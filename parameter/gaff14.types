@@ -1,0 +1,67 @@
+ c sig  1.90800 eps  0.08600 proton 06
+c1 sig  1.90800 eps  0.21000 proton 06
+c2 sig  1.90800 eps  0.08600 proton 06
+c3 sig  1.90800 eps  0.10940 proton 06
+ca sig  1.90800 eps  0.08600 proton 06
+cp sig  1.90800 eps  0.08600 proton 06
+cq sig  1.90800 eps  0.08600 proton 06
+cc sig  1.90800 eps  0.08600 proton 06
+cd sig  1.90800 eps  0.08600 proton 06
+ce sig  1.90800 eps  0.08600 proton 06
+cf sig  1.90800 eps  0.08600 proton 06
+cg sig  1.90800 eps  0.21000 proton 06
+ch sig  1.90800 eps  0.21000 proton 06
+cx sig  1.90800 eps  0.08600 proton 06
+cy sig  1.90800 eps  0.08600 proton 06
+cu sig  1.90800 eps  0.08600 proton 06
+cv sig  1.90800 eps  0.08600 proton 06
+cz sig  1.90800 eps  0.08600 proton 06
+h1 sig  1.38700 eps  0.01570 proton 01
+h2 sig  1.28700 eps  0.01570 proton 01
+h3 sig  1.18700 eps  0.01570 proton 01
+h4 sig  1.40900 eps  0.01500 proton 01
+h5 sig  1.35900 eps  0.01500 proton 01
+ha sig  1.45900 eps  0.01500 proton 01
+hc sig  1.48700 eps  0.01570 proton 01
+hn sig  0.60000 eps  0.01570 proton 01
+ho sig  0.00000 eps  0.00000 proton 01
+hp sig  0.60000 eps  0.01570 proton 01
+hs sig  0.60000 eps  0.01570 proton 01
+hw sig  0.00000 eps  0.00000 proton 01
+hx sig  1.10000 eps  0.01570 proton 01
+ f sig  1.75000 eps  0.06100 proton 09
+cl sig  1.94800 eps  0.26500 proton 17
+br sig  2.02000 eps  0.42000 proton 25
+ i sig  2.15000 eps  0.50000 proton 53
+ n sig  1.82400 eps  0.17000 proton 07
+n1 sig  1.82400 eps  0.17000 proton 07
+n2 sig  1.82400 eps  0.17000 proton 07
+n3 sig  1.82400 eps  0.17000 proton 07
+n4 sig  1.82400 eps  0.17000 proton 07
+na sig  1.82400 eps  0.17000 proton 07
+nb sig  1.82400 eps  0.17000 proton 07
+nc sig  1.82400 eps  0.17000 proton 07
+nd sig  1.82400 eps  0.17000 proton 07
+ne sig  1.82400 eps  0.17000 proton 07
+nf sig  1.82400 eps  0.17000 proton 07
+nh sig  1.82400 eps  0.17000 proton 07
+no sig  1.82400 eps  0.17000 proton 07
+ o sig  1.66120 eps  0.21000 proton 08
+oh sig  1.72100 eps  0.21040 proton 08
+os sig  1.68370 eps  0.17000 proton 08
+ow sig  1.76830 eps  0.15200 proton 08
+p2 sig  2.10000 eps  0.20000 proton 15
+p3 sig  2.10000 eps  0.20000 proton 15
+p4 sig  2.10000 eps  0.20000 proton 15
+p5 sig  2.10000 eps  0.20000 proton 15
+pb sig  2.10000 eps  0.20000 proton 15
+px sig  2.10000 eps  0.20000 proton 15
+py sig  2.10000 eps  0.20000 proton 15
+ s sig  2.00000 eps  0.25000 proton 16
+s2 sig  2.00000 eps  0.25000 proton 16
+s4 sig  2.00000 eps  0.25000 proton 16
+s6 sig  2.00000 eps  0.25000 proton 16
+sh sig  2.00000 eps  0.25000 proton 16
+ss sig  2.00000 eps  0.25000 proton 16
+sx sig  2.00000 eps  0.25000 proton 16
+sy sig  2.00000 eps  0.25000 proton 16

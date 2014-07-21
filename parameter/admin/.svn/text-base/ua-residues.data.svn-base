@@ -1,0 +1,1551 @@
+
+#
+# Residue and chain templates for a united atom forcefield.
+# Note that this file must be processed to add forcefield
+# parameters before it can be used with ProtoMS.
+#
+
+# Amino acid backbone for the middle of the chain
+#
+#
+#       --  HN      O  --
+#        |   |      |  |
+#   res-1| --N--CA--C--|res+1
+#        |       |     |
+#       --       X     --
+#
+mode template
+chain aacenter
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom  HN N  CA  C
+zmat  HN 1.010 119.8 180.0
+bond  O  C
+bond  C  CA
+bond  CA N
+bond  HN N
+angle HN N CA flex 3.0
+dihedral HN N CA C flex 3.0
+
+# GLY backbone in the middle of the chain - this has no sidechain
+#
+#       --  HN      O  --
+#        |   |      |  |
+#   res-1| --N--CA--C--|res+1
+#        |             |
+#       --             --
+#
+mode template
+chain glycenter
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom  HN  N  CA  C
+zmat  HN 1.010 119.8 180.0
+bond  O  C
+bond  C  CA
+bond  CA N
+bond  HN N
+angle HN N CA flex 3.0
+dihedral HN N CA C flex 3.0
+
+# PRO backbone in the middle of the chain - sidechain bonds to CA and N
+#
+#       --          O  --
+#        |          |  |
+#   res-1| --N--CA--C--|res+1
+#        |   |   |     |
+#       --   X...X     --
+#
+mode template
+chain procenter
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+bond  O  C
+bond  C  CA
+bond  CA N
+
+# AIB backbone in middle of the chain - has two side chain atoms connected 
+# to the CA atom.
+#
+#       --  HN      O  --
+#        |   |      |  |
+#   res-1| --N--CA--C--|res+1
+#        |      /\     |
+#       --     X  X    --
+#
+mode template
+chain aibcenter
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom  HN N  CA  C
+zmat  HN 1.010 119.8 180.0
+bond  O  C
+bond  C  CA
+bond  CA N
+bond  HN N
+angle HN N CA flex 3.0
+dihedral HN N CA C flex 3.0
+
+# Amino acid backbone at the c-terminal end of the chain (charged)
+#
+#     --| HN        O
+#       |  |       /
+#  res-1|--N--CA--C   (-1 charge)
+#       |      |   \
+#     --|      X    OT
+#
+mode template
+chain aacterm
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom HN  N  CA  C
+atom OT  C  O   CA
+zmat HN  1.010 119.8 180.0
+zmat OT  1.229 120.0 180.0
+bond O C
+bond C CA
+bond C OT
+bond CA N
+bond N HN
+angle HN N CA flex 3.0
+dihedral HN N CA C flex 3.0
+
+# GLY backbone at the c-terminal (charged)
+#
+#     --| HN        O
+#       |  |       /
+#  res-1|--N--CA--C   (-1 charge)
+#       |          \
+#     --|           OT
+#
+mode template
+chain glycterm
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom HN  N  CA  C
+atom OT  C  O   CA
+zmat HN  1.010 119.8 180.0
+zmat OT  1.229 120.0 180.0
+bond O C
+bond C CA
+bond C OT
+bond CA N
+bond N HN
+angle HN N CA flex 3.0
+dihedral HN N CA C flex 3.0
+
+# Amino acid backbone at the c-terminal (methyl-capped, uncharged)
+#
+#     --| HN        O
+#       |  |       /
+#  res-1|--N--CA--C  
+#       |      |   \
+#     --|      X    OT-CH3
+#
+mode template
+chain aacmethyl
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom HN  N  CA  C
+atom OT  C  O   CA
+atom CH3 OT C   CA
+zmat HN  1.010 119.8 180.0
+zmat OT  1.229 120.0 180.0
+#zmat CH3 need to get this
+bond O C
+bond C CA
+bond C OT
+bond CA N
+bond N HN
+bond CH3 OT
+angle HN N CA flex 3.0
+angle CH3 OT C flex 3.0
+dihedral HN N CA C flex 3.0
+dihedral CH3 OT C CA flex 5.0
+
+# GLY backbone at the c-terminal (methyl-capped, uncharged)
+#
+#     --| HN        O
+#       |  |       /
+#  res-1|--N--CA--C  
+#       |          \
+#     --|           OT-CH3
+#
+mode template
+chain glycmethyl
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom HN  N  CA  C
+atom OT  C  CA  N
+atom CH3 OT O   CA
+zmat HN  1.010 119.8 180.0
+zmat OT  1.229 120.0 180.0
+#zmat CH3 need to get this
+bond O C
+bond C CA
+bond C OT
+bond CA N
+bond N HN
+bond CH3 OT
+angle HN N CA flex 3.0
+angle CH3 OT C flex 3.0
+dihedral HN N CA C flex 3.0
+dihedral CH3 OT C CA flex 5.0
+
+# Amino acid backbone of the c-terminal capping metylamine residue
+#
+# A dummy atom is added to preserve the shape of the backbone
+#
+#     --| HN      
+#       |  |
+#  res-1|--N-CH3::DM1
+#       |   
+#     --|   
+#
+mode template
+chain methylamine
+bbatom 1  N  
+bbatom 2  CH3
+bbatom 3  DM1
+bbatom 4  HN 
+bond N HN
+bond N CH3
+
+# Amino acid backbone at the n-terminal end of the chain (charged)
+#
+#                HN1        O  |--
+#                   \       |  |
+#   (+1 charge)  HN2-N--CA--C--|res+1
+#                   /    |     |
+#                HN3     X     |--
+#
+mode template
+chain aanterm
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom HN1 N  CA  C
+atom HN2 N  CA  C
+atom HN3 N  CA  C
+zmat HN1 1.010 119.8 180.0
+zmat HN2 1.010 119.8  60.0
+zmat HN3 1.010 119.8 300.0
+bond HN1 N
+bond HN2 N
+bond HN3 N
+bond N CA
+bond CA C
+bond C O
+angle HN1 N CA flex 3.0
+angle HN2 N CA flex 3.0
+angle HN3 N CA flex 3.0
+dihedral HN1 N CA C flex 3.0
+dihedral HN2 N CA C flex 3.0
+dihedral HN3 N CA C flex 3.0
+
+# GLY backbone at the n-terminal end of the chain (charged)
+#
+#                HN1        O  |--
+#                   \       |  |
+#   (+1 charge)  HN2-N--CA--C--|res+1
+#                   /          |
+#                HN3           |--
+#
+mode template
+chain glynterm
+bbatom 1  N  
+bbatom 2  CA 
+bbatom 3  C  
+bbatom 4  O  
+atom HN1 N  CA  C
+atom HN2 N  CA  C
+atom HN3 N  CA  C
+zmat HN1 1.010 119.8 180.0
+zmat HN2 1.010 119.8  60.0
+zmat HN3 1.010 119.8 300.0
+bond HN1 N
+bond HN2 N
+bond HN3 N
+bond N CA
+bond CA C
+bond C O
+angle HN1 N CA flex 3.0
+angle HN2 N CA flex 3.0
+angle HN3 N CA flex 3.0
+dihedral HN1 N CA C flex 3.0
+dihedral HN2 N CA C flex 3.0
+dihedral HN3 N CA C flex 3.0
+
+# Amino acid backbone for a single residue
+#
+#                HN1          O
+#                   \        /
+#   (+1 charge)  HN2-N--CA--C  (-1 charge)
+#                   /    |   \
+#                HN3     X    OT
+#
+mode template
+chain aasingle
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom HN1 N CA C
+atom HN2 N CA C
+atom HN3 N CA C
+atom OT  C O  CA
+bond HN1 N
+bond HN2 N
+bond HN3 N
+bond N CA
+bond CA C
+bond C O
+bond C OT
+angle HN1 N CA flex 3.0
+angle HN2 N CA flex 3.0
+angle HN3 N CA flex 3.0
+dihedral HN1 N CA C flex 3.0
+dihedral HN2 N CA C flex 3.0
+dihedral HN3 N CA C flex 3.0
+
+# GLY backbone for a single residue
+#
+#                HN1          O
+#                   \        /
+#   (+1 charge)  HN2-N--CA--C  (-1 charge)
+#                   /    |   \
+#                HN3     X    OT
+#
+mode template
+chain glysingle
+bbatom 1  N 
+bbatom 2  CA
+bbatom 3  C 
+bbatom 4  O 
+atom HN1 N CA C
+atom HN2 N CA C
+atom HN3 N CA C
+atom OT  C O  CA
+bond HN1 N
+bond HN2 N
+bond HN3 N
+bond N CA
+bond CA C
+bond C O
+bond C OT
+angle HN1 N CA flex 3.0
+angle HN2 N CA flex 3.0
+angle HN3 N CA flex 3.0
+dihedral HN1 N CA C flex 3.0
+dihedral HN2 N CA C flex 3.0
+dihedral HN3 N CA C flex 3.0
+
+# 1-AMINOISOBUTYRIC ACID (ALPHA-METHYL-ALANINE - AIB)
+#
+# This residue only has a backbone for the middle of the chain
+#
+#     N-CA-C
+#       /\
+#     CB1 CB2
+#
+mode template
+residue AIB
+info rotate 3.0 translate 0.5
+backbone middle aibcenter
+atom  CB1 CA N C
+atom  CB2 CA N C
+zmat  CB1 1.525 111.1 -120.0
+zmat  CB2 1.525 111.1  109.5   #this needs to be checked
+bond CB1 CA
+bond CB2 CA
+angle CB1 CA N flex 0.5
+angle CB2 CA N flex 0.5
+
+# ALANINE
+#
+#     N-CA-C
+#        |  
+#       CB  
+#
+mode template
+residue ALA
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA N C
+zmat  CB  1.525 111.1 -120.0
+bond  CB CA
+angle CB CA N flex 0.5
+
+# ASPARAGINE
+#
+#      --C--CA--N--  
+#            |       
+#           CB       
+#            |
+#           CG==OD1
+#            |
+#      HD1--ND2--HD2
+#
+mode template
+residue ASN
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA  N   C
+atom  CG  CB  CA  N
+atom  ND2 CG  CB  CA
+atom  HD1 ND2 CG  CB
+atom  HD2 ND2 CG  HD1
+atom  OD1 CG  CB  ND2
+zmat  CB  1.535 111.1 -120.0
+zmat  CG  1.524 113.4  180.0
+zmat  ND2 1.327 118.4  180.0
+zmat  HD1 1.008 119.2  180.0
+zmat  HD2 1.008 119.2  180.0
+zmat  OD1 1.223 120.9  180.0
+bond CB CA
+bond CG CB
+bond OD1 CG
+bond ND2 CG
+bond HD1 ND2
+bond HD2 ND2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle OG1 CG CB flex 0.5
+angle ND2 CG CB flex 0.5
+dihedral CG CB CA N flex 10.0
+dihedral ND2 CG CB CA flex 10.0
+dihedral HD1 ND2 CG  CB flex 15.0
+
+# CYSTEINE
+#
+#    --C--CA--N-- 
+#          |      
+#         CB 
+#          |
+#          SG--HG     
+#
+mode template
+residue CYS
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA  N  C
+atom  SG  CB CA  N
+atom  HG  SG CB CA
+zmat  CB  1.544 111.1 -120.0
+zmat  SG  1.813 113.6  180.0
+zmat  HG  1.346  94.4  180.0
+bond CB CA
+bond SG CB
+bond HG SG
+angle CB CA N flex 0.5
+angle SG CB CA flex 0.5
+angle HG SG CB flex 0.5
+dihedral SG CG CB N flex 10.0
+dihedral HG SG CB CA flex 15.0
+
+# GLUTAMINE
+#
+#      --C--CA--N-- 
+#            |      
+#           CB 
+#            |
+#           CG
+#            |
+#           CD==OE1
+#            |
+#      HE1--NE2--HE2     
+#
+mode template
+residue GLN
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom CB  CA   N   C
+atom CG  CB  CA   N
+atom CD  CG  CB  CA
+atom NE2 CD  CG  CB
+atom HE1 NE2 CD  CG
+atom HE2 NE2 CD HE1
+atom OE1 CD  CG NE2
+zmat  CB  1.535 111.1 -120.0
+zmat  CG  1.524 113.4  180.0
+zmat  CD  1.524 113.4  180.0
+zmat  NE2 1.327 118.4  180.0
+zmat  HE1 1.008 119.2  180.0
+zmat  HE2 1.008 119.2  180.0
+zmat  OE1 1.223 120.9  180.0
+bond CB CA
+bond CG CB
+bond CD CG
+bond CD NE2
+bond OE1 CD
+bond NE2 HE2
+bond HE1 NE2
+angle CB CA N flex 0.5
+angle CD CG CB flex 0.5
+angle OE1 CD CG flex 0.5
+angle NE2 CD CG flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD CG CB CA flex 10.0
+dihedral NE2 CD CG CB flex 10.0
+dihedral HE1 NE1 CD CG flex 15.0
+
+# GLYCINE - this consists only of the glycine backbones
+#
+#    --C--CA--N-- 
+#
+mode template
+residue GLY
+info rotate 3.0 translate 0.5
+backbone first glynterm middle glycenter last glycterm single glysingle
+# glycine has no atoms, or internals!
+
+# ISOLEUCINE
+#
+#   --C--CA--N-- 
+#         |      
+#        CB--CG2
+#         |
+#        CG1
+#         |
+#        CD1
+#
+mode template
+residue ILE
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom CB  CA  N  C
+atom CG1 CB  CA N
+atom CG2 CB  CA CG1
+atom CD1 CG1 CB CA
+zmat  CB  1.568 111.1 -120.0
+zmat  CG1 1.532 122.0  180.0
+zmat  CG2 1.532 111.0 -120.0
+zmat  CD1 1.532 123.8  180.0
+bond CB CA
+bond CG1 CB
+bond CG2 CB
+bond CD1 CG1
+angle CB CA N flex 0.5
+angle CG1 CB CA flex 0.5
+angle CG2 CB CA flex 0.5
+angle CD1 CG1 CB flex 0.5
+dihedral CG1 CB CA N flex 10.0
+dihedral CD1 CG1 CB CA flex 15.0
+
+# LEUCINE
+#
+#    --C--CA--N-- 
+#          |      
+#         CB
+#          |
+#    CD1--CG--CD2      
+#
+mode template
+residue LEU
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA  N  C
+atom  CG  CB CA  N
+atom  CD1 CG CB CA
+atom  CD2 CG CB CD1
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.555 126.2  180.0
+zmat  CD1 1.532 118.7  180.0
+zmat  CD2 1.532 118.7  120.0
+bond CB CA
+bond CG CB
+bond CD1 CG
+bond CD2 CG
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD1 CG CB flex 0.5
+angle CD2 CG CB flex 0.5
+dihedral CG CB CA N flex 10.0
+dihedral CD1 CG CB CA flex 15.0
+
+
+# METHIONINE        
+#
+#   --C--CA--N-- 
+#         |      
+#        CB
+#         |
+#        CG
+#         |
+#        SD--CE
+#
+mode template
+residue MET
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB CA  N  C
+atom  CG CB CA  N
+atom  SD CG CB CA
+atom  CE SD CG CB
+zmat  CB 1.534 121.1 -120.0
+zmat  CG 1.528 113.1  180.0
+zmat  SD 1.810 115.6  180.0
+zmat  CE 1.780  98.9  180.0
+bond CB CA
+bond CG CB
+bond SD CG
+bond CE SD
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle SD CG CB flex 0.5
+angle CE SD CG flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral SD CG CB CA flex 10.0
+dihedral CE SD CG CB flex 15.0
+
+# PHENYLALANINE  - All-atom version
+#
+#     --C--CA--N-- 
+#           |      
+#          CB      
+#           |
+#          CG
+#        /    \
+#  HD1--CD1    CD2--HD2
+#       |      |
+#  HE1--CE1    CE2--HE2
+#        \    /
+#          CZ
+#          |
+#          HZ
+#
+mode template
+residue PHE
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB    CA   N   C
+atom  CG    CB  CA   N
+atom  CD1   CG  CB  CA
+atom  CE1  CD1  CG  CB 
+atom  HD1  CD1  CG CE1
+atom  CZ   CE1 CD1  CG
+atom  HE1  CE1 CD1  CZ
+atom  CE2   CZ CE1 CD1
+atom  HZ    CZ CE1 CE2
+atom  CD2  CE2  CZ CE1
+atom  HE2  CE2  CZ CD2
+atom  HD2  CD2 CE2  CG
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  CD1 1.400 120.0  180.0
+zmat  CE1 1.400 120.0  180.0
+zmat  HD1 1.090 120.0  180.0
+zmat  CZ  1.400 120.0    0.0
+zmat  HE1 1.090 120.0  180.0
+zmat  CE2 1.400 120.0    0.0
+zmat  HZ  1.090 120.0  180.0
+zmat  CD2 1.400 120.0    0.0
+zmat  HE2 1.090 120.0  180.0
+zmat  HD2 1.090 120.0  180.0
+bond CB CA
+bond CG CB
+bond CD1 CG
+bond CE1 CD1
+bond CZ CE1
+bond CE2 CZ
+bond CD2 CE2
+bond CG CD2
+bond HD1 CD1
+bond HE1 CE1
+bond HD2 CD2
+bond HE2 CE2
+bond HZ  CZ
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD1 CG CB flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD1 CG CB CA flex 10.0
+
+# PHENYLALANINE, United atom version
+#
+#     --C--CA--N-- 
+#           |      
+#          CB      
+#           |
+#          CG
+#        /    \
+#      CD1    CD2
+#       |      |
+#      CE1    CE2
+#        \    /
+#          CZ
+#
+mode template
+residue PHU
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA  N   C
+atom  CG  CB  CA  N
+atom  CD1 CG  CB  CA
+atom  CE1 CD1 CG  CB 
+atom  CZ  CE1 CD1 CG
+atom  CE2 CZ  CE1 CD1
+atom  CD2 CE2 CZ  CE1
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  CD1 1.400 120.0  180.0
+zmat  CE1 1.400 120.0  180.0
+zmat  CZ  1.400 120.0    0.0
+zmat  CE2 1.400 120.0    0.0
+zmat  CD2 1.400 120.0    0.0
+bond CB CA
+bond CG CB
+bond CD1 CG
+bond CE1 CD1
+bond CZ CE1
+bond CE2 CZ
+bond CD2 CE2
+bond CG CD2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD1 CG CB flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD1 CG CB CA flex 10.0
+
+# PROLINE
+#  Can only put proline in middle of chain
+#
+#   --C--CA--N--    
+#         |    \    
+#        CB--CG--CD 
+#
+mode template
+residue PRO
+info rotate 3.0 translate 0.5
+backbone middle procenter
+atom  CB CA N  C
+atom  CG CB CA N
+atom  CD CG CB CA
+zmat  CB 1.484 104.0 -120.0
+zmat  CG 1.510 108.5    3.7
+zmat  CD 1.500 106.0  -16.3
+bond CB CA
+bond CG CB
+bond CD CG
+bond N CD
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD CG CB flex 0.5
+dihedral CG CB CA N flex 2.0
+dihedral CD CG CB CA flex 2.0
+
+# SERINE
+#
+#    --C--CA--N-- 
+#          |      
+#         CB      
+#          |
+#         OG--HG
+#
+mode template
+residue SER
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA  N  C
+atom  OG  CB CA  N
+atom  HG  OG CB CA
+zmat  CB  1.543 111.1 -120.0
+zmat  OG  1.427 114.4  180.0
+zmat  HG  0.965 107.6  180.0
+bond CB CA
+bond OG CB
+bond HG OG
+angle CB CA N flex 0.5
+angle OG CB CA flex 0.5
+angle HG OG CB flex 0.5
+dihedral OG CB CA N flex 10.0
+dihedral HG OG CB CA flex 15.0
+
+# THREONINE
+#
+#  --C--CA--N-- 
+#        |      
+#       CB--OG1-HG
+#        |
+#       CG2      
+#
+mode template
+residue THR
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA  N   C
+atom  OG1  CB CA   N
+atom  HG  OG1 CB  CA
+atom  CG2  CB CA OG1
+zmat  CB  1.525 121.10 -120.0
+zmat  OG1 1.430 109.47   60.0
+zmat  HG  0.960 109.47  180.0
+zmat  CG2 1.525 109.47 -120.0
+bond CB CA
+bond OG1 CB
+bond HG OG1
+bond CG2 CB
+angle CB CA N flex 0.5
+angle CG2 CB CA flex 0.5
+angle OG1 CB CA flex 0.5
+angle HG  OG1 CB flex 0.5
+dihedral OG1 CB CA N flex 10.0
+dihedral HG OG1 CB CA flex 15.0
+
+# TRYPTOPHAN - all atom version
+#
+#       --C--CA--N-- 
+#             |      
+#            CB  
+#             |
+#            CG         HE3
+#           //  \        |
+#    HD1--CD1     CD2===CE3
+#          |     /         \ 
+#    HNE--NE1--CE2         CZ3--HZ3
+#                 \\       //
+#                  CZ2--CH2
+#                   |    |
+#                  HZ2  HH2
+#
+mode template
+residue TRP
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB    CA   N   C
+atom  CG    CB  CA   N
+atom  CD1   CG  CB  CA
+atom  NE1  CD1  CG  CB
+atom  HD1  CD1  CG NE1
+atom  CE2  NE1 CD1  CG
+atom  HNE  NE1 CD1 CE2
+atom  CZ2  CE2 NE1 CD1
+atom  CH2  CZ2 CE2 NE1
+atom  HZ2  CZ2 CE2 CH2
+atom  CZ3  CH2 CZ2 CE2
+atom  HH2  CH2 CZ2 CZ3
+atom  CE3  CZ3 CH2 CZ2
+atom  HZ3  CZ3 CH2 CE3
+atom  CD2  CE3 CZ3 CH2
+atom  HE3  CE3 CZ3 CD2
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  CD1 1.340 127.0  180.0
+zmat  NE1 1.430 107.0  180.0
+zmat  HD1 1.090 120.0  180.0
+zmat  CE2 1.310 109.0    0.0
+zmat  HNE 1.010 125.5  180.0
+zmat  CZ2 1.400 128.0  180.0
+zmat  CH2 1.390 116.0  180.0
+zmat  HZ2 1.090 120.0  180.0
+zmat  CZ3 1.350 121.0    0.0
+zmat  HH2 1.090 120.0  180.0
+zmat  CE3 1.410 122.0    0.0
+zmat  HZ3 1.090 120.0  180.0
+zmat  CD2 1.400 117.0    0.0
+zmat  HE3 1.090 120.0  180.0
+bond CB CA
+bond CG CB
+bond CD1 CG
+bond NE1 CD1
+bond CE2 NE1
+bond CD2 CE2
+bond CG CD2
+bond CE3 CD2
+bond CZ3 CE3
+bond CH2 CZ3
+bond CZ2 CH2
+bond CE2 CZ2
+bond HD1 CD1
+bond HNE NE1
+bond HE3 CE3
+bond HZ3 CZ3
+bond HH2 CH2
+bond HZ2 CZ2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD1 CG CB flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD1 CG CB CA flex 10.0
+
+# TRYPTOPHAN - united atom version
+#
+#       --C--CA--N-- 
+#             |      
+#            CB  
+#             |
+#            CG 
+#           //  \        
+#         CD1     CD2===CE3
+#          |     /         \ 
+#    HNE--NE1--CE2         CZ3
+#                 \\       //
+#                  CZ2--CH2
+#
+mode template
+residue TRU
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom  CD1  CG  CB  CA
+atom  NE1 CD1  CG  CB
+atom  CE2 NE1 CD1  CG
+atom  HNE NE1 CD1 CE2
+atom  CZ2 CE2 NE1 CD1
+atom  CH2 CZ2 CE2 NE1
+atom  CZ3 CH2 CZ2 CE2
+atom  CE3 CZ3 CH2 CZ2
+atom  CD2 CE3 CZ3 CH2
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  CD1 1.340 127.0  180.0
+zmat  NE1 1.430 107.0  180.0
+zmat  CE2 1.310 109.0    0.0
+zmat  HNE 1.010 125.5  180.0
+zmat  CZ2 1.400 128.0  180.0
+zmat  CH2 1.390 116.0  180.0
+zmat  CZ3 1.350 121.0    0.0
+zmat  CE3 1.410 122.0    0.0
+zmat  CD2 1.400 117.0    0.0
+bond CB CA
+bond CG CB
+bond CD1 CG
+bond NE1 CD1
+bond CE2 NE1
+bond CD2 CE2
+bond CG CD2
+bond CE3 CD2
+bond CZ3 CE3
+bond CH2 CZ3
+bond CZ2 CH2
+bond CE2 CZ2
+bond HNE NE1
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD1 CG CB flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD1 CG CB CA flex 10.0
+
+#
+# TYROSINE - all atom version
+#
+#      --C--CA--N-- 
+#            |
+#           CB
+#            |      
+#           CG
+#          /  \
+#  HD1--CD1    CD2--HD2
+#        |      |
+#  HE1--CE1    CE2--HE2
+#          \  /
+#           CZ
+#            |
+#            OH--HH
+#
+mode template
+residue TYR
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom CD1   CG  CB  CA
+atom CE1  CD1  CG  CB
+atom HD1  CD1  CG CE1
+atom  CZ  CE1 CD1  CG
+atom HE1  CE1 CD1  CZ
+atom CE2   CZ CE1 CD1
+atom  OH   CZ CE1 CE2
+atom CD2  CE2  CZ CE1
+atom HE2  CE2  CZ CD2
+atom HD2  CD2 CE2  CG
+atom  HH   OH  CZ CE1
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  CD1 1.400 120.0  180.0
+zmat  CE1 1.400 120.0  180.0
+zmat  HD1 1.090 120.0  180.0
+zmat  CZ  1.400 120.0    0.0
+zmat  HE1 1.090 120.0  180.0
+zmat  CE2 1.400 120.0    0.0
+zmat  OH  1.360 120.0  180.0
+zmat  CD2 1.400 120.0    0.0
+zmat  HE2 1.090 120.0  180.0
+zmat  HD2 1.090 120.0  180.0
+zmat  HH  0.960 113.0    0.0
+bond CB CA
+bond CG CB
+bond CD1 CG
+bond CE1 CD1
+bond CZ CE1
+bond CE2 CZ
+bond CD2 CE2
+bond CG CD2
+bond HD1 CD1
+bond HE1 CE1
+bond OH CZ
+bond HH OH
+bond HE2 CE2
+bond HD2 CD2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD1 CG CB flex 0.5
+angle OH CZ CE1 flex 0.5
+angle HH OH CZ flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD1 CG CB CA flex 10.0
+dihedral HH OH CZ CE1 flex 15.0
+
+# TYROSINE - united atom version
+#
+#      --C--CA--N-- 
+#            |
+#           CB
+#            |      
+#           CG
+#          /  \
+#       CD1    CD2
+#        |      |
+#       CE1    CE2
+#          \  /
+#           CZ
+#            |
+#            OH--HH
+#
+mode template
+residue TYU
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom CD1   CG  CB  CA
+atom CE1  CD1  CG  CB
+atom  CZ  CE1 CD1  CG
+atom CE2   CZ CE1 CD1
+atom  OH   CZ CE1 CE2
+atom CD2  CE2  CZ CE1
+atom  HH   OH  CZ CE1
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  CD1 1.400 120.0  180.0
+zmat  CE1 1.400 120.0  180.0
+zmat  CZ  1.400 120.0    0.0
+zmat  CE2 1.400 120.0    0.0
+zmat  OH  1.360 120.0  180.0
+zmat  CD2 1.400 120.0    0.0
+zmat  HH  0.960 113.0    0.0
+bond CB CA
+bond CG CB
+bond CD1 CG
+bond CE1 CD1
+bond CZ CE1
+bond CE2 CZ
+bond CD2 CE2
+bond CG CD2
+bond OH CZ
+bond HH OH
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD1 CG CB flex 0.5
+angle OH CZ CE1 flex 0.5
+angle HH OH CZ flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD1 CG CB CA flex 10.0
+dihedral HH OH CZ CE1 flex 15.0
+
+# VALINE
+#
+#   --C--CA--N-- 
+#         |      
+#    CG1--CB--CG2      
+#
+mode template
+residue VAL
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA  N   C
+atom CG1  CB CA   N
+atom CG2  CB CA CG1
+zmat  CB  1.568 111.1 -120.0
+zmat  CG1 1.532 118.5  180.0
+zmat  CG2 1.532 118.5 -120.0
+bond CB CA
+bond CG1 CB
+bond CG2 CB
+angle CB CA N flex 0.5
+angle CG1 CB CA flex 0.5
+angle CG2 CB CA flex 0.5
+dihedral CG1 CB CA N flex 15.0
+
+# ASPARTIC ACID
+#
+#   --C--CA--N-- 
+#         |      
+#        CB      
+#         |
+#    OD1--CG--OD2--HD2(dummy)
+#
+mode template
+residue ASP
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA   N   C
+atom  CG  CB  CA   N
+atom OD1  CG  CB  CA
+atom OD2  CG  CB OD1
+atom HD2 OD2  CG OD1
+zmat  CB  1.530  111.1 -120.0
+zmat  CG  1.517  111.6  180.0
+zmat  OD1 1.250  116.7  -90.0
+zmat  OD2 1.250  116.7  180.0
+zmat  HD2 0.970  107.0    0.0
+bond CB CA
+bond CG CB
+bond OD1 CG
+bond OD2 CG
+bond HD2 OD2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle OD1 CG CB flex 0.5
+angle OD2 CG CB flex 0.5
+angle HD2 OD2 CG flex 0.5
+dihedral CG CB CA N flex 10.0
+dihedral OD1 CG CB CA flex 15.0
+dihedral HD2 OD2 CG CB flex 15.0
+
+
+# GLUTAMIC ACID
+#
+#    --C--CA--N-- 
+#          |      
+#         CB    
+#          |
+#         CG
+#          |
+#    OE1--CD--OE2--HE2(dummy)
+#
+mode template
+residue GLU
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA   N   C
+atom  CG  CB  CA   N
+atom  CD  CG  CB  CA
+atom OE1  CD  CG  CB
+atom OE2  CD  CG OE1
+atom HE2 OE2  CD OE1
+zmat  CB  1.529 111.1 -120.0
+zmat  CG  1.529 112.7  180.0
+zmat  CD  1.521 112.3  180.0
+zmat  OE1 1.250 117.0  -90.0
+zmat  OE2 1.250 117.0  180.0
+zmat  HE2 0.970 107.0    0.0
+bond CB CA
+bond CG CB
+bond CD CG
+bond OE1 CD
+bond OE2 CD
+bond HE2 OE2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD CG CB flex 0.5
+angle OE1 CD CG flex 0.5
+angle OE2 CD CG flex 0.5
+angle HE2 OE2 CD flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD CG CB CA flex 10.0
+dihedral OE1 CD CG CB flex 15.0
+dihedral HE2 OE2 CD CG flex 15.0
+
+# ARGININE
+#
+#      --C--CA--N-- 
+#            |      
+#           CB    
+#            |
+#           CG
+#            |
+#           CD
+#            |
+#            NE--HE
+#            |
+#  H11--NH1--CZ--NH2--H21
+#       |        |
+#       H12      H22
+#
+mode template
+residue ARG
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA   N   C
+atom  CG  CB  CA   N
+atom  CD  CG  CB  CA
+atom  NE  CD  CG  CB
+atom  CZ  NE  CD  CG
+atom  HE  NE  CD  CZ
+atom NH1  CZ  NE  CD
+atom H11 NH1  CZ  NE
+atom H12 NH1  CZ H11
+atom NH2  CZ  NE NH1
+atom H21 NH2  CZ  NE
+atom H22 NH2  CZ H21
+zmat  CB  1.534 111.1 -120.0
+zmat  CG  1.525 121.1  180.0
+zmat  CD  1.525 112.5  180.0
+zmat  NE  1.476 113.0  180.0
+zmat  CZ  1.343 134.0  180.0
+zmat  HE  1.012 107.9  180.0
+zmat  NH1 1.336 121.3    0.0
+zmat  H11 1.012 120.7    0.0
+zmat  H12 1.012 123.3  180.0
+zmat  NH2 1.336 119.4  180.0
+zmat  H21 1.012 122.1    0.0
+zmat  H22 1.012 122.4  180.0
+bond CB CA
+bond CG CB
+bond CD CG
+bond NE CD
+bond HE NE
+bond CZ NE
+bond NH1 CZ
+bond H11 NH1
+bond H12 NH1
+bond NH2 CZ
+bond H21 NH2
+bond H22 NH2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD CG CB flex 0.5
+angle NE CD CG flex 0.5
+angle HE NE CD flex 0.5
+angle CZ NE CD flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD CG CB CA flex 5.0
+dihedral NE CD CG CB flex 10.0
+dihedral CZ NE CD CG flex 10.0
+
+# LYSINE
+#
+#   --C--CA--N-- 
+#         |      
+#        CB    
+#         |
+#        CG
+#         |       
+#        CD       
+#         |
+#        CE
+#         |
+#    HZ1--NZ--HZ3
+#         |
+#         HZ2
+#
+mode template
+residue LYS
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB  CA   N   C
+atom  CG  CB  CA   N
+atom  CD  CG  CB  CA
+atom  CE  CD  CG  CB
+atom  NZ  CE  CD  CG
+atom HZ1  NZ  CE  CD
+atom HZ2  NZ  CE HZ1
+atom HZ3  NZ  CE HZ1
+zmat  CB  1.535 111.10 -120.0
+zmat  CG  1.527 112.50  180.0
+zmat  CD  1.526 112.50  180.0
+zmat  CE  1.528 112.50  180.0
+zmat  NZ  1.472 111.70  180.0
+zmat  HZ1 1.010 109.47  180.0
+zmat  HZ2 1.010 109.47 -120.0
+zmat  HZ3 1.010 109.47  120.0
+bond CB CA
+bond CG CB
+bond CD CG
+bond CE CD
+bond NZ CE
+bond HZ1 NZ
+bond HZ2 NZ
+bond HZ3 NZ
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+angle CD CG CB flex 0.5
+angle CE CD CG flex 0.5
+angle NZ CE CD flex 0.5
+angle HZ1 NZ CE flex 0.5
+angle HZ2 NZ CE flex 0.5
+angle HZ3 NZ CE flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral CD CG CB CA flex 5.0
+dihedral CE CD CG CB flex 10.0
+dihedral NZ CE CD CG flex 10.0
+dihedral HZ1 NZ CE CD flex 15.0
+dihedral HZ2 NZ CE HZ1 flex 5.0
+dihedral HZ3 NZ CE HZ1 flex 5.0
+
+# HISTIDINE    - protonated on epsilon nitrogen, all atom version
+#
+#      --C--CA--N-- 
+#            |      
+#           CB    
+#            |
+#           CG
+#          /  \
+#    HND-ND1   CD2--HD    (HND is a dummy)
+#         |    |
+#    HE--CE1---NE2--HNE
+#
+mode template
+residue HIE
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom ND1   CG  CB  CA
+atom CE1  ND1  CG  CB
+atom HND  ND1  CG CE1
+atom NE2  CE1 ND1  CG
+atom  HE  CE1 ND1 NE2
+atom CD2  NE2 CE1 ND1
+atom  HD  CD2 NE2  CG
+atom HNE  NE2 CE1 CD2
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  ND1 1.390 122.0  180.0
+zmat  CE1 1.320 108.0  180.0
+zmat  HND 1.010 126.0  180.0
+zmat  NE2 1.310 109.0    0.0
+zmat  HE  1.090 120.0  180.0
+zmat  CD2 1.360 110.0    0.0
+zmat  HD  1.090 120.0  180.0
+zmat  HNE 1.010 125.0  180.0
+bond CB CA
+bond CG CB
+bond ND1 CG
+bond CE1 ND1
+bond NE2 CE1
+bond CD2 NE2
+bond CG CD2
+bond HND ND1
+bond HE CE1
+bond HNE NE2
+bond HD CD2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral ND1 CG CB CA flex 10.0
+
+# HISTIDINE  - protonated on both nitrogens, all atom version
+#
+#       --C--CA--N--  
+#             |      
+#            CB    
+#             |
+#            CG
+#           /  \
+#    HND--ND1   CD2--HD
+#          |    |
+#     HE--CE1---NE2--HNE
+#
+mode template
+residue HIP
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom ND1   CG  CB  CA
+atom CE1  ND1  CG  CB
+atom HND  ND1  CG CE1
+atom NE2  CE1 ND1  CG
+atom  HE  CE1 ND1 NE2
+atom CD2  NE2 CE1 ND1
+atom  HD  CD2 NE2  CG
+atom HNE  NE2 CE1 CD2
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  ND1 1.390 122.0  180.0
+zmat  CE1 1.320 108.0  180.0
+zmat  HND 1.010 126.0  180.0
+zmat  NE2 1.310 109.0    0.0
+zmat  HE  1.090 120.0  180.0
+zmat  CD2 1.360 110.0    0.0
+zmat  HD  1.090 120.0  180.0
+zmat  HNE 1.010 125.0  180.0
+bond CB CA
+bond CG CB
+bond ND1 CG
+bond CE1 ND1
+bond NE2 CE1
+bond CD2 NE2
+bond CG CD2
+bond HND ND1
+bond HE CE1
+bond HNE NE2
+bond HD CD2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral ND1 CG CB CA flex 10.0
+
+# HISTIDINE  - protonated on delta nitrogen, all atom version
+#
+#       --C--CA--N-- 
+#             |      
+#            CB         HNE is a dummy
+#             |
+#            CG
+#           /  \
+#    HND--ND1   CD2--HD
+#          |    |
+#     HE--CE1---NE2--HNE 
+#
+mode template
+residue HIS
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom ND1   CG  CB  CA
+atom CE1  ND1  CG  CB
+atom HND  ND1  CG CE1
+atom NE2  CE1 ND1  CG
+atom  HE  CE1 ND1 NE2
+atom CD2  NE2 CE1 ND1
+atom  HD  CD2 NE2  CG
+atom HNE  NE2 CE1 CD2
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  ND1 1.390 122.0  180.0
+zmat  CE1 1.320 108.0  180.0
+zmat  HND 1.010 126.0  180.0
+zmat  NE2 1.310 109.0    0.0
+zmat  HE  1.090 120.0  180.0
+zmat  CD2 1.360 110.0    0.0
+zmat  HD  1.090 120.0  180.0
+zmat  HNE 1.010 125.0  180.0
+bond CB CA
+bond CG CB
+bond ND1 CG
+bond CE1 ND1
+bond NE2 CE1
+bond CD2 NE2
+bond CG CD2
+bond HND ND1
+bond HE CE1
+bond HNE NE2
+bond HD CD2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral ND1 CG CB CA flex 10.0
+
+# HISTIDINE    - protonated on delta nitrogen, united atom version
+#
+#      --C--CA--N-- 
+#            |      
+#           CB    
+#            |
+#           CG
+#          /  \
+#    HND-ND1   CD2      (HNE is a dummy)
+#         |    |
+#        CE1---NE2--HNE
+#
+mode template
+residue HSU
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom ND1   CG  CB  CA
+atom CE1  ND1  CG  CB
+atom HND  ND1  CG CE1
+atom NE2  CE1 ND1  CG
+atom CD2  NE2 CE1 ND1
+atom HNE  NE2 CE1 CD2
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  ND1 1.390 122.0  180.0
+zmat  CE1 1.320 108.0  180.0
+zmat  HND 1.010 126.0  180.0
+zmat  NE2 1.310 109.0    0.0
+zmat  CD2 1.360 110.0    0.0
+zmat  HNE 1.010 125.0  180.0
+bond CB CA
+bond CG CB
+bond ND1 CG
+bond CE1 ND1
+bond NE2 CE1
+bond CD2 NE2
+bond CG CD2
+bond HND ND1
+bond HNE NE2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral ND1 CG CB CA flex 10.0
+
+# HISTIDINE  - protonated on both nitrogens, united atom version
+#
+#       --C--CA--N--  
+#             |      
+#            CB    
+#             |
+#            CG           (+1 charge)
+#           /  \
+#    HND--ND1   CD2
+#          |    |
+#         CE1---NE2--HNE
+#
+mode template
+residue HPU
+info rotate 3.0 translate 0.5
+backbone first aanterm middle aacenter last aacterm single aasingle
+atom  CB   CA   N   C
+atom  CG   CB  CA   N
+atom ND1   CG  CB  CA
+atom CE1  ND1  CG  CB
+atom HND  ND1  CG CE1
+atom NE2  CE1 ND1  CG
+atom CD2  NE2 CE1 ND1
+atom HNE  NE2 CE1 CD2
+zmat  CB  1.555 111.1 -120.0
+zmat  CG  1.517 117.3  180.0
+zmat  ND1 1.390 122.0  180.0
+zmat  CE1 1.320 108.0  180.0
+zmat  HND 1.010 126.0  180.0
+zmat  NE2 1.310 109.0    0.0
+zmat  CD2 1.360 110.0    0.0
+zmat  HNE 1.010 125.0  180.0
+bond CB CA
+bond CG CB
+bond ND1 CG
+bond CE1 ND1
+bond NE2 CE1
+bond CD2 NE2
+bond CG CD2
+bond HND ND1
+bond HNE NE2
+angle CB CA N flex 0.5
+angle CG CB CA flex 0.5
+dihedral CG CB CA N flex 5.0
+dihedral ND1 CG CB CA flex 10.0

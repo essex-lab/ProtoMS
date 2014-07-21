@@ -1,0 +1,24 @@
+This directory contains all of the source code for ProtoMS 2.
+
+Contents:
+
+*.F            : Fortran 77 source files
+*.inc          : Fortran include files - these declare all of the global variables
+*.o            : Fortran object files - these may be safely removed after a compilation
+Makefile       : Makefile to compile ProtoMS 2
+getid.py       : Python script used to identify the subversion version of the source code.
+                 This is not really useful to non-developers, and its use can be stopped
+                 by uncommenting the 'NOPYTHON2' line in the Makefile
+
+sfmakedepend   : Third-party script that calculates the dependancies of each Fortran
+                 source file to each include file. This is only needed by developers, and
+                 is run used via 'make depend'. This will modify the Makefile and leave
+                 a backup in Makefile.old
+                 
+TODO           : List of things that the developers plan to do for future releases. This
+                 is a wishlist, so do not hold us to it!
+                 
+parsefortran.py  : Script used to generate the auto-docs part of the developer documentation.
+                   This is not needed by normal users.
+                   
+

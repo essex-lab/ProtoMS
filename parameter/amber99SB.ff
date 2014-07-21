@@ -1,0 +1,44 @@
+#
+# Modification/update of parm99.dat (Hornak & Simmerling)
+#
+# Created by Samuel Genheden, October 2013
+# Parameters taken from frcmod.ff99SB
+#
+mode dihedral
+# U(phi) = k1*( 1.0 + k2*(cos[k3*phi + k4]) )
+#term k1(kcal mol-1) k2 k3 k4(deg) #comment
+# N -CT-C -N
+term   316     0.000    0.000    0.000    0.000
+term   317     0.450    1.000    1.000  180.000
+term   318     1.580    1.000    2.000  180.000
+term   319     0.550    1.000    3.000  180.000
+term   320     0.000    1.000    4.000    0.000
+# C -N -CT-C
+term   321     0.000    0.000    0.000    0.000
+term   322     0.000    1.000    1.000    0.000
+term   323     0.270    1.000    2.000    0.000
+term   324     0.420    1.000    3.000    0.000
+term   325     0.000    1.000    4.000    0.000
+# CT-CT-N -C
+term   326     0.000    0.000    0.000    0.000
+term   327     2.000    1.000    1.000    0.000
+term   328     2.000    1.000    2.000    0.000
+term   329     0.400    1.000    3.000    0.000
+term   330     0.000    1.000    4.000    0.000
+# CT-CT-C -N
+term   331     0.000    0.000    0.000    0.000
+term   332     0.200    1.000    1.000    0.000
+term   333     0.200    1.000    2.000    0.000
+term   334     0.400    1.000    3.000    0.000
+term   335     0.000    1.000    4.000    0.000
+## All of the par and atm instructions are the same as in amber99.ff, so they are just comments below
+#par  term1  term2 etc..  #comment
+#par    64   316   317   318   319   320  # N -CT-C -N
+#par    65   321   322   323   324   325  # C -N -CT-C
+#par    66   326   327   328   329   330  # CT-CT-N -C
+#par    67   331   332   333   334   335  # CT-CT-C -N
+#atm atm1 atm2 atm3 atm4 parameter #comment
+#atm   N    CT   C    N     64      #
+#atm   C    N    CT   C     65      #
+#atm   CT   CT   N    C     66      #
+#atm   CT   CT   C    N     67      #

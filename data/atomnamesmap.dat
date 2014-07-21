@@ -1,0 +1,294 @@
+backbone
+atom protoms N  whatif N    amber N
+atom protoms CA whatif CA   amber CA
+atom protoms C  whatif C    amber C  
+atom protoms O  whatif O    amber O  
+atom protoms OT whatif O''  amber OXT maestro OXT
+atom protoms HN whatif H    amber H reduce H maestro H
+atom protoms HA1 whatif 2HA amber 2HA reduce 1HA
+atom protoms HN1 whatif H1  amber H1 maestro H1
+atom protoms HN2 whatif H2  amber H2 maestro H2
+atom protoms HN3 whatif H3  amber H3 maestro H3
+atom protoms HA  amber HA
+atom protoms HB  amber HB
+
+residue GLY
+atom protoms HA2 whatif 3HA amber 3HA reduce 2HA
+atom protoms HA1 amber 2HA 
+
+residue VAL
+atom protoms CB whatif CB    amber CB
+atom protoms CG1 whatif CG1  amber CG1
+atom protoms CG2 whatif CG2  amber CG2
+atom protoms HB  whatif HB   amber HB
+atom protoms HG1 whatif 1HG1 amber 1HG1 reduce 1HG1
+atom protoms HG2 whatif 2HG1 amber 2HG1 reduce 2HG1
+atom protoms HG3 whatif 3HG1 amber 3HG1 reduce 3HG1
+atom protoms HG4 whatif 1HG2 amber 1HG2 reduce 1HG2
+atom protoms HG5 whatif 2HG2 amber 2HG2 reduce 2HG2
+atom protoms HG6 whatif 3HG2 amber 3HG2 reduce 3HG2
+
+residue GLU
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms   CD  whatif CD  amber CD
+atom protoms  OE1  whatif OE1 amber OE1
+atom protoms  OE2  whatif OE2 amber OE2
+atom protoms  HB1  whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB amber 3HB reduce 2HB
+atom protoms  HG1  whatif 2HG amber 2HG reduce 1HG
+atom protoms  HG2  whatif 3HG amber 3HG reduce 2HG
+
+residue ASN
+atom protoms   CB whatif CB   amber CB
+atom protoms   CG whatif CG   amber CG
+atom protoms  ND2 whatif ND2  amber ND2
+atom protoms  HD1 whatif 1HD2 amber 1HD2 reduce 1HD2 maestro HD21
+atom protoms  HD2 whatif 2HD2 amber 2HD2 reduce 2HD2 maestro HD22
+atom protoms  OD1 whatif OD1  amber OD1 
+atom protoms  HB1 whatif 2HB  amber 2HB reduce 1HB
+atom protoms  HB2 whatif 3HB  amber 3HB reduce 2HB
+
+residue TRP
+atom protoms   CB whatif CB  amber CB
+atom protoms   CG whatif CG  amber CG
+atom protoms  CD1 whatif CD1 amber CD1
+atom protoms  NE1 whatif NE1 amber NE1
+atom protoms  HD1 whatif HD1 amber HD1
+atom protoms  CE2 whatif CE2 amber CE2
+atom protoms  HNE whatif HE1 reduce HE1 amber HE1 maestro HE1
+atom protoms  CZ2 whatif CZ2 amber CZ2
+atom protoms  CH2 whatif CH2 amber CH2
+atom protoms  HZ2 whatif HZ2 amber HZ2
+atom protoms  CZ3 whatif CZ3 amber CZ3
+atom protoms  HH2 whatif HH2 amber HH2
+atom protoms  CE3 whatif CE3 amber CE3
+atom protoms  HZ3 whatif HZ3 amber HZ3
+atom protoms  CD2 whatif CD2 amber CD2
+atom protoms  HE3 whatif HE3 amber HE3
+atom protoms  HB1 whatif HB2 reduce 1HB amber 2HB
+atom protoms  HB2 whatif HB3 reduce 2HB amber 3HB
+
+residue SER
+atom protoms   CB whatif CB  amber CB
+atom protoms   OG whatif OH  amber OG
+atom protoms   HG whatif HG  amber HG
+atom protoms  HB1 whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2 whatif 3HB amber 3HB reduce 2HB
+
+residue LYS
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms   CD  whatif CD  amber CD
+atom protoms   CE  whatif CE  amber CE
+atom protoms   NZ  whatif NZ  amber NZ
+atom protoms  HZ1  whatif HZ1 amber 1HZ reduce 1HZ maestro HZ1
+atom protoms  HZ2  whatif HZ2 amber 2HZ reduce 2HZ maestro HZ2
+atom protoms  HZ3  whatif HZ3 amber 3HZ reduce 3HZ maestro HZ3
+atom protoms  HB1  whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB amber 3HB reduce 2HB
+atom protoms  HG1  whatif 2HG amber 2HG reduce 1HG
+atom protoms  HG2  whatif 3HG amber 3HG reduce 2HG
+atom protoms  HD1  whatif 2HD amber 2HD reduce 1HD
+atom protoms  HD2  whatif 3HD amber 3HD reduce 2HD
+atom protoms  HE1  whatif 2HE amber 2HE reduce 1HE
+atom protoms  HE2  whatif 3HE amber 3HE reduce 2HE
+
+residue PRO
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms   CD  whatif CD  amber CD
+atom protoms  HB1  whatif 2HB reduce 1HB amber 2HB
+atom protoms  HB2  whatif 3HB reduce 2HB amber 3HB
+atom protoms  HG1  whatif 2HG reduce 1HG amber 2HG
+atom protoms  HG2  whatif 3HG reduce 2HG amber 3HG
+atom protoms  HD1  whatif 2HD reduce 1HD amber 2HD
+atom protoms  HD2  whatif 3HD reduce 2HD amber 3HD
+
+residue GLN
+atom protoms   CB whatif CB   amber CB
+atom protoms   CG whatif CG   amber CG
+atom protoms   CD whatif CD   amber CD
+atom protoms  NE2 whatif NE2  amber NE2
+atom protoms  HE1 whatif 1HE2 amber 1HE2 reduce 1HE2 maestro HE21
+atom protoms  HE2 whatif 2HE2 amber 2HE2 reduce 2HE2 maestro HE22
+atom protoms  OE1 whatif OE1  amber OE1
+atom protoms  HB1 whatif 2HB  amber 2HB reduce 1HB
+atom protoms  HB2 whatif 3HB  amber 3HB reduce 2HB
+atom protoms  HG1 whatif 2HG  amber 2HG reduce 1HG
+atom protoms  HG2 whatif 3HG  amber 3HG reduce 2HG
+
+residue CYS
+atom protoms   CB whatif CB  amber CB
+atom protoms   SG whatif SG  amber SG
+atom protoms   HG whatif HG  amber HG
+atom protoms  HB1 whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2 whatif 3HB amber 3HB reduce 2HB
+
+residue CYX
+atom protoms   CB whatif CB  amber CB
+atom protoms   SG whatif SG  amber SG
+atom protoms   HG whatif HG  amber HG
+atom protoms  HB1 whatif 2HB amber 2HB
+atom protoms  HB2 whatif 3HB amber 3HB
+
+residue ILE
+atom protoms   CB whatif CB   amber CB
+atom protoms  CG1 whatif CG2  amber CG1
+atom protoms  CG2 whatif CG1  amber CG2
+atom protoms  CD1 whatif CD1  amber CD1
+atom protoms   HB whatif HB   amber HB
+atom protoms  HG1 whatif 1HG2 reduce 1HG2  amber 1HG2 
+atom protoms  HG2 whatif 2HG2 reduce 2HG2  amber 2HG2
+atom protoms  HG3 whatif 3HG2 reduce 3HG2  amber 3HG2
+atom protoms  HG4 whatif 2HG1 reduce 1HG1  amber 2HG1
+atom protoms  HG5 whatif 3HG1 reduce 2HG1  amber 3HG1
+atom protoms  HD1 whatif 1HD1 reduce 1HD1  amber 1HD1
+atom protoms  HD2 whatif 2HD1 reduce 2HD1  amber 2HD1
+atom protoms  HD3 whatif 3HD1 reduce 3HD1  amber 3HD1
+
+residue THR
+atom protoms   CB whatif CB  amber CB
+atom protoms  OG1 whatif OG1 amber OG1
+atom protoms   HG whatif HG1 reduce HG1 amber 1HG maestro HG1
+atom protoms  CG2 whatif CG2 amber CG2
+atom protoms   HB whatif HB  amber HB
+atom protoms  HG1 whatif 1HG2 reduce 1HG2 amber 1HG2
+atom protoms  HG2 whatif 2HG2 reduce 2HG2 amber 2HG2
+atom protoms  HG3 whatif 3HG2 reduce 3HG2 amber 3HG2
+
+residue PHE
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms  CD1  whatif CD1 amber CD1
+atom protoms  CE1  whatif CE1 amber CE1
+atom protoms  HD1  whatif HD1 amber HD1
+atom protoms   CZ  whatif CZ  amber CZ
+atom protoms  HE1  whatif HE1 amber HE1
+atom protoms  CE2  whatif CE2 amber CE2
+atom protoms   HZ  whatif HZ  amber HZ
+atom protoms  CD2  whatif CD2 amber CD2
+atom protoms  HE2  whatif HE2 amber HE2
+atom protoms  HD2  whatif HD2 amber HD2
+atom protoms  HB1  whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB amber 3HB reduce 2HB
+
+residue ALA
+atom protoms   CB whatif CB  amber CB
+atom protoms  HB1 whatif 1HB amber 1HB reduce 1HB
+atom protoms  HB2 whatif 2HB amber 2HB reduce 2HB
+atom protoms  HB3 whatif 3HB amber 3HB reduce 3HB
+
+residue ASP
+atom protoms   CB whatif CB  amber CB
+atom protoms   CG whatif CG  amber CG
+atom protoms  OD1 whatif OD1 amber OD1
+atom protoms  OD2 whatif OD2 amber OD2
+atom protoms  HB1 whatif 2HB reduce 1HB amber 2HB
+atom protoms  HB2 whatif 3HB reduce 2HB amber 3HB
+
+residue LEU
+atom protoms   CB  whatif CB   amber CB
+atom protoms   CG  whatif CG   amber CG
+atom protoms  CD1  whatif CD1  amber CD1
+atom protoms  CD2  whatif CD2  amber CD2
+atom protoms  HB1  whatif 2HB  amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB  amber 3HB reduce 2HB
+atom protoms   HG  whatif HG   amber HG
+atom protoms  HD1  whatif 1HD1 amber 1HD1 reduce 1HD1
+atom protoms  HD2  whatif 2HD1 amber 2HD1 reduce 2HD1
+atom protoms  HD3  whatif 3HD1 amber 3HD1 reduce 3HD1
+atom protoms  HD4  whatif 1HD2 amber 1HD2 reduce 1HD2
+atom protoms  HD5  whatif 2HD2 amber 2HD2 reduce 2HD2
+atom protoms  HD6  whatif 3HD2 amber 3HD2 reduce 3HD2
+
+residue HIP
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms  ND1  whatif ND1 amber ND1
+atom protoms  CE1  whatif CE1 amber CE1
+atom protoms  HND  whatif HD1 amber HD1 reduce HD1 maestro HD1
+atom protoms  NE2  whatif NE2 amber NE2
+atom protoms  HNE  whatif HE2 amber HE2 reduce HE2 maestro HE2
+atom protoms   HE  whatif HE1 amber HE1 reduce HE1
+atom protoms  CD2  whatif CD2 amber CD2
+atom protoms   HD  whatif HD2 amber HD2 reduce HD2
+atom protoms  HB1  whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB amber 3HB reduce 2HB
+
+residue HIS
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms  ND1  whatif ND1 amber ND1
+atom protoms  CE1  whatif CE1 amber CE1
+atom protoms  HND  whatif HD1 amber HD1 reduce HD1 maestro HD1
+atom protoms  NE2  whatif NE2 amber NE2
+atom protoms   HE  whatif HE1 amber HE1 reduce HE1 maestro HE1
+atom protoms  CD2  whatif CD2 amber CD2
+atom protoms   HD  whatif HD2 amber HD2 reduce HD2
+atom protoms  HB1  whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB amber 3HB reduce 2HB
+
+residue HIE
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms  ND1  whatif ND1 amber ND1
+atom protoms  CE1  whatif CE1 amber CE1
+atom protoms  HND  whatif HD1 amber HD1 reduce HD1
+atom protoms  NE2  whatif NE2 amber NE2
+atom protoms   HE  whatif HE1 amber HE1 reduce HE1
+atom protoms  CD2  whatif CD2 amber CD2
+atom protoms   HD  whatif HD2 amber HD2 reduce HD2
+atom protoms  HNE  whatif HE2 amber HE2 reduce HE2
+atom protoms  HB1  whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB amber 3HB reduce 2HB
+
+residue MET
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms   SD  whatif SD  amber SD
+atom protoms   CE  whatif CE  amber CE
+atom protoms  HB1  whatif 2HB reduce 1HB amber 2HB
+atom protoms  HB2  whatif 3HB reduce 2HB amber 3HB
+atom protoms  HG1  whatif 2HG reduce 1HG amber 2HG
+atom protoms  HG2  whatif 3HG reduce 2HG amber 3HG
+atom protoms  HE1  whatif 1HE reduce 1HE amber 1HE
+atom protoms  HE2  whatif 2HE reduce 2HE amber 2HE
+atom protoms  HE3  whatif 3HE reduce 3HE amber 3HE
+
+residue TYR
+atom protoms   CB  whatif CB  amber CB
+atom protoms   CG  whatif CG  amber CG
+atom protoms  CD1  whatif CD1 amber CD1
+atom protoms  CE1  whatif CE1 amber CE1
+atom protoms  HD1  whatif HD1 amber HD1
+atom protoms   CZ  whatif CZ  amber CZ
+atom protoms  HE1  whatif HE1 amber HE1
+atom protoms  CE2  whatif CE2 amber CE2
+atom protoms   OH  whatif OH  amber OH
+atom protoms   HH  whatif HH  amber HH
+atom protoms  CD2  whatif CD2 amber CD2
+atom protoms  HE2  whatif HE2 amber HE2
+atom protoms  HD2  whatif HD2 amber HD2
+atom protoms  HB1  whatif 2HB amber 2HB reduce 1HB
+atom protoms  HB2  whatif 3HB amber 3HB reduce 2HB
+
+residue ARG
+atom protoms   CB amber CB
+atom protoms   CG amber CG
+atom protoms   CD amber CD
+atom protoms   NE amber NE
+atom protoms   CZ amber CZ
+atom protoms   HE amber HE
+atom protoms  NH1 amber NH1
+atom protoms  H11 amber 1HH1 reduce 1HH1 maestro HH11
+atom protoms  H12 amber 2HH1 reduce 2HH1 maestro HH12
+atom protoms  NH2 amber NH2
+atom protoms  H21 amber 1HH2 reduce 1HH2 maestro HH21
+atom protoms  H22 amber 2HH2 reduce 2HH2 maestro HH22
+atom protoms  HB1 amber 2HB  reduce 1HB
+atom protoms  HB2 amber 3HB  reduce 2HB
+atom protoms  HG1 amber 2HG  reduce 1HG
+atom protoms  HG2 amber 3HG  reduce 2HG
+atom protoms  HD1 amber 2HD  reduce 1HD
+atom protoms  HD2 amber 3HD  reduce 2HD

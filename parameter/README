@@ -1,0 +1,13 @@
+This directory contains all of the forcefields and templates that are supplied with ProtoMS.
+
+opls96.ff           : The OPLS all-atom forcefield as published in 1996
+opls96-residues.ff  : The protein residue templates that go with opls96.ff
+
+solvents.ff         : Solvent templates and parameters for a wide range of solvent models (including ions)
+
+amber99.ff          : The amber parm99 force field
+amber99-residues.ff : The protein residue templates for amber99.ff
+gold-residues.ff    : Protein residue templates for GOLD-like flexibility of the protein 
+                      (e.g, polar hydrogens can rotate)
+gaff.ff             : The General Amber Force Field 
+

@@ -1,0 +1,18 @@
+mode template
+grand WAT
+info translate 0.15 rotate 15
+atom   O00  8003 8003  
+atom   H01  8004 8004  
+atom   H02  8004 8004  
+atom   M03  8005 8005 
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1)
+par  8003   OW    8    0.000      3.15363    0.1550
+par  8004   HW    1    0.520      0.0        0.0
+par  8005   ??    0   -1.040      0.0        0.0 
+
+
+
+
+
+

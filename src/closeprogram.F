@@ -1,0 +1,29 @@
+      subroutine closeProgram(stat,str)
+      implicit none
+      include 'printer.inc'
+      include 'mpif.h'
+c#######################################################
+c
+c     This closes the program because of an error
+c     May eventually drop different error codes to
+c     signify different behaviour...
+c
+c     (C) Christopher Woods    30 January 2002
+c
+c#######################################################
+
+      character*(*) str
+      integer stat,ierr
+      
+      call printLine(FATAL,str)
+      write(printstring,*) "Program exiting with status ",stat      
+      call printLine(FATAL,printstring)
+            
+c     try to print out results and restart information
+      call shutdown()
+      call flush(FATAL)
+
+      call MPI_FINALIZE(ierr)
+      call exit(stat)
+      
+      end
