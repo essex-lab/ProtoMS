@@ -25,9 +25,23 @@ import numpy as np
 import simulationobjects
 
 
-def assignMoveProbabilities(protein,solute,solvent,isgcmc,isperiodic) :
-  """ Assigns move probabilities for protein, solute, solvent and box
-      Does this by some "heuristic" rule
+def _assignMoveProbabilities(protein,solute,solvent,isgcmc,isperiodic) :
+  """ 
+  Assigns move probabilities for protein, solute, solvent and box
+  Does this by some "heuristic" rule
+  
+  Parameters
+  ----------
+  protein : string
+    the filename of the protein pdb file
+  solute : list of strings
+    the filenames of the solute pdb file
+  solvent : string
+    the filename of the solvent pdb file
+  isgcmc : boolean
+    flag indicating if GCMC is being prepared
+  isperiodic : boolean
+    flag indicating if a periodic simulation is prepared
   """
   pvolume = 0.0
   numprot = 0.0
@@ -70,39 +84,24 @@ def assignMoveProbabilities(protein,solute,solvent,isgcmc,isperiodic) :
     pprotein = int(round(addto*numprot/numtot/2))
     return "solvent=%d protein=%d solute=%d insertion=%d deletion=%d gcsolute=%d"%(psolvent,pprotein,psolute,pinsert,pdelete,pgcsolu)
 
-def assignMoveProbabilities_old(hasprotein,hassolute,hassolvent,isperiodic) :
-  """ Assigns move probabilities for protein, solute, solvent and box
-      Does this by some "heuristic" rule
-  """
-  psolute = 0
-  psolvent = 0
-  pprotein = 0
-  pvolume = 0
-  if hassolvent :
-    if hasprotein :
-      psolvent= 857
-    else  :
-      psolvent = 990
-    if isperiodic : 
-      pvolume = 1
-  if hasprotein :
-    pprotein = 128
-  if hassolute :
-    if hasprotein :
-      psolute = 14
-    else :
-      psolute = 9
-  return "solvent=%d protein=%d solute=%d volume=%d"%(psolvent,pprotein,psolute,pvolume)
-
 class ProtoMSSimulation :
-    """This is a ProtoMS command file object.This object holds all of the information
-       about the simulation and can either run the simulation with this
-       information, or can write this information to a command file.
+    """
+    This is a ProtoMS command file object.This object holds all of the information
+    about the simulation and can either run the simulation with this
+    information, or can write this information to a command file.
        
-    Attributes:
-        lines -- all the lines of the ProtoMS command file    
+    Attributes
+    ----------
+    lines : 
+        list of strings all the lines of the ProtoMS command file    
     """
     def __init__(self,filename=None):
+        """
+         Parameters
+        ----------
+        filename : string, optional
+            the filename of the command file to read from disc
+        """
         self._lines = []
         if (not filename is None):
             self.readCommandFile(filename)        
@@ -112,14 +111,20 @@ class ProtoMSSimulation :
     def _setkey(self,key,value):
       self._lines.append("%s %s"%(key,value))        
     def clear(self):
-        """Clear the simulation description"""    
+        """
+        Clear the simulation description
+        """    
         self._lines = []
     def readCommandFile(self,filename):
-        """Read in a simulation from a command file"""
-        lines = open(filename,"r").readlines()
-     
-        # Attempts to read PROTOMSHOME environmental variable
-        pmhome = os.getenv("PROTOMSHOME")       
+        """
+        Read in a simulation from a command file
+        
+        Parameters
+        ----------
+        filename : string
+            the filename of the command file to read from disc
+        """
+        lines = open(filename,"r").readlines()  
  
         for line in lines:
             #split the line into words
@@ -129,50 +134,145 @@ class ProtoMSSimulation :
             if (words[0].find("#") == 0): continue
 
             arguments = ' '.join(words[1:])
-            if pmhome != None :
-              arguments = arguments.replace("$PROTOMSHOME",pmhome)
             self._setkey(words[0],arguments)
     def setStream(self,stream,filename):
-        """Set the direction of the output stream to a filename"""
+        """
+        Set the direction of the output stream to a filename
+        
+        Parameters
+        ----------
+        stream : string
+          the name of the stream
+        filename : string
+          the filename to direct the stream to
+        """
         key = "stream%s" % stream.lower()
         self._setkey(key,filename)
     def setParameter(self,parameter,value):
-        """Set the parameter to value"""
+        """
+        Set the parameter to value
+        
+        Parameters
+        ----------
+        parameter : string
+          the name of the parameter
+        value : string
+          the value of the parameter
+        """
         self._setkey(parameter.lower(),value)
     def setChunk(self,chunk):
-        """This adds the simulation chunk to 'chunk'. """
+        """
+        This adds the simulation chunk to 'chunk'.
+        
+        Parameters
+        ----------
+        chunk : string
+          the chunk to be executed, including parameters
+        """
         self._setkey("chunk",chunk)
     def setDump(self,dump,freq):
-        """This adds the simulation dump to 'dump' with frequnecy freq"""
+        """
+        This adds the simulation dump to 'dump' with frequnecy freq
+        
+        Parameters
+        ----------
+        dump : string
+          the dump to be executed, including parameters
+        freq : int
+          the dump frequency
+        """
         self._setkey("dump","%d %s"%(freq,dump))
     def setProtein(self,n,filename):
-        """Set the filename for proteinN. It then returns n+1"""
+        """
+        Set the filename for proteinN. It then returns n+1
+        
+        Parameters
+        ----------
+        n : int
+          the protein serial number
+        filename : string
+          the filename of the protein pdb file
+          
+        Returns
+        -------
+        int
+            n + 1
+        """
         key = "protein%d" % n
         self._setkey(key,filename)
         return n+1      
     def setSolute(self,n,filename):
-        """Set the filename for soluteN. It then returns n+1"""
+        """
+        Set the filename for soluteN. It then returns n+1
+                
+        Parameters
+        ----------
+        n : int
+          the solute serial number
+        filename : string
+          the filename of the solute pdb file
+        
+        Returns
+        -------
+        int
+            n + 1
+        """
         key = "solute%d" % n
         self._setkey(key,filename)
         return n+1
     def setSolvent(self,n,filename):
-        """Set the filename for solventN. It then returns n+1"""
+        """
+        Set the filename for solventN. It then returns n+1
+                
+        Parameters
+        ----------
+        n : int
+          the solvent serial number
+        filename : string
+          the filename of the solvent pdb file
+        
+        Returns
+        -------
+        int
+            n + 1
+        """
         key = "solvent%d" % n
         self._setkey(key,filename)
         return n+1
     def setForceField(self,filename):
-        """Set the filename for parfile"""
+        """
+        Set the filename for parfile
+        
+        Parameters
+        ----------
+        filename : string
+          the filename of the force field file
+        """
         self._setkey("parfile",filename)
     def writeCommandFile(self,filename):
-        """Write the contents of this simulation object to the
-           command file 'filename'"""
+        """
+        Write the contents of this simulation object to disc
+        
+        Parameters
+        ----------
+        filename : string
+          the filename to write the commands to
+        """
         f = open(filename,"w")
         for line in self._lines:
             f.write("%s\n" % line)            
         f.close()
     def run(self,exe,cmdfile=None):
-        """Run this simulation using the executable 'exe' - returns the exit status
-           of the run"""
+        """
+        Run this simulation
+        
+        Parameters
+        ----------
+        exe : string
+          the filename of the executable
+        cmdfile : string, optional
+          the filename of the command file
+        """
         if (cmdfile is None):
             #save commands as environmental variables
             for line in self._lines:
@@ -187,14 +287,27 @@ class ProtoMSSimulation :
         return exitval
 
 class ProteinLigandSimulation(ProtoMSSimulation) :
-  """ This a generic command file for a protein-ligand simulation
-      Generates input for proteins, solutes and solvent
-      but does not write any chunks
+  """ 
+  This a generic command file for a protein-ligand simulation
+  Generates input for proteins, solutes and solvent but does not write any chunks
   """
   def __init__(self,protein="protein.pdb",
                     solutes=["solute.pdb"],
                     solvent="water.pdb",
                     templates=["solute.tem"]) :
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    """
+    
     ProtoMSSimulation.__init__(self)
     self.setForceField("$PROTOMSHOME/parameter/amber99.ff")
     self.setForceField("$PROTOMSHOME/parameter/solvents.ff")
@@ -230,9 +343,9 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
         self.setParameter("pressure","1")
 
 class Equilibration(ProteinLigandSimulation) :
-  """ This a command file for equilibration of a protein-ligand system
-      Generates input for proteins, solutes and solvent
-      and write an equilibration and a pdb chunk
+  """ 
+  This a command file for equilibration of a protein-ligand system
+  Generates input for proteins, solutes and solvent and write an equilibration and a pdb chunk
   """
   def __init__(self,protein="protein.pdb",
                     solutes=["solute.pdb"],
@@ -240,18 +353,34 @@ class Equilibration(ProteinLigandSimulation) :
                     templates=["solute.tem"],
                     nsteps=1E5,
                     pdbfile="equilibrated.pdb") :
-                    
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    nsteps : int, optional
+      number of equilibration moves
+    pdbfile  : string, optional
+      name of the filename to save the equilibrated system to
+    """                
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
 
     #moves = assignMoveProbabilities(protein is not None,solutes,solvent is not None,self.periodic)
-    moves = assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
     self.setChunk("equilibrate %d %s"%(nsteps,moves))
     self.setChunk("pdb all solvent=all file=%s standard"%pdbfile)
 
 class Sampling(ProteinLigandSimulation) :
-  """ This a command file for MC sampling of a protein-ligand system
-      Generates input for proteins, solutes and solvent
-      and write an equilibration and a simulate
+  """ 
+  This a command file for MC sampling of a protein-ligand system
+  Generates input for proteins, solutes and solvent and write 
+  chunks for equilibration and simulation, as well as dumps
   """
   def __init__(self,protein="protein.pdb",
                     solutes=["solute.pdb"],
@@ -261,7 +390,26 @@ class Sampling(ProteinLigandSimulation) :
                     nprod=40E6,
                     dumpfreq=1E5,
                     outprefix="") :
-                    
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    nequil : int, optional
+      number of equilibration moves
+    nprod : int, optional
+      number of production moves
+    dumfreq : int, optional
+      the dump frequency 
+    outprefix  : string, optional
+      the prefix for all output files
+    """                 
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
 
     self.setDump("results write %sresults"%outprefix,dumpfreq)
@@ -269,16 +417,17 @@ class Sampling(ProteinLigandSimulation) :
     self.setDump("restart write %srestart"%outprefix,dumpfreq)
     self.setDump("averages reset",dumpfreq)
     
-    moves = assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
 class DualTopology(ProteinLigandSimulation) :
-  """ This a command file for a dual-topology protein-ligand simulation
-      Generates input for proteins, solutes and solvent
-      write dual-toplogy parameters, lambda-replica exchange,
-      dump results, pdb and restart files
-      equilibrate and production run
+  """ 
+  This a command file for a dual-topology protein-ligand simulation
+  Generates input for proteins, solutes and solvent
+  write dual-toplogy parameters, lambda-replica exchange,
+  dump results, pdb and restart files
+  equilibrate and production run
   """
   def __init__(self,protein="protein.pdb",
                     solutes=["solute1.pdb","solute2.pdb"],
@@ -289,7 +438,33 @@ class DualTopology(ProteinLigandSimulation) :
                     dumpfreq=1E5,
                     lambdaval=None,
                     outfolder="out") :  
-                    
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    nequil : int, optional
+      number of equilibration moves
+    nprod : int, optional
+      number of production moves
+    dumfreq : int, optional
+      the dump frequency 
+    lambdaval : float or list of floats
+      the lambda values to perform the simulation at
+    outfolder  : string, optional
+      the folder for all output files
+    
+    Raises
+    ------
+    SetupError
+      less than two solutes given or no lambda values given
+    """                
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
 
     if len(solutes) < 2 :
@@ -313,12 +488,40 @@ class DualTopology(ProteinLigandSimulation) :
     self.setDump("restart write restart",dumpfreq)
     self.setDump("averages reset",dumpfreq)
     
-    moves = assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
 def generate_input(protein,ligands,templates,protein_water,ligand_water,settings) :
 
+  """
+  Generates ProtoMS command files
+  
+  If protein is a valid filename a protein(-ligand) simulation is setup, and if
+  ligands contains at least one valid filename a ligand simulation is setup. 
+  
+  Parameters
+  ----------
+  protein : string
+    the filename of a protein pdb file
+  ligands : list of strings
+    filenames of solute pdb files
+  templates : list of strings
+    filenames of template files to be included
+  protein_water : string
+    the filename of a solvent pdb file for the protein
+  ligand_water : string
+    the filename of a solvent pdb file for the ligands
+  settings : Namespace object (from argparse)
+    additional settings
+
+  Returns
+  -------
+  free_cmd : ProtoMSSimulation
+    the command file for the ligand simulation
+  bnd_cmd : ProtoMSSimulation
+    the command file for the protein simulation
+  """
   free_cmd = bnd_cmd = False
   
   if settings.simulation == "equilibration" :

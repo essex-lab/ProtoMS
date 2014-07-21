@@ -33,6 +33,11 @@ def _run_program ( name, command ):
     	the name of the program to run
     command : string
     	the command to execute it
+    	
+    Raises
+    ------
+    SetupError
+    	if the program failed to execute properly
     """
 
     # Create temporary file to write stdout, stderr of the program

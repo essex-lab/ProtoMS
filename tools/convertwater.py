@@ -18,20 +18,24 @@ import simulationobjects
 
 
 def _translatetemplate(solvents,watresname,wattemplate,watatomnames):
-  """ Translates an ideal water model geometry, such as tip4p, to match the location of the water molecules in a residue object. Original hydrogen positions are over-written.
-    
-  TranslateTemplate (solvents, warresname, wattemplate)
+  """ 
+  Translates an ideal water model geometry, such as tip4p, to match the location of the water molecules in a residue object. Original hydrogen positions are over-written.
 
   Parameters
   ----------        
-  solvents - the residue object that contains the water oxygen positions
-  watresname - the name of the water model that will be used
-  wattemplate - the 3D location of the atoms (i.e. the geometry) of the ideal water model
-  watatomnames - the atom names of the water model as they will appear in the PDB file
+  solvents : dictionary of Residue objects 
+  	  the residue object that contains the water oxygen positions
+  watresname : string 
+      the name of the water model that will be used
+  wattemplate : numpy array
+      the 3D location of the atoms (i.e. the geometry) of the ideal water model
+  watatomnames : list of strings 
+      the atom names of the water model as they will appear in the PDB file
 
   Returns
   -------
-  a set of water molecules that have the 3D structure of an ideal water geometry
+  dictionary of Residue objects
+      a set of water molecules that have the 3D structure of an ideal water geometry
   """
   new_solvents = {}
   for sol in solvents:
@@ -42,23 +46,28 @@ def _translatetemplate(solvents,watresname,wattemplate,watatomnames):
       for ind in range(len(watatomnames)):
           newatom = simulationobjects.Atom(index=ind,name=watatomnames[ind],resindex=sol,resname=watresname,coords=wat_new[ind])
           new_solvents[sol].addAtom(atom=newatom)
-  return(new_solvents)
+  return (new_solvents)
 
 
 def convertwater(pdb_in,watermodel):
-  """ Converts water in a pdb object to ideal water geometries of an input model
+  """ 
+  Converts water in a pdb object to ideal water geometries of an input model
+  
+  The protein object is not modified by this routine, but the Residue and Atom objects are.  
     
-  convertwater (pdb_in, watermodel)
-
   Parameters
   ----------        
-  pdb_in - the PDB object containing the water molecules that will be converted
-  watermodel - the name of the water model that will be used in the transformtation, e.g. tip4p, t3p.
+  pdb_in : PDBFile 
+      the PDB object containing the water molecules that will be converted
+  watermodel : string 
+      the name of the water model that will be used in the transformtation, e.g. tip4p, t3p.
+  
   Returns
   -------
-  a pdb object whose solvent elements have the geometry of the desired solvent model
+  PDBFile
+      a pdb file whose solvent elements have the geometry of the desired solvent model
   """
-  pdb_out = pdb_in
+  pdb_out = pdb_in.copy()
   solvents = pdb_in.solvents
   # Ideal water geometries:
   t4p_model = np.array([[-6.444, -5.581, -1.154],[-7.257, -5.869, -0.739],[-6.515, -4.627, -1.183],[-6.557, -5.495, -1.105]]) 
@@ -72,8 +81,6 @@ def convertwater(pdb_in,watermodel):
   else:
       print "Error in convertwater.py: water model name not recognised. Please check spelling matches known list or add new water model to function." 
   return pdb_out
-
-
 
 if __name__ == "__main__":
 

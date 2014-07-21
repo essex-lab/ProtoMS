@@ -21,34 +21,25 @@ from scipy.spatial.distance import cdist
 
 import simulationobjects
 
-def solvate(box, ligand=None, protein=None,
-            out="solvent_box.pdb", geometry="box",
-            padding=10.0, radius=30.0, center="cent",
-            namescheme="ProtoMS", log="solvate.log"):
+def solvate(box, ligand=None, protein=None, out="solvent_box.pdb", geometry="box",
+            padding=10.0, radius=30.0, center="cent", namescheme="ProtoMS"):
 
-  """Function to solvate ligand and/or protein structures using a
-     pre-equilibrated box of waters.
-
-     solvate(box, ligand=None, protein=None,
-               out="solvent_box.pdb", geometry="box",
-               padding=10.0, radius=30.0, center="cent",
-               namescheme="ProtoMS", log="solvate.log")
+  """
+  Function to solvate ligand and/or protein structures using a pre-equilibrated box of waters.
 
   Parameters
   ----------
   box : String
       String giving the name of a pdb file containing a box of pre-
       equilibrated water molecules for solvation
-  ligand : simulationobjects.PDBFile or string, optional
+  ligand : PDBFile or string, optional
       Either pdb instance for ligand to be solvated, or string giving
       the name of a pdb file of the ligand. NOTE - either ligand or protein
       or both must be supplied
-  protein : simulationobjects.PDBFile or string, optional
+  protein : PDBFile or string, optional
       Either pdb instance for protein to be solvated, or string giving
       the name of a pdb file of the protein. NOTE - either ligand or protein
       or both must be supplied
-  out : string, optional
-      File name to write solvent box. Default of "solvent_box.pdb"
   geometry : string, optional
       Shape of solvent box, options "box", "droplet", "flood". Default box.
       Droplet defines a sphere of radius 'radius' around center 'center'.
@@ -65,16 +56,20 @@ def solvate(box, ligand=None, protein=None,
       Cent defines the center based on all solute atom coordinates
       One number defines coordinates for the center as identical x,y,z
       Two numbers defines coordinates for the center over an atom range
-      Three numbers difines coordinates for the center as separate x,y,z
+      Three numbers defines coordinates for the center as separate x,y,z
   namescheme : string, optional
       Naming scheme for printout, options "ProtoMS", "Amber". Default ProtoMS
-  log : string, optional
-      Logfile for output, default solvate.log
 
   Returns
   -------
-  None, but writes out a pdb file of the added solvent box,
-  including any crystallographic waters in the protein """
+  PDBFile
+    the created box of waters, including crystallographic water
+    
+  Raises
+  ------
+  SetupError
+    neither protein nor ligand was given, or x-ray waters is not same format as pre-equilibrated box
+  """
 
   #
   # Lennard-Jones parameters of GAFF atom-types from gaff14.types
@@ -107,16 +102,19 @@ def solvate(box, ligand=None, protein=None,
   # -----------------
   #
 
-
   def element(atm) :
-    """ Extract the element from a pdb-type atom name
+    """ 
+    Extract the element from a pdb-type atom name
+    
     Parameters
     ----------
-       atm - the atom name
+    atm : string 
+      the atom name
 
     Returns
     -------
-       the element
+    string
+      the element
     """
     atm = atm.strip()
     atm = atm.lower()
@@ -129,15 +127,19 @@ def solvate(box, ligand=None, protein=None,
 
 
   def read_solute(sol_pdb,solute) :
-    """ Read a solute pdb-file
+    """ 
+    Read a solute pdb-file
+    
     Parameters
     ----------
-     sol_pdb - A simulationobjects pdb object of the solute
-      solute  - a dictionary of read solute data
+    sol_pdb : PDBFile
+      a pdb object of the solute
+    solute  : dictionary of lists 
+      read solute data
 
     Returns
     -------
-     none, but
+    None
        solute["atoms"] contains the element of all atoms
        solute["xyz"] contains all the coordinates (Nx3 NumPy array)
    """
@@ -147,16 +149,21 @@ def solvate(box, ligand=None, protein=None,
         solute["xyz"].append(sol_pdb.residues[i].atoms[j].coords)
 
   def read_protein(prot_pdb,solute,solvent) :
-    """ Read a protein + xtal waters pdb-file
+    """ 
+    Read a protein + xtal waters pdb-file
+    
     Parameters
     ----------
-     prot_pdb - a simulationobjects pdb object of the protein + xtal waters
-      solute  - a dictionary of read solute data
-      solvent  - a dictionary of xtal water data
+    prot_pdb : PDBFile
+      an object of the protein + xtal waters
+    solute  : dictionary of lists 
+      read solute data
+    solvent : dictionary of lists
+      read xtal water data
 
     Returns
     -------
-     none, but
+     None
        solute["atoms"] contains the element of all atoms
        solute["xyz"] contains all the coordinates including xtal waters (Nx3 NumPy array)
        solvent["xyz"] contains all the coordinates of just the waters (Nx3 NumPy array)
@@ -173,20 +180,23 @@ def solvate(box, ligand=None, protein=None,
         solute["atoms"].append(element(prot_pdb.solvents[i].atoms[j].name))
         solute["xyz"].append(prot_pdb.solvents[i].atoms[j].coords)
         xyz.append(prot_pdb.solvents[i].atoms[j].coords)
-      logfile.write("Recognised residue %s in protein as a crystallographic water - this is being retained\n" % prot_pdb.solvents[i].index)
       xyz = np.array(xyz)
       solvent["xyz"].append(xyz)
 
   def read_watbox(filename,watbox) :
-    """ Read a pdb-file and extract water coordinates
+    """ 
+    Read a pdb-file and extract water coordinates
+    
     Parameters
     ----------
-     filename - the name of the file to read
-     watbox   - a dictionary of read water data
+    filename : string 
+      the name of the file to read
+    watbox : dictionary of lists
+      read water data
 
     Returns
     -------
-     none, but
+    None
        watbox["xyz"] contains all the coordinates (array of NumPy arrays)
        watbox["min"] is the origin of water box
        watbox["len"] is the length of the water box
@@ -216,16 +226,22 @@ def solvate(box, ligand=None, protein=None,
   #----------------------------------------------------------------
 
   def vdw_energy(element,atomxyz,oxyz) :
-    """ Calculate the van der Waals energy between a water oxygen atom and a given atom
+    """ 
+    Calculate the van der Waals energy between a water oxygen atom and a given atom
+    
     Parameters
     ----------
-     element - the element of the atom
-     atomxyz - the coordinate of the atom (NumPy array)
-     oxyz    - the coordinate of the water oxygen (NumPy array)
+    element : string 
+      the element of the atom
+    atomxyz : numpy array
+      the coordinate of the atom
+    oxyz : numpy array 
+      the coordinate of the water oxygen
 
     Returns
     -------
-     an approximate energy, cut-off at 5 A
+    float :
+      an approximate energy, cut-off at 5 A
     """
 
     # Return 0 for undefined atoms
@@ -243,21 +259,24 @@ def solvate(box, ligand=None, protein=None,
     return 4.0*eps*(sigr2**6-sigr2**3)
 
 
-  def remove_overlap(water,solute,cutoff,logfile) :
-    """ Remove water molecules that overlap with solute coordinates
+  def remove_overlap(water,solute,cutoff) :
+    """ 
+    Remove water molecules that overlap with solute coordinates
+    
     Parameters
     ----------
-     water  - the added water molecules (a dictionary)
-     solute - the solute molecule (a dictionary)
-     cutoff - the energy cutoff to use
-     logfile - a file point to write log information
+    water  : dictionary of lists 
+      the added water molecules
+    solute : dictionary of lists 
+      the solute molecule
+    cutoff : float 
+      the energy cutoff
 
     Returns
     -------
      none, water argument is modified
     """
 
-    logfile.write("\n")
     saved = []
     # Loop over all added water molecules
     for wat in water["xyz"] :
@@ -267,10 +286,7 @@ def solvate(box, ligand=None, protein=None,
       ene = vdw_energy(solute["atoms"][i],solute["xyz"][i,:],wat[0,:]) 
       if ene < cutoff :
         saved.append(np.array(wat,copy=True))
-      else :
-        logfile.write("Overlap: removed water molecule with vdW energy: %.2f\n"%ene)
 
-    logfile.write("Overlap: removed %d water molecules\n"%(len(water["xyz"])-len(saved)))
     water["xyz"] = saved  
 
   # ---------------------------------------------------------------------
@@ -278,17 +294,24 @@ def solvate(box, ligand=None, protein=None,
   # ---------------------------------------------------------------------
 
   def add_template(template,delta,maxbox,container) :
-    """ Add a copy of template box to a container of waters
+    """ 
+    Add a copy of template box to a container of waters
+    
     Parameters
     ----------
-  #   template - the template to be copied (a dictionary)
-  #   delta    - an displacement to add to the template
-  #   maxbox   - the maximum of the big box
-  #   container - the container where the template should be added
+    template : dictionary of lists 
+      the template to be copied
+    delta : float
+      an displacement to add to the template
+    maxbox : numpy array 
+      the maximum of the big box
+    container : list 
+      the container where the template should be added
 
     Returns
     -------
-  #   none, container argument is modified 
+    None
+      container parameter modified
     """
     for wat in template :
       wat2 = wat-delta
@@ -296,21 +319,27 @@ def solvate(box, ligand=None, protein=None,
         container.append(wat2)
 
 
-  def replicate_box(watbox,solute,padding,flooding,bigbox,logfile) :
-    """ Replicate a pre-equilibrated box to cover a solute
+  def replicate_box(watbox,solute,padding,flooding,bigbox) :
+    """ 
+    Replicate a pre-equilibrated box to cover a solute
+    
     Parameters
     ----------
-  #   watbox - the pre-equilibrated box (a dictionary)
-  #   solute - the solute (a dictionary)
-  #   padding - the minimum distance between solute and box edge
-  #   flooding - turn on flooding which defines the bigbox in different way
-  #   bigbox  - the added water molecules (a dictionary)
-  #   logfile - a file point to write log information
+    watbox : dictionary 
+      the pre-equilibrated box
+    solute : dictionary
+      the solute
+    padding : float 
+      the minimum distance between solute and box edge
+    flooding : boolean 
+      turn on flooding which defines the bigbox in different way
+    bigbox  : dictionary
+      the added water molecules
 
     Returns
     -------
-  #  none, bigbox argument is modified
-  #
+    None
+      bigbox parameter modified
     """
     # Define the extent of the solvation box
     if not flooding :
@@ -322,46 +351,44 @@ def solvate(box, ligand=None, protein=None,
     bigbox["xy_plane"] = []
     bigbox["xyz"] = []
 
-    logfile.write("\nReplication: solvation box origin: %.2f %.2f %.2f\n"%(bigbox["min"][0],bigbox["min"][1],bigbox["min"][2]))
-    logfile.write("Replication: solvation box length: %.2f %.2f %.2f\n\n"%(bigbox["max"][0]-bigbox["min"][0],bigbox["max"][1]-bigbox["min"][1],bigbox["max"][2]-bigbox["min"][2]))
-
     # Add boxes in the x-dimension
     addxyz = np.array(bigbox["min"],copy=True)
     while addxyz[0] < bigbox["max"][0] :
       # Add boxes in the y-dimension
       while addxyz[1] < bigbox["max"][1] :
-        add_template(watbox["xyz"],watbox["min"]-addxyz,bigbox["max"],bigbox["xy_plane"])    
-        logfile.write("Replication: added box at: %7.2f %7.2f %7.2f\n"%(addxyz[0],addxyz[1],addxyz[2]))
+        add_template(watbox["xyz"],watbox["min"]-addxyz,bigbox["max"],bigbox["xy_plane"])
         addxyz[1] = addxyz[1] + watbox["len"][1]
 
       addxyz[1] = bigbox["min"][1]
       addxyz[0] = addxyz[0] + watbox["len"][0]
-      logfile.write("\n")
 
     # Add xy-planes in the z-dimension
     addz = bigbox["min"][2]
     while addz < bigbox["max"][2] :
       delta = np.array([0.0,0.0,bigbox["min"][2]-addz])
       add_template(bigbox["xy_plane"],delta,bigbox["max"],bigbox["xyz"])   
-      logfile.write("Replication: added xy-plane at: %7.2f\n"%addz)
       addz = addz + watbox["len"][2]
 
-    logfile.write("\nReplication: added %d water molecules in total\n"%len(bigbox["xyz"]))
 
   # -------------------------------------------------------------
   # Routines to solvate a solute in a droplet of water molecules 
   # -------------------------------------------------------------
   
   def define_center(cent,solute) :
-    """ Parse the center argument given by the user and thereby define the center of the droplet
+    """ 
+    Parse the center argument given by the user and thereby define the center of the droplet
+    
     Parameters
     ----------
-  #   cent - the command-line argument
-  #   solute - the solute (NumPy array)
+    cent : string 
+      the command-line argument
+    solute : numpy array
+      the solute coordinates
 
     Returns
     -------
-  #   the center of the droplet (NumPy array)
+    numpy array :
+      the center of the droplet
     """
     if cent[0:4] == "cent" :
       return np.array(solute["cent"],copy=True)
@@ -378,12 +405,18 @@ def solvate(box, ligand=None, protein=None,
         return np.array([cols[0],cols[0],cols[0]],dtype=float)
 
   def rand_sphere(rad) :
-    """ Utility to draw a random vector on a sphere
+    """ 
+    Utility to draw a random vector on a sphere
+    
     Parameters
     ----------
-  #   rad - the radius of the sphere
-  # Output:
-  #   the vector (NumPy array)
+    rad : float 
+      the radius of the sphere
+      
+    Returns
+    -------
+    numpy array
+      the generated vector
     """
     x = random.uniform(-rad,rad)
     y = random.uniform(-rad,rad)
@@ -394,26 +427,30 @@ def solvate(box, ligand=None, protein=None,
       z = random.uniform(-rad,rad)  
     return np.array([x,y,z])
 
-  def make_droplet(watbox,solute,radius,droplet,logfile) :
-    """ Create a droplet on top of a solute
+  def make_droplet(watbox,solute,radius,droplet) :
+    """ 
+    Create a droplet on top of a solute
+    
     Parameters
     ----------
-  #   watbox - the pre-equilibrated box (a dictionary)
-  #   solute - the solute (a dictionary)
-  #   radius - the radius of the droplet
-  #   droplet  - the added water molecules (a dictionary)
-  #   logfile - a file point to write log information
-
+    watbox : dictionary 
+      the pre-equilibrated box
+    solute : dictionary
+      the solute
+    radius : float 
+      the radius of the droplet
+    droplet : dictionary 
+      the added water molecules
+  
     Returns
     -------
-  #  none, droplet argument is modified
+    None
+      droplet parameter is modified
     """
     # Maximum extent if a box covering the entire droplet
     maxxyz = droplet["cent"] + radius
     # Spacing determined from the theoretical density of pure water
     delta  = (1.0/0.0335)**0.3333333
-
-    logfile
 
     rad2 = radius**2
     droplet["xyz"] = []
@@ -434,10 +471,6 @@ def solvate(box, ligand=None, protein=None,
           z = z + delta
         y = y + delta
       x = x + delta
-
-    logfile.write("\nDroplet: radius %.2f\n"%radius)  
-    logfile.write("Droplet: center sphere at: %.2f %.2f %.2f\n"%(droplet["cent"][0],droplet["cent"][1],droplet["cent"][2]))  
-    logfile.write("Droplet: added %d water molecules in total\n"%len(droplet["xyz"]))
 
   # -------------------------------------
   # Main routine begins below
@@ -468,9 +501,6 @@ def solvate(box, ligand=None, protein=None,
     names = [" O  "," H1 "," H2 ","EPW "]
     resname = ["","","WAT","WAT"]
 
-  # Open logfile
-  logfile = open(log,"w")
-
   # Read the pre-equilibrated water box
   watbox = {}
   read_watbox(box,watbox)
@@ -490,43 +520,34 @@ def solvate(box, ligand=None, protein=None,
   solute["max"] = np.max(solute["xyz"],axis=0)
   solute["len"] = solute["max"] - solute["min"]
   solute["cent"] = np.average(solute["xyz"],axis=0)
-
-  # Write some log information
-  logfile.write("Water box min %.2f %.2f %.2f\n"%(watbox["min"][0],watbox["min"][1],watbox["min"][2]))
-  logfile.write("Water box len %.2f %.2f %.2f\n"%(watbox["len"][0],watbox["len"][1],watbox["len"][2]))
-  logfile.write("Solute min %.2f %.2f %.2f\n"%(solute["min"][0],solute["min"][1],solute["min"][2]))
-  logfile.write("Solute max %.2f %.2f %.2f\n"%(solute["max"][0],solute["max"][1],solute["max"][2]))
-  logfile.write("Solute cent %.2f %.2f %.2f\n"%(solute["cent"][0],solute["cent"][1],solute["cent"][2]))
-
+  
   # Now add waters
   added_water = {}
   if geometry == "box" :
-    replicate_box(watbox,solute,padding,False,added_water,logfile)
+    replicate_box(watbox,solute,padding,False,added_water)
   elif geometry == "droplet" :  
     added_water["cent"] = define_center(center,solute)
-    make_droplet(watbox,solute,radius,added_water,logfile)
+    make_droplet(watbox,solute,radius,added_water)
   elif geometry == "flood" :
-    replicate_box(watbox,solute,0.1,True,added_water,logfile)
+    replicate_box(watbox,solute,0.1,True,added_water)
 
   # Remove water that overlap with the solute
   if not geometry == "flood" :
-    remove_overlap(added_water,solute,20.0,logfile)
+    remove_overlap(added_water,solute,20.0)
   new_watbox = simulationobjects.PDBFile()
   
   # Write box or cap information as header
   if geometry == "box" :
-    header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n"%(added_water["min"][0]-0.5,added_water["min"][1]-0.5,added_water["min"][2]-0.5,added_water["max"][0]+0.5,added_water["max"][1]+0.5,added_water["max"][2]+0.5)
+    new_watbox.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n"%(added_water["min"][0]-0.5,added_water["min"][1]-0.5,added_water["min"][2]-0.5,added_water["max"][0]+0.5,added_water["max"][1]+0.5,added_water["max"][2]+0.5)
   elif geometry == "droplet" :
-    header = "HEADER cap %.4f %.4f %.4f %.4f 1.5\n"%(added_water["cent"][0],added_water["cent"][1],added_water["cent"][2],radius)
+    new_watbox.header = "HEADER cap %.4f %.4f %.4f %.4f 1.5\n"%(added_water["cent"][0],added_water["cent"][1],added_water["cent"][2],radius)
   try:
     for i in range(len(solvent["xyz"])) :
       if len(solvent["xyz"][i]) == len(added_water["xyz"][0]) :
         added_water["xyz"].append(solvent["xyz"][i])
       else :
         raise simulationobjects.SetupError("The length of a crystal water molecule does not match the length of molecules in the water box - please check they are the same type (TIP3P/TIP4P)!")
-        quit()
   except KeyError:
-    logfile.write("No crystallographic waters added to solvent box!\n")
     pass
 
   # Write water coordinates
@@ -549,11 +570,8 @@ def solvate(box, ligand=None, protein=None,
       newatom4 = simulationobjects.Atom(index=atmidx,name=names[3],resindex=resid,resname=resname[len(w)-1],coords=w[3])
       atmidx += 1
       new_watbox.solvents[resid].addAtom(atom=newatom4)
-
-  new_watbox.write(filename=out, header=header)
-  logfile.close()
-
-
+ 
+  return new_watbox
 
 #
 # -------------------------------------
@@ -588,7 +606,6 @@ if __name__ == '__main__' :
   parser.add_argument('-r','--radius',type=float,help="the radius of the droplet, default=30A",default=30.0)
   parser.add_argument('-c','--center',help="definition of center, default='cent'",default="cent")
   parser.add_argument('-n','--names',choices=["Amber","ProtoMS"],help="the naming convention, should be either Amber or ProtoMS",default="ProtoMS")
-  parser.add_argument('-l','--log',help="The logfile for output, default is solvate.log",default="solvate.log")
   args = parser.parse_args()
 
   # Ask for input that is absolutely necessary and that do not have any defaults
@@ -607,5 +624,5 @@ if __name__ == '__main__' :
   if args.solute == "" : args.solute = None
   if args.protein == "" : args.protein = None
 
-  solvate(args.box,args.solute,args.protein,args.out,args.geometry,args.padding,args.radius,args.center,args.names,args.log)
-
+  boxpdb = solvate(args.box,args.solute,args.protein,args.geometry,args.padding,args.radius,args.center,args.names)
+  boxpdb.write(args.out)

@@ -21,28 +21,22 @@ import numpy as np
 
 import simulationobjects
 
-def scoop ( protein, ligand, out_file = '',
-            innercut = 16, outercut  = 20, 
-            flexin = 'full', flexout = 'sidechain', 
-            excluded = [], added = [] ):
+def scoop ( protein, ligand, innercut = 16, outercut  = 20, 
+            flexin = 'full', flexout = 'sidechain', excluded = [], added = [] ) :
 
-    """Function to generate scoop from protein structure
-
-    scoop ( protein,  ligand, out_file = '', 
-            innercut = 16, outercut = 20,
-            flexin = 'full', flexout = 'sidechain',
-            excluded = [], added = [] )
-
+    """
+    Generates a scoop from protein structure
+    
+    The protein object is not modified by this routine.
+    
     Parameters
     ----------
-    protein : simulationobjects.pdb
+    protein : PDBFile
         pdb instance for the protein to be scooped
-    ligand : simulationobjects.pdb or string
+    ligand : PDBFile or string
         Either pdb instance for ligand to be scooped around, or string giving
         the name of a file containing 3 floats to act as coords for scoop centre,
         or a string with three floating point numbers
-    out_file : string, optional
-        File name to write scooped protein. Default of '' does not write a file
     innercut : float, optional
         Maximum distance from ligand defining inner region of the scoop
     outercut : float, optional
@@ -50,17 +44,21 @@ def scoop ( protein, ligand, out_file = '',
     flexin : string, optional
         Gives the degree of flexibility for residues of the inner region
         Can be 'rigid', 'sidechain' or 'flexible'
-    flexout : string, optiniol
+    flexout : string, optional
         As flexin but for residues of the outer scoop
-    excluded : list of integers
+    excluded : list of int
         List of indices for residues to be excluded from scoop
-    added : list of integers
+    added : list of int
         List of indices for residues to be included in outer scoop
 
     Returns
     -------
-    A simulationobjects.PDBFile instance representing the scooped protein """
-
+    PDBFile 
+        an object representing the scooped protein
+    """
+  
+    pdb_out = protein.copy()
+    
     centerarray = None
     if isinstance(ligand,basestring) :
         if os.path.isfile(ligand) :
@@ -86,10 +84,10 @@ def scoop ( protein, ligand, out_file = '',
     #any atom of the ligand, add then to the appropriate list
     outer = []
     inner = []
-    for res in protein.residues:
+    for res in pdb_out.residues:
         kill = True
         in_kill = True
-        for atom in protein.residues[res].atoms:
+        for atom in pdb_out.residues[res].atoms:
             if ( atom.name.startswith( ( 'H', 'h', '1' ) )
                  or atom.name in ( 'N', 'C', 'O' ) ):
                 continue
@@ -112,9 +110,9 @@ def scoop ( protein, ligand, out_file = '',
 
     # Also eliminate Xray waters beyond outer cutoff
     waters = []
-    for mol in protein.solvents:
+    for mol in pdb_out.solvents:
         kill = True
-        for atom in protein.solvents[mol].atoms:
+        for atom in pdb_out.solvents[mol].atoms:
             for lig in ligand.residues.itervalues():
                 for lat in lig.atoms:
                     distance = np.linalg.norm ( atom.coords - lat.coords )
@@ -129,7 +127,7 @@ def scoop ( protein, ligand, out_file = '',
 
     #All CYS must be fixed to preserve disulphide bridges
     #this may be improved in future
-    rigid = [ res for res in both if protein.residues[res].name == 'CYS' ]
+    rigid = [ res for res in both if pdb_out.residues[res].name == 'CYS' ]
     backBoneRigid = []
 
     if flexout in [ 'rigid', 'sidechain' ]:
@@ -147,7 +145,7 @@ def scoop ( protein, ligand, out_file = '',
     rigidSC = []
     count = 0
     for res in both:
-        outres.append(protein.residues[res])
+        outres.append(pdb_out.residues[res])
         count += 1
         if res in backBoneRigid:
             rigidBB.append(count)
@@ -175,12 +173,12 @@ def scoop ( protein, ligand, out_file = '',
     outSC = outSC[:-2]
 
     #Purge residues outside the outer scoop from the protein pdb and save it
-    for res in protein.residues.keys():
+    for res in pdb_out.residues.keys():
         if res not in both + waters:
-            protein.residues.pop ( res )
+            pdb_out.residues.pop ( res )
 
 
-    header  = "REMARK Scoop of %s\n" % protein
+    header  = "REMARK Scoop of %s\n" % pdb_out
     header += "REMARK Inner Region : %8.2f Angstrom radius\n" % innercut
     header += "REMARK Outer Region : %8.2f Angstrom radius\n" % outercut
     header += "REMARK Num Residues %d ( %d inner %d outer )\n" % (len(inner)+len(outer),
@@ -196,12 +194,9 @@ def scoop ( protein, ligand, out_file = '',
     header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
     header += "REMARK of the ligand\n"
     
-    protein.header = header
+    pdb_out.header = header
 
-    if out_file:
-        protein.write ( out_file, header = header,renumber=True )
-
-    return protein
+    return pdb_out
 
 if __name__ == "__main__":
 
@@ -228,5 +223,6 @@ if __name__ == "__main__":
     else :
       ligand = simulationobjects.PDBFile(filename=args.ligand)
     protein = simulationobjects.PDBFile(filename=args.protein)
-    scoop(protein,ligand,args.out,args.innercut,args.outercut,args.flexin,args.flexout,args.excluded,args.added)
+    scoop(protein,ligand,args.innercut,args.outercut,args.flexin,args.flexout,args.excluded,args.added)
+    protein.write(args.out)
   

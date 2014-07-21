@@ -29,6 +29,11 @@ def read_convfile(file=None, inmode=None,outmode=None):
     Returns
     -------
     a dictionary of the conversion
+    
+    Raises
+    ------
+    ValueError
+    	if any of the parameters are none
     """
 
     if file is None:
@@ -80,6 +85,8 @@ def pdb2pms(pdb_in,forcefield,conversion_file):
     """ 
     Convert atom names to ProtoMS standard
 
+    The protein object is not modified by this routine, but the Residue and Atom objects are.
+
     Parameters
     ----------        
     pdb_in : PDBFile 
@@ -94,7 +101,7 @@ def pdb2pms(pdb_in,forcefield,conversion_file):
     a PDBFile instance with ProtoMS names
     """
 
-    pdb_out = pdb_in
+    pdb_out = pdb_in.copy()
     conversion = read_convfile(conversion_file,inmode=forcefield,outmode="protoms")
     for resnum in pdb_in.residues:
         residue = pdb_in.residues[resnum]

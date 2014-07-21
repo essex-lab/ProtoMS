@@ -4,7 +4,8 @@
 #          Samuel Genheden
 #          Gregory Ross
 
-""" Program to setup, run and analyse a ProtoMS simulation
+""" 
+Program to setup, run and analyse a ProtoMS simulation
 """
 
 import argparse
@@ -124,10 +125,10 @@ def prep_ligand(files,charge,ligobj12,folders,settings) :
     # Calling the routine
     print "Created waterbox-file: %s"%(ligprefix+"_box.pdb")
     files["wat"] = ligprefix+"_box.pdb"
-    tools.solvate(waterbox, ligand=solute, protein=None,
-            out=ligprefix+"_box.pdb", geometry="box",
-            padding=10.0, radius=30.0, center="cent",
-            namescheme="ProtoMS", log="solvate.log")
+    boxpdb = tools.solvate(waterbox, ligand=solute, protein=None,
+                           geometry="box",padding=10.0, radius=30.0, center="cent",
+                           namescheme="ProtoMS")
+    boxpdb.write(files["wat"])
 
   return files
   
@@ -166,7 +167,6 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
 
   protobj = None
   if protein_scoop_file is None and protein_pms_file is None :
-    protobj_copy = None
     # Start with an object for the original pdb-file
     protobj = simulationobjects.PDBFile(filename=protein_orig_file)
   
@@ -183,7 +183,6 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
 
     # Converting water molecules to specified model
     protobj = tools.convertwater(protobj,settings.watmodel)
-    protobj_copy = protobj.copy()
 
     # Defining the center of the scoop...
     if ligands is None :
@@ -197,20 +196,19 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
       ligobj = ligands
 
     # Here we need to call the routine to make a scoop
-    protein_scoop_file = get_prefix(protein_orig_file)+"_scoop.pdb"
-    tools.scoop(protobj,ligobj,out_file='',
-               innercut=settings.innercut,outercut=settings.outercut,
-               flexin=settings.flexin,flexout=settings.flexout)
+    protobj_scooped = tools.scoop(protobj,ligobj,
+                                  innercut=settings.innercut,outercut=settings.outercut,
+                                  flexin=settings.flexin,flexout=settings.flexout)
 
-    nresdiff = len(protobj_copy.residues)-len(protobj.residues)
+    nresdiff = len(protobj_scooped.residues)-len(protobj.residues)
     print "Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file)
     if nresdiff < settings.scooplimit:
       print "Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s_pms.pdb instead."%(nresdiff,protprefix)
-      protobj = protobj_copy
-      #os.remove(protein_scoop_file)
       protein_pms_file = get_prefix(protein_orig_file)+"_pms.pdb"
       protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file)
     else :
+      protobj = protobj_scooped
+      protein_scoop_file = get_prefix(protein_orig_file)+"_scoop.pdb"
       protobj.write(protein_scoop_file, renumber=True)
       
   if protein_water is None :
@@ -233,10 +231,10 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
     # Calling the routine
     protein_water = watprefix+".pdb"
     print "Created water cap-file: %s"%(protein_water)
-    tools.solvate(waterbox, ligand=ligands, protein=solute,
-            out=protein_water, geometry="droplet",
-            padding=10.0, radius=args.capradius, center="cent",
-            namescheme="ProtoMS", log="solvate.log")
+    cappdb = tools.solvate(waterbox, ligand=ligands, protein=solute,
+                          geometry="droplet",padding=10.0, radius=args.capradius, center="cent",
+                          namescheme="ProtoMS")
+    cappdb.write(protein_water)
 
   if protein_pms_file != None:
     return protein_pms_file,protein_water
