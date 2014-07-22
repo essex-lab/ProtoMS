@@ -749,14 +749,14 @@ endif
 	@echo "$(n)"
 
 # Build the program
-../protoms2: $(OBJS)
+../protoms3: $(OBJS)
 ifneq ($(NOPYTHON2),1)
 	@echo "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
 endif
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o
 	@echo "$(Fg)Linking the executable...$(Fr)"
-	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms2 $(OBJS) printheader.o
+	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o
 
 #ifneq ($(HAVE_MPI),0)
 #	@echo "$(Fg)Making the RETI handler..."
@@ -781,7 +781,7 @@ prjs: $(PRJS)
 
 rebuild:
 	@make distclean
-	@make ../protoms2
+	@make ../protoms3
 	@make ../reti
 
 #cleans everything!
@@ -792,7 +792,7 @@ clean:
 
 distclean:
 	@make clean
-	@-rm ../protoms2 ../reti
+	@-rm ../protoms3 ../reti
 
 #rebuild the ftnchek files
 cleancheck:

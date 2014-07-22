@@ -17,12 +17,41 @@ import numpy as np
 import tools
 from tools import simulationobjects
 
-def get_prefix(filename) :
+def _get_prefix(filename) :
+  """
+  Remove extension (including period from a filename)
+
+  Parameters
+  ----------
+  filename : string
+    the filename to modify
+
+  Returns
+  -------
+  string
+    the filename without extension
+  """
   h,t = os.path.splitext(filename)
   return h
   
-def locate_file(filename,folders) :
-  """ Find a file 
+def _locate_file(filename,folders) :
+  """ 
+  Find a file 
+  
+  Tries to find the file as it is given or in
+  any of the folders given
+
+  Parameters
+  ----------
+  filename : string
+    the name of the file to find
+  folders : list of strings
+    folders to search for the file
+
+  Returns
+  -------
+  string or None
+    the full filename or None if the file could not be found
   """
   # Try to see if the filename as given exists
   if os.path.isfile(filename) :
@@ -38,49 +67,80 @@ def locate_file(filename,folders) :
   # If we haven't found it up to now, give up and return None
   return None
 
-def load_ligand_pdb(ligprefix,folders) :
+def _load_ligand_pdb(ligprefix,folders) :
+  """
+  Load a ligand pdb file
+  
+  Parameters
+  ----------
+  ligprefix : string
+    the filename of ligand pdb-file, without the extension
+  folders : list of string
+    folders to look for the pdb-file in
+ 
+  Returns
+  -------
+  string
+    the full filename of the pdb-file
+  PDBFile
+    an instance that hold the pdb-file structure
 
-  pdbfile = locate_file(ligprefix+".pdb",folders)
+  Raises
+  ------
+  SetupError
+    if the pdb-file cannot be found
+  """
+  pdbfile = _locate_file(ligprefix+".pdb",folders)
   
   # Cannot do anything without a pdb-file so raise an exception
   if pdbfile is None :
-    raise SetupError("Ligand file %s.pdb could not be found"%ligprefix)
+    raise simulationobjects.SetupError("Ligand file %s.pdb could not be found"%ligprefix)
 
   return pdbfile,simulationobjects.PDBFile(filename=pdbfile)
 
-def prep_ligand(files,charge,ligobj12,folders,settings) :
-  """ Prepare a ligand completely so that a ProtoMS
-      templatefile and a box of water around the ligand
-      exist
+def _prep_ligand(files,charge,ligobj12,folders,settings) :
+  """ 
+  Prepare a ligand completely so that a ProtoMS
+  templatefile and a box of water around the ligand exist
   
   Parameters
   ----------   
-  ligprefix - the filename of the ligand, except the file extension
-  charge - the net charge of the ligand
-  files  - a dictionary of filenames and a simulationobjects.pdb object
-  ligobj12 - a simulationobjects.pdb object consisting of the first two ligands merged
-  folders - a set of folders where to look for the ligand files
-  settings - additional settings, an ArgParse objecy
+  files : dictionary
+    filenames and a PDBFile object associated with this ligand
+  charge : int
+    the net charge of the ligand
+  ligobj12 : PDBFile
+    an instance consisting of the first two ligands merged
+  folders : list of string
+    folders where to look for the ligand files
+  settings : Namespace (from argparse) 
+    additional settings
 
   Returns
   -------
-  None
+  dictionary
+    filenames and a PDBFile object associates with this ligand
+
+  Raises
+  ------
+  SetupError
+    if a default water box could not be found
   """
 
-  ligprefix = get_prefix(files["pdb"])
+  ligprefix = _get_prefix(files["pdb"])
 
   # Try to locate all necessary files for a ligand
-  files["prepi"] = locate_file(ligprefix+".prepi",folders)
-  files["frcmod"] = locate_file(ligprefix+".frcmod",folders)
-  files["zmat"] = locate_file(ligprefix+".zmat",folders)
-  files["tem"] = locate_file(ligprefix+".tem",folders)
-  files["wat"] = locate_file(ligprefix+"_box.pdb",folders)
+  files["prepi"] = _locate_file(ligprefix+".prepi",folders)
+  files["frcmod"] = _locate_file(ligprefix+".frcmod",folders)
+  files["zmat"] = _locate_file(ligprefix+".zmat",folders)
+  files["tem"] = _locate_file(ligprefix+".tem",folders)
+  files["wat"] = _locate_file(ligprefix+"_box.pdb",folders)
 
   print "\nSetting up ligand: %s..."%files["pdb"]
 
   # Check to see if we have a template file
   if files["tem"] is None : 
-    resnam = files["obj"].residues[1].name
+    resnam = files["obj"].residues[1].name # Set the prepi name and template name to the residue name
     if files["prepi"] is None :
       # Here we need to run Antechamber
       print "Running antechamber. Please check the output carefully"
@@ -93,8 +153,6 @@ def prep_ligand(files,charge,ligobj12,folders,settings) :
       print "Created frcmod-file: %s"%files["frcmod"]
      
     # By this stage we should have all necessary files to make the template file
-    # Now we need to call a routine to generate the template file
-    #files["obj"] = simulationobjects.pdb(filename=files["pdb"])
     files["tem"] = ligprefix+".tem"
     tem = tools.build_template(temfile=files["tem"],prepifile=files["prepi"],zmatfile=files["zmat"],
                         frcmodfile=files["frcmod"],resname=resnam)
@@ -107,24 +165,22 @@ def prep_ligand(files,charge,ligobj12,folders,settings) :
                           
   # Check to see if we have solvated the ligand
   if files["wat"] is None :
-    # Here we need to call the solvate routine
-
     # Try to find a default water box
     if settings.waterbox is None :
-      waterbox = simulationobjects.standard_filename("wbox_"+settings.watmodel+".pdb","data")
+      waterbox = simulationobjects.standard_filename("wbox_"+settings.watmodel.lower()+".pdb","data")
     else :
       waterbox = args.waterbox
     if not os.path.isfile(waterbox) : 
-      raise SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
+      raise simulationobjects.SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
 
-    # Setting the solute, either a pdb filename or a simulationobjects.pdb object
+    # Setting the solute
     if ligobj12 is None :
       solute = files["obj"]
     else :
       solute = ligobj12
     # Calling the routine
-    print "Created waterbox-file: %s"%(ligprefix+"_box.pdb")
     files["wat"] = ligprefix+"_box.pdb"
+    print "Created waterbox-file: %s"%(files["wat"])
     boxpdb = tools.solvate(waterbox, ligand=solute, protein=None,
                            geometry="box",padding=10.0, radius=30.0, center="cent",
                            namescheme="ProtoMS")
@@ -132,36 +188,51 @@ def prep_ligand(files,charge,ligobj12,folders,settings) :
 
   return files
   
-def prep_protein(protprefix,ligands,watprefix,folders,settings) :
-  """ Prepare a protein completely such that a scoop pdb-file
-      and a droplet of water exists
+def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
+  """ 
+  Prepare a protein completely such that a scoop pdb-file
+  and a droplet of water exists
   
   Parameters
   ----------   
-  protprefix - the filename of the protein, except the file extension
-  ligands - a simulationobjects.pdb object with all ligands merged
-  watprefix - the filename of the water sphere, except the file extension
-  folders - a set of folders where to look for the ligand files
-  settings - additional settings, an ArgParse objecy
-  limit - minimum difference between number of residues in protein and scoop
+  protprefix : string 
+    the filename of the protein
+  ligands : PDBFile
+    an instance with all ligands merged
+  watprefix : string 
+    the filename of the water sphere
+  folders : list of strings
+    folders where to look for the protein files
+  settings : Namespace (from argparse) 
+    additional settings
 
   Returns
   -------
-  the filenames of the protein and water droplet pdb-file
+  string
+    the filename of the protein pdb-file to use
+  string
+    the filename of the water droplet
+
+  Raises
+  ------
+  SetupError
+    if protein pdb-file cannot be found
+    if default atom name conversion file cannot be found
+    if default water box cannot be found
   """
 
-  protprefix = get_prefix(protprefix)
-  watprefix  = get_prefix(watprefix)
+  protprefix = _get_prefix(protprefix)
+  watprefix  = _get_prefix(watprefix)
 
   # Try to locate necessary protein files
-  protein_orig_file = locate_file(protprefix+".pdb",folders)
-  protein_pms_file = locate_file(protprefix+"_pms.pdb",folders)
-  protein_scoop_file = locate_file(protprefix+"_scoop.pdb",folders)
-  protein_water = locate_file(watprefix+".pdb",folders)
+  protein_orig_file = _locate_file(protprefix+".pdb",folders)
+  protein_pms_file = _locate_file(protprefix+"_pms.pdb",folders)
+  protein_scoop_file = _locate_file(protprefix+"_scoop.pdb",folders)
+  protein_water = _locate_file(watprefix+".pdb",folders)
   
   # Cannot do anything without a pdb-file, so raise an exception
   if protein_orig_file is None and protein_scoop_file is None and protein_pms_file is None:
-    raise SetupError("Protein file (%s.pdb) and protein scoop file (%s_scoop.pdb) and protein pms file (%s_pms.pdb) could not be found"%(protprefix,protprefix,protprefix))
+    raise simulationobjects.SetupError("Protein file (%s.pdb) and protein scoop file (%s_scoop.pdb) and protein pms file (%s_pms.pdb) could not be found"%(protprefix,protprefix,protprefix))
 
   print "\nSetting up protein: %s..."%protein_orig_file
 
@@ -176,7 +247,7 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
     else :
       conversionfile = args.atomnames
     if not os.path.isfile(conversionfile) : 
-      raise SetupError("Could not find file (%s) with atom name conversions"%conversionfile)
+      raise simulationobjects.SetupError("Could not find file (%s) with atom name conversions"%conversionfile)
 
     # Converting to ProtoMS atom names
     protobj = tools.pdb2pms(protobj,"amber",conversionfile)
@@ -200,19 +271,19 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
                                   innercut=settings.innercut,outercut=settings.outercut,
                                   flexin=settings.flexin,flexout=settings.flexout)
 
-    nresdiff = len(protobj_scooped.residues)-len(protobj.residues)
+    nresdiff = len(protobj.residues)-len(protobj_scooped.residues)
+    protein_scoop_file = _get_prefix(protein_orig_file)+"_scoop.pdb"
     print "Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file)
     if nresdiff < settings.scooplimit:
-      print "Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s_pms.pdb instead."%(nresdiff,protprefix)
-      protein_pms_file = get_prefix(protein_orig_file)+"_pms.pdb"
+      protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
+      print "Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file)
       protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file)
+      protein_scoop_file = None
     else :
       protobj = protobj_scooped
-      protein_scoop_file = get_prefix(protein_orig_file)+"_scoop.pdb"
       protobj.write(protein_scoop_file, renumber=True)
       
   if protein_water is None :
-    # Here we need to call the routine to solvate the protein
 
     # Try to find a default water box
     if settings.waterbox is None :
@@ -220,11 +291,13 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
     else :
       waterbox = args.waterbox
     if not os.path.isfile(waterbox) : 
-      raise SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
+      raise simulationobjects.SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
 
-    # Setting the solute, either a pdb filename or a simulationobjects.pdb object
     if protobj is None :
-      solute = protein_scoop_file
+      if protein_scoop_file is not None :
+        solute = protein_scoop_file
+      else :
+        solute = protein_pms_file
     else :
       solute = protobj
 
@@ -236,7 +309,7 @@ def prep_protein(protprefix,ligands,watprefix,folders,settings) :
                           namescheme="ProtoMS")
     cappdb.write(protein_water)
 
-  if protein_pms_file != None:
+  if protein_pms_file is not None:
     return protein_pms_file,protein_water
   else:
     return protein_scoop_file,protein_water
@@ -289,14 +362,14 @@ if __name__ == "__main__":
   ligpdbs = None # This will be a list of ligand pdb-files
   ligtems = None # This will be a list of ligand template files
   ligobjs = None # This will hold a merged pdb object of all ligand pdb objects
-  ligand_water = None
+  ligand_water = None # This will hold the filename of the free-leg waterbox
   if args.ligand is not None :
     # Read in each ligand pdb file and create a pdb object
     for l in args.ligand :
-      prefix = get_prefix(l)
+      prefix = _get_prefix(l)
       ligands.append(prefix)
       ligand_files[prefix] = {}
-      ligand_files[prefix]["pdb"],ligand_files[prefix]["obj"] = load_ligand_pdb(prefix,args.folders)
+      ligand_files[prefix]["pdb"],ligand_files[prefix]["obj"] = _load_ligand_pdb(prefix,args.folders)
 
     # Create merge pdb objects
     if len(ligands) >= 2 :
@@ -315,8 +388,8 @@ if __name__ == "__main__":
       else :
         charge = 0
       if i > 1 : ligobj12 = None
-      prefix = get_prefix(l)
-      prep_ligand(ligand_files[prefix],charge,ligobj12,args.folders,args)
+      prefix = _get_prefix(l)
+      _prep_ligand(ligand_files[prefix],charge,ligobj12,args.folders,args)
 
     ligpdbs = [ligand_files[l]["pdb"] for l in ligands]
     ligtems = [ligand_files[l]["tem"] for l in ligands]
@@ -337,7 +410,7 @@ if __name__ == "__main__":
   protein_file = None
   water_file = None
   if args.protein is not None :
-    protein_file,water_file = prep_protein(args.protein,ligobjs,args.water,args.folders,args)
+    protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,args)
 
   # Create ProtoMS command files
   free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)

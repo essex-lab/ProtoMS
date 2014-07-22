@@ -43,16 +43,18 @@ c     we will print them at the very end
       nrgtib = nrgtib + inrgb
       nrgtif = nrgtif + inrgf
       dl = max(lambdaf-lambda,lambda-lambdab)
+      dgf=-dlog(AVGFORWARDSENERGY) / mt_beta_T
+      dgb=-dlog(AVGBACKENERGY) / mt_beta_T
       if (lambda.eq.ZERO) then
         dvdl = (nrgtif - nrgti) / dl
+        dvdl2 = dgf / dl
       else if (lambda.eq.ONE) then
         dvdl = (nrgti - nrgtib) / dl
+        dvdl2 = -dgb / dl
       else
         dvdl = (nrgtif - nrgtib) / (2.0*dl)
-      endif
-      dgf=-dlog(AVGFORWARDSENERGY) / mt_beta_T
-      dgb=-dlog(AVGBACKENERGY) / mt_beta_T      
-      dvdl2 = (dgf-dgb)/(2.0d0*dl)
+        dvdl2 = (dgf-dgb)/(2.0d0*dl)
+      endif    
 
 
 c     write headers
@@ -104,14 +106,14 @@ c     do the actual perturbations
         nrgb = nrgb + inrgb
         nrgf = nrgf + inrgf
 
-        write(printstring,'(F4.2,X,A,X,F12.4)') lambdab,'|',nrgb
+        write(printstring,'(F5.3,X,A,X,F12.4)') lambdab,'|',nrgb
         call printLi ne(RESULTS,printstring)
         if (.not.(lambda.eq.lambdab)) then
-          write(printstring,'(F4.2,X,A,X,F12.4)') lambda,'|',nrg
+          write(printstring,'(F5.3,X,A,X,F12.4)') lambda,'|',nrg
           call printLine(RESULTS,printstring)
         endif
         if (.not.(lambdaf.eq.lambda)) then
-          write(printstring,'(F4.2,X,A,X,F12.4)') lambdaf,'|',nrgf
+          write(printstring,'(F5.3,X,A,X,F12.4)') lambdaf,'|',nrgf
           call printLine(RESULTS,printstring)
         endif
 

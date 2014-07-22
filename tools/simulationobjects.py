@@ -371,7 +371,7 @@ class SnapshotResults :
           cols = line.strip().split()
           self.feenergies[float(cols[0])] = float(cols[2])
           line = fileobj.readline()
-        self.gradient = (fileobj.readline().strip().split()[1])
+        self.gradient = float((fileobj.readline().strip().split()[1]))
       elif line.startswith(" Printing individual") :
         self.thetavals = [None]*self.ngcsolutes
         line = fileobj.readline() # Dummy line

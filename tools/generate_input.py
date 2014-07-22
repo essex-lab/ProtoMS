@@ -341,6 +341,9 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
       self.setParameter("boundary","solvent")
       if self.periodic  :
         self.setParameter("pressure","1")
+    if protein is None :
+      for i,sol in enumerate(solutes) :
+        self.setChunk("transrot %d 0.0"%(i+1))
 
 class Equilibration(ProteinLigandSimulation) :
   """ 
@@ -522,7 +525,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
   bnd_cmd : ProtoMSSimulation
     the command file for the protein simulation
   """
-  free_cmd = bnd_cmd = False
+  free_cmd = bnd_cmd = None
   
   if settings.simulation == "equilibration" :
     if ligands is not None :

@@ -1,12 +1,7 @@
       write(printstring,*)
-     . "Compiled on uos-206787 by aicm1f12 at 2014-07-18 16:44:45.089049",
-     . "."
+     . "Compiled on uos-206840 by sg6e12 at 2014-07-22 11:36:33.694581."
       call printBoxText(HEADER,printstring)
       write(printstring,*)
-     . "Subversion version 49. If you have access to the subversion resp",
-     . "ository you can extract the source code for this binary by typin",
-     . "g"
-      call printBoxText(HEADER,printstring)
-      write(printstring,*)
-     . "'svn co -r http://protoms.googlecode.com/svn/trunk 49'."
+     . "Subversion information not available on the computer that compil",
+     . "ed this version of ProtoMS."
       call printBoxText(HEADER,printstring)
