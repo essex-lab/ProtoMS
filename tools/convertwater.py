@@ -71,9 +71,9 @@ def convertwater(pdb_in,watermodel):
   solvents = pdb_in.solvents
   # Ideal water geometries:
   t4p_model = np.array([[-6.444, -5.581, -1.154],[-7.257, -5.869, -0.739],[-6.515, -4.627, -1.183],[-6.557, -5.495, -1.105]]) 
-  t4p_names = ["O00","H01","H03","M03"]
+  t4p_names = ["O00","H01","H02","M03"]
   t3p_model = np.array([[7.011, 5.276, 13.906],[6.313, 5.646, 13.365],[6.666,  4.432, 14.197]]) 
-  t3p_names = ["O00","H01","H03"]
+  t3p_names = ["O00","H01","H02"]
   if watermodel.upper() in ["T4P","TIP4P","TP4"]: 
       pdb_out.solvents = _translatetemplate(solvents,"T4P",t4p_model,t4p_names)
   elif watermodel.upper() in ["T3P","TIP3P","TP3"]:
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Program to convert water molecules - with or without hydrogens - in a pdb file to simulation models, such as tip4p. Currently ignores original hydrogen positions.")
     parser.add_argument('-p','--pdb',help="the PDF-file containing the waters to be transformed")
     parser.add_argument('-o','--out',help="the output PDB-file",default="convertedwater.pdb")
-    parser.add_argument('-m','--model',help="the water model",default="tip4p")
+    parser.add_argument('-m','--model',help="the water model,default=tip4p",default="tip4p")
     args = parser.parse_args()
 
     pdb_in = simulationobjects.PDBFile(filename=args.pdb)
