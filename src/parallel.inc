@@ -23,6 +23,10 @@ c     temperature-replica exchange
       double precision tempval(MAXLAMBDAS,MAXTEMPS)
       integer task2temperature(MAXLAMBDAS,MAXTEMPS),temperature2task(MAXLAMBDAS,MAXTEMPS)
 
+c     multi GCMC
+      integer nadams,myadam
+      character*255 gcmcfolder
+      double precision adamparam(MAXLAMBDAS)
              
       common /MPISTUFF/ myid,ntasks
       save /MPISTUFF/
@@ -33,3 +37,6 @@ c     temperature-replica exchange
       common /TRE/ tempval,task2temperature,temperature2task,ntretry,ntrswap,trefreq,ntemperatures,mytemperature,
      .             trefolder
       save /TRE/
+
+      common /MGCMC/ nadams,myadam,adamparam,gcmcfolder
+      save /MGCMC/

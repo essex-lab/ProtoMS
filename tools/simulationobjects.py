@@ -157,6 +157,8 @@ class PDBFile:
                     #print solvents
             elif line[:3] == "TER" :
               nres = nres + 1
+            elif line[:6] in ["HEADER","REMARK"] :
+              self.header = self.header + line
             # Read next line
             line = f.readline()
         self.residues, self.solvents = residues, solvents
@@ -189,6 +191,17 @@ class PDBFile:
             rescent = self.residues[res].center
             center = center + rescent
         self.center = center/float(len(self.residues))
+        return self.center
+
+    def getBox(self) :
+      minxyz = np.zeros(3)+1E6
+      maxxyz = np.zeros(3)-1E6
+      for res in self.residues :
+        for atom in self.residues[res].atoms :
+          minxyz = np.minimum(minxyz,atom.coords)
+          maxxyz = np.maximum(maxxyz,atom.coords)
+      return {"center":(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
+       
         
 
 def merge_pdbs(pdbobjs) :
@@ -205,8 +218,67 @@ def merge_pdbs(pdbobjs) :
           pdbobj.solvents[sol].index = nres
           for atom in pdbobj.solvents[sol].atoms : atom.resindex = nres
           pdbout.solvents[nres] = pdbobj.solvents[sol]
-    return pdbout  
-      
+    return pdbout      
+
+def find_box(pdbobj) :
+  if pdbobj.header == "" : return None
+  center = dim = box = None
+  headerlines = pdbobj.header.split("\n")
+  for line in headerlines :
+    if line.find("CENTER") > -1 :
+      center = np.array(line.strip().split()[5:],float)            
+    elif line.find("DIMENSIONS") > -1 :
+      dim = np.array(line.strip().split()[5:],float)
+    elif line.find("HEADER box") > -1 :
+      box = np.array(line.strip().split()[2:],float)
+  if center is not None and dim is not None :
+    return {"center":center,"len":dim}
+  elif box is not None :
+    return {"origin":box[:3],"len":box[3:]-box[:3]}
+  else :
+    return None
+    
+def write_box(filename,box) :
+
+  def makeBoundary(box_min,box_max) :
+    c1 = (box_min[0],box_min[1],box_min[2]) # Origin
+    c2 = (box_max[0],box_min[1],box_min[2])
+    c3 = (box_max[0],box_min[1],box_max[2]) 
+    c4 = (box_min[0],box_min[1],box_max[2])
+    c5 = (box_min[0],box_max[1],box_min[2])
+    c6 = (box_max[0],box_max[1],box_min[2])
+    c7 = (box_max[0],box_max[1],box_max[2]) 
+    c8 = (box_min[0],box_max[1],box_max[2])
+
+    return (c1,c2,c3,c4,c5,c6,c7,c8)
+
+  if "center" not in box :
+    box["center"] = box["origin"] + box["len"]/2.0
+  elif "origin" not in box :
+    box["origin"] = box["center"] - box["len"]/2.0
+  boundary = makeBoundary(box["origin"],box["origin"]+box["len"])
+
+  with open(filename,'w') as f :
+    f.write("HEADER    CORNERS OF BOX\n")
+    f.write("REMARK    CENTER (X Y Z)   %.3f  %.3f  %.3f\n"%(box["center"][0],box["center"][1],box["center"][2]))
+    f.write("REMARK    DIMENSIONS (X Y Z)   %.3f  %.3f  %.3f\n"%(box["len"][0],box["len"][1],box["len"][2]))
+    f.write("ATOM      1  DUA BOX     1    %8.3f%8.3f%8.3f\n"%boundary[0])
+    f.write("ATOM      2  DUB BOX     1    %8.3f%8.3f%8.3f\n"%boundary[1])
+    f.write("ATOM      3  DUC BOX     1    %8.3f%8.3f%8.3f\n"%boundary[2])
+    f.write("ATOM      4  DUD BOX     1    %8.3f%8.3f%8.3f\n"%boundary[3])
+    f.write("ATOM      5  DUE BOX     1    %8.3f%8.3f%8.3f\n"%boundary[4])
+    f.write("ATOM      6  DUF BOX     1    %8.3f%8.3f%8.3f\n"%boundary[5])
+    f.write("ATOM      7  DUG BOX     1    %8.3f%8.3f%8.3f\n"%boundary[6])
+    f.write("ATOM      8  DUH BOX     1    %8.3f%8.3f%8.3f\n"%boundary[7])
+    f.write("CONECT    1    2    4    5\n")
+    f.write("CONECT    2    1    3    6\n")
+    f.write("CONECT    3    2    4    7\n")
+    f.write("CONECT    4    1    3    8\n")
+    f.write("CONECT    5    1    6    8\n")
+    f.write("CONECT    6    2    5    7\n")
+    f.write("CONECT    7    3    6    8\n")
+    f.write("CONECT    8    4    5    7\n")
+    
 #--------------------------------
 # Classes to hold parameter sets
 #--------------------------------
@@ -299,7 +371,8 @@ class SnapshotResults :
       if line.startswith(" Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
       if line.startswith(" Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
       if line.startswith(" Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
-      if line.startswith(" Simulation B factor") : self.bfactor = float(line.split("=")[1].strip())
+      if line.startswith(" Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
+      if line.startswith(" Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
       if line.startswith(" Molecules in grid") : self.solventson = int(line.split("=")[1].strip())
       if line.startswith(" Pressure") : self.pressure = float(line.split("=")[1].strip().split()[0])
       if line.startswith(" Volume") : self.volume = float(line.split("=")[1].strip().split()[0])
@@ -369,6 +442,8 @@ class SnapshotResults :
         self.feenergies = {}
         while line[0] != "#" :
           cols = line.strip().split()
+          if cols[2] == "************" :
+            cols[2] = "inf"
           self.feenergies[float(cols[0])] = float(cols[2])
           line = fileobj.readline()
         self.gradient = float((fileobj.readline().strip().split()[1]))

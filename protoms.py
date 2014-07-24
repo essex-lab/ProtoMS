@@ -165,13 +165,6 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
                           
   # Check to see if we have solvated the ligand
   if files["wat"] is None :
-    # Try to find a default water box
-    if settings.waterbox is None :
-      waterbox = simulationobjects.standard_filename("wbox_"+settings.watmodel.lower()+".pdb","data")
-    else :
-      waterbox = args.waterbox
-    if not os.path.isfile(waterbox) : 
-      raise simulationobjects.SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
 
     # Setting the solute
     if ligobj12 is None :
@@ -181,7 +174,7 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
     # Calling the routine
     files["wat"] = ligprefix+"_box.pdb"
     print "Created waterbox-file: %s"%(files["wat"])
-    boxpdb = tools.solvate(waterbox, ligand=solute, protein=None,
+    boxpdb = tools.solvate(settings.waterbox, ligand=solute, protein=None,
                            geometry="box",padding=10.0, radius=30.0, center="cent",
                            namescheme="ProtoMS")
     boxpdb.write(files["wat"])
@@ -284,15 +277,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
       protobj.write(protein_scoop_file, renumber=True)
       
   if protein_water is None :
-
-    # Try to find a default water box
-    if settings.waterbox is None :
-      waterbox = simulationobjects.standard_filename("wbox_"+settings.watmodel+".pdb","data")
-    else :
-      waterbox = args.waterbox
-    if not os.path.isfile(waterbox) : 
-      raise simulationobjects.SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
-
+   
     if protobj is None :
       if protein_scoop_file is not None :
         solute = protein_scoop_file
@@ -304,7 +289,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     # Calling the routine
     protein_water = watprefix+".pdb"
     print "Created water cap-file: %s"%(protein_water)
-    cappdb = tools.solvate(waterbox, ligand=ligands, protein=solute,
+    cappdb = tools.solvate(settings.waterbox, ligand=ligands, protein=solute,
                           geometry="droplet",padding=10.0, radius=args.capradius, center="cent",
                           namescheme="ProtoMS")
     cappdb.write(protein_water)
@@ -313,13 +298,71 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     return protein_pms_file,protein_water
   else:
     return protein_scoop_file,protein_water
-  
 
+def _prep_gcmc(ligands,ligand_files,settings) :
+  """
+  Prepare water box for GCMC calculations
+  
+  Parameters
+  ----------
+  ligands : list of strings
+    names of all ligands loaded
+  ligand_files : dictionary
+    files and objects associated with each ligand
+  settings : Namespace (from argparse) 
+    additional settings
+    
+  Returns
+  -------
+  string
+    the filename of the created water box
+  """
+  
+  def pdb2box(pdbobj) :
+    BOX_PADDING = 2.0
+    # Create a box around the solute and pad it with two Angstromgs
+    box = pdbobj.getBox()
+    box["origin"] = box["origin"] - BOX_PADDING
+    box["len"] = box["len"] + 2.0*BOX_PADDING
+    # Save it to disc
+    boxpdb = "gcmc_box.pdb"
+    simulationobjects.write_box(boxpdb,box)
+    print "\nCreated %s to visualize GCMC simulation box. Please check the output carefully"%boxpdb
+    return boxpdb
+    
+  if ligands :
+    # Use the ligand to define the GCMC box
+    boxpdb = pdb2box(ligand_files[ligands[0]]["obj"])  
+  else :
+    if settings.gcmcbox is not None :
+      gcmcboxobj = simulationobjects.PDBFile(filename=settings.gcmcbox) 
+      # Try the find the box in the header of the file
+      box = simulationobjects.find_box(gcmcboxobj)
+      if box is None :
+        # Else take it as a ligand
+       boxpdb = pdb2box(gcmcboxobj)
+      else :
+        boxpdb = settings.gcmcbox
+    else :
+      simulationobjects.SetupError("Cannot define a GCMC simulation box without a ligand and without the gcmcbox setting") 
+    
+  # Use the flood option in solvate
+  boxobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
+                         geometry="flood",namescheme="ProtoMS")
+  # Need to change the residue name of the created waters
+  for sol in boxobj.solvents :
+    for atom in boxobj.solvents[sol].atoms : atom.resname = "WAT"
+  # Write the box to disc
+  boxname = "gcmc_wat.pdb"
+  boxobj.write(boxname) 
+  print "\nCreated %s; it contains the GCMC simulation waters. Please check the output carefully"%boxname       
+  return boxname
+  
 if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program setup and run a ProtoMS simulations")
-  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology"],help="the kind of simulation to setup",default="none")
+  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","gcmc"],help="the kind of simulation to setup",default="none")
   parser.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   parser.add_argument('-f','--folders',nargs="+",help="folders to search for files ",default=["."])
   parser.add_argument('-p','--protein',help="the prefix of the protein")
@@ -341,6 +384,9 @@ if __name__ == "__main__":
   parser.add_argument('--waterbox',help="a file with pre-equilibrated water molecules")
   parser.add_argument('--watmodel',help="the name of the water model. Default = tip4p",choices=[ 'tip3p', 'tip4p'],default='tip4p')
   parser.add_argument('--scooplimit',help="the minimum difference between number of residues in protein and scoop for scoop to be retained",default=10)
+  parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
+  parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
+  parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
   args = parser.parse_args()
   
   # Adds current folder to the folders
@@ -355,6 +401,12 @@ if __name__ == "__main__":
     str = os.path.dirname(os.path.abspath(__file__))
     print "Setting PROTOMSHOME to %s"%str
     os.environ["PROTOMSHOME"] = str # This does not change the original shell
+
+  # Try to find a default water box
+  if args.waterbox is None :
+    args.waterbox = simulationobjects.standard_filename("wbox_"+args.watmodel.lower()+".pdb","data")
+  if not os.path.isfile(args.waterbox) : 
+    raise simulationobjects.SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
      
   # Prepare each given ligand
   ligand_files = {} # This will be filled with a dictionary of filenames for each ligand
@@ -381,7 +433,7 @@ if __name__ == "__main__":
     else :
       ligobjs = ligand_files[ligands[0]]["obj"]
  
-    # Now do the prepartions
+    # Now do the preparations
     for i,l in enumerate(args.ligand) :
       if args.charge is not None and i < len(args.charge): 
         charge = args.charge[i]
@@ -412,6 +464,10 @@ if __name__ == "__main__":
   if args.protein is not None :
     protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,args)
 
+  # Extra preparation for GCMC
+  if args.simulation == "gcmc" and args.gcmcwater is None:
+    args.gcmcwater = _prep_gcmc(ligands,ligand_files,args)    
+      
   # Create ProtoMS command files
   free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)
   if free_cmd is not None : 

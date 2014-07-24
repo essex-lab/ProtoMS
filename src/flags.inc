@@ -26,14 +26,14 @@ c     whether we are using Lorentz-Berthelot combining rules
 c     whether or not to do preferential sampling
       logical PrefSample
 c     whether or not to do LambdaRE and TemperatureRE
-      logical doLambdaRE,doTemperatureRE
+      logical doLambdaRE,doTemperatureRE,doMultiGCMC
 
       common /LSIMFLAGS/ SolventBox,SolventCap,NeutraliseProtein,
      .          protodebug,
      .          GotInitialTotalEnergy,testEnergy,
      .          SingleTopologyFreeNrg,DualTopologyFreeNrg,
      .          DifferentLambdas,LorentzBerthelot,PrefSample,
-     .          doLambdaRE,doTemperatureRE,
+     .          doLambdaRE,doTemperatureRE,doMultiGCMC,
      .          PdbParams,
      .          printFE,mbar
 

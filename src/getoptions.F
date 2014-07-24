@@ -639,10 +639,15 @@ c     get the REST2 effective temperature
       restscale3 = 1.0d0 
 
 c     get the B factor for GCMC simulations
-      if (getOption('potential')) then
+      if ((.not.doMultiGCMC).and.getOption('potential')) then
          B = getDouble(words(1),B)
-      write(printstring,*) "Simulation B factor = ",B," AU"
-      call printLine(INFO,printstring)
+        write(printstring,*) "Simulation B value / Adams parameter = ",B," AU"
+        call printLine(INFO,printstring)
+      endif
+      if (doMultiGCMC) then
+        B = adamparam(myadam)
+        write(printstring,*) "Simulation B value / Adams parameter = ",B," AU"
+        call printLine(INFO,printstring) 
       endif
 
 c     Get the JAWS biasing term for JAWS-II simulations

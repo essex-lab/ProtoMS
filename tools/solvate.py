@@ -537,7 +537,7 @@ def solvate(box, ligand=None, protein=None, out="solvent_box.pdb", geometry="box
   new_watbox = simulationobjects.PDBFile()
   
   # Write box or cap information as header
-  if geometry == "box" :
+  if geometry == "box" or geometry == "flood":
     new_watbox.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n"%(added_water["min"][0]-0.5,added_water["min"][1]-0.5,added_water["min"][2]-0.5,added_water["max"][0]+0.5,added_water["max"][1]+0.5,added_water["max"][2]+0.5)
   elif geometry == "droplet" :
     new_watbox.header = "HEADER cap %.4f %.4f %.4f %.4f 1.5\n"%(added_water["cent"][0],added_water["cent"][1],added_water["cent"][2],radius)

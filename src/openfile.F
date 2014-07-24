@@ -69,8 +69,11 @@ c     see if we are asking for 'stdout' or 'stderr'
 c        write(6,*)"Task = ",myid,lrefolder,filename
         write(fullfilename,"(3A)")lrefolder(1:lineLength(lrefolder)),"/",
      .           filename(1:lineLength(filename))
+      elseif (doMultiGCMC) then
+        write(fullfilename,"(3A)")gcmcfolder(1:lineLength(gcmcfolder)),"/",
+     .           filename(1:lineLength(filename))
       else
-        fullfilename = filename
+        fullfilename = filename    
       endif
 
       lgth = lineLength(fullfilename)

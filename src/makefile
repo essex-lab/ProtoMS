@@ -617,6 +617,7 @@ OBJS = addacid.o \
        vecnormalise.o \
        volumemove.o \
        writenumberstring.o \
+       writedoublestring.o	\
        writerestart.o \
        writezmatrix.o \
        zeroallpdacont.o \

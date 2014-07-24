@@ -57,7 +57,7 @@ c       call printLine(RESULTS,printstring)
        write(printstring,*) "Solvents,Proteins,GC-solutes  =" ,NSolvents ,NProteins ,NGCSolutes
        call printLine(RESULTS,printstring)
 
-       write(printstring,*) "Simulation B factor =" ,B
+       write(printstring,*) "Simulation B value =" ,B
        call printLine(RESULTS,printstring)
 
        write(printstring,*) "Molecules in grid=" ,GCSCavity

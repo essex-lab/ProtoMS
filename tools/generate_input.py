@@ -333,10 +333,11 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
         pass      
     self.setStream("header","off")
     self.setStream("detail","off")
-    for s in ["warning","info","fatal","results"] :
+    for s in ["warning","info","fatal","results","accept",] :
       self.setStream(s,s)
     self.setParameter("cutoff",10.0)
     self.setParameter("feather",0.5)
+    self.setParameter("temperature",25.0)
     if not solvent is None :
       self.setParameter("boundary","solvent")
       if self.periodic  :
@@ -344,6 +345,8 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     if protein is None :
       for i,sol in enumerate(solutes) :
         self.setChunk("transrot %d 0.0"%(i+1))
+    else :
+      self.setParameter("pdbparams","on")
 
 class Equilibration(ProteinLigandSimulation) :
   """ 
@@ -481,7 +484,7 @@ class DualTopology(ProteinLigandSimulation) :
     self.setParameter("dualtopology1","1 2 synctrans syncrot")
     self.setParameter("softcore1","solute 1")
     self.setParameter("softcore2","solute 2")
-    self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6")
+    self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6 soft66")
     self.setParameter("lambda","0.500 0.501 0.499")
     self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
     self.setParameter("refolder",outfolder)
@@ -492,6 +495,112 @@ class DualTopology(ProteinLigandSimulation) :
     self.setDump("averages reset",dumpfreq)
     
     moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    self.setChunk("equilibrate %d %s"%(nequil,moves))        
+    self.setChunk("simulate %d %s"%(nprod,moves))
+
+class GCMC(ProteinLigandSimulation) :
+  """ 
+  This a command file for a GCMC simulation
+  Generates input for proteins, solutes and solvent
+  write GCMC parameters
+  dump results, pdb and restart files
+  equilibrate and production run
+  """
+  def __init__(self,protein="protein.pdb",
+                    solutes=[],
+                    solvent="water.pdb",
+                    templates=[],
+                    gcmcwater="gcmc_water.pdb",
+                    gcmcbox=None,   
+                    nequil=5E6,
+                    nprod=40E6,
+                    dumpfreq=1E5,
+                    adamval=None,
+                    outfolder="out_gcmc") :  
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    gcmcwater : string, optional
+      filename of the water to do gcmc one
+    gcmcbox : dictionary of numpy array, optional
+      defines the box if not found in gcmcwater
+    nequil : int, optional
+      number of equilibration moves
+    nprod : int, optional
+      number of production moves
+    dumfreq : int, optional
+      the dump frequency 
+    adamval : list of floats
+      the Adams values to perform the simulation at
+    outfolder  : string, optional
+      the folder for all output files
+    
+    Raises
+    ------
+    SetupError
+      no protein given
+      no box dimensions found
+      no GCMC water given
+      no Adam values givens
+    """      
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
+     
+    if adamval is None :
+      raise simulationobjects.SetupError("Must give at least one Adam value")
+
+    if protein is None :
+      raise simulationobjects.SetupError("Cannot setup GCMC without protein")
+
+    if gcmcwater is None  :
+      raise simulationobjects.SetupError("Cannot setup GCMC without any GCMC water")
+ 
+    self.setParameter("#"," GCMC specific parameters")
+    self.setParameter("gcmc","0")
+    self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
+    self.setParameter("grand1",gcmcwater)
+    if isinstance(adamval,float) or isinstance(adamval,int):
+      self.setParameter("potential","%.3f"%adamval)
+    elif len(adamval) == 1 :
+      self.setParameter("potential","%.3f"%adamval[0])
+    else :
+      self.setParameter("multigcmc"," ".join("%.3f"%a for a in adamval))
+    self.setParameter("refolder",outfolder)
+
+    gcmcwat = simulationobjects.PDBFile(filename=gcmcwater)
+    headerbox = simulationobjects.find_box(gcmcwat)
+      
+    if headerbox is None :
+      if gcmcbox is None :
+        raise simulationobjects.SetupError("Cannot setup GCMC without a box")
+      gcmcbox = simulationobjects.PDBFile(filename=gcmcbox).getBox()
+    else :
+      gcmcbox = headerbox
+
+    if "origin" in gcmcbox :
+      for i,param in enumerate(["x","y","z"]) :
+        self.setParameter("origin"+param,gcmcbox["origin"][i])
+    elif "center" in gcmcbox :
+      for i,param in enumerate(["x","y","z"]) :
+        self.setParameter("center"+param,gcmcbox["center"][i])
+    for i,param in enumerate(["x","y","z"]) :
+      self.setParameter(param,gcmcbox["len"][i])
+    
+    self.setParameter("#"," End of GCMC specific parameters")
+  
+    self.setDump("results write results",dumpfreq)
+    self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
+    self.setDump("restart write restart",dumpfreq)
+    self.setDump("averages reset",dumpfreq)
+    
+    moves = _assignMoveProbabilities(protein,solutes,solvent,True,self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
@@ -593,6 +702,13 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
                              templates=templates,solvent=protein_water,
                              lambdaval=lambdavals,nequil=settings.nequil,
                              nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder="out_bnd")
+
+  elif settings.simulation == "gcmc" :
+  
+      bnd_cmd = GCMC(protein=protein,solutes=ligands, 
+                     templates=templates,solvent=protein_water,gcmcwater=settings.gcmcwater,
+                     adamval=settings.adams,nequil=settings.nequil,gcmcbox=settings.gcmcbox,
+                     nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder="out_gcmc")    
                         
   return free_cmd,bnd_cmd  
 
@@ -603,30 +719,24 @@ if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to create a ProtoMS command file")
-  parser.add_argument('-s','--simulation',choices=["vacuum","equilibration","dualtopology"],help="the kind of simulation to setup",default="equilibration")
+  parser.add_argument('-s','--simulation',choices=["vacuum","equilibration","dualtopology","gcmc"],help="the kind of simulation to setup",default="equilibration")
   parser.add_argument('-p','--protein',help="the name of the protein file")
   parser.add_argument('-l','--ligands',nargs="+",help="the name of the ligand pdb files")
   parser.add_argument('-t','--templates',nargs="+",help="the name of ProtoMS template files")
-  parser.add_argument('-w','--water',help="the name of the solvent")
-  parser.add_argument('-o','--out',help="the name of the command file",default="run.cmd")
+  parser.add_argument('-pw','--protwater',help="the name of the solvent for protein")
+  parser.add_argument('-lw','--ligwater',help="the name of the solvent for ligand")
+  parser.add_argument('-o','--out',help="the prefix of the name of the command file",default="run")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
+  parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
+  parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
+  parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
   parser.add_argument('--nequil',type=int,help="the number of equilibration steps",default=5E6)
   parser.add_argument('--nprod',type=int,help="the number of production steps",default=40E6)
   parser.add_argument('--dumpfreq',type=int,help="the output dump frequency",default=1E5)
   args = parser.parse_args()
 
-  if args.simulation == "vacuum" :
-    cmdfile = Vacuum(protein=args.protein,solutes=args.ligands,templates=args.templates,nsteps=args.nprod)  
-  elif args.simulation == "equilibration" :
-    cmdfile = Equilibration(protein=args.protein,solutes=args.ligands,solvent=args.water,templates=args.templates,nsteps=args.nequil)
-  elif args.simulation == "dualtopology" : 
-    if len(args.ligands) < 2 :
-      simulationobjects.SetupError("Cannot perform dual topology with less than two ligands.")
-    if len(args.lambdas) == 1 :
-      nlambdas = int(args.lambdas[0])
-      lambdavals = np.linspace(0,1,nlambdas,endpoint=True)
-    else :
-      lambdavals = args.lambdas
-      nlambdas = len(lambdavals)
-    cmdfile = DualTopology(protein=args.protein,solutes=args.ligands,solvent=args.water,templates=args.templates,nequil=args.nequil,nprod=args.nprod,dumpfreq=args.dumpfreq,lambdaval=lambdavals)
-  cmdfile.writeCommandFile(args.out)
+  free_cmd,bnd_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args) 
+  if free_cmd is not None : 
+    free_cmd.writeCommandFile(args.out+"_free.cmd")
+  if bnd_cmd is not None : 
+    bnd_cmd.writeCommandFile(args.out+"_bnd.cmd")    
