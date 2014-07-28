@@ -97,7 +97,6 @@ c     this file has not been opened, so try to open it!
       nOpenFiles = FILE
       fileopened(FILE) = .false.     
       openfiles(FILE) = fullfilename
-      if (myid.eq.0) write(6,*)openfiles(FILE)(1:lineLength(openfiles(FILE)))      
       openFILE = FILE+40
       return
       

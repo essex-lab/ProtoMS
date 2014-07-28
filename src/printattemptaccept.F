@@ -19,7 +19,6 @@ c#############################################################
       integer i,j,itry,iacp,igcs
       integer lgth,lineLength
       double precision iprcnt
-      
       if (NVolTry.gt.0) then
         write(printstring,*) "Attempted ",NVolTry," volume moves. Accepted ",NVolAcp," (",
      .                      100.0*dble(NVolAcp)/dble(NVolTry),"%)"

@@ -23,7 +23,7 @@ c#################################################################
 
       integer nconfig
       integer i,imov,j,k    
-      integer NAcceptedMoves,NTotalMoves
+      integer NAcceptedMoves,NTotalMoves,linelength
       integer getMoveType,numb
       logical residueMove,titrationMove,solventMove,soluteMove
       logical rotamerMove
