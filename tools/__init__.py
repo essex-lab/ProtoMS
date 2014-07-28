@@ -13,3 +13,5 @@ from generate_input import generate_input
 from solvate import solvate
 from build_template import build_template
 from convertwater import convertwater
+from merge_templates import merge_templates
+from make_single import make_single,write_map

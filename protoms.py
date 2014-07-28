@@ -67,6 +67,27 @@ def _locate_file(filename,folders) :
   # If we haven't found it up to now, give up and return None
   return None
 
+def _merge_templates(templates) :
+  """
+  Merge template files
+  
+  Parameters
+  ----------
+  templates : list of string
+    names of all the template files
+
+  Returns
+  -------
+  list of strings
+    modify list of names
+  """
+  temfile = tools.merge_templates(templates)
+  allnames = "-".join(t.name.lower() for t in temfile.templates)
+  templates = [allnames+".tem"]
+  temfile.write(allnames+".tem")
+  print "Created a re-numbered template files for all ligands: %s"%templates[0]
+  return templates
+
 def _load_ligand_pdb(ligprefix,folders) :
   """
   Load a ligand pdb file
@@ -299,6 +320,51 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
   else:
     return protein_scoop_file,protein_water
 
+def _prep_singletopology(pdbs,templates1,settings) :
+  """
+  Prepare templates for single topology
+  
+  Parameters
+  ----------
+  pdbs : list of strings
+    names of ligand pdb files
+  templares1 : list of strings
+    names of ligand template files
+  settings : Namespace (from argparse) 
+    additional settings
+    
+  Returns
+  -------
+  list of string
+    the template files for electrostatic leg
+  list of string
+    the template files for the van der Waals leg
+  """
+  tem1 = simulationobjects.TemplateFile(templates1[0])
+  tem2 = simulationobjects.TemplateFile(templates1[1])
+
+  print "\nSetting up single-topology correspondance map and templates..."
+  eletem,vdwtem,cmap = tools.make_single(tem1,tem2,pdbs[0],pdbs[1],settings.singlemap)
+  
+  pdbs.pop(1)
+  templates1.pop(1)
+  templates2 = list(templates1)
+
+  prefix = os.path.join(os.path.dirname(pdbs[0]),tem1.templates[0].name.lower()+"t"+tem2.templates[0].name.lower())
+  templates1[0] = prefix+"_ele.tem" 
+  templates2[0] = prefix+"_vdw.tem"
+
+  eletem.write(templates1[0])
+  vdwtem.write(templates2[0])
+  print "\nCreated template %s for electrostatic perturbation. Please check the output carefully."%templates1[0]
+  print "Created template %s for van der Waals-perturbation. Please check the output carefully."%templates2[0]
+  
+  if args.singlemap is None : settings.singlemap = "single_cmap.dat"
+  print "Saved correspondance map to: %s"%settings.singlemap
+  tools.write_map(cmap,settings.singlemap)
+
+  return templates1,templates2
+
 def _prep_gcmc(ligands,ligand_files,settings) :
   """
   Prepare water box for GCMC calculations
@@ -357,12 +423,13 @@ def _prep_gcmc(ligands,ligand_files,settings) :
   boxobj.write(boxname) 
   print "\nCreated %s; it contains the GCMC simulation waters. Please check the output carefully"%boxname       
   return boxname
+
   
 if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program setup and run a ProtoMS simulations")
-  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","gcmc"],help="the kind of simulation to setup",default="none")
+  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc"],help="the kind of simulation to setup",default="none")
   parser.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   parser.add_argument('-f','--folders',nargs="+",help="folders to search for files ",default=["."])
   parser.add_argument('-p','--protein',help="the prefix of the protein")
@@ -387,6 +454,7 @@ if __name__ == "__main__":
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
+  parser.add_argument('--singlemap',help="the correspondance map for single-topology")
   args = parser.parse_args()
   
   # Adds current folder to the folders
@@ -446,17 +514,16 @@ if __name__ == "__main__":
     ligpdbs = [ligand_files[l]["pdb"] for l in ligands]
     ligtems = [ligand_files[l]["tem"] for l in ligands]
     ligand_water = ligand_files[ligands[0]]["wat"]
+ 
+    # Here we need to make single topology templates, if requested
+    if args.simulation == "singletopology" :
+      ligtems,ligtems2 = _prep_singletopology(ligpdbs,ligtems,args)
 
     # Here we will merge ligand template files if there is more than one
     if len(ligtems) > 1 :
-      temfile = tools.simulationobjects.TemplateFile(ligand_files[ligands[0]]["tem"])
-      for l in ligands[1:] :
-        temfile2 = tools.simulationobjects.TemplateFile(ligand_files[l]["tem"])
-        temfile.append(temfile2)
-      allnames = "-".join(t.name.lower() for t in temfile.templates)
-      ligtems = [allnames+".tem"]
-      temfile.write(allnames+".tem")
-      print "\nCreated a re-numbered template files for all ligands: %s"%ligtems[0]
+      print ""
+      ligtems = _merge_templates(ligtems)
+      if args.simulation == "singletopology" : ligtems2 = _merge_templates(ligtems2)    
     
   # Prepare the protein
   protein_file = None
@@ -469,11 +536,23 @@ if __name__ == "__main__":
     args.gcmcwater = _prep_gcmc(ligands,ligand_files,args)    
       
   # Create ProtoMS command files
+  postfix = ""
+  if args.simulation == "singletopology" : 
+    postfix = "_ele"
+    setattr(args,"outfolder","out_ele")
   free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)
   if free_cmd is not None : 
-    free_cmd.writeCommandFile(args.cmdfile+"_free.cmd")
+    free_cmd.writeCommandFile(args.cmdfile+postfix+"_free.cmd")
   if bnd_cmd is not None : 
-    bnd_cmd.writeCommandFile(args.cmdfile+"_bnd.cmd")    
+    bnd_cmd.writeCommandFile(args.cmdfile+postfix++"_bnd.cmd")    
+  
+  if args.simulation == "singletopology" :
+    setattr(args,"outfolder","out_vdw")
+    free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,args)
+    if free_cmd is not None : 
+      free_cmd.writeCommandFile(args.cmdfile+"_vdw_free.cmd")
+    if bnd_cmd is not None : 
+      bnd_cmd.writeCommandFile(args.cmdfile+"_vdw_bnd.cmd")      
       
     
       

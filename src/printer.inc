@@ -21,9 +21,11 @@ c     FATAL and WARNING are special, so are 1 and 2
       parameter(MOVE = 8)
       parameter(SPENERGY = 9)      
       parameter(DETAIL = 10)                      
-      parameter(RESULTS = 11)
+      parameter(RESULTS = 13) 
+c#11
       parameter(RESTART = 12)
-      parameter(ACCPT = 13)
+      parameter(ACCPT = 11) 
+c#13
       parameter(RETI = 14)
       parameter(SPLITPOT = 15)
       parameter(PPARAMS = 16)

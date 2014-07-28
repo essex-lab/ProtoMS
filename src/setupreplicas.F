@@ -46,13 +46,13 @@ c       Read in template folder
           enddo
           mylambda = 1
           write(lrefolder,"(2A,F5.3)")reoutfolder(1:lineLength(reoutfolder)),"/lam-",lambdaval(1)
-c          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
+          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
           nlretry = 0
           nlreswap = 0
         else
           call MPI_Recv(mylambda,1,MPI_INT,0,11,MPI_COMM_WORLD,mpistat,ierr)
           write(lrefolder,"(2A,F5.3)")reoutfolder(1:lineLength(reoutfolder)),"/lam-",lambdaval(mylambda)
-c          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
+          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
         endif
       elseif (getoption('multigcmc')) then
 c       Read in all B-values

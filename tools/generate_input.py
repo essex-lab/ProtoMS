@@ -479,12 +479,74 @@ class DualTopology(ProteinLigandSimulation) :
     if lambdaval is None or len(lambdaval) < 2 :
       raise simulationobjects.SetupError("Must give at least two lambda values")
 
-    self.setParameter("pdbparams","on")
     self.setParameter("printfe","mbar")
     self.setParameter("dualtopology1","1 2 synctrans syncrot")
     self.setParameter("softcore1","solute 1")
     self.setParameter("softcore2","solute 2")
     self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6 soft66")
+    self.setParameter("lambda","0.500 0.501 0.499")
+    self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
+    self.setParameter("refolder",outfolder)
+
+    self.setDump("results write results",dumpfreq)
+    self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
+    self.setDump("restart write restart",dumpfreq)
+    self.setDump("averages reset",dumpfreq)
+    
+    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    self.setChunk("equilibrate %d %s"%(nequil,moves))        
+    self.setChunk("simulate %d %s"%(nprod,moves))
+
+class SingleTopology(ProteinLigandSimulation) :
+  """ 
+  This a command file for a single-topology protein-ligand simulation
+  Generates input for proteins, solutes and solvent
+  write lambda-replica exchange,
+  dump results, pdb and restart files
+  equilibrate and production run
+  """
+  def __init__(self,protein="protein.pdb",
+                    solutes=["solute1.pdb"],
+                    solvent="water.pdb",
+                    templates=["solute.tem"],
+                    nequil=5E6,
+                    nprod=40E6,
+                    dumpfreq=1E5,
+                    lambdaval=None,
+                    outfolder="out") :  
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    nequil : int, optional
+      number of equilibration moves
+    nprod : int, optional
+      number of production moves
+    dumfreq : int, optional
+      the dump frequency 
+    lambdaval : float or list of floats
+      the lambda values to perform the simulation at
+    outfolder  : string, optional
+      the folder for all output files
+    
+    Raises
+    ------
+    SetupError
+      no lambda values given
+    """                
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
+     
+    if lambdaval is None or len(lambdaval) < 2 :
+      raise simulationobjects.SetupError("Must give at least two lambda values")
+
+    self.setParameter("printfe","mbar")
     self.setParameter("lambda","0.500 0.501 0.499")
     self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
     self.setParameter("refolder",outfolder)
@@ -679,8 +741,10 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
                          nequil=settings.nequil,
                          nprod=settings.nprod,dumpfreq=settings.dumpfreq)
             
-  elif settings.simulation == "dualtopology" :
+  elif settings.simulation in ["dualtopology","singletopology"] :
   
+    cmdcls = {"dualtopology":DualTopology,"singletopology":SingleTopology}
+   
     if ligands is None :
       raise tools.SetupError("No ligands loaded, cannot do dual-topology simulations.")
 
@@ -692,16 +756,21 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       nlambdas = len(lambdavals)
     print "\nWill simulate with %s lambda values"%nlambdas
   
-    free_cmd = DualTopology(protein=None,solutes=ligands[:min(len(ligands),2)], 
+    if hasattr(settings,"outfolder") :
+      outfolder = settings.outfolder
+    else :
+      outfolder = "out"
+
+    free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
                             lambdaval=lambdavals,nequil=settings.nequil,
-                            nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder="out_free")
+                            nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_free")
       
     if protein is not None :
-      bnd_cmd = DualTopology(protein=protein,solutes=ligands, 
+      bnd_cmd = cmdcls[settings.simulation](protein=protein,solutes=ligands, 
                              templates=templates,solvent=protein_water,
                              lambdaval=lambdavals,nequil=settings.nequil,
-                             nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder="out_bnd")
+                             nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_bnd")
 
   elif settings.simulation == "gcmc" :
   
@@ -719,7 +788,8 @@ if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to create a ProtoMS command file")
-  parser.add_argument('-s','--simulation',choices=["vacuum","equilibration","dualtopology","gcmc"],help="the kind of simulation to setup",default="equilibration")
+  parser.add_argument('-s','--simulation',choices=["sampling","equilibration","dualtopology","gcmc"],help="the kind of simulation to setup",default="equilibration")
+  parser.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   parser.add_argument('-p','--protein',help="the name of the protein file")
   parser.add_argument('-l','--ligands',nargs="+",help="the name of the ligand pdb files")
   parser.add_argument('-t','--templates',nargs="+",help="the name of ProtoMS template files")

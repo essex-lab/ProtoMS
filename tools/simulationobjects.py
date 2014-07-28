@@ -587,6 +587,7 @@ class TemplateConnectivity() :
   def __init__(self,record=None) :
     self.type = ""
     self.atoms = []
+    self.residues = []
     self.flex = None
     self.param0 = None
     self.param1 = None
@@ -596,13 +597,16 @@ class TemplateConnectivity() :
     cols = record.strip().split()
     self.type = cols[0]
     if self.type == "bond" :
-      self.atoms = ["%4s %s"%(cols[1],cols[2]),"%4s %s"%(cols[3],cols[4])]
+      self.atoms = [cols[1],cols[3]]
+      self.residues = [cols[2],cols[4]]
       nexti = 5
     elif self.type == "angle" :
-      self.atoms = ["%4s %s"%(cols[1],cols[2]),"%4s %s"%(cols[3],cols[4]),"%4s %s"%(cols[5],cols[6])]
+      self.atoms = [cols[1],cols[3],cols[5]]
+      self.residues = [cols[2],cols[4],cols[6]]
       nexti = 7
     elif self.type == "dihedral" :
-      self.atoms = ["%4s %s"%(cols[1],cols[2]),"%4s %s"%(cols[3],cols[4]),"%4s %s"%(cols[5],cols[6]),"%4s %s"%(cols[7],cols[8])]
+      self.atoms = [cols[1],cols[3],cols[5],cols[7]]
+      self.residues = [cols[2],cols[4],cols[6],cols[8]]
       nexti = 9
     while nexti < len(cols) :
       if cols[nexti] == "flex" :
@@ -621,7 +625,12 @@ class TemplateConnectivity() :
         return param.index
       else :
         return param
-    strout = "%s %s"%(self.type," ".join(self.atoms))
+    def make_atomstr(atom) :
+      if isinstance(atom,basestring) :
+        return atom
+      else :
+        return atom.name
+    strout = "%s %s"%(self.type," ".join("%4s %s"%(make_atomstr(atm),res) for atm,res in zip(self.atoms,self.residues)))
     if self.flex is not None : strout = strout + " flex %.3f"%self.flex          
     if self.param0 is not None : strout = strout + " param %d %d"%(make_paramstr(self.param0),make_paramstr(self.param1))
     if self.dummy : strout = strout + " dummy"
@@ -735,11 +744,11 @@ class TemplateFile() :
     templatenames = [t.name for t in self.templates]
     for template in other.templates :
       if template.name in templatenames :
-        SimulationObjects.SetupError("Appending this template will cause duplicate names: %s. Aborting."%template.name)
+        SetupError("Appending this template will cause duplicate names: %s. Aborting."%template.name)
       self.templates.append(template)     
      
   def assign_paramobj(self) :
-    def assign_con(con,paramlist) :
+    def assign_con(con,paramlist,tem) :
       if not isinstance(con.param0,ForceFieldParameter) :
         for param in paramlist :
           if param.index == con.param0 :
@@ -750,6 +759,11 @@ class TemplateFile() :
           if param.index == con.param1 :
             con.param1 = param
             break
+      for i,atom in enumerate(con.atoms) :
+        if isinstance(atom,basestring) :
+          for atom2 in tem.atoms :
+            if atom2.name.upper() == atom.upper() : 
+              con.atoms[i] = atom2
 
     for atms in self.bondatoms :
       if not isinstance(atms.param,ForceFieldParameter) :
@@ -787,13 +801,20 @@ class TemplateFile() :
             if param.index == atom.param1 :
               atom.param1 = param
               break
+        for atom2 in template.atoms :
+          if isinstance(atom.bondedto,basestring) and atom.bondedto == atom2.name :
+            atom.bondedto = atom2
+          if isinstance(atom.angleto,basestring) and atom.angleto == atom2.name :
+            atom.angleto = atom2
+          if isinstance(atom.dihedto,basestring) and atom.dihedto == atom2.name :
+            atom.dihedto = atom2
       for con in template.connectivity :
-        if con.type == "bond" and con.param0 is not None :
-          assign_con(con,self.bondparams)
-        elif con.type == "angle" and con.param0 is not None :
-          assign_con(con,self.angleparams)
-        if con.type == "dihedral" and con.param0 is not None :
-          assign_con(con,self.dihedralparams)
+        if con.type == "bond" :
+          assign_con(con,self.bondparams,template)
+        elif con.type == "angle" :
+          assign_con(con,self.angleparams,template)
+        if con.type == "dihedral" :
+          assign_con(con,self.dihedralparams,template)
   def read(self,filename) :
     
     with open(filename,"r") as f :
@@ -879,6 +900,26 @@ class TemplateFile() :
         for param in self.cljparams : f.write("%s\n"%param)
       if self.templates :
         for template in self.templates : template.write_to(f)
+
+#########
+
+def angle(v1,v2) :
+
+  a = (v1*v2).sum()/(np.sqrt((v1**2).sum())*np.sqrt((v2**2).sum()))
+  if a > 1.0 :
+    a = 0.0
+  elif a < -1 :
+    a = np.pi
+  else :
+    a = np.arccos(a)
+  return a
+
+def angle_atms(a1,a2,a3) :
+
+  v1 = a2 - a1
+  v2 = a2 - a3
+  return angle(v1,v2)
+
 
 if __name__ == "__main__":
 
