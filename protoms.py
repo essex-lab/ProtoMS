@@ -237,11 +237,15 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
 
   protprefix = _get_prefix(protprefix)
   watprefix  = _get_prefix(watprefix)
+  if settings.scoop is None :
+    scoopprefix = protprefix+"_scoop"
+  else :
+    scoopprefix = _get_prefix(settings.scoop)
 
   # Try to locate necessary protein files
   protein_orig_file = _locate_file(protprefix+".pdb",folders)
   protein_pms_file = _locate_file(protprefix+"_pms.pdb",folders)
-  protein_scoop_file = _locate_file(protprefix+"_scoop.pdb",folders)
+  protein_scoop_file = _locate_file(scoopprefix+".pdb",folders)
   protein_water = _locate_file(watprefix+".pdb",folders)
   
   # Cannot do anything without a pdb-file, so raise an exception
@@ -436,6 +440,7 @@ if __name__ == "__main__":
   parser.add_argument('-l','--ligand',nargs="+",help="the prefix of the ligand(s)")
   parser.add_argument('-w','--water',help="the prefix of the water/solvent",default="water")
   parser.add_argument('-c','--cmdfile',help="the prefix of the command file",default="run")
+  parser.add_argument('-o','--scoop',help="the name of your protein scoop")
   parser.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)
