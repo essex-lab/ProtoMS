@@ -235,7 +235,10 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     if default water box cannot be found
   """
 
-  protprefix = _get_prefix(protprefix)
+  if protprefix is not None :
+    protprefix = _get_prefix(protprefix)
+  else :
+    protprefix = _get_prefix(settings.scoop)
   watprefix  = _get_prefix(watprefix)
   if settings.scoop is None :
     scoopprefix = protprefix+"_scoop"
@@ -249,10 +252,15 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
   protein_water = _locate_file(watprefix+".pdb",folders)
   
   # Cannot do anything without a pdb-file, so raise an exception
+  if settings.protein is None and protein_scoop_file is None:
+    raise simulationobjects.SetupError("Specified scoop (%s.pdb) could not be found"%scoopprefix)
   if protein_orig_file is None and protein_scoop_file is None and protein_pms_file is None:
-    raise simulationobjects.SetupError("Protein file (%s.pdb) and protein scoop file (%s_scoop.pdb) and protein pms file (%s_pms.pdb) could not be found"%(protprefix,protprefix,protprefix))
+    raise simulationobjects.SetupError("Protein file (%s.pdb) and protein scoop file (%s.pdb) and protein pms file (%s_pms.pdb) could not be found"%(protprefix,scoopprefix,protprefix))
 
   print "\nSetting up protein: %s..."%protein_orig_file
+
+  if settings.scoop is not None and protein_scoop_file is None:
+    print "Specified scoop (%s.pdb) not found. Ignoring..."%scoopprefix
 
   protobj = None
   if protein_scoop_file is None and protein_pms_file is None :
@@ -465,7 +473,7 @@ if __name__ == "__main__":
   # Adds current folder to the folders
   args.folders.append(".")
   
-  if args.protein is None and args.ligand is None :
+  if args.protein is None and args.ligand is None and args.scoop is None:
     print "Nothing to do, so exit!"
     quit()
  
@@ -533,7 +541,7 @@ if __name__ == "__main__":
   # Prepare the protein
   protein_file = None
   water_file = None
-  if args.protein is not None :
+  if args.protein is not None or args.scoop is not None:
     protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,args)
 
   # Extra preparation for GCMC
