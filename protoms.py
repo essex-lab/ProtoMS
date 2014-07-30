@@ -154,8 +154,27 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
   files["prepi"] = _locate_file(ligprefix+".prepi",folders)
   files["frcmod"] = _locate_file(ligprefix+".frcmod",folders)
   files["zmat"] = _locate_file(ligprefix+".zmat",folders)
-  files["tem"] = _locate_file(ligprefix+".tem",folders)
   files["wat"] = _locate_file(ligprefix+"_box.pdb",folders)
+
+  # Get the ligand name from the pdb header
+  if 'HEADER' in files["obj"].header:
+    words = files["obj"].header.strip().split()
+    ligname = words[words.index('HEADER')+1]
+  else:
+    ligname = files["obj"].residues[1].name
+    files["obj"].header = files["obj"].header + "HEADER " + ligname + "\n"
+    files["obj"].write(files["pdb"])
+
+  # Try to locate template for the ligand
+  files["tem"] = None
+  if settings.template is None:
+    files["tem"] = _locate_file(ligprefix+".tem",folders)
+  else:
+    for f in settings.template :
+      tempfile = _locate_file(f,folders)
+      tem = simulationobjects.TemplateFile(filename=tempfile)
+      if tem.templates[0].name == ligname:
+        files["tem"] = tempfile
 
   print "\nSetting up ligand: %s..."%files["pdb"]
 
@@ -199,15 +218,6 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
                            geometry="box",padding=10.0, radius=30.0, center="cent",
                            namescheme="ProtoMS")
     boxpdb.write(files["wat"])
-
-  # Check if the pdb of the ligand has a header
-  if 'HEADER' in files["obj"].header:
-    words = files["obj"].header.strip().split()
-    ligname = words[words.index('HEADER')+1]
-  else:
-    ligname = files["obj"].residues[1].name
-    files["obj"].header = files["obj"].header + "HEADER " + ligname + "\n"
-    files["obj"].write(files["pdb"])
 
   return files
   
@@ -458,6 +468,7 @@ if __name__ == "__main__":
   parser.add_argument('-w','--water',help="the prefix of the water/solvent",default="water")
   parser.add_argument('-c','--cmdfile',help="the prefix of the command file",default="run")
   parser.add_argument('-o','--scoop',help="the name of your protein scoop")
+  parser.add_argument('-t','--template',nargs="+",help="the template files for your ligands")
   parser.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)
@@ -544,8 +555,12 @@ if __name__ == "__main__":
     # Here we will merge ligand template files if there is more than one
     if len(ligtems) > 1 :
       print ""
-      ligtems = _merge_templates(ligtems)
-      if args.simulation == "singletopology" : ligtems2 = _merge_templates(ligtems2)    
+      # Unless they are all identical, merge
+      if not ligtems[1:] == ligtems[:-1] :
+        ligtems = _merge_templates(ligtems)
+        if args.simulation == "singletopology" : ligtems2 = _merge_templates(ligtems2)  
+      else :
+        ligtems = [ligtems[0]]  
     
   # Prepare the protein
   protein_file = None
@@ -566,7 +581,7 @@ if __name__ == "__main__":
   if free_cmd is not None : 
     free_cmd.writeCommandFile(args.cmdfile+postfix+"_free.cmd")
   if bnd_cmd is not None : 
-    bnd_cmd.writeCommandFile(args.cmdfile+postfix++"_bnd.cmd")    
+    bnd_cmd.writeCommandFile(args.cmdfile+postfix+"_bnd.cmd")    
   
   if args.simulation == "singletopology" :
     setattr(args,"outfolder","out_vdw")

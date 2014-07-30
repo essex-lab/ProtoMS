@@ -720,7 +720,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       
   elif settings.simulation == "sampling" :
     if ligands is not None :
-      if args.dovacuum : 
+      if settings.dovacuum : 
         solvent = None
       else :
         solvent = ligand_water
