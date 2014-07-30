@@ -200,6 +200,15 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
                            namescheme="ProtoMS")
     boxpdb.write(files["wat"])
 
+  # Check if the pdb of the ligand has a header
+  if 'HEADER' in files["obj"].header:
+    words = files["obj"].header.strip().split()
+    ligname = words[words.index('HEADER')+1]
+  else:
+    ligname = files["obj"].residues[1].name
+    files["obj"].header = files["obj"].header + "HEADER " + ligname + "\n"
+    files["obj"].write(files["pdb"])
+
   return files
   
 def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
