@@ -555,12 +555,8 @@ if __name__ == "__main__":
     # Here we will merge ligand template files if there is more than one
     if len(ligtems) > 1 :
       print ""
-      # Unless they are all identical, merge
-      if not ligtems[1:] == ligtems[:-1] :
-        ligtems = _merge_templates(ligtems)
-        if args.simulation == "singletopology" : ligtems2 = _merge_templates(ligtems2)  
-      else :
-        ligtems = [ligtems[0]]  
+      ligtems = _merge_templates(ligtems)
+      if args.simulation == "singletopology" : ligtems2 = _merge_templates(ligtems2)    
     
   # Prepare the protein
   protein_file = None

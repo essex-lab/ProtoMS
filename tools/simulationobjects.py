@@ -696,6 +696,11 @@ class TemplateFile() :
 
   def append(self,other) :
 
+    templatenames = [t.name for t in self.templates]
+    if set([t.name for t in other.templates]).issubset(set(templatenames)) :
+      SetupError("All molecules in the new template file are already in the original template.")
+      return
+
     if self.bondparams :
       start = max(p.index for p in self.bondparams) + 1
     else :
@@ -721,6 +726,8 @@ class TemplateFile() :
     else :
       start = -5000000
     for index,param in enumerate(other.dihedralterms,start) :
+      print start
+      print index
       if index > 0 : param.index = index
       self.dihedralterms.append(param)
     if self.dihedralparams :
@@ -741,11 +748,11 @@ class TemplateFile() :
       if index > 0 : param.index = index
       self.cljparams.append(param)
     
-    templatenames = [t.name for t in self.templates]
     for template in other.templates :
       if template.name in templatenames :
         SetupError("Appending this template will cause duplicate names: %s. Aborting."%template.name)
-      self.templates.append(template)     
+      else :
+        self.templates.append(template)     
      
   def assign_paramobj(self) :
     def assign_con(con,paramlist,tem) :
