@@ -27,7 +27,8 @@ c       Read in frequency and number of lambdas
           lambdaval(i-1) = getDouble(words(i),0.0)
         enddo
         if (ntasks.ne.nlambdas) then
-          call closeProgram(100,"Number of lambdas is not equal to the number of tasks!")
+          write(printstring,*)"Number of lambdas is not equal to the number of tasks!",ntasks,nlambdas
+          call closeProgram(100,printstring)
         endif  
         doLambdaRE = .true.
 c       Read in template folder    

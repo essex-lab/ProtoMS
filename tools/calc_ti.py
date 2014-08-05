@@ -66,7 +66,7 @@ def _print_head(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8s"%std,
   print ""
 
-def _parse_folder(path,res_tem,skip,maxread) :
+def _parse_folder(path,res_tem,skip,maxread,useanalytical) :
   """ 
   Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
   
@@ -80,7 +80,9 @@ def _parse_folder(path,res_tem,skip,maxread) :
     number of snapshots to skip
   maxread : int
     maximum number of snapshots to read
-
+  useanalytical : boolean
+    if to use analytical gradients
+    
   Returns
   -------
   float
@@ -105,7 +107,10 @@ def _parse_folder(path,res_tem,skip,maxread) :
     results_file.read(filename=f,skip=skip,readmax=maxread)
     for snapshot in results_file.snapshots:
       # what you want here is to get the current lambda and the gradient for this snapshot, so that you can do (9) 
-      if hasattr(snapshot,"gradient") :
+      if useanalytical and hasattr(snapshot,"agradient") :
+        gradient = snapshot.agradient
+        lam = snapshot.lam
+      elif hasattr(snapshot,"gradient") :
         gradient = snapshot.gradient
         lam = snapshot.lam
       else :
@@ -133,7 +138,7 @@ def _parse_folder(path,res_tem,skip,maxread) :
       std = np.sqrt((gradsum2-av*gradsum)/(n-1)/n)
     return lam,av,std
 
-def _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam) :
+def _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam,useanalytical) :
   """
   Calculate gradients for a number of folders
   
@@ -153,7 +158,9 @@ def _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam)
     indicate if uncertainties should be printed
   print_lam : boolean
     indicate if lambda values should be printed
-
+  useanalytical : boolean
+    if to use analytical gradients
+    
   Returns
   -------
   numpy array
@@ -173,14 +180,14 @@ def _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam)
   stds = []
   lambdas = []
   for path in paths :
-    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread)
+    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,useanalytical)
     if print_grad : _print_ene(lam,grad,std,print_uncert,print_lam)
     gradients.append(grad)
     lambdas.append(lam)
     stds.append(std)
   return np.array(lambdas),np.array(gradients),np.array(stds)
 
-def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam) :
+def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam,useanalytical) :
   """
   Do thermodynamic integration
   
@@ -202,6 +209,8 @@ def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam) :
     if to print the uncertainty
   print_lam : boolean
     if to print the lambda value
+  useanalytical : boolean
+    if to use analytical gradients
 
   Returns
   -------
@@ -220,7 +229,7 @@ def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam) :
   # Calculate the gradient
   if print_grad :
     _print_head("lambda","gradient","std",print_uncert,print_lam)
-  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam)
+  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam,useanalytical)
 
   
   # Calculate and print the PMF 
@@ -261,6 +270,7 @@ if __name__ == '__main__' :
   parser.add_argument('-pu','--print-uncert',dest='printUncert',action='store_false',help="turns off printing of uncertainties",default=True)
   parser.add_argument('-pl','--print-lam',dest='printLam',action='store_false',help="turns off printing of lambda-values",default=True)
   parser.add_argument('-gr','--plot-grads',dest='plotGrad',action='store_false',help="turns off producing plot of gradients",default=True)
+  parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   args = parser.parse_args()
 
   # Fix negative values of skip and max
@@ -270,7 +280,7 @@ if __name__ == '__main__' :
     args.skip = -1
   # Do thermodynamic integration
   lambdas,gradients,grad_std,pmf,pmf_std = ti(args.directory,args.results,args.skip,args.max,args.printGrad,
-                                               args.printPMF,args.printUncert,args.printLam)
+                                               args.printPMF,args.printUncert,args.printLam,args.analytical)
 
   # Plot the gradient
   if args.plotGrad :

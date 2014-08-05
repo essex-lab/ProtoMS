@@ -88,7 +88,7 @@ c       the format is 'lambda lambdaf lambdab'
 c          write(6,*)"Task =",myid,"lambda = ",lambda
         endif
       endif
-      lambda = lambdaval(mylambda)
+      if (doLambdaRE) lambda = lambdaval(mylambda)
 
 c     are we trying to match Sire?
       if (getOption('sire_compatibility_mode')) then

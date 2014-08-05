@@ -301,6 +301,7 @@ OBJS = addacid.o \
        isbackbone.o \
        join.o \
        join2.o \
+       lambdaderivative.o	\
        lambdare.o	\
        lreenergy.o	\
        lambdamove.o \

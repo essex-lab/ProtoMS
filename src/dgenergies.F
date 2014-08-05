@@ -27,7 +27,7 @@ c###########################################################
       double precision inrgb,inrgf
       double precision nrgti,nrgtib,nrgtif
       double precision totalEnergy
-      double precision ExtraEnergy
+      double precision ExtraEnergy,LambdaDerivative
       integer lambindex1, lambindex2,i
       logical mbar
 
@@ -129,7 +129,7 @@ c     now reset the parameters
 
 c      call prettyLine(RESULTS,'Gradient. Instantaneous | On running averages')
 c      write(printstring,'(F12.4,X,A,X,F12.4)') dvdl,'|',dvdl2
-      write(printstring,'(A,X,F12.4)') 'Gradient',dvdl2
+      write(printstring,'(A,X,F12.4,X,F12.4)') 'Gradient',dvdl2,lambdaderivative()
       call prettyline(RESULTS,printstring)
 
       end

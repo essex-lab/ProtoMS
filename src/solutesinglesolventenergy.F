@@ -110,7 +110,11 @@ c     Activate Distance Dependent Dielectric calculation
 
           include 'nbinitial.inc'
           include 'nbsolsvn.inc'
-          include 'nbenergy2.inc'
+          if (doDerivative) then
+            include 'nbderivative.inc'
+          else
+            include 'nbenergy2.inc'
+          endif
 
           nrg = nrg + funcnbnrg
           cnrg = cnrg + funccnrg

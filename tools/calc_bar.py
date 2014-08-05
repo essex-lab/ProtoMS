@@ -179,7 +179,7 @@ def _do_bar(work_back,work_forw,RT,nboots) :
     NF = workF.shape[0]
     NR = workB.shape[0]
     NTot = NF + NR
-    M = np.log(NF/NR)
+    M = np.log(float(NF)/float(NR))
     C = dG + M*RT
     for i in range(50) :
       summa = 0

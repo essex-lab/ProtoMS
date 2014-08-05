@@ -29,7 +29,7 @@ c###########################################################
       integer getInt,lineLength,lgth,openFILE
       integer isol,iprnt,iprot,ires
       double precision retideltau,retideltal,getDouble,printsolvent
-      double precision delta,deltaf,deltab,lb,lf
+      double precision delta,deltaf,deltab,lb,lf,lambdaderivative
       character*64 tempstring
       integer i,j,nstps,ilgth,istrt,iend,k
       integer ichunk,numb
@@ -506,6 +506,9 @@ c           Deal with the adding of restrains
            call processHardwallLine(check)
           else if (words(1) .eq. 'addclj') then
             call addSoluteCLJ(getInt(words(2),ZERO),getInt(words(3),ZERO),getDouble(words(4),ZERO))
+          else if (words(1) .eq. 'gradient') then
+            write(printstring,"(A,F20.5)")"Gradient = ",lambdaderivative()
+            call printLine(INFO,printstring)
           else
             call printLine(WARNING,"Cannot intepret simulation chunk!")
             call join(1,nwords,printstring)

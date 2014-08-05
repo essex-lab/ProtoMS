@@ -27,6 +27,8 @@ c     whether or not to do preferential sampling
       logical PrefSample
 c     whether or not to do LambdaRE and TemperatureRE
       logical doLambdaRE,doTemperatureRE,doMultiGCMC
+c     whether or not to calculate lambda-gradient and not energy
+      logical doDerivative,doLowDerivative
 
       common /LSIMFLAGS/ SolventBox,SolventCap,NeutraliseProtein,
      .          protodebug,
@@ -35,7 +37,7 @@ c     whether or not to do LambdaRE and TemperatureRE
      .          DifferentLambdas,LorentzBerthelot,PrefSample,
      .          doLambdaRE,doTemperatureRE,doMultiGCMC,
      .          PdbParams,
-     .          printFE,mbar
+     .          printFE,mbar,doDerivative,doLowDerivative
 
       save /LSIMFLAGS/
 

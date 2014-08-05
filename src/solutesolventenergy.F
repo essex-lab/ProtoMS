@@ -35,7 +35,6 @@ c################################################################
       if (isol.gt.NSolutes  .or. NSolutes.le.0 .or. NSolvents.le.0) return
 
       if (IgnoreSolute(isol)) return   
-    
 c     return if this solute has been done before
       if (DoneSolNrg(isol)) return
       do i=1,NSolvents
@@ -54,7 +53,7 @@ c     return if this solute has been done before
 
 c     Sort out the preferential sampling - we need to normalise
 c     all of the probabilities, and find the maximum probability
-      if (isol.eq.SvnPrefSol .and. PrefSample) then
+      if (isol.eq.SvnPrefSol .and. PrefSample .and. .not. doDerivative) then
 c       initialise the sum and max sampling
         SvnNewSumProb = ZERO
         SvnNewMaxProb = ZERO

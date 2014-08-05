@@ -270,8 +270,6 @@ def _compute_closeness(atoms,verbose=False) :
 
 def make_zmat(prepifile):
   """ Make a ProtoMS z-matrix for a solute
-   
-  make_zmat(prepifile)
   
   Parameters
   ----------   
@@ -453,21 +451,29 @@ def _readfrcmod(filename):
 
 
 def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None, frcmodfile=None, resname="UNK" ) :
-    """ Build a ProtoMS template file
-   
-    build_template ( temfile, prepifile, zmatfile=None, frcmodfile=None, resname="UNK" ) 
+    """ Build a ProtoMS template file 
   
     Parameters
     ----------   
-    temfile - the filename to save the template file to
-    prepifile - the filename of the Amber prepi file (prep-file with z-matrix)
-    zmatfile - the filename of a zmat, if None it is created
-    frcmodfile - the filename of an Amber frcmod file with additional parameters
-    resname - the name of solute
+    temfile : string
+      the filename to save the template file to
+    prepifile : string
+      the filename of the Amber prepi file (prep-file with z-matrix)
+    translate : float, optional
+      the translational displacement
+    rotate : float, optional
+      the rotational displacement
+    zmatfile : string, optional
+      the filename of a zmat, if None it is created
+    frcmodfile > string, optional
+      the filename of an Amber frcmod file with additional parameters
+    resname : string, optional
+      the name of solute
 
     Returns
     -------
-    None
+    TemplateFile
+      the created template file
     """
     if zmatfile is None :
         atoms,zmat = make_zmat(prepifile)

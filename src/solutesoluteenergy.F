@@ -64,6 +64,7 @@ c       solute 1 is a low dual topology solute
         scl = getLowScale(Lambda)
         sclb = getLowScale(LambdaB)
         sclf = getLowScale(LambdaF)
+        doLowDerivative = .True.
         if (DualTopologySolute(isol2).gt.0) then
 c         solute 2 is also a low dual topology solute
           scl = scl*scl
@@ -82,17 +83,20 @@ c         solute 2 is a low dual topology solute
           scl = getLowScale(Lambda)
           sclb = getLowScale(LambdaB)
           sclf = getLowScale(LambdaF)
+          doLowDerivative = .True.
         else
 c         solute 2 is a high dual topology solute
           scl = getHighScale(Lambda)
           sclb = getHighScale(LambdaB)
           sclf = getHighScale(LambdaF)
+          doLowDerivative = .False.
         endif
       else
 c       solute 1 is a high dual topology solute
         scl = getHighScale(Lambda)
         sclb = getHighScale(LambdaB)
         sclf = getHighScale(LambdaF)
+        doLowDerivative = .False.
         if (DualTopologySolute(isol2).gt.0) then
 c         solute 2 is a low dual topology solute
           scl = scl * getLowScale(Lambda)
@@ -152,8 +156,12 @@ c         initialise the calculation
 c         set up for a solute-solute interaction
           include 'nbsolsol.inc'
 c         actually perform the calculation
-          include 'nbenergy2.inc'
-
+          if (doDerivative) then
+            include 'nbderivative.inc'
+          else
+            include 'nbenergy2.inc'
+          endif
+          
           nrg = nrg + funcnbnrg
           cnrg = cnrg + funccnrg
           ljnrg = ljnrg + funcljnrg
@@ -198,20 +206,23 @@ c      if (QuickMove) then
 c         sclf = scl
 c         sclb = scl
 c      endif
-c     scale the energies
-      nrg = nrg * scl
-      cnrg = cnrg * scl
-      ljnrg = ljnrg * scl
-      cnrgf = cnrgf * sclf
-      ljnrgf = ljnrgf * sclf
-      cnrgb = cnrgb * sclb
-      ljnrgb = ljnrgb * sclb
-c     If softcore, the coulombic if scaled further
-      if (Solutesoftcore(isol1) .or. SoluteSoftCore(isol2)) then
-        cnrg = cnrg * (scl)**CoulSoftPower
-        cnrgf = cnrgf * (sclf)**CoulSoftPower
-        cnrgb = cnrgb * (sclb)**CoulSoftPower
-      endif       
+c     scale the energies, unless we are calculating the lambda-gradient in case
+c     the energies are already scaled
+      if (.not.doDerivative) then
+        nrg = nrg * scl
+        cnrg = cnrg * scl
+        ljnrg = ljnrg * scl
+        cnrgf = cnrgf * sclf
+        ljnrgf = ljnrgf * sclf
+        cnrgb = cnrgb * sclb
+        ljnrgb = ljnrgb * sclb
+c       If softcore, the coulombic if scaled further
+        if (Solutesoftcore(isol1) .or. SoluteSoftCore(isol2)) then
+          cnrg = cnrg * (scl)**CoulSoftPower
+          cnrgf = cnrgf * (sclf)**CoulSoftPower
+          cnrgb = cnrgb * (sclb)**CoulSoftPower
+        endif 
+      endif      
 c     soluteSoluteEnergy = nrg
       soluteSoluteEnergy = cnrg + ljnrg
 
