@@ -469,6 +469,7 @@ if __name__ == "__main__":
   parser.add_argument('-c','--cmdfile',help="the prefix of the command file",default="run")
   parser.add_argument('-o','--scoop',help="the name of your protein scoop")
   parser.add_argument('-t','--template',nargs="+",help="the template files for your ligands")
+  parser.add_argument('-r','--repeats',help="the number of repeats to be run (if more than 1) or a name for your repeat",default="") 
   parser.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)
@@ -499,9 +500,9 @@ if __name__ == "__main__":
  
   # Set $PROTOMSHOME 
   if os.getenv("PROTOMSHOME") is None :
-    str = os.path.dirname(os.path.abspath(__file__))
-    print "Setting PROTOMSHOME to %s"%str
-    os.environ["PROTOMSHOME"] = str # This does not change the original shell
+    string = os.path.dirname(os.path.abspath(__file__))
+    print "Setting PROTOMSHOME to %s"%string
+    os.environ["PROTOMSHOME"] = string # This does not change the original shell
 
   # Try to find a default water box
   if args.waterbox is None :
@@ -569,23 +570,31 @@ if __name__ == "__main__":
     args.gcmcwater = _prep_gcmc(ligands,ligand_files,args)    
       
   # Create ProtoMS command files
-  postfix = ""
-  if args.simulation == "singletopology" : 
-    postfix = "_ele"
-    setattr(args,"outfolder","out_ele")
-  free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)
-  if free_cmd is not None : 
-    free_cmd.writeCommandFile(args.cmdfile+postfix+"_free.cmd")
-  if bnd_cmd is not None : 
-    bnd_cmd.writeCommandFile(args.cmdfile+postfix+"_bnd.cmd")    
-  
   if args.simulation == "singletopology" :
-    setattr(args,"outfolder","out_vdw")
-    free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,args)
+   postfix = ["_ele","_vdw"]
+  else :
+   postfix = [""]
+  if args.repeats.isdigit():
+    args.repeats = range(1,int(args.repeats)+1)
+  else :
+    args.repeats = [args.repeats]
+
+  repeats = []
+
+  for post in postfix :
+    for repeat in args.repeats:
+      repeats.append(str(repeat) + post)
+
+  for repeat in repeats :
+    setattr(args,"outfolder","out"+repeat)
+    if not args.simulation == "singletopology" or "_ele" in repeat : 
+      free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)
+    elif "_vdw" in repeat :
+      free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,args)
     if free_cmd is not None : 
-      free_cmd.writeCommandFile(args.cmdfile+"_vdw_free.cmd")
+      free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")
     if bnd_cmd is not None : 
-      bnd_cmd.writeCommandFile(args.cmdfile+"_vdw_bnd.cmd")      
+      bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_bnd.cmd")       
       
     
       
