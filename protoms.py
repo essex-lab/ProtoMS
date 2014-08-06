@@ -172,9 +172,12 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
   else:
     for f in settings.template :
       tempfile = _locate_file(f,folders)
-      tem = simulationobjects.TemplateFile(filename=tempfile)
-      if tem.templates[0].name == ligname:
+      if tempfile is None : 
         files["tem"] = tempfile
+      else :
+        tem = simulationobjects.TemplateFile(filename=tempfile)
+        if tem.templates[0].name == ligname:
+          files["tem"] = tempfile
 
   print "\nSetting up ligand: %s..."%files["pdb"]
 
