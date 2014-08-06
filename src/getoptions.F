@@ -74,7 +74,7 @@ c       the format is 'lambda lambdaf lambdab'
           lambdaf = getDouble(words(2),lambdaf)
           lambdab = getDouble(words(3),lambdab)
         endif      
-        if (ntasks.gt.2) then
+        if (doLambdaRE) then
           if (nwords.ge.3) then
             delf = lambda-lambdaf
             delb = lambda-lambdab
