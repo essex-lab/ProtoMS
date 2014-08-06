@@ -31,7 +31,7 @@ c
 c#######################################################
 
       integer i,j,lgth,lgth0,lgth1,lineLength
-      integer lowsol,highsol
+      integer lowgroup,highgroup,k
       integer imol
 c     the current system time and date            
       integer year,month,day,hour,mins,secs
@@ -43,6 +43,7 @@ c     the current system time and date
       character*300 filename
 
       double precision delb,delf
+
 
 c     set initial, default values for options
       call setDefaultOptions
@@ -388,7 +389,6 @@ c$$$        write(printstring,*) ' GB On ? ',OnGBQuickPot,' DDD On ? ',OnDDDQuic
 c$$$        call printLine(INFO,printstring)
 c$$$      endif
 
-
 c     get the names of all of the parameter files and read them in
 c     (as the parameter files may change some of the default options)
 c     Keep reading parameter files while we have them
@@ -467,6 +467,28 @@ c     Assign Generalised Born terms to each CLJ type that was loaded
 
 c     now assign templates etc. for all of the loaded molecules
       call assignSystem
+
+      if (NSolutes.gt.0) then
+        do i=1,NSolutes
+c         trying to get possible solute groups
+          call writeNumberString('group',i,tempstring)
+          if (getOption(tempstring)) then
+c           get the number of solutes in this group
+            NGroupSols(i) = getInt(words(1),0)
+c           loop over the amount of solutes in a group
+            do j=1,getInt(words(1),0)
+              SolGroup(i,j) = getInt(words(j+1),0)
+            enddo
+c           Here I'm setting the number of groups to the number of groups user-defined.
+c           I'm not sure whether it should be like this, or it should include the automatic.
+c           But in that case, it is simply equal to the number of solutes...
+            NSolGroups = i
+          else
+            NGroupSols(i) = 1
+            SolGroup(i,1) = i
+          endif
+        enddo
+      endif
       
       if (NSolutes.gt.0) then
 c       get the number of dual topology solutes - do this here as we may need to 
@@ -476,51 +498,58 @@ c       modify the dummies and this can only be done after the solutes have been
           i = i+1
           call writeNumberString('dualtopology',i,tempstring)
           if (getOption(tempstring)) then
-c           format of the line is 'dualtopology lowsol highsol (syncdummy) (synctrans) (syncrot) #comment'
+c           format of the line is 'dualtopology lowgroup highgroup (syncdummy) (synctrans) (syncrot) #comment'
             if (nwords.lt.2) then
-              call printLine(WARNING,"dualtopology line needs two parameters (lowsol and highsol)")
+              call printLine(WARNING,"dualtopology line needs two parameters (lowgroup and highgroup)")
               i = i-1
               goto 200
             endif
             
 c           read in both solutes
-            lowsol = getInt(words(1),0)
-            highsol = getInt(words(2),0)                        
+            lowgroup = getInt(words(1),0)
+            highgroup = getInt(words(2),0)                        
           
-            if (lowsol.gt.0 .and. lowsol.le.NSolutes .and.
-     .          highsol.gt.0 .and. highsol.le.NSolutes .and. 
-     .          lowsol.ne.highsol) then
+            if (lowgroup.gt.0 .and. lowgroup.le.NSolutes .and.
+     .          highgroup.gt.0 .and. highgroup.le.NSolutes .and. 
+     .          lowgroup.ne.highgroup) then
           
-              lgth0 = lineLength(SoluteName(lowsol))
-              lgth1 = lineLength(SoluteName(highsol))
+              lgth0 = lineLength(SoluteName(lowgroup))
+              lgth1 = lineLength(SoluteName(highgroup))
               
-              write(printstring,*) "Dual topology simulation with solute ",
-     .              SoluteName(lowsol)(1:lgth0)," (",lowsol,") at lambda=0, and solute ",
-     .              SoluteName(highsol)(1:lgth1)," (",highsol,") at lambda=1."
+              write(printstring,*) "Dual topology simulation with group ",
+     .              lowgroup," at lambda=0, and group ",
+     .              highgroup," at lambda=1. If groups are not defined, ",
+     .              "each group corresponds to the solute with the same number."
               call printLine(INFO,printstring)
             
-              if (DualTopologySolute(lowsol).ne.0) then
-                write(printstring,*) "Solute ",SoluteName(lowsol)(1:lgth0),
-     .               " (",lowsol,") already has a dual topology partner!"
+              if (DualTopologySolute(SolGroup(lowgroup,1)).ne.0.and.
+     .        DualTopologySolute(SolGroup(lowgroup,NGroupSols(lowgroup))).ne.0) then
+                write(printstring,*) "Group ",
+     .               lowgroup," already has a dual topology partner!"
                 call printLine(WARNING,printstring)
                 i = i-1
                 goto 200
-              else if (DualTopologySolute(highsol).ne.0) then
-                write(printstring,*) "Solute ",SoluteName(highsol)(1:lgth0),
-     .               " (",highsol,") already has a dual topology partner!"
+              else if (DualTopologySolute(SolGroup(highgroup,1)).ne.0.and.
+     .        DualTopologySolute(SolGroup(highgroup,NGroupSols(highgroup))).ne.0) then
+                write(printstring,*) "Group ",
+     .               highgroup," already has a dual topology partner!"
                 call printLine(WARNING,printstring)
                 i = i-1
                 goto 200
               endif
             
-              DualTopologySolute(lowsol) = highsol
-              DualTopologySolute(highsol) = -lowsol
-              DualTopologySyncTrans(lowsol) = .false.
-              DualTopologySyncTrans(highsol) = .false.
-              DualTopologySyncRot(lowsol) = .false.
-              DualTopologySyncRot(highsol) = .false.
-              DualTopologySyncInt(lowsol) = .false.
-              DualTopologySyncInt(highsol) = .false.
+              do j=1,NGroupSols(lowgroup)
+                DualTopologySolute(SolGroup(lowgroup,j)) = highgroup
+                DualTopologySyncTrans(SolGroup(lowgroup,j)) = .false.
+                DualTopologySyncRot(SolGroup(lowgroup,j)) = .false.
+                DualTopologySyncInt(SolGroup(lowgroup,j)) = .false.
+              enddo
+              do j=1,NGroupSols(highgroup)
+                DualTopologySolute(SolGroup(highgroup,j)) = -lowgroup
+                DualTopologySyncTrans(SolGroup(highgroup,j)) = .false.
+                DualTopologySyncRot(SolGroup(highgroup,j)) = .false.
+                DualTopologySyncInt(SolGroup(highgroup,j)) = .false.
+              enddo
               
 c             loop through the rest of the string to see if we sync moving or 
 c             sync dummies
@@ -534,23 +563,31 @@ c                 we will sync the solute dummies - this ensures that the two
 c                 solutes are rotated about the same point, thus ensuring that
 c                 the solutes stay together
                   call printLine(INFO,"Dummy atoms of both solutes will be synched")
-                  call syncSoluteDummies(lowsol,highsol)
+                  call syncSoluteDummies(lowgroup,highgroup)
                 else if (words(j).eq.'synctrans') then
 c                 we will translate these solutes together
-                  DualTopologySyncTrans(lowsol) = .true.
-                  DualTopologySyncTrans(highsol) = .true.
+                  do k=1,NGroupSols(highgroup)
+                    DualTopologySyncTrans(SolGroup(highgroup,k)) = .true.
+                  enddo
+                  do k=1,NGroupSols(lowgroup)
+                    DualTopologySyncTrans(SolGroup(lowgroup,k)) = .true.
+                  enddo
                   call printLine(INFO,"Solutes will be translated together")
                 else if (words(j).eq.'syncrot') then
 c                 we will rotate these solutes together
-                  DualTopologySyncRot(lowsol) = .true.
-                  DualTopologySyncRot(highsol) = .true.
+                  do k=1,NGroupSols(highgroup)
+                    DualTopologySyncRot(SolGroup(highgroup,k)) = .true.
+                  enddo
+                  do k=1,NGroupSols(lowgroup)
+                    DualTopologySyncRot(SolGroup(lowgroup,k)) = .true.
+                  enddo
                   call printLine(INFO,"Solutes will rotated together")
                 endif                  
               enddo
 201           continue
             else
               write(printstring,*) "Problem specifying dual topology solutes, ",
-     .           "lowsol = ",lowsol," and highsol = ",highsol
+     .           "lowgroup = ",lowgroup," and highgroup = ",highgroup
               call printLine(WARNING,printstring)
               i = i-1
               goto 200

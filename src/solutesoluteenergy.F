@@ -18,7 +18,7 @@ c     (C) Christopher Woods       29 January 2002
 c
 c##############################################################
 
-      integer isol1,isol2
+      integer isol1,isol2,group1,group2
       double precision cnrg,ljnrg,nrg,mindist
       double precision cnrgf,ljnrgf,cnrgb,ljnrgb
       double precision distx,disty,distz,dist2,sclfac
@@ -36,9 +36,26 @@ c##############################################################
       ljnrgb = ZERO
       ljnrgf = ZERO
       nrg = ZERO
+      group1 = ZERO
+      group2 = ZERO
       mindist = 999999.0
       softcore = .false.
       ddd = .false.
+
+c     the number of solutes is equal to the total number of groups (user + automatically defined)
+c     storing the group at which each of the solutes belong
+      do i=1,NSolutes
+        do j=1,NgroupSols(i)
+c         we will only take into account the first group a solute is assigned to
+          if ((SolGroup(i,j).eq.isol1).and.(group1.eq.0)) then
+            group1 = i
+          endif
+          if ((SolGroup(i,j).eq.isol2).and.(group2.eq.0)) then
+            group2 = i
+          endif
+        enddo
+      enddo
+
       if (NSolutes.le.0  .or. isol1.eq.isol2 .or. isol1.gt.NSolutes
      .          .or. isol2.gt.NSolutes) then
         return
@@ -48,7 +65,7 @@ c     return if either of the solutes has been done before (prevents double
 c     calculation of shared energies)
       else if (DoneSolNrg(isol1) .or. DoneSolNrg(isol2)) then
         return
-      else if (DualTopologySolute(isol1).eq.isol2 .or. DualTopologySolute(isol2).eq.isol1) then
+      else if (DualTopologySolute(isol1).eq.group2 .or. DualTopologySolute(isol2).eq.group1) then
 c       do not calculate the energy between dual topology pairs
 c        write(printstring,*) 'sol ',isol1,' and sol ',isol2,' NO NRG'
 c        call printLine(DEBUG,printstring)
@@ -59,6 +76,20 @@ c       there are no dual topology solutes
         sclb = ONE
         sclf = ONE
 c     there are dual topology solutes, so get the scale factors
+      else if (DualTopologySolute(isol1).eq.DualTopologySolute(isol2)) then
+c       both solutes are dual topology solutes from the same group
+c       isol1 should feel isol2 as much as it feels the protein or solvent
+        if (DualTopologySolute(isol1).gt.0) then
+c         they are both low dual topology solutes
+          scl = getLowScale(Lambda)
+          sclb = getLowScale(LambdaB)
+          sclf = getLowScale(LambdaF)
+        else
+c         they are both high dual topolgy solutes
+          scl = getHighScale(Lambda)
+          sclb = getHighScale(LambdaB)
+          sclf = getHighScale(LambdaF)
+        endif  
       else if (DualTopologySolute(isol1).gt.0) then
 c       solute 1 is a low dual topology solute
         scl = getLowScale(Lambda)
@@ -161,7 +192,7 @@ c         actually perform the calculation
           else
             include 'nbenergy2.inc'
           endif
-          
+
           nrg = nrg + funcnbnrg
           cnrg = cnrg + funccnrg
           ljnrg = ljnrg + funcljnrg
@@ -222,7 +253,7 @@ c       If softcore, the coulombic if scaled further
           cnrgf = cnrgf * (sclf)**CoulSoftPower
           cnrgb = cnrgb * (sclb)**CoulSoftPower
         endif 
-      endif      
+      endif    
 c     soluteSoluteEnergy = nrg
       soluteSoluteEnergy = cnrg + ljnrg
 

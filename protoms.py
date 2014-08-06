@@ -506,6 +506,7 @@ if __name__ == "__main__":
     string = os.path.dirname(os.path.abspath(__file__))
     print "Setting PROTOMSHOME to %s"%string
     os.environ["PROTOMSHOME"] = string # This does not change the original shell
+    print os.environ["PROTOMSHOME"]
 
   # Try to find a default water box
   if args.waterbox is None :
@@ -580,7 +581,7 @@ if __name__ == "__main__":
   if args.repeats.isdigit():
     args.repeats = range(1,int(args.repeats)+1)
   else :
-    args.repeats = [args.repeats]
+    args.repeats = [args.repeats.lower()]
 
   repeats = []
 
