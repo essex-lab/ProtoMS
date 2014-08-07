@@ -1167,7 +1167,11 @@ class TemplateFile() :
     self.dihedralatoms = []
     self.cljparams = []
     self.templates = []
+    self.filename = ""
     if filename is not None : self.read(filename)
+
+  def __str__(self) :
+   return self.filename
 
   def append(self,other) :
     """
@@ -1376,6 +1380,7 @@ class TemplateFile() :
           self.templates.append(MolTemplate())
           line = self.templates[-1].parse_from(f)
     self.assign_paramobj()
+    self.filename = filename
 
   def write(self,filename) :
     """
@@ -1417,9 +1422,9 @@ class TemplateFile() :
       if self.templates :
         for template in self.templates : template.write_to(f)
 
-########################
+#-----------------------
 # Other useful routines
-########################
+#-----------------------
 
 def standard_filename(filename,folder) :
     """ 

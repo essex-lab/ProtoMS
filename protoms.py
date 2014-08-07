@@ -11,6 +11,7 @@ Program to setup, run and analyse a ProtoMS simulation
 import argparse
 import os
 import subprocess
+import logging
 
 import numpy as np
 
@@ -85,7 +86,7 @@ def _merge_templates(templates) :
   allnames = "-".join(t.name.lower() for t in temfile.templates)
   templates = [allnames+".tem"]
   temfile.write(allnames+".tem")
-  print "Created a re-numbered template files for all ligands: %s"%templates[0]
+  logger.info("Created a re-numbered template files for all ligands: %s"%templates[0])
   return templates
 
 def _load_ligand_pdb(ligprefix,folders) :
@@ -115,7 +116,9 @@ def _load_ligand_pdb(ligprefix,folders) :
   
   # Cannot do anything without a pdb-file so raise an exception
   if pdbfile is None :
-    raise simulationobjects.SetupError("Ligand file %s.pdb could not be found"%ligprefix)
+    msg = "Ligand file %s.pdb could not be found"%ligprefix
+    logger.error(msg)
+    raise simulationobjects.SetupError(msg)
 
   return pdbfile,simulationobjects.PDBFile(filename=pdbfile)
 
@@ -179,21 +182,22 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
         if tem.templates[0].name == ligname:
           files["tem"] = tempfile
 
-  print "\nSetting up ligand: %s..."%files["pdb"]
+  logger.info("")
+  logger.info("Setting up ligand: %s..."%files["pdb"])
 
   # Check to see if we have a template file
   if files["tem"] is None : 
     resnam = files["obj"].residues[1].name # Set the prepi name and template name to the residue name
     if files["prepi"] is None :
       # Here we need to run Antechamber
-      print "Running antechamber. Please check the output carefully"
+      logger.info("Running antechamber. Please check the output carefully")
       files["prepi"] = tools.run_antechamber(files["pdb"],charge,resnam)
-      print "Created prepi-file: %s"%files["prepi"]
+      logger.info("Created prepi-file: %s"%files["prepi"])
     if files["frcmod"] is None :
       # Here we need to run parmchk
-      print "Running parmchk. Please check the output carefully"
+      logger.info("Running parmchk. Please check the output carefully")
       files["frcmod"] = tools.run_parmchk(files["pdb"])
-      print "Created frcmod-file: %s"%files["frcmod"]
+      logger.info("Created frcmod-file: %s"%files["frcmod"])
      
     # By this stage we should have all necessary files to make the template file
     files["tem"] = ligprefix+".tem"
@@ -203,8 +207,8 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
     if files["zmat"] is None :
       files["zmat"] = ligprefix+".zmat"
       tem.templates[0].write_zmat(files["zmat"])
-      print "Created zmatrix (%s) for ligand. Please check the output carefully"%files["zmat"]
-    print "Created ProtoMS template-file (%s) for ligand. Please check the output carefully"%files["tem"]
+      logger.info("Created zmatrix (%s) for ligand. Please check the output carefully"%files["zmat"])
+    logger.info("Created ProtoMS template-file (%s) for ligand. Please check the output carefully"%files["tem"])
                           
   # Check to see if we have solvated the ligand
   if files["wat"] is None :
@@ -216,7 +220,7 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
       solute = ligobj12
     # Calling the routine
     files["wat"] = ligprefix+"_box.pdb"
-    print "Created waterbox-file: %s"%(files["wat"])
+    logger.info("Created waterbox-file: %s"%(files["wat"]))
     boxpdb = tools.solvate(settings.waterbox, ligand=solute, protein=None,
                            geometry="box",padding=10.0, radius=30.0, center="cent",
                            namescheme="ProtoMS")
@@ -275,14 +279,19 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
   
   # Cannot do anything without a pdb-file, so raise an exception
   if settings.protein is None and protein_scoop_file is None:
-    raise simulationobjects.SetupError("Specified scoop (%s.pdb) could not be found"%scoopprefix)
+    msg = "Specified scoop (%s.pdb) could not be found"%scoopprefix
+    logger.error(msg)
+    raise simulationobjects.SetupError(msg)
   if protein_orig_file is None and protein_scoop_file is None and protein_pms_file is None:
-    raise simulationobjects.SetupError("Protein file (%s.pdb) and protein scoop file (%s.pdb) and protein pms file (%s_pms.pdb) could not be found"%(protprefix,scoopprefix,protprefix))
+    msg = "Protein file (%s.pdb) and protein scoop file (%s.pdb) and protein pms file (%s_pms.pdb) could not be found"%(protprefix,scoopprefix,protprefix)
+    logger.error(msg)
+    raise simulationobjects.SetupError(msg)
 
-  print "\nSetting up protein: %s..."%protein_orig_file
+  logger.info("")
+  logger.info("Setting up protein: %s..."%protein_orig_file)
 
   if settings.scoop is not None and protein_scoop_file is None:
-    print "Specified scoop (%s.pdb) not found. Ignoring..."%scoopprefix
+    logger.info("Specified scoop (%s.pdb) not found. Ignoring..."%scoopprefix)
 
   protobj = None
   if protein_scoop_file is None and protein_pms_file is None :
@@ -295,7 +304,9 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     else :
       conversionfile = args.atomnames
     if not os.path.isfile(conversionfile) : 
-      raise simulationobjects.SetupError("Could not find file (%s) with atom name conversions"%conversionfile)
+      msg = "Could not find file (%s) with atom name conversions"%conversionfile
+      logger.error(msg)
+      raise simulationobjects.SetupError(msg)
 
     # Converting to ProtoMS atom names
     protobj = tools.pdb2pms(protobj,"amber",conversionfile)
@@ -310,7 +321,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
       else :
         protobj.getCenter()
         ligobj = "%f %f %f" % tuple(protobj.center)
-        print "Warning: No specified center for protein scoop. Using the center of the protein." 
+        logger.info("Warning: No specified center for protein scoop. Using the center of the protein." )
     else :
       ligobj = ligands
 
@@ -321,10 +332,10 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
 
     nresdiff = len(protobj.residues)-len(protobj_scooped.residues)
     protein_scoop_file = _get_prefix(protein_orig_file)+"_scoop.pdb"
-    print "Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file)
+    logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))
     if nresdiff < settings.scooplimit:
       protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
-      print "Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file)
+      logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file))
       protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file)
       protein_scoop_file = None
     else :
@@ -343,7 +354,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
 
     # Calling the routine
     protein_water = watprefix+".pdb"
-    print "Created water cap-file: %s"%(protein_water)
+    logger.info("Created water cap-file: %s"%(protein_water))
     cappdb = tools.solvate(settings.waterbox, ligand=ligands, protein=solute,
                           geometry="droplet",padding=10.0, radius=args.capradius, center="cent",
                           namescheme="ProtoMS")
@@ -377,7 +388,8 @@ def _prep_singletopology(pdbs,templates1,settings) :
   tem1 = simulationobjects.TemplateFile(templates1[0])
   tem2 = simulationobjects.TemplateFile(templates1[1])
 
-  print "\nSetting up single-topology correspondance map and templates..."
+  logger.info("")
+  logger.info("Setting up single-topology correspondance map and templates...")
   eletem,vdwtem,cmap = tools.make_single(tem1,tem2,pdbs[0],pdbs[1],settings.singlemap)
   
   pdbs.pop(1)
@@ -390,11 +402,12 @@ def _prep_singletopology(pdbs,templates1,settings) :
 
   eletem.write(templates1[0])
   vdwtem.write(templates2[0])
-  print "\nCreated template %s for electrostatic perturbation. Please check the output carefully."%templates1[0]
-  print "Created template %s for van der Waals-perturbation. Please check the output carefully."%templates2[0]
+  logger.info("")
+  logger.info("Created template %s for electrostatic perturbation. Please check the output carefully."%templates1[0])
+  logger.info("Created template %s for van der Waals-perturbation. Please check the output carefully."%templates2[0])
   
   if args.singlemap is None : settings.singlemap = "single_cmap.dat"
-  print "Saved correspondance map to: %s"%settings.singlemap
+  logger.info("Saved correspondance map to: %s"%settings.singlemap)
   tools.write_map(cmap,settings.singlemap)
 
   return templates1,templates2
@@ -427,7 +440,8 @@ def _prep_gcmc(ligands,ligand_files,settings) :
     # Save it to disc
     boxpdb = "gcmc_box.pdb"
     simulationobjects.write_box(boxpdb,box)
-    print "\nCreated %s to visualize GCMC simulation box. Please check the output carefully"%boxpdb
+    logger.info("")
+    logger.info("Created %s to visualize GCMC simulation box. Please check the output carefully"%boxpdb)
     return boxpdb
     
   if ligands :
@@ -443,8 +457,10 @@ def _prep_gcmc(ligands,ligand_files,settings) :
        boxpdb = pdb2box(gcmcboxobj)
       else :
         boxpdb = settings.gcmcbox
-    else :
-      simulationobjects.SetupError("Cannot define a GCMC simulation box without a ligand and without the gcmcbox setting") 
+    else : 
+      msg = "Cannot define a GCMC simulation box without a ligand and without the gcmcbox setting"
+      logger.error(msg)
+      simulationobjects.SetupError(msg) 
     
   # Use the flood option in solvate
   boxobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
@@ -455,7 +471,8 @@ def _prep_gcmc(ligands,ligand_files,settings) :
   # Write the box to disc
   boxname = "gcmc_wat.pdb"
   boxobj.write(boxname) 
-  print "\nCreated %s; it contains the GCMC simulation waters. Please check the output carefully"%boxname       
+  logger.info("")
+  logger.info("Created %s; it contains the GCMC simulation waters. Please check the output carefully"%boxname)
   return boxname
 
   
@@ -494,6 +511,20 @@ if __name__ == "__main__":
   parser.add_argument('--singlemap',help="the correspondance map for single-topology")
   args = parser.parse_args()
   
+  # Setup the logger
+  logger = logging.getLogger('protoms')
+  logger.setLevel(logging.DEBUG)
+  formatter1 = logging.Formatter('%(message)s')
+  console = logging.StreamHandler()
+  console.setLevel(logging.INFO)
+  console.setFormatter(formatter1)
+  logger.addHandler(console)
+  formatter2 = logging.Formatter('%(levelname)s : %(message)s')
+  logfile = logging.FileHandler("protoms_py.log",mode="w")
+  logfile.setLevel(logging.DEBUG)
+  logfile.setFormatter(formatter2)
+  logger.addHandler(logfile)
+
   # Adds current folder to the folders
   args.folders.append(".")
   
@@ -504,14 +535,16 @@ if __name__ == "__main__":
   # Set $PROTOMSHOME 
   if os.getenv("PROTOMSHOME") is None :
     string = os.path.dirname(os.path.abspath(__file__))
-    print "Setting PROTOMSHOME to %s"%string
+    logger.info("Setting PROTOMSHOME to %s"%string)
     os.environ["PROTOMSHOME"] = string # This does not change the original shell
 
   # Try to find a default water box
   if args.waterbox is None :
     args.waterbox = simulationobjects.standard_filename("wbox_"+args.watmodel.lower()+".pdb","data")
   if not os.path.isfile(args.waterbox) : 
-    raise simulationobjects.SetupError("Could not find file (%s) with pre-equilibrated waters"%waterbox)
+    msg = "Could not find file (%s) with pre-equilibrated waters"%waterbox
+    logger.error(msg)
+    raise simulationobjects.SetupError(msg)
      
   # Prepare each given ligand
   ligand_files = {} # This will be filled with a dictionary of filenames for each ligand
