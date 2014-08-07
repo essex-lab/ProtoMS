@@ -10,3 +10,13 @@ Otherwise defaults
 
 
 make html
+
+insert
+sys.path.insert(0,os.path.abspath('..'))
+in conf.py
+
+sphinx-apidoc -o . ../
+
+Installed numpydoc
+and added
+'numpydoc' to extensions in conf.py

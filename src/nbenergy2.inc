@@ -237,7 +237,7 @@ c           ...Otherwise we have to get it by lookup
           invfuncdist12 = invfuncdist6**2
         else
           invfuncdist = ONE / dsqrt(funcdist2)
-          invfuncdist6 = invfuncdist**6
+          invfuncdist6 = ONE / funcdist2**3
           invfuncdist12 = invfuncdist6**2
         endif
 c       calculate the distances for variable geometry (if necessary)
