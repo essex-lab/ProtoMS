@@ -81,6 +81,9 @@ c            call printLine(RESULTS,"Hardwall applied to some protein atom, MC f
 210     continue  
         endif
 
+c    This should work for any kind of solute
+c    Also, only the given atom of the solute should feel the hardwall within the residue
+
 c    The solute is more complicated. The HW is built around a water molecule, and has the double function of
 c    keeping the water inside and the rest outside.
 c    Differentiate between the the solutes using the id assigned by processhardwallline.F and addid.F 
@@ -88,35 +91,42 @@ c    When the solute is anything but the molecules of interest the energy must b
 c    distance between the its atoms and the reference point is less than the user-defined distance.
 c    When the solute is the water of interest, the opposite must be verified.     
                
-       if (NSolutes.gt.0) then
-         do 235 j=1,NSolutes
-         jj=DualTopologySolute(j)
-         if (jj.lt.0) jj = -jj
-       do 245 k=1,NSolAtoms(j)
-            if (.not.IgnoreSolute(j)) then
-              idist = ((HardwallCenter(i,1)-ZSolCoords(j,k,1))**2 + (HardwallCenter(i,2)-ZSolCoords(j,k,2))**2 
-     .            + (HardwallCenter(i,3)-ZSolCoords(j,k,3))**2)
-            if ((j .eq.HardwallMolecule(i)).or.(jj.eq.HardwallMolecule(i))) then 
-                if (idist.ge.RadiusSq) then
-                  hardwallEnergy  = hardwallEnergy + HardwallextraEnergy(i)
-                  inrgb = hardwallEnergy
-                  inrgf = hardwallEnergy
-c              call printLine(DEBUG,"Hardwall applied to the solute of interst, MC fails")
-              goto 300
-                endif
+c        write(6,*) "HardwallMolecule",Hardwallmolecule(i)
+c   	write(6,*) "HardwallCenter",HardwallCenter(i,1),HardwallCenter(i,2),HardwallCenter(i,3)
+
+        if (NSolutes.gt.0) then
+          do 235 j=1,NSolutes
+c           for the molecule of interest, we check whether its geometry center is in the region of the hardwall
+            if (j.eq.HardwallMolecule(i)) then
+              idist = ((HardwallCenter(i,1)-SolGeomCentre(j,1))**2 + (HardwallCenter(i,2)-SolGeomCentre(j,2))**2 
+     .              + (HardwallCenter(i,3)-SolGeomCentre(j,3))**2)
+c              write(6,*) "SolGeomCentre",SolGeomCentre(j,1),SolGeomCentre(j,2),SolGeomCentre(j,3)
+c              write(6,*) "Distance",(idist)**0.5
+              if (idist.ge.RadiusSq) then
+                hardwallEnergy  = hardwallEnergy + HardwallextraEnergy(i)
+                inrgb = hardwallEnergy
+                inrgf = hardwallEnergy
+                goto 300
+              endif
             else
-              if (idist.le.RadiusSq) then
-                  hardwallEnergy  = hardwallEnergy + HardwallextraEnergy(i)
-                  inrgb = hardwallEnergy
-                  inrgf = hardwallEnergy
-c              call printLine(DEBUG,"Hardwall applied to some solute atom, MC fails")
-              goto 300
-                endif
-            endif            
+              do 245 k=1,NSolAtoms(j)
+                if (.not.IgnoreSolute(j)) then
+                  idist = ((HardwallCenter(i,1)-ZSolCoords(j,k,1))**2 + (HardwallCenter(i,2)-ZSolCoords(j,k,2))**2 
+     .              + (HardwallCenter(i,3)-ZSolCoords(j,k,3))**2)
+                else
+                  if (idist.le.RadiusSq) then
+                    hardwallEnergy  = hardwallEnergy + HardwallextraEnergy(i)
+                    inrgb = hardwallEnergy
+                    inrgf = hardwallEnergy
+                    goto 300
+                  endif
+                endif  
+245           continue          
             endif  
-245      continue
-235      continue
-       endif 
+235       continue
+c245       continue
+c235       continue
+        endif 
 
       enddo
    
