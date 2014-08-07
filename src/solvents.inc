@@ -55,12 +55,14 @@ c     the theta parameter for each gcs
       logical DoneGCSNrg(MAXSOLVENTS)
       logical GCsoluteSoftCore(MAXSOLVENTS)
       double precision thetaparam(MAXSOLVENTS)
+c     The optimization flag for each solvent
+      integer SvnOptimization(MAXSOLVENTS)
 
 
       common /DSVNDATA/ ZSvnCoords,SvnCentre,OldSvnCentre,
      .                  SvnADel,SvnRDel,SvnProb,SvnNewProb,
      .                  SvnMaxProb,SvnNewMaxProb,SvnSumProb,SvnNewSumProb,
-     .                  SvnProbParam,ZGCSCoords,GCSADel,GCSRDel,GCSCentre
+     .                  SvnProbParam,ZGCSCoords,GCSADel,GCSRDel,GCSCentre,SvnOptimization
       common /ISVNDATA/ NSvnAtoms,ZSvnPar,ZGCSPar,NSolvents,SvnRes,SvnPrefSol
       common /CSVNDATA/ SvnName,SvnAtomName,GCSAtomName,GCSname
       common /LSVNDATA/ DoneSvnNrg,DoneGCSNrg

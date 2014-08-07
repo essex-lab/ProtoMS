@@ -56,11 +56,19 @@ c     the default zmatrix values for the residue and chain templates
       double precision MolTemplateDihedralDelta(MAXMOLTEMPLATES,MAXMOLTEMPLATEDIHEDRALS)
       double precision MolTemplVarVal(MAXMOLTEMPLATES,MAXMOLTEMPLVAR,2)
       double precision MolTemplateADel(MAXMOLTEMPLATES),MolTemplateRDel(MAXMOLTEMPLATES)
+c     SG
+      double precision MolTemplateTDel(MAXMOLTEMPLATES)
+      double precision MolTemplateJCorr(MAXMOLTEMPLATES)
+      integer MolTemplateJPmfOrd(MAXMOLTEMPLATES)
+      integer MAXJPMFORDER
+      parameter(MAXJPMFORDER=5)
+      double precision MolTemplateJPmfCoeff(MAXMOLTEMPLATES,MAXJPMFORDER)
 c     template solvent parameters
       double precision SvnTemplateADel(MAXSVNTEMPLATES)
       double precision SvnTemplateRDel(MAXSVNTEMPLATES)
       double precision GCSTemplateADel(MAXSVNTEMPLATES)
       double precision GCSTemplateRDel(MAXSVNTEMPLATES)
+      integer          SvnTemplateOptimization(MAXSVNTEMPLATES)
 
       common /DTEMPLATEVALS/ TemplateAngleDelta,TemplateBondDelta,
      .           TemplateDihedralDelta,
@@ -68,7 +76,8 @@ c     template solvent parameters
      .           MolTemplateBondDelta,MolTemplateAngleDelta,
      .           MolTemplateDihedralDelta,SvnTemplateADel,GCSTemplateADel,GCSTemplateRDel,
      .           SvnTemplateRDel,MolTemplVarVal,MolTemplateAdel,MolTemplateRdel,
-     .           TemplateResADel,TemplateResRDel
+     .           MolTemplateTDel,MolTemplateJCorr,MolTemplateJPmfOrd,MolTemplateJPmfCoeff,
+     .           TemplateResADel,TemplateResRDel,SvnTemplateOptimization
 
       save /DTEMPLATEVALS/
 

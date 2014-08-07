@@ -36,6 +36,10 @@ c     grid dimensions for GCMC
       double precision gridy
       double precision gridz
       double precision space
+c     grid center for GCMC/JAWS
+      double precision centerx
+      double precision centery
+      double precision centerz
 c     grid origin for GCMC
       double precision coordhwx
       double precision coordhwy
@@ -69,7 +73,7 @@ c     whether or not to calculate energies in the same way as Sire
 c     (this slows things down, but is useful to allow debugging of Sire)
       logical SIRE_COMPATIBILITY_MODE 
 
-      common /SIMPARAMVALS/ cut,cut2,
+      common /SIMPARAMVALS/ cut,cut2,centerx,centery,centerz,
      .           Lambda,LambdaF,LambdaB,BoxDimension,BoxOrigin,feather,feather2,featherfac,
      .           OldBoxDimension,OldBoxOrigin,temperatureC,temperature,B,coordx,coordy,coordz,gridx,gridy,gridz,space,bias,
      .           BoxDimension2,BoxTop,TempAtoms,desiredCharge,coordhwx,coordhwy,coordhwz,gridhwx,gridhwy,gridhwz,

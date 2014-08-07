@@ -52,7 +52,7 @@ c     integer key used to update the energies
       parameter(NOUPDATE = 0)
 c     now the different types of move
       integer TRYSOLUTE,TRYSOLVENT,TRYPROTEIN,TRYTITRATE,TRYTHETA,TRYVOLUME,TRYROTAMER
-      integer TRYINSERTION,TRYDELETION,TRYGCSOLUTE,TRYSAMPLE
+      integer TRYINSERTION,TRYDELETION,TRYGCSOLUTE,TRYSAMPLE,TRYSOLTHETA
       parameter(TRYSOLUTE=1)
       parameter(TRYSOLVENT=2)
       parameter(TRYPROTEIN=3)
@@ -64,6 +64,7 @@ c     now the different types of move
       parameter(TRYDELETION=9)
       parameter(TRYGCSOLUTE=10)
       parameter(TRYSAMPLE=11)
+      parameter(TRYSOLTHETA=12)
 c     now the different types of extra energy
       integer EXTRA_UMBRELLA,EXTRA_POSITION_RESTRAINT,EXTRA_BOND_RESTRAINT
       integer EXTRA_ANGLE_RESTRAINT,EXTRA_DIHEDRAL_RESTRAINT
@@ -96,4 +97,10 @@ c                           (-1) Agree with whatever the solvent wants
       parameter(CUBICHARMONIC=2)
       parameter(SPHERICALHARMONIC=3)
       parameter(AGREESOLVENT=-1)
+
+c     Types of solvent optimizers
+      integer OPTNONE,OPTTIP3P,OPTTIP4P
+      parameter (OPTNONE=0)
+      parameter (OPTTIP3P=1)
+      parameter (OPTTIP4P=2)
        

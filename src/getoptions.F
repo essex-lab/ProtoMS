@@ -30,7 +30,7 @@ c     Christopher Woods, October 2004
 c
 c#######################################################
 
-      integer i,j,lgth,lgth0,lgth1,lineLength
+      integer i,j,lgth,lgth0,lgth1,lineLength,nkind,nold
       integer lowsol,highsol
       integer imol
 c     the current system time and date            
@@ -415,6 +415,16 @@ c     get the names of all of the protein files and read them in
         endif
 c     end of do-while
 
+c     SG
+c     Try to read in number of solute theta kinds
+      NThetaSolKind = 0
+      if (getOption('nthetasolutes').or.getOption('nfrag')) then
+        NThetaSolKind = getInt(words(1),0)  
+        write(printstring,*)"Will consider the first ",NThetaSolKind, "soluteX as theta-solutes"
+        call printLine(INFO,printstring)
+      endif      
+      nkind = 0
+
 c     get the names of all of the solute files and read them in
       i = 0
 102   continue      
@@ -422,10 +432,54 @@ c     get the names of all of the solute files and read them in
         call writeNumberString('solute',i,tempstring)
         if (getOption(tempstring)) then
           filename = words(1)
+          nold = NSolutes
           call loadSolute(filename)
+c         SG, check if we should tag this solute as a theta solute
+          if (i.le.NThetaSolKind) then
+            nkind = nkind + 1
+c           Set default values of fragment variables            
+            do j=nold+1,NSolutes
+              ThetaKind(j) = nkind
+              SoluteTheta(j) = ZERO
+              SoluteHydScale(j) = ONE
+            enddo
+            NThetaSolutes = NThetaSolutes + NSolutes-nold
+          else
+            do j=nold+1,NSolutes
+              ThetaKind(j) = 0
+              SoluteTheta(j) = ONE
+              SoluteHydScale(j) = ONE
+            enddo
+          endif
           goto 102
         endif        
 c     end of do-while
+
+c     SG, set initial theta values
+      if (getOption('theta0')) then
+        do i=1,min(NThetaSolutes,nwords)
+          SoluteTheta(i) = getDouble(words(i),SoluteTheta(i)) 
+        enddo
+      endif 
+
+c     SG, set hydration scaling variable
+      if (getOption('hydscaling')) then
+        do i=1,min(NThetaSolutes,nwords)
+          SoluteHydScale(i) = getDouble(words(i),SoluteHydScale(i)) 
+        enddo
+      endif 
+
+      UseConcCorr = .true.
+      if (getOption('conccorr')) then
+        UseConcCorr = (words(1).eq."on") 
+      endif
+      if (UseConcCorr) then
+        write(printstring,*)"Using concentration correction"
+        call printLine(INFO,printstring)
+      else
+        write(printstring,*)"NOT using concentration correction"
+        call printLine(INFO,printstring)
+      endif
 
 c     get the names of all of the gc- solute files and read them in
       i = 0
@@ -657,6 +711,56 @@ c     Get the JAWS biasing term for JAWS-II simulations
       call printLine(INFO,printstring)
       endif
 
+      if (getOption('x').or.getOption('lenx')) then
+      gridx = getDouble(words(1),gridx)
+      write(printstring,*) "Grid size in X dimension" ,gridx
+      call printLine(INFO,printstring)
+      endif
+      if (getOption('y').or.getOption('leny')) then
+      gridy = getDouble(words(1),gridy)
+      write(printstring,*) "Grid size in Y dimension" ,gridy
+      call printLine(INFO,printstring)
+      endif
+      if (getOption('z').or.getOption('lenz')) then
+      gridz = getDouble(words(1),gridz)
+      write(printstring,*) "Grid size in Z dimension" ,gridz
+      call printLine(INFO,printstring)
+      endif
+
+      if (getOption('spacing')) then
+      space = getDouble(words(1),space)
+      write(printstring,*) "Grid granularity" ,space, "A"
+      call printLine(INFO,printstring)
+      endif
+
+c     get grid centers
+      if (getOption('centerx')) then
+      centerx = getDouble(words(1),centerx)
+      write(printstring,*) "Grid center in X dimension" ,centerx
+      call printLine(INFO,printstring)
+      coordx = centerx - gridx / 2.0
+      write(printstring,*) "Grid origin in X dimension" ,coordx
+      call printLine(INFO,printstring)
+      endif
+
+      if (getOption('centery')) then
+      centery = getDouble(words(1),centery)
+      write(printstring,*) "Grid center in Y dimension" ,centery
+      call printLine(INFO,printstring)
+      coordy = centery - gridy / 2.0
+      write(printstring,*) "Grid origin in Y dimension" ,coordy
+      call printLine(INFO,printstring)
+      endif
+
+      if (getOption('centerc')) then
+      centerz = getDouble(words(1),centerz)
+      write(printstring,*) "Grid center in Z dimension" ,centerz
+      call printLine(INFO,printstring)
+      coordz = centerz - gridz / 2.0
+      write(printstring,*) "Grid origin in Z dimension" ,coordz
+      call printLine(INFO,printstring)
+      endif
+
 c     get grid origins
       if (getOption('originx')) then
        coordx = getDouble(words(1),coordx)
@@ -708,28 +812,6 @@ c"
         do i=1,NGCSolutes
         thetaparam(i) = jaws1
         enddo
-      endif
-
-
-      if (getOption('x')) then
-      gridx = getDouble(words(1),gridx)
-      write(printstring,*) "Grid size in X dimension" ,gridx
-      call printLine(INFO,printstring)
-      endif
-      if (getOption('y')) then
-      gridy = getDouble(words(1),gridy)
-      write(printstring,*) "Grid size in Y dimension" ,gridy
-      call printLine(INFO,printstring)
-      endif
-      if (getOption('z')) then
-      gridz = getDouble(words(1),gridz)
-      write(printstring,*) "Grid size in Z dimension" ,gridz
-      call printLine(INFO,printstring)
-      endif
-      if (getOption('spacing')) then
-      space = getDouble(words(1),space)
-      write(printstring,*) "Grid granularity" ,space, "A"
-      call printLine(INFO,printstring)
       endif
 
 c     read perturbeIntra flag

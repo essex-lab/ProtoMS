@@ -27,7 +27,7 @@ c     then solutes, then solvent coordinates. The aim
 c     still is that the next simulation loads up the same
 c     input files, then the restart file is used to modify
 c     the coordinates
-      ienew = totalEnergy(savenrg,inrgb,inrgf)
+c      ienew = totalEnergy(savenrg,inrgb,inrgf)
 c        PRINT*, "ENERGY",ienew
 c     don't do anything if nothing is loaded
       if (NProteins.le.0 .and. NSolutes.le.0 .and. NSolvents.le.0)
@@ -51,8 +51,6 @@ c     now write out the number of proteins,solutes,solvents
        call printLine(RESTART,printstring)
 91     format('GCSCavity= ',i8)
 
-
-      
 c     if necessary, write out information about the solvent box
       if (boundary.eq.PERIODICBOUNDARIES) then
         write(printstring,72) BoxDimension(1),BoxDimension(2),BoxDimension(3)
@@ -106,7 +104,10 @@ c     now write the coordinates of all of the solutes
         write(printstring,21) NSolAtoms(i)
         call printLine(RESTART,printstring)
 21      format('NAtoms = ',i8)
-
+c       SG
+        write(printstring,77) SoluteTheta(i)
+        call printLine(RESTART,printstring)        
+77      format('Theta = ',f8.4)
 c       first write out the dummies / axes of the solute
         write(printstring,23) 'DUMMY',(SolDummy(i,1,j),j=1,3)
         call printLine(RESTART,printstring)

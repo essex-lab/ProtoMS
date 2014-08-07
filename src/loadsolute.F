@@ -13,11 +13,13 @@ c     There is one index per solute that
 c     can be loaded into this code.
 c
 c     (C) Christopher Woods, October 2004
+c     Samuel Genheden implemented reading of several
+c                     solutes from a file, 2012
 c
 c##################################################
 
       character*(*) filename
-      character*300 line
+      character*300 line,savenam
       integer isol,itmpl
       integer izid
       integer lgth,lineLength,linenum
@@ -79,6 +81,8 @@ c         can only have one 'header' line
 c         the rest of the header line contains the solute name
           call join(2,nwords,line)
           lgth = lineLength(line)
+c         SG
+          savenam = line(1:lgth)
           SoluteName(isol) = line(1:lgth)
           write(printstring,*) "Loading solute '",SoluteName(isol)(1:lgth),"'"
           call printLine(INFO,printstring)
@@ -92,15 +96,27 @@ c         try to find the solute template for this molecule
             call printLine(WARNING,"Cannot load a solute unless it has a valid template!")
             call prettyLine(WARNING,"This simulation is now broken!")
             return
-          endif
+          endif        
         else if (words(1)(1:3).eq.'ter') then
 c         we cannot load multiple solutes from a single file! This could be easily changed though...
-          write(printstring,*)
-     .      "Cannot load multiple solutes from a PDB file - each solute must be in a separate file with ",
-     .      "no 'ter' records. Skipping the rest of the PDB file from line ",linenum
-          call printLine(WARNING,printstring)
+c          write(printstring,*)
+c     .      "Cannot load multiple solutes from a PDB file - each solute must be in a separate file with ",
+c     .      "no 'ter' records. Skipping the rest of the PDB file from line ",linenum
+c          call printLine(WARNING,printstring)
 c         the solute has now ended
-          goto 9800          
+c          goto 9800 
+c         SG: when TER record is found, start a new solute molecule
+          isol = NSolutes + 1
+          if (isol.gt.MAXSOLUTES) then
+            write(printstring,*) "Exceeded maximum number of solutes (",MAXSOLUTES,")"
+            call printLine(WARNING,printstring)
+            call printLine(WARNING,"Increase MAXSOLUTES and recompile")
+            return
+          endif
+          call initialiseSolute(isol)                    
+          NSolutes = isol
+          izid = 0
+          SoluteName(isol) = savenam(1:lineLength(savenam))
         else
           if (itmpl.eq.0) then
             call printLine(WARNING,"Cannot load a solute atom without a valid solute template!")

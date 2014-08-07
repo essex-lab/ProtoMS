@@ -24,7 +24,7 @@ c##########################################################
       double precision cnrg,ljnrg,nrg,mindist
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision distx,disty,distz,dist2,sclfac
-      integer i,j,nat1,nat2
+      integer i,j,nat1,nat2,istart
       include 'nbenergyvar2.inc'
       double precision charge,sigma,epslon      
       double precision scl,sclf,sclb
@@ -105,26 +105,64 @@ c     Activate Distance Dependent Dielectric calculation
       do i=1,nat1
         funcat1 = i
 
-        do j=1,nat2
-          funcat2 = j
+        if ((SvnOptimization(isvn).eq.OPTTIP3P.or.SvnOptimization(isvn).eq.OPTTIP4P).and..not.doDerivative) then
+c          if (isvn.eq.1) write(6,*)"Using optimized routines..."
+c         Optimized for TIP4P-TIP4P interactions
 
+c         LJ on oxygens only
+          funcat2 = 1
           include 'nbinitial.inc'
           include 'nbsolsvn.inc'
-          if (doDerivative) then
-            include 'nbderivative.inc'
-          else
-            include 'nbenergy2.inc'
-          endif
-
+          include 'nbenergy_lj.inc'         
+        
           nrg = nrg + funcnbnrg
-          cnrg = cnrg + funccnrg
           ljnrg = ljnrg + funcljnrg
-          cnrgf = cnrgf + funccnrgf
-          cnrgb = cnrgb + funccnrgb
           ljnrgf = ljnrgf + funcljnrgf
           ljnrgb = ljnrgb + funcljnrgb
           if (funcmindist.lt.mindist) mindist = funcmindist
-        enddo
+
+c         Charges on the rest of the particles, i.e., between hydrogens and extra point particle
+          if (SvnOptimiZation(isvn).eq.OPTTIP3P) then
+            istart = 1
+          else
+            istart = 2
+          endif
+          do j=istart,nat2
+            funcat2 = j
+
+            include 'nbinitial.inc'
+            include 'nbsolsvn.inc'
+            include 'nbenergy_coul.inc'
+          
+            nrg = nrg + funcnbnrg
+            cnrg = cnrg + funccnrg
+            cnrgf = cnrgf + funccnrgf
+            cnrgb = cnrgb + funccnrgb
+
+            if (funcmindist.lt.mindist) mindist = funcmindist
+          enddo
+        else
+          do j=1,nat2
+            funcat2 = j
+  
+            include 'nbinitial.inc'
+            include 'nbsolsvn.inc'
+            if (doDerivative) then
+              include 'nbderivative.inc'
+            else
+              include 'nbenergy2.inc'
+            endif
+
+            nrg = nrg + funcnbnrg
+            cnrg = cnrg + funccnrg
+            ljnrg = ljnrg + funcljnrg
+            cnrgf = cnrgf + funccnrgf
+            cnrgb = cnrgb + funccnrgb
+            ljnrgf = ljnrgf + funcljnrgf
+            ljnrgb = ljnrgb + funcljnrgb
+            if (funcmindist.lt.mindist) mindist = funcmindist
+          enddo
+        endif
       enddo
 
       if (cuttype.eq.RESIDUEMOLECULE .or. cuttype.eq.MOLECULEMOLECULE) then

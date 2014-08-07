@@ -60,6 +60,14 @@ c     the bonds/angles/dihedrals in the solutes
       double precision SolUreyBradleySize(MAXSOLUTES,MAXSOLUTEUREYBRADLEYS)
       double precision GCSUreyBradleySize(125,MAXSOLUTEUREYBRADLEYS)
       double precision SolADel(MAXSOLUTES),SolRDel(MAXSOLUTES)
+c     SG
+      double precision SolTDel(MAXSOLUTES)
+      double precision SolJCorr(MAXMOLTEMPLATES)
+      integer SolJPmfOrd(MAXMOLTEMPLATES)
+      integer MAXORDER
+      parameter(MAXORDER=5)
+      double precision SolJPmfCoeff(MAXMOLTEMPLATES,MAXORDER)
+      
       logical SolBondDummy(MAXSOLUTES,MAXSOLUTEBONDS)
       logical SolAngleDummy(MAXSOLUTES,MAXSOLUTEANGLES)
       logical SolDihedralDummy(MAXSOLUTES,MAXSOLUTEDIHEDRALS)
@@ -108,13 +116,26 @@ c     whether or not a softcore is used for interactions involving that solute
       logical SoluteSoftCore(MAXSOLUTES)
 c     wheter to use library charges for intra molecular energies or the perturbed ones
       logical perturbeIntra
-            
+
+c     SG
+c     scaling parameter for solute
+      double precision SoluteTheta(MAXSOLUTES)  
+      double precision SoluteHydScale(MAXSOLUTES)   
+      logical UseConcCorr
+
+c     Number of theta solute kinds
+      integer NThetaSolKind
+c     Number of theta solute molecules
+      integer NThetaSolutes
+c     Which kind of theta solute a solute is
+      integer ThetaKind(MAXSOLUTES)
+
       common /DSOLDATA/ ZSolCoords,ZSolVal,SolBondLength,SolAngleSize,
      .                  SolDihedralSize,SolUreyBradleySize,SolBondDelta,SolAngleDelta,
      .                  SolDihedralDelta,ZSolDelta,SolDummy,
      .                  SolCentre,OldSolCentre,SolRadius,SolGeomCentre,
-     .                  OldSolGeomCentre,SolADel,SolRDel,SolVariableVal,
-     .                      ZSolDihWell
+     .                  OldSolGeomCentre,SolADel,SolRDel,SolTDel,SolJCorr,SolJPmfOrd,SolJPmfCoeff,
+     .                  SolVariableVal,ZSolDihWell
       common /ISOLDATA/ NSolutes,ZSolPar,ZSolMat,SolResidues,SolBond,SolAngle,
      .                  SolDihedral,SolUreyBradley,NSolBonds,NSolAngles,NSolDihedrals,
      .                  NSolUreyBradleys,NSolAtoms,NSolResidues,SolResidue,
@@ -127,12 +148,15 @@ c     wheter to use library charges for intra molecular energies or the perturbe
      .                  GCSUreyBradleySize,NGCSNB
       common /CSOLDATA/ SolResNam,SolAtomNam,SoluteName
       common /LSOLDATA/ FlexSolBond,FlexSolAngle,FlexSolDihedral,ZSolMov,DoneSolNrg,
-     .                  SolNB14,IgnoreSolute,DualTopologySyncTrans,
-     .                DualTopologySyncRot,DualTopologySyncInt,
-     .                  SolBondDummy,SolAngleDummy,SolDihedralDummy,SoluteSoftCore,perturbeIntra
+     .                  SolNB14,IgnoreSolute,DualTopologySyncTrans,SoluteTheta,SoluteHydScale, 
+     .                  DualTopologySyncRot,DualTopologySyncInt,
+     .                  SolBondDummy,SolAngleDummy,SolDihedralDummy,SoluteSoftCore,perturbeIntra                  
+
+      common /FRAGDATA/ NThetaSolKind,NThetaSolutes,ThetaKind,UseConcCorr
 
       save /DSOLDATA/
       save /ISOLDATA/
       save /CSOLDATA/
       save /LSOLDATA/
       save /GCSSDATA/
+      save /FRAGDATA/

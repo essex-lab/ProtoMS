@@ -162,7 +162,7 @@ c     Re-setting all running averages
 
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
       write(lrefolder,"(2A,F5.3)")reoutfolder(1:lineLength(reoutfolder)),"/lam-",lambdaval(mylambda)
-      do i=1,nOpenFiles         
+      do i=1,nOpenFiles    
         fileappend(i) = .True.
         fileopened(i) = .False.
         call split2(openfiles(i),"/")

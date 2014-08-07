@@ -24,6 +24,8 @@ c
 c
 c     (C) Christopher Woods    7 February 2002
 c
+c     Modified by Samuel Genheden 2012-2014
+c
 c###########################################################
 
       integer savenrg
@@ -311,6 +313,11 @@ c           see if this is a dual topology solute
               sclb = getHighScale(LambdaB)
               sclf = getHighScale(LambdaF)
             endif
+c          SG do theta scaling for fragments
+           scl = scl*SoluteTheta(j) ! SG
+           sclf = sclf*SoluteTheta(j) ! SG
+           sclb = sclb*SoluteTheta(j) ! SG  
+           
 c          August 08. JM bugfix to remove harmless warnings when doing splitGBSA simulations with a dual
 c          topology sims. The fwd/bwd energies should be the same, but for this to be true, the scale factors
 c          must be the same at
@@ -397,26 +404,28 @@ c       calculate the bulk GCS energy
 c       now the solvent-GCS energy
         if (NSolvents.gt.0) then
 c        add the total GCS-protein energy for protein i
-          nrg = GCsoluteSolventEnergy(i,
+          do i=1,NGCSolutes
+            nrg = GCsoluteSolventEnergy(i,
      .              cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist)
-          nrgf = nrgf + cnrgf + ljnrgf
-          nrgb = nrgb + cnrgb + ljnrgb
-          totalEnergy = totalEnergy + nrg
-          if (savenrg.eq.OLD) then
-            OldGCSSvnC(i) = cnrg
-            OldGCSSvnLJ(i) = ljnrg
-            OldGCSSvnCF(i) = cnrgf
-            OldGCSSvnLJF(i) = ljnrgf
-            OldGCSSvnCB(i) = cnrgb
-            OldGCSSvnLJB(i) = ljnrgb
-          else if (savenrg.eq.NEW) then
-            NewGCSSvnC(i) = cnrg
-            NewGCSSvnLJ(i) = ljnrg
-            NewGCSSvnCF(i) = cnrgf
-            NewGCSSvnLJF(i) = ljnrgf
-            NewGCSSvnCB(i) = cnrgb
-            NewGCSSvnLJB(i) = ljnrgb
-          endif         
+            nrgf = nrgf + cnrgf + ljnrgf
+            nrgb = nrgb + cnrgb + ljnrgb
+            totalEnergy = totalEnergy + nrg
+            if (savenrg.eq.OLD) then
+              OldGCSSvnC(i) = cnrg
+              OldGCSSvnLJ(i) = ljnrg
+              OldGCSSvnCF(i) = cnrgf
+              OldGCSSvnLJF(i) = ljnrgf
+              OldGCSSvnCB(i) = cnrgb
+              OldGCSSvnLJB(i) = ljnrgb
+            else if (savenrg.eq.NEW) then
+              NewGCSSvnC(i) = cnrg
+              NewGCSSvnLJ(i) = ljnrg
+              NewGCSSvnCF(i) = cnrgf
+              NewGCSSvnLJF(i) = ljnrgf
+              NewGCSSvnCB(i) = cnrgb
+              NewGCSSvnLJB(i) = ljnrgb
+            endif         
+          enddo
         endif
 
 c       write(6,*)totalEnergy,nrgf,nrgb
@@ -470,7 +479,11 @@ c             this being a dual topology solute
                 sclb = getHighScale(LambdaB)
                 sclf = getHighScale(LambdaF)
               endif
-
+c             SG theta scaling for fragments
+              scl = scl*SoluteTheta(i) ! SG
+              sclf = sclf*SoluteTheta(i) ! SG
+              sclb = sclb*SoluteTheta(i) ! SG  
+              
               nrg = soluteGCSEnergy(DONTCARE,i,
      .              cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist,
      .              scl,sclf,sclb)
@@ -599,7 +612,11 @@ c             this being a dual topology solute
                 sclb = getHighScale(LambdaB)
                 sclf = getHighScale(LambdaF)
               endif
-
+c             SG theta scaling for fragments
+              scl = scl*SoluteTheta(i) ! SG
+              sclf = sclf*SoluteTheta(i) ! SG
+              sclb = sclb*SoluteTheta(i) ! SG  
+              
               nrg = soluteSolventEnergy(DONTCARE,i,
      .              cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist,
      .              scl,sclf,sclb)
