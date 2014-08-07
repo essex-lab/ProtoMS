@@ -465,7 +465,7 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
       the rotational displacement
     zmatfile : string, optional
       the filename of a zmat, if None it is created
-    frcmodfile > string, optional
+    frcmodfile : string, optional
       the filename of an Amber frcmod file with additional parameters
     resname : string, optional
       the name of solute
@@ -491,8 +491,8 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
 
     PROTOMSHOME = os.getenv('PROTOMSHOME')
 
-    angle_params = sim.parameter_set ( "%s/parameter/gaff14.ff" % PROTOMSHOME, 'angle' )
-    dihedral_params = sim.parameter_set ( "%s/parameter/gaff14.ff" % PROTOMSHOME, 'dihedral' )
+    angle_params = sim.ParameterSet ( "%s/parameter/gaff14.ff" % PROTOMSHOME, 'angle' )
+    dihedral_params = sim.ParameterSet ( "%s/parameter/gaff14.ff" % PROTOMSHOME, 'dihedral' )
 
     with open ( "%s/parameter/gaff.types" % PROTOMSHOME ) as f:
         at_params = [ line.split() for line in f ]

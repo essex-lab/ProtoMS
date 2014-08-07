@@ -1,0 +1,12 @@
+
+sphinx-quickstart
+
+Project name: ProtoMS
+Author names: Richard Bradshaw, Ana Cabedo Martinez, Chris Cave-Ayland, Samuel Genheden, Gregory Ross
+Version: 3.0
+autodoc: automatically insert docstrings from modules (y/n) [n]: y
+
+Otherwise defaults
+
+
+make html

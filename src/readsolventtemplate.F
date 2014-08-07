@@ -78,6 +78,7 @@ c       make sure there are at least two words
             SvnTemplateOptimization(itmpl) = OPTTIP3P
           else
             SvnTemplateOptimization(itmpl) = OPTNONE
+            call printLine(INFO,"Found solvent template without optimization")          
           endif
         else if (words(1).eq.'coord') then
           call readSvnTemplateCoordLine(line,itmpl)

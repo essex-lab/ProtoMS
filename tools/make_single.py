@@ -369,7 +369,10 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
 
   # Setup parameter sets to search
   gaffname = sim.standard_filename("gaff14.ff","parameter")
-  gaffsets = {type:sim.parameter_set(gaffname, type ) for type in ["bond","angle","dihedral"]}
+  #gaffsets = {type:sim.parameter_set(gaffname, type) for type in ["bond","angle","dihedral"]}
+  gaffsets = {}
+  for type in ["bond","angle","dihedral"] :
+    gaffsets[type] = sim.ParameterSet(gaffname, type)
   temsets = {"bond" : tem1.bondatoms,"angle" : tem1.angleatoms,"dihedral" : tem1.dihedralatoms}
 
   # Now loop over all atoms that changes type
