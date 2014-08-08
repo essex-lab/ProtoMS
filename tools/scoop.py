@@ -16,10 +16,13 @@ Can be executed from the command line as a stand-alone program
 import os
 import operator
 import itertools
+import logging
 
 import numpy as np
 
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def scoop ( protein, ligand, innercut = 16, outercut  = 20, 
             flexin = 'full', flexout = 'sidechain', excluded = [], added = [] ) :
@@ -56,6 +59,17 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
     PDBFile 
         an object representing the scooped protein
     """
+    
+    logger.debug("Running scoop with arguments: ")
+    logger.debug("\tprotein  = %s"%protein) 
+    logger.debug("\tligand   = %s"%ligand) 
+    logger.debug("\tinnercut = %f"%innercut) 
+    logger.debug("\toutercut = %f"%outercut) 
+    logger.debug("\tflexin   = %s"%flexin) 
+    logger.debug("\tflexout  = %s"%flexout) 
+    logger.debug("\texcluded = %s"%" ".join("%d"%e for e in excluded)) 
+    logger.debug("\tadded    = %s"%" ".join("%d"%e for a in added)) 
+    logger.debug("This will generate a truncated version for a protein")
   
     pdb_out = protein.copy()
     
@@ -217,6 +231,9 @@ if __name__ == "__main__":
     parser.add_argument('--excluded',nargs="+",type=int,help="a list of indices for residues to be excluded from scoops",default=[])
     parser.add_argument('--added',nargs="+",type=int,help="a list of indices for residues to be included in outer scoops",default=[])
     args = parser.parse_args()
+
+    # Setup the logger
+    logger = simulationobjects.setup_logger("scoop_py.log")
 
     if args.ligand is None :
       ligand = args.center

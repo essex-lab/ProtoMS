@@ -13,6 +13,10 @@ pdb2pms
 Can be executed from the command line as a stand-alone program
 """
 
+import logging
+
+logger = logging.getLogger('protoms')
+
 def read_convfile(file=None, inmode=None,outmode=None):
     """ 
     Reads a conversion file into a dictionary
@@ -101,6 +105,12 @@ def pdb2pms(pdb_in,forcefield,conversion_file):
     a PDBFile instance with ProtoMS names
     """
 
+    logger.debug("Running pdb2pms with arguments: ")
+    logger.debug("\tpdb_in          = %s"%pdb_in) 
+    logger.debug("\tforcefield      = %s"%forcefield) 
+    logger.debug("\tconversion_file = %s"%conversion_file) 
+    logger.debug("This will rename atoms in a PDB-file to match ProtoMS naming convention")
+
     pdb_out = pdb_in.copy()
     conversion = read_convfile(conversion_file,inmode=forcefield,outmode="protoms")
     for resnum in pdb_in.residues:
@@ -122,7 +132,7 @@ def pdb2pms(pdb_in,forcefield,conversion_file):
                 newName = conversion[resname][(atomname[-1] + atomname[0:(len(atomname)-1)])]
             else:
                 newName = atomname
-                print "Warning: atom %s in residue %s %i not found in %s. This atom has not been converted. Check atom names are valid."  %(atomname, resname, resnum, conversion_file)
+                logger.warning("Warning: atom %s in residue %s %i not found in %s. This atom has not been converted. Check atom names are valid."  %(atomname, resname, resnum, conversion_file))
             pdb_out.residues[resnum].atoms[atomnum].name = newName
             pdb_out.residues[resnum].atoms[atomnum].resname = resname 
     return pdb_out
@@ -140,6 +150,9 @@ if __name__ == "__main__":
     parser.add_argument('-s','--style',help="the style of the input PDB-file",default="amber")
     parser.add_argument('-c','--conversionfile',help="the name of the file with conversion rules",default="atomnamesmap.dat")
     args = parser.parse_args()
+
+    # Setup the logger
+    logger = simulationobjects.setup_logger("convertatomnames_py.log")
 
     protein = simulationobjects.PDBFile(filename=args.protein)
     protein_out = pdb2pms(protein,args.style,args.conversionfile)

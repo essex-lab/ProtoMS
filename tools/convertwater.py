@@ -13,9 +13,12 @@ convertwater
 Can be executed from the command line as a stand-alone program
 """
 
+import logging
+
 import numpy as np
 import simulationobjects 
 
+logger = logging.getLogger('protoms')
 
 def _translatetemplate(solvents,watresname,wattemplate,watatomnames):
   """ 
@@ -67,6 +70,12 @@ def convertwater(pdb_in,watermodel):
   PDBFile
       a pdb file whose solvent elements have the geometry of the desired solvent model
   """
+  
+  logger.debug("Running convertwater with arguments: ")
+  logger.debug("\tpdb_in     = %s"%pdb_in) 
+  logger.debug("\twatermodel = %s"%watermodel) 
+  logger.debug("This will change the water molecule in the pdb file to match the water model")
+  
   pdb_out = pdb_in.copy()
   solvents = pdb_in.solvents
   # Ideal water geometries:
@@ -92,6 +101,9 @@ if __name__ == "__main__":
     parser.add_argument('-o','--out',help="the output PDB-file",default="convertedwater.pdb")
     parser.add_argument('-m','--model',help="the water model,default=tip4p",default="tip4p")
     args = parser.parse_args()
+
+    # Setup the logger
+    logger = simulationobjects.setup_logger("convertwater_py.log")
 
     pdb_in = simulationobjects.PDBFile(filename=args.pdb)
     pdb_out = convertwater(pdb_in,args.model)

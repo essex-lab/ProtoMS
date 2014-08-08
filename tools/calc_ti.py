@@ -15,11 +15,14 @@ Can be executed from the command line as a stand-alone program
 
 import glob
 import os
+import logging
 
 import matplotlib.pyplot as pl
 import numpy as np
 
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def _print_ene(lam,ene,std,print_uncert,print_lam) :
   """ 
@@ -279,6 +282,9 @@ if __name__ == '__main__' :
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   args = parser.parse_args()
+
+  # Setup the logger
+  logger = simulationobjects.setup_logger()
 
   # Fix negative values of skip and max
   if args.max < 0 :

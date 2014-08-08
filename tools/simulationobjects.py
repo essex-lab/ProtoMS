@@ -17,6 +17,8 @@
 import math
 import sys
 import os
+import logging
+
 import numpy as np
 
 boltz = 0.00198717076 # kcal.mol-1K-1
@@ -306,7 +308,9 @@ def merge_pdbs(pdbobjs) :
     """
     pdbout = PDBFile()
     nres = 0
+    names = []
     for pdbobj in pdbobjs :
+        names.append(pdbobj.name)
         for res in sorted ( pdbobj.residues.keys() ) :
           nres = nres + 1
           pdbobj.residues[res].index = nres
@@ -317,6 +321,8 @@ def merge_pdbs(pdbobjs) :
           pdbobj.solvents[sol].index = nres
           for atom in pdbobj.solvents[sol].atoms : atom.resindex = nres
           pdbout.solvents[nres] = pdbobj.solvents[sol]
+    pdbout.name = "_".join(names)
+    
     return pdbout      
 
 def find_box(pdbobj) :
@@ -1456,6 +1462,43 @@ def standard_filename(filename,folder) :
       oneup = os.path.split(thispath)[0]
       return os.path.join(oneup,folder_filename)
 
+def setup_logger(filename=None) :
+  """
+  Setup ProtoMS logging system
+  
+  Uses the standard logging module with two handlers,
+  one that prints everything above DEBUG to standard output
+  and one that prints everything, even DEBUG to a file
+  
+  If filename is None no file handler is created
+  
+  This should be called by protoms.py and all other stand-alone
+  programs that uses the tools
+  
+  Parameters
+  ----------
+  filename : string, optional
+    the filename of the string
+    
+  Returns
+  -------
+  a reference to the created logger
+  """
+  logger = logging.getLogger('protoms')
+  logger.setLevel(logging.DEBUG)
+  formatter1 = logging.Formatter('%(message)s')
+  console = logging.StreamHandler()
+  console.setLevel(logging.INFO)
+  console.setFormatter(formatter1)
+  logger.addHandler(console)
+  if filename is not None :
+    formatter2 = logging.Formatter('%(levelname)s : %(message)s')
+    logfile = logging.FileHandler(filename,mode="w")
+    logfile.setLevel(logging.DEBUG)
+    logfile.setFormatter(formatter2)
+    logger.addHandler(logfile)
+  return logger
+  
 def angle(v1,v2) :
   """
   Calculates the angle between two vectors

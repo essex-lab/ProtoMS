@@ -15,10 +15,13 @@ Can be executed from the command line as a stand-alone program
 
 import glob
 import os
+import logging
 
 import numpy as np
 
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def _print_ene(lam0,lam1,ene,std,print_uncert,print_lam) :
   """ 
@@ -325,8 +328,10 @@ if __name__ == '__main__' :
   parser.add_argument('-pu','--print-uncert',dest='printUncert',action='store_false',help="turns off printing of uncertainties",default=True)
   parser.add_argument('-pl','--print-lam',dest='printLam',action='store_false',help="turns off printing of lambda-values",default=True)
   parser.add_argument('-b','--nboots',type=int,help="the number of bootstrap samples",default=100)
-
   args = parser.parse_args()
+  
+  # Setup the logger
+  logger = simulationobjects.setup_logger()
 
   # Fix negative values of skip and max
   if args.max < 0 :

@@ -10,8 +10,10 @@ Program to setup, run and analyse a ProtoMS simulation
 
 import argparse
 import os
+import sys
 import subprocess
 import logging
+import time
 
 import numpy as np
 
@@ -220,11 +222,11 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
       solute = ligobj12
     # Calling the routine
     files["wat"] = ligprefix+"_box.pdb"
-    logger.info("Created waterbox-file: %s"%(files["wat"]))
     boxpdb = tools.solvate(settings.waterbox, ligand=solute, protein=None,
                            geometry="box",padding=10.0, radius=30.0, center="cent",
                            namescheme="ProtoMS")
     boxpdb.write(files["wat"])
+    logger.info("Created waterbox-file: %s"%(files["wat"]))
 
   return files
   
@@ -321,7 +323,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
       else :
         protobj.getCenter()
         ligobj = "%f %f %f" % tuple(protobj.center)
-        logger.info("Warning: No specified center for protein scoop. Using the center of the protein." )
+        logger.warning("Warning: No specified center for protein scoop. Using the center of the protein." )
     else :
       ligobj = ligands
 
@@ -354,11 +356,11 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
 
     # Calling the routine
     protein_water = watprefix+".pdb"
-    logger.info("Created water cap-file: %s"%(protein_water))
     cappdb = tools.solvate(settings.waterbox, ligand=ligands, protein=solute,
                           geometry="droplet",padding=10.0, radius=args.capradius, center="cent",
                           namescheme="ProtoMS")
     cappdb.write(protein_water)
+    logger.info("Created water cap-file: %s"%(protein_water))
 
   if protein_pms_file is not None:
     return protein_pms_file,protein_water
@@ -407,8 +409,8 @@ def _prep_singletopology(pdbs,templates1,settings) :
   logger.info("Created template %s for van der Waals-perturbation. Please check the output carefully."%templates2[0])
   
   if args.singlemap is None : settings.singlemap = "single_cmap.dat"
-  logger.info("Saved correspondance map to: %s"%settings.singlemap)
   tools.write_map(cmap,settings.singlemap)
+  logger.info("Saved correspondance map to: %s"%settings.singlemap)
 
   return templates1,templates2
 
@@ -512,18 +514,10 @@ if __name__ == "__main__":
   args = parser.parse_args()
   
   # Setup the logger
-  logger = logging.getLogger('protoms')
-  logger.setLevel(logging.DEBUG)
-  formatter1 = logging.Formatter('%(message)s')
-  console = logging.StreamHandler()
-  console.setLevel(logging.INFO)
-  console.setFormatter(formatter1)
-  logger.addHandler(console)
-  formatter2 = logging.Formatter('%(levelname)s : %(message)s')
-  logfile = logging.FileHandler("protoms_py.log",mode="w")
-  logfile.setLevel(logging.DEBUG)
-  logfile.setFormatter(formatter2)
-  logger.addHandler(logfile)
+  logger = simulationobjects.setup_logger("protoms_py.log")
+  logger.debug("Running protoms.py at %s"%time.strftime("%d/%m/%Y - %H:%M:%S"))
+  logger.debug("Command line arguments = %s"%" ".join(sys.argv[1:]))
+  logger.debug("Settings = %s"%args)
 
   # Adds current folder to the folders
   args.folders.append(".")
@@ -591,7 +585,7 @@ if __name__ == "__main__":
 
     # Here we will merge ligand template files if there is more than one
     if len(ligtems) > 1 :
-      print ""
+      logger.info("")
       ligtems = _merge_templates(ligtems)
       if args.simulation == "singletopology" : ligtems2 = _merge_templates(ligtems2)    
     

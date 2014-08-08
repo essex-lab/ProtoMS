@@ -10,10 +10,13 @@ Program to prepare ProtoMS output for pymbar
 
 import glob
 import os
+import logging
 
 import numpy as np
 
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def _parse_folder(path,res_tem,skip,maxread) :
   """ 
@@ -132,6 +135,9 @@ if __name__ == '__main__' :
   parser.add_argument('-t','--temperature',type=float,help="the simulation temperature in degrees. Default is 25.0",default=25.0)
   parser.add_argument('--run',action='store_true',help="whether to run pymbar",default=False)
   args = parser.parse_args()  
+
+  # Setup the logger
+  logger = simulationobjects.setup_logger()
 
   lambdas,energies,paths = _extract_energies(args.directory,args.results,args.skip,args.max)
   for lam,ene,path in zip(lambdas,energies,paths) :

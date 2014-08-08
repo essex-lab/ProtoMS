@@ -451,6 +451,7 @@ def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
   logger.debug("\tpdb1    = %s"%pdb1)
   logger.debug("\tpdb2    = %s"%pdb2)
   logger.debug("\tmapfile = %s"%mapfile)
+  logger.debug("This will make a ProtoMS template files for single-topology perturbations")
 
   if isinstance(tem1,basestring) :
     tem1 = sim.TemplateFile(filename=tem1)
@@ -526,8 +527,10 @@ if __name__ == '__main__' :
   parser.add_argument('-p1','--pdb1',help="PDB-file for V1")
   parser.add_argument('-m','--map',help="the correspondance map from V0 to V1")
   parser.add_argument('-o','--out',help="prefix of the output file",default="single")
-
   args = parser.parse_args()
+  
+  # Setup the logger
+  logger = simulationobjects.setup_logger("make_single_py.log")
 
   if args.tem0 is None or args.tem1 is None or args.pdb0 is None or args.pdb1 is None :
     sim.SetupError("Not all four necessary input files given. Cannot setup single-topology")
@@ -538,7 +541,8 @@ if __name__ == '__main__' :
   if args.map is None : write_map(cmap,args.out+"_cmap.dat")
 
   # Write out a summary
-  print "\nAtom    Ele perturbation                                        ||         Vdw perturbation"
+  logger.info("")
+  logger.info("Atom    Ele perturbation                                        ||         Vdw perturbation")
   for atom1,atom2 in zip(eletem.templates[0].atoms,vdwtem.templates[0].atoms) :
     ele0,ele1 = atom1.param0,atom1.param1
     vdw0,vdw1 = atom2.param0,atom2.param1
@@ -556,13 +560,15 @@ if __name__ == '__main__' :
           strout += "c"
         if abs(float(param1.params[3])-float(param2.params[3])) > 0.000001 : strout += "lj"        
         return "%3s"%strout
-    print "%5s : %s ==> %s %s || %s ==> %s %s" %(atom1.name,get_param(ele0),get_param(ele1),get_diff(ele0,ele1),get_param(vdw0),get_param(vdw1),get_diff(vdw0,vdw1))
+    logger.info("%5s : %s ==> %s %s || %s ==> %s %s" %(atom1.name,get_param(ele0),get_param(ele1),get_diff(ele0,ele1),get_param(vdw0),get_param(vdw1),get_diff(vdw0,vdw1)))
 
-  print "\nZ-matrix connectivities that changes parameter: "
+  logger.info("")
+  logger.info("Z-matrix connectivities that changes parameter: ")
   for con in vdwtem.templates[0].connectivity :
-    if con.param0 is not None : print con
+    if con.param0 is not None : logger.info(con)
 
-  print "\nVariable geometries: "
+  logger.info("")
+  logger.info("Variable geometries: ")
   for comment,var in zip(vdwtem.templates[0].variables[:-1:2],vdwtem.templates[0].variables[1::2]) :
-    print var," ",comment
+    logger.info("%s %s"%(var,comment))
  
