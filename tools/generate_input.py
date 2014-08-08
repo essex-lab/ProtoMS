@@ -508,7 +508,8 @@ class DualTopology(ProteinLigandSimulation) :
             if mol_template.name in pdbobj.header :
               resname = pdbobj.residues[1].name
               resatom = str(mol_template.atoms[0]).strip().split()
-              atmcoords = pdbobj.residues[1].atoms[0].coords
+              for atom in pdbobj.residues[1].atoms :
+                if atom.name in resatom[1] : atmcoords = atom.coords
         self.setChunk("id add %d solute %d %s %s"%(restsol+1,restsol+1,resatom[1],resname))
         self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f 10"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2]))
     
@@ -792,10 +793,8 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       outfolder = "out"
 
     rest_solutes = []
-    print settings.absolute
     if settings.simulation == 'dualtopology' and settings.absolute:
       rest_solutes.append(0)
-    print rest_solutes
 
     free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
