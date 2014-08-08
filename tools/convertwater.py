@@ -13,11 +13,18 @@ convertwater
 Can be executed from the command line as a stand-alone program
 """
 
+import logging
+
 import numpy as np
 from scipy.optimize import minimize
 import random
 import simulationobjects 
 
+<<<<<<< /local/scratch/gar1c13/ProtoMS3.0/tools/convertwater.py
+=======
+logger = logging.getLogger('protoms')
+
+>>>>>>> /tmp/convertwater.py~other.xG7Nc7
 def _translatetemplate(solvents,watresname,wattemplate,watatomnames):
   """ 
   Translates an ideal water model geometry, such as tip4p, to match the location of the water molecules in a residue object. Original hydrogen positions are over-written. Superseded by rottranstemplate below.
@@ -208,10 +215,19 @@ def convertwater(pdb_in,watermodel,ignorH=None):
   PDBFile
       a pdb file whose solvent elements have the geometry of the desired solvent model
   """
+<<<<<<< /local/scratch/gar1c13/ProtoMS3.0/tools/convertwater.py
   if ignorH.upper() in ['TRUE','YES','Y','T'] :
       ignorH = True
   else:
       ignorH = False
+=======
+  
+  logger.debug("Running convertwater with arguments: ")
+  logger.debug("\tpdb_in     = %s"%pdb_in) 
+  logger.debug("\twatermodel = %s"%watermodel) 
+  logger.debug("This will change the water molecule in the pdb file to match the water model")
+  
+>>>>>>> /tmp/convertwater.py~other.xG7Nc7
   pdb_out = pdb_in.copy()
   solvents = pdb_in.solvents
   # Ideal water geometries:
@@ -245,6 +261,9 @@ if __name__ == "__main__":
     parser.add_argument('-m','--model',help="the water model,default=tip4p",default="tip4p")
     parser.add_argument('-i','--ignorh',help="whether to ignore hydrogens in input water. If no hydrogens are present, waters are randomly orientated. default=No",default='No')
     args = parser.parse_args()
+
+    # Setup the logger
+    logger = simulationobjects.setup_logger("convertwater_py.log")
 
     pdb_in = simulationobjects.PDBFile(filename=args.pdb)
     pdb_out = convertwater(pdb_in,args.model,ignorH=args.ignorh)	# Possibly add a check for whether the solvent contains hydrogens before this line.

@@ -16,8 +16,11 @@ Can be executed from the command line as a stand-alone program
 
 import sys
 import os
+import logging
 
 import simulationobjects as sim
+
+logger = logging.getLogger('protoms')
 
 class PrepiAtom :
   """
@@ -387,7 +390,11 @@ def make_zmat(prepifile):
     if verbose : print ""
   
     return all_zmat
-    
+
+  logger.debug("Running make_zmat with arguments: ")
+  logger.debug("\tprepifile = %s"%prepifile) 
+  logger.debug("This will generate a ProtoMS compatible z-matrix for a solute")
+
   # Parse the prepi-file into a list of atom names and a dictionary of Atom objects
   atomnames,atoms = _read_prepi(prepifile)	# MOD
   h,t = os.path.splitext(prepifile)	
@@ -475,6 +482,17 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     TemplateFile
       the created template file
     """
+    
+    logger.debug("Running build_template with arguments: ")
+    logger.debug("\ttemfile    = %s"%temfile) 
+    logger.debug("\tprepifile  = %s"%prepifile) 
+    logger.debug("\ttranslate  = %f"%translate)
+    logger.debug("\trotate     = %f"%rotate)
+    logger.debug("\tzmatfile   = %s"%zmatfile)
+    logger.debug("\tfrcmodfile = %s"%frcmodfile)
+    logger.debug("\tresname    = %s"%resname)
+    logger.debug("This will generate a ProtoMS template file for a solute")
+    
     if zmatfile is None :
         atoms,zmat = make_zmat(prepifile)
     else :
@@ -663,9 +681,9 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
                 k = [ i for i in frcangles
                       if atypes in ( i[0], i[0][::-1] ) ][0][1]
             except IndexError:
-                print "Unable to find angle parameters for %s-%s-%s" % tuple ( atypes )
-                print "For now the flexibility of this angle will be set to zero."
-                print "To correct this consider manually adding a term to the frcmod file\n"
+                logger.warning("Unable to find angle parameters for %s-%s-%s" % tuple ( atypes ))
+                logger.warning("For now the flexibility of this angle will be set to zero.")
+                logger.warning("To correct this consider manually adding a term to the frcmod file\n")
                 k = 10**10 #make k huge so max_move is zero
             except TypeError :
                 k = 10*10
@@ -694,9 +712,9 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
                 [ i for i in frcdihedrals
                   if atypes in ( i[0], i[0][::-1] ) ]
             except IndexError:
-                print "Unable to find dihedral parameters for %s-%s-%s-%s" % tuple ( atypes )
-                print "For now the flexibility of this angle will be set to zero."
-                print "To correct this consider manually adding a term to the frcmod file\n"
+                logger.warning("Unable to find dihedral parameters for %s-%s-%s-%s" % tuple ( atypes ))
+                logger.warning("For now the flexibility of this angle will be set to zero.")
+                logger.warning("To correct this consider manually adding a term to the frcmod file\n")
                 k = 10**10 #make k huge so max_move is zero
                 missing = True
             
@@ -749,6 +767,9 @@ if __name__ == '__main__':
     parser.add_argument('-t','--translate',help="maxmium size for translation moves in Angstroms", default=0.25, type=float)
     parser.add_argument('-r','--rotate',help="maxmium size for rotation moves in degrees", default=5.0, type=float)
     args = parser.parse_args()
+    
+    # Setup the logger
+    logger = simulationobjects.setup_logger("build_template_py.log")
     
     tem = build_template ( temfile=args.out, prepifile=args.prepi, zmatfile=args.zmat, frcmodfile=args.frcmod, resname=args.name, translate=args.translate, rotate=args.rotate ) 
     

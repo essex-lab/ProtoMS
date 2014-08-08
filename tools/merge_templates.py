@@ -13,7 +13,11 @@ merge_templates
 Can be executed from the command line as a stand-alone program
 """
 
+import logging
+
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def merge_templates(templates) :
   """
@@ -29,6 +33,11 @@ def merge_templates(templates) :
   TemplateFile
     the merged template file
   """
+  
+  logger.debug("Running merge_templates with arguments: ")
+  logger.debug("\ttemplates = %s"%" ".join(templates)) 
+  logger.debug("This will merge all templates, renumbering force field parameters")
+  
   templates = list(set(templates)) # Make it a unique list
   temfile = simulationobjects.TemplateFile(templates[0])
   for t in templates[1:] :
@@ -44,6 +53,9 @@ if __name__ == "__main__":
   parser.add_argument('-f','--files',nargs="+",help="the name of the template files")
   parser.add_argument('-o','--out',help="the name of the merged template file")
   args = parser.parse_args()
+
+  # Setup the logger
+  logger = simulationobjects.setup_logger("merge_templates_py.log")
 
   if args.files is None : 
     print "Nothing to do! Exiting."
