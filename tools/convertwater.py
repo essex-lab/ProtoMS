@@ -20,11 +20,10 @@ from scipy.optimize import minimize
 import random
 import simulationobjects 
 
-<<<<<<< /local/scratch/gar1c13/ProtoMS3.0/tools/convertwater.py
-=======
+
 logger = logging.getLogger('protoms')
 
->>>>>>> /tmp/convertwater.py~other.xG7Nc7
+
 def _translatetemplate(solvents,watresname,wattemplate,watatomnames):
   """ 
   Translates an ideal water model geometry, such as tip4p, to match the location of the water molecules in a residue object. Original hydrogen positions are over-written. Superseded by rottranstemplate below.
@@ -215,19 +214,16 @@ def convertwater(pdb_in,watermodel,ignorH=None):
   PDBFile
       a pdb file whose solvent elements have the geometry of the desired solvent model
   """
-<<<<<<< /local/scratch/gar1c13/ProtoMS3.0/tools/convertwater.py
   if ignorH.upper() in ['TRUE','YES','Y','T'] :
       ignorH = True
   else:
       ignorH = False
-=======
   
   logger.debug("Running convertwater with arguments: ")
   logger.debug("\tpdb_in     = %s"%pdb_in) 
   logger.debug("\twatermodel = %s"%watermodel) 
   logger.debug("This will change the water molecule in the pdb file to match the water model")
   
->>>>>>> /tmp/convertwater.py~other.xG7Nc7
   pdb_out = pdb_in.copy()
   solvents = pdb_in.solvents
   # Ideal water geometries:
