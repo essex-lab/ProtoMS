@@ -42,6 +42,7 @@ c         reset all of the probability data to 0 - nothing can move!
           pDeletion = 0
           pGCSolute = 0
           pSample = 0
+          pSolTheta = 0
         else if (words(i)(1:7).eq.'protein') then
           pProtein = getInt(words(i)(9:lgth),0)
         else if (words(i)(1:6).eq.'solute') then
@@ -64,7 +65,8 @@ c         reset all of the probability data to 0 - nothing can move!
           pGCSolute = getInt(words(i)(10:lgth),0)
         else if (words(i)(1:6).eq.'sample') then
           pSample = getInt(words(i)(8:lgth),0)
-
+        else if (words(i)(1:8).eq.'soltheta') then
+          pSolTheta = getInt(words(i)(10:lgth),0)
         else if (words(i)(1:9).eq.'printmove') then
           printMoveEvery = getInt(words(i)(11:lgth),0)
         
@@ -99,10 +101,12 @@ c     eliminate invalid values
        pGCSolute = 0
       endif
 
+      if (NThetaSolKind.le.0) pSolTheta = 0
+
       if (NProteins.le.0) pTitrate = 0
 
 c     now calculate their values
-      probTotal = pProtein+pSolute+pSolvent+pTitrate+pTheta+pVolume+pRotamer+pInsertion+pDeletion+pGCSolute+pSample
+      probTotal = pProtein+pSolute+pSolvent+pTitrate+pTheta+pVolume+pRotamer+pInsertion+pDeletion+pGCSolute+pSample+pSolTheta
       
 c     if nothing is moving then set default values
       if (probTotal.eq.0) then
@@ -115,8 +119,9 @@ c     if nothing is moving then set default values
         pGCSolute = 0
         pTheta = 0
         pSample = 0
+        pSolTheta = 0
         if (pressure .ne. ZERO) pVolume = 1
-        probTotal = pProtein+pSolute+pSolvent+pTitrate+pTheta+pVolume+pRotamer+pInsertion+pDeletion+pGCSolute
+        probTotal = pProtein+pSolute+pSolvent+pTitrate+pTheta+pVolume+pRotamer+pInsertion+pDeletion+pGCSolute+pSolTheta
       endif
      
       probProtein = pProtein
@@ -130,16 +135,17 @@ c     if nothing is moving then set default values
       probDeletion = pDeletion+probInsertion
       probGCSolute = pGCSolute+probDeletion
       probSample = pSample+probGCSolute
+      probSolTheta = pSolTheta+probSample
 
       write(printstring,75) pProtein,pSolute,pSolvent,pInsertion
       call printLine(INFO,printstring)
       write(printstring,76) pTitrate,pTheta,pVolume,pDeletion
       call printLine(INFO,printstring)
-      write(printstring,77) pRotamer,pSample,pGCsolute
+      write(printstring,77) pRotamer,pSample,pGCsolute,pSolTheta
       call printLine(INFO,printstring)                   
                    
 75    format('Move probabilies: Protein = ',i8,' Solute = ',i8,' Solvent = ',i8,' Insertion = ',i8)
 76    format('                  Titrate = ',i8,' Theta  = ',i8,' Volume  = ',i8,' Deletion  = ',i8)
-77    format('                  Rotamer = ',i8,' Sample = ',i8,' GCsolute = ',i8)
+77    format('                  Rotamer = ',i8,' Sample = ',i8,' GCsolute = ',i8,' SolTheta = ',i8)
 
       end

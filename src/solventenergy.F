@@ -167,6 +167,9 @@ c           this is the high dual topology solute
             sclb = getHighScale(LambdaB)
             sclf = getHighScale(LambdaF)
           endif
+          scl = scl*SoluteTheta(i) ! SG
+          sclf = sclf*SoluteTheta(i) ! SG
+          sclb = sclb*SoluteTheta(i) ! SG 
           nrg = soluteSingleSolventEnergy(i,isvn,
      .        icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,
      .        scl,sclf,sclb)

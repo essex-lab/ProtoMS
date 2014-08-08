@@ -36,6 +36,7 @@ par 2002  HW  1   0.417  0.0      0.0
 
 mode template
 solvent T3P
+opt tip3p
 info translate 0.15 rotate 15.0
 atom O00 2001 2001
 atom H01 2002 2002
@@ -56,6 +57,7 @@ par 2005  ??  0 -1.040  0.0      0.0
 
 mode template
 solvent T4P
+#opt tip4p
 info translate 0.15 rotate 15.0
 atom O00 2003 2003
 atom H01 2004 2004
@@ -118,6 +120,7 @@ par 2010  HW  1   0.410  0.0       0.0
 
 mode template
 solvent SPC
+opt tip3p
 info translate 0.15 rotate 15.0
 atom O00 2009 2009
 atom H01 2010 2010

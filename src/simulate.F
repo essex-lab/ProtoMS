@@ -29,7 +29,7 @@ c#################################################################
       logical rotamerMove
       logical volumeMove,sampleMove
       logical insertionMove,deletionMove
-      logical gcsoluteMove,thetaMove
+      logical gcsoluteMove,thetaMove,solThetaMove
       logical templ,append
       character*64 tempstring
       integer ndumps, kdumps(25),fdumps(25)
@@ -85,7 +85,8 @@ c       obtain the move type based on probabilities entered by the user
           templ = sampleMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYTHETA) then
           templ = thetaMove(UPDATEENERGY,i,0)
-
+        else if (imov.eq.TRYSOLTHETA) then
+          templ = solThetaMove(UPDATEENERGY,i,0)
         else
           write(printstring,*) "Problems sorting out the move type! ",imov
           call printLine(WARNING,printstring)

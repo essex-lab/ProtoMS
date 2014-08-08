@@ -15,11 +15,14 @@ Can be executed from the command line as a stand-alone program
 
 import glob
 import os
+import logging
 
 import matplotlib.pyplot as pl
 import numpy as np
 
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def _print_ene(lam,ene,std,print_uncert,print_lam) :
   """ 
@@ -66,7 +69,7 @@ def _print_head(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8s"%std,
   print ""
 
-def _parse_folder(path,res_tem,skip,maxread,useanalytical) :
+def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
   """ 
   Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
   
@@ -80,6 +83,8 @@ def _parse_folder(path,res_tem,skip,maxread,useanalytical) :
     number of snapshots to skip
   maxread : int
     maximum number of snapshots to read
+  numkind : string
+    the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
     
@@ -110,13 +115,15 @@ def _parse_folder(path,res_tem,skip,maxread,useanalytical) :
       if useanalytical and hasattr(snapshot,"agradient") :
         gradient = snapshot.agradient
         lam = snapshot.lam
-      elif hasattr(snapshot,"gradient") :
+      elif numkind == "both" and hasattr(snapshot,"gradient") :
         gradient = snapshot.gradient
         lam = snapshot.lam
       else :
+        if not (hasattr(snapshot,"backfe") and hasattr(snapshot,"forwfe")) :
+          raise simulationobjects.SetupError("This results file does not contain any data on which one can estimate gradients.")
         lam = snapshot.lam
         lamB = snapshot.lamb
-        lamF = snapshot.lamf
+        lamF = snapshot.lamf        
         dGB = snapshot.backfe
         dGF = snapshot.forwfe
         # Calculate and return the gradient
@@ -126,7 +133,12 @@ def _parse_folder(path,res_tem,skip,maxread,useanalytical) :
           dGB = -dGF
         if (lam > 0.9999):
           dGF = -dGB
-        gradient = (dGF - dGB) / (2*deltalam)      
+        if numkind == "back" :
+          gradient = -dGB / deltalam
+        elif numkind == "forw" :
+          gradient = dGF / deltalam
+        else :
+          gradient = (dGF - dGB) / (2*deltalam)      
       if gradient != None :
         gradsum = gradsum + gradient
         gradsum2 = gradsum2 + gradient*gradient
@@ -138,7 +150,7 @@ def _parse_folder(path,res_tem,skip,maxread,useanalytical) :
       std = np.sqrt((gradsum2-av*gradsum)/(n-1)/n)
     return lam,av,std
 
-def _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam,useanalytical) :
+def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   """
   Calculate gradients for a number of folders
   
@@ -152,12 +164,10 @@ def _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam,
     number of snapshots to ignore
   maxread : int
     maximum number of snapshots to read
-  print_grad : boolean
-    indicate if gradients should be printed
-  print_uncert : boolean
-    indicate if uncertainties should be printed
-  print_lam : boolean
-    indicate if lambda values should be printed
+  verbose : dictionary of booleans
+    tune the printing to standard output
+  numkind : string
+    the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
     
@@ -180,14 +190,14 @@ def _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam,
   stds = []
   lambdas = []
   for path in paths :
-    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,useanalytical)
-    if print_grad : _print_ene(lam,grad,std,print_uncert,print_lam)
+    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical)
+    if verbose["gradient"] : _print_ene(lam,grad,std,verbose["uncert"],verbose["lambda"])
     gradients.append(grad)
     lambdas.append(lam)
     stds.append(std)
   return np.array(lambdas),np.array(gradients),np.array(stds)
 
-def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam,useanalytical) :
+def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   """
   Do thermodynamic integration
   
@@ -201,14 +211,10 @@ def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam,use
     number of snapshots to skip
   maxread : int 
     maximum number of snapshots to read
-  print_grad : boolean
-    if the gradient should be printed to standard output
-  print_pmf : boolean 
-    if the PMF should be calculate and printed to standard output
-  print_uncert : boolean
-    if to print the uncertainty
-  print_lam : boolean
-    if to print the lambda value
+  verbose : dictionary of booleans
+    tune the printing to standard output
+  numkind : string
+    the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
 
@@ -227,19 +233,19 @@ def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam,use
   """
 
   # Calculate the gradient
-  if print_grad :
-    _print_head("lambda","gradient","std",print_uncert,print_lam)
-  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,print_grad,print_uncert,print_lam,useanalytical)
+  if verbose["gradient"] :
+    _print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
+  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
 
   
   # Calculate and print the PMF 
   pmf = np.zeros(gradients.shape)
   pmf_std = np.zeros(gradients.shape)
-  if print_pmf : _print_head("lambda","PMF","std",print_uncert,print_lam)
+  if verbose["pmf"] : _print_head("lambda","PMF","std",verbose["uncert"],verbose["lambda"])
   pmf[0] = 0.0
   w = 0.5*(lambdas[0]+lambdas[1])
   pmf_std[0] = w**2*stds[0]**2
-  if print_pmf : _print_ene(lambdas[0],pmf[0],np.sqrt(pmf_std[0]),print_uncert,print_lam)
+  if verbose["pmf"] : _print_ene(lambdas[0],pmf[0],np.sqrt(pmf_std[0]),verbose["uncert"],verbose["lambda"])
   # Trapezium integration
   for i in range(1,len(lambdas)) :
     h = lambdas[i]-lambdas[i-1]
@@ -249,8 +255,11 @@ def ti(path,res_tem,skip,maxread,print_grad,print_pmf,print_uncert,print_lam,use
     else :
       w = 0.5*(lambdas[i+1]-lambdas[i-1])      
     pmf_std[i] = pmf_std[i-1] + w**2*stds[i]**2
-    if print_pmf : _print_ene(lambdas[i],pmf[i],np.sqrt(pmf_std[i]),print_uncert,print_lam)
-  
+    if verbose["pmf"] : _print_ene(lambdas[i],pmf[i],np.sqrt(pmf_std[i]),verbose["uncert"],verbose["lambda"])
+
+  if not verbose["pmf"] and verbose["total"] : 
+    _print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
+
   return lambdas,gradients,stds,pmf,np.sqrt(pmf_std)
 #
 # If this is run from the command-line
@@ -269,9 +278,13 @@ if __name__ == '__main__' :
   parser.add_argument('-pp','--print-pmf',dest='printPMF',action='store_false',help="turns off printing of PMF",default=True)
   parser.add_argument('-pu','--print-uncert',dest='printUncert',action='store_false',help="turns off printing of uncertainties",default=True)
   parser.add_argument('-pl','--print-lam',dest='printLam',action='store_false',help="turns off printing of lambda-values",default=True)
-  parser.add_argument('-gr','--plot-grads',dest='plotGrad',action='store_false',help="turns off producing plot of gradients",default=True)
+  parser.add_argument('-gr','--plot-grads',dest='plotGrad',action='store_true',help="turns off producing plot of gradients",default=False)
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
+  parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   args = parser.parse_args()
+
+  # Setup the logger
+  logger = simulationobjects.setup_logger()
 
   # Fix negative values of skip and max
   if args.max < 0 :
@@ -279,8 +292,8 @@ if __name__ == '__main__' :
   if args.skip <= 0 :
     args.skip = -1
   # Do thermodynamic integration
-  lambdas,gradients,grad_std,pmf,pmf_std = ti(args.directory,args.results,args.skip,args.max,args.printGrad,
-                                               args.printPMF,args.printUncert,args.printLam,args.analytical)
+  verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam}
+  lambdas,gradients,grad_std,pmf,pmf_std = ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
 
   # Plot the gradient
   if args.plotGrad :

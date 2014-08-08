@@ -15,11 +15,14 @@ Can be executed from the command line as a stand-alone program
 
 import sys
 import random
+import logging
 
 import numpy as np
 from scipy.spatial.distance import cdist
 
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def solvate(box, ligand=None, protein=None, out="solvent_box.pdb", geometry="box",
             padding=10.0, radius=30.0, center="cent", namescheme="ProtoMS"):
@@ -475,6 +478,17 @@ def solvate(box, ligand=None, protein=None, out="solvent_box.pdb", geometry="box
   # -------------------------------------
   # Main routine begins below
   # -------------------------------------
+ 
+  logger.debug("Running solvate with arguments: ")
+  logger.debug("\tbox        = %s"%box) 
+  logger.debug("\tligand     = %s"%ligand) 
+  logger.debug("\tprotein    = %s"%protein) 
+  logger.debug("\tgeometry   = %s"%geometry) 
+  logger.debug("\tpadding    = %f"%padding) 
+  logger.debug("\tradius     = %f"%radius) 
+  logger.debug("\tcenter     = %s"%center) 
+  logger.debug("\tnamescheme = %s"%namescheme) 
+  logger.debug("This will solvate either a protein or a ligand using a pre-equilibrated box")
 
   # Check for presence of required inputs and change pdb files into pdb objects
   if ligand is None and protein is None :
@@ -607,6 +621,9 @@ if __name__ == '__main__' :
   parser.add_argument('-c','--center',help="definition of center, default='cent'",default="cent")
   parser.add_argument('-n','--names',choices=["Amber","ProtoMS"],help="the naming convention, should be either Amber or ProtoMS",default="ProtoMS")
   args = parser.parse_args()
+
+  # Setup the logger
+  logger = simulationobjects.setup_logger("solvate_py.log")
 
   # Ask for input that is absolutely necessary and that do not have any defaults
   if args.solute is None and args.protein is None:

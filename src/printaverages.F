@@ -653,6 +653,15 @@ c51        format('Total ',i8,'/',i8,'(',i8,'%)')
 c        endif
 c      endif
  
+      if (NThetaSolutes.gt.0) then
+        write(printstring,*) "Printing individual theta values for solutes"
+        call prettyLine(RESULTS,printstring)
+        do i=1,NThetaSolutes
+          write(printstring,*) "theta" ,i,SoluteTheta(i)
+          call printLine(RESULTS,printstring)
+        enddo
+      endif
+      
        if (NGCSolutes.gt.0) then
         write(printstring,*) "Printing individual theta values"
        call prettyLine(RESULTS,printstring)

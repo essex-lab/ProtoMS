@@ -18,8 +18,11 @@ Can be executed from the command line as a stand-alone program
 import os
 import subprocess
 import tempfile
+import logging
 
 import simulationobjects
+
+logger = logging.getLogger('protoms')
 
 def _run_program ( name, command ):
     """ 
@@ -45,12 +48,16 @@ def _run_program ( name, command ):
     ret_code = subprocess.call ( command, shell = True , stdout=tmpfile, stderr=tmpfile)
     # Catch some error codes
     if ret_code == 127:
-        raise simulationobjects.SetupError ( "Unable to find %s executable, please make sure this is present in your PATH."%name )
+        msg = "Unable to find %s executable, please make sure this is present in your PATH."%name
+        logger.error(msg) 
+        raise simulationobjects.SetupError ( msg )
     if ret_code == 1:
         # Get the error message from the temporary file
         errmsg = "\n".join(line for line in open(tmpname).readlines())
         os.remove(tmpname)
-        raise simulationobjects.SetupError ( "%s was not able to run successfully. Please check output. Error message was:\n%s"%(name,errmsg)  )
+        msg = "%s was not able to run successfully. Please check output. Error message was:\n%s"%(name,errmsg)
+        logger.error(msg)
+        raise simulationobjects.SetupError ( msg  )
 
     os.remove(tmpname)
 
@@ -72,6 +79,12 @@ def run_antechamber ( lig, charge, resnam = None):
     string
     	the filename of the created prepi file
     """
+
+    logger.debug("Running run_antechamber with arguments: ")
+    logger.debug("\tlig    = %s"%lig) 
+    logger.debug("\tcharge = %d"%charge) 
+    logger.debug("\tresnam = %s"%resname)
+    logger.debug("This will generate an Amber prepi file with AM1-BCC and GAFF atom types")
 
     # Check if it is a string, otherwise assumes it is a pdb object
     if isinstance(lig,basestring) :
@@ -106,6 +119,10 @@ def run_parmchk ( lig ):
     	the filename of the created frcmod file
     """
    
+    logger.debug("Running run_parmchk with arguments: ")
+    logger.debug("\tlig = %s"%lig) 
+    logger.debug("This will generate an Amber frcmod file with additional parameters")
+   
     # Check if it is a string, otherwise assumes it is a pdb object
     if isinstance(lig,basestring) :
       name = lig
@@ -128,6 +145,9 @@ if __name__ == "__main__":
     parser.add_argument('-n','--name',help="the name of the solute",default="UNK")
     parser.add_argument('-c','--charge',nargs="+",type=float,help="the net charge of each PDB-file")
     args = parser.parse_args()
+
+    # Setup the logger
+    logger = simulationobjects.setup_logger("ambertools_py.log")
 
     for i,filename in enumerate(args.files) :
       if args.charge is None or i >= len(args.charge) :

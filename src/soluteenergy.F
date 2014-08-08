@@ -21,6 +21,8 @@ c     energy!
 c
 c     (C) Christopher Woods
 c
+c     Modified by Samuel Genheden 2012-2013
+c
 c#################################################################
 
       integer i,savenrg,isol
@@ -71,6 +73,9 @@ c       this is the dual topology solute at lambda=1
         sclb = getHighScale(LambdaB)
         sclf = getHighScale(LambdaF)
       endif  
+      scl = scl*SoluteTheta(isol) ! SG
+      sclf = sclf*SoluteTheta(isol) ! SG
+      sclb = sclb*SoluteTheta(isol) ! SG
 
 c     the solute intramolecular energy
       nrg = soluteIntraEnergy(isol,
@@ -189,6 +194,7 @@ c         If the soft-core is on, the coulombic is scaled further here
           cnrgb = cnrgb + icnrgb*sclb
           ljnrgf = ljnrgf + iljnrgf*sclf
           ljnrgb = ljnrgb + iljnrgb*sclb
+!         SG
           soluteEnergy = soluteEnergy + scl*icnrg + scl*iljnrg
 
           if (savenrg.eq.OLD) then
@@ -217,19 +223,21 @@ c    solute-gcs energy
      .               icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,
      .               scl,sclf,sclb)
 
+!       SG
 c       If the soft-core is on, the coulombic is scaled further here
         if (Solutesoftcore(isol)) then
-            icnrg = icnrg * (scl)**CoulSoftPower
-            icnrgf = icnrgf * (sclf)**CoulSoftPower
-            icnrgb = icnrgb * (sclb)**CoulSoftPower
-        endif         
+          icnrg = icnrg * (scl)**CoulSoftPower
+          icnrgf = icnrgf * (sclf)**CoulSoftPower
+          icnrgb = icnrgb * (sclb)**CoulSoftPower
+        endif   
+      
         cnrg = cnrg + icnrg*scl
         ljnrg = ljnrg + iljnrg*scl
         cnrgf = cnrgf + icnrgf*sclf
         cnrgb = cnrgb + icnrgb*sclb
         ljnrgf = ljnrgf + iljnrgf*sclf
         ljnrgb = ljnrgb + iljnrgb*sclb
-        soluteEnergy = soluteEnergy + scl*icnrg + scl*iljnrg
+        soluteEnergy = soluteEnergy + icnrg*scl + iljnrg*scl
 
         if (savenrg.eq.OLD) then
           OldSolGCSC(isol) = icnrg*scl

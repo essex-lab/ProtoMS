@@ -23,7 +23,7 @@ c####################################################################
       double precision cnrg,ljnrg,nrg
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision distx,disty,distz,dist2
-      integer i,j,nat,resstrt,resend
+      integer i,j,nat,resstrt,resend,istart
       double precision sclfac
       double precision mindist
       include 'nbenergyvar2.inc'
@@ -93,23 +93,61 @@ c     assume residue runs concurrently from N to O
       if (QuickMove .and. DDDon) ddd = .true.
       do i=resstrt,resend
         funcat1 = i
-              
-        do j=1,nat
-          funcat2 = j
 
+        if ((SvnOptimization(isvn).eq.OPTTIP3P.or.SvnOptimization(isvn).eq.OPTTIP4P)) then
+
+c         Optimized for TIP4P-TIP4P interactions
+
+c         LJ on oxygens only
+          funcat2 = 1
           include 'nbinitial.inc'
           include 'nbprosvn.inc'
-          include 'nbenergy2.inc'
-          
+          include 'nbenergy_lj.inc'         
+        
           nrg = nrg + funcnbnrg
-          cnrg = cnrg + funccnrg
           ljnrg = ljnrg + funcljnrg
-          cnrgf = cnrgf + funccnrgf
-          cnrgb = cnrgb + funccnrgb
           ljnrgf = ljnrgf + funcljnrgf
           ljnrgb = ljnrgb + funcljnrgb
           if (funcmindist.lt.mindist) mindist = funcmindist
-        enddo
+
+c         Charges on the rest of the particles, i.e., between hydrogens and extra point particle
+          if (SvnOptimiZation(isvn).eq.OPTTIP3P) then
+            istart = 1
+          else
+            istart = 2
+          endif
+          do j=istart,nat
+            funcat2 = j
+
+            include 'nbinitial.inc'
+            include 'nbprosvn.inc'
+            include 'nbenergy_coul.inc'
+          
+            nrg = nrg + funcnbnrg
+            cnrg = cnrg + funccnrg
+            cnrgf = cnrgf + funccnrgf
+            cnrgb = cnrgb + funccnrgb
+
+            if (funcmindist.lt.mindist) mindist = funcmindist
+          enddo
+       else              
+          do j=1,nat
+            funcat2 = j
+
+            include 'nbinitial.inc'
+            include 'nbprosvn.inc'
+            include 'nbenergy2.inc'
+          
+            nrg = nrg + funcnbnrg
+            cnrg = cnrg + funccnrg
+            ljnrg = ljnrg + funcljnrg
+            cnrgf = cnrgf + funccnrgf
+            cnrgb = cnrgb + funccnrgb
+            ljnrgf = ljnrgf + funcljnrgf
+            ljnrgb = ljnrgb + funcljnrgb
+            if (funcmindist.lt.mindist) mindist = funcmindist
+          enddo
+        endif
       enddo
 
       if (cuttype.eq.RESIDUEMOLECULE) then

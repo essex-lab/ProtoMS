@@ -42,6 +42,8 @@ c       clear the current version of the template
       endif
 
       SvnTemplateName(itmpl) = svnnam
+c     Default is no optimization
+      SvnTemplateOptimization(itmpl) = OPTNONE
 
 c     now get on with reading the file
 100   continue
@@ -67,6 +69,17 @@ c       make sure there are at least two words
           call readSvnTemplateAtomLine(line,itmpl)
         else if (words(1).eq.'info') then
           call readSvnTemplateInfoLine(line,itmpl)
+        else if (words(1).eq.'opt') then
+          if (words(2)(1:5).eq.'tip4p') then
+            call printLine(INFO,"Found solvent template with TIP4p optimization")
+            SvnTemplateOptimization(itmpl) = OPTTIP4P
+          else if (words(2)(1:5).eq.'tip3p') then
+            call printLine(INFO,"Found solvent template with TIP3p optimization")            
+            SvnTemplateOptimization(itmpl) = OPTTIP3P
+          else
+            SvnTemplateOptimization(itmpl) = OPTNONE
+            call printLine(INFO,"Found solvent template without optimization")          
+          endif
         else if (words(1).eq.'coord') then
           call readSvnTemplateCoordLine(line,itmpl)
         else

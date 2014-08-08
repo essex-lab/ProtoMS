@@ -80,7 +80,7 @@ c           write out the solvent cap information to the file
           do i=1,NSolutes
             if (showhidden) then
               call printPDBSolute(i,showdummies,printstd)
-            else if (.not.ignoreSolute(i)) then
+            else if ((.not.ignoreSolute(i)).and.(SoluteTheta(i).ge.thres))  then
               call printPDBSolute(i,showdummies,printstd)
             endif
           enddo

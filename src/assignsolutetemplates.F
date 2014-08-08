@@ -13,6 +13,8 @@ c     solute isol, based on its molecule name
 c
 c     (C) Christopher Woods   18 February 2002
 c
+c     Modified by Samuel Genheden, 2012-2013
+c
 c########################################################
 
       integer isol,tmol,findMoleculeTemplate,i,j,newsol
@@ -47,7 +49,19 @@ c########################################################
 
 c     assign the maxmimum translation/rotation of the solute
       SolADel(isol) = MolTemplateADel(tmol)
-      SolRDel(isol) = MolTemplateRDel(tmol)      
+      SolRDel(isol) = MolTemplateRDel(tmol)   
+
+c     SG 2012-2013, assign JAWS-specific parameters
+
+c     assign the maximum theta movement of the solute
+      SolTDel(isol) = MolTemplateTDel(tmol)
+
+c     assign JAWS parameters of the solute
+      SolJCorr(isol) = MolTemplateJCorr(tmol)
+      SolJPmfOrd(isol) = MolTemplateJPmfOrd(tmol)
+      do i=1,SolJPmfOrd(isol)
+        SolJPmfCoeff(isol,i) = MolTemplateJPmfCoeff(tmol,i)
+      enddo
       
 c     the number of atoms in the solute must be the same as the number of atoms in the template      
       NSolAtoms(isol) = NMolTemplateAtms(tmol)

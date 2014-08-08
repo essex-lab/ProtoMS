@@ -4,6 +4,7 @@
       include 'proteins.inc'
       include 'constants.inc'
       include 'solutes.inc'
+      include 'simparams.inc'
       include 'solvents.inc'
       include 'enums.inc'
 c###############################################################################
@@ -13,6 +14,8 @@ c       instead prints out *all* of the energy components. This is useful
 c       for template debugging.
 c
 c       (C) Christopher Woods  23 May 2003
+c
+c       Modified by Samuel Genheden, 2012-2013
 c
 c################################################################################
 
@@ -26,9 +29,11 @@ c###############################################################################
       double precision imindist
       double precision inrg
       double precision icnrgf,icnrgb,iljnrgf,iljnrgb
+      double precision scl,sclf,sclb,getHighScale,getLowScale
 
       savenrg = DONTCARE
       solenergy = ZERO
+
 
       if (isol.le.0 .or. isol.gt.NSolutes) then
         write(printstring,*) "Cannot print energy of invalid solute ",isol
@@ -36,6 +41,27 @@ c###############################################################################
         call printLine(WARNING,printstring)
         return
       endif
+
+c     see if this is a dual topology solute - get the scale factor if it is
+      if (DualTopologySolute(isol).eq.0) then
+c       not a dual topology solute
+        scl = ONE
+        sclf = ONE
+        sclb = ONE
+      else if (DualTopologySolute(isol).gt.0) then
+c       this is the dual topology solute at lambda=0
+        scl = getLowScale(Lambda)
+        sclb = getLowScale(LambdaB)
+        sclf = getLowScale(LambdaF)
+      else
+c       this is the dual topology solute at lambda=1
+        scl = getHighScale(Lambda)
+        sclb = getHighScale(LambdaB)
+        sclf = getHighScale(LambdaF)
+      endif  
+      scl = scl*SoluteTheta(isol) ! SG
+      sclf = sclf*SoluteTheta(isol) ! SG
+      sclb = sclb*SoluteTheta(isol) ! SG
 
       lgth = lineLength(SoluteName(isol))
       write(printstring,*) "Detailed energy of solute ",isol," ",SoluteName(isol)(1:lgth)
@@ -61,12 +87,21 @@ c     inter-solute energy
           endif
         enddo
       endif
-      
+
 c     solute-protein energy
       if (NProteins.gt.0) then
         do i=1,NProteins
-          inrg = proteinSoluteEnergy(i,isol,
-     .              icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist)
+!       SG Added DONTCARE
+          inrg = proteinSoluteEnergy(savenrg,i,isol,
+     .              icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,scl,sclf,sclb)
+c         If the soft-core is on, the coulombic is scaled further here
+          if (Solutesoftcore(isol)) then
+            icnrg = icnrg * (scl)**CoulSoftPower
+          endif                
+          icnrg = icnrg*scl
+          iljnrg =  iljnrg*scl
+!         SG
+          inrg = icnrg + iljnrg
           write(printstring,*) "Solute-Protein ",i," energy = ",inrg
           call printLine(ENERGY,printstring)
           write(printstring,*) "Coulomb = ",icnrg," LJ = ",iljnrg
@@ -74,17 +109,22 @@ c     solute-protein energy
           solEnergy = solEnergy + inrg
         enddo
       endif
-      
+
 c     solute-solvent energy
       if (NSolvents.gt.0) then
         inrg =  soluteSolventEnergy(savenrg,isol,
-     .               icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist)
-      
+     .               icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,scl,sclf,sclb)
+c       If the soft-core is on, the coulombic is scaled further here
+        if (Solutesoftcore(isol)) then
+          icnrg = icnrg * (scl)**CoulSoftPower
+        endif                
+        icnrg = icnrg*scl
+        iljnrg =  iljnrg*scl
+!       SG
+        inrg = icnrg + iljnrg
         write(printstring,*) "Solute-solvent energy = ",inrg
         call printLine(ENERGY,printstring)
         write(printstring,*) "Coulomb = ",icnrg," LJ = ",iljnrg
-        call printLine(ENERGY,printstring) 
-        write(printstring,*) "Mindist = ",sqrt(imindist)
         call printLine(ENERGY,printstring)
         solEnergy = solEnergy + inrg
       endif

@@ -4,6 +4,7 @@
       include 'templates.inc'
       include 'splitter.inc'
       include 'enums.inc'
+      include 'constants.inc'
 c###############################################################
 c
 c     This is a master routine that coordinates the reading in
@@ -11,15 +12,18 @@ c     of a solute template
 c
 c     (C) Christopher Woods,  September 2004
 c
+c     Modified by Samuel Genheden 2012-2013
+c
 c###############################################################
 
       character*(*) solnm
       integer FILE
       character*(*) line
       logical changemode,endfile
-      integer itmpl
+      integer itmpl,i
       integer lineLength,lgth
       integer findMoleculeTemplate
+      double precision readDouble
       
       changemode = .false.
       endfile = .false.
@@ -49,6 +53,11 @@ c       clear the current version of the solute template
       
       MolTemplateName(itmpl) = solnm
       
+c     Zeroing JAWS variable in case it is not in the template file
+      MolTemplateTDel(itmpl) = ZERO
+      MolTemplateJCorr(itmpl) = ZERO
+      MolTemplateJPmfOrd(itmpl) = 0
+
 c     now get on with reading the lines...
 100   continue
         read(FILE,10,err=9700,end=9800) line
@@ -82,6 +91,17 @@ c     now get on with reading the lines...
           call readSolTemplateCoordLine(line,itmpl)
         else if (words(1).eq.'info') then
           call readSolTemplateInfoLine(line,itmpl)
+!       SG, Read JAWS-specific variables
+        else if (words(1).eq.'jtheta') then
+          MolTemplateTDel(itmpl) = readDouble(words(2),0.0)
+        else if (words(1).eq.'jpmf') then
+          MolTemplateJPmfOrd(itmpl) = nwords-1
+          if (MolTemplateJPmfOrd(itmpl).gt.MAXJPMFORDER) MolTemplateJPmfOrd(itmpl) = MAXJPMFORDER
+          do i=2,nwords
+            MolTemplateJPmfCoeff(itmpl,i-1) = readDouble(words(i),0.0)
+          enddo
+        else if (words(1).eq.'jcorr') then
+          MolTemplateJCorr(itmpl) = readDouble(words(2),0.0)
         else
           call printLine(WARNING,"Unrecognised parameter file line (SOLUTE-TEMPLATE)")
           call printLine(WARNING,line)

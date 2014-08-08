@@ -1,6 +1,7 @@
       
       logical function soluteMove(updatenrg,movnum,movtyp)
       include 'dimensions.inc'
+      include 'constants.inc'
       include 'printer.inc'
       include 'solutes.inc'
       include 'flags.inc'
@@ -10,18 +11,20 @@
       include 'gb.inc'
       include 'quickpot.inc'
       include 'solvents.inc'
+      include 'simparams.inc'
 c###############################################################
 c
 c     This function performs everything necessary for a solute
 c     move .. returns true if the move is accepted.
 c
 c     (C) Christopher Woods, Julien Michel, November 2004
+c     Modified by Samuel Genheden, 2014
 c
 c###############################################################
 
       integer updatenrg,movnum,savenrg
       integer isol,ires,movtyp
-      double precision ieold,ienew
+      double precision ieold,ienew,penalty
       double precision soluteEnergy
       double precision extraEnergy,inrgf,inrgb
       logical metropolis
@@ -84,6 +87,30 @@ c     JM Dual Topology consider saving coords of coupled solute
 c     move the solute
       call moveSolute(isol,ires)
 
+c     if this is theta solute, it has to reside within a box
+c     check that solute is inside the given box
+      penalty = ZERO
+      if ((NThetaSolutes.gt.0).and.(isol.le.NThetaSolutes)) then
+        if (SolGeomCentre(isol,1).gt.(coordx+gridx+TINY)) then
+          penalty = (HUGE*HUGE)
+        endif
+        if (SolGeomCentre(isol,2).gt.(coordy+gridy+TINY)) then
+          penalty = (HUGE*HUGE)
+        endif
+        if (SolGeomCentre(isol,3).gt.(coordz+gridz+TINY)) then
+          penalty = (HUGE*HUGE)
+        endif
+        if (SolGeomCentre(isol,1).lt.(coordx-TINY)) then
+           penalty = (HUGE*HUGE)
+        endif
+        if (SolGeomCentre(isol,2).lt.(coordy-TINY)) then
+           penalty = (HUGE*HUGE)
+        endif
+        if (SolGeomCentre(isol,3).lt.(coordz-TINY)) then
+          penalty = (HUGE*HUGE)
+        endif
+      endif
+
 c     rebuild the solute - this will recalculate the internal angles
       call buildSolute(isol)   
 
@@ -102,7 +129,7 @@ c     make the calculation go from old to new if necessary
       
 c     get the new energy
       ienew = soluteEnergy(savenrg,isol,inrgb,inrgf) + 
-     .           extraEnergy(savenrg,inrgb,inrgf)
+     .           extraEnergy(savenrg,inrgb,inrgf) + penalty
 
 c     JM Dual Topology get energy of old solute if it is being moved
       if (jsol .ne. 0) ienew = ienew + soluteEnergy(savenrg,jsol,inrgb,inrgf)

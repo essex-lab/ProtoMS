@@ -18,7 +18,7 @@ c###########################################################
       integer getMoveType
       logical residueMove,titrationMove,lambdaMove,solventMove,soluteMove
       logical thetaMove, sampleMove,gcsoluteMove,deletionMove,insertionMove
-      logical volumeMove,rotamerMove
+      logical volumeMove,rotamerMove,solThetaMove
       logical templ
                      
 c     return if there are no configurations
@@ -58,6 +58,8 @@ c       obtain the move type based on probabilities entered by the user
           templ = sampleMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYTHETA) then
           templ = thetaMove(UPDATEENERGY,i,0)
+        else if (imov.eq.TRYSOLTHETA) then
+          templ = solThetaMove(UPDATEENERGY,i,0)
         else
           write(printstring,*) "Problems sorting out the move type in equilibrate()!"
           call closeProgram(-1,printstring)

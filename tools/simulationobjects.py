@@ -5,17 +5,20 @@
 #          Julien Michel
 #          Gregory Ross
 
-""" Useful classes for setup and analysis of ProtoMS simulations.
-    Contain classes to 
-      1) Read, modify and write structures in PDB format
-      2) Store parameter collections
-      3) Read and store ProtoMS results files
-      4) Read, modify and write ProtoMS template files
+""" 
+  Useful classes for setup and analysis of ProtoMS simulations.
+  Contain classes to 
+    1) Read, modify and write structures in PDB format
+    2) Store parameter collections
+    3) Read and store ProtoMS results files
+    4) Read, modify and write ProtoMS template files
 """
 
 import math
 import sys
 import os
+import logging
+
 import numpy as np
 
 boltz = 0.00198717076 # kcal.mol-1K-1
@@ -25,28 +28,30 @@ class SetupError(Exception) :
     """
     pass
 
-def standard_filename(filename,folder) :
-    """ Returns the filename of file in the
-        standard ProtoMS file hierarchy
-    """
-    folder_filename = os.path.join(folder,filename)
-    pmshome = os.getenv("PROTOMSHOME")
-    # If $PROTOMSHOME is set, use that as the base path
-    if pmshome is not None :
-      return os.path.join(pmshome,folder_filename)
-    else :
-    # otherwise, use the location of this python library,
-    # and step-up onces in the hierarchy to find the base path
-      thispath = os.path.dirname(os.path.abspath(__file__))
-      oneup = os.path.split(thispath)[0]
-      return os.path.join(oneup,folder_filename)
-
 #------------------------------------------
 # Classes and routines to handle PDB-files
 #------------------------------------------
 
 class Atom(object):
-    """ Class for holding a PDB atom record
+    """ 
+    Class for holding a PDB atom record
+
+    Attributes
+    ----------
+    index : integer
+      the number of the atom in the pdb file
+    resindex : integer
+      the number of the residue in the pdb file
+    name : string
+      the name of the atom
+    resname : string
+      the name of the residue
+    coords : NumpyArray
+      Cartesian coordinates
+    type : string
+      either atom or hetatm
+    element : string
+      the element of the atom
     """
     def __init__(self,index=0,name="?",resname="???",resindex=0,coords=[]):
         self.index = index
@@ -57,7 +62,8 @@ class Atom(object):
         self.type = "atom"
         self.element = "??"      
     def getElement(self):
-        """ Trying to set the element of this atom
+        """ 
+        Set the element of this atom        
         """
         k = 0
         self.element = self.name[k]
@@ -66,32 +72,71 @@ class Atom(object):
             self.element = self.name[k]
         self.element = self.element.lower()
     def __str__(self):
+        """
+        Produces a string representation, viz. a standard ATOM record
+        """
         return "ATOM  %-5d %3s %3s    %4d     %8.5f %8.5f %8.5f  1.00 0.00" % (self.index,self.name,self.resname,self.resindex,self.coords[0],self.coords[1],self.coords[2])
               
 class Residue(object):
-    """ Class for holding a set of PDB atoms
+    """ 
+    Class for holding a set of PDB atoms
+
+    Attributes
+    ----------
+    atoms : list of Atom objects 
+      the atom of this residue
+    index : integer
+      the number of the residue in the pdb file
+    name : string
+      the name of the residue
+    center : NumPy array
+      the center of coordinates of all atoms
     """
     def __init__(self,name="???",index=0):
         self.atoms = []
         self.index = index
         self.name = name
         self.center = np.array([0.0,0.0,0.0])          
-    def addAtom(self,atom=None):
-        """ Adds an atom to this residue
+    def addAtom(self,atom):
+        """ 
+        Adds an atom to this residue
+
+        Parameters
+        ----------
+        atom : Atom object
+          the atom to add
         """        
         assert atom.type ==  "atom"
         self.atoms.append(atom)
     def getCenter ( self ):
-        """ Calculates the center of coordinates for this residue 
+        """ 
+        Sets the center of coordinates for this residue 
         """
         coords = np.array ( [ atom.coords for atom in self.atoms ] )
         self.center = coords[:,0].mean(), coords[:,1].mean(), coords[:,2].mean()
         #return self.center            
     def __str__(self):
+        """
+        Produces a string representation, viz. lines of ATOM records
+        """
         return '\n'.join(atom.__str__() for atom in self.atoms)
 
 class PDBFile:
-    """ Class for holding the atoms and residues of a PDB file
+    """ 
+    Class for holding the atoms and residues of a PDB file
+     
+    Attributes
+    ----------
+    center : NumPy array
+      the center of coordinates of all atoms
+    head : string
+      additional lines to print before ATOM records
+    name : string
+      the name of the file
+    residues : dictionary of Residue objects
+      all non-solvent residues
+    solvents : dictionary of Residue objects
+      all solvent residues
     """
     def __init__ ( self, filename = None ):
         self.residues = {}
@@ -101,12 +146,20 @@ class PDBFile:
         self.header = ""
 
         if filename is not None : self.read(filename)
-
     def __str__ ( self ):
+        """
+        Returns the filename
+        """
         return self.name
-
     def copy ( self ) :
-        """ Make a copy of the residues and solvents dictionaries, not the Residue and Atom objects themselves
+        """ 
+        Make a copy of the residues and solvents dictionaries, 
+        not the Residue and Atom objects themselves
+
+        Returns
+        -------
+        PDBFile
+          the newly created instance
         """
         new = PDBFile()
         new.name = self.name
@@ -115,8 +168,17 @@ class PDBFile:
         for res in self.residues : new.residues[res] = self.residues[res]
         for sol in self.solvents : new.solvents[sol] = self.solvents[sol]
         return new
-
     def read(self, filename) :
+        """
+        Read a pdb-file from disc
+       
+        It will overwrite existing residues and renumber all residues from 1
+       
+        Parameters
+        ----------
+        filename : string
+          the name of the pdb file
+        """
         residues = {}
         solvents = {}
         self.name = filename
@@ -138,7 +200,7 @@ class PDBFile:
                 newatom = Atom(index=index,name=atname,resindex=nres,
                                resname=restype,coords=coords)
                 # If solvent
-                if restype not in ['WAT','HOH','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']:
+                if restype not in ['WAT','wat','HOH','hoh','DOD','dod','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']:
                     try:
                         residues[nres]
                     except KeyError:
@@ -162,8 +224,19 @@ class PDBFile:
             # Read next line
             line = f.readline()
         self.residues, self.solvents = residues, solvents
-
     def write ( self, filename, renumber = False, header = None ):
+        """
+        Write the PDB file to disc
+
+        Parameters
+        ----------
+        filename : string
+          the name of the file
+        renumber : boolean, optional
+          indicate if residues should be renumbered
+        header : string, optional
+          additional lines to print before the atom records
+        """
         with open ( filename, 'w' ) as f:
             if header is None :
                 f.write ( self.header)
@@ -182,9 +255,16 @@ class PDBFile:
                         atom.resindex = i
                     s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                     f.write ( s )
-                f.write ( "TER \n" )
-
+                f.write ( "TER \n" )     
     def getCenter(self):
+        """
+        Calculate the center of geometry  
+        
+        Returns
+        -------
+        NumPy array
+          the center
+        """
         center = np.array([0.0,0.0,0.0])
         for res in self.residues:
             self.residues[res].getCenter()
@@ -192,22 +272,45 @@ class PDBFile:
             center = center + rescent
         self.center = center/float(len(self.residues))
         return self.center
-
     def getBox(self) :
-      minxyz = np.zeros(3)+1E6
-      maxxyz = np.zeros(3)-1E6
-      for res in self.residues :
-        for atom in self.residues[res].atoms :
-          minxyz = np.minimum(minxyz,atom.coords)
-          maxxyz = np.maximum(maxxyz,atom.coords)
-      return {"center":(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
+        """
+        Calculate the smallest box to encompass the atoms
+        
+        Returns
+        -------
+        dictionary of Numpy arrays
+          the center, length and origin of the box
+        """
+        minxyz = np.zeros(3)+1E6
+        maxxyz = np.zeros(3)-1E6
+        for res in self.residues :
+          for atom in self.residues[res].atoms :
+            minxyz = np.minimum(minxyz,atom.coords)
+            maxxyz = np.maximum(maxxyz,atom.coords)
+        return {"center":(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
        
         
-
 def merge_pdbs(pdbobjs) :
+    """
+    Merge pdb files
+
+    Create a new PDBFile instance and add all residues and solvents from
+    all pdb files given, renumbering residues
+
+    Parameters
+    ----------
+    pdbobjs : list of PDBFile objects
+ 
+    Returns
+    -------
+    PDBFile object
+      the newly created and merged pdb structure
+    """
     pdbout = PDBFile()
     nres = 0
+    names = []
     for pdbobj in pdbobjs :
+        names.append(pdbobj.name)
         for res in sorted ( pdbobj.residues.keys() ) :
           nres = nres + 1
           pdbobj.residues[res].index = nres
@@ -218,9 +321,27 @@ def merge_pdbs(pdbobjs) :
           pdbobj.solvents[sol].index = nres
           for atom in pdbobj.solvents[sol].atoms : atom.resindex = nres
           pdbout.solvents[nres] = pdbobj.solvents[sol]
+    pdbout.name = "_".join(names)
+    
     return pdbout      
 
 def find_box(pdbobj) :
+  """
+  Parse box information from a pdb file
+
+  Looks for CENTER, DIMENSIONS and box keywords
+  in the header of the pdb file
+
+  Parameters
+  ----------
+  pdbobj : PDBFile object
+    the structure to parse
+
+  Returns
+  -------
+  dictionary of Numpy arrays
+    the center, length and origin of the box  
+  """
   if pdbobj.header == "" : return None
   center = dim = box = None
   headerlines = pdbobj.header.split("\n")
@@ -239,7 +360,16 @@ def find_box(pdbobj) :
     return None
     
 def write_box(filename,box) :
-
+  """
+  Write a box in PDB file format
+  
+  Parameters
+  ----------
+  filename : string
+    the name of the file to write
+  box : dictionary of Numpy array
+    the box specification
+  """
   def makeBoundary(box_min,box_max) :
     c1 = (box_min[0],box_min[1],box_min[2]) # Origin
     c2 = (box_max[0],box_min[1],box_min[2])
@@ -283,16 +413,41 @@ def write_box(filename,box) :
 # Classes to hold parameter sets
 #--------------------------------
 
-class parameter:
-    #Not valid for dihedral parameters but contains sufficient
-    #information to check that a parameter exists
+class Parameter:
+    """ 
+    Class to hold a parameter from a ProtoMS template file
+    
+    Not valid for dihedral parameters but contains sufficient
+    information to check that a parameter exists
+
+    Attributes
+    ----------
+    index : integer
+      the serial number of the parameter
+    ats : list of string
+      the name of the atoms associated with the parameter
+    k : float
+      the force constant
+    b0 : float
+      the equilibrium value
+    """
     def __init__ ( self, index, ats, k, b0 ):
         self.index = int ( index )
         self.ats = ats
         self.k = float ( k )
         self.b0 = float ( b0 )
 
-class parameter_set:
+class ParameterSet:
+    """
+    Class to hold a collection of parameters
+    
+    Attributes
+    ----------
+    file_name : string
+      the name of the file where the parameters originated
+    params : list of Parameter objects
+      the parameters in this collection
+    """
     def __init__ ( self, param_file, ptype ):
         self.file_name = param_file
         
@@ -316,9 +471,22 @@ class parameter_set:
             par_cols, at_cols = par.split(), at.split()
             if par_cols[1] != at_cols[-1]:
                 raise ValueError ( "No matching values in gaff parameter file" )
-            self.params += [ parameter ( par_cols[1], at_cols[1:-1], par_cols[2], par_cols[3] ) ]
+            self.params += [ Parameter ( par_cols[1], at_cols[1:-1], par_cols[2], par_cols[3] ) ]
 
     def get_params ( self, ats ):
+        """
+        Find parameters for specific atoms
+        
+        Parameters
+        ----------
+        ats : list of string
+          the query atoms
+
+        Returns
+        -------
+        Parameter object
+          the found parameter
+        """
         try:
             return [ i for i in self.params 
                      if i.ats == ats or i.ats == ats[::-1] ][0]
@@ -331,6 +499,20 @@ class parameter_set:
 #--------------------------------------------------
 
 class EnergyResults :
+  """
+  Class to hold energy results
+  
+  Attributes
+  ----------
+  curr : float
+    the energy at the current lambda
+  back : float
+    the energy at the previous lambda
+  forward : float
+    the energy at the next lambda
+  type : string
+    a label
+  """
   def __init__(self,line=None) : 
     self.curr = None
     self.back = None
@@ -339,6 +521,14 @@ class EnergyResults :
     if line is not None :
       self.parse_line(line)
   def parse_line(self,line) :
+    """
+    Parse energies from the result file
+    
+    Parameters
+    ----------
+    line : string
+      the line to parse
+    """
     cols = line.strip().split()
     self.type = cols[0] 
     self.curr = float(cols[1])
@@ -348,10 +538,78 @@ class EnergyResults :
     return "%s %F20.10 %F20.10 %F20.10"%(self.type,self.curr,self.back,self.forw)
 
 class SnapshotResults :
+  """
+  Class to store a single snapshot of results
+  
+  Not all attributes might not be set as they might not
+  exists in the result file
+
+  internal_energies and interaction_energies are dictionary
+  where the key is is the molecules involved in the energy, e.g.
+  protein1, or protein1-solute1. The value is a list of EnergyResults
+  objects, for the various energy components.
+
+  Attributes
+  ----------
+  lam : float
+    the current lambda value
+  lamb : float
+    the previous lambda value
+  lamf : float
+    the next lambda value
+  datastep : int
+    the number of steps the averages are calculate over
+  lambdareplica : int
+    the index of the lambda replica
+  temperature : float
+    the temperature of the simulation
+  ngcsolutes : float
+    the number of GC solutes
+  bvalue : float
+    the Adams value
+  solventson : int
+    the number of GC solutes that are turned on
+  pressure : float
+    the pressure
+  volume : float
+    the volume
+  seed : int
+    the random seed
+  backfe : float
+    the free energy to the previous lambda
+  forwfe : float
+    the free energy to the next lambda
+  total : EnergyResults object
+    the total energy
+  internal_energies : dictionary of lists of EnergyResults object
+    the internal energies
+  interaction_energies : dictionary of lists of EnergyResults objects
+    the interaction energies
+  capenergy : EnergyResults object
+    the energy of the cap
+  extraenergy : EnergyResults object
+    all extra energies
+  feenergies : dictionary of float
+    the total energy at various lambda values
+  gradient : float
+    the numerical gradient of lambda
+  agradient : float
+    the analytical gradient of lambda
+  thetavals : list of float
+    the theta values of all GC solutes
+  """
   def __init__(self,fileobj=None) :
     if fileobj is not None :
       self.parse(fileobj) 
-  def parse(self,fileobj) :
+  def parse(self,fileobj) : 
+    """
+    Parse a file for results
+    
+    Parameters
+    ----------
+    fileobj : file object
+      the file to read from
+    """
     # First look for the lambda values
     line = fileobj.readline()
     while line.find("RESULTS for lambda") == -1 : line = fileobj.readline()
@@ -388,7 +646,7 @@ class SnapshotResults :
     # Look for internal and average energies
     
     self.internal_energies = {}
-    self.average_energies = {}
+    self.interaction_energies = {}
     while line :
       if line.startswith("Internal ")  :
         cols = line.strip().split()  
@@ -428,11 +686,11 @@ class SnapshotResults :
           key = "solute"+cols[5]+"-solvent"
         elif cols[1] == "solute-GCS" :
           key = "solute"+cols[5]+"-GCS"   
-        self.average_energies[key] = []   
+        self.interaction_energies[key] = []   
         line = fileobj.readline() # Dummy line
-        self.average_energies[key].append(EnergyResults(line=fileobj.readline())) # Coul
+        self.interaction_energies[key].append(EnergyResults(line=fileobj.readline())) # Coul
         line = fileobj.readline() # Dummy line    
-        self.average_energies[key].append(EnergyResults(line=fileobj.readline())) # LJ
+        self.interaction_energies[key].append(EnergyResults(line=fileobj.readline())) # LJ
       elif line.startswith("FREE ENERGY DATA") :
         line = fileobj.readline() # Dummy line
         line = fileobj.readline() # Dummy line
@@ -460,10 +718,32 @@ class SnapshotResults :
       if line.startswith("  -") : break
 
 class ResultsFile :
+  """
+  Class to store a collection of results
+
+  Attributes
+  ----------
+  filename : string
+    the name of the file
+  snapshots : list of SnapshotResult
+    all the results
+  """
   def __init__(self) :
     self.filename = None
     self.snapshots = []
   def read(self,filename,skip=0,readmax=None) :
+    """
+    Read results from disc
+   
+    Parameters
+    ----------
+    filename : string or list of strings
+      the name of the file to read
+    skip : int, optional
+      number of snapshot at the beginning to skip
+    readmax : int, optional
+      maximum number of snapshots to read
+    """
     if isinstance(filename,basestring) :
       f = open(filename,"r")
       line = f.readline()
@@ -491,7 +771,19 @@ class ResultsFile :
 #---------------------------------------------------------
 
 class ForceFieldParameter :
-  """ Class to hold a general parameter set
+  """ 
+  Class to hold a general parameter set
+  
+  Attributes
+  ----------
+  key : string
+    a label
+  index : integer
+    a serial number
+  params : list
+    either a list of strings or
+    a list of ForceFieldParameter, containing
+    the actual parameters
   """
   def __init__(self,record=None) :
     self.key = None
@@ -499,11 +791,22 @@ class ForceFieldParameter :
     self.params = []
     if record is not None : self.parse(record)
   def parse(self,record) :
+    """
+    Parse a line from a ProtoMS file
+    
+    Parameters
+    ----------
+    record : string
+      the line to parse from
+    """
     cols = record.strip().split()
     self.key = cols[0] 
     self.index = int(cols[1])
     self.params = cols[2:]
   def __str__(self) :
+    """
+    Produces a correct ProtoMS file line
+    """
     outparams = []
     for par in self.params :
       if isinstance(par,ForceFieldParameter) :
@@ -513,17 +816,36 @@ class ForceFieldParameter :
     return "%s %d    %s"%(self.key,self.index,"    ".join(outparams))
 
 class AtomSet :
-  """ Class to hold a set of atoms and their associated parameter
+  """
+  Class to hold a set of atoms and their associated parameter
+
+  Attributes
+  ----------
+  atoms : list of strings
+    the atoms in this set
+  param : int or ForceFieldParameter
+    the parameter associated with the atoms
   """
   def __init__(self,record=None) :
     self.atoms = []
     self.param = None
     if record is not None : self.parse(record)
   def parse(self,record) :
+    """
+    Parse a line from a ProtoMS file
+    
+    Parameters
+    ----------
+    record : string
+      the line to parse from
+    """
     cols = record.strip().split()
     self.atoms = cols[1:-1]
     self.param = int(cols[-1])
   def __str__(self) :
+    """
+    Produces a correct ProtoMS file line
+    """
     if isinstance(self.param,ForceFieldParameter) :
       pindex = self.param.index
     else :
@@ -531,7 +853,25 @@ class AtomSet :
     return "atm %s    %d"%(" ".join(self.atoms),pindex)
 
 class TemplateAtom :
-  """ Class to hold a template atom
+  """ 
+  Class to hold a template atom
+
+  Attributes
+  ----------
+  name : string
+    the name of the atom
+  residue : string
+    the residue of the atom
+  param0 : int or ForceFieldParameter
+    the parameter associated with this atom at v0 
+  param1 : int or ForceFieldParameter
+    the parameter associated with this atom at v1
+  bondedto : string or TemplateAtom
+    the atom this atom is bonded to
+  angleto : string or TemplateAtom
+    the atom this atom forms an angle with
+  dihedto : string or TemplateAtom
+    the atom this atom forms a dihedral with
   """
   def __init__(self,record) :
     self.name = ""
@@ -543,16 +883,47 @@ class TemplateAtom :
     self.dihedto = None
     if record is not None : self.parse(record)
   def parse(self,record):
+    """
+    Parse a line from a ProtoMS file
+    
+    Parameters
+    ----------
+    record : string
+      the line to parse from
+    """
     pass
-  def zmat(self,record) :
+  def zmat(self) :
+    """
+    Produces a simple z-matrix representation of this atom
+    
+    Returns
+    -------
+    returns
+      the z-matrix representation
+    """
     pass
 
 class TemplateSoluteAtom(TemplateAtom) :
-  """ Class to hold a solute atom
+  """ 
+  Class to hold a solute atom
+
+  This is a sub-class that implements functions
+  that are specific for solute templates
+
+  Has the same attributes as TemplateAtom
+
   """
   def __init__(self,record=None) :
     TemplateAtom.__init__(self,record)
   def parse(self,record) :
+    """
+    Parse a line from a ProtoMS file
+    
+    Parameters
+    ----------
+    record : string
+      the line to parse from
+    """
     cols = record.strip().split()
     self.name = cols[1] 
     self.residue = cols[2]
@@ -562,6 +933,9 @@ class TemplateSoluteAtom(TemplateAtom) :
     self.angleto = cols[7]
     self.dihedto = cols[9]
   def __str__(self) :
+    """
+    Produces a correct ProtoMS file line
+    """
     def make_str(strobj) :
       if isinstance(strobj,basestring) :
         if strobj in ["DM3","DM2","DM1"] :
@@ -577,6 +951,14 @@ class TemplateSoluteAtom(TemplateAtom) :
         return param
     return "atom %4s %s %d %d %s %s %s"%(self.name,self.residue,make_paramstr(self.param0),make_paramstr(self.param1),make_str(self.bondedto),make_str(self.angleto),make_str(self.dihedto))
   def zmat(self) :
+    """
+    Produces a simple z-matrix representation of this atom
+    
+    Returns
+    -------
+    returns
+      the z-matrix representation, viz. ATOM BONDEDTO ANGLETO DIHEDRALTO
+    """
     def make_str(strobj) :
       if isinstance(strobj,basestring) :
         return strobj
@@ -585,7 +967,23 @@ class TemplateSoluteAtom(TemplateAtom) :
     return "%s %s %s %s"%(self.name,make_str(self.bondedto),make_str(self.angleto),make_str(self.dihedto))
     
 class TemplateConnectivity() :
-  """ Class to hold a solute bond, angle or dihedral
+  """ 
+  Class to hold a solute bond, angle or dihedral
+
+  Attributes
+  ----------
+  type : string
+    the kind of connectivity, i.e. bond, angle or dihedral
+  atoms : list of strings or TemplateAtom objects
+    the atoms involved in this connectivity
+  flex : float
+    the flexibility
+  param0 : int or ForceFieldParameter
+    the parameter associated with this connectivity at v0 
+  param1 : int or ForceFieldParameter
+    the parameter associated with this connectivity at v1
+  dummy : bool 
+    flag to indicate if this should be treated as a dummy
   """
   def __init__(self,record=None) :
     self.type = ""
@@ -597,6 +995,14 @@ class TemplateConnectivity() :
     self.dummy = None
     if record is not None : self.parse(record)
   def parse(self,record) :
+    """
+    Parse a line from a ProtoMS file
+    
+    Parameters
+    ----------
+    record : string
+      the line to parse from
+    """
     cols = record.strip().split()
     self.type = cols[0]
     if self.type == "bond" :
@@ -623,6 +1029,9 @@ class TemplateConnectivity() :
         self.dummy = True
         nexti = nexti + 1
   def __str__(self) :
+    """
+    Produces a correct ProtoMS file line
+    """
     def make_paramstr(param) :
       if isinstance(param,ForceFieldParameter) :
         return param.index
@@ -640,7 +1049,27 @@ class TemplateConnectivity() :
     return strout
 
 class MolTemplate :
-  """ Class to hold a ProtoMS template  
+  """ 
+  Class to hold a ProtoMS template  
+
+  Attributes
+  ----------
+  name : string
+    the name of the template
+  type : string
+    the kind of template, e.g. solute
+  translate : float
+    the translation displacement
+  rot : float
+    the rotational displacement
+  atoms : list of TemplateAtom objects
+    the atoms in this template
+  connectivity : list of TemplateConnectivity objects
+    the connectivity in this template
+  variables : list of string
+    the variable geometries
+  atomclass : TemplateAtom class
+    the class to create objects of atoms
   """
   def __init__(self) :
     self.name = ""
@@ -652,6 +1081,17 @@ class MolTemplate :
     self.variables = []
     self.atomclass = None
   def parse_from(self,fileobj) :
+    """
+    Parse a full template from a file
+    
+    Terminates when found another mode 
+    or end of file
+
+    Parameters
+    ----------
+    fileobj : file object
+      the file to parse from
+    """
     line = fileobj.readline()
     while line :
       if line.startswith("solute") :
@@ -671,6 +1111,14 @@ class MolTemplate :
       line = fileobj.readline()
     return line
   def write_to(self,fileobj) :
+    """
+    Write the template to disc
+   
+    Parameters
+    ----------
+    fileobj : file object
+      the file to write to
+    """
     fileobj.write("mode template\n")
     fileobj.write("%s %s\n"%(self.type,self.name))
     fileobj.write("info translate %.3f rotate %.3f\n"%(self.translate,self.rotate))
@@ -678,12 +1126,42 @@ class MolTemplate :
     for con in self.connectivity : fileobj.write("%s\n"%con)
     for var in self.variables : fileobj.write("%s\n"%var)
   def write_zmat(self,filename) :
+    """
+    Write the z-matrix of this template to disc
+    
+    Parameters
+    ----------
+    filename : string
+      the name of the file to write to
+    """
     with open(filename,"w") as f :
       for atom in self.atoms :
         f.write("%s\n"%atom.zmat())
 
 class TemplateFile() :
-  """ Class to hold a ProtoMS template file
+  """ 
+  Class to hold a ProtoMS template file
+
+  Attributes
+  ----------
+  bondparams : list of ForceFieldParameter objects
+    all bond parameters
+  bondatoms : list of AtomSet objects
+    all atoms associated with bond parameters
+  angleparams : list of ForceFieldParameter objects
+    all angle parameters
+  angleatoms : list of AtomSet objects
+    all atoms associated with angle parameters
+  dihedralterms : list of ForceFieldParameter objects
+    all dihedral term parameters
+  dihedralparams : list of ForceFieldParameter objects
+    all dihedral parameters
+  dihedralatoms : list of AtomSet objects
+    all atoms associated with dihedral parameters  
+  cljparams : list of ForceFieldParameter objects
+    all clj parameters
+  templates : list of MolTemplate objects
+    all templates in this file
   """   
   def __init__(self,filename=None) :
     self.bondparams = []
@@ -695,10 +1173,24 @@ class TemplateFile() :
     self.dihedralatoms = []
     self.cljparams = []
     self.templates = []
+    self.filename = ""
     if filename is not None : self.read(filename)
 
-  def append(self,other) :
+  def __str__(self) :
+   return self.filename
 
+  def append(self,other) :
+    """
+    Adds another template file to this one
+
+    Will renumber the parameters of the other
+    file
+ 
+    Parameters
+    ----------
+    other : TemplateFile
+      the file to add
+    """
     templatenames = [t.name for t in self.templates]
     if set([t.name for t in other.templates]).issubset(set(templatenames)) :
       SetupError("All molecules in the new template file are already in the original template.")
@@ -758,6 +1250,15 @@ class TemplateFile() :
         self.templates.append(template)     
      
   def assign_paramobj(self) :
+    """
+    Replaces integers and strings with objects
+
+    It replaces all indices to force field parameters
+    with references to ForceFieldParameter objects
+ 
+    It replaces all atom in templates with references
+    to TemplateAtom objects
+    """
     def assign_con(con,paramlist,tem) :
       if not isinstance(con.param0,ForceFieldParameter) :
         for param in paramlist :
@@ -825,8 +1326,16 @@ class TemplateFile() :
           assign_con(con,self.angleparams,template)
         if con.type == "dihedral" :
           assign_con(con,self.dihedralparams,template)
+
   def read(self,filename) :
-    
+    """
+    Read a template file from disc
+ 
+    Parameters
+    ----------
+    filename : string
+      the name of the file to read
+    """    
     with open(filename,"r") as f :
       line = f.readline()
       while line :
@@ -877,9 +1386,17 @@ class TemplateFile() :
           self.templates.append(MolTemplate())
           line = self.templates[-1].parse_from(f)
     self.assign_paramobj()
+    self.filename = filename
 
   def write(self,filename) :
-
+    """
+    Write a template file to disc
+ 
+    Parameters
+    ----------
+    filename : string
+      the name of the file to write to
+    """    
     with open(filename,"w") as f :      
       if self.bondparams :
         f.write("mode bond\n")
@@ -911,10 +1428,93 @@ class TemplateFile() :
       if self.templates :
         for template in self.templates : template.write_to(f)
 
-#########
+#-----------------------
+# Other useful routines
+#-----------------------
 
+def standard_filename(filename,folder) :
+    """ 
+    Generates the filename of file in the standard ProtoMS file hierarchy
+
+    If $PROTOMSHOME is set, it uses it as the base-path, otherwise,
+    it uses the location of this module as to create the base-path
+
+    Parameters
+    ----------
+    filename : string
+      the name of the file
+    folder : string
+      a folder in the standard ProtoMS file hierarchy
+   
+    Returns
+    -------
+    the full path to the file
+    """
+    folder_filename = os.path.join(folder,filename)
+    pmshome = os.getenv("PROTOMSHOME")
+    # If $PROTOMSHOME is set, use that as the base path
+    if pmshome is not None :
+      return os.path.join(pmshome,folder_filename)
+    else :
+    # otherwise, use the location of this python library,
+    # and step-up onces in the hierarchy to find the base path
+      thispath = os.path.dirname(os.path.abspath(__file__))
+      oneup = os.path.split(thispath)[0]
+      return os.path.join(oneup,folder_filename)
+
+def setup_logger(filename=None) :
+  """
+  Setup ProtoMS logging system
+  
+  Uses the standard logging module with two handlers,
+  one that prints everything above DEBUG to standard output
+  and one that prints everything, even DEBUG to a file
+  
+  If filename is None no file handler is created
+  
+  This should be called by protoms.py and all other stand-alone
+  programs that uses the tools
+  
+  Parameters
+  ----------
+  filename : string, optional
+    the filename of the string
+    
+  Returns
+  -------
+  a reference to the created logger
+  """
+  logger = logging.getLogger('protoms')
+  logger.setLevel(logging.DEBUG)
+  formatter1 = logging.Formatter('%(message)s')
+  console = logging.StreamHandler()
+  console.setLevel(logging.INFO)
+  console.setFormatter(formatter1)
+  logger.addHandler(console)
+  if filename is not None :
+    formatter2 = logging.Formatter('%(levelname)s : %(message)s')
+    logfile = logging.FileHandler(filename,mode="w")
+    logfile.setLevel(logging.DEBUG)
+    logfile.setFormatter(formatter2)
+    logger.addHandler(logfile)
+  return logger
+  
 def angle(v1,v2) :
+  """
+  Calculates the angle between two vectors
+  
+  Parameters
+  ----------
+  v1 : Numpy array
+    the first vecor
+  v2 : Numpy array
+    the second vecor
 
+  Returns
+  -------
+  float
+    the angle in radians
+  """
   a = (v1*v2).sum()/(np.sqrt((v1**2).sum())*np.sqrt((v2**2).sum()))
   if a > 1.0 :
     a = 0.0
@@ -925,11 +1525,26 @@ def angle(v1,v2) :
   return a
 
 def angle_atms(a1,a2,a3) :
+  """
+  Calculates the angle between three atoms
+  
+  Parameters
+  ----------
+  a1 : Numpy array
+    the first atom
+  a2 : Numpy array
+    the second atom
+  a3 : Numpy array
+    the third atom
 
+  Returns
+  -------
+  float
+    the angle in radians
+  """
   v1 = a2 - a1
   v2 = a2 - a3
   return angle(v1,v2)
-
 
 if __name__ == "__main__":
 

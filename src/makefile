@@ -17,17 +17,12 @@ mpi_fortrancompiler = mpif77
 #fortrancompiler = pgf77
 #fortrancompiler = ifort
 
-# Is openmp available? It needs to be to use the reti openmp driver
-HAVE_OPENMP = 1
-
-# The flag used by the fortran compiler to turn on openmp
-#openmp_flags = -fopenmp
-
 # What compilation flags do you want to use? Note the you need to turn
 # on 'long lines'. For g77 you do this via the '-ffixed-line-length-none' option,
 # while the Portland Group compilers use the '-Mextend' option.
 # Either modify the line below, or uncomment the line that matches your
 # compiler / architecture
+
 fflags = -m64 -O3 -I. -fomit-frame-pointer -ffixed-line-length-none
 
 #Compile flags for g77
@@ -125,6 +120,7 @@ OBJS = addacid.o \
        calcbond.o \
        calcdihedral.o \
        calcgeneraldihedral.o \
+       calcjpmf.o	\
        calculatecljpairs.o \
        calculatesolventbox.o \
        calculatetotalsurface.o \
@@ -517,6 +513,7 @@ OBJS = addacid.o \
        savesolventgb.o \
        saveresiduegb.o \
        slow.o \
+       solthetamove.o	\
        solutebornintrapda.o \
        solutedetailedintraenergy.o \
        soluteenergy.o \
@@ -624,39 +621,6 @@ OBJS = addacid.o \
        zeroallpdacont.o \
        zeropdacont.o 
 
-RETIOBJS = checkoutput.o	\
-           fileexists.o	\
-           fullsplit.o	\
-           grnd.o	\
-           getdateandtime.o	\
-           getdouble.o	\
-           getint.o	\
-           getoption.o	\
-           getretioptions.o	\
-           initialiseprintsystem.o	\
-           join.o	\
-           killslaves.o	\
-           linelength.o	\
-           lowercase.o	\
-           parsefile.o	\
-           parseretiargs.o	\
-           prettyline.o	\
-           printline.o	\
-           ranint.o	\
-           readretienergy.o	\
-           readspenergy.o	\
-           retest.o	\
-           reti_mpi.o	\
-           retisimulation_mpi.o	\
-           retiswap.o	\
-           retitest.o	\
-           sgrnd.o	\
-           setkey.o	\
-           spawnprocesses.o	\
-           split.o	\
-           tempswap.o	\
-           writenumberstring.o
-
 #
 #*********************************************************************
 #  You shouldn't need to modify anything below. These lines compile
@@ -675,12 +639,6 @@ nl = \033[\n
 #
 FC = $(fortrancompiler)
 FC_MPI = $(fortrancompiler)
-
-ifneq ($(HAVE_OPENMP),1)
-  FFLAGS = $(fflags)
-else
-  FFLAGS = ${fflags} ${openmp_flags}
-endif
 
 # Flags for ftnchek:
 CHEK1 = -pretty=no-long-line
@@ -741,6 +699,8 @@ SRCS = $(OBJS:%.o=%.F)
 # ftnchek project files:
 PRJS = $(OBJS:%.o=%.prj)
 
+FFLAGS = $(fflags)
+
 ifneq ($(HAVE_MPI),0)
 	fortrancompiler = $(mpi_fortrancompiler)
 endif
@@ -760,19 +720,6 @@ endif
 	@echo "$(Fg)Linking the executable...$(Fr)"
 	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o
 
-#ifneq ($(HAVE_MPI),0)
-#	@echo "$(Fg)Making the RETI handler..."
-#	@make ../reti
-#endif
-
-	@echo "$(Fg)Build complete. Go to the tutorials directory for"
-	@echo "guidance on how to use this program.$(n)"
-
-
-# Build the reti program
-../reti : $(RETIOBJS)
-	@echo "$(Fg)Linking the executable...$(Fr)"
-	@$(FC_MPI) $(LFLAGS) $(FFLAGS) -o ../reti $(RETIOBJS)
 	@echo "$(Fg)Build complete. Go to the tutorials directory for"
 	@echo "guidance on how to use this program.$(n)"
 
@@ -784,7 +731,6 @@ prjs: $(PRJS)
 rebuild:
 	@make distclean
 	@make ../protoms3
-	@make ../reti
 
 #cleans everything!
 clean:
@@ -794,7 +740,7 @@ clean:
 
 distclean:
 	@make clean
-	@-rm ../protoms3 ../reti
+	@-rm ../protoms3
 
 #rebuild the ftnchek files
 cleancheck:
@@ -849,6 +795,8 @@ adddihedral.o:
 adddihedralharmonicrestraint.o: dimensions.inc extraenergies.inc gb.inc
 adddihedralharmonicrestraint.o: surface.inc constants.inc printer.inc
 adddihedralharmonicrestraint.o:
+addgcsoluteaxes.o: enums.inc dimensions.inc solvents.inc
+addgcsoluteaxes.o:
 addid.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
 addid.o: printer.inc splitter.inc labels.inc
 addid.o:
@@ -875,6 +823,9 @@ addsoluteangle.o: enums.inc dimensions.inc solutes.inc printer.inc
 addsoluteangle.o:
 addsolutebond.o: enums.inc dimensions.inc solutes.inc printer.inc
 addsolutebond.o:
+addsoluteclj.o: enums.inc dimensions.inc splitter.inc solutes.inc parameters.inc
+addsoluteclj.o: constants.inc printer.inc
+addsoluteclj.o:
 addsolutedihedral.o: enums.inc dimensions.inc solutes.inc printer.inc
 addsolutedihedral.o:
 addsolutedummies.o: enums.inc dimensions.inc solutes.inc
@@ -894,6 +845,11 @@ angleenergy.o: constants.inc printer.inc flags.inc
 angleenergy.o:
 assignborn.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc
 assignborn.o:
+assigngcsolutetemplate.o: enums.inc dimensions.inc solvents.inc printer.inc
+assigngcsolutetemplate.o: templates.inc
+assigngcsolutetemplate.o:
+assigngcsolutetemplates.o: dimensions.inc solvents.inc
+assigngcsolutetemplates.o:
 assignresidueoverrides.o: proteins.inc dimensions.inc printer.inc templates.inc
 assignresidueoverrides.o:
 assignresiduetemplate.o: enums.inc proteins.inc dimensions.inc constants.inc
@@ -920,6 +876,9 @@ assignsystem.o: solvents.inc printer.inc simparams.inc flags.inc pressure.inc
 assignsystem.o:
 atomname.o: proteins.inc dimensions.inc
 atomname.o:
+biaspotential.o: simparams.inc dimensions.inc constants.inc solvents.inc
+biaspotential.o: stacks.inc
+biaspotential.o:
 bndharmonicrestraintenergy.o: simparams.inc flags.inc enums.inc dimensions.inc
 bndharmonicrestraintenergy.o: extraenergies.inc gb.inc surface.inc constants.inc
 bndharmonicrestraintenergy.o: printer.inc movelist.inc
@@ -964,6 +923,8 @@ calcdihedral.o: printer.inc
 calcdihedral.o:
 calcgeneraldihedral.o: enums.inc dimensions.inc constants.inc printer.inc
 calcgeneraldihedral.o:
+calcjpmf.o: dimensions.inc solutes.inc
+calcjpmf.o:
 calculatecljpairs.o: flags.inc dimensions.inc constants.inc parameters.inc
 calculatecljpairs.o: printer.inc
 calculatecljpairs.o:
@@ -987,6 +948,8 @@ checkgottotal.o: enums.inc flags.inc dimensions.inc gb.inc printer.inc
 checkgottotal.o:
 cleansoluteparameters.o: dimensions.inc solutes.inc constants.inc parameters.inc
 cleansoluteparameters.o:
+cleargcsolutecoordstack.o: dimensions.inc stacks.inc
+cleargcsolutecoordstack.o:
 clearid.o: dimensions.inc splitter.inc labels.inc printer.inc
 clearid.o:
 clearmovelist.o: dimensions.inc movelist.inc
@@ -1014,6 +977,8 @@ cljid.o: simparams.inc dimensions.inc constants.inc parameters.inc
 cljid.o:
 closefile.o: dimensions.inc printer.inc
 closefile.o:
+closefiles.o: dimensions.inc printer.inc
+closefiles.o:
 closeprogram.o: printer.inc
 closeprogram.o:
 convertres.o: enums.inc proteins.inc dimensions.inc constants.inc printer.inc
@@ -1026,14 +991,21 @@ createconnectivitymap.o: printer.inc
 createconnectivitymap.o:
 createresresconnectivitymap.o: proteins.inc flags.inc dimensions.inc printer.inc
 createresresconnectivitymap.o:
+deletionmove.o: enums.inc dimensions.inc solutes.inc gb.inc constants.inc
+deletionmove.o: solvents.inc printer.inc moves.inc flags.inc energies.inc
+deletionmove.o: metropolis.inc quickpot.inc stacks.inc
+deletionmove.o:
 deprotonate.o: proteins.inc dimensions.inc
 deprotonate.o:
 detailedresidueenergy.o: simparams.inc proteins.inc enums.inc dimensions.inc
 detailedresidueenergy.o: solutes.inc solvents.inc constants.inc printer.inc
 detailedresidueenergy.o:
 detailedsoluteenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc
-detailedsoluteenergy.o: solvents.inc constants.inc printer.inc
+detailedsoluteenergy.o: solvents.inc constants.inc printer.inc simparams.inc
 detailedsoluteenergy.o:
+dgenergies.o: enums.inc dimensions.inc gb.inc constants.inc printer.inc
+dgenergies.o: averages.inc parallel.inc simparams.inc metropolis.inc
+dgenergies.o:
 dihedralenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc
 dihedralenergy.o: parameters.inc constants.inc printer.inc simparams.inc
 dihedralenergy.o: flags.inc
@@ -1050,6 +1022,10 @@ dualtopologysasa.o: solvents.inc constants.inc surface.inc printer.inc flags.inc
 dualtopologysasa.o: simparams.inc energies.inc extraenergies.inc gb.inc
 dualtopologysasa.o: surface.inc
 dualtopologysasa.o:
+dump.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
+dump.o: constants.inc printer.inc averages.inc parallel.inc flags.inc
+dump.o: splitter.inc
+dump.o:
 duplicatesolute.o: dimensions.inc solutes.inc printer.inc
 duplicatesolute.o:
 epslon.o: dimensions.inc constants.inc parameters.inc
@@ -1094,6 +1070,10 @@ finddihedralparam.o: printer.inc
 finddihedralparam.o:
 findgb.o: dimensions.inc gb.inc constants.inc
 findgb.o:
+findgcsolutetemplate.o: dimensions.inc templates.inc
+findgcsolutetemplate.o:
+findgcsolutetemplateatom.o: dimensions.inc templates.inc
+findgcsolutetemplateatom.o:
 findmoleculetemplate.o: dimensions.inc printer.inc templates.inc
 findmoleculetemplate.o:
 findmoltemplateangle.o: dimensions.inc templates.inc
@@ -1138,6 +1118,8 @@ findureybradleyindex.o: dimensions.inc parameters.inc
 findureybradleyindex.o:
 findureybradleyparam.o: enums.inc dimensions.inc parameters.inc printer.inc
 findureybradleyparam.o:
+fixresidues.o: proteins.inc dimensions.inc splitter.inc printer.inc
+fixresidues.o:
 flagmovedbits.o: dimensions.inc quickpot.inc solutes.inc movelist.inc
 flagmovedbits.o:
 flatbottomrestraintenergy.o: enums.inc dimensions.inc extraenergies.inc gb.inc
@@ -1152,6 +1134,33 @@ gbenergy.o:
 gbsavesystem.o: enums.inc proteins.inc dimensions.inc solutes.inc gb.inc
 gbsavesystem.o: solvents.inc constants.inc printer.inc flags.inc simparams.inc
 gbsavesystem.o:
+gcsolutebulkenergy.o: flags.inc dimensions.inc constants.inc solvents.inc
+gcsolutebulkenergy.o:
+gcsoluteenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
+gcsoluteenergy.o: constants.inc printer.inc flags.inc simparams.inc energies.inc
+gcsoluteenergy.o:
+gcsolutegcsoluteenergy.o: flags.inc dimensions.inc constants.inc solvents.inc
+gcsolutegcsoluteenergy.o: printer.inc surface.inc stacks.inc
+gcsolutegcsoluteenergy.o:
+gcsolutegcsolutesingleenergy.o: enums.inc dimensions.inc nbenergy3.inc
+gcsolutegcsolutesingleenergy.o: solutes.inc parameters.inc constants.inc
+gcsolutegcsolutesingleenergy.o: solvents.inc printer.inc nbenergyvar2.inc
+gcsolutegcsolutesingleenergy.o: simparams.inc flags.inc quickpot.inc
+gcsolutegcsolutesingleenergy.o: nbgcsgcs.inc nbinitial.inc stacks.inc
+gcsolutegcsolutesingleenergy.o:
+gcsolutemove.o: enums.inc dimensions.inc solutes.inc gb.inc solvents.inc
+gcsolutemove.o: constants.inc printer.inc moves.inc flags.inc energies.inc
+gcsolutemove.o: metropolis.inc quickpot.inc stacks.inc
+gcsolutemove.o:
+gcsolutesinglesolventenergy.o: enums.inc nbgcssvn.inc dimensions.inc
+gcsolutesinglesolventenergy.o: nbenergy3.inc solutes.inc parameters.inc
+gcsolutesinglesolventenergy.o: constants.inc solvents.inc printer.inc
+gcsolutesinglesolventenergy.o: nbenergyvar2.inc simparams.inc flags.inc
+gcsolutesinglesolventenergy.o: quickpot.inc nbinitial.inc
+gcsolutesinglesolventenergy.o:
+gcsolutesolventenergy.o: flags.inc dimensions.inc solutes.inc constants.inc
+gcsolutesolventenergy.o: solvents.inc printer.inc
+gcsolutesolventenergy.o:
 genproteinatom.o: proteins.inc dimensions.inc
 genproteinatom.o:
 gensoluteatom.o: dimensions.inc solutes.inc
@@ -1187,7 +1196,7 @@ getgbiborn.o:
 getgbscale.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc
 getgbscale.o:
 getmajorminoraxis.o: proteins.inc enums.inc dimensions.inc solutes.inc
-getmajorminoraxis.o: solvents.inc constants.inc printer.inc
+getmajorminoraxis.o: solvents.inc constants.inc printer.inc templates.inc
 getmajorminoraxis.o:
 getmoveinfo.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
 getmoveinfo.o: constants.inc printer.inc moves.inc simparams.inc splitter.inc
@@ -1199,9 +1208,10 @@ getnonbonded.o: enums.inc proteins.inc dimensions.inc printer.inc
 getnonbonded.o:
 getoption.o: dimensions.inc splitter.inc keyset.inc
 getoption.o:
-getoptions.o: enums.inc proteins.inc dimensions.inc solutes.inc gb.inc
-getoptions.o: parameters.inc solvents.inc constants.inc surface.inc printer.inc
-getoptions.o: flags.inc simparams.inc metropolis.inc splitter.inc pressure.inc
+getoptions.o: proteins.inc dimensions.inc solutes.inc gb.inc solvents.inc
+getoptions.o: constants.inc keyset.inc parallel.inc enums.inc parameters.inc
+getoptions.o: printer.inc surface.inc simparams.inc flags.inc metropolis.inc
+getoptions.o: splitter.inc pressure.inc
 getoptions.o:
 getperpendicular.o: dimensions.inc constants.inc
 getperpendicular.o:
@@ -1231,6 +1241,9 @@ getureybradley.o:
 getzmatdihedral.o: proteins.inc enums.inc flags.inc dimensions.inc solutes.inc
 getzmatdihedral.o: solvents.inc printer.inc
 getzmatdihedral.o:
+hardwallenergy.o: proteins.inc enums.inc dimensions.inc solutes.inc solvents.inc
+hardwallenergy.o: constants.inc printer.inc extraenergies.inc gb.inc surface.inc
+hardwallenergy.o:
 harmonicrestraintenergy.o: enums.inc dimensions.inc extraenergies.inc gb.inc
 harmonicrestraintenergy.o: surface.inc constants.inc printer.inc movelist.inc
 harmonicrestraintenergy.o:
@@ -1262,9 +1275,8 @@ hasureybradley.o:
 initialise.o: version.inc dimensions.inc printer.inc
 initialise.o:
 initialisearrays.o: proteins.inc dimensions.inc solutes.inc solvents.inc
-initialisearrays.o: constants.inc moves.inc quickpot.inc labels.inc
-initialisearrays.o: shrakeinit.inc enums.inc parameters.inc rotamer.inc
-initialisearrays.o: printer.inc averages.inc flags.inc simparams.inc
+initialisearrays.o: constants.inc moves.inc labels.inc enums.inc parameters.inc
+initialisearrays.o: rotamer.inc printer.inc averages.inc flags.inc simparams.inc
 initialisearrays.o: metropolis.inc energies.inc extraenergies.inc gb.inc
 initialisearrays.o: surface.inc pressure.inc templates.inc stacks.inc
 initialisearrays.o:
@@ -1279,6 +1291,10 @@ initialisesolute.o: dimensions.inc solutes.inc constants.inc moves.inc
 initialisesolute.o:
 inresiduesplitmoved.o: dimensions.inc quickpot.inc printer.inc
 inresiduesplitmoved.o:
+insertionmove.o: enums.inc dimensions.inc solutes.inc gb.inc constants.inc
+insertionmove.o: solvents.inc printer.inc moves.inc flags.inc energies.inc
+insertionmove.o: metropolis.inc quickpot.inc stacks.inc
+insertionmove.o:
 insolutesplitmoved.o: dimensions.inc quickpot.inc printer.inc
 insolutesplitmoved.o:
 insolventsplitmoved.o: dimensions.inc quickpot.inc printer.inc
@@ -1296,8 +1312,20 @@ isbackbone.o: proteins.inc dimensions.inc
 isbackbone.o:
 join.o: dimensions.inc splitter.inc
 join.o:
+join2.o: dimensions.inc splitter.inc
+join2.o:
+lambdaderivative.o: enums.inc proteins.inc dimensions.inc solutes.inc
+lambdaderivative.o: constants.inc solvents.inc printer.inc flags.inc
+lambdaderivative.o: simparams.inc energies.inc quickpot.inc movelist.inc
+lambdaderivative.o:
 lambdamove.o: dimensions.inc printer.inc
 lambdamove.o:
+lambdare.o: enums.inc dimensions.inc gb.inc constants.inc printer.inc
+lambdare.o: averages.inc simparams.inc flags.inc parallel.inc splitter.inc
+lambdare.o:
+loadgc.o: enums.inc dimensions.inc solvents.inc constants.inc printer.inc
+loadgc.o: simparams.inc flags.inc splitter.inc
+loadgc.o:
 loadprotein.o: enums.inc proteins.inc dimensions.inc splitter.inc constants.inc
 loadprotein.o: printer.inc
 loadprotein.o:
@@ -1307,11 +1335,14 @@ loadsolute.o:
 loadsolvent.o: enums.inc dimensions.inc solvents.inc constants.inc printer.inc
 loadsolvent.o: simparams.inc flags.inc splitter.inc
 loadsolvent.o:
+lreenergy.o: enums.inc simparams.inc dimensions.inc gb.inc constants.inc
+lreenergy.o: printer.inc
+lreenergy.o:
 main.o: protoms.inc proteins.inc dimensions.inc solutes.inc solvents.inc
-main.o: constants.inc keyset.inc moves.inc movelist.inc enums.inc parameters.inc
-main.o: printer.inc averages.inc simparams.inc flags.inc metropolis.inc
-main.o: energies.inc splitter.inc extraenergies.inc gb.inc surface.inc
-main.o: pressure.inc stacks.inc templates.inc
+main.o: constants.inc keyset.inc moves.inc parallel.inc movelist.inc enums.inc
+main.o: parameters.inc printer.inc averages.inc simparams.inc flags.inc
+main.o: metropolis.inc energies.inc splitter.inc extraenergies.inc gb.inc
+main.o: surface.inc pressure.inc stacks.inc templates.inc
 main.o:
 makevariableangle.o: proteins.inc dimensions.inc printer.inc
 makevariableangle.o:
@@ -1335,8 +1366,20 @@ marksaupdate.o: proteins.inc dimensions.inc solutes.inc constants.inc
 marksaupdate.o: solvents.inc surface.inc printer.inc flags.inc energies.inc
 marksaupdate.o:
 metropolis.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
-metropolis.o: constants.inc printer.inc metropolis.inc pressure.inc
+metropolis.o: constants.inc printer.inc simparams.inc metropolis.inc
+metropolis.o: pressure.inc
 metropolis.o:
+metropolis2.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
+metropolis2.o: constants.inc printer.inc moves.inc flags.inc simparams.inc
+metropolis2.o: energies.inc metropolis.inc pressure.inc stacks.inc
+metropolis2.o:
+metropolis3.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
+metropolis3.o: constants.inc printer.inc moves.inc flags.inc simparams.inc
+metropolis3.o: energies.inc metropolis.inc pressure.inc stacks.inc
+metropolis3.o:
+minsolventgcsolutedist2.o: flags.inc simparams.inc enums.inc dimensions.inc
+minsolventgcsolutedist2.o: solutes.inc solvents.inc
+minsolventgcsolutedist2.o:
 minsolventproteindist2.o: proteins.inc flags.inc simparams.inc enums.inc
 minsolventproteindist2.o: dimensions.inc solvents.inc
 minsolventproteindist2.o:
@@ -1345,6 +1388,9 @@ minsolventsolutedist2.o: solutes.inc solvents.inc
 minsolventsolutedist2.o:
 moveacid.o: proteins.inc enums.inc dimensions.inc constants.inc printer.inc
 moveacid.o:
+movegcsolute.o: flags.inc simparams.inc enums.inc dimensions.inc solutes.inc
+movegcsolute.o: constants.inc solvents.inc
+movegcsolute.o:
 moverotamer.o: proteins.inc dimensions.inc constants.inc printer.inc rotamer.inc
 moverotamer.o:
 movesidechain.o: proteins.inc dimensions.inc
@@ -1365,11 +1411,11 @@ namestring.o: proteins.inc dimensions.inc
 namestring.o:
 notbonded.o: proteins.inc enums.inc dimensions.inc solutes.inc
 notbonded.o:
-openfile.o: dimensions.inc printer.inc
+openfile.o: parallel.inc flags.inc dimensions.inc printer.inc
 openfile.o:
 openstreamfiles.o: dimensions.inc splitter.inc printer.inc
 openstreamfiles.o:
-parseargs.o: version.inc dimensions.inc splitter.inc printer.inc
+parseargs.o: parallel.inc version.inc dimensions.inc splitter.inc printer.inc
 parseargs.o:
 parsefile.o: dimensions.inc splitter.inc printer.inc keyset.inc
 parsefile.o:
@@ -1380,6 +1426,9 @@ popallresidueenergy.o: solutes.inc printer.inc stacks.inc
 popallresidueenergy.o:
 popdeletesolventcoords.o: enums.inc dimensions.inc printer.inc stacks.inc
 popdeletesolventcoords.o:
+popgcsolutecoords.o: enums.inc dimensions.inc solvents.inc printer.inc
+popgcsolutecoords.o: stacks.inc
+popgcsolutecoords.o:
 poppdacont.o: proteins.inc dimensions.inc solutes.inc gb.inc solvents.inc
 poppdacont.o: parameters.inc constants.inc
 poppdacont.o:
@@ -1399,9 +1448,10 @@ printattemptaccept.o:
 printaverageextraenergies.o: flags.inc dimensions.inc extraenergies.inc gb.inc
 printaverageextraenergies.o: surface.inc constants.inc printer.inc
 printaverageextraenergies.o:
-printaverages.o: enums.inc proteins.inc dimensions.inc solutes.inc constants.inc
-printaverages.o: solvents.inc parameters.inc printer.inc averages.inc flags.inc
-printaverages.o: simparams.inc metropolis.inc pressure.inc
+printaverages.o: proteins.inc dimensions.inc solutes.inc constants.inc
+printaverages.o: solvents.inc moves.inc parallel.inc enums.inc parameters.inc
+printaverages.o: printer.inc averages.inc simparams.inc flags.inc metropolis.inc
+printaverages.o: energies.inc pressure.inc stacks.inc
 printaverages.o:
 printaveragesaenergy.o: dimensions.inc constants.inc surface.inc printer.inc
 printaveragesaenergy.o:
@@ -1411,16 +1461,18 @@ printboxtext.o: dimensions.inc splitter.inc
 printboxtext.o:
 printenergies.o: energies.inc dimensions.inc printer.inc
 printenergies.o:
-printline.o: dimensions.inc printer.inc
+printline.o: parallel.inc dimensions.inc printer.inc
 printline.o:
-printparameters.o: simparams.inc proteins.inc dimensions.inc solutes.inc
-printparameters.o: parameters.inc solvents.inc printer.inc
+printparameters.o: proteins.inc dimensions.inc solutes.inc parameters.inc
+printparameters.o: solvents.inc printer.inc simparams.inc templates.inc
 printparameters.o:
 printpdb.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
 printpdb.o: constants.inc printer.inc simparams.inc flags.inc
 printpdb.o:
 printpdbatom.o: dimensions.inc parameters.inc printer.inc
 printpdbatom.o:
+printpdbgcsolute.o: dimensions.inc solvents.inc printer.inc stacks.inc
+printpdbgcsolute.o:
 printpdbprotein.o: proteins.inc enums.inc dimensions.inc printer.inc
 printpdbprotein.o:
 printpdbresidue.o: proteins.inc dimensions.inc
@@ -1432,6 +1484,10 @@ printpdbsolvent.o:
 processgeometryline.o: enums.inc proteins.inc dimensions.inc solutes.inc
 processgeometryline.o: constants.inc solvents.inc printer.inc splitter.inc
 processgeometryline.o:
+processhardwallline.o: enums.inc proteins.inc dimensions.inc solutes.inc
+processhardwallline.o: constants.inc solvents.inc printer.inc extraenergies.inc
+processhardwallline.o: gb.inc surface.inc labels.inc splitter.inc
+processhardwallline.o:
 processidline.o: dimensions.inc splitter.inc printer.inc
 processidline.o:
 processrestraintline.o: enums.inc proteins.inc dimensions.inc solutes.inc
@@ -1440,6 +1496,9 @@ processrestraintline.o: splitter.inc
 processrestraintline.o:
 processsolventline.o: dimensions.inc splitter.inc constants.inc printer.inc
 processsolventline.o:
+proteingcsenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
+proteingcsenergy.o: solvents.inc
+proteingcsenergy.o:
 proteinintraenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
 proteinintraenergy.o:
 proteinproteinenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
@@ -1456,6 +1515,9 @@ protonate.o: proteins.inc dimensions.inc
 protonate.o:
 protonnum.o: simparams.inc dimensions.inc parameters.inc
 protonnum.o:
+pushbackgcsolutecoords.o: enums.inc dimensions.inc solvents.inc printer.inc
+pushbackgcsolutecoords.o: stacks.inc
+pushbackgcsolutecoords.o:
 pushbacknewresidueenergy.o: enums.inc proteins.inc energies.inc dimensions.inc
 pushbacknewresidueenergy.o: solutes.inc printer.inc stacks.inc
 pushbacknewresidueenergy.o:
@@ -1512,6 +1574,14 @@ readdih.o: constants.inc printer.inc
 readdih.o:
 readdouble.o: dimensions.inc printer.inc
 readdouble.o:
+readgcsolutetemplate.o: enums.inc dimensions.inc splitter.inc printer.inc
+readgcsolutetemplate.o: templates.inc
+readgcsolutetemplate.o:
+readgcstemplateatomline.o: enums.inc dimensions.inc splitter.inc printer.inc
+readgcstemplateatomline.o: templates.inc
+readgcstemplateatomline.o:
+readgcstemplateinfoline.o: dimensions.inc templates.inc
+readgcstemplateinfoline.o:
 readinfo.o: flags.inc simparams.inc dimensions.inc splitter.inc constants.inc
 readinfo.o: printer.inc
 readinfo.o:
@@ -1534,7 +1604,7 @@ readresiduetemplate.o: enums.inc dimensions.inc splitter.inc constants.inc
 readresiduetemplate.o: printer.inc templates.inc
 readresiduetemplate.o:
 readrestart.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
-readrestart.o: printer.inc simparams.inc flags.inc pressure.inc
+readrestart.o: printer.inc simparams.inc flags.inc pressure.inc stacks.inc
 readrestart.o:
 readrestemplateangleline.o: enums.inc proteins.inc dimensions.inc splitter.inc
 readrestemplateangleline.o: printer.inc templates.inc
@@ -1584,8 +1654,8 @@ readsoltemplateureybradleyline.o:
 readsoltemplatevariableline.o: enums.inc proteins.inc dimensions.inc
 readsoltemplatevariableline.o: splitter.inc printer.inc templates.inc
 readsoltemplatevariableline.o:
-readsolutetemplate.o: enums.inc dimensions.inc splitter.inc printer.inc
-readsolutetemplate.o: templates.inc
+readsolutetemplate.o: enums.inc dimensions.inc splitter.inc constants.inc
+readsolutetemplate.o: printer.inc templates.inc
 readsolutetemplate.o:
 readsolventtemplate.o: enums.inc dimensions.inc splitter.inc printer.inc
 readsolventtemplate.o: templates.inc
@@ -1623,6 +1693,8 @@ residuedetailedintraenergy.o:
 residueenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
 residueenergy.o: constants.inc printer.inc simparams.inc energies.inc
 residueenergy.o:
+residuegcsolutenergy.o: proteins.inc dimensions.inc constants.inc solvents.inc
+residuegcsolutenergy.o:
 residueintraenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
 residueintraenergy.o:
 residueintragbenergy.o: enums.inc proteins.inc dimensions.inc gb.inc
@@ -1650,19 +1722,25 @@ residueresidueintergbenergy.o: enums.inc proteins.inc dimensions.inc gb.inc
 residueresidueintergbenergy.o: parameters.inc constants.inc printer.inc
 residueresidueintergbenergy.o: simparams.inc flags.inc
 residueresidueintergbenergy.o:
-residuesinglesolventenergy.o: nbenergy2.inc enums.inc proteins.inc
-residuesinglesolventenergy.o: dimensions.inc parameters.inc solvents.inc
-residuesinglesolventenergy.o: constants.inc printer.inc nbenergyvar2.inc
-residuesinglesolventenergy.o: simparams.inc flags.inc quickpot.inc nbprosvn.inc
-residuesinglesolventenergy.o: nbinitial.inc
+residuesinglegcsoluteenergy.o: enums.inc proteins.inc dimensions.inc
+residuesinglegcsoluteenergy.o: nbenergy3.inc solutes.inc parameters.inc
+residuesinglegcsoluteenergy.o: solvents.inc constants.inc printer.inc
+residuesinglegcsoluteenergy.o: nbenergyvar2.inc simparams.inc flags.inc
+residuesinglegcsoluteenergy.o: quickpot.inc nbprogcs.inc nbinitial.inc
+residuesinglegcsoluteenergy.o:
+residuesinglesolventenergy.o: nbenergy2.inc proteins.inc dimensions.inc
+residuesinglesolventenergy.o: solvents.inc constants.inc quickpot.inc
+residuesinglesolventenergy.o: nbprosvn.inc nbenergy_lj.inc nbinitial.inc
+residuesinglesolventenergy.o: enums.inc parameters.inc printer.inc flags.inc
+residuesinglesolventenergy.o: simparams.inc nbenergyvar2.inc nbenergy_coul.inc
 residuesinglesolventenergy.o:
 residuesolutebornpda.o: enums.inc proteins.inc dimensions.inc solutes.inc gb.inc
 residuesolutebornpda.o: parameters.inc constants.inc simparams.inc flags.inc
 residuesolutebornpda.o:
-residuesoluteenergy.o: nbenergy2.inc enums.inc proteins.inc dimensions.inc
-residuesoluteenergy.o: solutes.inc nbprosol.inc parameters.inc constants.inc
-residuesoluteenergy.o: printer.inc nbenergyvar2.inc simparams.inc flags.inc
-residuesoluteenergy.o: quickpot.inc nbinitial.inc
+residuesoluteenergy.o: nbenergy2.inc nbderivative.inc enums.inc proteins.inc
+residuesoluteenergy.o: dimensions.inc solutes.inc nbprosol.inc parameters.inc
+residuesoluteenergy.o: constants.inc printer.inc nbenergyvar2.inc simparams.inc
+residuesoluteenergy.o: flags.inc quickpot.inc nbinitial.inc
 residuesoluteenergy.o:
 residuesolutegbenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc
 residuesolutegbenergy.o: gb.inc parameters.inc constants.inc printer.inc
@@ -1684,6 +1762,8 @@ residuesurface.o:
 retienergy.o: enums.inc simparams.inc dimensions.inc gb.inc constants.inc
 retienergy.o: printer.inc
 retienergy.o:
+retitest.o: metropolis.inc dimensions.inc constants.inc printer.inc
+retitest.o:
 reversevolumemove.o: enums.inc proteins.inc dimensions.inc solutes.inc
 reversevolumemove.o: solvents.inc constants.inc flags.inc simparams.inc
 reversevolumemove.o: pressure.inc
@@ -1704,10 +1784,21 @@ rotamermove.o: moves.inc flags.inc energies.inc
 rotamermove.o:
 rotateacid.o: proteins.inc dimensions.inc
 rotateacid.o:
+rotategcsolute.o: dimensions.inc solutes.inc constants.inc solvents.inc
+rotategcsolute.o:
 rotatesolute.o: dimensions.inc solutes.inc
 rotatesolute.o:
 rotatesolvent.o: dimensions.inc constants.inc solvents.inc
 rotatesolvent.o:
+samplemove.o: enums.inc dimensions.inc solutes.inc gb.inc constants.inc
+samplemove.o: solvents.inc printer.inc moves.inc flags.inc energies.inc
+samplemove.o: metropolis.inc quickpot.inc stacks.inc
+samplemove.o:
+savepoint.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc
+savepoint.o: parameters.inc solvents.inc constants.inc printer.inc moves.inc
+savepoint.o: simparams.inc flags.inc energies.inc metropolis.inc quickpot.inc
+savepoint.o: stacks.inc
+savepoint.o:
 saveresiduegb.o: proteins.inc dimensions.inc gb.inc printer.inc
 saveresiduegb.o:
 savesolutegb.o: dimensions.inc solutes.inc gb.inc printer.inc
@@ -1745,6 +1836,8 @@ setequilibriumgeometry.o: parameters.inc printer.inc
 setequilibriumgeometry.o:
 setforwardsstructure.o: simparams.inc dimensions.inc solutes.inc
 setforwardsstructure.o:
+setgcsolutemoved.o: dimensions.inc solvents.inc printer.inc movelist.inc
+setgcsolutemoved.o:
 setinitialtitrationstate.o: enums.inc proteins.inc flags.inc simparams.inc
 setinitialtitrationstate.o: dimensions.inc printer.inc
 setinitialtitrationstate.o:
@@ -1764,20 +1857,37 @@ setsolventmoved.o: dimensions.inc solvents.inc printer.inc movelist.inc
 setsolventmoved.o:
 setstream.o: dimensions.inc printer.inc
 setstream.o:
+setupreplicas.o: parallel.inc flags.inc dimensions.inc splitter.inc keyset.inc
+setupreplicas.o: printer.inc
+setupreplicas.o:
 setzmatrixgeometry.o: dimensions.inc printer.inc
 setzmatrixgeometry.o:
+shigh.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc parameters.inc
+shigh.o: solvents.inc constants.inc printer.inc moves.inc simparams.inc
+shigh.o: flags.inc energies.inc metropolis.inc quickpot.inc stacks.inc
+shigh.o:
 shutdown.o: version.inc printer.inc
 shutdown.o:
 sigma.o: dimensions.inc constants.inc parameters.inc
 sigma.o:
-simulate.o: flags.inc enums.inc dimensions.inc pressure.inc printer.inc
+simulate.o: enums.inc dimensions.inc keyset.inc printer.inc averages.inc
+simulate.o: moves.inc parallel.inc flags.inc splitter.inc pressure.inc
+simulate.o: stacks.inc
 simulate.o:
 simulation.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
-simulation.o: constants.inc surface.inc rotamer.inc printer.inc averages.inc
-simulation.o: simparams.inc flags.inc splitter.inc
+simulation.o: constants.inc keyset.inc surface.inc rotamer.inc printer.inc
+simulation.o: averages.inc simparams.inc flags.inc splitter.inc
 simulation.o:
 singlepointenergy.o: enums.inc dimensions.inc printer.inc
 singlepointenergy.o:
+slow.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc parameters.inc
+slow.o: solvents.inc constants.inc printer.inc moves.inc simparams.inc flags.inc
+slow.o: energies.inc metropolis.inc quickpot.inc stacks.inc
+slow.o:
+solthetamove.o: enums.inc dimensions.inc solutes.inc gb.inc constants.inc
+solthetamove.o: solvents.inc printer.inc moves.inc simparams.inc flags.inc
+solthetamove.o: energies.inc metropolis.inc quickpot.inc stacks.inc
+solthetamove.o:
 solutebornintrapda.o: enums.inc flags.inc dimensions.inc solutes.inc gb.inc
 solutebornintrapda.o: parameters.inc
 solutebornintrapda.o:
@@ -1789,6 +1899,9 @@ solutedetailedintraenergy.o:
 soluteenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
 soluteenergy.o: constants.inc printer.inc flags.inc simparams.inc energies.inc
 soluteenergy.o:
+solutegcsenergy.o: flags.inc dimensions.inc solutes.inc constants.inc
+solutegcsenergy.o: solvents.inc printer.inc
+solutegcsenergy.o:
 soluteintraenergy.o: nbenergy2.inc enums.inc dimensions.inc solutes.inc
 soluteintraenergy.o: parameters.inc constants.inc printer.inc nbenergyvar2.inc
 soluteintraenergy.o: simparams.inc flags.inc quickpot.inc nbsolsol.inc
@@ -1799,20 +1912,28 @@ soluteintragbenergy.o: parameters.inc constants.inc printer.inc simparams.inc
 soluteintragbenergy.o: flags.inc
 soluteintragbenergy.o:
 solutemove.o: enums.inc dimensions.inc solutes.inc solvents.inc gb.inc
-solutemove.o: printer.inc moves.inc flags.inc energies.inc quickpot.inc
+solutemove.o: constants.inc printer.inc moves.inc simparams.inc flags.inc
+solutemove.o: energies.inc quickpot.inc
 solutemove.o:
-solutesinglesolventenergy.o: nbenergy2.inc enums.inc dimensions.inc solutes.inc
-solutesinglesolventenergy.o: parameters.inc constants.inc solvents.inc
-solutesinglesolventenergy.o: printer.inc nbenergyvar2.inc simparams.inc
-solutesinglesolventenergy.o: flags.inc quickpot.inc nbsolsvn.inc nbinitial.inc
+solutesinglegcsoluteenergy.o: enums.inc dimensions.inc nbenergy3.inc solutes.inc
+solutesinglegcsoluteenergy.o: parameters.inc constants.inc solvents.inc
+solutesinglegcsoluteenergy.o: printer.inc nbsolgcs.inc nbenergyvar2.inc
+solutesinglegcsoluteenergy.o: simparams.inc flags.inc quickpot.inc nbinitial.inc
+solutesinglegcsoluteenergy.o:
+solutesinglesolventenergy.o: nbenergy2.inc dimensions.inc solutes.inc
+solutesinglesolventenergy.o: constants.inc solvents.inc quickpot.inc
+solutesinglesolventenergy.o: nbenergy_lj.inc nbsolsvn.inc nbinitial.inc
+solutesinglesolventenergy.o: enums.inc nbderivative.inc parameters.inc
+solutesinglesolventenergy.o: printer.inc flags.inc simparams.inc
+solutesinglesolventenergy.o: nbenergyvar2.inc nbenergy_coul.inc
 solutesinglesolventenergy.o:
 solutesoluteborninterpda.o: enums.inc dimensions.inc solutes.inc gb.inc
 solutesoluteborninterpda.o: parameters.inc constants.inc simparams.inc flags.inc
 solutesoluteborninterpda.o:
-solutesoluteenergy.o: nbenergy2.inc enums.inc dimensions.inc solutes.inc
-solutesoluteenergy.o: parameters.inc constants.inc printer.inc nbenergyvar2.inc
-solutesoluteenergy.o: flags.inc simparams.inc quickpot.inc nbsolsol.inc
-solutesoluteenergy.o: nbinitial.inc
+solutesoluteenergy.o: nbenergy2.inc nbderivative.inc enums.inc dimensions.inc
+solutesoluteenergy.o: solutes.inc parameters.inc constants.inc printer.inc
+solutesoluteenergy.o: nbenergyvar2.inc flags.inc simparams.inc quickpot.inc
+solutesoluteenergy.o: nbsolsol.inc nbinitial.inc
 solutesoluteenergy.o:
 solutesoluteintergbenergy.o: enums.inc dimensions.inc solutes.inc gb.inc
 solutesoluteintergbenergy.o: parameters.inc constants.inc printer.inc
@@ -1849,7 +1970,7 @@ solventintragbenergy.o: flags.inc
 solventintragbenergy.o:
 solventmove.o: enums.inc dimensions.inc gb.inc solvents.inc constants.inc
 solventmove.o: printer.inc moves.inc flags.inc energies.inc metropolis.inc
-solventmove.o: quickpot.inc
+solventmove.o: quickpot.inc stacks.inc
 solventmove.o:
 solventsolventborninterpda.o: enums.inc flags.inc dimensions.inc gb.inc
 solventsolventborninterpda.o: parameters.inc solvents.inc
@@ -1865,7 +1986,8 @@ solventsolventintergbenergy.o:
 solventsolventsingleenergy.o: nbenergy2.inc enums.inc dimensions.inc
 solventsolventsingleenergy.o: parameters.inc constants.inc solvents.inc
 solventsolventsingleenergy.o: printer.inc nbenergyvar2.inc simparams.inc
-solventsolventsingleenergy.o: flags.inc quickpot.inc nbsvnsvn.inc nbinitial.inc
+solventsolventsingleenergy.o: flags.inc quickpot.inc nbenergy_coul.inc
+solventsolventsingleenergy.o: nbsvnsvn.inc nbenergy_lj.inc nbinitial.inc
 solventsolventsingleenergy.o:
 solventsurface.o: enums.inc proteins.inc dimensions.inc solutes.inc
 solventsurface.o: parameters.inc solvents.inc constants.inc surface.inc
@@ -1928,6 +2050,10 @@ takebase.o:
 testenergies.o: flags.inc enums.inc energies.inc dimensions.inc constants.inc
 testenergies.o: printer.inc
 testenergies.o:
+thetamove.o: enums.inc dimensions.inc solutes.inc gb.inc constants.inc
+thetamove.o: solvents.inc printer.inc moves.inc simparams.inc flags.inc
+thetamove.o: energies.inc metropolis.inc quickpot.inc stacks.inc
+thetamove.o:
 titrationmove.o: enums.inc flags.inc proteins.inc energies.inc dimensions.inc
 titrationmove.o: printer.inc moves.inc
 titrationmove.o:
@@ -1943,6 +2069,8 @@ totalsurface.o: constants.inc printer.inc surface.inc flags.inc simparams.inc
 totalsurface.o:
 translateacid.o: proteins.inc dimensions.inc
 translateacid.o:
+translategcsolute.o: simparams.inc dimensions.inc solutes.inc solvents.inc
+translategcsolute.o:
 translatesolute.o: dimensions.inc solutes.inc
 translatesolute.o:
 translatesolvent.o: dimensions.inc solvents.inc
@@ -1960,6 +2088,10 @@ updateextraenergies.o: flags.inc energies.inc dimensions.inc quickpot.inc
 updateextraenergies.o: extraenergies.inc gb.inc surface.inc constants.inc
 updateextraenergies.o: printer.inc
 updateextraenergies.o:
+updategcsoluteenergies.o: enums.inc proteins.inc dimensions.inc solutes.inc
+updategcsoluteenergies.o: solvents.inc constants.inc printer.inc simparams.inc
+updategcsoluteenergies.o: flags.inc energies.inc
+updategcsoluteenergies.o:
 updatemultiplemovesenergies.o: proteins.inc energies.inc dimensions.inc
 updatemultiplemovesenergies.o: solutes.inc solvents.inc printer.inc movelist.inc
 updatemultiplemovesenergies.o: stacks.inc
@@ -2007,12 +2139,13 @@ volumemove.o: enums.inc dimensions.inc solvents.inc printer.inc moves.inc
 volumemove.o: flags.inc metropolis.inc energies.inc pressure.inc
 volumemove.o:
 writerestart.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
-writerestart.o: printer.inc simparams.inc flags.inc
+writerestart.o: printer.inc simparams.inc flags.inc stacks.inc
 writerestart.o:
+writezmatrix.o: enums.inc proteins.inc dimensions.inc parameters.inc printer.inc
+writezmatrix.o:
 zeroallpdacont.o: proteins.inc dimensions.inc solutes.inc gb.inc solvents.inc
 zeroallpdacont.o: parameters.inc constants.inc
 zeroallpdacont.o:
 zeropdacont.o: proteins.inc dimensions.inc solutes.inc gb.inc solvents.inc
 zeropdacont.o: parameters.inc constants.inc
 zeropdacont.o:
-

@@ -20,10 +20,13 @@ DualTopology
 Can be executed from the command line as a stand-alone program
 """
 
+import logging
+
 import numpy as np
 
 import simulationobjects
 
+logger = logging.getLogger('protoms')
 
 def _assignMoveProbabilities(protein,solute,solvent,isgcmc,isperiodic) :
   """ 
@@ -696,6 +699,16 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
   bnd_cmd : ProtoMSSimulation
     the command file for the protein simulation
   """
+  
+  logger.debug("Running generate_input with arguments: ")
+  logger.debug("\tprotein       = %s"%protein) 
+  logger.debug("\tligands       = %s"%" ".join(ligands)) 
+  logger.debug("\ttemplates     = %s"%" ".join(templates))
+  logger.debug("\tprotein_water = %s"%protein_water)
+  logger.debug("\tligand_water  = %s"%ligand_water)
+  logger.debug("\tsettings      = %s"%settings)
+  logger.debug("This will make an input file for ProtoMS")
+  
   free_cmd = bnd_cmd = None
   
   if settings.simulation == "equilibration" :
@@ -754,7 +767,8 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
     else :
       lambdavals = settings.lambdas
       nlambdas = len(lambdavals)
-    print "\nWill simulate with %s lambda values"%nlambdas
+    logger.info("")
+    logger.info("Will simulate with %s lambda values"%nlambdas)
   
     if hasattr(settings,"outfolder") :
       outfolder = settings.outfolder
@@ -804,6 +818,9 @@ if __name__ == "__main__":
   parser.add_argument('--nprod',type=int,help="the number of production steps",default=40E6)
   parser.add_argument('--dumpfreq',type=int,help="the output dump frequency",default=1E5)
   args = parser.parse_args()
+
+  # Setup the logger
+  logger = simulationobjects.setup_logger("generate_input_py.log")
 
   free_cmd,bnd_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args) 
   if free_cmd is not None : 

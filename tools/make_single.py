@@ -15,10 +15,13 @@ Can be executed from the command line as a stand-alone program
 """
 
 import copy
+import logging
 
 import numpy as np
 
 import simulationobjects as sim
+
+logger = logging.getLogger('protoms')
 
 def _make_dict(atoms,moltem,pdbres,objdict=None,onlypdb=False) :
   """ 
@@ -58,7 +61,7 @@ def _make_dict(atoms,moltem,pdbres,objdict=None,onlypdb=False) :
         objdict[atom]["pdb"] = patom
         break
     if "pdb" not in objdict[atom] :
-      print "Warning: Could not find atom %s in the pdb-file, cannot look for map for this atom"%atom
+      logger.warning("Warning: Could not find atom %s in the pdb-file, cannot look for map for this atom"%atom)
       objdict[atom]["pdb"] = None
   return objdict
 
@@ -106,14 +109,14 @@ def _make_map(tem1,tem2,pdb1,pdb2,cmap) :
           not_taken1.remove(atom1)
           not_taken2.remove(atom2)    
         else :
-          print "Warning: Could not find atom %s in the second template file, will ignore this map."%atom2
+          logger.warning("Warning: Could not find atom %s in the second template file, will ignore this map."%atom2)
           del cmap[atom1]
       else :
         not_taken1.remove(atom1)     
     else :
-      print "Warning: Could not find atom %s in the first template file, will ignore this map."%atom2
+      logger.warning("Warning: Could not find atom %s in the first template file, will ignore this map."%atom2)
       del cmap[atom1]
-  print "Pre-defined maps:\n%s"%" ".join("%s-%s"%(atom1,cmap[atom1]) for atom1 in sorted(cmap.keys()))
+  logger.info("Pre-defined maps:\n%s"%" ".join("%s-%s"%(atom1,cmap[atom1]) for atom1 in sorted(cmap.keys())))
 
   # Next we will calculate pair-wise distance from the given pdb structures,
   # use a cut-off of 0.02 A^2 to determine possible pair and then use atom type as the final filter
@@ -132,7 +135,7 @@ def _make_map(tem1,tem2,pdb1,pdb2,cmap) :
         if dist2 < 0.02 and type1 == type2 :
           found[atom1] = atom2
           break
-    print "Distance/atom type maps:\n%s"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys()))
+    logger.info("Distance/atom type maps:\n%s"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys())))
     for atom1 in found :
       atom2 = found[atom1] 
       not_taken1.remove(atom1)
@@ -144,19 +147,21 @@ def _make_map(tem1,tem2,pdb1,pdb2,cmap) :
   if not_taken1 or not_taken2 :
 
     # Print out useful information
-    print "\nThese are the un-matched atoms of template 1: %s"%" ".join(not_taken1)
-    print "These are the un-matched atoms of template 2: %s"%" ".join(not_taken2)
+    logger.info("")
+    logger.info("These are the un-matched atoms of template 1: %s"%" ".join(not_taken1))
+    logger.info("These are the un-matched atoms of template 2: %s"%" ".join(not_taken2))
  
-    print "\nThese are the distances (A): "
-    print "%8s%s"%("","".join("%8s"%atom for atom in not_taken1))
+    logger.info("")
+    logger.info("These are the distances (A): ")
+    logger.info("%8s%s"%("","".join("%8s"%atom for atom in not_taken1)))
     for atom2 in not_taken2 :
-      print "%8s"%atom2,
+      outstr = "%8s"%atom2
       for atom1 in not_taken1 :
         dist = objdict1[atom1]["pdb"].coords-objdict2[atom2]["pdb"].coords
         dist = np.sqrt(np.sum(dist*dist))
-        print "%8.3f"%dist,
-      print ""
-    print ""
+        outstr = outstr +  "%8.3f"%dist
+      logger.info(outstr)
+    logger.info("")
   
     found = {}
     for atom1 in not_taken1 :
@@ -174,7 +179,8 @@ def _make_map(tem1,tem2,pdb1,pdb2,cmap) :
         found[atom1] = "DUM"
       else :
         found[atom1] = atom2
-    print "\nUser maps:\n%s"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys()))
+    logger.info("")
+    logger.info("User maps:\n%s"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys())))
     for atom1 in found :
       atom2 = found[atom1] 
       not_taken1.remove(atom1)
@@ -369,7 +375,10 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
 
   # Setup parameter sets to search
   gaffname = sim.standard_filename("gaff14.ff","parameter")
-  gaffsets = {type:sim.parameter_set(gaffname, type ) for type in ["bond","angle","dihedral"]}
+  #gaffsets = {type:sim.parameter_set(gaffname, type) for type in ["bond","angle","dihedral"]}
+  gaffsets = {}
+  for type in ["bond","angle","dihedral"] :
+    gaffsets[type] = sim.ParameterSet(gaffname, type)
   temsets = {"bond" : tem1.bondatoms,"angle" : tem1.angleatoms,"dihedral" : tem1.dihedralatoms}
 
   # Now loop over all atoms that changes type
@@ -398,7 +407,8 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
         con.param0,equil0 = find_param(atomtypes0,temsets[con.type],gaffsets[con.type]) # Find parameter index and equilibrium value
         con.param1,equil1 = find_param(atomtypes1,temsets[con.type],gaffsets[con.type])
         if con.param0 == -1 or con.param1 == -1 : # Warn if it could not be found
-          print "\nWarning: could not find parameters for %s or %s at atoms %s"%("-".join(atomtypes0),"-".join(atomtypes1)," ".join(catom.name for catom in con.atoms))
+          logger.warning("")
+          logger.warning("Warning: could not find parameters for %s or %s at atoms %s"%("-".join(atomtypes0),"-".join(atomtypes1)," ".join(catom.name for catom in con.atoms)))
           con.param0 = con.param1 = None
 
   return tem1
@@ -435,13 +445,23 @@ def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
     tem2 is larger than tem1
   """
   
+  logger.debug("Running make_single with arguments: ")
+  logger.debug("\ttem1    = %s"%tem1) 
+  logger.debug("\ttem2    = %s"%tem2) 
+  logger.debug("\tpdb1    = %s"%pdb1)
+  logger.debug("\tpdb2    = %s"%pdb2)
+  logger.debug("\tmapfile = %s"%mapfile)
+  logger.debug("This will make a ProtoMS template files for single-topology perturbations")
+
   if isinstance(tem1,basestring) :
     tem1 = sim.TemplateFile(filename=tem1)
   if isinstance(tem2,basestring) :
     tem2 = sim.TemplateFile(filename=tem2)
     
   if len(tem1.templates[0].atoms) < len(tem2.templates[0].atoms) :
-    raise sim.SetupError("The first template needs to be larger than the second template")
+    msg = "The first template needs to be larger than the second template"
+    logger.error(msg)
+    raise sim.SetupError(msg)
 
   if isinstance(pdb1,basestring) :
     pdb1 = sim.PDBFile(filename=pdb1)
@@ -507,8 +527,10 @@ if __name__ == '__main__' :
   parser.add_argument('-p1','--pdb1',help="PDB-file for V1")
   parser.add_argument('-m','--map',help="the correspondance map from V0 to V1")
   parser.add_argument('-o','--out',help="prefix of the output file",default="single")
-
   args = parser.parse_args()
+  
+  # Setup the logger
+  logger = simulationobjects.setup_logger("make_single_py.log")
 
   if args.tem0 is None or args.tem1 is None or args.pdb0 is None or args.pdb1 is None :
     sim.SetupError("Not all four necessary input files given. Cannot setup single-topology")
@@ -519,7 +541,8 @@ if __name__ == '__main__' :
   if args.map is None : write_map(cmap,args.out+"_cmap.dat")
 
   # Write out a summary
-  print "\nAtom    Ele perturbation                                        ||         Vdw perturbation"
+  logger.info("")
+  logger.info("Atom    Ele perturbation                                        ||         Vdw perturbation")
   for atom1,atom2 in zip(eletem.templates[0].atoms,vdwtem.templates[0].atoms) :
     ele0,ele1 = atom1.param0,atom1.param1
     vdw0,vdw1 = atom2.param0,atom2.param1
@@ -537,13 +560,15 @@ if __name__ == '__main__' :
           strout += "c"
         if abs(float(param1.params[3])-float(param2.params[3])) > 0.000001 : strout += "lj"        
         return "%3s"%strout
-    print "%5s : %s ==> %s %s || %s ==> %s %s" %(atom1.name,get_param(ele0),get_param(ele1),get_diff(ele0,ele1),get_param(vdw0),get_param(vdw1),get_diff(vdw0,vdw1))
+    logger.info("%5s : %s ==> %s %s || %s ==> %s %s" %(atom1.name,get_param(ele0),get_param(ele1),get_diff(ele0,ele1),get_param(vdw0),get_param(vdw1),get_diff(vdw0,vdw1)))
 
-  print "\nZ-matrix connectivities that changes parameter: "
+  logger.info("")
+  logger.info("Z-matrix connectivities that changes parameter: ")
   for con in vdwtem.templates[0].connectivity :
-    if con.param0 is not None : print con
+    if con.param0 is not None : logger.info(con)
 
-  print "\nVariable geometries: "
+  logger.info("")
+  logger.info("Variable geometries: ")
   for comment,var in zip(vdwtem.templates[0].variables[:-1:2],vdwtem.templates[0].variables[1::2]) :
-    print var," ",comment
+    logger.info("%s %s"%(var,comment))
  

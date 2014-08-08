@@ -46,6 +46,8 @@ c     generate a random number from 1 to probTotal
         getMoveType = TRYGCSOLUTE
       else if (ranval.le.probSample) then
         getMoveType = TRYSAMPLE
+      else if (ranval.le.probSolTheta) then
+        getMoveType = TRYSOLTHETA
       else
         write(printstring,*) "Could not work out the move type from ",getMoveType
         call printLine(WARNING,printstring)

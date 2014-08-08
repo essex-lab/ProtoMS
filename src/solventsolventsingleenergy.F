@@ -50,7 +50,7 @@ c
 c####################################################################
 
       integer isvn1,isvn2
-      integer i,j,nats1,nats2
+      integer i,j,nats1,nats2,istart
       double precision mindist,dist2
       double precision distx,disty,distz
       double precision cnrg,ljnrg,nrg,sclfac
@@ -126,30 +126,76 @@ c     does periodic boundaries based on a single point, in this case the centre
 
       funcisvn1 = isvn1
       funcisvn2 = isvn2
-      do i=1,nats1
-        funcat1 = i
-        do j=1,nats2
-          funcat2 = j
 
-c         intialise the nb calculation          
-          include 'nbinitial.inc'
-c         set up for a solvent solvent interaction
-          include 'nbsvnsvn.inc'
-c         actually calculate the energy
-          include 'nbenergy2.inc'
+      if ((SvnOptimization(isvn1).eq.OPTTIP4P.and.SvnOptimization(isvn1).eq.OPTTIP4P).or.
+     .   (SvnOptimization(isvn1).eq.OPTTIP3P.and.SvnOptimization(isvn1).eq.OPTTIP3P)) then
+
+c       Optimized for TIP4P-TIP4P interactions
+c        write(6,*)"Using optimized routines"
+c       LJ between oxygens only
+        funcat1 = 1
+        funcat2 = 1
+        include 'nbinitial.inc'
+        include 'nbsvnsvn.inc'
+        include 'nbenergy_lj.inc'                 
+        nrg = nrg + funcnbnrg
+        ljnrg = ljnrg + funcljnrg
+        ljnrgf = ljnrgf + funcljnrgf
+        ljnrgb = ljnrgb + funcljnrgb
+        if (SIRE_COMPATIBILITY_MODE .and. (funcmindist .lt. mindist)) 
+     .          mindist = funcmindist
+
+c       Coulomb between the rest of the particles, i.e., between hydrogens and extra point particle
+        if (SvnOptimiZation(isvn1).eq.OPTTIP3P) then
+          istart = 1
+        else
+          istart = 2
+        endif
+        do i=istart,nats1
+          funcat1 = i
+          do j=istart,nats2
+            funcat2 = j
+
+            include 'nbinitial.inc'
+            include 'nbsvnsvn.inc'
+            include 'nbenergy_coul.inc'
           
-          nrg = nrg + funcnbnrg
-          cnrg = cnrg + funccnrg
-          ljnrg = ljnrg + funcljnrg
-          cnrgf = cnrgf + funccnrgf
-          cnrgb = cnrgb + funccnrgb
-          ljnrgf = ljnrgf + funcljnrgf
-          ljnrgb = ljnrgb + funcljnrgb
+            nrg = nrg + funcnbnrg
+            cnrg = cnrg + funccnrg
+            cnrgf = cnrgf + funccnrgf
+            cnrgb = cnrgb + funccnrgb
 
-          if (SIRE_COMPATIBILITY_MODE .and. (funcmindist .lt. mindist)) 
-     .        mindist = funcmindist
+            if (SIRE_COMPATIBILITY_MODE .and. (funcmindist .lt. mindist)) 
+     .          mindist = funcmindist
+          enddo
+        enddo      
+ 
+      else
+
+        do i=1,nats1
+          funcat1 = i
+          do j=1,nats2
+            funcat2 = j
+
+c           intialise the nb calculation          
+            include 'nbinitial.inc'
+c           set up for a solvent solvent interaction
+            include 'nbsvnsvn.inc'
+c           actually calculate the energy
+            include 'nbenergy2.inc'
+          
+            nrg = nrg + funcnbnrg
+            cnrg = cnrg + funccnrg
+            ljnrg = ljnrg + funcljnrg
+            cnrgf = cnrgf + funccnrgf
+            cnrgb = cnrgb + funccnrgb
+            ljnrgf = ljnrgf + funcljnrgf
+            ljnrgb = ljnrgb + funcljnrgb
+            if (SIRE_COMPATIBILITY_MODE .and. (funcmindist .lt. mindist)) 
+     .          mindist = funcmindist
+          enddo
         enddo
-      enddo
+      endif
 
       if (cuttype.eq.RESIDUEMOLECULE .or. cuttype.eq.MOLECULEMOLECULE) then
         if (mindist.gt.cut2) then

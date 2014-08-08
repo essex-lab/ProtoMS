@@ -16,6 +16,8 @@ c     energy between solutes isol1 and isol2
 c
 c     (C) Christopher Woods       29 January 2002
 c
+c     Modified by Samuel Genheden 2013-2014
+c
 c##############################################################
 
       integer isol1,isol2,group1,group2
@@ -140,6 +142,9 @@ c         solute 2 is also a high dual topology solute
           sclf = sclf*sclf
         endif
       endif
+      scl = scl*SoluteTheta(isol1)*SoluteTheta(isol2) ! SG 
+      sclb = sclb*SoluteTheta(isol1)*SoluteTheta(isol2) ! SG
+      sclf = sclf*SoluteTheta(isol1)*SoluteTheta(isol2) ! SG
           
       nat1 = NSolAtoms(isol1)
       nat2 = NSolAtoms(isol2)

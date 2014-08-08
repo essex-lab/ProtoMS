@@ -18,6 +18,8 @@ c     savenrg=2 then this is a new energy. Otherwise, dont save...
 c
 c     (C) Christopher Woods    4 February 2002
 c
+c     Modified by Samuel Genheden 2012-2013
+c
 c##################################################################
 
       integer ires,iprot,i,savenrg
@@ -60,7 +62,7 @@ c##################################################################
         oldResNBC = ZERO
         oldResNBLJ = ZERO
         oldResSvnDist = ZERO
-      oldResGCSDist = ZERO
+	oldResGCSDist = ZERO
         oldResNrg = ZERO 
         oldResNrgF = ZERO
         oldResNrgB = ZERO
@@ -102,7 +104,7 @@ c##################################################################
         newResSvnCB = ZERO
         newResSvnLB = ZERO
         newResSvnDist = ZERO
-      newResGCSC = ZERO
+	newResGCSC = ZERO
         newResGCSL = ZERO
         newResGCSCF = ZERO
         newResGCSLF = ZERO
@@ -220,6 +222,9 @@ c           this is the high solute
             sclb = getHighScale(LambdaB)
             sclf = getHighScale(LambdaF)
           endif         
+          scl = scl*SoluteTheta(i) ! SG
+          sclf = sclf*SoluteTheta(i) ! SG
+          sclb = sclb*SoluteTheta(i) ! SG 
           nrg = residueSoluteEnergy(iprot,ires,i,
      .                icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,mindist,
      .                scl,sclf,sclb)

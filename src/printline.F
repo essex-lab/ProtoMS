@@ -32,8 +32,9 @@ c       if the file has not been opened, then try to open it!
         if (.not.fileopened(opfile)) then
           if (fileappend(opfile)) then
             open(unit=FILE,form="formatted",status="old",position='APPEND',err=300,file=openfiles(opfile))
-          else 
-300         open(unit=FILE,form="formatted",status="unknown",err=100,file=openfiles(opfile))
+          else
+300         continue
+            open(unit=FILE,form="formatted",status="unknown",err=100,file=openfiles(opfile))
           endif
           fileopened(opfile) = .true.
           goto 200

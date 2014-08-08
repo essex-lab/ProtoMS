@@ -23,7 +23,7 @@ c######################################################
       integer FILE,itmp,i,j,inats,ires,iat,ires2,gcs
       double precision ix,iy,iz,theta
       character*(*) restartfile
-      character*300 tmpnam
+      character*300 tmpnam,tmpstr
       integer lineLength,lgth,lgth2
       character*4 inam,inam2
       character*4 iresnam,iresnam2
@@ -85,9 +85,7 @@ c     now the number of GCsolutes
 c       PRINT*, "itmp",itmp
        GCSCavity = itmp
 10    format(11x,i8)      
-
-
-      
+     
       if (.not.allok) then
         write(printstring,*) "There were problems reading in the restart file!"
         call closeProgram(-1,printstring)
@@ -189,8 +187,19 @@ c     now loop over the solutes and read in their coordinates
           call closeProgram(-1,printstring)
         endif
 
-c       read in the dummies and axes for the solute
-        read(FILE,23,ERR=9700,END=9900) (SolDummy(i,1,j),j=1,3)
+        read(FILE,"(a100)",ERR=9700,END=9900)tmpstr
+        if (tmpstr(1:2).eq."Th") then
+          read(tmpstr,77) SoluteTheta(i)
+77        format(8x,f8.4)
+
+c         read in the dummies and axes for the solute
+          read(FILE,23,ERR=9700,END=9900) (SolDummy(i,1,j),j=1,3) 
+        else
+          SoluteTheta(i) = 1.0d0
+
+c         read in the dummies and axes for the solute
+          read(tmpstr,23) (SolDummy(i,1,j),j=1,3)
+        endif
         read(FILE,23,ERR=9700,END=9900) (SolDummy(i,2,j),j=1,3)
         read(FILE,23,ERR=9700,END=9900) (SolDummy(i,3,j),j=1,3)
         read(FILE,23,ERR=9700,END=9900) (SolGeomCentre(i,j),j=1,3)

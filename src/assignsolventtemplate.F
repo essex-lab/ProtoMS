@@ -55,5 +55,9 @@ c       add the clj types for this solvent atom and assign the parameter
         ipar2 = addCLJ(SvnTemplateAtmCLJ(itmpl,iat,2))
         ZSvnPar(isvn,i) = getCLJ(ipar1,ipar2)
       enddo
+
+c     Assign the optimization flag
+      SvnOptimization(isvn) = SvnTemplateOptimization(itmpl)
+
       return
       end
