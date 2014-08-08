@@ -198,7 +198,7 @@ class PDBFile:
                 newatom = Atom(index=index,name=atname,resindex=nres,
                                resname=restype,coords=coords)
                 # If solvent
-                if restype not in ['WAT','HOH','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']:
+                if restype not in ['WAT','wat','HOH','hoh','DOD','dod','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']:
                     try:
                         residues[nres]
                     except KeyError:
