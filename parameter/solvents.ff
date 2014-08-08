@@ -57,7 +57,7 @@ par 2005  ??  0 -1.040  0.0      0.0
 
 mode template
 solvent T4P
-#opt tip4p
+opt tip4p
 info translate 0.15 rotate 15.0
 atom O00 2003 2003
 atom H01 2004 2004

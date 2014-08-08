@@ -446,7 +446,8 @@ class DualTopology(ProteinLigandSimulation) :
                     nprod=40E6,
                     dumpfreq=1E5,
                     lambdaval=None,
-                    outfolder="out") :  
+                    outfolder="out",
+                    restrained=[]) :  
     """
     Parameters
     ----------
@@ -468,6 +469,8 @@ class DualTopology(ProteinLigandSimulation) :
       the lambda values to perform the simulation at
     outfolder  : string, optional
       the folder for all output files
+    restrained : string, optional
+      the solutes on which restrains should be applied
     
     Raises
     ------
@@ -476,7 +479,7 @@ class DualTopology(ProteinLigandSimulation) :
     """                
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
 
-    if len(solutes) < 2 :
+    if len(solutes) < 2 and restrained is [] :
       raise simulationobjects.SetupError("Cannot do dual topology with less than 2 solutes")
       
     if lambdaval is None or len(lambdaval) < 2 :
@@ -495,6 +498,19 @@ class DualTopology(ProteinLigandSimulation) :
     self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
     self.setDump("restart write restart",dumpfreq)
     self.setDump("averages reset",dumpfreq)
+
+    if protein is not None :
+      for restsol in restrained :
+        pdbobj = simulationobjects.PDBFile(filename=solutes[restsol])
+        for ind,tem in enumerate(templates) :
+          temobj = simulationobjects.TemplateFile(filename=templates[ind])
+          for mol_template in temobj.templates :
+            if mol_template.name in pdbobj.header :
+              resname = pdbobj.residues[1].name
+              resatom = str(mol_template.atoms[0]).strip().split()
+              atmcoords = pdbobj.residues[1].atoms[0].coords
+        self.setChunk("id add %d solute %d %s %s"%(restsol+1,restsol+1,resatom[1],resname))
+        self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f 10"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2]))
     
     moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
@@ -775,16 +791,22 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
     else :
       outfolder = "out"
 
+    rest_solutes = []
+    print settings.absolute
+    if settings.simulation == 'dualtopology' and settings.absolute:
+      rest_solutes.append(0)
+    print rest_solutes
+
     free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
                             lambdaval=lambdavals,nequil=settings.nequil,
-                            nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_free")
+                            nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_free",restrained=rest_solutes)
       
     if protein is not None :
       bnd_cmd = cmdcls[settings.simulation](protein=protein,solutes=ligands, 
                              templates=templates,solvent=protein_water,
                              lambdaval=lambdavals,nequil=settings.nequil,
-                             nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_bnd")
+                             nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_bnd",restrained=rest_solutes)
 
   elif settings.simulation == "gcmc" :
   

@@ -511,6 +511,7 @@ if __name__ == "__main__":
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
   parser.add_argument('--singlemap',help="the correspondance map for single-topology")
+  parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   args = parser.parse_args()
   
   # Setup the logger
