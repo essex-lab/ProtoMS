@@ -314,7 +314,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     protobj = tools.pdb2pms(protobj,"amber",conversionfile)
 
     # Converting water molecules to specified model
-    protobj = tools.convertwater(protobj,settings.watmodel)
+    protobj = tools.convertwater(protobj,settings.watmodel,ignorH='No')
 
     # Defining the center of the scoop...
     if ligands is None :

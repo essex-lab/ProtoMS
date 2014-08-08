@@ -196,7 +196,7 @@ def _rottranstemplate(solvents,watresname,wattemplate,watatomnames,ignorH):
           new_solvents[sol].addAtom(atom=newatom)
   return (new_solvents)
 
-def convertwater(pdb_in,watermodel,ignorH=None):
+def convertwater(pdb_in,watermodel,ignorH):
   """ 
   Converts water in a pdb object to ideal water geometries of an input model
   
@@ -208,6 +208,8 @@ def convertwater(pdb_in,watermodel,ignorH=None):
       the PDB object containing the water molecules that will be converted
   watermodel : string 
       the name of the water model that will be used in the transformtation, e.g. tip4p, t3p.
+  ignorH : string
+      whether to ignore hydrogens in the input water. If 'yes' or 'true', then hydrogens are added in a random orientation.
   
   Returns
   -------
