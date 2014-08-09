@@ -702,8 +702,14 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
   
   logger.debug("Running generate_input with arguments: ")
   logger.debug("\tprotein       = %s"%protein) 
-  logger.debug("\tligands       = %s"%" ".join(ligands)) 
-  logger.debug("\ttemplates     = %s"%" ".join(templates))
+  if ligands is not None :
+    logger.debug("\tligands       = %s"%" ".join(ligands)) 
+  else :
+    logger.debug("\tligand        = None")
+  if templates is not None :
+    logger.debug("\ttemplates     = %s"%" ".join(templates))
+  else :
+    logger.debug("\ttemplates     = None")
   logger.debug("\tprotein_water = %s"%protein_water)
   logger.debug("\tligand_water  = %s"%ligand_water)
   logger.debug("\tsettings      = %s"%settings)
