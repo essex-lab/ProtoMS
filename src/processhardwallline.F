@@ -41,6 +41,12 @@ c
 c      J. Taylor July 2005
 c       Adapted from: processrestraintline.F and addcartesianharmonicrestraint.F 
 c       By: Julien Michel February 2005
+c     Modification: 
+c       By A.I.Cabedo Martinez 2014
+c       The input can now be hardwall idnum irad ibigeng
+c       When this is the case, the current position of the geometry centre of the molecule of interest
+c       is assigned to ixcen iycen izcen
+c
 c
 c#########################################
       logical check
@@ -55,22 +61,29 @@ c#########################################
       integer resnumid1
       character*4 nameid1
       
-      if (nwords.ne.7) then
+      if (nwords.ne.7.and.nwords.ne.4) then
         call printLine(WARNING,"Hardwall line not correctly implemented.")
         call join(1,nwords,printstring)
-      call printLine(WARNING,"Correct useage: hardwall idnum ixcen iycen izcen irad ibigeng")
+      call printLine(WARNING,"Correct useage: hardwall idnum ixcen iycen izcen irad ibigeng",
+     .                       " or hardwall idnum irad ibigeng")
         call printLine(WARNING,printstring)
         return
       endif
 c         
 c Get all the paramters that are always present  
-      idnum = getInt(words(2),0)
-      ixcen = getDouble(words(3),0)
-      iycen = getDouble(words(4),0)
-      izcen = getDouble(words(5),0)
-      irad = getDouble(words(6),0)
-      ibigeng = getDouble(words(7),0)
-c
+      if (nwords.eq.7) then
+        idnum = getInt(words(2),0)
+        ixcen = getDouble(words(3),0)
+        iycen = getDouble(words(4),0)
+        izcen = getDouble(words(5),0)
+        irad = getDouble(words(6),0)
+        ibigeng = getDouble(words(7),0)
+      else if (nwords.eq.4) then
+        idnum = getInt(words(2),0)
+        irad = getDouble(words(3),0)
+        ibigeng = getDouble(words(4),0)
+      endif
+c 
 c       Make sure the IDs are valid
         if ( idnum .ne. 0 .and. LabelID(idnum) .eq. 0) then
           write(printstring,*)' No ID = ',idnum,' has been set ! ',
@@ -102,6 +115,12 @@ c
             call printLine(INFO,printstring)
       endif
 c          
+      if (nwords.eq.4) then
+        ixcen = SolGeomCentre(molid1,1)
+        iycen = SolGeomCentre(molid1,2)
+        izcen = SolGeomCentre(molid1,3)
+      endif
+
       nHardwallPotential = nHardwallPotential + 1
             HardwallCenter(nHardwallPotential,1) = ixcen
             HardwallCenter(nHardwallPotential,2) = iycen

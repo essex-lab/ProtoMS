@@ -64,6 +64,10 @@ c     see whether we are updating the solute energies
 
 c     Check if a coupled solute must be moved as well
       jsol = DualTopologySolute(isol)
+
+c     In group dual topology each solute is moved independently
+      if (NSolGroups.gt.0) jsol = 0
+
       if (jsol .lt. 0) jsol = -jsol
       if (jsol .ne. 0) call setSoluteMoved(jsol)
 

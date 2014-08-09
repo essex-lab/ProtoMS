@@ -24,6 +24,10 @@ c     Determine if this is a dual topology solute
 c
       jsol = DualTopologySolute(isol)
       if (jsol .lt. 0) jsol = -jsol
+
+c     In group dual topology, each solute is moved independently
+      if (NSolGroups.gt.ZERO) jsol = 0
+
 c
 c     Translation 
 c

@@ -314,7 +314,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     protobj = tools.pdb2pms(protobj,"amber",conversionfile)
 
     # Converting water molecules to specified model
-    protobj = tools.convertwater(protobj,settings.watmodel)
+    protobj = tools.convertwater(protobj,settings.watmodel,ignorH='No')
 
     # Defining the center of the scoop...
     if ligands is None :
@@ -511,6 +511,7 @@ if __name__ == "__main__":
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
   parser.add_argument('--singlemap',help="the correspondance map for single-topology")
+  parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   args = parser.parse_args()
   
   # Setup the logger
@@ -531,6 +532,7 @@ if __name__ == "__main__":
     string = os.path.dirname(os.path.abspath(__file__))
     logger.info("Setting PROTOMSHOME to %s"%string)
     os.environ["PROTOMSHOME"] = string # This does not change the original shell
+    print os.environ["PROTOMSHOME"]
 
   # Try to find a default water box
   if args.waterbox is None :
@@ -607,7 +609,7 @@ if __name__ == "__main__":
   if args.repeats.isdigit():
     args.repeats = range(1,int(args.repeats)+1)
   else :
-    args.repeats = [args.repeats]
+    args.repeats = [args.repeats.lower()]
 
   repeats = []
 
