@@ -75,21 +75,19 @@ c       the format is 'lambda lambdaf lambdab'
           lambdaf = getDouble(words(2),lambdaf)
           lambdab = getDouble(words(3),lambdab)
         endif      
-        if (doLambdaRE) then
-          if (nwords.ge.3) then
-            delf = lambda-lambdaf
-            delb = lambda-lambdab
-            lambdaf = lambdaval(mylambda)-delf
-            lambdab = lambdaval(mylambda)-delb
-            if (lambdaf.gt.1.0) lambdaf = 1.0
-            if (lambdaf.lt.0.0) lambdaf = 0.0
-            if (lambdab.gt.1.0) lambdab = 1.0
-            if (lambdab.lt.0.0) lambdab = 0.0
-          endif
-c          write(6,*)"Task =",myid,"lambda = ",lambda
+      endif
+      if (doLambdaRE) then
+        lambda = lambdaval(mylambda)
+        if (getOption('dlambda')) then
+          deltalam = getDouble(words(1),0.0)
+          lambdaf = lambda+deltalam
+          lambdab = lambda-deltalam
+          if (lambdaf.gt.1.0) lambdaf = 1.0
+          if (lambdaf.lt.0.0) lambdaf = 0.0
+          if (lambdab.gt.1.0) lambdab = 1.0
+          if (lambdab.lt.0.0) lambdab = 0.0          
         endif
       endif
-      if (doLambdaRE) lambda = lambdaval(mylambda)
 
 c     are we trying to match Sire?
       if (getOption('sire_compatibility_mode')) then

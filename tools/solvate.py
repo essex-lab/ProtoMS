@@ -24,7 +24,7 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
-def solvate(box, ligand=None, protein=None, out="solvent_box.pdb", geometry="box",
+def solvate(box, ligand=None, protein=None, geometry="box",
             padding=10.0, radius=30.0, center="cent", namescheme="ProtoMS"):
 
   """

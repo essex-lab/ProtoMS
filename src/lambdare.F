@@ -129,18 +129,16 @@ c            write(6,*)"Failing ",lambdaval(aidx),lambdaval(bidx),allnrg(aidx),a
       call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
       call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
 
+      oldlam = lambda
+      lambda = lambdaval(mylambda)
       if (DifferentLambdas) then
-        delf = lambda-lambdaf
-        delb = lambda-lambdab
-        lambdaf = lambdaval(mylambda)-delf
-        lambdab = lambdaval(mylambda)-delb
+        lambdaf = lambda+deltalam
+        lambdab = lambda-deltalam
         if (lambdaf.gt.1.0) lambdaf = 1.0
         if (lambdaf.lt.0.0) lambdaf = 0.0
         if (lambdab.gt.1.0) lambdab = 1.0
         if (lambdab.lt.0.0) lambdab = 0.0
       endif
-      oldlam = lambda
-      lambda = lambdaval(mylambda)
 
       call recalculateParameters
       call recalculateGeometries    

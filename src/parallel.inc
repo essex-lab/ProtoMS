@@ -14,6 +14,7 @@ c     lambda-replica exchange
       integer lrefreq,nlambdas,mylambda
       character*255 reoutfolder,lrefolder
       double precision lambdaval(MAXLAMBDAS)  
+      double precision deltalam
       integer task2lambda(MAXLAMBDAS),lambda2task(MAXLAMBDAS)
 
 c     temperature-replica exchange
@@ -31,7 +32,7 @@ c     multi GCMC
       common /MPISTUFF/ myid,ntasks
       save /MPISTUFF/
  
-      common /LRE/ lambdaval,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,mylambda,lrefolder,reoutfolder
+      common /LRE/ lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,mylambda,lrefolder,reoutfolder
       save /LRE/
 
       common /TRE/ tempval,task2temperature,temperature2task,ntretry,ntrswap,trefreq,ntemperatures,mytemperature,
