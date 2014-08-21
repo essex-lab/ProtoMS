@@ -18,6 +18,7 @@ import math
 import sys
 import os
 import logging
+import copy
 
 import numpy as np
 
@@ -514,10 +515,10 @@ class EnergyResults :
     a label
   """
   def __init__(self,line=None) : 
-    self.curr = None
-    self.back = None
-    self.forw = None
-    self.type = None
+    self.curr = 0.0
+    self.back = 0.0
+    self.forw = 0.0
+    self.type = ""
     if line is not None :
       self.parse_line(line)
   def parse_line(self,line) :
@@ -535,7 +536,24 @@ class EnergyResults :
     self.forw = float(cols[6])
     self.back = float(cols[10])
   def __str__(self) :
-    return "%s %F20.10 %F20.10 %F20.10"%(self.type,self.curr,self.back,self.forw)
+    if isinstance(self.curr,float) :
+      return "%s %20.10F %20.10F %20.10F"%(self.type,self.curr,self.back,self.forw)
+    else :
+      return "%s Numpy array with %d elements"%(self.type,self.curr.shape)
+  def __add__(self,b) :
+    r = EnergyResults()
+    r.curr = self.curr + b.curr
+    r.forw = self.forw + b.forw
+    r.back = self.back + b.back
+    r.type = self.type + b.type
+    return r
+  def __radd__(self,b) :
+    r = EnergyResults()
+    r.curr = self.curr + b.curr
+    r.forw = self.forw + b.forw
+    r.back = self.back + b.back
+    r.type = b.type + self.type
+    return r
 
 class SnapshotResults :
   """
@@ -563,7 +581,7 @@ class SnapshotResults :
     the index of the lambda replica
   temperature : float
     the temperature of the simulation
-  ngcsolutes : float
+  ngcsolutes : in
     the number of GC solutes
   bvalue : float
     the Adams value
@@ -677,15 +695,15 @@ class SnapshotResults :
         elif cols[1] == "protein-protein" :
           key = "protein"+cols[4]+"-protein"+cols[7]
         elif cols[1] == "solute-protein" :
-          key = "protein"+cols[4]+"-solute"+cols[8]
+          key = "protein"+cols[4]+"-"+cols[8]
         elif cols[1] == "protein-solvent" :
           key = "protein"+cols[4]+"-solvent"
         elif cols[1] == "solute-solute" :
-          key = "solute"+cols[5]+"-solute"+cols[8]
+          key = cols[5]+"-"+cols[8]
         elif cols[1] == "solute-solvent" :
-          key = "solute"+cols[5]+"-solvent"
+          key = cols[5]+"-solvent"
         elif cols[1] == "solute-GCS" :
-          key = "solute"+cols[5]+"-GCS"   
+          key = cols[5]+"-GCS"   
         self.interaction_energies[key] = []   
         line = fileobj.readline() # Dummy line
         self.interaction_energies[key].append(EnergyResults(line=fileobj.readline())) # Coul
@@ -716,6 +734,15 @@ class SnapshotResults :
         
       line = fileobj.readline()
       if line.startswith("  -") : break
+    # Sum of contributions for the different internal and interaction energies
+    for attr in ["internal_energies","interaction_energies"] :
+      if not hasattr(self,attr) : continue
+      dict = getattr(self,attr)
+      for label in dict :
+        dict[label].append(EnergyResults())  
+        for e in dict[label][:-1] :
+          dict[label][-1] = dict[label][-1]+e
+        dict[label][-1].type = "SUM"
 
 class ResultsFile :
   """
@@ -727,10 +754,13 @@ class ResultsFile :
     the name of the file
   snapshots : list of SnapshotResult
     all the results
+  series : SnapshotResult
+    all the results in a single object
   """
   def __init__(self) :
     self.filename = None
     self.snapshots = []
+    self.series = None
   def read(self,filename,skip=0,readmax=None) :
     """
     Read results from disc
@@ -765,7 +795,90 @@ class ResultsFile :
         f = open(filenam, "r")
         self.snapshots.append(SnapshotResults(f))
         f.close()
-        
+  def make_series(self) :
+    """
+    Make a snapshot with all the results
+
+    This routine creates a special SnapshotResults object, which has
+    the same attributes as the objects in the snapshots list,
+    but rather than storing single floats and integers, this
+    object stores NumpyArrays of all the results
+
+    Returns
+    -------
+    SnapshotResults
+      the created object, also stored in self.series
+    """
+    def set_energyresults(obj) :
+      obj.curr = np.zeros(nsnap)
+      obj.forw = np.zeros(nsnap)
+      obj.back = np.zeros(nsnap)
+    def put_energyresults(dest,source,i) :
+      dest.curr[i] = source.curr
+      dest.forw[i] = source.forw
+      dest.back[i] = source.back
+    
+    if len(self.snapshots) < 2 : return
+    nsnap = len(self.snapshots)
+
+    # First replace all float/int in the SnapshotResults object with NumpyArrays
+    self.series = copy.deepcopy(self.snapshots[0])
+    for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient"] :
+      if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap))
+    for attr in ["datastep","lambdareplica","solventson","seed"] :
+      if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap,dtype=int))
+    if hasattr(self.snapshots[0],"total") :
+      set_energyresults(self.series.total)  
+    if hasattr(self.snapshots[0],"internal_energies") :
+      for elabel in self.series.internal_energies :
+        for ene in self.series.internal_energies[elabel] :
+          set_energyresults(ene)
+    if hasattr(self.snapshots[0],"interaction_energies") :
+      for elabel in self.series.interaction_energies :
+        for ene in self.series.interaction_energies[elabel] :
+          set_energyresults(ene)  
+    if hasattr(self.snapshots[0],"capenergy") :  
+      set_energyresults(self.series.capenergy)
+    if hasattr(self.snapshots[0],"extraenergy") :  
+      set_energyresults(self.series.extraenergy)
+    if hasattr(self.snapshots[0],"feenergies") :
+      for elabel in self.series.feenergies :
+        self.series.feenergies[elabel] = np.zeros(nsnap)
+    if hasattr(self.snapshots[0],"thetavals") :
+      for elabel in self.series.thetavals :
+        self.series.thetavals[elabel] = np.zeros(nsnap)
+
+    # Then loop over all snapshots and fill the NumpyArrays with data
+    for i,snapshot in enumerate(self.snapshots) :
+      for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","datastep","lambdareplica","solventson","seed"] :
+        if hasattr(snapshot,attr) : getattr(self.series,attr)[i] = getattr(snapshot,attr)
+      if hasattr(snapshot,"total") :
+        put_energyresults(self.series.total,snapshot.total,i)
+      if hasattr(snapshot,"internal_energies") :
+        for elabel in snapshot.internal_energies :
+          if elabel not in self.series.internal_energies : continue
+          for ene1,ene2 in zip(self.series.internal_energies[elabel],snapshot.internal_energies[elabel]) :
+             put_energyresults(ene1,ene2,i)
+      if hasattr(snapshot,"interaction_energies") :
+        for elabel in snapshot.interaction_energies :
+          if elabel not in self.series.interaction_energies : continue
+          for ene1,ene2 in zip(self.series.interaction_energies[elabel],snapshot.interaction_energies[elabel]) :
+            put_energyresults(ene1,ene2,i)
+      if hasattr(snapshot,"capenergy") :  
+        put_energyresults(self.series.capenergy,snapshot.capenergy,i)
+      if hasattr(snapshot,"extraenergy") :  
+        put_energyresults(self.series.extraenergy,snapshot.extraenergy,i)
+      if hasattr(snapshot,"feenergies") :
+        for elabel in snapshot.feenergies :
+          if elabel not in self.series.feenergies : continue
+          self.series.feenergies[elabel][i] = snapshot.feenergies[elabel]
+      if hasattr(snapshot,"thetavals") :
+        for elabel in snapshot.thetavals :
+          if elabel not in self.series.thetavals : continue
+          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
+
+    return self.series
+
 #---------------------------------------------------------
 # Classes to read, modify and write ProtoMS template files
 #---------------------------------------------------------
@@ -1545,6 +1658,36 @@ def angle_atms(a1,a2,a3) :
   v1 = a2 - a1
   v2 = a2 - a3
   return angle(v1,v2)
+
+def color(idx) :
+  """
+  Returns a color of index
+
+  For instances when the index is larger than the number of defined colors,
+  this routine takes care of this by periodicity, i.e.
+  color at idx=0 is the same color as idx=n 
+
+  Parameters
+  ----------
+  idx : int
+    the index of the color
+  
+  Returns
+  -------
+  list of floats 
+    the color
+  """
+  colors = []
+  colors.append((0.0/255.0,69.0/255.0,134.0/255.0))
+  colors.append((255.0/255.0,66.0/255.0,14.0/255.0))
+  colors.append((255.0/255.0,211.0/255.0,32.0/255.0))
+  colors.append((87.0/255.0,157.0/255.0,28.0/255.0))
+  colors.append((126.0/255.0,0.0/255.0,33.0/255.0))
+  colors.append((131.0/255.0,202.0/255.0,255.0/255.0))
+  colors.append((49.0/255.0,64.0/255.0,4.0/255.0))
+  colors.append((174.0/255.0,207.0/255.0,0.0/255.0))
+  d = int(len(colors)*np.floor(idx / float(len(colors))))
+  return colors[idx-d]
 
 if __name__ == "__main__":
 
