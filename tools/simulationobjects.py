@@ -1334,8 +1334,6 @@ class TemplateFile() :
     else :
       start = -5000000
     for index,param in enumerate(other.dihedralterms,start) :
-      print start
-      print index
       if index > 0 : param.index = index
       self.dihedralterms.append(param)
     if self.dihedralparams :

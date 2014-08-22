@@ -9,7 +9,12 @@ Program to analyze and plot data series
 
 This module defines the following public functions:
 find_equilibration
+stats_inefficiency
+maximize_samples
+running
+moving
 parse_series
+parse_files
 plot_series
 write_series
 
@@ -27,6 +32,10 @@ from scipy.stats import kendalltau
 import simulationobjects
 
 logger = logging.getLogger('protoms')
+
+################################
+# Data series analysis routines
+################################
 
 def find_equilibration(x,y,atleast=50,threshold=0.05,nperm=0) :
   """
@@ -62,6 +71,112 @@ def find_equilibration(x,y,atleast=50,threshold=0.05,nperm=0) :
       ncnt = (rho0*rho0 < rhos*rhos).sum()
       if float(ncnt) / float(nperm) > threshold : return i
   return y.shape[0]-atleast
+
+def stat_inefficiency(y) :
+  """
+  Calculates the statistical inefficiency, g.
+  
+  g = 1 + 2*tau, where tau is the autocorrelation time
+
+  Parameters
+  ----------
+  y : Numpy array
+    the data
+
+  Returns
+  -------
+  float
+    g, the inefficiency
+  """
+  n = len(y)
+  dy = y - y.mean()
+  vary = (dy*dy).mean()
+  tmax = int(np.round(n*0.9))
+  g = 1.0
+  for t in range(1,tmax+1) :
+    c = np.sum(dy[0:n-t]*dy[t:n]) / (float(n-t) * vary)
+    if c < 0.0 and t > 10 :
+      break
+    g = g + 2.0 * c * (1.0-float(t) / float(n))
+  if g < 1.0 : g = 1.0
+  neff = float(n) / float(g)
+  return g,neff
+
+def maximize_samples(y,atleast=50) :
+  """
+  Find the minimum of the statistical inefficiency by varying
+  the equlibration period, i.e. maximizing the number of 
+  uncorrelated samples
+  
+  Parameters
+  ----------
+  y : Numpy array
+    the data
+  atleast : int, optional
+    this is the smallest number of snapshots considered to be production
+  
+  Returns
+  -------
+  int
+    the snapshot at which g is maximum
+  float
+    maximum of g
+  int
+    the number of uncorrelated samples
+  """  
+  n = y.shape[0]
+  gt = np.zeros([n-atleast])
+  neff = np.zeros([n-atleast])
+  for i in range(0,n-atleast) :
+    gt[i],neff[i] = stat_inefficiency(y[i:])
+  
+  neff_max = neff.max()
+  t = neff.argmax()
+  return t,gt[t],neff_max
+
+def running(data) :
+  """
+  Returns a running average of the data
+
+  Value at position i of the returned data is the average of the input data from point zero to point i
+
+  Parameters
+  ----------
+  data : NumpyArray
+    the input data, should be 1D
+
+  Returns
+  -------
+  NumpyArray
+    the averaged data
+  """
+  running = np.zeros(data.shape) 
+  for i in range(data.shape[0]) :
+    running[i] = data[:i+1].mean()
+  return running
+
+def moving(data,window) :
+  """
+  Returns a moving/rolling average of the data
+
+  Parameters
+  ----------
+  data : NumpyArray
+    the input data, should be 1D
+  window : int
+    the window size
+
+  Returns
+  -------
+  NumpyArray
+    the averaged data
+  """
+  weights = np.repeat(1.0,window) / float(window)
+  return np.convolve(data,weights,'valid')
+
+###################
+# Parsing routines
+###################
 
 def parse_series(series,results) :
   """
@@ -188,6 +303,108 @@ def parse_series(series,results) :
       print "Skipping non-exisiting series %s"%s
   return ys,labels
 
+def parse_files(filenames,series,all_results,ys,labels,**kwargs) :
+  """
+  Parse multiple results file
+
+  If a data serie in series can be calculated over multiple
+  input files, the data serie is replaced by some calculation 
+  over all input files
+
+  Parameters
+  ----------
+  filenames : list of strings
+    the files to parse
+  series : list of strings
+    the series selected
+  all_results : list of SnapshotResults
+    all the results loaded from all input files, needs to be initialized before calling this routine
+  ys : list of NumpyArrays
+    all the series
+  labels : list of strings
+    labels for all the data series
+  **kwargs : dictionary
+    additional parameters, passed directly to the different parsers
+
+  Returns
+  -------
+  bool
+    whether the series has been modified, i.e. if any parser was found
+  """
+
+  def parse_multi_gradients(results,attr,**kwargs) :
+    """
+    Routine to return parse multiple gradients series, 
+    and computing running average of dG using trapezium
+    """
+    lam = [r.lam[0] for r in results]
+    lam = np.array(lam)
+  
+    gradients = [getattr(r,attr) for r in results]
+    gradients = np.array(gradients)
+  
+    dg = np.zeros(gradients.shape[1])
+
+    # Setup moving averages
+    domoving = "moving" in kwargs and kwargs["moving"] is not None
+    if domoving :  
+      d = int(np.ceil(kwargs["moving"] / 2.0))
+    else :
+      d = 0
+    
+    for i in range(d,gradients.shape[1]-d) :
+      if domoving :
+        dg[i] = np.trapz(gradients[:,i-d:i+d+1].mean(axis=1),lam)
+      else : 
+        dg[i] = np.trapz(gradients[:,i:].mean(axis=1),lam)
+
+    # Remove start and begininng of series
+    if domoving :
+      dg = dg[d:dg.shape[0]-d]
+
+    return dg,"dG [kcal/mol]"
+
+  # Main routine
+
+  # Initialize arrays
+  if len(ys) == 0 :
+    ys = [None]*len(series)
+    labels = [None]*len(series)
+ 
+  # Initialize parsing routines
+  parse_multi = {}
+  parse_multi["gradient"] = parse_multi_gradients
+  parse_multi["agradient"] = parse_multi_gradients
+   
+  # Check that some parsing routines for the selected series exists
+  found = False
+  for i,s in enumerate(series) :
+    attr = s.strip().split("/")[0]
+    if attr in parse_multi :
+      found = True
+      break
+
+  if found :
+    # Open all results files
+    for f in filenames :
+      results_file = simulationobjects.ResultsFile()
+      results_file.read(filename=f)
+      all_results.append(results_file.make_series())
+    # Replace the series with a series created from all input files
+    for i,s in enumerate(series) :
+      attr = s.strip().split("/")[0]
+      if attr in parse_multi : 
+        ys[i],labels[i] = parse_multi[attr](all_results,s,**kwargs) 
+        #for r in all_results :
+        #  ys_new,labels_new = parse_series(s,r)
+        #  ys.extend(ys_new)
+        #  labels.extend(labels_new)
+  return found
+
+#################################################
+# Routines to plot and write data series to disc
+#################################################
+
 def _label0(label) :
   """
   Removes the unit from a label
@@ -198,7 +415,7 @@ def _label0(label) :
   l.replace("/","_")    
   return l
 
-def plot_series(ys,x0s,labels,plotkind,outprefix) :
+def plot_series(ys,yprop,labels,offset,plotkind,outprefix) :
   """
   Plot a series
   
@@ -206,10 +423,12 @@ def plot_series(ys,x0s,labels,plotkind,outprefix) :
   ----------
   ys : list of Numpy arrays
     the data series
-  x0s : list of int
-    the length of the equilibration period for data series
+  yprop : list of dictionary
+    statistical properties of the data
   labels : list of strings
     the labels for the data series
+  offset : int
+    the offset of x from 1
   plotkind : string
     the type of plot to create, can be either sep, sub, single, single_first0 or single_last0
   outprefix : string
@@ -220,7 +439,7 @@ def plot_series(ys,x0s,labels,plotkind,outprefix) :
   ncols = int(np.ceil(len(ys)/2.0))
 
   ys = np.array(ys)
-  x = np.arange(1,ys.shape[1]+1)
+  x = np.arange(1,ys.shape[1]+1)+offset
   
   # Subtract either first or last point from each series
   if plotkind.startswith("single_") :
@@ -237,7 +456,7 @@ def plot_series(ys,x0s,labels,plotkind,outprefix) :
     ymax = ys.max() + 0.1*(ys.max()-ys.min())
     ymin = ys.min() - 0.1*(ys.max()-ys.min())
 
-  for i,(y,x0,label) in enumerate(zip(ys,x0s,labels)) :    
+  for i,(y,prop,label) in enumerate(zip(ys,yprop,labels)) :    
     if plotkind == "sep" :
       currfig = plt.figure(i+1)
     if plotkind == "sub" :
@@ -248,7 +467,7 @@ def plot_series(ys,x0s,labels,plotkind,outprefix) :
       ax = currfig.gca()
 
     ax.plot(x,y,label=label,color=simulationobjects.color(i))
-    ax.plot([x0,x0],[ymin,ymax],'--',color=simulationobjects.color(i))
+    ax.plot([prop["equil"],prop["equil"]],[ymin,ymax],'--',color=simulationobjects.color(i))
 
     if not plotkind.startswith("single") :
       ax.set_ylim([ymin,ymax])
@@ -265,8 +484,8 @@ def plot_series(ys,x0s,labels,plotkind,outprefix) :
     else :
       ax.set_ylabel("Data")
       ax.legend()
-  if plotkind == "sub" :
-    currfig.tight_layout()
+  #if plotkind == "sub" :
+  #  currfig.tight_layout()
   
   if plotkind != "sep" :
     currfig.savefig(outprefix+".png",format="png")
@@ -274,7 +493,7 @@ def plot_series(ys,x0s,labels,plotkind,outprefix) :
     print "\nType enter to quit\n>",
     raw_input()
 
-def write_series(ys,x0s,labels,filekind,outprefix) :
+def write_series(ys,yprop,labels,offset,filekind,outprefix) :
   """
   Write a series to disc
   
@@ -282,31 +501,40 @@ def write_series(ys,x0s,labels,filekind,outprefix) :
   ----------
   ys : list of Numpy arrays
     the data series
-  x0s : list of int
-    the length of the equilibration period for data series
+  yprop : list of dictionary
+    statistical properties of the data
   labels : list of strings
     the labels for the data series
+  offset : int
+    the offset of x from 1
   filekind : string
     the type of file to write, can be either sep or single
   outprefix : string
     the prefix of the created files
   """
-  if len(ys) == 1 or filekind is None : filekind  = "single" # For a single series, there is only one kind
+  if len(ys) == 1 or filekind is None : filekind  = "sep" # For a single series, there is only one kind
   if filekind not in ["sep","single"] : filekind = "single" # For files the kinds sub, single, single_first0 and single_last0 all means the same
 
   if filekind == "sep" :
-    for y,x0,label in zip(ys,x0s,labels) :      
+    for y,prop,label in zip(ys,yprop,labels) :      
       with open(outprefix+"_"+_label0(label)+".dat","w") as f :
         f.write("#Data for %s\n"%label)
-        f.write("#Equilibration time: %d\n"%x0)
+        f.write("#Equilibration time: %d\n"%prop["equil"])
+        f.write("#Production contain %d data (g=%.3f)\n"%(prop["neff"],prop["g"]))
+        f.write("#Number of samples are maximized at %d with g=%.3f and samples=%d\n"%(prop["t_opt"],prop["g_min"],prop["neff_max"]))
         for i,yi in enumerate(y) :
-          f.write("%d %.5f\n"%(i+1,yi))
+          f.write("%d %.5f\n"%(i+1+offset,yi))
   else :
     with open(outprefix+".dat","w") as f :
       f.write("#Data for %s\n"%"\t".join(labels))
-      f.write("#Equilibration time: %s\n"%"\t".join("%d"%x0 for x0 in x0s))
+      f.write("#Equilibration time: %s\n"%"\t".join("%d"%prop["equil"] for prop in yprop))
+      f.write("#Independent samples: %s\n"%"\t".join("%d"%prop["neff"] for prop in yprop))
+      f.write("#Production period g: %s\n"%"\t".join("%d"%prop["g"] for prop in yprop))
+      f.write("#Snapshot when independent samples are optimized: %s\n"%"\t".join("%d"%prop["t_opt"] for prop in yprop))
+      f.write("#Minimum g: %s\n"%"\t".join("%d"%prop["g_min"] for prop in yprop))
+      f.write("#Maximum number of independent samples: %s\n"%"\t".join("%d"%prop["neff_max"] for prop in yprop))
       for i in range(ys[0].shape[0]) :
-        f.write("%d %s\n"%(i+1,"\t".join("%.5f"%y[i] for y in ys)))
+        f.write("%d %s\n"%(i+1+offset,"\t".join("%.5f"%y[i] for y in ys)))
 
 #################################
 # Wizard routines for user input
@@ -396,17 +624,28 @@ if __name__ == '__main__' :
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to analyze and plot a time series")
-  parser.add_argument('-f','--file',help="the name of the file to analyse. Default is results. ",default="results")
+  parser.add_argument('-f','--file',nargs="+",help="the name of the file to analyse. Default is results. ",default=["results"])
   parser.add_argument('-o','--out',help="the prefix of the output figure. Default is results. ",default="results")
   parser.add_argument('-s','--series',nargs="+",help="the series to analyze")
   parser.add_argument('-p','--plot',choices=["sep","sub","single","single_first0","single_last0"],help="the type of plot to generate for several series")
   parser.add_argument('--nperm',type=int,help="if larger than zero, perform a permutation test to determine equilibration, default=0",default=0)
   parser.add_argument('--threshold',type=float,help="the significant level of the equilibration test, default=0.05",default=0.05)
+  parser.add_argument('--average',action='store_true',help="turns on use of running averaging of series",default=False)
+  parser.add_argument('--moving',type=int,help="turns on use of moving averaging of series, default=None")
   args = parser.parse_args()
+
+  # Mutually exclusive options
+  if args.average : 
+    args.moving = None
+
+  if args.moving is not None : 
+    offset = int(np.ceil(args.moving/2.0))
+  else :
+    offset = 0
   
   # Read the input file from disc
   results_file = simulationobjects.ResultsFile()
-  results_file.read(filename=args.file)
+  results_file.read(filename=args.file[0])
   results = results_file.make_series() # This puts all data into Numpy arrays
   
   # Select which series to plot
@@ -421,22 +660,41 @@ if __name__ == '__main__' :
   if len(ys) == 0 :
     print "No series was parsed from the selection! Exiting"
     quit()
+    
+  # If user has given several results files
+  parsed_files= False
+  if len(args.file) > 1 : 
+    all_results = [results]
+    parsed_files = parse_files(args.file[1:],args.series,all_results,ys,labels,moving=args.moving)    
   
-  # Compute the equilibration time for each series to plot
-  x0s = np.zeros(len(ys))
-  x = np.arange(1,ys[0].shape[0]+1)
+  # Calculates running/moving averages for series
+  if not parsed_files and args.average :
+    for i,y in enumerate(ys) :
+      ys[i] = running(y)
+  elif not parsed_files and args.moving is not None :
+    for i,y in enumerate(ys) :
+      ys[i] = moving(y,args.moving)    
+
+  # Compute the equilibration time and other properties for each series to plot  
+  yprop = [{} for y in ys]
+  x = np.arange(1,ys[0].shape[0]+1)+offset
   print ""
-  for i,(y,label) in enumerate(zip(ys,labels)) :
-    x0s[i] = find_equilibration(y,x,nperm=args.nperm,threshold=args.threshold)
-    print "Equilibration found at snapshot %d for %s"%(x0s[i],_label0(label))
+  for i,(y,prop,label) in enumerate(zip(ys,yprop,labels)) :
+    prop["equil"] = find_equilibration(y,x,nperm=args.nperm,threshold=args.threshold) + offset
+    print "Equilibration found at snapshot %d for %s, value=%.3f"%(prop["equil"],_label0(label),ys[i][prop["equil"]])    
+    prop["g"],prop["neff"] = stat_inefficiency(y[prop["equil"]:])
+    print "\tThis production part is estimated to contain %d uncorrelated samples (g=%.3f)"%(prop["neff"],prop["g"])    
+    prop["t_opt"],prop["g_min"],prop["neff_max"] = maximize_samples(y) 
+    prop["t_opt"] = prop["t_opt"] + offset
+    print "\tThe number of samples is maximized at %d, g=%.3f and the number of uncorrelated samples is %d"%(prop["t_opt"],prop["g_min"],prop["neff_max"])
 
   # Select what kind of plot to make for multiple series
   if len(ys) > 1 and args.plot is None :
-    args.plot = _select_plot()
-    
+    args.plot = _select_plot()   
+
   # Plot the series
-  plot_series(ys,x0s,labels,args.plot,args.out)
+  plot_series(ys,yprop,labels,offset,args.plot,args.out)
 
   # Write the series to disc
-  write_series(ys,x0s,labels,args.plot,args.out)
+  write_series(ys,yprop,labels,offset,args.plot,args.out)
 

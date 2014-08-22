@@ -477,7 +477,77 @@ def _prep_gcmc(ligands,ligand_files,settings) :
   logger.info("Created %s; it contains the GCMC simulation waters. Please check the output carefully"%boxname)
   return boxname
 
+def _wizard(settings) :
+
+  print "\nBecause you initiated protoms.py without any arguments, a wizard will walk you through the setup\n"
   
+  print "What kind of simulation would you like to setup?"
+  print "\t1) Equilibration"
+  print "\t2) Sampling"
+  print "\t3) Dual topology free energy"
+  print "\t4) Single topology free energy"
+  print "\t5) Grand-canonical Monte Carlo (GCMC)"
+  print ">",
+  valid = ["","1","2","3","4","5"]
+  instr = raw_input()
+  if instr == "jon" :
+    import matplotlib.pylab as plt
+    img = np.load(simulationobjects.standard_filename("ee.npz","tools"))["jon"]
+    plt.imshow(img)
+    plt.show()
+    return
+  while instr not in valid :
+    print "Please type a number between 1 and 5!"
+    print ">",
+    instr = raw_input()
+  if instr == "" : return
+  val = int(instr)
+  vals = ["equilibration","sampling","dualtopology","singletopology","gcmc"]
+  settings.simulation = vals[val-1]
+  
+  print "\nDo you have a protein that you would like to setup and simulate?"
+  print "\tPlease enter the protein name or a PDB filename.\n\tPress enter if you don't have a protein."
+  print ">",
+  instr = raw_input()
+  if instr != "" : settings.protein = instr
+
+  print "\nDo you have a ligand that you would like to setup and simulate?"
+  print "\tPlease enter the ligand name or a PDB filename."
+  if settings.simulation not in ["dualtopology","singletopology"] : print "\tPress enter if you don't have a ligand."
+  print ">",
+  instr = raw_input()
+  if settings.simulation in ["dualtopology","singletopology"] :
+    while instr == "" :
+      print "For the type of simulation you have selected, two ligands needs to be given. \n\tPlease enter a ligand name or a PDB filename"
+      print ">",
+      instr = raw_input()
+    args.ligand = [instr]     
+    print "\tPlease enter the second ligand name or a PDB filename."
+    instr = ""
+    while instr == "" :
+      print ">",
+      instr = raw_input()
+    args.ligand.append(instr)
+  else :
+    if instr != "" : args.ligand = [instr]
+
+  print "\nDo you have a co-factor or another solute that you would like to setup and simulate?"
+  print "\tPlease enter the solute name or a PDB filename."
+  print "\tPress enter if you don't have a solute or when you have specified all solutes."
+  print ">",
+  instr = raw_input()  
+  if instr != "" :
+    if args.ligand is None or len(args.ligand) == 0 :
+      args.ligand = [instr]
+    else :
+      args.ligand.append(instr)
+  while instr != "" : 
+    print ">",
+    instr = raw_input()  
+    if instr != "" :
+      args.ligand.append(instr)
+    
+
 if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
@@ -513,7 +583,7 @@ if __name__ == "__main__":
   parser.add_argument('--singlemap',help="the correspondance map for single-topology")
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   args = parser.parse_args()
-  
+ 
   # Setup the logger
   logger = simulationobjects.setup_logger("protoms_py.log")
   logger.debug("Running protoms.py at %s"%time.strftime("%d/%m/%Y - %H:%M:%S"))
@@ -523,6 +593,10 @@ if __name__ == "__main__":
   # Adds current folder to the folders
   args.folders.append(".")
   
+  # If we run without any command-line arguments, initiate the wizard
+  if len(sys.argv) == 1 :
+    _wizard(args)
+
   if args.protein is None and args.ligand is None and args.scoop is None:
     print "Nothing to do, so exit!"
     quit()
