@@ -1,5 +1,5 @@
 
-      subroutine printAverages
+      subroutine printAllEnergies
       include 'dimensions.inc'
       include 'metropolis.inc'
       include 'printer.inc'
@@ -19,9 +19,13 @@
       include 'parallel.inc'
 c###################################################################
 c
-c     This routine prints the averages, as of the current time!
+c     This routine prints the instantaneous energies of the system
+c      in contrast to printAverages that print the running averages
 c
-c     (C) Christopher Woods          9 August 2002
+c     However, retain the format of the results file, all stds
+c     are printed as zeroes.
+c
+c     (C) Samuel Genheden      August 2014
 c
 c####################################################################
 
@@ -38,12 +42,9 @@ c####################################################################
 11       format("RESULTS for lambda = ",f15.10)
        endif
        call prettyLine(RESULTS,printstring)
-            
-c       write(printstring,*) "Total Energy = ",totalEnergy(savenrg,nrgb,nrgf)
-c       call printLine(RESULTS,printstring)
 
 
-       write(printstring,*) "Number of data steps = ",NSTEPS 
+       write(printstring,*) "Number of data steps = 1" 
        call printLine(RESULTS,printstring)
 
        if (doLambdaRE) then
@@ -70,34 +71,25 @@ c       call printLine(RESULTS,printstring)
          write(printstring,*) "Volume = ",volume," A^3"
          call printLine(RESULTS,printstring)
        
-         std = stdDev(AvgVolume2,AvgVolume)
-         write(printstring,*) "Average volume = ",AvgVolume," (",std,")"
+         write(printstring,*) "Average volume = ",Volume," (",ZERO,")"
          call printLine(RESULTS,printstring)
        endif
 
 c      write out the random number seed used to generate this trajectory
        write(printstring,*) "Random number seed = ",ranseed
        call printLine(RESULTS,printstring)
-
-       if (NSteps.le.0) then
-         write(printstring,*) "No data collected, thus no averages!"
-         call printLine(RESULTS,printstring)
-         return
-       endif
                                   
        if (DifferentLambdas) then
-         gfor = -dlog(AVGFORWARDSENERGY) / mt_beta_T
-         gback = -dlog(AVGBACKENERGY) / mt_beta_T
+         gfor = OLDTOTALENERGYF-OLDTOTALENERGY
+         gback = OLDTOTALENERGYB-OLDTOTALENERGY
 
          if (abs(gfor).lt.TINY) gfor = ZERO
          if (abs(gback).lt.TINY) gback = ZERO
        
-         std = stdDev(AVGBACKENERGY2,AVGBACKENERGY1)
-         write(printstring,19) "Backwards",gback,std
+         write(printstring,19) "Backwards",gback,ZERO
          call printLine(RESULTS,printstring)
          
-         std = stdDev(AVGFORWARDSENERGY2,AVGFORWARDSENERGY1)
-         write(printstring,19) "Forwards ",gfor,std
+         write(printstring,19) "Forwards ",gfor,ZERO
          call printLine(RESULTS,printstring)
 
 19       format(a9,' Free Energy = ',g30.20,' ( ',g15.10,' )')
@@ -105,10 +97,7 @@ c      write out the random number seed used to generate this trajectory
        write(printstring,*) "Averages. Stddev in brackets. Average | forwards backwards"
        call prettyLine(RESULTS,printstring)
        
-       std = stdDev(AVGTOTALENERGY2,AVGTOTALENERGY)
-       stdf = stdDev(AVGTOTALENERGYF2,AVGTOTALENERGYF)
-       stdb = stdDev(AVGTOTALENERGYB2,AVGTOTALENERGYB)
-       write(printstring,43) AVGTOTALENERGY,std,AVGTOTALENERGYF,stdf,AVGTOTALENERGYB,stdb
+       write(printstring,43) OLDTOTALENERGY,ZERO,OLDTOTALENERGYF,ZERO,OLDTOTALENERGYB,ZERO
 43     format('Total Energy ',f18.8,' ( ',f8.3,' ) | ',f18.8,' ( ',f8.3,' ) ',f18.8,' ( ',f8.3,' )')
        call printLine(RESULTS,printstring)
 
@@ -116,74 +105,53 @@ c      write out the random number seed used to generate this trajectory
          do i=1,NProteins
            if (NBonds(i).gt.0) then
 c           internal bond energy
-             std = stdDev(AvgProBnd2(i),AvgProBnd(i))
-c             PRINT*, "std" ,std
-             stdf = stdDev(AvgProBndF2(i),AvgProBndF(i))
-             stdb = stdDev(AvgProBndB2(i),AvgProBndB(i))
              lgth = lineLength(ProteinName(i))
              write(printstring,*) "Internal energy averages for protein ",i," ",ProteinName(i)(1:lgth)
              call prettyLine(RESULTS,printstring)
-             write(printstring,20) "BND",AvgProBnd(i),std,AvgProBndF(i),stdf,AvgProBndB(i),stdb
+             write(printstring,20) "BND",OldProBnd(i),ZERO,OldProBndF(i),ZERO,OldProBndB(i),ZERO
 20           format(a3,1x,g20.10,' ( ',f8.3,' ) | ',g20.10,' ( ',f8.3,' ) ',g20.10,' ( ',f8.3,' )')
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProBndF(i)-AvgProBnd(i),AvgProBndB(i)-AvgProBnd(i)
+             write(printstring,21) OldProBndF(i)-OldProBnd(i),OldProBndB(i)-OldProBnd(i)
              call printLine(RESULTS,printstring)
 21           format('DIFF',36x,g20.10,14x,g20.10)
            endif
            
            if (NAngles(i).gt.0) then
 c            internal angle energy
-             std = stdDev(AvgProAng2(i),AvgProAng(i))
-             stdf = stdDev(AvgProAngF2(i),AvgProAngF(i))
-             stdb = stdDev(AvgProAngB2(i),AvgProAngB(i))
-             write(printstring,20) "ANG",AvgProAng(i),std,AvgProAngF(i),stdf,AvgProAngB(i),stdb
+             write(printstring,20) "ANG",OldProAng(i),ZERO,OldProAngF(i),ZERO,OldProAngB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProAngF(i)-AvgProAng(i),AvgProAngB(i)-AvgProAng(i)
+             write(printstring,21) OldProAngF(i)-OldProAng(i),OldProAngB(i)-OldProAng(i)
              call printLine(RESULTS,printstring)
            endif
                 
            if (NDihedrals(i).gt.0) then               
 c            internal dihedral energy
-             std = stdDev(AvgProDih2(i),AvgProDih(i))
-             stdf = stdDev(AvgProDihF2(i),AvgProDihF(i))
-             stdb = stdDev(AvgProDihB2(i),AvgProDihB(i))
-             write(printstring,20) "DIH",AvgProDih(i),std,AvgProDihF(i),stdf,AvgProDihB(i),stdb
+             write(printstring,20) "DIH",OldProDih(i),ZERO,OldProDihF(i),ZERO,OldProDihB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProDihF(i)-AvgProDih(i),AvgProDihB(i)-AvgProDih(i)
+             write(printstring,21) OldProDihF(i)-OldProDih(i),OldProDihB(i)-OldProDih(i)
              call printLine(RESULTS,printstring)
            endif
 
            if (NUreyBradleys(i).gt.0) then               
 c            internal Urey-Bradley energy
-             std = stdDev(AvgProUBy2(i),AvgProUBy(i))
-             stdf = stdDev(AvgProUByF2(i),AvgProUByF(i))
-             stdb = stdDev(AvgProUByB2(i),AvgProUByB(i))
-             write(printstring,20) "UBY",AvgProUBy(i),std,AvgProUByF(i),stdf,AvgProUByB(i),stdb
+             write(printstring,20) "UBY",OldProUBy(i),ZERO,OldProUByF(i),ZERO,OldProUByB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProUByF(i)-AvgProUBy(i),AvgProUByB(i)-AvgProUBy(i)
+             write(printstring,21) OldProUByF(i)-OldProUBy(i),OldProUByB(i)-OldProUBy(i)
              call printLine(RESULTS,printstring)
            endif
 
 c          internal nbc energy
-           std = stdDev(AvgProNBC2(i),AvgProNBC(i))
-           stdf = stdDev(AvgProNBCF2(i),AvgProNBCF(i))
-           stdb = stdDev(AvgProNBCB2(i),AvgProNBCB(i))
-           write(printstring,20) "NBC",AvgProNBC(i),std,AvgProNBCF(i),stdf,AvgProNBCB(i),stdb
+           write(printstring,20) "NBC",OldProNBC(i),ZERO,OldProNBCF(i),ZERO,OldProNBCB(i),ZERO
            call printLine(RESULTS,printstring)
-           write(printstring,21) AvgProNBCF(i)-AvgProNBC(i),AvgProNBCB(i)-AvgProNBC(i)
+           write(printstring,21) OldProNBCF(i)-OldProNBC(i),OldProNBCB(i)-OldProNBC(i)
            call printLine(RESULTS,printstring)
 
 c          internal nblj energy
-           std = stdDev(AvgProNBLJ2(i),AvgProNBLJ(i))
-           stdf = stdDev(AvgProNBLJF2(i),AvgProNBLJF(i))
-           stdb = stdDev(AvgProNBLJB2(i),AvgProNBLJB(i))
-           write(printstring,20) "NBL",AvgProNBLJ(i),std,AvgProNBLJF(i),stdf,AvgProNBLJB(i),stdb
+           write(printstring,20) "NBL",OldProNBLJ(i),ZERO,OldProNBLJF(i),ZERO,OldProNBLJB(i),ZERO
            call printLine(RESULTS,printstring)
-           write(printstring,21) AvgProNBLJF(i)-AvgProNBLJ(i),AvgProNBLJB(i)-AvgProNBLJ(i)
+           write(printstring,21) OldProNBLJF(i)-OldProNBLJ(i),OldProNBLJB(i)-OldProNBLJ(i)
            call printLine(RESULTS,printstring)
          enddo
-       else
-c       PRINT*, "Hello"
        endif           
 
        if (NSolutes.gt.0) then
@@ -198,64 +166,46 @@ c          skip duplicate solutes used for geometry variations / multicopy sampl
            
              if (NSolBonds(i).gt.0) then
 c              bond
-               std = stdDev(AvgSolBnd2(i),AvgSolBnd(i))
-               stdf = stdDev(AvgSolBndf2(i),AvgSolBndf(i))
-               stdb = stdDev(AvgSolBndb2(i),AvgSolBndb(i))
-               write(printstring,20) 'BND',AvgSolBnd(i),std,AvgSolBndF(i),stdf,AvgSolBndB(i),stdb
+               write(printstring,20) 'BND',OldSolBnd(i),ZERO,OldSolBndF(i),ZERO,OldSolBndB(i),ZERO
                call printLine(RESULTS,printstring)
-               write(printstring,21) AvgSolBndF(i)-AvgSolBnd(i),AvgSolBndB(i)-AvgSolBnd(i)
+               write(printstring,21) OldSolBndF(i)-OldSolBnd(i),OldSolBndB(i)-OldSolBnd(i)
                call printLine(RESULTS,printstring)
              endif
            
              if (NSolAngles(i).gt.0) then
 c              angle
-               std = stdDev(AvgSolAng2(i),AvgSolAng(i))
-               stdf = stdDev(AvgSolAngf2(i),AvgSolAngf(i))
-               stdb = stdDev(AvgSolAngb2(i),AvgSolAngb(i))
-               write(printstring,20) 'ANG',AvgSolAng(i),std,AvgSolAngF(i),stdf,AvgSolAngB(i),stdb
+               write(printstring,20) 'ANG',OldSolAng(i),ZERO,OldSolAngF(i),ZERO,OldSolAngB(i),ZERO
                call printLine(RESULTS,printstring)
-               write(printstring,21) AvgSolAngF(i)-AvgSolAng(i),AvgSolAngB(i)-AvgSolAng(i)
+               write(printstring,21) OldSolAngF(i)-OldSolAng(i),OldSolAngB(i)-OldSolAng(i)
                call printLine(RESULTS,printstring)
              endif
 
              if (NSolDihedrals(i).gt.0) then
 c              dihedral
-               std = stdDev(AvgSolDih2(i),AvgSolDih(i))
-               stdf = stdDev(AvgSolDihf2(i),AvgSolDihf(i))
-               stdb = stdDev(AvgSolDihb2(i),AvgSolDihb(i))
-               write(printstring,20) 'DIH',AvgSolDih(i),std,AvgSolDihF(i),stdf,AvgSolDihB(i),stdb
+               write(printstring,20) 'DIH',OldSolDih(i),ZERO,OldSolDihF(i),ZERO,OldSolDihB(i),ZERO
                call printLine(RESULTS,printstring)
-               write(printstring,21) AvgSolDihF(i)-AvgSolDih(i),AvgSolDihB(i)-AvgSolDih(i)
+               write(printstring,21) OldSolDihF(i)-OldSolDih(i),OldSolDihB(i)-OldSolDih(i)
                call printLine(RESULTS,printstring)
              endif
 
              if (NSolUreyBradleys(i).gt.0) then
 c              Urey-Bradley
-               std = stdDev(AvgSolUBy2(i),AvgSolUBy(i))
-               stdf = stdDev(AvgSolUByf2(i),AvgSolUByf(i))
-               stdb = stdDev(AvgSolUByb2(i),AvgSolUByb(i))
-               write(printstring,20) 'UBY',AvgSolUBy(i),std,AvgSolUByF(i),stdf,AvgSolUByB(i),stdb
+               write(printstring,20) 'UBY',OldSolUBy(i),ZERO,OldSolUByF(i),ZERO,OldSolUByB(i),ZERO
                call printLine(RESULTS,printstring)
-               write(printstring,21) AvgSolUByF(i)-AvgSolUBy(i),AvgSolUByB(i)-AvgSolUBy(i)
+               write(printstring,21) OldSolUByF(i)-OldSolUBy(i),OldSolUByB(i)-OldSolUBy(i)
                call printLine(RESULTS,printstring)
              endif
 
 c            nbc
-             std = stdDev(AvgSolNBC2(i),AvgSolNBC(i))
-             stdf = stdDev(AvgSolNBCf2(i),AvgSolNBCf(i))
-             stdb = stdDev(AvgSolNBCb2(i),AvgSolNBCb(i))
-             write(printstring,20) 'NBC',AvgSolNBC(i),std,AvgSolNBCF(i),stdf,AvgSolNBCB(i),stdb
+             write(printstring,20) 'NBC',OldSolNBC(i),ZERO,OldSolNBCF(i),ZERO,OldSolNBCB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgSolNBCF(i)-AvgSolNBC(i),AvgSolNBCB(i)-AvgSolNBC(i)
+             write(printstring,21) OldSolNBCF(i)-OldSolNBC(i),OldSolNBCB(i)-OldSolNBC(i)
              call printLine(RESULTS,printstring)
 
 c            nblj
-             std = stdDev(AvgSolNBLJ2(i),AvgSolNBLJ(i))
-             stdf = stdDev(AvgSolNBLJf2(i),AvgSolNBLJf(i))
-             stdb = stdDev(AvgSolNBLJb2(i),AvgSolNBLJb(i))
-             write(printstring,20) 'NBL',AvgSolNBLJ(i),std,AvgSolNBLJF(i),stdf,AvgSolNBLJB(i),stdb
+             write(printstring,20) 'NBL',OldSolNBLJ(i),ZERO,OldSolNBLJF(i),ZERO,OldSolNBLJB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgSolNBLJF(i)-AvgSolNBLJ(i),AvgSolNBLJB(i)-AvgSolNBLJ(i)
+             write(printstring,21) OldSolNBLJF(i)-OldSolNBLJ(i),OldSolNBLJB(i)-OldSolNBLJ(i)
              call printLine(RESULTS,printstring)
            endif
          enddo
@@ -264,44 +214,30 @@ c            nblj
        if (NSolvents.gt.0) then
          call prettyLine(RESULTS,"Average solvent-solvent energy")
 c        coulomb energy         
-c         PRINT*, "av" ,AvgSvnSvnC2
-         std = stdDev(AvgSvnSvnC2,AvgSvnSvnC)
-         stdf = stdDev(AvgSvnSvnCF2,AvgSvnSvnCF)
-         stdb = stdDev(AvgSvnSvnCB2,AvgSvnSvnCB)
-         write(printstring,20) 'COU',AvgSvnSvnC,std,AvgSvnSvnCF,stdf,AvgSvnSvnCB,stdb
+         write(printstring,20) 'COU',OldSvnSvnC,ZERO,OldSvnSvnCF,ZERO,OldSvnSvnCB,ZERO
          call printLine(RESULTS,printstring)
-         write(printstring,21) AvgSvnSvnCF-AvgSvnSvnC,AvgSvnSvnCB-AvgSvnSvnC
+         write(printstring,21) OldSvnSvnCF-OldSvnSvnC,OldSvnSvnCB-OldSvnSvnC
          call printLine(RESULTS,printstring)
          
 c        lj energy
-         std = stdDev(AvgSvnSvnLJ2,AvgSvnSvnLJ)
-         stdf = stdDev(AvgSvnSvnLJF2,AvgSvnSvnLJF)
-         stdb = stdDev(AvgSvnSvnLJB2,AvgSvnSvnLJB)
-         write(printstring,20) 'LJ ',AvgSvnSvnLJ,std,AvgSvnSvnLJF,stdf,AvgSvnSvnLJB,stdb
+         write(printstring,20) 'LJ ',OldSvnSvnLJ,ZERO,OldSvnSvnLJF,ZERO,OldSvnSvnLJB,ZERO
          call printLine(RESULTS,printstring)
-         write(printstring,21) AvgSvnSvnLJF-AvgSvnSvnLJ,AvgSvnSvnLJB-AvgSvnSvnLJ
+         write(printstring,21) OldSvnSvnLJF-OldSvnSvnLJ,OldSvnSvnLJB-OldSvnSvnLJ
          call printLine(RESULTS,printstring)
        endif
        
        if (NGCSolutes.gt.0) then
          call prettyLine(RESULTS,"Average GCS-GCS energy")
 c        coulomb energy         
-c         PRINT*, "av" ,AvgGCSGCSC2
-         std = stdDev(AvgGCSGCSC2,AvgGCSGCSC)
-         stdf = stdDev(AvgGCSGCSCF2,AvgGCSGCSCF)
-         stdb = stdDev(AvgGCSGCSCB2,AvgGCSGCSCB)
-         write(printstring,20) 'COU',AvgGCSGCSC,std,AvgGCSGCSCF,stdf,AvgGCSGCSCB,stdb
+         write(printstring,20) 'COU',OldGCSGCSC,ZERO,OldGCSGCSCF,ZERO,OldGCSGCSCB,ZERO
          call printLine(RESULTS,printstring)
-         write(printstring,21) AvgGCSGCSCF-AvgGCSGCSC,AvgGCSGCSCB-AvgGCSGCSC
+         write(printstring,21) OldGCSGCSCF-OldGCSGCSC,OldGCSGCSCB-OldGCSGCSC
          call printLine(RESULTS,printstring)
          
 c        lj energy
-         std = stdDev(AvgGCSGCSLJ2,AvgGCSGCSLJ)
-         stdf = stdDev(AvgGCSGCSLJF2,AvgGCSGCSLJF)
-         stdb = stdDev(AvgGCSGCSLJB2,AvgGCSGCSLJB)
-         write(printstring,20) 'LJ ',AvgGCSGCSLJ,std,AvgGCSGCSLJF,stdf,AvgGCSGCSLJB,stdb
+         write(printstring,20) 'LJ ',OldGCSGCSLJ,ZERO,oldGCSGCSLJF,Zero,OldGCSGCSLJB,ZERO
          call printLine(RESULTS,printstring)
-         write(printstring,21) AvgGCSGCSLJF-AvgGCSGCSLJ,AvgGCSGCSLJB-AvgGCSGCSLJ
+         write(printstring,21) OldGCSGCSLJF-OldGCSGCSLJ,OldGCSGCSLJB-OldGCSGCSLJ
          call printLine(RESULTS,printstring)
        endif
                      
@@ -317,24 +253,17 @@ c        lj energy
            call prettyLine(RESULTS,printstring)
 
 c            coulomb
-c             PRINT*, "en" ,AvgProGCSC
-             std = stdDev(AvgProGCSC2(i),AvgProGCSC(i))
-             stdf = stdDev(AvgProGCSCF2(i),AvgProGCSCF(i))
-             stdb = stdDev(AvgProGCSCB2(i),AvgProGCSCB(i))
-             write(printstring,20) 'COU',AvgProGCSC(i),std,AvgProGCSCF(i),stdf,
-     .                                                      AvgProGCSCB(i),stdb
+             write(printstring,20) 'COU',OLDProGCSC(i),ZERO,OldProGCSCF(i),ZERO,
+     .                                                      OldProGCSCB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProGCSCF(i)-AvgProGCSC(i),AvgProGCSCB(i)-AvgProGCSC(i)
+             write(printstring,21) OldProGCSCF(i)-OldProGCSC(i),OldProGCSCB(i)-OldProGCSC(i)
              call printLine(RESULTS,printstring)
 
 c            lj
-             std = stdDev(AvgProGCSLJ2(i),AvgProGCSLJ(i))
-             stdf = stdDev(AvgProGCSLJF2(i),AvgProGCSLJF(i))
-             stdb = stdDev(AvgProGCSLJB2(i),AvgProGCSLJB(i))
-             write(printstring,20) 'LJ',AvgProGCSLJ(i),std,AvgProGCSLJF(i),stdf,
-     .                                                    AvgProGCSLJB(i),stdb
+             write(printstring,20) 'LJ',OldProGCSLJ(i),ZERO,OldProGCSLJF(i),ZERO,
+     .                                                    OldProGCSLJB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProGCSLJF(i)-AvgProGCSLJ(i),AvgProGCSLJB(i)-AvgProGCSLJ(i)
+             write(printstring,21) OldProGCSLJF(i)-OldProGCSLJ(i),OldProGCSLJB(i)-OldProGCSLJ(i)
              call printLine(RESULTS,printstring)
          enddo
        endif
@@ -382,23 +311,17 @@ c"
              call prettyLine(RESULTS,printstring)
 
 c            coulomb
-             std = stdDev(AvgProProC2(i,j),AvgProProC(i,j))
-             stdf = stdDev(AvgProProCF2(i,j),AvgProProCF(i,j))
-             stdb = stdDev(AvgProProCB2(i,j),AvgProProCB(i,j))
-             write(printstring,20) 'COU',AvgProProC(i,j),std,AvgProProCF(i,j),stdf,
-     .                                                      AvgProProCB(i,j),stdb
+             write(printstring,20) 'COU',OldProProC(i,j),ZERO,OldProProCF(i,j),ZERO,
+     .                                                      OldProProCB(i,j),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProProCF(i,j)-AvgProProC(i,j),AvgProProCB(i,j)-AvgProProC(i,j)
+             write(printstring,21) OldProProCF(i,j)-OldProProC(i,j),OldProProCB(i,j)-OldProProC(i,j)
              call printLine(RESULTS,printstring)
 
 c            lj
-             std = stdDev(AvgProProLJ2(i,j),AvgProProLJ(i,j))
-             stdf = stdDev(AvgProProLJF2(i,j),AvgProProLJF(i,j))
-             stdb = stdDev(AvgProProLJB2(i,j),AvgProProLJB(i,j))
-             write(printstring,20) 'LJ ',AvgProProLJ(i,j),std,AvgProProLJF(i,j),stdf,
-     .                                                      AvgProProLJB(i,j),stdb
+             write(printstring,20) 'LJ ',OldProProLJ(i,j),ZERO,OldProProLJF(i,j),ZERO,
+     .                                                      OldProProLJB(i,j),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProProLJF(i,j)-AvgProProLJ(i,j),AvgProProLJB(i,j)-AvgProProLJ(i,j)
+             write(printstring,21) OldProProLJF(i,j)-OldProProLJ(i,j),OldProProLJB(i,j)-OldProProLJ(i,j)
              call printLine(RESULTS,printstring)
              
            enddo
@@ -416,23 +339,17 @@ c        endif
                call prettyLine(RESULTS,printstring)
 
 c              coulomb
-               std = stdDev(AvgProSolC2(i,j),AvgProSolC(i,j))
-               stdf = stdDev(AvgProSolCF2(i,j),AvgProSolCF(i,j))
-               stdb = stdDev(AvgProSolCB2(i,j),AvgProSolCB(i,j))
-               write(printstring,20) 'COU',AvgProSolC(i,j),std,AvgProSolCF(i,j),stdf,
-     .                                                      AvgProSolCB(i,j),stdb
+               write(printstring,20) 'COU',OldProSolC(i,j),ZERO,OldProSolCF(i,j),ZERO,
+     .                                                      OldProSolCB(i,j),ZERO
                call printLine(RESULTS,printstring)
-               write(printstring,21) AvgProSolCF(i,j)-AvgProSolC(i,j),AvgProSolCB(i,j)-AvgProSolC(i,j)
+               write(printstring,21) OldProSolCF(i,j)-OldProSolC(i,j),OldProSolCB(i,j)-OldProSolC(i,j)
                call printLine(RESULTS,printstring)
 
 c              lj
-               std = stdDev(AvgProSolLJ2(i,j),AvgProSolLJ(i,j))
-               stdf = stdDev(AvgProSolLJF2(i,j),AvgProSolLJF(i,j))
-               stdb = stdDev(AvgProSolLJB2(i,j),AvgProSolLJB(i,j))
-               write(printstring,20) 'LJ ',AvgProSolLJ(i,j),std,AvgProSolLJF(i,j),stdf,
-     .                                                      AvgProSolLJB(i,j),stdb
+               write(printstring,20) 'LJ ',OldProSolLJ(i,j),ZERO,OldProSolLJF(i,j),ZERO,
+     .                                                      OldProSolLJB(i,j),ZERO
                call printLine(RESULTS,printstring)
-               write(printstring,21) AvgProSolLJF(i,j)-AvgProSolLJ(i,j),AvgProSolLJB(i,j)-AvgProSolLJ(i,j)
+               write(printstring,21) OldProSolLJF(i,j)-OldProSolLJ(i,j),OldProSolLJB(i,j)-OldProSolLJ(i,j)
                call printLine(RESULTS,printstring)
              endif
            enddo
@@ -447,24 +364,17 @@ c"
            call prettyLine(RESULTS,printstring)
 
 c            coulomb
-c             PRINT*, "en" ,AvgProSvnC
-             std = stdDev(AvgProSvnC2(i),AvgProSvnC(i))
-             stdf = stdDev(AvgProSvnCF2(i),AvgProSvnCF(i))
-             stdb = stdDev(AvgProSvnCB2(i),AvgProSvnCB(i))
-             write(printstring,20) 'COU',AvgProSvnC(i),std,AvgProSvnCF(i),stdf,
-     .                                                      AvgProSvnCB(i),stdb
+             write(printstring,20) 'COU',OldProSvnC(i),ZERO,OldProSvnCF(i),ZERO,
+     .                                                      OldProSvnCB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProSvnCF(i)-AvgProSvnC(i),AvgProSvnCB(i)-AvgProSvnC(i)
+             write(printstring,21) OldProSvnCF(i)-OldProSvnC(i),OldProSvnCB(i)-OldProSvnC(i)
              call printLine(RESULTS,printstring)
 
 c            lj
-             std = stdDev(AvgProSvnLJ2(i),AvgProSvnLJ(i))
-             stdf = stdDev(AvgProSvnLJF2(i),AvgProSvnLJF(i))
-             stdb = stdDev(AvgProSvnLJB2(i),AvgProSvnLJB(i))
-             write(printstring,20) 'LJ',AvgProSvnLJ(i),std,AvgProSvnLJF(i),stdf,
-     .                                                    AvgProSvnLJB(i),stdb
+             write(printstring,20) 'LJ',OldProSvnLJ(i),ZERO,OldProSvnLJF(i),ZERO,
+     .                                                    OldProSvnLJB(i),ZERO
              call printLine(RESULTS,printstring)
-             write(printstring,21) AvgProSvnLJF(i)-AvgProSvnLJ(i),AvgProSvnLJB(i)-AvgProSvnLJ(i)
+             write(printstring,21) OldProSvnLJF(i)-OldProSvnLJ(i),OldProSvnLJB(i)-OldProSvnLJ(i)
              call printLine(RESULTS,printstring)
          enddo
        endif
@@ -513,23 +423,17 @@ c       endif
                  call prettyLine(RESULTS,printstring)
 
 c                coulomb
-                 std = stdDev(AvgSolSolC2(i,j),AvgSolSolC(i,j))
-                 stdf = stdDev(AvgSolSolCF2(i,j),AvgSolSolCF(i,j))
-                 stdb = stdDev(AvgSolSolCB2(i,j),AvgSolSolCB(i,j))
-                 write(printstring,20) 'COU',AvgSolSolC(i,j),std,AvgSolSolCF(i,j),stdf,
-     .                                                           AvgSolSolCB(i,j),stdb
+                 write(printstring,20) 'COU',OldSolSolC(i,j),ZERO,OldSolSolCF(i,j),ZERO,
+     .                                                           OldSolSolCB(i,j),ZERO
                  call printLine(RESULTS,printstring)
-                 write(printstring,21) AvgSolSolCF(i,j)-AvgSolSolC(i,j),AvgSolSolCB(i,j)-AvgSolSolC(i,j)
+                 write(printstring,21) OldSolSolCF(i,j)-OldSolSolC(i,j),OldSolSolCB(i,j)-OldSolSolC(i,j)
                  call printLine(RESULTS,printstring)
 
 c                lj
-                 std = stdDev(AvgSolSolLJ2(i,j),AvgSolSolLJ(i,j))
-                 stdf = stdDev(AvgSolSolLJF2(i,j),AvgSolSolLJF(i,j))
-                 stdb = stdDev(AvgSolSolLJB2(i,j),AvgSolSolLJB(i,j))
-                 write(printstring,20) 'LJ ',AvgSolSolLJ(i,j),std,AvgSolSolLJF(i,j),stdf,
-     .                                                      AvgSolSolLJB(i,j),stdb
+                 write(printstring,20) 'LJ ',OldSolSolLJ(i,j),ZERO,OldSolSolLJF(i,j),ZERO,
+     .                                                      OldSolSolLJB(i,j),ZERO
                  call printLine(RESULTS,printstring)
-                 write(printstring,21) AvgSolSolLJF(i,j)-AvgSolSolLJ(i,j),AvgSolSolLJB(i,j)-AvgSolSolLJ(i,j)
+                 write(printstring,21) OldSolSolLJF(i,j)-OldSolSolLJ(i,j),OldSolSolLJB(i,j)-OldSolSolLJ(i,j)
                  call printLine(RESULTS,printstring)
                endif
              enddo
@@ -546,23 +450,17 @@ c                lj
              call prettyLine(RESULTS,printstring)
 
 c           coulomb
-            std = stdDev(AvgSolSvnC2(i),AvgSolSvnC(i))
-            stdf = stdDev(AvgSolSvnCF2(i),AvgSolSvnCF(i))
-            stdb = stdDev(AvgSolSvnCB2(i),AvgSolSvnCB(i))
-            write(printstring,20) 'COU',AvgSolSvnC(i),std,AvgSolSvnCF(i),stdf,
-     .                                                    AvgSolSvnCB(i),stdb
+            write(printstring,20) 'COU',OldSolSvnC(i),ZERO,OldSolSvnCF(i),ZERO,
+     .                                                    OldSolSvnCB(i),ZERO
             call printLine(RESULTS,printstring)
-            write(printstring,21) AvgSolSvnCF(i)-AvgSolSvnC(i),AvgSolSvnCB(i)-AvgSolSvnC(i)
+            write(printstring,21) OldSolSvnCF(i)-OldSolSvnC(i),OldSolSvnCB(i)-OldSolSvnC(i)
             call printLine(RESULTS,printstring)
 
 c           lj
-            std = stdDev(AvgSolSvnLJ2(i),AvgSolSvnLJ(i))
-            stdf = stdDev(AvgSolSvnLJF2(i),AvgSolSvnLJF(i))
-            stdb = stdDev(AvgSolSvnLJB2(i),AvgSolSvnLJB(i))
-            write(printstring,20) 'LJ ',AvgSolSvnLJ(i),std,AvgSolSvnLJF(i),stdf,
-     .                                                     AvgSolSvnLJB(i),stdb
+            write(printstring,20) 'LJ ',OldSolSvnLJ(i),ZERO,OldSolSvnLJF(i),ZERO,
+     .                                                     OldSolSvnLJB(i),ZERO
             call printLine(RESULTS,printstring)
-            write(printstring,21) AvgSolSvnLJF(i)-AvgSolSvnLJ(i),AvgSolSvnLJB(i)-AvgSolSvnLJ(i)
+            write(printstring,21) OldSolSvnLJF(i)-OldSolSvnLJ(i),OldSolSvnLJB(i)-OldSolSvnLJ(i)
             call printLine(RESULTS,printstring)
            endif
          enddo
@@ -577,31 +475,25 @@ c           lj
              call prettyLine(RESULTS,printstring)
 
 c           coulomb
-            std = stdDev(AvgSolGCSC2(i),AvgSolGCSC(i))
-            stdf = stdDev(AvgSolGCSCF2(i),AvgSolGCSCF(i))
-            stdb = stdDev(AvgSolGCSCB2(i),AvgSolGCSCB(i))
-            write(printstring,20) 'COU',AvgSolGCSC(i),std,AvgSolGCSCF(i),stdf,
-     .                                                    AvgSolGCSCB(i),stdb
+            write(printstring,20) 'COU',OldSolGCSC(i),ZERO,OldSolGCSCF(i),ZERO,
+     .                                                    OldSolGCSCB(i),ZERO
             call printLine(RESULTS,printstring)
-            write(printstring,21) AvgSolGCSCF(i)-AvgSolGCSC(i),AvgSolGCSCB(i)-AvgSolGCSC(i)
+            write(printstring,21) OldSolGCSCF(i)-OldSolGCSC(i),OldSolGCSCB(i)-OldSolGCSC(i)
             call printLine(RESULTS,printstring)
 
 c           lj
-            std = stdDev(AvgSolGCSLJ2(i),AvgSolGCSLJ(i))
-            stdf = stdDev(AvgSolGCSLJF2(i),AvgSolGCSLJF(i))
-            stdb = stdDev(AvgSolGCSLJB2(i),AvgSolGCSLJB(i))
-            write(printstring,20) 'LJ ',AvgSolGCSLJ(i),std,AvgSolGCSLJF(i),stdf,
-     .                                                     AvgSolGCSLJB(i),stdb
+            write(printstring,20) 'LJ ',OldSolGCSLJ(i),ZERO,OldSolGCSLJF(i),ZERO,
+     .                                                     OldSolGCSLJB(i),ZERO
             call printLine(RESULTS,printstring)
-            write(printstring,21) AvgSolGCSLJF(i)-AvgSolGCSLJ(i),AvgSolGCSLJB(i)-AvgSolGCSLJ(i)
+            write(printstring,21) OldSolGCSLJF(i)-OldSolGCSLJ(i),OldSolGCSLJB(i)-OldSolGCSLJ(i)
             call printLine(RESULTS,printstring)
            endif
          enddo
        endif
        
 c      print out the averages of the extra energy terms
-      call printAverageExtraEnergies
-
+       call printAverageExtraEnergies
+ 
 c     print out free energy stuff
       call dGEnergies
  

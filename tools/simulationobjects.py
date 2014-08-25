@@ -130,7 +130,7 @@ class PDBFile:
     ----------
     center : NumPy array
       the center of coordinates of all atoms
-    head : string
+    header : string
       additional lines to print before ATOM records
     name : string
       the name of the file
@@ -249,7 +249,7 @@ class PDBFile:
                         atom.resindex = i
                     s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                     f.write ( s )
-            f.write ( "TER \n" )
+            if len(self.solvents.keys()) > 0 : f.write ( "TER \n" )
             for i, sol in enumerate ( sorted ( self.solvents.keys() ), 1 ):
                 for atom in self.solvents[sol].atoms:
                     if renumber:
@@ -539,7 +539,7 @@ class EnergyResults :
     if isinstance(self.curr,float) :
       return "%s %20.10F %20.10F %20.10F"%(self.type,self.curr,self.back,self.forw)
     else :
-      return "%s Numpy array with %d elements"%(self.type,self.curr.shape)
+      return "%s Numpy array with %d elements"%(self.type,self.curr.shape[0])
   def __add__(self,b) :
     r = EnergyResults()
     r.curr = self.curr + b.curr

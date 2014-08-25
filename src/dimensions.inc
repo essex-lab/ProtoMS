@@ -208,3 +208,11 @@ c     grid bits
       parameter(MAXZGRID=10000000)
       integer MAXRESERVOIR
       parameter(MAXRESERVOIR=50000)
+      
+c     Parallel tempering bits
+c     Maximum allowed number of lambdas
+      integer MAXLAMBDAS
+      parameter (MAXLAMBDAS=50)
+c     Maximum allowed number of temperatures
+      integer MAXTEMPS
+      parameter (MAXTEMPS=50) 

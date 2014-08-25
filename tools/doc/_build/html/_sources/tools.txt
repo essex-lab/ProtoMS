@@ -20,18 +20,26 @@ tools.build_template module
     :undoc-members:
     :show-inheritance:
 
-tools.build_template.py.bak module
-----------------------------------
-
-.. automodule:: tools.build_template.py.bak
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 tools.calc_bar module
 ---------------------
 
 .. automodule:: tools.calc_bar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    
+tools.calc_replicapath module
+---------------------
+
+.. automodule:: tools.calc_replicapath
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    
+tools.calc_series module
+---------------------
+
+.. automodule:: tools.calc_series
     :members:
     :undoc-members:
     :show-inheritance:
@@ -64,6 +72,14 @@ tools.generate_input module
 ---------------------------
 
 .. automodule:: tools.generate_input
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    
+tools.make_dummy module
+------------------------
+
+.. automodule:: tools.make_dummy
     :members:
     :undoc-members:
     :show-inheritance:

@@ -347,6 +347,8 @@ OBJS = addacid.o \
        popsolventcoords.o \
        positionstring.o \
        prettyline.o \
+       printallenergies.F	\
+       printallextraenergies.F	\
        printattemptaccept.o \
        printaverages.o \
        printaveragesgbenergy.o \

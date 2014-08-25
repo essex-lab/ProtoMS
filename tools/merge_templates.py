@@ -25,7 +25,7 @@ def merge_templates(templates) :
   
   Parameters
   ----------
-  templates : list of TemplateFile
+  templates : list of string
     the names of the template file
   
   Returns

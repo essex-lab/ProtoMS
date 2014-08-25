@@ -165,6 +165,32 @@ and its connectivity</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.build_template.PrepiAtom.add_bond" title="tools.build_template.PrepiAtom.add_bond"><tt class="xref py py-obj docutils literal"><span class="pre">add_bond</span></tt></a>(atomname[,&nbsp;loop_closure])</td>
+<td>Add a bond to this atom</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.build_template.PrepiAtom.backward_bond" title="tools.build_template.PrepiAtom.backward_bond"><tt class="xref py py-obj docutils literal"><span class="pre">backward_bond</span></tt></a>(exclude,&nbsp;defined)</td>
+<td>Find an atom, bonded to this atom that has</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.build_template.PrepiAtom.improper_dihedral" title="tools.build_template.PrepiAtom.improper_dihedral"><tt class="xref py py-obj docutils literal"><span class="pre">improper_dihedral</span></tt></a>(exclude,&nbsp;defined)</td>
+<td>Look for the definition of an improper dihedral:</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.build_template.PrepiAtom.next_bond" title="tools.build_template.PrepiAtom.next_bond"><tt class="xref py py-obj docutils literal"><span class="pre">next_bond</span></tt></a>(defined[,&nbsp;update])</td>
+<td>Find an atom, bonded to this atom that</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.build_template.PrepiAtom.read" title="tools.build_template.PrepiAtom.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(record,&nbsp;atomlist)</td>
+<td>Read a line from an Amber prepi-file</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.build_template.PrepiAtom.sort_bonds" title="tools.build_template.PrepiAtom.sort_bonds"><tt class="xref py py-obj docutils literal"><span class="pre">sort_bonds</span></tt></a>(metric)</td>
+<td>Sort the bonds based on some metric</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.build_template.PrepiAtom.add_bond">
 <tt class="descname">add_bond</tt><big>(</big><em>atomname</em>, <em>loop_closure=False</em><big>)</big><a class="headerlink" href="#tools.build_template.PrepiAtom.add_bond" title="Permalink to this definition">¶</a></dt>
@@ -284,9 +310,6 @@ has not been defined and where the bond has not been traversed</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-build-template-py-bak-module">
-<h2>tools.build_template.py.bak module<a class="headerlink" href="#tools-build-template-py-bak-module" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-tools.calc_bar">
 <span id="tools-calc-bar-module"></span><h2>tools.calc_bar module<a class="headerlink" href="#module-tools.calc_bar" title="Permalink to this headline">¶</a></h2>
 <p>Program to do BAR</p>
@@ -342,6 +365,376 @@ bar</p>
 <p>numpy array</p>
 <blockquote class="last">
 <div><p>the standard error of the free energy for each lambda</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-calc-replicapath-module">
+<h2>tools.calc_replicapath module<a class="headerlink" href="#tools-calc-replicapath-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tools.calc_replicapath"></span><p>Program to analyze and plot replica paths</p>
+<p>This module defines the following public functions:
+replica_path</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.calc_replicapath.replica_path">
+<tt class="descclassname">tools.calc_replicapath.</tt><tt class="descname">replica_path</tt><big>(</big><em>filenames</em>, <em>evalthis</em>, <em>replicakind='lambda'</em><big>)</big><a class="headerlink" href="#tools.calc_replicapath.replica_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract replica path from a set of results files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filenames</strong> : list of strings</p>
+<blockquote>
+<div><p>the files to read</p>
+</div></blockquote>
+<p><strong>evalthis</strong> : list</p>
+<blockquote>
+<div><p>labels to evaluate the paths on, all files are read
+but paths are only made for the replicas with these labels</p>
+</div></blockquote>
+<p><strong>replicakind</strong> : string</p>
+<blockquote>
+<div><p>the type of replica, at the moment only lambda is allowed</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote>
+<div><p>the labeled replica path</p>
+</div></blockquote>
+<p>list</p>
+<blockquote class="last">
+<div><p>list of the labels for all input files</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-calc-series-module">
+<h2>tools.calc_series module<a class="headerlink" href="#tools-calc-series-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tools.calc_series"></span><p>Program to analyze and plot data series</p>
+<p>This module defines the following public functions:
+find_equilibration
+stats_inefficiency
+maximize_samples
+running
+moving
+parse_series
+parse_files
+plot_series
+write_series</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.calc_series.find_equilibration">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">find_equilibration</tt><big>(</big><em>x</em>, <em>y</em>, <em>atleast=50</em>, <em>threshold=0.05</em>, <em>nperm=0</em><big>)</big><a class="headerlink" href="#tools.calc_series.find_equilibration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the equilibration time of a data series</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>x</strong> : Numpy array</p>
+<blockquote>
+<div><p>the x data</p>
+</div></blockquote>
+<p><strong>y</strong> : Numpy array</p>
+<blockquote>
+<div><p>the y data</p>
+</div></blockquote>
+<p><strong>atleast</strong> : int, optional</p>
+<blockquote>
+<div><p>this is the smallest number of snapshots considered to be production</p>
+</div></blockquote>
+<p><strong>threshold</strong> : float, optional</p>
+<blockquote>
+<div><p>the confidence level</p>
+</div></blockquote>
+<p><strong>nperm</strong> : int, optional</p>
+<blockquote>
+<div><p>if greater than zero, a permutation test is peformed with nperm synthetic permuations</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int</p>
+<blockquote class="last">
+<div><p>the length of the equilibration period</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.maximize_samples">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">maximize_samples</tt><big>(</big><em>y</em>, <em>atleast=50</em><big>)</big><a class="headerlink" href="#tools.calc_series.maximize_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the minimum of the statistical inefficiency by varying
+the equlibration period, i.e. maximizing the number of 
+uncorrelated samples</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>y</strong> : Numpy array</p>
+<blockquote>
+<div><p>the data</p>
+</div></blockquote>
+<p><strong>atleast</strong> : int, optional</p>
+<blockquote>
+<div><p>this is the smallest number of snapshots considered to be production</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int</p>
+<blockquote>
+<div><p>the snapshot at which g is maximum</p>
+</div></blockquote>
+<p>float</p>
+<blockquote>
+<div><p>maximum of g</p>
+</div></blockquote>
+<p>int</p>
+<blockquote class="last">
+<div><p>the number of uncorrelated samples</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.moving">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">moving</tt><big>(</big><em>data</em>, <em>window</em><big>)</big><a class="headerlink" href="#tools.calc_series.moving" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a moving/rolling average of the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : NumpyArray</p>
+<blockquote>
+<div><p>the input data, should be 1D</p>
+</div></blockquote>
+<p><strong>window</strong> : int</p>
+<blockquote>
+<div><p>the window size</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumpyArray</p>
+<blockquote class="last">
+<div><p>the averaged data</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.parse_files">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">parse_files</tt><big>(</big><em>filenames</em>, <em>series</em>, <em>all_results</em>, <em>ys</em>, <em>labels</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#tools.calc_series.parse_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse multiple results file</p>
+<p>If a data serie in series can be calculated over multiple
+input files, the data serie is replaced by some calculation 
+over all input files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filenames</strong> : list of strings</p>
+<blockquote>
+<div><p>the files to parse</p>
+</div></blockquote>
+<p><strong>series</strong> : list of strings</p>
+<blockquote>
+<div><p>the series selected</p>
+</div></blockquote>
+<p><strong>all_results</strong> : list of SnapshotResults</p>
+<blockquote>
+<div><p>all the results loaded from all input files, needs to be initialized before calling this routine</p>
+</div></blockquote>
+<p><strong>ys</strong> : list of NumpyArrays</p>
+<blockquote>
+<div><p>all the series</p>
+</div></blockquote>
+<p><strong>labels</strong> : list of strings</p>
+<blockquote>
+<div><p>labels for all the data series</p>
+</div></blockquote>
+<p><strong>**kwargs</strong> : dictionary</p>
+<blockquote>
+<div><p>additional parameters, passed directly to the different parsers</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">bool</p>
+<blockquote class="last">
+<div><p>whether the series has been modified, i.e. if any parser was found</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.parse_series">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">parse_series</tt><big>(</big><em>series</em>, <em>results</em><big>)</big><a class="headerlink" href="#tools.calc_series.parse_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract data series and label from a results file based on a label</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series</strong> : list of string</p>
+<blockquote>
+<div><p>the series to extract</p>
+</div></blockquote>
+<p><strong>results</strong> : SnapshotResults object</p>
+<blockquote>
+<div><p>all the results</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of NumpyArrays</p>
+<blockquote>
+<div><p>the data series</p>
+</div></blockquote>
+<p>list of string</p>
+<blockquote class="last">
+<div><p>the labels for the series</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.plot_series">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">plot_series</tt><big>(</big><em>ys</em>, <em>yprop</em>, <em>labels</em>, <em>offset</em>, <em>plotkind</em>, <em>outprefix</em><big>)</big><a class="headerlink" href="#tools.calc_series.plot_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a series</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ys</strong> : list of Numpy arrays</p>
+<blockquote>
+<div><p>the data series</p>
+</div></blockquote>
+<p><strong>yprop</strong> : list of dictionary</p>
+<blockquote>
+<div><p>statistical properties of the data</p>
+</div></blockquote>
+<p><strong>labels</strong> : list of strings</p>
+<blockquote>
+<div><p>the labels for the data series</p>
+</div></blockquote>
+<p><strong>offset</strong> : int</p>
+<blockquote>
+<div><p>the offset of x from 1</p>
+</div></blockquote>
+<p><strong>plotkind</strong> : string</p>
+<blockquote>
+<div><p>the type of plot to create, can be either sep, sub, single, single_first0 or single_last0</p>
+</div></blockquote>
+<p><strong>outprefix</strong> : string</p>
+<blockquote class="last">
+<div><p>the prefix of the created png-files</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.running">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">running</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#tools.calc_series.running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a running average of the data</p>
+<p>Value at position i of the returned data is the average of the input data from point zero to point i</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : NumpyArray</p>
+<blockquote>
+<div><p>the input data, should be 1D</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumpyArray</p>
+<blockquote class="last">
+<div><p>the averaged data</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.stat_inefficiency">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">stat_inefficiency</tt><big>(</big><em>y</em><big>)</big><a class="headerlink" href="#tools.calc_series.stat_inefficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the statistical inefficiency, g.</p>
+<p>g = 1 + 2*tau, where tau is the autocorrelation time</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>y</strong> : Numpy array</p>
+<blockquote>
+<div><p>the data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote class="last">
+<div><p>g, the inefficiency</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.write_series">
+<tt class="descclassname">tools.calc_series.</tt><tt class="descname">write_series</tt><big>(</big><em>ys</em>, <em>yprop</em>, <em>labels</em>, <em>offset</em>, <em>filekind</em>, <em>outprefix</em><big>)</big><a class="headerlink" href="#tools.calc_series.write_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a series to disc</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ys</strong> : list of Numpy arrays</p>
+<blockquote>
+<div><p>the data series</p>
+</div></blockquote>
+<p><strong>yprop</strong> : list of dictionary</p>
+<blockquote>
+<div><p>statistical properties of the data</p>
+</div></blockquote>
+<p><strong>labels</strong> : list of strings</p>
+<blockquote>
+<div><p>the labels for the data series</p>
+</div></blockquote>
+<p><strong>offset</strong> : int</p>
+<blockquote>
+<div><p>the offset of x from 1</p>
+</div></blockquote>
+<p><strong>filekind</strong> : string</p>
+<blockquote>
+<div><p>the type of file to write, can be either sep or single</p>
+</div></blockquote>
+<p><strong>outprefix</strong> : string</p>
+<blockquote class="last">
+<div><p>the prefix of the created files</p>
 </div></blockquote>
 </td>
 </tr>
@@ -501,8 +894,40 @@ pdb2pms</p>
 convertwater</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
+<dt id="tools.convertwater.alignhydrogens">
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">alignhydrogens</tt><big>(</big><em>watcoords</em>, <em>template</em>, <em>tol=0.1</em><big>)</big><a class="headerlink" href="#tools.convertwater.alignhydrogens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates a template water molecule such that it has the same orientation as a reference water molecule. Useful for converting between different water models in cases when one wishes to retain the same orientations of hydrogens. It assumes that both the template and the reference water have maching oxygen locations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>watcoords</strong> : numpy array</p>
+<blockquote>
+<div><p>the coordinates of the water molecule that will be aligned to. The first row must be the x,y,z coordinates of the oxygen atom. Hydrogens must be present in the proceeding two rows</p>
+</div></blockquote>
+<p><strong>template</strong> : numpy array</p>
+<blockquote>
+<div><p>the template water molecule whose hydrogens will be aligned to match that of watcoords. Does not have to be same water model (e.g. tip4p versus spc) as watcoords.</p>
+</div></blockquote>
+<p><strong>tol</strong> : float</p>
+<blockquote>
+<div><p>the tolerance level for the BFGS solver. At a tolerance level of 0.1, orientating 1000 water molecules takes about 10s. With a lower tolerance, alignment is more accurate, but can take up to 17s per 1000 waters.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote class="last">
+<div><p>the rotated set of water coordinates.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.convertwater.convertwater">
-<tt class="descclassname">tools.convertwater.</tt><tt class="descname">convertwater</tt><big>(</big><em>pdb_in</em>, <em>watermodel</em><big>)</big><a class="headerlink" href="#tools.convertwater.convertwater" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">convertwater</tt><big>(</big><em>pdb_in</em>, <em>watermodel</em>, <em>ignorH</em><big>)</big><a class="headerlink" href="#tools.convertwater.convertwater" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts water in a pdb object to ideal water geometries of an input model</p>
 <p>The protein object is not modified by this routine, but the Residue and Atom objects are.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -517,11 +942,123 @@ convertwater</p>
 <blockquote>
 <div><p>the name of the water model that will be used in the transformtation, e.g. tip4p, t3p.</p>
 </div></blockquote>
+<p><strong>ignorH</strong> : string</p>
+<blockquote>
+<div><p>whether to ignore hydrogens in the input water. If &#8216;yes&#8217; or &#8216;true&#8217;, then hydrogens are added in a random orientation.</p>
+</div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">PDBFile</p>
 <blockquote class="last">
 <div><p>a pdb file whose solvent elements have the geometry of the desired solvent model</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.convertwater.rotatewat">
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">rotatewat</tt><big>(</big><em>watcoords</em>, <em>alpha</em>, <em>beta</em>, <em>gamma</em><big>)</big><a class="headerlink" href="#tools.convertwater.rotatewat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates a water molecule about the oxygen atom, which is assumed to be the first element in the coordinate array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>watcoords</strong> : numpy array</p>
+<blockquote>
+<div><p>the coordinates of the water molecule. The first row must be the x,y,z coordinates of the oxygen atom. Hydrogens must be present in the proceeding two rows</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the x-axis.</p>
+</div></blockquote>
+<p><strong>beta</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the y-axis.</p>
+</div></blockquote>
+<p><strong>gamma</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the z-axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote class="last">
+<div><p>the rotated set of water coordinates.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.convertwater.rotmat_x">
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">rotmat_x</tt><big>(</big><em>alpha</em><big>)</big><a class="headerlink" href="#tools.convertwater.rotmat_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>3D rotation matrix for rotations about x-axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>alpha</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the x-axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote class="last">
+<div><p>the rotation matrix for the desired angle.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.convertwater.rotmat_y">
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">rotmat_y</tt><big>(</big><em>beta</em><big>)</big><a class="headerlink" href="#tools.convertwater.rotmat_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>3D rotation matrix for rotations about x-axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>beta</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the y-axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote class="last">
+<div><p>the rotation matrix for the desired angle.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.convertwater.rotmat_z">
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">rotmat_z</tt><big>(</big><em>gamma</em><big>)</big><a class="headerlink" href="#tools.convertwater.rotmat_z" title="Permalink to this definition">¶</a></dt>
+<dd><p>3D rotation matrix for rotations about x-axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>gamma</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the z-axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote class="last">
+<div><p>the rotation matrix for the desired angle.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -544,7 +1081,7 @@ DualTopology</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="class">
 <dt id="tools.generate_input.DualTopology">
-<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">DualTopology</tt><big>(</big><em>protein='protein.pdb', solutes=['solute1.pdb', 'solute2.pdb'], solvent='water.pdb', templates=['solute1.tem', 'solute2.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, outfolder='out'</em><big>)</big><a class="headerlink" href="#tools.generate_input.DualTopology" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">DualTopology</tt><big>(</big><em>protein='protein.pdb', solutes=['solute1.pdb', 'solute2.pdb'], solvent='water.pdb', templates=['solute1.tem', 'solute2.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, outfolder='out', restrained=[]</em><big>)</big><a class="headerlink" href="#tools.generate_input.DualTopology" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></tt></a></p>
 <p>This a command file for a dual-topology protein-ligand simulation
 Generates input for proteins, solutes and solvent
@@ -552,6 +1089,50 @@ write dual-toplogy parameters, lambda-replica exchange,
 dump results, pdb and restart files
 equilibrate and production run</p>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -561,6 +1142,50 @@ equilibrate and production run</p>
 <p>This a command file for equilibration of a protein-ligand system
 Generates input for proteins, solutes and solvent and write an equilibration and a pdb chunk</p>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -573,6 +1198,50 @@ write GCMC parameters
 dump results, pdb and restart files
 equilibrate and production run</p>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -582,6 +1251,50 @@ equilibrate and production run</p>
 <p>This a generic command file for a protein-ligand simulation
 Generates input for proteins, solutes and solvent but does not write any chunks</p>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -603,6 +1316,50 @@ information, or can write this information to a command file.</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.clear" title="tools.generate_input.ProtoMSSimulation.clear"><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt></a>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.readCommandFile" title="tools.generate_input.ProtoMSSimulation.readCommandFile"><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt></a>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.run" title="tools.generate_input.ProtoMSSimulation.run"><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt></a>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setChunk" title="tools.generate_input.ProtoMSSimulation.setChunk"><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt></a>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setDump" title="tools.generate_input.ProtoMSSimulation.setDump"><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt></a>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setForceField" title="tools.generate_input.ProtoMSSimulation.setForceField"><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt></a>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setParameter" title="tools.generate_input.ProtoMSSimulation.setParameter"><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt></a>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setProtein" title="tools.generate_input.ProtoMSSimulation.setProtein"><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt></a>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setSolute" title="tools.generate_input.ProtoMSSimulation.setSolute"><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt></a>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setSolvent" title="tools.generate_input.ProtoMSSimulation.setSolvent"><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt></a>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.setStream" title="tools.generate_input.ProtoMSSimulation.setStream"><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt></a>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.generate_input.ProtoMSSimulation.writeCommandFile" title="tools.generate_input.ProtoMSSimulation.writeCommandFile"><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt></a>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.generate_input.ProtoMSSimulation.clear">
 <tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#tools.generate_input.ProtoMSSimulation.clear" title="Permalink to this definition">¶</a></dt>
@@ -863,6 +1620,50 @@ information, or can write this information to a command file.</p>
 Generates input for proteins, solutes and solvent and write 
 chunks for equilibration and simulation, as well as dumps</p>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -875,6 +1676,50 @@ write lambda-replica exchange,
 dump results, pdb and restart files
 equilibrate and production run</p>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -920,6 +1765,37 @@ ligands contains at least one valid filename a ligand simulation is setup.</p>
 <p><strong>bnd_cmd</strong> : ProtoMSSimulation</p>
 <blockquote class="last">
 <div><p>the command file for the protein simulation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tools.make_dummy">
+<span id="tools-make-dummy-module"></span><h2>tools.make_dummy module<a class="headerlink" href="#module-tools.make_dummy" title="Permalink to this headline">¶</a></h2>
+<p>Routine to make a dummy PDB structure for a solute</p>
+<p>This module defines a single public function:
+make_dummy</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.make_dummy.make_dummy">
+<tt class="descclassname">tools.make_dummy.</tt><tt class="descname">make_dummy</tt><big>(</big><em>pdbfile</em><big>)</big><a class="headerlink" href="#tools.make_dummy.make_dummy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a dummy PDB structure to match a solute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pdbfile</strong> : string or PDBFile</p>
+<blockquote>
+<div><p>the pdb structure of the solute</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">PDBFile instance</p>
+<blockquote class="last">
+<div><p>the dummy structure</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1026,7 +1902,7 @@ merge_templates</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>templates</strong> : list of TemplateFile</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>templates</strong> : list of string</p>
 <blockquote>
 <div><p>the names of the template file</p>
 </div></blockquote>
@@ -1158,6 +2034,17 @@ Contain classes to</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.Atom.getElement" title="tools.simulationobjects.Atom.getElement"><tt class="xref py py-obj docutils literal"><span class="pre">getElement</span></tt></a>()</td>
+<td>Set the element of this atom</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.Atom.getElement">
 <tt class="descname">getElement</tt><big>(</big><big>)</big><a class="headerlink" href="#tools.simulationobjects.Atom.getElement" title="Permalink to this definition">¶</a></dt>
@@ -1186,6 +2073,17 @@ Contain classes to</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.AtomSet.parse" title="tools.simulationobjects.AtomSet.parse"><tt class="xref py py-obj docutils literal"><span class="pre">parse</span></tt></a>(record)</td>
+<td>Parse a line from a ProtoMS file</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.AtomSet.parse">
 <tt class="descname">parse</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.AtomSet.parse" title="Permalink to this definition">¶</a></dt>
@@ -1232,6 +2130,17 @@ Contain classes to</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.EnergyResults.parse_line" title="tools.simulationobjects.EnergyResults.parse_line"><tt class="xref py py-obj docutils literal"><span class="pre">parse_line</span></tt></a>(line)</td>
+<td>Parse energies from the result file</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.EnergyResults.parse_line">
 <tt class="descname">parse_line</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.EnergyResults.parse_line" title="Permalink to this definition">¶</a></dt>
@@ -1275,6 +2184,17 @@ Contain classes to</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.ForceFieldParameter.parse" title="tools.simulationobjects.ForceFieldParameter.parse"><tt class="xref py py-obj docutils literal"><span class="pre">parse</span></tt></a>(record)</td>
+<td>Parse a line from a ProtoMS file</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.ForceFieldParameter.parse">
 <tt class="descname">parse</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.ForceFieldParameter.parse" title="Permalink to this definition">¶</a></dt>
@@ -1333,6 +2253,23 @@ Contain classes to</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.MolTemplate.parse_from" title="tools.simulationobjects.MolTemplate.parse_from"><tt class="xref py py-obj docutils literal"><span class="pre">parse_from</span></tt></a>(fileobj)</td>
+<td>Parse a full template from a file</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.MolTemplate.write_to" title="tools.simulationobjects.MolTemplate.write_to"><tt class="xref py py-obj docutils literal"><span class="pre">write_to</span></tt></a>(fileobj)</td>
+<td>Write the template to disc</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.MolTemplate.write_zmat" title="tools.simulationobjects.MolTemplate.write_zmat"><tt class="xref py py-obj docutils literal"><span class="pre">write_zmat</span></tt></a>(filename)</td>
+<td>Write the z-matrix of this template to disc</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.MolTemplate.parse_from">
 <tt class="descname">parse_from</tt><big>(</big><em>fileobj</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.MolTemplate.parse_from" title="Permalink to this definition">¶</a></dt>
@@ -1405,7 +2342,7 @@ or end of file</p>
 <tr class="row-odd"><td>center</td>
 <td>(NumPy array) the center of coordinates of all atoms</td>
 </tr>
-<tr class="row-even"><td>head</td>
+<tr class="row-even"><td>header</td>
 <td>(string) additional lines to print before ATOM records</td>
 </tr>
 <tr class="row-odd"><td>name</td>
@@ -1420,6 +2357,29 @@ or end of file</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.copy" title="tools.simulationobjects.PDBFile.copy"><tt class="xref py py-obj docutils literal"><span class="pre">copy</span></tt></a>()</td>
+<td>Make a copy of the residues and solvents dictionaries,</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.getBox" title="tools.simulationobjects.PDBFile.getBox"><tt class="xref py py-obj docutils literal"><span class="pre">getBox</span></tt></a>()</td>
+<td>Calculate the smallest box to encompass the atoms</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.getCenter" title="tools.simulationobjects.PDBFile.getCenter"><tt class="xref py py-obj docutils literal"><span class="pre">getCenter</span></tt></a>()</td>
+<td>Calculate the center of geometry</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read" title="tools.simulationobjects.PDBFile.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
+<td>Read a pdb-file from disc</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filename[,&nbsp;renumber,&nbsp;header])</td>
+<td>Write the PDB file to disc</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.PDBFile.copy">
 <tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.copy" title="Permalink to this definition">¶</a></dt>
@@ -1571,6 +2531,17 @@ information to check that a parameter exists</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.ParameterSet.get_params" title="tools.simulationobjects.ParameterSet.get_params"><tt class="xref py py-obj docutils literal"><span class="pre">get_params</span></tt></a>(ats)</td>
+<td>Find parameters for specific atoms</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.ParameterSet.get_params">
 <tt class="descname">get_params</tt><big>(</big><em>ats</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.ParameterSet.get_params" title="Permalink to this definition">¶</a></dt>
@@ -1624,6 +2595,20 @@ information to check that a parameter exists</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.Residue.addAtom" title="tools.simulationobjects.Residue.addAtom"><tt class="xref py py-obj docutils literal"><span class="pre">addAtom</span></tt></a>(atom)</td>
+<td>Adds an atom to this residue</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.Residue.getCenter" title="tools.simulationobjects.Residue.getCenter"><tt class="xref py py-obj docutils literal"><span class="pre">getCenter</span></tt></a>()</td>
+<td>Sets the center of coordinates for this residue</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.Residue.addAtom">
 <tt class="descname">addAtom</tt><big>(</big><em>atom</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.Residue.addAtom" title="Permalink to this definition">¶</a></dt>
@@ -1657,8 +2642,8 @@ information to check that a parameter exists</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="18%" />
-<col width="82%" />
+<col width="15%" />
+<col width="85%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>filename</td>
@@ -1667,9 +2652,48 @@ information to check that a parameter exists</p>
 <tr class="row-even"><td>snapshots</td>
 <td>(list of SnapshotResult) all the results</td>
 </tr>
+<tr class="row-odd"><td>series</td>
+<td>(SnapshotResult) all the results in a single object</td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.ResultsFile.make_series" title="tools.simulationobjects.ResultsFile.make_series"><tt class="xref py py-obj docutils literal"><span class="pre">make_series</span></tt></a>()</td>
+<td>Make a snapshot with all the results</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.ResultsFile.read" title="tools.simulationobjects.ResultsFile.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename[,&nbsp;skip,&nbsp;readmax])</td>
+<td>Read results from disc</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.simulationobjects.ResultsFile.make_series">
+<tt class="descname">make_series</tt><big>(</big><big>)</big><a class="headerlink" href="#tools.simulationobjects.ResultsFile.make_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a snapshot with all the results</p>
+<p>This routine creates a special SnapshotResults object, which has
+the same attributes as the objects in the snapshots list,
+but rather than storing single floats and integers, this
+object stores NumpyArrays of all the results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">SnapshotResults</p>
+<blockquote class="last">
+<div><p>the created object, also stored in self.series</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="tools.simulationobjects.ResultsFile.read">
 <tt class="descname">read</tt><big>(</big><em>filename</em>, <em>skip=0</em>, <em>readmax=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.ResultsFile.read" title="Permalink to this definition">¶</a></dt>
@@ -1741,7 +2765,7 @@ objects, for the various energy components.</p>
 <td>(float) the temperature of the simulation</td>
 </tr>
 <tr class="row-odd"><td>ngcsolutes</td>
-<td>(float) the number of GC solutes</td>
+<td>(in) the number of GC solutes</td>
 </tr>
 <tr class="row-even"><td>bvalue</td>
 <td>(float) the Adams value</td>
@@ -1794,6 +2818,17 @@ objects, for the various energy components.</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.SnapshotResults.parse" title="tools.simulationobjects.SnapshotResults.parse"><tt class="xref py py-obj docutils literal"><span class="pre">parse</span></tt></a>(fileobj)</td>
+<td>Parse a file for results</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.SnapshotResults.parse">
 <tt class="descname">parse</tt><big>(</big><em>fileobj</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.SnapshotResults.parse" title="Permalink to this definition">¶</a></dt>
@@ -1849,6 +2884,20 @@ objects, for the various energy components.</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.TemplateAtom.parse" title="tools.simulationobjects.TemplateAtom.parse"><tt class="xref py py-obj docutils literal"><span class="pre">parse</span></tt></a>(record)</td>
+<td>Parse a line from a ProtoMS file</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.TemplateAtom.zmat" title="tools.simulationobjects.TemplateAtom.zmat"><tt class="xref py py-obj docutils literal"><span class="pre">zmat</span></tt></a>()</td>
+<td>Produces a simple z-matrix representation of this atom</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.TemplateAtom.parse">
 <tt class="descname">parse</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.TemplateAtom.parse" title="Permalink to this definition">¶</a></dt>
@@ -1919,6 +2968,17 @@ objects, for the various energy components.</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.TemplateConnectivity.parse" title="tools.simulationobjects.TemplateConnectivity.parse"><tt class="xref py py-obj docutils literal"><span class="pre">parse</span></tt></a>(record)</td>
+<td>Parse a line from a ProtoMS file</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.TemplateConnectivity.parse">
 <tt class="descname">parse</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.TemplateConnectivity.parse" title="Permalink to this definition">¶</a></dt>
@@ -1980,6 +3040,26 @@ objects, for the various energy components.</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.TemplateFile.append" title="tools.simulationobjects.TemplateFile.append"><tt class="xref py py-obj docutils literal"><span class="pre">append</span></tt></a>(other)</td>
+<td>Adds another template file to this one</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.TemplateFile.assign_paramobj" title="tools.simulationobjects.TemplateFile.assign_paramobj"><tt class="xref py py-obj docutils literal"><span class="pre">assign_paramobj</span></tt></a>()</td>
+<td>Replaces integers and strings with objects</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.TemplateFile.read" title="tools.simulationobjects.TemplateFile.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
+<td>Read a template file from disc</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.TemplateFile.write" title="tools.simulationobjects.TemplateFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filename)</td>
+<td>Write a template file to disc</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.TemplateFile.append">
 <tt class="descname">append</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.TemplateFile.append" title="Permalink to this definition">¶</a></dt>
@@ -2057,6 +3137,20 @@ to TemplateAtom objects</p>
 that are specific for solute templates</p>
 <p>Has the same attributes as TemplateAtom</p>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.TemplateSoluteAtom.parse" title="tools.simulationobjects.TemplateSoluteAtom.parse"><tt class="xref py py-obj docutils literal"><span class="pre">parse</span></tt></a>(record)</td>
+<td>Parse a line from a ProtoMS file</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.TemplateSoluteAtom.zmat" title="tools.simulationobjects.TemplateSoluteAtom.zmat"><tt class="xref py py-obj docutils literal"><span class="pre">zmat</span></tt></a>()</td>
+<td>Produces a simple z-matrix representation of this atom</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="tools.simulationobjects.TemplateSoluteAtom.parse">
 <tt class="descname">parse</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.TemplateSoluteAtom.parse" title="Permalink to this definition">¶</a></dt>
@@ -2156,6 +3250,33 @@ that are specific for solute templates</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.simulationobjects.color">
+<tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">color</tt><big>(</big><em>idx</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a color of index</p>
+<p>For instances when the index is larger than the number of defined colors,
+this routine takes care of this by periodicity, i.e.
+color at idx=0 is the same color as idx=n</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>idx</strong> : int</p>
+<blockquote>
+<div><p>the index of the color</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of floats</p>
+<blockquote class="last">
+<div><p>the color</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.simulationobjects.find_box">
 <tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">find_box</tt><big>(</big><em>pdbobj</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.find_box" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse box information from a pdb file</p>
@@ -2198,6 +3319,33 @@ all pdb files given, renumbering residues</p>
 <blockquote class="last">
 <div><p>the newly created and merged pdb structure</p>
 </div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.simulationobjects.setup_logger">
+<tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">setup_logger</tt><big>(</big><em>filename=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.setup_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup ProtoMS logging system</p>
+<p>Uses the standard logging module with two handlers,
+one that prints everything above DEBUG to standard output
+and one that prints everything, even DEBUG to a file</p>
+<p>If filename is None no file handler is created</p>
+<p>This should be called by protoms.py and all other stand-alone
+programs that uses the tools</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string, optional</p>
+<blockquote>
+<div><p>the filename of the string</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a reference to the created logger</p>
 </td>
 </tr>
 </tbody>
@@ -2262,7 +3410,7 @@ solvate</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.solvate.solvate">
-<tt class="descclassname">tools.solvate.</tt><tt class="descname">solvate</tt><big>(</big><em>box</em>, <em>ligand=None</em>, <em>protein=None</em>, <em>out='solvent_box.pdb'</em>, <em>geometry='box'</em>, <em>padding=10.0</em>, <em>radius=30.0</em>, <em>center='cent'</em>, <em>namescheme='ProtoMS'</em><big>)</big><a class="headerlink" href="#tools.solvate.solvate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.solvate.</tt><tt class="descname">solvate</tt><big>(</big><em>box</em>, <em>ligand=None</em>, <em>protein=None</em>, <em>geometry='box'</em>, <em>padding=10.0</em>, <em>radius=30.0</em>, <em>center='cent'</em>, <em>namescheme='ProtoMS'</em><big>)</big><a class="headerlink" href="#tools.solvate.solvate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to solvate ligand and/or protein structures using a pre-equilibrated box of waters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2350,17 +3498,23 @@ Three numbers defines coordinates for the center as separate x,y,z</p>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-tools.ambertools">tools.ambertools module</a></li>
 <li><a class="reference internal" href="#module-tools.build_template">tools.build_template module</a></li>
-<li><a class="reference internal" href="#tools-build-template-py-bak-module">tools.build_template.py.bak module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_bar">tools.calc_bar module</a></li>
+<li><a class="reference internal" href="#tools-calc-replicapath-module">tools.calc_replicapath module</a></li>
+<li><a class="reference internal" href="#tools-calc-series-module">tools.calc_series module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_ti">tools.calc_ti module</a></li>
 <li><a class="reference internal" href="#module-tools.convertatomnames">tools.convertatomnames module</a></li>
 <li><a class="reference internal" href="#module-tools.convertwater">tools.convertwater module</a></li>
-<li><a class="reference internal" href="#module-tools.generate_input">tools.generate_input module</a></li>
+<li><a class="reference internal" href="#module-tools.generate_input">tools.generate_input module</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-tools.make_dummy">tools.make_dummy module</a></li>
 <li><a class="reference internal" href="#module-tools.make_single">tools.make_single module</a></li>
 <li><a class="reference internal" href="#module-tools.merge_templates">tools.merge_templates module</a></li>
 <li><a class="reference internal" href="#module-tools.pms2pymbar">tools.pms2pymbar module</a></li>
 <li><a class="reference internal" href="#module-tools.scoop">tools.scoop module</a></li>
-<li><a class="reference internal" href="#module-tools.simulationobjects">tools.simulationobjects module</a></li>
+<li><a class="reference internal" href="#module-tools.simulationobjects">tools.simulationobjects module</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-tools.solvate">tools.solvate module</a></li>
 <li><a class="reference internal" href="#module-tools">Module contents</a></li>
 </ul>

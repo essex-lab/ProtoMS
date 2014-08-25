@@ -606,7 +606,6 @@ if __name__ == "__main__":
     string = os.path.dirname(os.path.abspath(__file__))
     logger.info("Setting PROTOMSHOME to %s"%string)
     os.environ["PROTOMSHOME"] = string # This does not change the original shell
-    print os.environ["PROTOMSHOME"]
 
   # Try to find a default water box
   if args.waterbox is None :
@@ -631,6 +630,19 @@ if __name__ == "__main__":
       ligand_files[prefix] = {}
       ligand_files[prefix]["pdb"],ligand_files[prefix]["obj"] = _load_ligand_pdb(prefix,args.folders)
 
+    # Make a dummy PDB structure
+    if args.simulation == "dualtopology" and args.absolute :
+      ligands.insert(1,"*dummy")
+      prefix0 = ligands[0]
+      dummy_name = os.path.basename(_get_prefix(prefix0))+"_dummy.pdb"
+      ligand_files["*dummy"] = {}
+      ligand_files["*dummy"]["pdb"] = dummy_name
+      ligand_files["*dummy"]["obj"] = tools.make_dummy(ligand_files[prefix0]["obj"])
+      ligand_files["*dummy"]["obj"].write(ligand_files["*dummy"]["pdb"])
+      ligand_files["*dummy"]["tem"] = simulationobjects.standard_filename("dummy.tem","data")
+      logger.info("")
+      logger.info("Creating dummy PDB-file for ligand: %s"%ligand_files["*dummy"]["pdb"])
+
     # Create merge pdb objects
     if len(ligands) >= 2 :
       ligobj12 = simulationobjects.merge_pdbs(ligand_files[l]["obj"] for l in ligands[:2])  
@@ -643,13 +655,14 @@ if __name__ == "__main__":
  
     # Now do the preparations
     for i,l in enumerate(args.ligand) :
+      if l[0] == "*" : continue # Skip ligands created in the script
       if args.charge is not None and i < len(args.charge): 
         charge = args.charge[i]
       else :
         charge = 0
       if i > 1 : ligobj12 = None
       prefix = _get_prefix(l)
-      _prep_ligand(ligand_files[prefix],charge,ligobj12,args.folders,args)
+      _prep_ligand(ligand_files[prefix],charge,ligobj12,args.folders,args) 
 
     ligpdbs = [ligand_files[l]["pdb"] for l in ligands]
     ligtems = [ligand_files[l]["tem"] for l in ligands]

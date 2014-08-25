@@ -1,13 +1,6 @@
 
 c     MPI ID and number of tasks
-      integer myid,ntasks
-
-c     Maximum allowed number of lambdas
-      integer MAXLAMBDAS
-      parameter (MAXLAMBDAS=50)
-c     Maximum allowed number of temperatures
-      integer MAXTEMPS
-      parameter (MAXTEMPS=50)  
+      integer myid,ntasks 
 
 c     lambda-replica exchange
       integer nlretry,nlreswap
@@ -32,7 +25,8 @@ c     multi GCMC
       common /MPISTUFF/ myid,ntasks
       save /MPISTUFF/
  
-      common /LRE/ lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,mylambda,lrefolder,reoutfolder
+      common /LRE/ lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,
+     .               mylambda,lrefolder,reoutfolder
       save /LRE/
 
       common /TRE/ tempval,task2temperature,temperature2task,ntretry,ntrswap,trefreq,ntemperatures,mytemperature,

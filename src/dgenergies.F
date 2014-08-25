@@ -1,11 +1,13 @@
-      subroutine dGEnergies(mbar)
+      subroutine dGEnergies
       include 'dimensions.inc'
       include 'printer.inc'
       include 'simparams.inc'
       include 'constants.inc'
+      include 'flags.inc'
       include 'enums.inc'
       include 'gb.inc'
       include 'averages.inc'
+      include 'energies.inc'
       include 'metropolis.inc'
       include 'parallel.inc'
 c###########################################################
@@ -29,40 +31,9 @@ c###########################################################
       double precision totalEnergy
       double precision ExtraEnergy,LambdaDerivative
       integer lambindex1, lambindex2,i
-      logical mbar
 
+      if (.not.(doLambdaRE.and.printFE)) return
 
-c     save the old lambdaf and lambdab
-      oldlamf = lambdaf
-      oldlam = lambda
-      oldlamb = lambdab
-
-c     doing the gradient calculations
-c     we will print them at the very end
-      nrgti = totalEnergy(DONTCARE,nrgtib,nrgtif) + extraEnergy(DONTCARE,inrgb,inrgf)
-      nrgtib = nrgtib + inrgb
-      nrgtif = nrgtif + inrgf
-      dl = max(lambdaf-lambda,lambda-lambdab)
-      dgf=-dlog(AVGFORWARDSENERGY) / mt_beta_T
-      dgb=-dlog(AVGBACKENERGY) / mt_beta_T
-      if (lambda.eq.ZERO) then
-        dvdl = (nrgtif - nrgti) / dl
-        dvdl2 = dgf / dl
-      else if (lambda.eq.ONE) then
-        dvdl = (nrgti - nrgtib) / dl
-        dvdl2 = -dgb / dl
-      else
-        dvdl = (nrgtif - nrgtib) / (2.0*dl)
-        dvdl2 = (dgf-dgb)/(2.0d0*dl)
-      endif    
-
-
-c     write headers
-      call prettyLine(RESULTS,'FREE ENERGY DATA')
-      call prettyLine(RESULTS,'lambda | Total Energy')
-
-
-c     start the bar / mbar calculations
       if (mbar) then
         lambindex1 = 1
         lambindex2 = nlambdas
@@ -80,56 +51,82 @@ c       setting lambda forwards index
           lambindex2 = mylambda
         endif
       endif
-c     do the actual perturbations
-      do i=lambindex1,lambindex2,3
 
-        lambdaf = lambdaval(min(i+2,lambindex2))
-        lambda = lambdaval(min(i+1,lambindex2))
-        lambdab = lambdaval(i)
+      if (reCalculateFreeEnergies) then
+        reCalculateFreeEnergies = .false.
+        
+c       save the old lambdaf and lambdab
+        oldlamf = lambdaf
+        oldlam = lambda
+        oldlamb = lambdab
 
-        if (lambdaf.gt.ONE) lambdaf = ONE
-        if (lambdaf.lt.ZERO) lambdaf = ZERO
+c       doing the gradient calculations
+        dl = max(lambdaf-lambda,lambda-lambdab)
+        dgf=-dlog(AVGFORWARDSENERGY) / mt_beta_T
+        dgb=-dlog(AVGBACKENERGY) / mt_beta_T
+        if (lambda.eq.ZERO) then
+          numericalGradient = dgf / dl
+        else if (lambda.eq.ONE) then
+          numericalGradient = -dgb / dl
+        else
+          numericalGradient = (dgf-dgb)/(2.0d0*dl)
+        endif   
+        AnalyticalGradient = lambdaderivative() 
+
+
+c       start the bar / mbar calculations
+        do i=lambindex1,lambindex2,3
+
+          lambdaf = lambdaval(min(i+2,lambindex2))
+          lambda = lambdaval(min(i+1,lambindex2))
+          lambdab = lambdaval(i)
+
+          if (lambdaf.gt.ONE) lambdaf = ONE
+          if (lambdaf.lt.ZERO) lambdaf = ZERO
       
-        if (lambdab.gt.ONE) lambdab = ONE
-        if (lambdab.lt.ZERO) lambdab = ZERO
+          if (lambdab.gt.ONE) lambdab = ONE
+          if (lambdab.lt.ZERO) lambdab = ZERO
       
+          call recalculateParameters
+          call recalculateGeometries
+
+          call setAllMoved
+          if (doGB) then 
+            call ZeroAllPDACont
+            call ZeroPDACont
+            call gbsavesystem
+          endif
+          nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
+          nrgb = nrgb + inrgb
+          nrgf = nrgf + inrgf
+
+          MBAREnergy(min(i+2,lambindex2)) = nrgf
+          MBAREnergy(min(i+1,lambindex2)) = nrg
+          MBAREnergy(i) = nrgb
+        enddo
+      
+        call clearMoveList
+c       now reset the parameters
+        lambdaf = oldlamf
+        lambda = oldlam
+        lambdab = oldlamb
         call recalculateParameters
         call recalculateGeometries
 
-        call setAllMoved
-        if (doGB) then 
-          call ZeroAllPDACont
-          call ZeroPDACont
-          call gbsavesystem
-        endif
-        nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
-        nrgb = nrgb + inrgb
-        nrgf = nrgf + inrgf
+c     Now we have up to date energies to print
+      endif
+      
 
-        write(printstring,'(F5.3,X,A,X,F12.4)') lambdab,'|',nrgb
-        call printLi ne(RESULTS,printstring)
-        if (.not.(lambda.eq.lambdab)) then
-          write(printstring,'(F5.3,X,A,X,F12.4)') lambda,'|',nrg
-          call printLine(RESULTS,printstring)
-        endif
-        if (.not.(lambdaf.eq.lambda)) then
-          write(printstring,'(F5.3,X,A,X,F12.4)') lambdaf,'|',nrgf
-          call printLine(RESULTS,printstring)
-        endif
-
+c     write headers
+      call prettyLine(RESULTS,'FREE ENERGY DATA')
+      call prettyLine(RESULTS,'lambda | Total Energy')
+      
+      do i=lambindex1,lambindex2
+        write(printstring,'(F5.3,X,A,X,F12.4)') lambdaval(i),'|',MBAREnergy(i)
+        call printLine(RESULTS,printstring)
       enddo
       
-      call clearMoveList
-c     now reset the parameters
-      lambdaf = oldlamf
-      lambda = oldlam
-      lambdab = oldlamb
-      call recalculateParameters
-      call recalculateGeometries
-
-c      call prettyLine(RESULTS,'Gradient. Instantaneous | On running averages')
-c      write(printstring,'(F12.4,X,A,X,F12.4)') dvdl,'|',dvdl2
-      write(printstring,'(A,X,F12.4,X,F12.4)') 'Gradient',dvdl2,lambdaderivative()
+      write(printstring,'(A,X,F12.4,X,F12.4)') 'Gradient',NumericalGradient,AnalyticalGradient
       call prettyline(RESULTS,printstring)
 
       end

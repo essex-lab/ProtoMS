@@ -98,6 +98,9 @@ c       obtain the move type based on probabilities entered by the user
 c       now average the energies
         call calcAverageEnergy
 
+c       This we force re-calculation of BAR, MBAR and TI energies
+        if (doLambdaRE) reCalculateFreeEnergies = .true.
+
 c       taking care of dumping with the right frequency
         do j=1,ndumps
           if (mod(i,fdumps(j)).eq.0) then

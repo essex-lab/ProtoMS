@@ -490,11 +490,12 @@ class DualTopology(ProteinLigandSimulation) :
     self.setParameter("softcore1","solute 1")
     self.setParameter("softcore2","solute 2")
     self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6 soft66")
-    self.setParameter("lambda","0.500 0.501 0.499")
+    self.setParameter("dlambda","0.001")
     self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
     self.setParameter("refolder",outfolder)
 
     self.setDump("results write results",dumpfreq)
+    self.setDump("results writeinst results_inst",dumpfreq)
     self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
     self.setDump("restart write restart",dumpfreq)
     self.setDump("averages reset",dumpfreq)
@@ -567,11 +568,12 @@ class SingleTopology(ProteinLigandSimulation) :
       raise simulationobjects.SetupError("Must give at least two lambda values")
 
     self.setParameter("printfe","mbar")
-    self.setParameter("lambda","0.500 0.501 0.499")
+    self.setParameter("dlambda","0.001")
     self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
     self.setParameter("refolder",outfolder)
 
     self.setDump("results write results",dumpfreq)
+    self.setDump("results writeinst results_inst",dumpfreq)
     self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
     self.setDump("restart write restart",dumpfreq)
     self.setDump("averages reset",dumpfreq)

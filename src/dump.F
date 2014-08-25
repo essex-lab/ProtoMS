@@ -217,7 +217,7 @@ c           'averages reset|write (filename)'
             if (words(2).eq.'reset') then
               if (numb.le.1) call printLine(INFO,"Resetting free energy average to zero.")
               nsteps = 0
-            else if (words(2).eq.'write') then
+            else if ((words(2).eq.'write').or.(words(2).eq.'writeinst')) then
               
               if (nwords.ge.3) then
 c               the new file is the third word
@@ -241,11 +241,10 @@ c               the new file is the third word
                 write(tempstring,"(A,I4)")"RESULTS FILE ",numb
                 call prettyline(RESULTS, tempstring)
               endif  
-              call printAverages
-
-c             deciding whether we print FE data
-              if (doLambdaRE.and.printFE) then
-                call dGEnergies(mbar)
+              if (words(2)(1:9).eq.'writeinst') then
+                call printAllEnergies
+              else 
+                call printAverages
               endif
 
             else

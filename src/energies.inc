@@ -345,6 +345,10 @@ c      Overall
       double precision oldIndGCSLJF,newIndGCSLJF
       double precision oldIndGCSCB,newIndGCSCB
       double precision oldIndGCSLJB,newIndGCSLJB
+      
+c     Energies for MBAR, BAR or TI
+      double precision MBAREnergy(MAXLAMBDAS),AnalyticalGradient,NumericalGradient
+  
 
 c     the common blocks...
       common /DENERGY1/ NewProProC,NewProProLJ,NewProBnd,NewProAng,
@@ -440,6 +444,8 @@ c     the common blocks...
      .  newGCSGCSLJ,oldGCSGCSLJ,newGCSGCSLJB,oldGCSGCSLJB,newGCSGCSLJF,oldGCSGCSLJF,
      .  newGCSSvnDist,oldGCSSvnDist, newIndGCSGCSC,oldIndGCSGCSC, newIndGCSGCSLJ,oldIndGCSGCSLJ,
      .  newIndGCSGCSCF,oldIndGCSGCSCF, newIndGCSGCSCB,oldIndGCSGCSCB, newIndGCSGCSLJF,oldIndGCSGCSLJF
+     
+      common /DENERGY7/ MBAREnergy,AnalyticalGradient,NumericalGradient
 
       save /DENERGY1/
       save /DENERGY2/

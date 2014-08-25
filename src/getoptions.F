@@ -110,15 +110,16 @@ c     whether we are going to use chunks from protein pdb
       endif  
       
 c     whether free energy data will be printed in results
-      printFE = .false.
-      mbar = .false.
       if (getOption('printfe')) then
         if (words(1).eq.'bar') then
           printFE = .true.
+          mbar = .false.
         else if (words(1).eq.'mbar') then
           printFE = .true.
           mbar = .true.
         endif
+      else 
+        printFE = .false.
       endif  
 
 c     now get the type of boundaries to use...
