@@ -416,7 +416,7 @@ def _prep_singletopology(pdbs,templates1,settings) :
 
 def _prep_gcmc(ligands,ligand_files,settings) :
   """
-  Prepare water box for GCMC calculations
+  Prepare water box for GCMC or JAWS-1 calculations
   
   Parameters
   ----------
@@ -440,10 +440,10 @@ def _prep_gcmc(ligands,ligand_files,settings) :
     box["origin"] = box["origin"] - BOX_PADDING
     box["len"] = box["len"] + 2.0*BOX_PADDING
     # Save it to disc
-    boxpdb = "gcmc_box.pdb"
+    boxpdb = "%s_box.pdb"%settings.simulation
     simulationobjects.write_box(boxpdb,box)
     logger.info("")
-    logger.info("Created %s to visualize GCMC simulation box. Please check the output carefully"%boxpdb)
+    logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. Please check the output carefully"%boxpdb)
     return boxpdb
     
   if ligands :
@@ -460,7 +460,7 @@ def _prep_gcmc(ligands,ligand_files,settings) :
       else :
         boxpdb = settings.gcmcbox
     else : 
-      msg = "Cannot define a GCMC simulation box without a ligand and without the gcmcbox setting"
+      msg = "Cannot define a GCMC or JAWS-1 simulation box without a ligand and without the gcmcbox setting"
       logger.error(msg)
       simulationobjects.SetupError(msg) 
     
@@ -471,10 +471,10 @@ def _prep_gcmc(ligands,ligand_files,settings) :
   for sol in boxobj.solvents :
     for atom in boxobj.solvents[sol].atoms : atom.resname = "WAT"
   # Write the box to disc
-  boxname = "gcmc_wat.pdb"
+  boxname = "%s_wat.pdb"%settings.simulation
   boxobj.write(boxname) 
   logger.info("")
-  logger.info("Created %s; it contains the GCMC simulation waters. Please check the output carefully"%boxname)
+  logger.info("Created %s; it contains the GCMC or JAWS-1 simulation waters. Please check the output carefully"%boxname)
   return boxname
 
 def _wizard(settings) :
@@ -487,6 +487,7 @@ def _wizard(settings) :
   print "\t3) Dual topology free energy"
   print "\t4) Single topology free energy"
   print "\t5) Grand-canonical Monte Carlo (GCMC)"
+  print "\t6) JAWS stage 1 (Just Add Waters)"
   print ">",
   valid = ["","1","2","3","4","5"]
   instr = raw_input()
@@ -502,7 +503,7 @@ def _wizard(settings) :
     instr = raw_input()
   if instr == "" : return
   val = int(instr)
-  vals = ["equilibration","sampling","dualtopology","singletopology","gcmc"]
+  vals = ["equilibration","sampling","dualtopology","singletopology","gcmc","jaws1"]
   settings.simulation = vals[val-1]
   
   print "\nDo you have a protein that you would like to setup and simulate?"
@@ -552,7 +553,7 @@ if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program setup and run a ProtoMS simulations")
-  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc"],help="the kind of simulation to setup",default="none")
+  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc","jaws1"],help="the kind of simulation to setup",default="none")
   parser.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   parser.add_argument('-f','--folders',nargs="+",help="folders to search for files ",default=["."])
   parser.add_argument('-p','--protein',help="the prefix of the protein")
@@ -684,8 +685,8 @@ if __name__ == "__main__":
   if args.protein is not None or args.scoop is not None:
     protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,args)
 
-  # Extra preparation for GCMC
-  if args.simulation == "gcmc" and args.gcmcwater is None:
+  # Extra preparation for GCMC or JAWS-1
+  if args.simulation in ["gcmc","jaws1"] and args.gcmcwater is None:
     args.gcmcwater = _prep_gcmc(ligands,ligand_files,args)    
       
   # Create ProtoMS command files

@@ -28,7 +28,7 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
-def _assignMoveProbabilities(protein,solute,solvent,isgcmc,isperiodic) :
+def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
   """ 
   Assigns move probabilities for protein, solute, solvent and box
   Does this by some "heuristic" rule
@@ -41,8 +41,9 @@ def _assignMoveProbabilities(protein,solute,solvent,isgcmc,isperiodic) :
     the filenames of the solute pdb file
   solvent : string
     the filename of the solvent pdb file
-  isgcmc : boolean
-    flag indicating if GCMC is being prepared
+  moveset : string
+    string indicating the type of move set to create.
+    Can be standard, gcmc, jaws1 or jaws2
   isperiodic : boolean
     flag indicating if a periodic simulation is prepared
   """
@@ -73,20 +74,31 @@ def _assignMoveProbabilities(protein,solute,solvent,isgcmc,isperiodic) :
     pvolume = int(0.002*addto) + 1
   else:
     pvolume = 0
-  if isgcmc == False:
+  if moveset == "standard" :
     psolvent = int(round(addto*numsolv/numtot)) - pvolume
     psolute = int(round(addto*numsolu/numtot))
     pprotein = int(round(addto*numprot/numtot))
     return "solvent=%d protein=%d solute=%d volume=%d"%(psolvent,pprotein,psolute,pvolume)
-  else:
+  elif moveset == "gcmc":
     pinsert = int(round(addto/6))				# Giving half of all moves to GCMC moves.
     pdelete = int(round(addto/6))
     pgcsolu = int(round(addto/6))
-    psolvent = int(round(addto*numsolv/numtot/2))
-    psolute = int(round(addto*numsolu/numtot/2))
-    pprotein = int(round(addto*numprot/numtot/2))
+    psolvent = int(round(addto*numsolv/numtot/2.0))
+    psolute = int(round(addto*numsolu/numtot/2.0))
+    pprotein = int(round(addto*numprot/numtot/2.0))
     return "solvent=%d protein=%d solute=%d insertion=%d deletion=%d gcsolute=%d"%(psolvent,pprotein,psolute,pinsert,pdelete,pgcsolu)
-
+  elif moveset in ["jaws1","jaws2"] :
+    pgcsolue = int(round(addto/6)) # Giving half of all move to JAWS moves.
+    ptheta  = int(round(addto/3))
+    psolvent = int(round(addto*numsolv/numtot/2.0))
+    psolute = int(round(addto*numsolu/numtot/2.0))
+    pprotein = int(round(addto*numprot/numtot/2.0))
+    if moveset == "jaws1" :
+      movenam = "theta"
+    else :
+      movenam = "sample"
+    return "solvent=%d protein=%d solute=%d %s=%d gcsolute=%d"%(psolvent,pprotein,psolute,movenam,ptheta,pgcsolu)
+  
 class ProtoMSSimulation :
     """
     This is a ProtoMS command file object.This object holds all of the information
@@ -381,7 +393,7 @@ class Equilibration(ProteinLigandSimulation) :
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
 
     #moves = assignMoveProbabilities(protein is not None,solutes,solvent is not None,self.periodic)
-    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nsteps,moves))
     self.setChunk("pdb all solvent=all file=%s standard"%pdbfile)
 
@@ -426,7 +438,7 @@ class Sampling(ProteinLigandSimulation) :
     self.setDump("restart write %srestart"%outprefix,dumpfreq)
     self.setDump("averages reset",dumpfreq)
     
-    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
@@ -514,7 +526,7 @@ class DualTopology(ProteinLigandSimulation) :
         self.setChunk("id add %d solute %d %s %s"%(restsol+1,restsol+1,resatom[1],resname))
         self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f 10"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2]))
     
-    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
@@ -578,9 +590,34 @@ class SingleTopology(ProteinLigandSimulation) :
     self.setDump("restart write restart",dumpfreq)
     self.setDump("averages reset",dumpfreq)
     
-    moves = _assignMoveProbabilities(protein,solutes,solvent,False,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
+
+#
+# Helper routine
+#
+
+def _setbox(simulation,waters,inbox) :
+
+  waters = simulationobjects.PDBFile(filename=waters)
+  headerbox = simulationobjects.find_box(waters)
+      
+  if headerbox is None :
+    if inbox is None :
+      raise simulationobjects.SetupError("Cannot setup simulation without a box")
+    outbox = simulationobjects.PDBFile(filename=inbox).getBox()
+  else :
+    outbox = headerbox
+
+  if "origin" in outbox :
+    for i,param in enumerate(["x","y","z"]) :
+      simulation.setParameter("origin"+param,outbox["origin"][i])
+  elif "center" in outbox :
+    for i,param in enumerate(["x","y","z"]) :
+      simulation.setParameter("center"+param,outbox["center"][i])
+  for i,param in enumerate(["x","y","z"]) :
+    simulation.setParameter(param,outbox["len"][i])
 
 class GCMC(ProteinLigandSimulation) :
   """ 
@@ -657,26 +694,7 @@ class GCMC(ProteinLigandSimulation) :
     else :
       self.setParameter("multigcmc"," ".join("%.3f"%a for a in adamval))
     self.setParameter("refolder",outfolder)
-
-    gcmcwat = simulationobjects.PDBFile(filename=gcmcwater)
-    headerbox = simulationobjects.find_box(gcmcwat)
-      
-    if headerbox is None :
-      if gcmcbox is None :
-        raise simulationobjects.SetupError("Cannot setup GCMC without a box")
-      gcmcbox = simulationobjects.PDBFile(filename=gcmcbox).getBox()
-    else :
-      gcmcbox = headerbox
-
-    if "origin" in gcmcbox :
-      for i,param in enumerate(["x","y","z"]) :
-        self.setParameter("origin"+param,gcmcbox["origin"][i])
-    elif "center" in gcmcbox :
-      for i,param in enumerate(["x","y","z"]) :
-        self.setParameter("center"+param,gcmcbox["center"][i])
-    for i,param in enumerate(["x","y","z"]) :
-      self.setParameter(param,gcmcbox["len"][i])
-    
+    _setbox(self,gcmcwater,gcmcbox)
     self.setParameter("#"," End of GCMC specific parameters")
   
     self.setDump("results write results",dumpfreq)
@@ -684,7 +702,77 @@ class GCMC(ProteinLigandSimulation) :
     self.setDump("restart write restart",dumpfreq)
     self.setDump("averages reset",dumpfreq)
     
-    moves = _assignMoveProbabilities(protein,solutes,solvent,True,self.periodic)
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"gcmc",self.periodic)
+    self.setChunk("equilibrate %d %s"%(nequil,moves))        
+    self.setChunk("simulate %d %s"%(nprod,moves))
+
+class Jaws1(ProteinLigandSimulation) :
+  """ 
+  This a command file for a JAWS-1 simulation
+  Generates input for proteins, solutes and solvent
+  write JAWS-1 parameters
+  dump results, pdb and restart files
+  equilibrate and production run
+  """
+  def __init__(self,protein="protein.pdb",
+                    solutes=[],
+                    solvent="water.pdb",
+                    templates=[],
+                    jawswater="jaws_water.pdb",
+                    jawsbox=None,   
+                    nequil=5E6,
+                    nprod=40E6,
+                    dumpfreq=1E5) :  
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    jawswater : string, optional
+      filename of the water to do JAWS-1 one
+    jawsbox : dictionary of numpy array, optional
+      defines the box if not found in jawswater
+    nequil : int, optional
+      number of equilibration moves
+    nprod : int, optional
+      number of production moves
+    dumfreq : int, optional
+      the dump frequency 
+    
+    Raises
+    ------
+    SetupError
+      no protein given
+      no box dimensions found
+      no JAWS water given
+    """      
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
+     
+    if protein is None :
+      raise simulationobjects.SetupError("Cannot setup GCMC without protein")
+
+    if jawswater is None  :
+      raise simulationobjects.SetupError("Cannot setup JAWS-1 without any JAWS water")
+ 
+    self.setParameter("#"," JAWS-1 specific parameters")
+    self.setParameter("jaws1","0")
+    self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
+    self.setParameter("grand1",jawswater)
+    _setbox(self,jawswater,jawsbox)
+    self.setParameter("#"," End of JAWS specific parameters")
+  
+    self.setDump("results write results",dumpfreq)
+    self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
+    self.setDump("restart write restart",dumpfreq)
+    self.setDump("averages reset",dumpfreq)
+    
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"jaws1",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
@@ -821,7 +909,14 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
                      templates=templates,solvent=protein_water,gcmcwater=settings.gcmcwater,
                      adamval=settings.adams,nequil=settings.nequil,gcmcbox=settings.gcmcbox,
                      nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder="out_gcmc")    
-                        
+
+  elif settings.simulation == "jaws1" :
+  
+      bnd_cmd = Jaws1(protein=protein,solutes=ligands, 
+                     templates=templates,solvent=protein_water,jawswater=settings.gcmcwater,
+                     nequil=settings.nequil,jawsbox=settings.gcmcbox,
+                     nprod=settings.nprod,dumpfreq=settings.dumpfreq) 
+                     
   return free_cmd,bnd_cmd  
 
 if __name__ == "__main__":

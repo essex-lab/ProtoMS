@@ -180,51 +180,67 @@ class PDBFile:
         filename : string
           the name of the pdb file
         """
-        residues = {}
-        solvents = {}
         self.name = filename
         with open ( filename ) as f:
+          read_from(f)
+    def read_from(self,f) :
+        """
+        Read a pdb structure from a fileobject
+        
+        Terminates reading when found a record starting with END
+        
+        Parameters
+        ----------
+        f : file object
+          the object to read from
+        
+        """
+        residues = {}
+        solvents = {}
+        line = f.readline()
+        nres = 0
+        prevres = -1
+        while line :
+          if line[:6] in ["ATOM  ","HETATM"] :           
+              index = int(line[6:11].strip())
+              atname = line[12:16].strip()
+              restype = line[17:20]
+              resnum = int(line[22:26].strip())
+              if resnum != prevres :
+                nres = nres + 1
+              prevres = resnum
+              x,y,z = float(line[30:38].strip()),float(line[38:46].strip()),float(line[46:54].strip())
+              coords = [x,y,z]
+              newatom = Atom(index=index,name=atname,resindex=nres,
+                             resname=restype,coords=coords)
+              # If solvent
+              if restype not in ['WAT','wat','HOH','hoh','DOD','dod','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']:
+                  try:
+                      residues[nres]
+                  except KeyError:
+                      residues[nres] = Residue(name=restype,index=nres)
+                  #print "resnum is %d adding atom %d" % (resnum,index)
+                  residues[nres].addAtom(atom=newatom)
+              else:
+                  #print restype
+                  try:
+                      solvents[nres]
+                  except KeyError:
+                      solvents[nres] = Residue(name=restype,index=nres)
+                  if len (solvents[nres].atoms) >= 4:
+                      raise BaseException("More than one residue with number %d " % nres)
+                  solvents[nres].addAtom(atom=newatom)
+                  #print solvents
+          elif line[:3] == "TER" :
+            nres = nres + 1
+          elif line[:6] in ["HEADER","REMARK"] :
+            self.header = self.header + line
+          elif line[:3] == "END" :
+            self.residues,self.solvents = residues,solvents
+            return
+          # Read next line
           line = f.readline()
-          nres = 0
-          prevres = -1
-          while line :
-            if line[:6] in ["ATOM  ","HETATM"] :                
-                index = int(line[6:11].strip())
-                atname = line[12:16].strip()
-                restype = line[17:20]
-                resnum = int(line[22:26].strip())
-                if resnum != prevres :
-                  nres = nres + 1
-                prevres = resnum
-                x,y,z = float(line[30:38].strip()),float(line[38:46].strip()),float(line[46:54].strip())
-                coords = [x,y,z]
-                newatom = Atom(index=index,name=atname,resindex=nres,
-                               resname=restype,coords=coords)
-                # If solvent
-                if restype not in ['WAT','wat','HOH','hoh','DOD','dod','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']:
-                    try:
-                        residues[nres]
-                    except KeyError:
-                        residues[nres] = Residue(name=restype,index=nres)
-                    #print "resnum is %d adding atom %d" % (resnum,index)
-                    residues[nres].addAtom(atom=newatom)
-                else:
-                    #print restype
-                    try:
-                        solvents[nres]
-                    except KeyError:
-                        solvents[nres] = Residue(name=restype,index=nres)
-                    if len (solvents[nres].atoms) >= 4:
-                        raise BaseException("More than one residue with number %d " % nres)
-                    solvents[nres].addAtom(atom=newatom)
-                    #print solvents
-            elif line[:3] == "TER" :
-              nres = nres + 1
-            elif line[:6] in ["HEADER","REMARK"] :
-              self.header = self.header + line
-            # Read next line
-            line = f.readline()
-        self.residues, self.solvents = residues, solvents
+        self.residues,self.solvents = residues,solvents
     def write ( self, filename, renumber = False, header = None ):
         """
         Write the PDB file to disc
@@ -290,7 +306,36 @@ class PDBFile:
             maxxyz = np.maximum(maxxyz,atom.coords)
         return {"center":(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
        
+class  PDBSet :
+    """
+    Hold a collection of PDBFile objects
+    
+    Attributes
+    ----------
+    pdbs : list of PDBFile objects
+      the pdb files
+    """
+    def __init__(self) :
+        self.pdbs = []
+    def read(self,filename) :
+        """
+        Read a set of pdb structures from a file
         
+        Parameters
+        ----------
+        filename : string
+          the name of the file to read
+        """
+        self.pdbs = []
+        with open(filename,"r") as f :
+            while True :
+                pdb = PDBFile()
+                pdb.read_from(f)
+                if not (pdb.residues or pdb.solvents) :
+                    break
+                else :
+                    self.pdbs.append(pdb)
+          
 def merge_pdbs(pdbobjs) :
     """
     Merge pdb files
