@@ -644,8 +644,13 @@ if __name__ == '__main__' :
     offset = 0
   
   # Read the input file from disc
+  if len(args.file) == 2 and os.path.isdir(args.file[0]) :
+    restem = args.file.pop(1)
+    filename = [args.file[0],restem]
+  else :
+    filename = args.file[0]
   results_file = simulationobjects.ResultsFile()
-  results_file.read(filename=args.file[0])
+  results_file.read(filename=filename)
   results = results_file.make_series() # This puts all data into Numpy arrays
   
   # Select which series to plot

@@ -814,6 +814,46 @@ ti</p>
 </dd></dl>
 
 </div>
+<div class="section" id="tools-clear-gcmcbox-module">
+<h2>tools.clear_gcmcbox module<a class="headerlink" href="#tools-clear-gcmcbox-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tools.clear_gcmcbox"></span><p>Routine to remove solvent molecules from a GCMC/JAWS-1 simulation box</p>
+<p>This module defines a single public function:
+clear_gcmcbox</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.clear_gcmcbox.clear_gcmcbox">
+<tt class="descclassname">tools.clear_gcmcbox.</tt><tt class="descname">clear_gcmcbox</tt><big>(</big><em>gcmcbox</em>, <em>waters</em><big>)</big><a class="headerlink" href="#tools.clear_gcmcbox.clear_gcmcbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes solvent molecules from the GCMC/JAWS-1 box as they will not be 
+able to move during the simulation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>gcmcbox</strong> : string or PDBFile object</p>
+<blockquote>
+<div><p>the gcmcbox</p>
+</div></blockquote>
+<p><strong>waters</strong> : string or PDBFile object</p>
+<blockquote>
+<div><p>the water molecule to check</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int</p>
+<blockquote>
+<div><p>the number of removed water molecules</p>
+</div></blockquote>
+<p>PDBFile</p>
+<blockquote class="last">
+<div><p>the cleared solvation box</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-tools.convertatomnames">
 <span id="tools-convertatomnames-module"></span><h2>tools.convertatomnames module<a class="headerlink" href="#module-tools.convertatomnames" title="Permalink to this headline">¶</a></h2>
 <p>Routines to convert atom names in a PDB-file</p>
@@ -1195,6 +1235,62 @@ Generates input for proteins, solutes and solvent and write an equilibration and
 <p>This a command file for a GCMC simulation
 Generates input for proteins, solutes and solvent
 write GCMC parameters
+dump results, pdb and restart files
+equilibrate and production run</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.generate_input.Jaws1">
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Jaws1</tt><big>(</big><em>protein='protein.pdb'</em>, <em>solutes=</em>, <span class="optional">[</span><span class="optional">]</span><em>solvent='water.pdb'</em>, <em>templates=</em>, <span class="optional">[</span><span class="optional">]</span><em>jawswater='jaws_water.pdb'</em>, <em>jawsbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em><big>)</big><a class="headerlink" href="#tools.generate_input.Jaws1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></tt></a></p>
+<p>This a command file for a JAWS-1 simulation
+Generates input for proteins, solutes and solvent
+write JAWS-1 parameters
 dump results, pdb and restart files
 equilibrate and production run</p>
 <p class="rubric">Methods</p>
@@ -1782,20 +1878,54 @@ make_dummy</p>
 <dl class="function">
 <dt id="tools.make_dummy.make_dummy">
 <tt class="descclassname">tools.make_dummy.</tt><tt class="descname">make_dummy</tt><big>(</big><em>pdbfile</em><big>)</big><a class="headerlink" href="#tools.make_dummy.make_dummy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a dummy PDB structure to match a solute</p>
+<dd><p>Make a dummy PDB structure to match a molecule</p>
+<p>It will place the dummy at the centre of the molecule</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pdbfile</strong> : string or PDBFile</p>
 <blockquote>
-<div><p>the pdb structure of the solute</p>
+<div><p>the pdb structure of the molecule</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">PDBFile instance</p>
 <blockquote class="last">
 <div><p>the dummy structure</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="tools-make-gcmcbox-module">
+<h2>tools.make_gcmcbox module<a class="headerlink" href="#tools-make-gcmcbox-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tools.make_gcmcbox"></span><p>Routine to make a GCMC/JAWS-1 simulation box from a ligand</p>
+<p>This module defines a single public function:
+make_gcmcbox</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.make_gcmcbox.make_gcmcbox">
+<tt class="descclassname">tools.make_gcmcbox.</tt><tt class="descname">make_gcmcbox</tt><big>(</big><em>pdb</em>, <em>filename</em>, <em>padding=2.0</em><big>)</big><a class="headerlink" href="#tools.make_gcmcbox.make_gcmcbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a GCMC/JAWS-1 simulation box around a PDB-structure</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pdb</strong> : PDBFile object</p>
+<blockquote>
+<div><p>the PDB structure</p>
+</div></blockquote>
+<p><strong>filename</strong> : string</p>
+<blockquote>
+<div><p>the name of the output file</p>
+</div></blockquote>
+<p><strong>padding</strong> : float, optional</p>
+<blockquote class="last">
+<div><p>the amount of extra space around the ligand to add</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2375,7 +2505,10 @@ or end of file</p>
 <tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read" title="tools.simulationobjects.PDBFile.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
 <td>Read a pdb-file from disc</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filename[,&nbsp;renumber,&nbsp;header])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read_from" title="tools.simulationobjects.PDBFile.read_from"><tt class="xref py py-obj docutils literal"><span class="pre">read_from</span></tt></a>(f)</td>
+<td>Read a pdb structure from a fileobject</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filename[,&nbsp;renumber,&nbsp;header])</td>
 <td>Write the PDB file to disc</td>
 </tr>
 </tbody>
@@ -2455,6 +2588,25 @@ not the Residue and Atom objects themselves</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="tools.simulationobjects.PDBFile.read_from">
+<tt class="descname">read_from</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.read_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pdb structure from a fileobject</p>
+<p>Terminates reading when found a record starting with END</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>f</strong> : file object</p>
+<blockquote class="last">
+<div><p>the object to read from</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="tools.simulationobjects.PDBFile.write">
 <tt class="descname">write</tt><big>(</big><em>filename</em>, <em>renumber=False</em>, <em>header=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the PDB file to disc</p>
@@ -2473,6 +2625,54 @@ not the Residue and Atom objects themselves</p>
 <p><strong>header</strong> : string, optional</p>
 <blockquote class="last">
 <div><p>additional lines to print before the atom records</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.simulationobjects.PDBSet">
+<em class="property">class </em><tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">PDBSet</tt><a class="headerlink" href="#tools.simulationobjects.PDBSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hold a collection of PDBFile objects</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>pdbs</td>
+<td>(list of PDBFile objects) the pdb files</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.read" title="tools.simulationobjects.PDBSet.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
+<td>Read a set of pdb structures from a file</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.simulationobjects.PDBSet.read">
+<tt class="descname">read</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBSet.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a set of pdb structures from a file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string</p>
+<blockquote class="last">
+<div><p>the name of the file to read</p>
 </div></blockquote>
 </td>
 </tr>
@@ -3502,12 +3702,14 @@ Three numbers defines coordinates for the center as separate x,y,z</p>
 <li><a class="reference internal" href="#tools-calc-replicapath-module">tools.calc_replicapath module</a></li>
 <li><a class="reference internal" href="#tools-calc-series-module">tools.calc_series module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_ti">tools.calc_ti module</a></li>
+<li><a class="reference internal" href="#tools-clear-gcmcbox-module">tools.clear_gcmcbox module</a></li>
 <li><a class="reference internal" href="#module-tools.convertatomnames">tools.convertatomnames module</a></li>
 <li><a class="reference internal" href="#module-tools.convertwater">tools.convertwater module</a></li>
 <li><a class="reference internal" href="#module-tools.generate_input">tools.generate_input module</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-tools.make_dummy">tools.make_dummy module</a></li>
+<li><a class="reference internal" href="#tools-make-gcmcbox-module">tools.make_gcmcbox module</a></li>
 <li><a class="reference internal" href="#module-tools.make_single">tools.make_single module</a></li>
 <li><a class="reference internal" href="#module-tools.merge_templates">tools.merge_templates module</a></li>
 <li><a class="reference internal" href="#module-tools.pms2pymbar">tools.pms2pymbar module</a></li>

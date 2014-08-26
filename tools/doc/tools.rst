@@ -51,6 +51,14 @@ tools.calc_ti module
     :members:
     :undoc-members:
     :show-inheritance:
+    
+tools.clear_gcmcbox module
+--------------------
+
+.. automodule:: tools.clear_gcmcbox
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 tools.convertatomnames module
 -----------------------------
@@ -80,6 +88,14 @@ tools.make_dummy module
 ------------------------
 
 .. automodule:: tools.make_dummy
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tools.make_gcmcbox module
+------------------------
+
+.. automodule:: tools.make_gcmcbox
     :members:
     :undoc-members:
     :show-inheritance:

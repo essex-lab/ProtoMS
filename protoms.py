@@ -161,11 +161,15 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
   files["zmat"] = _locate_file(ligprefix+".zmat",folders)
   files["wat"] = _locate_file(ligprefix+"_box.pdb",folders)
 
+  logger.info("")
+  logger.info("Setting up ligand: %s..."%files["pdb"])
+
   # Get the ligand name from the pdb header
   if 'HEADER' in files["obj"].header:
     words = files["obj"].header.strip().split()
     ligname = words[words.index('HEADER')+1]
   else:
+    logger.info('Unable to find header information in the PDB-file, adding it automatically.')
     ligname = files["obj"].residues[1].name
     files["obj"].header = files["obj"].header + "HEADER " + ligname + "\n"
     files["obj"].write(files["pdb"])
@@ -181,11 +185,9 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
         files["tem"] = tempfile
       else :
         tem = simulationobjects.TemplateFile(filename=tempfile)
-        if tem.templates[0].name == ligname:
+        if tem.templates[0].name.lower() == ligname.lower():
           files["tem"] = tempfile
-
-  logger.info("")
-  logger.info("Setting up ligand: %s..."%files["pdb"])
+          break
 
   # Check to see if we have a template file
   if files["tem"] is None : 
@@ -414,7 +416,7 @@ def _prep_singletopology(pdbs,templates1,settings) :
 
   return templates1,templates2
 
-def _prep_gcmc(ligands,ligand_files,settings) :
+def _prep_gcmc(ligands,ligand_files,waters,settings) :
   """
   Prepare water box for GCMC or JAWS-1 calculations
   
@@ -424,6 +426,8 @@ def _prep_gcmc(ligands,ligand_files,settings) :
     names of all ligands loaded
   ligand_files : dictionary
     files and objects associated with each ligand
+  waters : string
+    the name of the filename containing solvation waters
   settings : Namespace (from argparse) 
     additional settings
     
@@ -434,14 +438,8 @@ def _prep_gcmc(ligands,ligand_files,settings) :
   """
   
   def pdb2box(pdbobj) :
-    BOX_PADDING = 2.0
-    # Create a box around the solute and pad it with two Angstromgs
-    box = pdbobj.getBox()
-    box["origin"] = box["origin"] - BOX_PADDING
-    box["len"] = box["len"] + 2.0*BOX_PADDING
-    # Save it to disc
     boxpdb = "%s_box.pdb"%settings.simulation
-    simulationobjects.write_box(boxpdb,box)
+    tools.make_gcmcbox(pdbobj,boxpdb)
     logger.info("")
     logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. Please check the output carefully"%boxpdb)
     return boxpdb
@@ -456,7 +454,7 @@ def _prep_gcmc(ligands,ligand_files,settings) :
       box = simulationobjects.find_box(gcmcboxobj)
       if box is None :
         # Else take it as a ligand
-       boxpdb = pdb2box(gcmcboxobj)
+        boxpdb = pdb2box(gcmcboxobj)
       else :
         boxpdb = settings.gcmcbox
     else : 
@@ -475,7 +473,17 @@ def _prep_gcmc(ligands,ligand_files,settings) :
   boxobj.write(boxname) 
   logger.info("")
   logger.info("Created %s; it contains the GCMC or JAWS-1 simulation waters. Please check the output carefully"%boxname)
-  return boxname
+  
+  # Clear the GCMC/JAWS-1 box from solvation waters
+  logger.info("")
+  nrem,waters2 = tools.clear_gcmcbox(boxobj,waters)
+  if nrem > 0 :
+    waters2_name = _get_prefix(str(waters2))+"_clr.pdb"
+    logger.info("Created water cap-file: %s"%waters2_name)
+    waters2.write(waters2_name)
+    waters = waters2_name
+  
+  return boxname,waters
 
 def _wizard(settings) :
 
@@ -644,7 +652,7 @@ if __name__ == "__main__":
       logger.info("")
       logger.info("Creating dummy PDB-file for ligand: %s"%ligand_files["*dummy"]["pdb"])
 
-    # Create merge pdb objects
+    # Create merged pdb objects
     if len(ligands) >= 2 :
       ligobj12 = simulationobjects.merge_pdbs(ligand_files[l]["obj"] for l in ligands[:2])  
     else :
@@ -687,7 +695,7 @@ if __name__ == "__main__":
 
   # Extra preparation for GCMC or JAWS-1
   if args.simulation in ["gcmc","jaws1"] and args.gcmcwater is None:
-    args.gcmcwater = _prep_gcmc(ligands,ligand_files,args)    
+    args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,args)    
       
   # Create ProtoMS command files
   if args.simulation == "singletopology" :
@@ -700,7 +708,6 @@ if __name__ == "__main__":
     args.repeats = [args.repeats.lower()]
 
   repeats = []
-
   for post in postfix :
     for repeat in args.repeats:
       repeats.append(str(repeat) + post)

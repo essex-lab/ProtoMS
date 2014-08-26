@@ -17,6 +17,7 @@
 import math
 import sys
 import os
+import glob
 import logging
 import copy
 
@@ -182,7 +183,7 @@ class PDBFile:
         """
         self.name = filename
         with open ( filename ) as f:
-          read_from(f)
+          self.read_from(f)
     def read_from(self,f) :
         """
         Read a pdb structure from a fileobject
@@ -810,6 +811,17 @@ class ResultsFile :
     """
     Read results from disc
    
+    The filename parameter can be either a single filename, in
+    case it is assumed that it is a ProtoMS3.0 results file, i.e.
+    it contains several snapshots
+    if it is a list of strings, two behaviors are supported:
+      1) if the length of the list is 2, and the first filename
+    is a dictionary, a glob is used to list all filenames in that
+    directory that starts with the second filename in the list
+      2) if the length is not two or you give two filenames,
+    each of them are processed individually and treated as individual
+    snapshots
+
     Parameters
     ----------
     filename : string or list of strings
@@ -836,7 +848,15 @@ class ResultsFile :
       f.close()  
     else :   # Assumes it is a list and read each one of them
       if readmax is None : readmax = 1E10
-      for filenam in filename[skip:min(len(filename),(skip+readmax+1))] :
+      if len(filename) == 2 :
+        if os.path.isdir(filename[0]) :
+          filenames = glob.glob(os.path.join(filename[0],"%s*"%filename[1]))
+          if len(filenames) > 1 : filenames.sort()
+        else :
+          filenames = filename
+      else :
+        filenames = filename
+      for filenam in filenames[skip:min(len(filenames),(skip+readmax+1))] :
         f = open(filenam, "r")
         self.snapshots.append(SnapshotResults(f))
         f.close()
@@ -868,7 +888,7 @@ class ResultsFile :
 
     # First replace all float/int in the SnapshotResults object with NumpyArrays
     self.series = copy.deepcopy(self.snapshots[0])
-    for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient"] :
+    for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","capenergy"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap))
     for attr in ["datastep","lambdareplica","solventson","seed"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap,dtype=int))
@@ -882,8 +902,6 @@ class ResultsFile :
       for elabel in self.series.interaction_energies :
         for ene in self.series.interaction_energies[elabel] :
           set_energyresults(ene)  
-    if hasattr(self.snapshots[0],"capenergy") :  
-      set_energyresults(self.series.capenergy)
     if hasattr(self.snapshots[0],"extraenergy") :  
       set_energyresults(self.series.extraenergy)
     if hasattr(self.snapshots[0],"feenergies") :
@@ -895,7 +913,7 @@ class ResultsFile :
 
     # Then loop over all snapshots and fill the NumpyArrays with data
     for i,snapshot in enumerate(self.snapshots) :
-      for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","datastep","lambdareplica","solventson","seed"] :
+      for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","datastep","lambdareplica","solventson","seed","capenergy"] :
         if hasattr(snapshot,attr) : getattr(self.series,attr)[i] = getattr(snapshot,attr)
       if hasattr(snapshot,"total") :
         put_energyresults(self.series.total,snapshot.total,i)
@@ -909,8 +927,6 @@ class ResultsFile :
           if elabel not in self.series.interaction_energies : continue
           for ene1,ene2 in zip(self.series.interaction_energies[elabel],snapshot.interaction_energies[elabel]) :
             put_energyresults(ene1,ene2,i)
-      if hasattr(snapshot,"capenergy") :  
-        put_energyresults(self.series.capenergy,snapshot.capenergy,i)
       if hasattr(snapshot,"extraenergy") :  
         put_energyresults(self.series.extraenergy,snapshot.extraenergy,i)
       if hasattr(snapshot,"feenergies") :

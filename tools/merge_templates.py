@@ -38,9 +38,14 @@ def merge_templates(templates) :
   logger.debug("\ttemplates = %s"%" ".join(templates)) 
   logger.debug("This will merge all templates, renumbering force field parameters")
   
-  templates = list(set(templates)) # Make it a unique list
-  temfile = simulationobjects.TemplateFile(templates[0])
-  for t in templates[1:] :
+   # Make it a unique list
+  templates2 = []
+  for t in templates :
+    if not t in templates2  :
+      templates2.append(t)
+      
+  temfile = simulationobjects.TemplateFile(templates2[0])
+  for t in templates2[1:] :
     temfile2 = simulationobjects.TemplateFile(t)
     temfile.append(temfile2)
   return temfile
