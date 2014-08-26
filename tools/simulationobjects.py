@@ -77,7 +77,7 @@ class Atom(object):
         """
         Produces a string representation, viz. a standard ATOM record
         """
-        return "ATOM  %-5d %3s %3s    %4d     %8.5f %8.5f %8.5f  1.00 0.00" % (self.index,self.name,self.resname,self.resindex,self.coords[0],self.coords[1],self.coords[2])
+        return "ATOM  %-5d %3s %3s    %4d     %8.3f%8.3f%8.3f  1.00 0.00" % (self.index,self.name,self.resname,self.resindex,self.coords[0],self.coords[1],self.coords[2])
               
 class Residue(object):
     """ 
@@ -266,7 +266,7 @@ class PDBFile:
                         atom.resindex = i
                     s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                     f.write ( s )
-            if len(self.solvents.keys()) > 0 : f.write ( "TER \n" )
+            if len(self.residues.keys()) > 0 : f.write ( "TER \n" )
             for i, sol in enumerate ( sorted ( self.solvents.keys() ), 1 ):
                 for atom in self.solvents[sol].atoms:
                     if renumber:
@@ -305,6 +305,10 @@ class PDBFile:
           for atom in self.residues[res].atoms :
             minxyz = np.minimum(minxyz,atom.coords)
             maxxyz = np.maximum(maxxyz,atom.coords)
+        for res in self.solvents :
+          for atom in self.solvents[res].atoms :
+            minxyz = np.minimum(minxyz,atom.coords)
+            maxxyz = np.maximum(maxxyz,atom.coords)
         return {"center":(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
        
 class  PDBSet :
@@ -318,6 +322,24 @@ class  PDBSet :
     """
     def __init__(self) :
         self.pdbs = []
+    def from_residues(self,pdbfile) :
+        """
+        Split a PDB file into a set by residue
+        
+        Parameters
+        ----------
+        pdbfile : PDBFile object
+          the pdb-file to split          
+        """
+        self.pdbs = []
+        for resi,res in pdbfile.residues.iteritems() :
+          self.pdbs.append(PDBFile()) 
+          self.pdbs[-1].residues[resi] = res
+          self.pdbs[-1].header = pdbfile.header
+        for soli,sol in pdbfile.solvents.iteritems() :
+          self.pdbs.append(PDBFile()) 
+          self.pdbs[-1].solvents[soli] = sol
+          self.pdbs[-1].header = pdbfile.header
     def read(self,filename) :
         """
         Read a set of pdb structures from a file
@@ -336,7 +358,26 @@ class  PDBSet :
                     break
                 else :
                     self.pdbs.append(pdb)
-          
+    def write(self,filenames) :
+        """
+        Write the set to disc
+
+        If one filename is given all PDB-files are written to one file
+        
+        Parameters
+        ----------
+        filenames : list of strings
+          the name of the file(s) to write to
+        
+        """        
+        if isinstance(filenames,basestring) or len(filenames) == 1 :
+          raise SetupError("This feature is not implemented yet")
+        elif len(filenames) == len(self.pdbs) :
+          for pdb,filename in zip(self.pdbs,filenames) :
+            pdb.write(filename)
+        else :
+          raise SetupError("Invalid number of filenames given")        
+  
 def merge_pdbs(pdbobjs) :
     """
     Merge pdb files

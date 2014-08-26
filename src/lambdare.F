@@ -159,7 +159,7 @@ c     Re-setting all running averages
       nsteps = 0
 
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
-      write(lrefolder,"(2A,F5.3)")reoutfolder(1:lineLength(reoutfolder)),"/lam-",lambdaval(mylambda)
+      write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
       do i=1,nOpenFiles    
         fileappend(i) = .True.
         fileopened(i) = .False.

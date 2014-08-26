@@ -21,6 +21,11 @@ c     multi GCMC
       integer nadams,myadam
       character*255 gcmcfolder
       double precision adamparam(MAXLAMBDAS)
+
+c     multi JAWS-2
+      integer njaws2,myjbias
+      character*255 jaws2folder
+      double precision alljbias(MAXLAMBDAS)
              
       common /MPISTUFF/ myid,ntasks
       save /MPISTUFF/
@@ -35,3 +40,6 @@ c     multi GCMC
 
       common /MGCMC/ nadams,myadam,adamparam,gcmcfolder
       save /MGCMC/
+
+      common /MJAWS/ njaws2,myjbias,alljbias,jaws2folder
+      save /MJAWS/

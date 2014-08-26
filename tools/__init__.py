@@ -18,3 +18,4 @@ from make_single import make_single,write_map
 from make_dummy import make_dummy
 from clear_gcmcbox import clear_gcmcbox
 from make_gcmcbox import make_gcmcbox
+from split_jawswater import split_waters

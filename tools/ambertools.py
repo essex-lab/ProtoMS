@@ -83,7 +83,7 @@ def run_antechamber ( lig, charge, resnam = None):
     logger.debug("Running run_antechamber with arguments: ")
     logger.debug("\tlig    = %s"%lig) 
     logger.debug("\tcharge = %d"%charge) 
-    logger.debug("\tresnam = %s"%resname)
+    logger.debug("\tresnam = %s"%resnam)
     logger.debug("This will generate an Amber prepi file with AM1-BCC and GAFF atom types")
 
     # Check if it is a string, otherwise assumes it is a pdb object

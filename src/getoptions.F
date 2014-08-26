@@ -39,7 +39,7 @@ c     the current system time and date
       logical getLogical,getOption
       double precision getDouble
       integer getInt
-      character*32 tempstring
+      character*300 tempstring
       character*300 filename
 
       double precision delb,delf
@@ -741,10 +741,15 @@ c     get the B factor for GCMC simulations
       endif
 
 c     Get the JAWS biasing term for JAWS-II simulations
-      if (getOption('jbias')) then
+      if ((.not.doMultiJaws2).and.getOption('jbias')) then
          bias = getDouble(words(1),bias)
-      write(printstring,*) "JAWS biasing term = ",bias," kcal/mol"
-      call printLine(INFO,printstring)
+        write(printstring,*) "JAWS biasing term = ",bias," kcal/mol"
+        call printLine(INFO,printstring)
+      endif
+      if (doMultiJaws2) then
+        bias = alljbias(myjbias)
+        write(printstring,*) "JAWS biasing term = ",bias," kcal/mol"
+        call printLine(INFO,printstring) 
       endif
 
       if (getOption('x').or.getOption('lenx')) then

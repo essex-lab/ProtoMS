@@ -530,7 +530,7 @@ if __name__ == '__main__' :
   args = parser.parse_args()
   
   # Setup the logger
-  logger = simulationobjects.setup_logger("make_single_py.log")
+  logger = sim.setup_logger("make_single_py.log")
 
   if args.tem0 is None or args.tem1 is None or args.pdb0 is None or args.pdb1 is None :
     sim.SetupError("Not all four necessary input files given. Cannot setup single-topology")

@@ -57,9 +57,12 @@ c     a string that may be used to format lines to print
 
 c     whether or not to do pretty printing
       logical prettyprint
+
+      character*300 outfolder
+      logical hasoutfolder
                   
-      common /PROTOPRINT/ nopenfiles,streamhandle,printstring,streamtag,openfiles,prettyprint,
-     .                    fileopened,fileappend,appendto
+      common /PROTOPRINT/ nopenfiles,streamhandle,printstring,outfolder,streamtag,openfiles,prettyprint,
+     .                    fileopened,fileappend,appendto,hasoutfolder
 
       save /PROTOPRINT/
       

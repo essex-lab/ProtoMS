@@ -496,8 +496,9 @@ def _wizard(settings) :
   print "\t4) Single topology free energy"
   print "\t5) Grand-canonical Monte Carlo (GCMC)"
   print "\t6) JAWS stage 1 (Just Add Waters)"
+  print "\t7) JAWS stage 2 (Just Add Waters)"
   print ">",
-  valid = ["","1","2","3","4","5"]
+  valid = ["","1","2","3","4","5","6","7"]
   instr = raw_input()
   if instr == "jon" :
     import matplotlib.pylab as plt
@@ -511,7 +512,7 @@ def _wizard(settings) :
     instr = raw_input()
   if instr == "" : return
   val = int(instr)
-  vals = ["equilibration","sampling","dualtopology","singletopology","gcmc","jaws1"]
+  vals = ["equilibration","sampling","dualtopology","singletopology","gcmc","jaws1","jaws2"]
   settings.simulation = vals[val-1]
   
   print "\nDo you have a protein that you would like to setup and simulate?"
@@ -561,7 +562,7 @@ if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program setup and run a ProtoMS simulations")
-  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc","jaws1"],help="the kind of simulation to setup",default="none")
+  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc","jaws1","jaws2"],help="the kind of simulation to setup",default="none")
   parser.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   parser.add_argument('-f','--folders',nargs="+",help="folders to search for files ",default=["."])
   parser.add_argument('-p','--protein',help="the prefix of the protein")
@@ -571,6 +572,7 @@ if __name__ == "__main__":
   parser.add_argument('-o','--scoop',help="the name of your protein scoop")
   parser.add_argument('-t','--template',nargs="+",help="the template files for your ligands")
   parser.add_argument('-r','--repeats',help="the number of repeats to be run (if more than 1) or a name for your repeat",default="") 
+  parser.add_argument('--outfolder',help="the ProtoMS output folder",default="")
   parser.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)
@@ -589,6 +591,7 @@ if __name__ == "__main__":
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
+  parser.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
   parser.add_argument('--singlemap',help="the correspondance map for single-topology")
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   args = parser.parse_args()
@@ -696,10 +699,25 @@ if __name__ == "__main__":
   # Extra preparation for GCMC or JAWS-1
   if args.simulation in ["gcmc","jaws1"] and args.gcmcwater is None:
     args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,args)    
-      
+  
+  # Extra preparation for JAWS-2
+  if args.simulation == "jaws2"  :
+    if args.gcmcwater is None :
+      msg = "You must set gcmcwater settings when preparing JAWS-2 input"
+      logger.error(msg)
+      raise simulationobjects.SetupError(msg)
+    single_wat,other_wat = tools.split_waters(args.gcmcwater)
+    logger.info("")
+    logger.info("Creating water PDB-files for JAWS-2 called jaws2_wat*.pdb and jaws2_not*.pdb")
+    single_wat.write(["jaws2_wat%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
+    other_wat.write(["jaws2_not%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
+    
   # Create ProtoMS command files
   if args.simulation == "singletopology" :
    postfix = ["_ele","_vdw"]
+  elif args.simulation == "jaws2" :
+    postfix = ["_jaws2-w%d"%(i+1) for i in range(len(single_wat.pdbs))] 
+    if args.outfolder == "" : args.outfolder = "out"
   else :
    postfix = [""]
   if args.repeats.isdigit():
@@ -712,12 +730,19 @@ if __name__ == "__main__":
     for repeat in args.repeats:
       repeats.append(str(repeat) + post)
 
+  outfolder = args.outfolder
   for repeat in repeats :
-    setattr(args,"outfolder","out"+repeat)
-    if not args.simulation == "singletopology" or "_ele" in repeat : 
+    args.outfolder = outfolder + repeat
+    #setattr(args,"outfolder","out"+repeat)
+    if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat : 
       free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)
-    elif "_vdw" in repeat :
+    elif args.simulation == "singletopology" and "_vdw" in repeat :
       free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,args)
+    elif args.simulation == "jaws2" :
+      idx = int(repeat.split("-")[-1][1:])
+      args.gcmcwater = "jaws2_wat%d.pdb"%idx
+      jaws2wat = "jaws2_not%d.pdb"%idx
+      free_cmd,bnd_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,args)
     if free_cmd is not None : 
       free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")
     if bnd_cmd is not None : 

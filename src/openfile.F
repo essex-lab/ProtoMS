@@ -72,8 +72,16 @@ c        write(6,*)"Task = ",myid,lrefolder,filename
       elseif (doMultiGCMC) then
         write(fullfilename,"(3A)")gcmcfolder(1:lineLength(gcmcfolder)),"/",
      .           filename(1:lineLength(filename))
-      else
-        fullfilename = filename    
+      elseif (doMultiJAWS2) then
+        write(fullfilename,"(3A)")jaws2folder(1:lineLength(jaws2folder)),"/",
+     .           filename(1:lineLength(filename))
+      else      
+        if (hasoutfolder) then
+          write(fullfilename,"(3A)")outfolder(1:lineLength(outfolder)),"/",
+     .             filename(1:lineLength(filename))
+        else
+          fullfilename = filename  
+        endif
       endif
 
       lgth = lineLength(fullfilename)

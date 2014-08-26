@@ -26,7 +26,7 @@ c     whether we are using Lorentz-Berthelot combining rules
 c     whether or not to do preferential sampling
       logical PrefSample
 c     whether or not to do LambdaRE and TemperatureRE
-      logical doLambdaRE,doTemperatureRE,doMultiGCMC
+      logical doLambdaRE,doTemperatureRE,doMultiGCMC,doMultiJaws2
 c     whether or not to calculate lambda-gradient and not energy
       logical doDerivative,doLowDerivative
 c     whether or not the MBAR, BAR and TI data needs to be re-calculated
@@ -37,7 +37,7 @@ c     whether or not the MBAR, BAR and TI data needs to be re-calculated
      .          GotInitialTotalEnergy,testEnergy,
      .          SingleTopologyFreeNrg,DualTopologyFreeNrg,
      .          DifferentLambdas,LorentzBerthelot,PrefSample,
-     .          doLambdaRE,doTemperatureRE,doMultiGCMC,
+     .          doLambdaRE,doTemperatureRE,doMultiGCMC,doMultiJaws2,
      .          PdbParams,
      .          printFE,mbar,doDerivative,doLowDerivative,reCalculateFreeEnergies
 

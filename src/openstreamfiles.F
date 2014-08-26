@@ -2,6 +2,7 @@
       include 'dimensions.inc'
       include 'printer.inc'
       include 'splitter.inc'
+      include 'flags.inc'
 c###############################################
 c
 c     This function opens all of the files
@@ -15,7 +16,21 @@ c###############################################
       logical getOption
       integer openFile
       character*14 optn
+      character*300 tempstring
       
+c     check if we are dumping files to folder
+      if (.not.(doLambdaRE.or.doMultiGCMC.or.doMultiJAws2.or.doTemperatureRe)) then
+        if(getOption('outfolder')) then
+          outfolder = words(1)
+          write(tempstring,"(2A)")"mkdir -p ",outfolder(1:lineLength(outfolder))
+          call system(tempstring) 
+          hasoutfolder = .true.
+        else 
+          outfolder = ""
+          hasoutfolder = .false.
+        endif
+      endif
+
       do i=1,nstreams
 c       write the name of the option - it will be 'stream???'
 c       where ??? is the tag for the string, e.g. streaminfo or
