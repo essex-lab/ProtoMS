@@ -935,7 +935,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
         solvent = ligand_water
       free_cmd = Equilibration(protein=None,solutes=ligands[:min(len(ligands),2)], 
                               templates=templates,
-                              solvent=solvent,outfolder=settings.outfolder,
+                              solvent=solvent,outfolder=settings.outfolder+"_free",
                               nsteps=settings.nequil,pdbfile="equil_free.pdb")
       
     if protein is not None :
@@ -944,7 +944,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       else :
         solvent = protein_water  
       bnd_cmd = Equilibration(protein=protein,solutes=ligands, 
-                              templates=templates,solvent=solvent,outfolder=settings.outfolder,
+                              templates=templates,solvent=solvent,outfolder=settings.outfolder+"_bnd",
                               nsteps=args.nequil,pdbfile="equil_bnd.pdb")
       
   elif settings.simulation == "sampling" :
@@ -956,7 +956,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       free_cmd = Sampling(protein=None,solutes=ligands[:min(len(ligands),2)], 
                          templates=templates,
                          solvent=solvent,outprefix="free_",
-                         nequil=settings.nequil,outfolder=settings.outfolder,
+                         nequil=settings.nequil,outfolder=settings.outfolder+"_free",
                          nprod=settings.nprod,dumpfreq=settings.dumpfreq)
       
     if protein is not None :
@@ -967,7 +967,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       bnd_cmd = Sampling(protein=protein,solutes=ligands, 
                          templates=templates,solvent=solvent,
                          outprefix="bnd_",
-                         nequil=settings.nequil,outfolder=settings.outfolder,
+                         nequil=settings.nequil,outfolder=settings.outfolder+"_bnd",
                          nprod=settings.nprod,dumpfreq=settings.dumpfreq)
             
   elif settings.simulation in ["dualtopology","singletopology"] :

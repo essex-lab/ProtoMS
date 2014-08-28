@@ -731,6 +731,7 @@ if __name__ == "__main__":
       repeats.append(str(repeat) + post)
 
   outfolder = args.outfolder
+  if args.outfolder == "" : outfolder = "out"
   for repeat in repeats :
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
