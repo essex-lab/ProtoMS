@@ -67,7 +67,7 @@ c       lowercase the line and split it into words
         call split(line)
         
 c       make sure that there are at least two words on the line
-        if (nwords.lt.2) goto 100
+        if (nwords.lt.1) goto 100
         
 c       get the solute name from the 'header' line
         if (words(1).eq.'header') then
