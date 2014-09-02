@@ -370,11 +370,12 @@ class  PDBSet :
           the name of the file(s) to write to
         
         """        
-        if isinstance(filenames,basestring) or len(filenames) == 1 :
-          raise SetupError("This feature is not implemented yet")
-        elif len(filenames) == len(self.pdbs) :
+
+        if len(filenames) == len(self.pdbs) :
           for pdb,filename in zip(self.pdbs,filenames) :
             pdb.write(filename)
+        elif isinstance(filenames,basestring) or len(filenames) == 1 :
+          raise SetupError("This feature is not implemented yet")
         else :
           raise SetupError("Invalid number of filenames given")        
   
