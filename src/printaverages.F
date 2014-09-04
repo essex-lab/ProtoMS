@@ -28,7 +28,7 @@ c####################################################################
        double precision gfor,gback,stdDev
        double precision std,stdf,stdb,totalEnergy,nrgb,nrgf
        integer lineLength,lgth,lgth2,igcs,savenrg,Molcount
-       integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t
+       integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
 
        if (DifferentLambdas) then
          write(printstring,10) lambdab,lambda,lambdaf
@@ -615,7 +615,7 @@ c     print out free energy stuff
       endif
       
        if (NGCSolutes.gt.0) then
-        write(printstring,*) "Printing individual theta values"
+        write(printstring,*) "Individual theta values"
        call prettyLine(RESULTS,printstring)
         endif
 
@@ -626,7 +626,7 @@ c     print out free energy stuff
       enddo
 
        if (NGCSolutes.gt.0) then
-        write(printstring,*) "Printing JAWS-I sites with theta greater than",thres
+        write(printstring,"(A,F4.2)") "JAWS-I sites with theta greater than ",thres
        call prettyLine(RESULTS,printstring)
         endif
        do X = 1,cavCoordDepth
@@ -637,24 +637,39 @@ c        print*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
        cavCoordDepth = 0
 
        if (NGCSolutes.gt.0) then
-        write(printstring,*) "Printing JAWS-2 occurances with theta greater than 0.95"
+        write(printstring,"(A,F4.2,A)") "JAWS-2 moves with theta above ",thres,
+     .                                  " - centre position"
        call prettyLine(RESULTS,printstring)
         endif
-       do s = 1,highstack
+
+       if (everyjaws2) then
+         initial = avHighstack+1
+       else
+         initial = highstack
+       endif
+       do s = initial,highstack
 c        print*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
         write(printstring,*) "HIGH" ,s,stackGridX(s,1),stackGridY(s,2),stackGridZ(s,3)
         call printLine(RESULTS,printstring)
        enddo
+       avHighstack = highstack
 
        if (NGCSolutes.gt.0) then
-        write(printstring,*) "Printing JAWS-2 occurances with theta less than 0.05"
+        write(printstring,"(A,F4.2,A)") "JAWS-2 moves with theta below ",1-thres,
+     .                                  " - centre position"
        call prettyLine(RESULTS,printstring)
         endif
 
-       do t = 1,lowstack
+       if (everyjaws2) then
+         initial = avLowstack+1
+       else
+         initial = lowstack
+       endif
+       do t = initial,lowstack
 c        prnt*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
         write(printstring,*) "LOW" ,t,stackGridXL(t,1),stackGridYL(t,2),stackGridZL(t,3)
         call printLine(RESULTS,printstring)
        enddo
+       avLowstack = lowstack
        return
        end

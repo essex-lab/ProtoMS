@@ -444,23 +444,25 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
     logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. Please check the output carefully"%boxpdb)
     return boxpdb
     
-  if ligands :
+    print ligands
+
+  if settings.gcmcbox is not None :
+    gcmcboxobj = simulationobjects.PDBFile(filename=settings.gcmcbox) 
+    # Try the find the box in the header of the file
+    box = simulationobjects.find_box(gcmcboxobj)
+    if box is None :
+      # Else take it as a ligand
+      boxpdb = pdb2box(gcmcboxobj)
+    else :
+      boxpdb = settings.gcmcbox
+  elif ligands :
+    print "We have ligands  but not box"
     # Use the ligand to define the GCMC box
     boxpdb = pdb2box(ligand_files[ligands[0]]["obj"])  
-  else :
-    if settings.gcmcbox is not None :
-      gcmcboxobj = simulationobjects.PDBFile(filename=settings.gcmcbox) 
-      # Try the find the box in the header of the file
-      box = simulationobjects.find_box(gcmcboxobj)
-      if box is None :
-        # Else take it as a ligand
-        boxpdb = pdb2box(gcmcboxobj)
-      else :
-        boxpdb = settings.gcmcbox
-    else : 
-      msg = "Cannot define a GCMC or JAWS-1 simulation box without a ligand and without the gcmcbox setting"
-      logger.error(msg)
-      simulationobjects.SetupError(msg) 
+  else : 
+    msg = "Cannot define a GCMC or JAWS-1 simulation box without a ligand and without the gcmcbox setting"
+    logger.error(msg)
+    simulationobjects.SetupError(msg) 
     
   # Use the flood option in solvate
   boxobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,

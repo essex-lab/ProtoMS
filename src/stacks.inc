@@ -202,7 +202,11 @@ c      integer stackCavCoord(MAXBNDPARAM)
       integer SvnNonInter 
       integer GCSNonInter   
       integer highstack
+      integer avHighstack
+      integer instHighstack
       integer lowstack
+      integer avLowstack
+      integer instLowstack
 
 
 c      common /CAVITYSTACK/ ZSolCoordst,stackCav,stackCavZ,stackCavCentre,
@@ -210,7 +214,8 @@ c     .                     stackCavCoord,cavCoordDepth,filledCoordDepthisvnc
 c     
        common /CAVITYSTACK/ cavCoordDepth,filledCoordDepth,SvnReser,SvnCav,SvnCavity,SvnReservoir,SvnNameC,
      .                       GCSNameC,GCSNameR,SvnNameR,SvnNonInter,
-     .                       GCSCavity,GCSReservoir,GCSNonInter,highstack,lowstack,bnzCoordDepth,aceCoordDepth,pyrCoordDepth
+     .                       GCSCavity,GCSReservoir,GCSNonInter,highstack,lowstack,bnzCoordDepth,aceCoordDepth,pyrCoordDepth,
+     .                       avHighstack,avLowstack,instHighstack,instLowstack
        
        save /CAVITYSTACK/
 

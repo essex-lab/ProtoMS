@@ -108,7 +108,16 @@ c     whether we are going to use chunks from protein pdb
           PdbParams = .true.
         endif
       endif  
-      
+
+c     whether jaws2 information on each move will be printed to results
+      everyjaws2 = .false.
+      if (getOption('everyjaws2')) then
+        if (words(1).eq.'on') then
+          everyjaws2 = .true.
+        endif
+      endif    
+
+
 c     whether free energy data will be printed in results
       if (getOption('printfe')) then
         if (words(1).eq.'bar') then
