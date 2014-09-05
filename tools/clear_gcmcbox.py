@@ -44,7 +44,7 @@ def clear_gcmcbox(gcmcbox,waters) :
   logger.debug("Running clear_gcmcbox with arguments: ")
   logger.debug("\tgcmcbox = %s"%gcmcbox) 
   logger.debug("\twaters = %s"%waters) 
-  logger.debug("This will remove solvent molecules within the GCMC/JAWS-1 box")
+  logger.debug("This will remove solvent molecules within the GCMC/JAWS box")
   
   if isinstance(gcmcbox,basestring) :
     gcmcbox = simulationobjects.PDBFile(filename=gcmcbox)
@@ -71,7 +71,7 @@ def clear_gcmcbox(gcmcbox,waters) :
       nrem = nrem + 1
       removethese.append(soli)
   for soli in removethese : del waters.solvents[soli]
-  logger.info("Removed %d water molecules from %s that were inside the GCMC/JAWS-1 box %s"%(nrem,waters,gcmcbox))
+  logger.info("Removed %d water molecules from %s that were inside the GCMC/JAWS box %s"%(nrem,waters,gcmcbox))
   
   return nrem,waters 
 

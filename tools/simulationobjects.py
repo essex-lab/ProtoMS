@@ -439,7 +439,7 @@ def find_box(pdbobj) :
       center = np.array(line.strip().split()[5:],float)            
     elif line.find("DIMENSIONS") > -1 :
       dim = np.array(line.strip().split()[5:],float)
-    elif line.find("HEADER box") > -1 :
+    elif line.find("HEADER box") > -1  or line.find("REMARK box") > -1 :
       box = np.array(line.strip().split()[2:],float)
   if center is not None and dim is not None :
     return {"center":center,"len":dim}

@@ -802,7 +802,7 @@ c     get grid centers
       call printLine(INFO,printstring)
       endif
 
-      if (getOption('centerc')) then
+      if (getOption('centerz')) then
       centerz = getDouble(words(1),centerz)
       write(printstring,*) "Grid center in Z dimension" ,centerz
       call printLine(INFO,printstring)

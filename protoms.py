@@ -443,8 +443,6 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
     logger.info("")
     logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. Please check the output carefully"%boxpdb)
     return boxpdb
-    
-    print ligands
 
   if settings.gcmcbox is not None :
     gcmcboxobj = simulationobjects.PDBFile(filename=settings.gcmcbox) 
@@ -456,7 +454,7 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
     else :
       boxpdb = settings.gcmcbox
   elif ligands :
-    print "We have ligands  but not box"
+    print "We have ligands but not box"
     # Use the ligand to define the GCMC box
     boxpdb = pdb2box(ligand_files[ligands[0]]["obj"])  
   else : 
@@ -713,6 +711,27 @@ if __name__ == "__main__":
     logger.info("Creating water PDB-files for JAWS-2 called jaws2_wat*.pdb and jaws2_not*.pdb")
     single_wat.write(["jaws2_wat%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
     other_wat.write(["jaws2_not%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
+    nrem = 0
+    for count,watobj in enumerate(single_wat.pdbs) :
+      for k in watobj.solvents : boxcoords = watobj.solvents[k].atoms[0].coords
+      for i,coord in enumerate(boxcoords[:3]) :
+        boxcoords[i] = coord-1.5
+        boxcoords = np.append(boxcoords,coord+1.5)
+      watobj.header = watobj.header + "REMARK box"
+      for coord in boxcoords :
+        watobj.header = watobj.header + " %.3f"%coord
+      watobj.header = watobj.header + "\n"
+      # Clear the JAWS-2 box from solvation waters
+      watobj.name = "jaws2_wat%d.pdb"%(count+1)
+      n,water_file = tools.clear_gcmcbox(watobj,water_file)
+      nrem = nrem + n
+    if nrem > 0 :
+      waters2_name = _get_prefix(str(water_file))+"_clr.pdb"
+      logger.info("Created water cap-file: %s"%waters2_name)
+      water_file.write(waters2_name)
+      water_file = waters2_name
+    else :
+      water_file = water_file.name
     
   # Create ProtoMS command files
   if args.simulation == "singletopology" :

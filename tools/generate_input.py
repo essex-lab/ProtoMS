@@ -865,7 +865,7 @@ class Jaws2(ProteinLigandSimulation) :
     watobj = simulationobjects.PDBFile(filename=jawswater)
     ocoord = watobj.solvents[1].atoms[0].coords
     for i,param in enumerate(["x","y","z"]) :
-      self.setParameter("origin"+param,ocoord[i])
+      self.setParameter("origin"+param,ocoord[i]-1.5)
     for i,param in enumerate(["x","y","z"]) :
       self.setParameter(param,"3.0")
     self.setParameter("#"," End of JAWS specific parameters")
