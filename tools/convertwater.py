@@ -200,7 +200,7 @@ def _rottranstemplate(solvents,wattemplate,watatomnames,ignorH,watresname=None):
           new_solvents[sol].addAtom(atom=newatom)
   return (new_solvents)
 
-def convertwater(pdb_in,watermodel,ignorH):
+def convertwater(pdb_in,watermodel,ignorH,watresname=None):
   """ 
   Converts water in a pdb object to ideal water geometries of an input model
   
@@ -238,10 +238,17 @@ def convertwater(pdb_in,watermodel,ignorH):
   t3p_model = np.array([[7.011, 5.276, 13.906],[6.313, 5.646, 13.365],[6.666,  4.432, 14.197]]) 
   t3p_names = ["O00","H01","H02"]
   if watermodel.upper() in ["T4P","TIP4P","TP4"]: 
-      #pdb_out.solvents = _translatetemplate(solvents,"T4P",t4p_model,t4p_names)
-      pdb_out.solvents = _rottranstemplate(solvents,t4p_model,t4p_names,ignorH,watresname="T4P")
+      if watresname==None:
+          wresnm = "T4P"
+      else:
+          wresnm = watresname
+      pdb_out.solvents = _rottranstemplate(solvents,t4p_model,t4p_names,ignorH,wresnm)
   elif watermodel.upper() in ["T3P","TIP3P","TP3"]:
-      pdb_out.solvents = _rottranstemplate(solvents,t3p_model,t3p_names,ignorH,watresname="T3P")
+      if watresname==None:
+          wresnm = "T3P"
+      else:
+          wresnm = watresname
+      pdb_out.solvents = _rottranstemplate(solvents,t3p_model,t3p_names,ignorH,wresnm)
   else:
       print "Error in convertwater.py: water model name not recognised. Please check spelling matches known list or add new water model to function." 
   return pdb_out
