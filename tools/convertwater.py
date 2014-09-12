@@ -133,7 +133,7 @@ def rotatewat(watcoords,alpha,beta,gamma):
   return( rotated.transpose() + watcoords[0] )							# Translating back to the location of the original oxygen.
 
 
-def alignhydrogens(watcoords,template,tol=0.1):
+def alignhydrogens(watcoords,template,tol=0.05):
   """ 
   Rotates a template water molecule such that it has the same orientation as a reference water molecule. Useful for converting between different water models in cases when one wishes to retain the same orientations of hydrogens. It assumes that both the template and the reference water have maching oxygen locations.
 
@@ -158,7 +158,7 @@ def alignhydrogens(watcoords,template,tol=0.1):
 
 
 
-def _rottranstemplate(solvents,watresname,wattemplate,watatomnames,ignorH):
+def _rottranstemplate(solvents,wattemplate,watatomnames,ignorH,watresname=None):
   """ 
   Rotates and translates an ideal water model geometry, such as tip4p, to match the location and hydrogens of the water molecules in a residue object.
 
@@ -182,6 +182,10 @@ def _rottranstemplate(solvents,watresname,wattemplate,watatomnames,ignorH):
   """
   new_solvents = {}
   for sol in solvents:
+      if watresname == None:												# If no solvent name is specified, the name is left unchanged.
+          wresnm = solvents[sol].name
+      else:
+          wresnm = watresname
       oxy_coord = solvents[sol].atoms[0].coords								# Assuming the water oxygen is the first entry in the solvent residue.
       translate = oxy_coord - wattemplate[0]					
       wat_new = wattemplate + translate										# Shifting the model water to match the oxygens position.
@@ -190,9 +194,9 @@ def _rottranstemplate(solvents,watresname,wattemplate,watatomnames,ignorH):
           wat_new = alignhydrogens(wat,wat_new)
       else:																	# ... if not, the template is randomly orientated.
           wat_new = rotatewat(wat_new,random.uniform(0,2*3.142),random.uniform(0,2*3.142),random.uniform(0,2*3.142)).round(3)
-      new_solvents[sol] = simulationobjects.Residue(name=watresname,index=sol)			# Creating a new pdb object that contains the water.
+      new_solvents[sol] = simulationobjects.Residue(name=wresnm,index=sol)			# Creating a new pdb object that contains the water.
       for ind in range(len(watatomnames)):
-          newatom = simulationobjects.Atom(index=ind,name=watatomnames[ind],resindex=sol,resname=watresname,coords=wat_new[ind])
+          newatom = simulationobjects.Atom(index=ind,name=watatomnames[ind],resindex=sol,resname=wresnm,coords=wat_new[ind])
           new_solvents[sol].addAtom(atom=newatom)
   return (new_solvents)
 
@@ -235,9 +239,9 @@ def convertwater(pdb_in,watermodel,ignorH):
   t3p_names = ["O00","H01","H02"]
   if watermodel.upper() in ["T4P","TIP4P","TP4"]: 
       #pdb_out.solvents = _translatetemplate(solvents,"T4P",t4p_model,t4p_names)
-      pdb_out.solvents = _rottranstemplate(solvents,"T4P",t4p_model,t4p_names,ignorH)
+      pdb_out.solvents = _rottranstemplate(solvents,t4p_model,t4p_names,ignorH,watresname="T4P")
   elif watermodel.upper() in ["T3P","TIP3P","TP3"]:
-      pdb_out.solvents = _translatetemplate(solvents,"T3P",t3p_model,t3p_names,ignorH)
+      pdb_out.solvents = _rottranstemplate(solvents,t3p_model,t3p_names,ignorH,watresname="T3P")
   else:
       print "Error in convertwater.py: water model name not recognised. Please check spelling matches known list or add new water model to function." 
   return pdb_out
