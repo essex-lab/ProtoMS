@@ -290,26 +290,39 @@ class PDBFile:
             center = center + rescent
         self.center = center/float(len(self.residues))
         return self.center
-    def getBox(self) :
+    def getBox(self,atomlist = 'all',reslist = 'all') :
         """
         Calculate the smallest box to encompass the atoms
-        
+
+        Parameters
+        ----------
+        atomlist = list, optional
+          the atoms to be taken into acount to get the box
+        reslist = list, optional
+          the residues to be taken into acount to get the box
+
         Returns
         -------
         dictionary of Numpy arrays
           the center, length and origin of the box
         """
+        if reslist is 'all' :
+          reslist = list(set([self.residues[i].name for i in self.residues] + [self.solvents[i].name for i in self.solvents]))	
+        if atomlist is 'all' :
+          atomlist = list(set([atom.name for i in self.residues for atom in self.residues[i].atoms]))
         minxyz = np.zeros(3)+1E6
         maxxyz = np.zeros(3)-1E6
         for res in self.residues :
           for atom in self.residues[res].atoms :
-            minxyz = np.minimum(minxyz,atom.coords)
-            maxxyz = np.maximum(maxxyz,atom.coords)
+            if atom.name in atomlist and self.residues[res].name in reslist :
+              minxyz = np.minimum(minxyz,atom.coords)
+              maxxyz = np.maximum(maxxyz,atom.coords)
         for res in self.solvents :
           for atom in self.solvents[res].atoms :
-            minxyz = np.minimum(minxyz,atom.coords)
-            maxxyz = np.maximum(maxxyz,atom.coords)
-        return {"center":(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
+            if atom.name in atomlist and self.solvents[res].name in reslist :
+              minxyz = np.minimum(minxyz,atom.coords)
+              maxxyz = np.maximum(maxxyz,atom.coords)
+        return {"center":minxyz+(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
        
 class  PDBSet :
     """

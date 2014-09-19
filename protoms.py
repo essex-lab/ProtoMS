@@ -19,6 +19,27 @@ import numpy as np
 
 import tools
 from tools import simulationobjects
+#from tools import distribute_waters
+
+def _is_float(num) :
+  """
+  Check whether a string is convertible to a float
+  
+  Parameters
+  ----------
+  num : string
+    the string which might be convertible to float
+  
+  Returns
+  -------
+  volean
+    whether the string is convertible to float
+  """
+  try :
+    float(num)
+  except :
+    return False
+  return True
 
 def _get_prefix(filename) :
   """
@@ -437,53 +458,143 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
     the filename of the created water box
   """
   
-  def pdb2box(pdbobj) :
+  def pdb2box(pdbobj,padding=2.0) :
     boxpdb = "%s_box.pdb"%settings.simulation
-    tools.make_gcmcbox(pdbobj,boxpdb)
+    tools.make_gcmcbox(pdbobj,boxpdb,padding)
     logger.info("")
     logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. Please check the output carefully"%boxpdb)
     return boxpdb
 
-  if settings.gcmcbox is not None :
+  def arrage_wats(box,water_file,out_name) :
+
+    # find smallest box including all oxigens in my water_file
+    waterobj = simulationobjects.PDBFile(filename = water_file)
+    waterbox = waterobj.getBox(atomlist=[waterobj.solvents.itervalues().next().atoms[0].name])
+
+    # check whether the box of the water oxigens is within the box provided as argument
+    box_origen_below = all(box_o < waterbox['origin'][ind] for ind,box_o in enumerate(box['origin']))
+    box_end_avobe = all(box_e > np.add(waterbox['origin'],waterbox['len'])[ind] for ind,box_e in enumerate(np.add(box['origin'],box['len']))) 
+    if not (box_origen_below and box_end_avobe) or all(i < 0.5 for i in waterbox['len']) :
+      # re-distribute the waters if required according to provided box
+      logger.info("\nRedistributing your GCMC / JAWS1 waters according to the specified box\n")
+      arranged_name = tools.distribute_waters(box,water_file,out=out_name)
+      arraged_obj = simulationobjects.PDBFile(filename=arranged_name)
+      return arraged_obj, arranged_name
+    else :
+      # make sure the header in the waterobj is the box dimensions which will be used in this simulation
+      box_extremes = tuple(box['origin']) + tuple(np.add(box['origin'],box['len']))
+      waterobj.header = "HEADER box %.3f %.3f %.3f %.3f %.3f %.3f \n" %box_extremes
+      return waterobj, out_name
+
+  ghost_name = "%s_wat.pdb"%settings.simulation
+  write = True
+
+  # If the gcmcbox has been set as a file
+  if settings.gcmcbox is not None  and isinstance(settings.gcmcbox,str) :
     gcmcboxobj = simulationobjects.PDBFile(filename=settings.gcmcbox) 
-    # Try the find the box in the header of the file
+    # Try to find the box in the header of the file
     box = simulationobjects.find_box(gcmcboxobj)
     if box is None :
-      # Else take it as a ligand
-      boxpdb = pdb2box(gcmcboxobj)
+      boxpdb = pdb2box(gcmcboxobj,padding=0.0)
+      gcmcboxobj = simulationobjects.PDBFile(filename=boxpdb)
+      box = simulationobjects.find_box(gcmcboxobj)
     else :
       boxpdb = settings.gcmcbox
+    if "center" in box :
+      box['origin'] = np.array([coord-box["len"][ind]/2 for ind,coord in enumerate(box["center"])])
+    # Fill the box with waters
+    if settings.gcmcwater is None :
+      ghostobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
+                         geometry="flood",namescheme="ProtoMS")
+      boxinfo = tuple(box['origin']) + tuple(box['origin'] + box['len'])
+      ghostobj.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" %boxinfo
+      for sol in ghostobj.solvents :
+        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
+    elif settings.gcmcwater.isdigit() :
+      ghost_name = tools.distribute_waters(box,settings.gcmcwater,out=ghost_name)
+      ghostobj = simulationobjects.PDBFile(filename=ghost_name)
+    else :
+      ghostobj, ghost_name = arrage_wats(box,settings.gcmcwater,ghost_name)
+        
+
+  # If the dimensions of the gcmc box have been provided
+  elif settings.gcmcbox is not None and len(settings.gcmcbox) is 6 and [_is_float(value) for value in settings.gcmcbox] :
+    # Generate the box pdb
+    boxpdb = "%s_box.pdb"%settings.simulation
+    try :
+      box={}
+      box['origin'] = np.array([float(value) for value in settings.gcmcbox[:3]])
+      box['len'] = np.array([float(value) for value in settings.gcmcbox[3:]])
+    except :
+      raise simulationobjects.SetupError("The box dimensions %s could not be correctly interpreted"%settings.gcmcbox)
+    simulationobjects.write_box(boxpdb,box)
+    logger.info("")
+    logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. Please check the output carefully"%boxpdb)
+    # Fill the box with waters
+    if settings.gcmcwater is None : 
+      ghostobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
+                         geometry="flood",namescheme="ProtoMS")
+      boxinfo = tuple(box['origin']) + tuple(box['origin'] + box['len'])
+      ghostobj.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" %boxinfo
+      for sol in ghostobj.solvents :
+        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
+    elif settings.gcmcwater.isdigit() :
+      ghost_name = tools.distribute_waters(settings.gcmcbox,settings.gcmcwater,out=ghost_name)
+      ghostobj = simulationobjects.PDBFile(filename=ghost_name)
+    else:
+      ghostobj, ghost_name = arrage_wats(box,settings.gcmcwater,ghost_name)
+  
+  # If no box information has been provided but we have a gcmcwater file
+  elif settings.gcmcbox is None and settings.gcmcwater is not None and not settings.gcmcwater.isdigit() :
+    waterobj = simulationobjects.PDBFile(filename = settings.gcmcwater)
+    box = simulationobjects.find_box(waterobj)
+    if box is None :
+      raise simulationobjects.SetupError("Cannot set up simulation without a box.")
+    else :
+      ghostobj = waterobj
+      ghost_name = waterobj.name
+      write = False
+
+  # If no information on the box has been provided
   elif ligands :
-    print "We have ligands but not box"
     # Use the ligand to define the GCMC box
     boxpdb = pdb2box(ligand_files[ligands[0]]["obj"])  
+    gcmcboxobj = simulationobjects.PDBFile(filename=boxpdb)
+    box = simulationobjects.find_box(gcmcboxobj)
+    if "center" in box :
+      box['origin'] = np.array([coord-box["len"][ind]/2 for ind,coord in enumerate(box["center"])])
+    # Fill the box with waters
+    if settings.gcmcwater is None :
+      ghostobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
+                         geometry="flood",namescheme="ProtoMS")
+      boxinfo = tuple(box['origin']) + tuple(box['origin'] + box['len'])
+      ghostobj.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" %boxinfo
+      for sol in ghostobj.solvents :
+        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
+    elif settings.gcmcwater.isdigit() :
+      ghost_name = tools.distribute_waters(box,settings.gcmcwater,out=ghost_name)
+      ghostobj = simulationobjects.PDBFile(filename=ghost_name)
   else : 
     msg = "Cannot define a GCMC or JAWS-1 simulation box without a ligand and without the gcmcbox setting"
     logger.error(msg)
     simulationobjects.SetupError(msg) 
     
-  # Use the flood option in solvate
-  boxobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
-                         geometry="flood",namescheme="ProtoMS")
-  # Need to change the residue name of the created waters
-  for sol in boxobj.solvents :
-    for atom in boxobj.solvents[sol].atoms : atom.resname = "WAT"
-  # Write the box to disc
-  boxname = "%s_wat.pdb"%settings.simulation
-  boxobj.write(boxname) 
-  logger.info("")
-  logger.info("Created %s; it contains the GCMC or JAWS-1 simulation waters. Please check the output carefully"%boxname)
+  # Write the waters to disc
+  if write :
+    ghostobj.write(ghost_name) 
+    logger.info("")
+    logger.info("Created %s; it contains the GCMC or JAWS-1 simulation waters. Please check the output carefully"%ghost_name)
   
   # Clear the GCMC/JAWS-1 box from solvation waters
   logger.info("")
-  nrem,waters2 = tools.clear_gcmcbox(boxobj,waters)
+  nrem,waters2 = tools.clear_gcmcbox(ghostobj,waters)
   if nrem > 0 :
     waters2_name = _get_prefix(str(waters2))+"_clr.pdb"
     logger.info("Created water cap-file: %s"%waters2_name)
     waters2.write(waters2_name)
     waters = waters2_name
   
-  return boxname,waters
+  return ghost_name,waters
 
 def _wizard(settings) :
 
@@ -590,7 +701,7 @@ if __name__ == "__main__":
   parser.add_argument('--scooplimit',help="the minimum difference between number of residues in protein and scoop for scoop to be retained",default=10)
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
-  parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
+  parser.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box")
   parser.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
   parser.add_argument('--singlemap',help="the correspondance map for single-topology")
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
@@ -697,7 +808,20 @@ if __name__ == "__main__":
     protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,args)
 
   # Extra preparation for GCMC or JAWS-1
-  if args.simulation in ["gcmc","jaws1"] and args.gcmcwater is None:
+  if args.gcmcwater is not None and not args.gcmcwater.isdigit():
+    gcmcwater = _locate_file(args.gcmcwater,args.folders)
+    if gcmcwater is None :
+      raise simulationobjects.SetupError("File %s given as gcmcwater could not be found."%args.gcmcwater)
+    args.gcmcwater = gcmcwater
+  if args.gcmcbox is not None and len(args.gcmcbox) is 1:
+    gcmcbox = _locate_file(args.gcmcbox[0],args.folders)
+    if gcmcbox is None :
+      raise simulationobjects.SetupError("File %s given as gcmcwater could not be found."%args.gcmcbox[0])
+    args.gcmcbox = gcmcbox
+  elif args.gcmcbox is not None and len(args.gcmcbox) < 6 :
+    raise simulationobjects.SetupError("6 arguments expected to define the GCMC/JAWS1 box dimensions, %d provided: %s"%(len(args.gcmcbox)," ".join(args.gcmcbox)))
+      
+  if args.simulation in ["gcmc","jaws1"] :
     args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,args)    
   
   # Extra preparation for JAWS-2
