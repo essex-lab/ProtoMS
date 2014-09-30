@@ -635,6 +635,8 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
 solute %s
 info translate %f rotate %f\n""" % ( resname, translate, rotate )
 
+    print "The first line of %s.pdb must be 'HEADER %s'" %  ( os.path.splitext(temfile)[0], resname)
+
     # Print out the atoms
     for i, line in enumerate ( zmat, 3000 ):
         atms = line.split()
