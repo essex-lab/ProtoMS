@@ -291,21 +291,24 @@ def make_zmat(prepifile):
   # Helper routines
   # ----------------
 
-  def define_atom(current,previous,atoms,defined,all_zmat,verbose=False) :
+  def define_atom(current,previous,atoms,defined,all_zmat,terminal,verbose=False) :
     """
     Define a new atom in the z-matrix
     """
   # Make a proper dihedral for the current atom
     def make_proper() :
       # If we a dealing with the first three atoms, just include less and less dummies
-      if len(all_zmat) <= 2 : 
+      if len(all_zmat) < 2 or (len(all_zmat) == 2 and not terminal) : 
         atoms[current].zmat = atoms[previous].zmat[:2]
         atoms[current].zmat.insert(0,previous)
       # if not, we traverse backwards on the molecular graph, looking for two atoms to
       # form an angle and dihedral
       else :
         a2 = atoms[previous].backward_bond([current,previous],defined)
-        a3 = atoms[a2].backward_bond([previous,a2],defined)
+        if len(all_zmat) > 2 :
+          a3 = atoms[a2].backward_bond([previous,a2],defined)
+        else :
+          a3 = "DM3"
         atoms[current].zmat = ("%s %s %s"%(previous,a2,a3)).split()
       
     # Make an improper dihedral for the current atom
@@ -355,7 +358,8 @@ def make_zmat(prepifile):
   
     # Start with the most central atom
     branch_atom = atomlist[0]
-    define_atom(branch_atom,None,atoms,defined,all_zmat,verbose)
+    terminal_flag = False
+    define_atom(branch_atom,None,atoms,defined,all_zmat,terminal_flag,verbose)
   
     while True :
       # Traverse a branch from an atom with at least two bonds
@@ -363,11 +367,12 @@ def make_zmat(prepifile):
       next = atoms[branch_atom].next_bond(defined)
       atoms[next].traversed[branch_atom] = True
       while next != None : 
-        define_atom(next,previous,atoms,defined,all_zmat,verbose)
+        define_atom(next,previous,atoms,defined,all_zmat,terminal_flag,verbose)
         previous = next
         next = atoms[previous].next_bond(defined)
         if next != None : 
           atoms[next].traversed[previous] = True
+        terminal_flag = next == None
       if verbose : print ".",
     
       # Check if we have more branches to traverse
@@ -378,7 +383,8 @@ def make_zmat(prepifile):
         for atom  in atomlist :
           if not defined[atom] :
             branch_atom = atom
-            define_atom(branch_atom,atoms[atom].bonds[0],atoms,defined,all_zmat,verbose)
+            terminal_flag = False
+            define_atom(branch_atom,atoms[atom].bonds[0],atoms,defined,all_zmat,terminal_flag,verbose)
             # If the found atom has more than one bonds, we can traverse its branches
             if len(atoms[branch_atom].bonds) > 1 :
               found = True
@@ -674,6 +680,7 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
     # Print out the angles:
     for line in zmat[2:]:
         angle = line.split()[:3]
+        if "DM3" in angle : continue
         atypes = [ atoms[i].atype for i in angle ]
         try:
             k = angle_params.get_params ( atypes ).k

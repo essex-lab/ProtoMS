@@ -995,7 +995,8 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
 
     rest_solutes = []
     if settings.simulation == 'dualtopology' and settings.absolute:
-      rest_solutes.append(0)
+      rest_solutes.append(0) 
+      rest_solutes.append(1)
 
     free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
