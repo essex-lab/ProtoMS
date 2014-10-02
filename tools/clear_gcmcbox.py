@@ -88,8 +88,8 @@ if __name__ == "__main__":
   # Setup the logger
   logger = simulationobjects.setup_logger("clear_gcmcbox_py.log")
 
-  if args.file is None or args.solvation is None : 
-    print "Nothing to do! Exiting."
+  if args.solvation is None : 
+    print "No pdb with solvent provided. Nothing to do! Exiting."
   
   nrem,cleared_box = clear_gcmcbox(args.box,args.solvation)
   cleared_box.write(args.out)
