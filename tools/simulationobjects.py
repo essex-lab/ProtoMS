@@ -242,7 +242,7 @@ class PDBFile:
           # Read next line
           line = f.readline()
         self.residues,self.solvents = residues,solvents
-    def write ( self, filename, renumber = False, header = None ):
+    def write ( self, filename, renumber = False, header = None, solvents = True ):
         """
         Write the PDB file to disc
 
@@ -254,6 +254,8 @@ class PDBFile:
           indicate if residues should be renumbered
         header : string, optional
           additional lines to print before the atom records
+        solvents : boolean, optional
+          if to write the solvents
         """
         with open ( filename, 'w' ) as f:
             if header is None :
@@ -266,14 +268,15 @@ class PDBFile:
                         atom.resindex = i
                     s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                     f.write ( s )
-            if len(self.solvents.keys()) > 0 : f.write ( "TER \n" )
-            for i, sol in enumerate ( sorted ( self.solvents.keys() ), 1 ):
-                for atom in self.solvents[sol].atoms:
-                    if renumber:
-                        atom.resindex = i
-                    s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                    f.write ( s )
-                f.write ( "TER \n" )     
+            if len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
+            if solvents :
+                for i, sol in enumerate ( sorted ( self.solvents.keys() ), 1 ):
+                    for atom in self.solvents[sol].atoms:
+                        if renumber:
+                            atom.resindex = i
+                        s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                        f.write ( s )
+                    #f.write ( "TER \n" )     
     def getCenter(self):
         """
         Calculate the center of geometry  
@@ -371,7 +374,7 @@ class  PDBSet :
                     break
                 else :
                     self.pdbs.append(pdb)
-    def write(self,filenames) :
+    def write(self,filenames,solvents=True) :
         """
         Write the set to disc
 
@@ -381,12 +384,13 @@ class  PDBSet :
         ----------
         filenames : list of strings
           the name of the file(s) to write to
-        
+        solvents : boolean
+          if to write the solvents
         """        
 
         if len(filenames) == len(self.pdbs) :
           for pdb,filename in zip(self.pdbs,filenames) :
-            pdb.write(filename)
+            pdb.write(filename,solvents=solvents)
         elif isinstance(filenames,basestring) or len(filenames) == 1 :
           raise SetupError("This feature is not implemented yet")
         else :

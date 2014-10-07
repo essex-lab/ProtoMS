@@ -365,7 +365,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
       protein_scoop_file = None
     else :
       protobj = protobj_scooped
-      protobj.write(protein_scoop_file, renumber=True)
+      protobj.write(protein_scoop_file, renumber=True, solvents = False)
       
   if protein_water is None :
    

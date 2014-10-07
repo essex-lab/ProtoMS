@@ -188,9 +188,12 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
 
     #Purge residues outside the outer scoop from the protein pdb and save it
     for res in pdb_out.residues.keys():
-        if res not in both + waters:
+        if res not in both :
             pdb_out.residues.pop ( res )
 
+    for res in pdb_out.solvents.keys():
+        if res not in waters:
+            pdb_out.solvents.pop ( res )
 
     header  = "REMARK Scoop of %s\n" % pdb_out
     header += "REMARK Inner Region : %8.2f Angstrom radius\n" % innercut
