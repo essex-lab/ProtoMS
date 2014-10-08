@@ -641,7 +641,7 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
 solute %s
 info translate %f rotate %f\n""" % ( resname, translate, rotate )
 
-    print "The first line of %s.pdb must be 'HEADER %s'" %  ( os.path.splitext(temfile)[0], resname)
+    logger.info("The first line of %s.pdb must be 'HEADER %s'" %  ( os.path.splitext(temfile)[0], resname))
 
     # Print out the atoms
     for i, line in enumerate ( zmat, 3000 ):
@@ -778,7 +778,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     # Setup the logger
-    logger = simulationobjects.setup_logger("build_template_py.log")
+    logger = sim.setup_logger("build_template_py.log")
     
     tem = build_template ( temfile=args.out, prepifile=args.prepi, zmatfile=args.zmat, frcmodfile=args.frcmod, resname=args.name, translate=args.translate, rotate=args.rotate ) 
+    tem.write(args.out)
+    if args.zmat is None :      
+      tem.templates[0].write_zmat(os.path.splitext(args.out)[0]+".zmat")
     

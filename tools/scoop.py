@@ -243,6 +243,6 @@ if __name__ == "__main__":
     else :
       ligand = simulationobjects.PDBFile(filename=args.ligand)
     protein = simulationobjects.PDBFile(filename=args.protein)
-    scoop(protein,ligand,args.innercut,args.outercut,args.flexin,args.flexout,args.excluded,args.added)
-    protein.write(args.out)
+    protein = scoop(protein,ligand,args.innercut,args.outercut,args.flexin,args.flexout,args.excluded,args.added)
+    protein.write(args.out,renumber=True)
   

@@ -101,7 +101,7 @@ def run_antechamber ( lig, charge, resnam = None):
     out_name = os.path.splitext ( name )[0]
     cmd = 'antechamber -i %s -fi pdb -o %s.prepi -fo prepi -c bcc -nc %d %s -pf y' % ( name, out_name,  charge, resnamstr )
     _run_program ( "antechamber", cmd)
-    subprocess.call ( "rm ANTECHAMBER_* ATOMTYPE.INF PREP.INF NEWPDB.PDB sqm.in sqm.out sqm.pdb", shell = True )
+    subprocess.call ( "rm sqm.in sqm.out sqm.pdb", shell = True )
     return "%s.prepi"%out_name
 
 def run_parmchk ( lig ):

@@ -1064,9 +1064,10 @@ if __name__ == "__main__":
   parser.add_argument('--jawsbias',nargs="+",type=float,help="the bias for the JAWS-2",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
-  parser.add_argument('--nequil',type=int,help="the number of equilibration steps",default=5E6)
-  parser.add_argument('--nprod',type=int,help="the number of production steps",default=40E6)
-  parser.add_argument('--dumpfreq',type=int,help="the output dump frequency",default=1E5)
+  parser.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
+  parser.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
+  parser.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
+  parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   args = parser.parse_args()
 
   # Setup the logger

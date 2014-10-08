@@ -268,15 +268,16 @@ class PDBFile:
                         atom.resindex = i
                     s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                     f.write ( s )
-            if len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
+            if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
             if solvents :
-                for i, sol in enumerate ( sorted ( self.solvents.keys() ), 1 ):
+                l = sorted ( self.solvents.keys() )
+                for i, sol in enumerate (l , 1 ):
                     for atom in self.solvents[sol].atoms:
                         if renumber:
                             atom.resindex = i
                         s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                         f.write ( s )
-                    #f.write ( "TER \n" )     
+                    if i < len(l) : f.write ( "TER \n" )     
     def getCenter(self):
         """
         Calculate the center of geometry  
