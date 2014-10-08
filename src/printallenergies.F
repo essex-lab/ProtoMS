@@ -517,7 +517,8 @@ c     print out free energy stuff
        call printLine(RESULTS,printstring)
       enddo
 
-       if (NGCSolutes.gt.0) then
+c      the variable 'space' determines 'cavCoordDepth'. By default both are zero
+       if (NGCSolutes.gt.0.and.cavCoordDepth.gt.0) then
         write(printstring,"(A,F4.2)") "JAWS-I sites with theta greater than ",thres
        call prettyLine(RESULTS,printstring)
         endif
