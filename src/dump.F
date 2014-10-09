@@ -193,7 +193,10 @@ c               restart files will never be appended
               endif
               
               if (numb.le.1) call prettyLine(INFO,"Writing restart file")
-              
+              if (numb.ne.0) then
+                write(tempstring,"(A,I4)")"RESTART FILE ",numb
+                call prettyline(RESTART, tempstring)
+              endif  
               call writeRestart()
             else
               call printLine(WARNING,"Cannot interpret restart line")
