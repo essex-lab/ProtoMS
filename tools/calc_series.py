@@ -91,6 +91,7 @@ def stat_inefficiency(y) :
   n = len(y)
   dy = y - y.mean()
   vary = (dy*dy).mean()
+  if vary < 0.1E-6 : return None,None
   tmax = int(np.round(n*0.9))
   g = 1.0
   for t in range(1,tmax+1) :
@@ -688,10 +689,11 @@ if __name__ == '__main__' :
     prop["equil"] = find_equilibration(y,x,nperm=args.nperm,threshold=args.threshold) + offset
     print "Equilibration found at snapshot %d for %s, value=%.3f"%(prop["equil"],_label0(label),ys[i][prop["equil"]])    
     prop["g"],prop["neff"] = stat_inefficiency(y[prop["equil"]:])
-    print "\tThis production part is estimated to contain %d uncorrelated samples (g=%.3f)"%(prop["neff"],prop["g"])    
-    prop["t_opt"],prop["g_min"],prop["neff_max"] = maximize_samples(y) 
-    prop["t_opt"] = prop["t_opt"] + offset
-    print "\tThe number of samples is maximized at %d, g=%.3f and the number of uncorrelated samples is %d"%(prop["t_opt"],prop["g_min"],prop["neff_max"])
+    if prop["g"] is not None :
+      print "\tThis production part is estimated to contain %d uncorrelated samples (g=%.3f)"%(prop["neff"],prop["g"])    
+      prop["t_opt"],prop["g_min"],prop["neff_max"] = maximize_samples(y) 
+      prop["t_opt"] = prop["t_opt"] + offset
+      print "\tThe number of samples is maximized at %d, g=%.3f and the number of uncorrelated samples is %d"%(prop["t_opt"],prop["g_min"],prop["neff_max"])
 
   # Select what kind of plot to make for multiple series
   if len(ys) > 1 and args.plot is None :
