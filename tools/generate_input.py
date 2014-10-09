@@ -24,6 +24,8 @@ import logging
 
 import numpy as np
 
+import random
+
 import simulationobjects
 
 logger = logging.getLogger('protoms')
@@ -357,6 +359,7 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     self.setParameter("cutoff",10.0)
     self.setParameter("feather",0.5)
     self.setParameter("temperature",25.0)
+    self.setParameter("ranseed",random.randrange(100000))
     if not solvent is None :
       self.setParameter("boundary","solvent")
       if self.periodic  :
