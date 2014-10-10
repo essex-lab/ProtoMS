@@ -100,6 +100,6 @@ if __name__ == '__main__' :
   plt.yticks(labels)
   plt.ylabel(args.kind.capitalize())
   plt.xlabel("Snapshot")
-  plt.savefig(args.out+".png",format="png")
+  plt.savefig(args.out,format="png")
   
   

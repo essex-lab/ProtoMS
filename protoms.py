@@ -337,7 +337,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     protobj = tools.pdb2pms(protobj,"amber",conversionfile)
 
     # Converting water molecules to specified model
-    protobj = tools.convertwater(protobj,settings.watmodel,ignorH='No')
+    protobj = tools.convertwater(protobj,settings.watmodel)
 
     # Defining the center of the scoop...
     if ligands is None :
@@ -705,6 +705,7 @@ if __name__ == "__main__":
   parser.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
   parser.add_argument('--singlemap',help="the correspondance map for single-topology")
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
+  parser.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
   args = parser.parse_args()
  
   # Setup the logger
@@ -856,6 +857,17 @@ if __name__ == "__main__":
       water_file = waters2_name
     else :
       water_file = water_file.name
+
+  # Check of test run
+  if args.testrun :
+    if args.nequil == 5E6 :
+      args.nequil = 0
+    if args.nprod == 40E6 :
+      args.nprod = 4000
+    if args.dumpfreq == 1E5 :
+      args.dumpfreq = 10
+    if len(args.lambdas) == 1 and args.lambdas[0] == 16 :
+      args.lambdas = [4]
     
   # Create ProtoMS command files
   if args.simulation == "singletopology" :

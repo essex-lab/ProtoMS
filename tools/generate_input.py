@@ -359,7 +359,9 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     self.setParameter("cutoff",10.0)
     self.setParameter("feather",0.5)
     self.setParameter("temperature",25.0)
-    self.setParameter("ranseed",random.randrange(100000))
+    r = random.randrange(110000,11000000)
+    if r % 2 == 0 : r = r + -1
+    self.setParameter("ranseed",r)
     if not solvent is None :
       self.setParameter("boundary","solvent")
       if self.periodic  :

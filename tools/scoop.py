@@ -25,7 +25,7 @@ import simulationobjects
 logger = logging.getLogger('protoms')
 
 def scoop ( protein, ligand, innercut = 16, outercut  = 20, 
-            flexin = 'full', flexout = 'sidechain', excluded = [], added = [] ) :
+            flexin = 'full', flexout = 'sidechain', terminal = 'neutralize', excluded = [], added = [] ) :
 
     """
     Generates a scoop from protein structure
@@ -49,6 +49,9 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
         Can be 'rigid', 'sidechain' or 'flexible'
     flexout : string, optional
         As flexin but for residues of the outer scoop
+    terminal : string, optional
+        Determines what to do with terminal residues
+        Can be 'keep', 'doublekeep','neutralize'
     excluded : list of int
         List of indices for residues to be excluded from scoop
     added : list of int
@@ -67,6 +70,7 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
     logger.debug("\toutercut = %f"%outercut) 
     logger.debug("\tflexin   = %s"%flexin) 
     logger.debug("\tflexout  = %s"%flexout) 
+    logger.debug("\tterminal  = %s"%terminal) 
     logger.debug("\texcluded = %s"%" ".join("%d"%e for e in excluded)) 
     logger.debug("\tadded    = %s"%" ".join("%d"%e for a in added)) 
     logger.debug("This will generate a truncated version for a protein")
@@ -195,6 +199,43 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
         if res not in waters:
             pdb_out.solvents.pop ( res )
 
+    # Check of terminal residue
+    headerscoop = False
+    if terminal != 'keep' :
+      nres = pdb_out.residues[sorted(pdb_out.residues.keys())[0]]
+      cres = pdb_out.residues[sorted(pdb_out.residues.keys())[-1]]
+
+      # Check if the N terminal is charged, only works for now with ProtoMS names
+      charged_nres = False
+      for atom in nres.atoms :
+        if atom.name.upper().strip() in ["HN1","HN2","HN3"] :
+          charged_nres = True
+      
+      # Check if the C terminal is charged
+      charged_cres = False
+      for atom in cres.atoms :
+        if atom.name.upper().strip() in ["OT","OXT"] :
+          charged_cres = True
+
+      # If both are charged and terminal is doublekeep, we will not tell ProtoMS this is a scoop and keep them
+      if charged_nres and charged_cres and terminal == 'doublekeep':
+        headerscoop = False
+      # Otherwise we will neutralize and tell ProtoMS this is a scoop
+      else :
+        headerscoop = True
+        if charged_nres :
+          remthis = []
+          for atom in nres.atoms :
+            if atom.name.upper().strip() in ["HN1","HN2","HN3"] : remthis.append(atom)
+          for atom in remthis :
+            nres.atoms.remove(atom)
+        if charged_cres :
+          remthis = []
+          for atom in cres.atoms :
+            if atom.name.upper().strip() in ["OT","OXT"]  : remthis.append(atom)
+          for atom in remthis :
+            cres.atoms.remove(atom)
+   
     header  = "REMARK Scoop of %s\n" % pdb_out
     header += "REMARK Inner Region : %8.2f Angstrom radius\n" % innercut
     header += "REMARK Outer Region : %8.2f Angstrom radius\n" % outercut
@@ -210,6 +251,9 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
 
     header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
     header += "REMARK of the ligand\n"
+
+    if headerscoop : 
+      header += 'HEADER scoop\n'
     
     pdb_out.header = header
 
@@ -231,6 +275,7 @@ if __name__ == "__main__":
     parser.add_argument('--outercut',type=float,help="maximum distance from ligand defining outer region of the scoop",default=20.0)
     parser.add_argument('--flexin',choices=[ 'sidechain', 'flexible', 'rigid' ],help="the flexibility of the inner region",default="flexible")
     parser.add_argument('--flexout',choices=[ 'sidechain', 'flexible', 'rigid' ],help="the flexibility of the inner region",default="sidechain")
+    parser.add_argument('--terminal',choices=[ 'keep', 'doublekeep', 'neutralize' ],help="controls of to deal with charged terminal",default="neutralize")
     parser.add_argument('--excluded',nargs="+",type=int,help="a list of indices for residues to be excluded from scoops",default=[])
     parser.add_argument('--added',nargs="+",type=int,help="a list of indices for residues to be included in outer scoops",default=[])
     args = parser.parse_args()
@@ -243,6 +288,6 @@ if __name__ == "__main__":
     else :
       ligand = simulationobjects.PDBFile(filename=args.ligand)
     protein = simulationobjects.PDBFile(filename=args.protein)
-    protein = scoop(protein,ligand,args.innercut,args.outercut,args.flexin,args.flexout,args.excluded,args.added)
+    protein = scoop(protein,ligand,args.innercut,args.outercut,args.flexin,args.flexout,args.terminal,args.excluded,args.added)
     protein.write(args.out,renumber=True)
   
