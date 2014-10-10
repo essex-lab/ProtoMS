@@ -42,7 +42,7 @@ c
 
       if (jsol .ne. 0) then
         if (DualTopologySyncTrans(isol)) then
-          if (SolADel(jsol) .gt. ZERO) call translateSolute(jsol,ranvec)
+          if (SolADel(jsol) .gt. ZERO .and. SolADel(isol).gt.ZERO) call translateSolute(jsol,ranvec)
         else
           call getVectorOnSphere(ranvec)
           ranval = ranRange(-SolADel(isol),SolADel(isol))
@@ -64,7 +64,7 @@ c
 
       if (jsol .ne. 0) then
         if (DualTopologySyncRot(isol)) then
-          if (SolRdel(jsol) .gt. ZERO) call rotateSolute(jsol,ranvec,ranval)
+          if (SolRdel(jsol) .gt. ZERO .and. SolRdel(isol).gt.ZERO) call rotateSolute(jsol,ranvec,ranval)
         else
           call getVectorOnSphere(ranvec)
           ranval = ranRange(-SolRDel(jsol),SolRDel(jsol))
