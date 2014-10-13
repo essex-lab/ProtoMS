@@ -84,7 +84,7 @@ if __name__ == '__main__' :
   parser.add_argument('-f','--files',nargs="+",help="the name of the files to analyse")
   parser.add_argument('-p','--plot',type=float,nargs="+",help="the replica values to plot")
   parser.add_argument('-k','--kind',choices=["lambda"],help="the kind of replica to analyze",default="lambda")
-  parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path")
+  parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path.png")
   args = parser.parse_args()
 
   # Extract paths and labels from the input files

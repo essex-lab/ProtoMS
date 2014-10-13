@@ -1,0 +1,848 @@
+<html>
+<head>
+<title>ProtoMS Tools</title>
+</head>
+<body>
+<h1>Tools</h1>
+In the <code>$PROTOMSHOME/tools</code> folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the <code>protoms.py</code> setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at this page.
+<p>
+These are the available tools in ProtoMS3.0
+<code><ul>
+	<li><a href="#ambertools">ambertools.py</a></li>
+	<li><a href="#build_template">build_template.py</a></li>
+	<li><a href="#calc_bar">calc_bar.py</a></li>
+	<li><a href="#calc_density">calc_density.py</a></li>
+	<li><a href="#calc_replicapath">calc_replicapath.py</a></li>
+	<li><a href="#calc_series">calc_series.py</a></li>
+	<li><a href="#calc_ti">calc_ti.py</a></li>
+	<li><a href="#clear_gcmcbox">clear_gcmcbox.py</a></li>
+	<li><a href="#convertatomnames">convertatomnames.py</a></li>
+	<li><a href="#convertwater">convertwater.py</a></li>
+	<li><a href="#distribute_waters">distribute_waters.py</a></li>
+	<li><a href="#divide_pdb">divide_pdb.py</a></li>
+	<li><a href="#generate_input">generate_input.py</a></li>
+	<li><a href="#make_dummy">make_dummy.py</a></li>
+	<li><a href="#make_gcmcbox">make_gcmcbox.py</a></li>
+	<li><a href="#make_single">make_single.py</a></li>
+	<li><a href="#merge_templates">merge_templates.py</a></li>
+	<li><a href="#pms2pymbar">pms2pymbar.py</a></li>
+	<li><a href="#scoop">scoop.py</a></li>
+	<li><a href="#solvate">solvate.py</a></li>
+	<li><a href="#split_jawswater">split_jawswater.py</a></li>
+</ul>
+</code>
+<hr align="center" size="2"/>
+<code><h2><a name="ambertools">ambertools.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>ambertools.py -f pdbfile [pdbfile2 ...] [-n name name2 ...] [-c charge charge2 ...] </code>
+<pre>
+<ul>
+<li>-f pdbfile pdbfile2 ... = the name of one or more structures in PDB format
+    at least one filename needs to be given
+<li>-n name name2 ... = the name of the molecule(s) in the PDB file(s)
+    optional, default = UNK
+<li>-c charge charge2 ... = the net charge of the molecule(s) in the PDB file(s)
+    optional, default=0
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+ambertools.py -f benzene.pdb
+ambertools.py -f benzene.pdb -n BNZ
+ambertools.py -f benzenamide.pdb -c 0
+ambertools.py -f benzene.pdb toluene.pdb -n BNZ TOL
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool encapsulate the program <code>antechamber</code> and <code>parmchk</code> from the <a href="http://www.ambermd.org">AmberTools</a> suite of programs.
+<p>
+It will produce an Amber prepi-file, containing the z-matrix and atom types of the given solutes, parametrized with the general Amber force field and AM1-BCC charges. It will also produce an Amber frcmod-file with additional parameters not found in the GAFF definition. These files be named after the input <code>pdbfile</code>, replacing the extension <code>.pdb</code> with <code>.prepi</code> and <code>.frcmod</code></p>
+<p>
+The AmberTools program should exist in the system path.</p>
+
+<hr align="center" size="2"/>
+<code><h2><a name="build_template">build_template.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>build_template.py -p prepifile [-f frcmodfile] [-z zmatfile] [-o outfile] [-n name] [-t trans] [-r rot] </code>
+<pre>
+<ul>
+<li>-p prepifile = the name of an Amber prepi file containing the z-matrix and atom types of a solute
+<li>-f frcmodfile = the name of an Amber frcmod file 
+    optional, no default
+<li>-z zmatfile = the name of a file containing the ProtoMS z-matrix of a solute
+    optional, no default
+<li>-o outfile = the name of a ProtoMS template file
+    optional, default = lig.tem
+<li>-n name = the name of the solute
+    optional, default = UNK    
+<li>-t trans = the maximum translational displacement
+   optional, default = 0.25 A
+<li>-r rot = the maximum rotational displacement
+   optional, default = 5 degrees
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+build_template.py -p benzene.prepi
+build_template.py -p benzene.prepi -f benzene.frcmod 
+build_template.py -p benzene.prepi -f benzene.frcmod -o benzene.template -n BNZ
+build_template.py -p benzene.prepi -f benzene.frcmod -t 1.0 -r 10
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool builds a ProtoMS template file for a solute given an Amber prepi file.
+<p>
+If the solute needs parameter not in the GAFF release, they should be supplied with the <code>frcmodfile</code>. 
+</p>
+<p>The tool will automatically make an appropriate z-matrix for Monte Carlo sampling. This works in most situations. However, if something is not working properly with the generated z-matrix, one can be supplied in the <code>zmatfile</code></p>
+<p>The default translational and rotational displacements are based on experience and should be appropriate in most situations.</p>
+
+<hr align="center" size="2"/>
+<code><h2><a name="calc_bar">calc_bar.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>calc_bar.py [-d directory] [-r results] [-s nskip] [-m nmax] [-t temperature]  [-b nbootstraps] [-pw] [-pu] [-pl]</code>
+<pre>
+<ul>
+<li>-d directory = name of output directory of the simulation
+    optional, default = current working directory (.)
+<li>-r results = the beginning of the name of the file to analyse
+    optional, default = results
+<li>-s nskip = the number of snapshots to skip at the beginning of the simulation
+    optional, default = 0
+<li>-m nmax = the maximum number of snapshots to process
+    optional, default = the total number of snapshot in the results file, excluding nskip
+<li>-t temperature = the simulation temperature in degree Celsius 
+    optional, default = 25 degrees
+<li>-b nbootstraps = the number of bootstraps samples to use in uncertainty estimation 
+    optional, default = 100
+<li>-pw  = flag that turns <i>off</i> the printing of individual free energies between windows
+    optional, default = on
+<li>-pu  = flag that turns <i>off</i> the printing of uncertainties 
+    optional, default = on
+<li>-pl  = flag that turns <i>off</i> the printing of &lambda;-values
+    optional, default = on         
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+calc_bar.py -d out_free/
+calc_bar.py -s 200
+calc_bar.py -m 200
+calc_bar.py -d out_free/ -pw
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool calculates free energies using the Bennets Acceptance Ratio (BAR) method.
+<p>The program expects that in the <code>directory</code> there exist an output folder for each &lambda;-value, eg. <code>lam-0.000</code> and <code>lam-1.000</code></p>
+<p>The uncertainty of the free energies is estimated by boostrapping the energy differnces. The number of bootstrap samples is set by the <code>nbootstraps</code> argument. The procedure is rather slow, so in order to obtain a quick estimate of the free energy, lower this value.</p>
+<p>Block estimates can be constructed by combining <code>nskip</code> and <code>nmax</code>. For instance, these commands calculates block estimates with a block size of 5 m snapshots
+</p>
+<p>
+<pre>
+for X in 0 50 100 150 200 250 300 350
+do
+calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
+done
+</pre></p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="calc_density">calc_density.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>calc_density.py -f file1 [file2 ...]  [-o outfile] [-r residue] [-a atom] [-p padding] [-s spacing] [-e extent] [-n norm] [-t sphere|gaussian] </code>
+<pre>
+<ul>
+<li>-f file1 file2 ... = name(s) of PDB-file(s) containing simulation snapshots
+    at least one file needs to be specified
+<li>-o outfile = the produced density in DX-format
+    optional, default = grid.dx
+<li>-r residue = the name of the residue to make a grid on
+    optional, default = wat
+<li>-a atom = the name of the atom in the residue to make a grid on
+    optional, default = o00
+<li>-p padding = the amount to increase the minimum box in each dimension
+    optional, default = 2.0 A
+<li>-s spacing = the grid resolution
+    optional, default = 0.5 A
+<li>-e extent = the size of the smoothing
+    optional, default =  1.0 A
+<li>-n norm = the normalisation constant
+    optional, default = the number of snapshot processed
+<li>-t sphere|gaussian = the type of coordinate smoothing
+    optional, default = sphere
+    sphere = spherical smoothing with extent radius
+    gaussian = smoothing with Gaussian with standard deviation = extent 
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+calc_density.py -f all.pdb
+calc_density.py -f all.pdb all2.pdb
+calc_density.py -f all.pdb -o gcmc_density.dx
+calc_density.py -f all.pdb -r t4p -n o00
+calc_density.py -f all.pdb -p 1.0 -s 1.0
+calc_density.py -f all.pdb -e 0.5 -t gaussian
+calc_density.py -f all.pdb -n 100
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool discretises atoms on a grid, thereby representing a simulation output as a density. <p>
+It will extract the coordinates of all atoms with name equal to <code>atom</code> in residues with name equal to <code>residue</code> in all input files and discretise them on a grid. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
+<p>The produced density can be visualized with most programs, e.g.
+<pre>vmd -m all.pdb grid.dx</pre></p></p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="calc_replicapath">calc_replicapath.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>calc_replicapath.py -f file1 [file2 ...] -p replica1 [replica2 ...] -k lambda [-o outfile]</code>
+<pre>
+<ul>
+<li>-f file1 file2 ... = the name(s) of ProtoMS results file(s)
+    at least one file needs to be given
+<li>-p replica1 replica2 ... = the replica values to plot
+    at least one replica value needs to be given
+<li>-k lambda = the kind of replicas
+    optional, default = lambda
+    lambda = &lambda; replica exchange replicas
+<li>-o outfile = the name of a PNG file to write the replica paths 
+    optional, default = replica_path.png
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 1.000
+calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 0.500 1.000 -o replica_paths.png
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tools plots the path of different replicas in a replica exchange simulation as a function of simulation time.
+<p>At the moment only paths from a &lambda; replica exchange simulation is supported. Hence, the <code>-k</code> argument is reduntant.</p>
+<p>If the kind of replicas is from &lambda; replica exchange the <code>replica1</code> and <code>replica2</code> etc should be individual &lambda;-values to plot. </p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="calc_series">calc_series.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>calc_series.py -f file1 [file2 ...] [-o outprefix] [-s series series2 ...] [-p sep|sub|single|single_first0|single_last0] [--nperm N] [--threshold N] [--average] [--moving windowsize]</code>
+<pre>
+<ul>
+<li>-f file1 file2 ... = the name(s) of ProtoMS result file(s)
+    at least one name needs to be given
+<li>-o outprefix = the prefix of the created PNG-files
+    optional, default = results
+<li>-s serie series2 ... = the name of the series to plot
+    optional, no default
+<li>-p sep|sub|single|single_first0|single_last0 = the type of plot if plotting multiple series
+    optional, no default
+    sep = separate plots
+    sub = sub plots
+    single = all series in one plot
+    single_first0 = all series in one plot, but make the first value zero
+    single_last0 = all series in one plot, but make the last value zero
+<li>--nperm N = the number of permutation tests to determine equilibration
+    optional, default = 0 (use analytical test)
+<li>--threshold N = the signficance level for testing equilibration
+    optional, default = 0.05
+<li>--average = flag that turns <i>on</i> plotting running averages of the series
+    optional, default = off (plot raw series)
+<li>--moving windowsize = turns <i>on</i> plotting of moving averages with a specific window size
+    optional, default = off (plot raw series)
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+calc_series.py -f results
+calc_series.py -f results -s total gradient
+calc_series.py -f results -s total gradient -p sub
+calc_series.py -f lam-*/results -s gradient
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tools plots and analyses time series.
+<p>The series to plot is selected by the <code>-s</code> flag. Basically any property written to the ProtoMS results file can be plotted, e.g. energies, volume, gradients etc. If the <code>-s</code> flag is not specified, a wizard will display all available series that can be plotted. This can be useful if one is unsure what the name of the series is. </p>
+<p>The tool can plot multiple series and there is five choices how produce these plots, set by the <code>-p</code> flag. If the <code>sep</code> multiple PNG files will be created, one for each series. With all other choices, one PNG file is created. If the <code>-p</code> flag is not specified on the command line, a wizard will prompt the user for the different options.</p>
+<p>All plotted data series will also be written to disc. If <code>sep</code> is used, separate files will be written as well. </p>
+<p>For each time series, the tool will estimate the equilibration time. It will do this by performing a statistical test based on the rank order of the series. If the series is equilibrated it will have a slope close to zero and the Kendall's &tau; will be zero. When the equilibration time has been determined, the tool will estimate the number of independent samples in the production part using the method of statistical inefficiency. The equilibration time will also be estimated from a method that maximizes the number uncorrelated samples as suggested on <a href="www.alchemistry.org">alchemistry.org</a>.</p>
+<p>Apart from the raw series, the tool can also plot the running average if the <code>--average</code> flag is set or the moving average if the <code>--moving</code> flag is used.</p>
+<p>Typically only a single ProtoMS results file will be analysed and plotted. However, for the series <code>grad</code> and <code>agrad</code> (the gradient and analytical gradient, respectively), multiple results file can be given. In this case, the gradients for each results file is used to estimate the free energy using thermodynamic integration.</p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="calc_ti">calc_ti.py</a></h2></code>
+<b>Syntax:</b>
+<p>
+<code>calc_ti.py [-d directory] [-r results] [-s nskip] [-m nmax]  [-pg] [-pp] [-pl] [-pu] [-gr] [--analytical] [--numerical both|back|forw ] </code>
+<pre>
+<ul>
+<li>-d directory = name of output directory of the simulation
+    optional, default = current working directory (.)
+<li>-r results = the beginning of the name of the file to analyse
+    optional, default = results
+<li>-s nskip = the number of snapshots to skip at the beginning of the simulation
+    optional, default = 0
+<li>-m nmax = the maximum number of snapshots to process
+    optional, default = the total number of snapshot in the results file, excluding nskip
+<li>-pg  = flag that turns <i>off</i> the printing of the gradient
+    optional, default = on
+<li>-pp  = flag that turns <i>off</i> the printing of the PMF
+    optional, default = on
+<li>-pl  = flag that turns <i>off</i> the printing of &lambda;-values
+    optional, default = on
+<li>-pu  = flag that turns <i>off</i> the printing of uncertainties 
+    optional, default = on
+<li>-gr  = flag that turns <i>on</i> the plotting of the gradient
+    optional, default = off        
+<li>--analytical = turns <i>on</i> the use of analytical gradients
+  optional, default = off
+<li>--numerical = turns <i>on</i> the use of numerical gradients and selects the kind
+  optional, default = both
+  both = uses the free energy in both backward and forward direction to compute the free energy gradient
+  back = uses the free energy in the backward direction to compute the free energy gradient
+  forw = uses the free energy in the forward direction to compute the free energy gradient
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+calc_ti.py -d out_free/
+calc_ti.py -s 200
+calc_ti.py -m 200
+calc_ti.py -d out_free/ --analytical
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool calculates free energies using the method of thermodynamic integration (TI).
+<p>The program expects that in the <code>directory</code> there exist an output folder for each &lambda;-value, eg. <code>lam-0.000</code> and <code>lam-1.000</code></p>
+<p>If the <code>-gr</code> flag is set the gradient with respect to &lambda; is plotted and saved to a file called <code>gradient.png</code></p>
+<p>Block estimates can be constructed by combining <code>nskip</code> and <code>nmax</code>. For instance, these commands calculates block estimates with a block size of 5 m snapshots
+</p>
+<p>
+<pre>
+for X in 0 50 100 150 200 250 300 350
+do
+calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
+done
+</pre></p>
+
+
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="clear_gcmcbox">clear_gcmcbox.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>clear_gcmcbox.py -b boxfile -s waterfile [-o outfile]</code>
+<pre>
+<ul>
+<li>-b boxfile = the name of a PDB file containing a GCMC or JAWS1 box
+<li>-w waterfile = the name of a PDB file containing the bulk water
+<li>-o outfile = the created PDB file containing cleaned bulk water
+    optional, default = cleared_box.pdb 
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+clear_gcmcbox.py -b gcmc_box.pdb -w water.pdb
+clear_gcmcbox.py -b gcmc_box.pdb -w water.pdb -o water_cleared.pdb
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool clears a GCMC or JAWS-1 simulation box from any bulk water placed there by the solvation method.
+<p>
+In a GCMC and JAWS-1 simulation the bulk water is prevented to enter or exit a GCMC or JAWS-1 simulation box. Therefore, bulk water that are within this box needs to be removed prior to the GCMC or JAWS-1 simulation. </p>
+<p>The <code>boxfile</code> is typically created by <code>make_gcmcbox.py</code> and the <code>waterfile</code> is typically created by <code>solvate.py</code> and can be either a droplet or a box</p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="convertatomnames">convertatomnames.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>convertatomnames.py -p pdbfile [-o outfile] [-s style] [-c conversionfile]</code>
+<pre>
+<ul>
+<li>-p pdbfile = the name of a PDB file that should be modified
+<li>-o outfile = the name of the modified PDB file
+    optional, default = protein_pms.pdb
+<li>-s style = the naming convention in pdbfile
+    optional, default = amber
+<li>-c conversionfile = the name of file containing conversion instructions
+    optional, default = atomnamesmap.dat  
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+convertatomnames.py -p protein.pdb
+convertatomnames.py -p protein.pdb -c $PROTOMSHOME/data/atomnamesmap.dat
+convertatomnames.py -p protein.pdb -s charmm
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool converts residue and atom names to ProtoMS convention. 
+<p>This script modfies in particular names of hydrogen atoms, but also some residue names, e.g. histidines.</p>
+<p>A file containing conversion instructions for amber and charmm is available in the <code>$PROTOMSHOME/data</code> folder.</p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="convertwater">convertwater.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>convertwater.py -p pdbfile [-o outfile] [-m model] [--ignoreh]</code>
+<pre>
+<ul>
+<li>-p pdbfile = the name of a PDB containing waters to be modified
+<li>-o outfile = the name of the modified PDB file
+    optional, default = convertedwater.pdb
+<li>-m model = the name of the target water model
+    optional, default = tip4p
+<li>--ignoreh = flag that turns <i>on</i> the ignoring of hydrogen atoms
+    optional, default = off 
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+convertwater.py -p protein.pdb
+convertwater.py -p protein.pdb -m tip3p
+convertwater.py -p protein.pdb --ignoreh
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool converts water molecules to a specific model.
+<p>Currently the script recognizes TIP3P and TIP4P water models. The valid values for <code>style</code> is therefore <code>t4p, tip4p, tp4, t3p, tip3p, tp3</code></p>
+<p>If the <code>--ignoreh</code> flag is given, the script will discard the hydrogen atoms found in <code>pdbfile</code> and add them at a random orientation.</p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="distribute_waters">distribute_waters.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>distribute_waters.py  </code>
+<pre>
+<ul>
+<li>
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+distribute_waters.py
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool places water molecules at random within a GCMC or JAWS-1 simulation box.
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="divide_pdb">divide_pdb.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>divide_pdb.py </code>
+<pre>
+<ul>
+<li>-p 
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+divide_pdb.py
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool split up a PDB file with multiple structures into several PDB files.
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="generate_input">generate_input.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>generate_input.py [-s equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2] [-p protein.pdb] [-l lig1.pdb lig2.pdb ...] [-t template1 template2 ...] [-pw protwat.pdb] [-lw ligwat.pdb] [-o outfile] [--outfolder folder] [--lambdas nlambdas | lambda1 lambda2 ...] [--adams B1 B2 ...] [--jawsbias bias] [--gcmcwater wat.pdb] [--gcmcbox box.pdb] [--nequil N] [--nprod N] [--dumpfreq N] [--absolute] [--dovacuum]</code>
+<pre>
+<ul>
+<li>-s equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2 = the type of simulation to perform
+    optional, default = equilibration
+<li>-p protein.pdb = the name of the protein PDB file
+    optional, no default
+<li>-l lig1.pdb lig2.pdb ... = the name(s) of PDB file(s) containing ligand(s)
+    optional, no default
+<li>-t template1 template2 ... = the name(s) of ProtoMS template file(s) that needs to be loaded
+    optional, no default
+<li>-pw protwat.pdb = the name of a PDB file with bulk water for the protein
+    optional, no default
+<li>-lw ligwat.pdb = the name of a PDB file with bulk water for the ligand(s)
+    optional, no default
+<li>-o outfile = the prefix for the created ProtoMS command file
+    optional, default = run
+<li>--outfolder folder = the ProtoMS output folder
+    optional, default = "" (empty string)
+<li>--lambdas nlambdas | lambda1 lambada2 ... = specification of &lambda; space for free energy calculations
+    optional, default = 16
+    if a single value is given, this number of &lambda;-values is created uniformly from 0 to 1
+    if a list of values are given, this is the &lambda;-values to use
+<li>--adams B1 B2 ... = the Adams parameter for GCMC
+    optional, default = 0
+<li>--jawsbias bias = the bias to apply in JAWS-2 simulations
+    optional, default = 0
+<li>--gcmcwater wat.pdb = the name of a PDB file with reservoir waters for GCMC and JAWS-1
+    optional, no default
+<li>--gcmcbox box.pdb = the name of a PDB file with GCMC or JAWS-1 simulation box dimension
+    optional, no default
+<li>--nequil N = the number of equilibration moves
+    optional, default = 5E6
+<li>--nprod N = the number of production moves
+    optional, default = 40E6
+<li>--dumpfreq N = the frequency with which output is written to disc
+    optional, default = 1E5
+<li>--absolute = turns <i>on</i> the setup of absolute free energies
+    optional, default = off          
+<li>--dovacuum = turns <i>on</i> the setup of vacuum simulation
+    optional, default = off
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+generate_input.py -s dualtopology -l lig1.pdb lig2.pdb -p protein.pdb -t li1-li2.tem -pw droplet.pdb -lw lig1_wat.pdb --lambas 8
+generate_input.py -s dualtopology -l lig1.pdb dummy.pdb -t li1-dummy.tem -lw lig1_wat.pdb --absolute
+generate_input.py -s gcmc -p protein.pdb -pw droplet.pdb --adams -4 -2 0 2 4 6 --gcmcwater gcmc_water.pdb --gcmcbox gcmc_box.pdb
+generate_input.py -s sampling -l lig1.pdb -t lig1.tem --dovacuum
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool generates input files with commands for ProtoMS.
+<p>The settings generate are made according to experience and should work in most situations.</p>
+<p>The tool will create at most two ProtoMS command files, one for the protein simulation and one for the ligand simulation. These can be used to run ProtoMS, e.g.
+<pre>
+$PROTOMS/protoms3 run_free.cmd</pre></p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="make_dummy">make_dummy.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>make_dummy.py -f pdbfile [-o outfile] </code>
+<pre>
+<ul>
+<li>-f pdbfile = the name of PDB file containing the solute
+<li>-o outfile = the name of the created dummy PDB file
+    optional, default = dummy.pdb
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+make_dummy.py -f benzene.pdb
+make_dummy.py -f benzene.pdb -o benzene_dummy.pdb
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool makes a matching dummy particle for a solute.
+<p>The dummy particle will be placed at the centre of the solute.</p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="make_gcmcbox">make_gcmcbox.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>make_gcmcbox.py -s pdbfile [-o outfile] [-p padding]</code>
+<pre>
+<ul>
+<li>-s pdbfile = the name of a PDB file containing a solute molecule
+<li>-o outfile = a PDB file with the created box
+    optional, default = gcmc_box.pdb
+<li>-p padding = the extra space to add to the box in each dimension
+    optional, default = 2.0 A
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+make_gcmcbox.py -s benzene.pdb
+make_gcmcbox.py -s benzene.pdb -p 0.0
+make_gcmcbox.py -s benzene.pdb -o benzene_gcmc_box.pdb
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool makes a GCMC or JAWS-1 simulation box to fit on top of a solute.
+<p>
+The box will be created so that it has the extreme dimensions of the solute and then <code>padding</code> will be added in each dimension</p>
+<p>The box can be visualised with most common programs, e.g.
+<pre>vmd -m benzene.pdb benzene_gcmc_box.pdb</pre>
+this is a good way to see that the box is of appropriate dimensions.</p>
+<p>When an appropriate box has been made, it can be used by <code>solvate.py</code> to fill it with water.</p>
+<p></p>
+
+
+<hr align="center" size="2"/>
+<code><h2><a name="make_single">make_single.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>make_single.py -t0 template0 -t1 template1 -p0 pdbfile0 -p1 pdbfile1 [-m map] [-o outfile]</code>
+<pre>
+<ul>
+<li>-t0 template0 = the name of a ProtoMS template file of solute at &lambda;=0.0
+<li>-t1 template1 = the name of a ProtoMS template file of solute at &lambda;=1.0
+<li>-p0 pdbfile0 = the name of a PDB file of the solute at &lambda;=0.0
+<li>-p1 pdbfile1 = the name of a PDB file of the solute at &lambda;=1.0
+<li>-m map = the name of a correspondence map
+    optional, no default
+<li>-o outfile = the start of the name of the created single-topology templates
+    optional, default = single
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb
+make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -m bnz2tol.dat
+make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -o bnz-tol
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool makes ProtoMS template files for single topology free energy simulations.
+<p>The program will automatically try to match atoms in <code>template0</code> with atoms in <code>template1</code>. It will do this by looking for atoms with the same atom type that are on top of each other in <code>pdbfile0</code> and <code>pdbfile1</code>. A cut-off of 0.02 A<sup>2</sup> will be used for this. All atoms that cannot be identified in this way are written to the screen and the user has to enter the corresponding atoms. If no corresponding atom exists, i.e., the atom should be perturbed to a dummy, the user may enter blank. </p>
+<p>The user may also write the corresponding atoms to a file and provide it as <code>map</code> above. In this file there should be one atom pair on each line, separated by white-space. A dummy atom should be denoted as <code>DUM</code>. If <code>map</code> is not given, the program will write the created correspondence map to a file based on the <code>outfile</code> string.</p>
+<p>Currently, dummy atoms are not supported in the solute at &lambda;=0.0. Therefore, this solute needs to be the larger one.</p>
+<p>The tool will write two ProtoMS template files, one for the electrostatic perturbation and one for the van der Waals perturbation. These template files will end in <code>_ele.tem</code> and <code>_vdw.tem</code> respectively. </p>
+<p>A summary of the charges and van der Waals parameters in the four states will be printed to the screen. This information should be checked carefully. </p>
+<p></p>
+
+
+<hr align="center" size="2"/>
+<code><h2><a name="merge_templates">merge_templates.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>merge_templates.py -f file1 file2 [file3 ...] -o outfile</code>
+<pre>
+<ul>
+<li>-f file1 file2 file3 ... = the ProtoMS template files that should be merged
+<li>-o outfile = the name of the merged ProtoMS templatefile
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+merge_templates.py -f benzene.tem dummy.tem -o bnz-dummy.tem
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool combines several ProtoMS template files into a single template file.
+<p>
+The force field parameters in <code>file2</code> will be re-numbered so that they do not conflict with <code>file1</code>. This is important when you want to load both parameters into ProtoMS at the same time.</p>
+<p></p>
+
+
+<hr align="center" size="2"/>
+<code><h2><a name="pms2pymbar">pms2pymbar.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>pms2pymbar.py [-d directory] [-r results] [-o outfile] [-s nskip] [-m nmax] [-t temperature] [--run]</code>
+<pre>
+<ul>
+<li>-d directory = name of output directory of the simulation
+    optional, default = current working directory (.)
+<li>-r results = the beginning of the name of the file to analyse
+    optional, default = results
+<li>-o outfile = the name of file with all energy values
+    optional, default = pymbar_energy
+<li>-s nskip = the number of snapshots to skip at the beginning of the simulation
+    optional, default = 0
+<li>-m nmax = the maximum number of snapshots to process
+    optional, default = the total number of snapshot in the results file, excluding nskip
+<li>-t temperature = the simulation temperature in degree Celsius 
+    optional, default = 25 degrees 
+<li>--run = flag indicating if to run pymbar
+    optional, default = No
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+pms2pymbar.py -d out_free/
+pms2pymbar.py -s 200
+pms2pymbar.py -m 200
+pms2pymbar.py -d out_free/ --run
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool extract free energy data from ProtoMS output files and makes them compatible with the PyMBAR software.
+<p>The program expects that in the <code>directory</code> there exist an output folder for each &lambda;-value, eg. <code>lam-0.000</code> and <code>lam-1.000</code></p>
+<p>The tool writes a file <code>outfile</code> to each folder in <code>directory</code> that is human readable. It contains some header information such as units, current &lambda;-value and total number of &lambda-values. It then contains one row for each snapshot and each of these rows contains a column with the total energy at a specific &lambda;-value., one column for each &lambda;-value. These files can then be read by PyMBAR.</p>
+<p>Alternatively, if PyMBAR is properly installed and can be loaded as a python library, the user can add the <code>--run</code> flag and the tool will automatically feed PyMBAR with the energy values and compute the free energy using MBAR.</p>
+<p></p>
+
+
+<hr align="center" size="2"/>
+<code><h2><a name="scoop">scoop.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>scoop.py -p proteinfile [-l ligandfile] [-o outfile] [--center center] [--innercut icut] [--outercut ocut] [--flexin sidechain|flexible|rigid] [--flexout sidechain|flexible|rigid] [--terminal keep|doublekeep|neutralize] [--excluded res1 res2 ...] [--added res1 res2 ...]</code>
+<pre>
+<ul>
+<li>-p proteinfile = the name of a PDB file containing the protein
+<li>-l ligandfile = the name of a PDB file containing a ligand
+    optional, no default
+<li>-o outfile = the name of the truncated PDB file
+    optional, default = scoop.pdb
+<li>--center center = the centre of the scoop
+    optional, default = 0.0,0.0,0.0
+<li>--innercut icut == the inner region cut-off in Angstroms
+    optional, default = 16.0 A
+<li>--outercut ocut == the outer region cut-off in Angstroms
+    optional, default = 20.0 A
+<li>--flexin sidechain|flexible|rigid = determine the flexibility of the inner region
+    optional, default = flexible
+    sidechain = only the sidechains will be sampled in the simulation
+    flexible = both sidechain and backbone will be sampled in the simulation
+    rigid = no residues will be sampled
+<li>--flexout sidechain|flexible|rigid = determine the flexibility of the outer region
+    optional, default = sidechain
+    sidechain = only the sidechains will be sampled in the simulation
+    flexible = both sidechain and backbone will be sampled in the simulation
+    rigid = no residues will be sampled
+<li>--terminal keep|doublekeep|neutralize = determines the treatment of charged terminal residues
+    optional, default = neutralize
+    keep = keep any charged terminal
+    doublekeep = keep charged terminal but only if both are in the scoop
+    neutralize = neutralize any charged terminal within the scoop
+<li>--excluded res1 res2 ...    
+    one or more reside numbers
+    optional, default = none
+<li>--added res1 res2 ...    
+    one or more reside numbers
+    optional, default = none    
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+scoop.py -p protein.pdb
+scoop.py -p protein.pdb  -l benzene.pdb
+scoop.py -p protein.pdb  --center "0.0 0.0 0.0"
+scoop.py -p protein.pdb  --center origin.dat
+scoop.py -p protein.pdb  --innercut 10 --outercut 16
+scoop.py -p protein.pdb  --exclude 189 190
+scoop.py -p protein.pdb  --added 57 58 59 
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool truncates a protein and thereby creating a scoop.
+<p>All residues outside <code>ocut</code> is removed completely. <code>icut</code> is used to separate the scoop model into two different regions, that possibly can have different sampling regimes. The sampling regimes are determined by <code>--flexin</code> and <code>--flexout</code>. </p>
+<p>If the user would like to finetune the residues in the scoop this can be done with <code>--excluded</code> to discard specific residues or <code>--added</code> to include specific residues.</p>
+<p>The scoop will be centred on the <code>ligandfile</code> is such a file is provided. Otherwise, it will be centred on the flag <code>--center</code>. The argument to this flag can be either a string with three numbers specifying the centre, as in example three above. It can also be the name of a file containing the centre, as in example four above.</p>
+<p>Crystallographic waters that are in <code>proteinfile</code> will also be truncated at <code>ocut</code></p>
+<p>The PDB file will contain specific instructions for ProtoMS to automatically enforce the values of  <code>--flexin</code> and <code>--flexout</code>.</p>
+<p></p>
+
+
+<hr align="center" size="2"/>
+<code><h2><a name="solvate">solvate.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>solvate.py -b boxfile [-s solutefile] [-pr proteinfile] [-o outfile] [-g box|droplet|flood] [-p padding] [-r radius] [-center] [-n Amber|ProtoMS]</code>
+<pre>
+<ul>
+<li>-b boxfile = the name of a PDB file with pre-equilibrated waters
+<li>-s solutefile = the name of a PDB file with a solute molecule
+    optional, no default
+<li>-pr proteinfile = the name of a PDB file with a protein
+    optional, no default   
+<li>-o outfile = the name of the created water box
+    optional, default = solvent_box.pdb
+<li>-g box|droplet|flood
+    optional, default = box
+    box = a box of water molecules will be created
+    droplet = a droplet of water molecules will be created
+    flood = a box will be flooded with water molecules
+<li>-p padding = the minimum distance between solute and the box edge
+    optional, default = 10.0 A
+<li>-r radius = the radius of the water droplet
+    optional, default = 30.0 A
+<li>-c center = the center of the droplet
+    optional, default = "cent"
+<li>-n Amber|ProtoMS = the name style of the created water molecules 
+    optional, default = ProtoMS
+    Amber = Amber naming convention
+    ProtoMS = ProtoMS naming convention
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -p 12.0 
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -pr protein.pdb -g droplet
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -pr protein.pdb -g droplet -r 24.0
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -pr protein.pdb -g droplet -c 0.0
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -pr protein.pdb -g droplet -c "0.0 10.0 20.0"
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -pr protein.pdb -g droplet -c "76 86"
+solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s gcmc_box.pdb -g flood
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool solvates a ligand in either a droplet or a box of water. It can also flood a GCMC or JAWS-1 simulatios box with waters.
+<p>Pre-equilibrated boxes to use can be found in the <code>$PROTOMSHOME/data</code> folder.</p>
+<p>To solvate small molecule it is sufficient to give the <code>solutefile</code> as in the first example above. This produces a box with at least 10 A between the solute and the edge of the water box, which should be sufficient in most situation. Use <code>padding</code> to increase or decreas the box size as in the second example. The solvation box is created by replicating the pre-equilibrated box in all dimensions and then removing waters that overlap with solute atoms.</p>
+<p>To solvate a protein in a droplet, specify <code>proteinfile</code> and <code>droplet</code> as in the third example above. This produces a droplet with radius of 30 A, which was choosen to work well with the default options in <code>scoop.py</code>. Use <code>radius</code> to obtain a smaller or larger droplet as in the fourth example. The centre of the droplet can be on a ligand if <code>ligandfile</code> is specified. Otherwise, the <code>center</code>argument is used. This argument can be either <code>cent</code> (the default) that places the droplet at the centre of the protein. It can also take a single number as in the fifth example above in case it is placed at this coordinate in all dimensions. It can also take a string with three numbers which is the origin of the droplet in x, y, and z dimensions, see the sixth example above. If two numbers are given as in the seventh example above, it is assumed that this is an atom range and the droplet will be placed at the centre of these atoms. The droplet is created by putting random waters from the pre-equilibrated box on a grid, displacing them slightly in a random fashion.</p>
+<p>The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulations, similar to <code>distribute_waters.py</code>. In this case the solute is typically a box created by <code>make_gcmcbox.py</code> and <code>flood</code> needs to be specified, see the last example above. This gives a box filled with the bulk number of waters.</p>
+<p></p>
+
+
+<hr align="center" size="2"/>
+<code><h2><a name="split_jawswater">split_jawswater.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>split_jawswater.py -w pdbfile [-o outprefix] </code>
+<pre>
+<ul>
+<li>-w pdbfile = the name of PDB file with water molecules
+<li>-o outprefix = the prefix appended to all output files
+    optional, default = "" (empty string)
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+split_jawswater.py -w waters.pdb
+split_jawswater.py -w waters.pdb -o jaws2_
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool splits a PDB file containing multiple water molecules into PDB files appropriate for JAWS-2. 
+<p>For each water molecule in <code>pdbfile</code> the tool will write a PDB file with individual water molecules named <code>outprefix+watN.pdb</code> where N is the serial number of the water molecule. Furthermore, the tool will write a PDB file with all the other molecules and name if <code>outprefix+notN.pdb</code> where again N is the serial number of the water molecule. In these latter PDB-files, the water residue name is changed to that of the bulk water, e.g., <code>t3p</code> or <code>t4p</code>.</p>
+<p>For instance, if <code>waters.pdb</code> in the second example above contains 3 water molecule, this tool will create the following files:
+<pre>jaws2_wat1.pdb
+jaws2_wat2.pdb
+jaws2_wat3.pdb
+
+jaws2_not1.pdb
+jaws2_not2.pdb
+jaws2_not3.pdb</pre></p> 
+<p></p>
+
+</body>
+</html>

@@ -584,6 +584,8 @@ class SingleTopology(ProteinLigandSimulation) :
       the lambda values to perform the simulation at
     outfolder  : string, optional
       the folder for all output files
+    restrained : string, optional
+      the solutes on which restrains should be applied
     
     Raises
     ------
@@ -1051,11 +1053,10 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
 if __name__ == "__main__":
 
   import argparse
-  import numpy as np
 
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to create a ProtoMS command file")
-  parser.add_argument('-s','--simulation',choices=["sampling","equilibration","dualtopology","gcmc","jaws1","jaws2"],help="the kind of simulation to setup",default="equilibration")
+  parser.add_argument('-s','--simulation',choices=["sampling","equilibration","dualtopology","singletopology","gcmc","jaws1","jaws2"],help="the kind of simulation to setup",default="equilibration")
   parser.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   parser.add_argument('-p','--protein',help="the name of the protein file")
   parser.add_argument('-l','--ligands',nargs="+",help="the name of the ligand pdb files")
