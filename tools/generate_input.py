@@ -90,7 +90,7 @@ def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
     pprotein = int(round(addto*numprot/numtot/2.0))
     return "solvent=%d protein=%d solute=%d insertion=%d deletion=%d gcsolute=%d"%(psolvent,pprotein,psolute,pinsert,pdelete,pgcsolu)
   elif moveset in ["jaws1","jaws2"] :
-    pgcsolue = int(round(addto/6)) # Giving half of all move to JAWS moves.
+    pgcsolu = int(round(addto/6)) # Giving half of all move to JAWS moves.
     ptheta  = int(round(addto/3))
     psolvent = int(round(addto*numsolv/numtot/2.0))
     psolute = int(round(addto*numsolu/numtot/2.0))
