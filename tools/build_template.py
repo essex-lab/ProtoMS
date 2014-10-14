@@ -581,6 +581,7 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
 #term k1(kcal mol-1) k2 k3 k4(deg) #comment\n"""
         fmt = ( 4600, 0.0, 0.0, 0.0, 0.0 )
         out += "term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt
+        template.dihedralterms.append(sim.ForceFieldParameter(record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt))
         for i, di in enumerate ( frcdihedrals, 4601 ):
             fmt = ( i, di[2], di[1], di[4], di[3] )
             out += "term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt
