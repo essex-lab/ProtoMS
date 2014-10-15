@@ -310,6 +310,9 @@ has not been defined and where the bond has not been traversed</p>
 </dd></dl>
 
 </div>
+<div class="section" id="tools-build-template-py-bak-module">
+<h2>tools.build_template.py.bak module<a class="headerlink" href="#tools-build-template-py-bak-module" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="module-tools.calc_bar">
 <span id="tools-calc-bar-module"></span><h2>tools.calc_bar module<a class="headerlink" href="#module-tools.calc_bar" title="Permalink to this headline">¶</a></h2>
 <p>Program to do BAR</p>
@@ -373,9 +376,107 @@ bar</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-calc-replicapath-module">
-<h2>tools.calc_replicapath module<a class="headerlink" href="#tools-calc-replicapath-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-tools.calc_replicapath"></span><p>Program to analyze and plot replica paths</p>
+<div class="section" id="module-tools.calc_density">
+<span id="tools-calc-density-module"></span><h2>tools.calc_density module<a class="headerlink" href="#module-tools.calc_density" title="Permalink to this headline">¶</a></h2>
+<p>Routine to calculate a density from a set of PDB files</p>
+<p>This module defines a these public functions:
+calc_density
+writeDX</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.calc_density.calc_density">
+<tt class="descclassname">tools.calc_density.</tt><tt class="descname">calc_density</tt><big>(</big><em>pdbfiles</em>, <em>residue</em>, <em>atom</em>, <em>padding=2.0</em>, <em>extent=1.0</em>, <em>spacing=0.5</em>, <em>norm=None</em>, <em>smoothing='sphere'</em><big>)</big><a class="headerlink" href="#tools.calc_density.calc_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the density from a set of PDB files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pdbfiles</strong> : PDBSet</p>
+<blockquote>
+<div><p>the PDB files</p>
+</div></blockquote>
+<p><strong>residue</strong> : string</p>
+<blockquote>
+<div><p>the residue to extract</p>
+</div></blockquote>
+<p><strong>atom</strong> : string</p>
+<blockquote>
+<div><p>the name of the atom to make a density from</p>
+</div></blockquote>
+<p><strong>padding</strong> : float, optional</p>
+<blockquote>
+<div><p>extra space to add to the minimum extent</p>
+</div></blockquote>
+<p><strong>extent</strong> : float, optional</p>
+<blockquote>
+<div><p>the extent of the smoothing</p>
+</div></blockquote>
+<p><strong>spacing</strong> : float, optional</p>
+<blockquote>
+<div><p>the spacing of the grid</p>
+</div></blockquote>
+<p><strong>norm</strong> : int, optional</p>
+<blockquote>
+<div><p>number to normalize the density by</p>
+</div></blockquote>
+<p><strong>smoothing</strong> : string, optional</p>
+<blockquote>
+<div><p>kind of smoothing, can be either sphere or gauss</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumpyArray of integers</p>
+<blockquote>
+<div><p>the number of atom extracted from each PDB structure</p>
+</div></blockquote>
+<p>NumpyArray</p>
+<blockquote>
+<div><p>the 3D density</p>
+</div></blockquote>
+<p>dictionary</p>
+<blockquote class="last">
+<div><p>grid properties, keys = spacing, min, and max</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_density.writeDX">
+<tt class="descclassname">tools.calc_density.</tt><tt class="descname">writeDX</tt><big>(</big><em>grid</em>, <em>origin</em>, <em>spacing</em>, <em>filename</em><big>)</big><a class="headerlink" href="#tools.calc_density.writeDX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the grid to file in DX-format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>grid</strong> : Numpy array</p>
+<blockquote>
+<div><p>the 3D grid</p>
+</div></blockquote>
+<p><strong>origin</strong> : NumpyArray</p>
+<blockquote>
+<div><p>the bottom-left coordinate of the grid</p>
+</div></blockquote>
+<p><strong>spacing</strong> : float</p>
+<blockquote>
+<div><p>the grid spacing</p>
+</div></blockquote>
+<p><strong>filename</strong> : string</p>
+<blockquote class="last">
+<div><p>the name of the DX file</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tools.calc_replicapath">
+<span id="tools-calc-replicapath-module"></span><h2>tools.calc_replicapath module<a class="headerlink" href="#module-tools.calc_replicapath" title="Permalink to this headline">¶</a></h2>
+<p>Program to analyze and plot replica paths</p>
 <p>This module defines the following public functions:
 replica_path</p>
 <p>Can be executed from the command line as a stand-alone program</p>
@@ -417,9 +518,9 @@ but paths are only made for the replicas with these labels</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-calc-series-module">
-<h2>tools.calc_series module<a class="headerlink" href="#tools-calc-series-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-tools.calc_series"></span><p>Program to analyze and plot data series</p>
+<div class="section" id="module-tools.calc_series">
+<span id="tools-calc-series-module"></span><h2>tools.calc_series module<a class="headerlink" href="#module-tools.calc_series" title="Permalink to this headline">¶</a></h2>
+<p>Program to analyze and plot data series</p>
 <p>This module defines the following public functions:
 find_equilibration
 stats_inefficiency
@@ -814,9 +915,9 @@ ti</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-clear-gcmcbox-module">
-<h2>tools.clear_gcmcbox module<a class="headerlink" href="#tools-clear-gcmcbox-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-tools.clear_gcmcbox"></span><p>Routine to remove solvent molecules from a GCMC/JAWS-1 simulation box</p>
+<div class="section" id="module-tools.clear_gcmcbox">
+<span id="tools-clear-gcmcbox-module"></span><h2>tools.clear_gcmcbox module<a class="headerlink" href="#module-tools.clear_gcmcbox" title="Permalink to this headline">¶</a></h2>
+<p>Routine to remove solvent molecules from a GCMC/JAWS-1 simulation box</p>
 <p>This module defines a single public function:
 clear_gcmcbox</p>
 <p>Can be executed from the command line as a stand-alone program</p>
@@ -935,7 +1036,7 @@ convertwater</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.convertwater.alignhydrogens">
-<tt class="descclassname">tools.convertwater.</tt><tt class="descname">alignhydrogens</tt><big>(</big><em>watcoords</em>, <em>template</em>, <em>tol=0.1</em><big>)</big><a class="headerlink" href="#tools.convertwater.alignhydrogens" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">alignhydrogens</tt><big>(</big><em>watcoords</em>, <em>template</em>, <em>tol=0.05</em><big>)</big><a class="headerlink" href="#tools.convertwater.alignhydrogens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotates a template water molecule such that it has the same orientation as a reference water molecule. Useful for converting between different water models in cases when one wishes to retain the same orientations of hydrogens. It assumes that both the template and the reference water have maching oxygen locations.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -967,7 +1068,7 @@ convertwater</p>
 
 <dl class="function">
 <dt id="tools.convertwater.convertwater">
-<tt class="descclassname">tools.convertwater.</tt><tt class="descname">convertwater</tt><big>(</big><em>pdb_in</em>, <em>watermodel</em>, <em>ignorH</em><big>)</big><a class="headerlink" href="#tools.convertwater.convertwater" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">convertwater</tt><big>(</big><em>pdb_in</em>, <em>watermodel</em>, <em>ignorH=False</em>, <em>watresname=None</em><big>)</big><a class="headerlink" href="#tools.convertwater.convertwater" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts water in a pdb object to ideal water geometries of an input model</p>
 <p>The protein object is not modified by this routine, but the Residue and Atom objects are.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -982,9 +1083,9 @@ convertwater</p>
 <blockquote>
 <div><p>the name of the water model that will be used in the transformtation, e.g. tip4p, t3p.</p>
 </div></blockquote>
-<p><strong>ignorH</strong> : string</p>
+<p><strong>ignorH</strong> : bool</p>
 <blockquote>
-<div><p>whether to ignore hydrogens in the input water. If &#8216;yes&#8217; or &#8216;true&#8217;, then hydrogens are added in a random orientation.</p>
+<div><p>whether to ignore hydrogens in the input water.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1107,6 +1208,130 @@ convertwater</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-tools.distribute_waters">
+<span id="tools-distribute-waters-module"></span><h2>tools.distribute_waters module<a class="headerlink" href="#module-tools.distribute_waters" title="Permalink to this headline">¶</a></h2>
+<p>Program to generate a set of n waters contained within given box dimenstions
+or to redistribute waters given in a pdb object or file within the given box dimensions</p>
+<p>This program takes the box dimensions as a list of strings convertible to floats,
+in the following order :</p>
+<blockquote>
+<div>origin in x | origin in y | origin in z | length in x | length in y | length in z</div></blockquote>
+<p>And either the number of waters as a string convertible to integer,
+or the pdb, which can be provided as a string with the name of the file, or an object.</p>
+<p>It produces a pdb file with the randomly distributed waters with their oxigen atoms
+within the box limits.</p>
+<p>Initially thought to generate JAWS or GCMC waters</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.distribute_waters.create_res">
+<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">create_res</tt><big>(</big><em>atnames=['O00'], resname='sol', positions=[array([ 0.,  0.,  0.])]</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.create_res" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a residue object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>atnames</strong> : list of strings</p>
+<blockquote>
+<div><p>a list containing the names of all
+the atoms in the residue</p>
+</div></blockquote>
+<p><strong>resname</strong> : string</p>
+<blockquote>
+<div><p>the name of the residue</p>
+</div></blockquote>
+<p><strong>positions</strong> : list of numpy arrays</p>
+<blockquote>
+<div><p>a list with the positions of all
+the atoms in the residue</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Residue object</p>
+<blockquote class="last">
+<div><p>the residue built with the given atoms</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.distribute_waters.distribute_waters">
+<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">distribute_waters</tt><big>(</big><em>box</em>, <em>waters</em>, <em>watermodel='t4p'</em>, <em>out='ghostwaters.pdb'</em>, <em>resname='WAT'</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.distribute_waters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly distribute waters in a box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>box</strong> : a list or dictionary</p>
+<blockquote>
+<div><p>the origin and lenght of the box
+where the waters will be placed</p>
+</div></blockquote>
+<p><strong>waters</strong> : string or PDB object</p>
+<blockquote>
+<div><p>the number of waters to include in the box
+or the pdb object or filename with the waters
+to include in the box</p>
+</div></blockquote>
+<p><strong>watermodel</strong> : string, optional</p>
+<blockquote>
+<div><p>(only used when waters is a string)
+either &#8220;t4p&#8221; or &#8220;t3p&#8221;
+the water model for the generated waters</p>
+</div></blockquote>
+<p><strong>out</strong> : string, optional</p>
+<blockquote>
+<div><p>the name of the pdb file to write the waters to</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">string</p>
+<blockquote class="last">
+<div><p>the pdb file name of the file with the waters
+distributed randomly in the box</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tools.divide_pdb">
+<span id="tools-divide-pdb-module"></span><h2>tools.divide_pdb module<a class="headerlink" href="#module-tools.divide_pdb" title="Permalink to this headline">¶</a></h2>
+<p>Program to split a multi pdb file into individual files</p>
+<p>This program divides a multi pdb file in individual files.
+The individual pdbs must be separated by a line starting with END.</p>
+<p>Initially thought to divide the multi-snapshot pdb file produced as ProtoMS output
+into individual snapshot pdb files.
+Required for an easy visualization of GCMC and JAWS stage 1 results.</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.divide_pdb.divide_print">
+<tt class="descclassname">tools.divide_pdb.</tt><tt class="descname">divide_print</tt><big>(</big><em>common</em>, <em>prefix</em><big>)</big><a class="headerlink" href="#tools.divide_pdb.divide_print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Divide a pdb file in individual pdbfiles.
+Division is controled by lines starting with END</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>common</strong> : string</p>
+<blockquote>
+<div><p>the name of the initial pdb file</p>
+</div></blockquote>
+<p><strong>prefix</strong> : string</p>
+<blockquote class="last">
+<div><p>the prefix for output pdb files</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-tools.generate_input">
 <span id="tools-generate-input-module"></span><h2>tools.generate_input module<a class="headerlink" href="#module-tools.generate_input" title="Permalink to this headline">¶</a></h2>
 <p>Classes and routines to make ProtoMS command files</p>
@@ -1177,7 +1402,7 @@ equilibrate and production run</p>
 
 <dl class="class">
 <dt id="tools.generate_input.Equilibration">
-<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Equilibration</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], nsteps=100000.0, pdbfile='equilibrated.pdb'</em><big>)</big><a class="headerlink" href="#tools.generate_input.Equilibration" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Equilibration</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder='', nsteps=100000.0, pdbfile='equilibrated.pdb'</em><big>)</big><a class="headerlink" href="#tools.generate_input.Equilibration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></tt></a></p>
 <p>This a command file for equilibration of a protein-ligand system
 Generates input for proteins, solutes and solvent and write an equilibration and a pdb chunk</p>
@@ -1286,7 +1511,7 @@ equilibrate and production run</p>
 
 <dl class="class">
 <dt id="tools.generate_input.Jaws1">
-<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Jaws1</tt><big>(</big><em>protein='protein.pdb'</em>, <em>solutes=</em>, <span class="optional">[</span><span class="optional">]</span><em>solvent='water.pdb'</em>, <em>templates=</em>, <span class="optional">[</span><span class="optional">]</span><em>jawswater='jaws_water.pdb'</em>, <em>jawsbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em><big>)</big><a class="headerlink" href="#tools.generate_input.Jaws1" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Jaws1</tt><big>(</big><em>protein='protein.pdb'</em>, <em>solutes=</em>, <span class="optional">[</span><span class="optional">]</span><em>solvent='water.pdb'</em>, <em>templates=</em>, <span class="optional">[</span><span class="optional">]</span><em>outfolder=''</em>, <em>jawswater='jaws_water.pdb'</em>, <em>jawsbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em><big>)</big><a class="headerlink" href="#tools.generate_input.Jaws1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></tt></a></p>
 <p>This a command file for a JAWS-1 simulation
 Generates input for proteins, solutes and solvent
@@ -1341,8 +1566,64 @@ equilibrate and production run</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="tools.generate_input.Jaws2">
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Jaws2</tt><big>(</big><em>protein='protein.pdb'</em>, <em>solutes=</em>, <span class="optional">[</span><span class="optional">]</span><em>solvent='water.pdb'</em>, <em>templates=</em>, <span class="optional">[</span><span class="optional">]</span><em>outfolder=''</em>, <em>jawswater='jaws_water.pdb'</em>, <em>jbias=6.5</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em><big>)</big><a class="headerlink" href="#tools.generate_input.Jaws2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></tt></a></p>
+<p>This a command file for a JAWS-2 simulation
+Generates input for proteins, solutes and solvent
+write JAWS-2 parameters
+dump results, pdb and restart files
+equilibrate and production run</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></tt>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setChunk</span></tt>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setDump</span></tt>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setForceField</span></tt>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setParameter</span></tt>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setProtein</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolute</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></tt>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">setStream</span></tt>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></tt>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
 <dt id="tools.generate_input.ProteinLigandSimulation">
-<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">ProteinLigandSimulation</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem']</em><big>)</big><a class="headerlink" href="#tools.generate_input.ProteinLigandSimulation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">ProteinLigandSimulation</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder=''</em><big>)</big><a class="headerlink" href="#tools.generate_input.ProteinLigandSimulation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProtoMSSimulation" title="tools.generate_input.ProtoMSSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProtoMSSimulation</span></tt></a></p>
 <p>This a generic command file for a protein-ligand simulation
 Generates input for proteins, solutes and solvent but does not write any chunks</p>
@@ -1710,7 +1991,7 @@ information, or can write this information to a command file.</p>
 
 <dl class="class">
 <dt id="tools.generate_input.Sampling">
-<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Sampling</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, outprefix=''</em><big>)</big><a class="headerlink" href="#tools.generate_input.Sampling" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">Sampling</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder='', nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, outprefix=''</em><big>)</big><a class="headerlink" href="#tools.generate_input.Sampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></tt></a></p>
 <p>This a command file for MC sampling of a protein-ligand system
 Generates input for proteins, solutes and solvent and write 
@@ -1764,7 +2045,7 @@ chunks for equilibration and simulation, as well as dumps</p>
 
 <dl class="class">
 <dt id="tools.generate_input.SingleTopology">
-<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">SingleTopology</tt><big>(</big><em>protein='protein.pdb', solutes=['solute1.pdb'], solvent='water.pdb', templates=['solute.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, outfolder='out'</em><big>)</big><a class="headerlink" href="#tools.generate_input.SingleTopology" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">SingleTopology</tt><big>(</big><em>protein='protein.pdb', solutes=['solute1.pdb'], solvent='water.pdb', templates=['solute.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, outfolder='out', restrained=[]</em><big>)</big><a class="headerlink" href="#tools.generate_input.SingleTopology" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></tt></a></p>
 <p>This a command file for a single-topology protein-ligand simulation
 Generates input for proteins, solutes and solvent
@@ -1901,9 +2182,9 @@ make_dummy</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-make-gcmcbox-module">
-<h2>tools.make_gcmcbox module<a class="headerlink" href="#tools-make-gcmcbox-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-tools.make_gcmcbox"></span><p>Routine to make a GCMC/JAWS-1 simulation box from a ligand</p>
+<div class="section" id="module-tools.make_gcmcbox">
+<span id="tools-make-gcmcbox-module"></span><h2>tools.make_gcmcbox module<a class="headerlink" href="#module-tools.make_gcmcbox" title="Permalink to this headline">¶</a></h2>
+<p>Routine to make a GCMC/JAWS-1 simulation box from a ligand</p>
 <p>This module defines a single public function:
 make_gcmcbox</p>
 <p>Can be executed from the command line as a stand-alone program</p>
@@ -1939,7 +2220,8 @@ make_gcmcbox</p>
 <p>Routines to make ProtoMS single topology template</p>
 <p>This module defines these public function
 make_single
-write_map</p>
+write_map
+summarize</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.make_single.make_single">
@@ -1988,6 +2270,32 @@ write_map</p>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>SetupError</strong></p>
 <blockquote class="last">
 <div><p>tem2 is larger than tem1</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.make_single.summarize">
+<tt class="descclassname">tools.make_single.</tt><tt class="descname">summarize</tt><big>(</big><em>eletem</em>, <em>vdwtem</em>, <em>loggfunc</em><big>)</big><a class="headerlink" href="#tools.make_single.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print single topology parameter summary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eletem</strong> : TemplateFile</p>
+<blockquote>
+<div><p>template for electrostatic perturbation</p>
+</div></blockquote>
+<p><strong>vdwtem</strong> : TemplateFile</p>
+<blockquote>
+<div><p>template for van der Waals perturbation</p>
+</div></blockquote>
+<p><strong>loggfunc</strong> : logger function</p>
+<blockquote class="last">
+<div><p>the logger function to use to print the summary</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2061,7 +2369,7 @@ scoop</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.scoop.scoop">
-<tt class="descclassname">tools.scoop.</tt><tt class="descname">scoop</tt><big>(</big><em>protein</em>, <em>ligand</em>, <em>innercut=16</em>, <em>outercut=20</em>, <em>flexin='full'</em>, <em>flexout='sidechain'</em>, <em>excluded=</em>, <span class="optional">[</span><span class="optional">]</span><em>added=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#tools.scoop.scoop" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.scoop.</tt><tt class="descname">scoop</tt><big>(</big><em>protein</em>, <em>ligand</em>, <em>innercut=16</em>, <em>outercut=20</em>, <em>flexin='full'</em>, <em>flexout='sidechain'</em>, <em>terminal='neutralize'</em>, <em>excluded=</em>, <span class="optional">[</span><span class="optional">]</span><em>added=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#tools.scoop.scoop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a scoop from protein structure</p>
 <p>The protein object is not modified by this routine.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -2094,6 +2402,11 @@ Can be &#8216;rigid&#8217;, &#8216;sidechain&#8217; or &#8216;flexible&#8217;</p
 <p><strong>flexout</strong> : string, optional</p>
 <blockquote>
 <div><p>As flexin but for residues of the outer scoop</p>
+</div></blockquote>
+<p><strong>terminal</strong> : string, optional</p>
+<blockquote>
+<div><p>Determines what to do with terminal residues
+Can be &#8216;keep&#8217;, &#8216;doublekeep&#8217;,&#8217;neutralize&#8217;</p>
 </div></blockquote>
 <p><strong>excluded</strong> : list of int</p>
 <blockquote>
@@ -2496,7 +2809,7 @@ or end of file</p>
 <tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.copy" title="tools.simulationobjects.PDBFile.copy"><tt class="xref py py-obj docutils literal"><span class="pre">copy</span></tt></a>()</td>
 <td>Make a copy of the residues and solvents dictionaries,</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.getBox" title="tools.simulationobjects.PDBFile.getBox"><tt class="xref py py-obj docutils literal"><span class="pre">getBox</span></tt></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.getBox" title="tools.simulationobjects.PDBFile.getBox"><tt class="xref py py-obj docutils literal"><span class="pre">getBox</span></tt></a>([atomlist,&nbsp;reslist])</td>
 <td>Calculate the smallest box to encompass the atoms</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.getCenter" title="tools.simulationobjects.PDBFile.getCenter"><tt class="xref py py-obj docutils literal"><span class="pre">getCenter</span></tt></a>()</td>
@@ -2508,7 +2821,7 @@ or end of file</p>
 <tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read_from" title="tools.simulationobjects.PDBFile.read_from"><tt class="xref py py-obj docutils literal"><span class="pre">read_from</span></tt></a>(f)</td>
 <td>Read a pdb structure from a fileobject</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filename[,&nbsp;renumber,&nbsp;header])</td>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filename[,&nbsp;renumber,&nbsp;header,&nbsp;solvents])</td>
 <td>Write the PDB file to disc</td>
 </tr>
 </tbody>
@@ -2534,13 +2847,23 @@ not the Residue and Atom objects themselves</p>
 
 <dl class="method">
 <dt id="tools.simulationobjects.PDBFile.getBox">
-<tt class="descname">getBox</tt><big>(</big><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.getBox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getBox</tt><big>(</big><em>atomlist='all'</em>, <em>reslist='all'</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.getBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the smallest box to encompass the atoms</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary of Numpy arrays</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>atomlist = list, optional</strong></p>
+<blockquote>
+<div><p>the atoms to be taken into acount to get the box</p>
+</div></blockquote>
+<p><strong>reslist = list, optional</strong></p>
+<blockquote>
+<div><p>the residues to be taken into acount to get the box</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary of Numpy arrays</p>
 <blockquote class="last">
 <div><p>the center, length and origin of the box</p>
 </div></blockquote>
@@ -2608,7 +2931,7 @@ not the Residue and Atom objects themselves</p>
 
 <dl class="method">
 <dt id="tools.simulationobjects.PDBFile.write">
-<tt class="descname">write</tt><big>(</big><em>filename</em>, <em>renumber=False</em>, <em>header=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>filename</em>, <em>renumber=False</em>, <em>header=None</em>, <em>solvents=True</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the PDB file to disc</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2623,8 +2946,12 @@ not the Residue and Atom objects themselves</p>
 <div><p>indicate if residues should be renumbered</p>
 </div></blockquote>
 <p><strong>header</strong> : string, optional</p>
-<blockquote class="last">
+<blockquote>
 <div><p>additional lines to print before the atom records</p>
+</div></blockquote>
+<p><strong>solvents</strong> : boolean, optional</p>
+<blockquote class="last">
+<div><p>if to write the solvents</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2657,11 +2984,35 @@ not the Residue and Atom objects themselves</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.read" title="tools.simulationobjects.PDBSet.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.from_residues" title="tools.simulationobjects.PDBSet.from_residues"><tt class="xref py py-obj docutils literal"><span class="pre">from_residues</span></tt></a>(pdbfile)</td>
+<td>Split a PDB file into a set by residue</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.read" title="tools.simulationobjects.PDBSet.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
 <td>Read a set of pdb structures from a file</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.write" title="tools.simulationobjects.PDBSet.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filenames[,&nbsp;solvents])</td>
+<td>Write the set to disc</td>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="tools.simulationobjects.PDBSet.from_residues">
+<tt class="descname">from_residues</tt><big>(</big><em>pdbfile</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBSet.from_residues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a PDB file into a set by residue</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pdbfile</strong> : PDBFile object</p>
+<blockquote class="last">
+<div><p>the pdb-file to split</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="tools.simulationobjects.PDBSet.read">
 <tt class="descname">read</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBSet.read" title="Permalink to this definition">¶</a></dt>
@@ -2673,6 +3024,29 @@ not the Residue and Atom objects themselves</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string</p>
 <blockquote class="last">
 <div><p>the name of the file to read</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.simulationobjects.PDBSet.write">
+<tt class="descname">write</tt><big>(</big><em>filenames</em>, <em>solvents=True</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBSet.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the set to disc</p>
+<p>If one filename is given all PDB-files are written to one file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filenames</strong> : list of strings</p>
+<blockquote>
+<div><p>the name of the file(s) to write to</p>
+</div></blockquote>
+<p><strong>solvents</strong> : boolean</p>
+<blockquote class="last">
+<div><p>if to write the solvents</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2898,6 +3272,24 @@ object stores NumpyArrays of all the results</p>
 <dt id="tools.simulationobjects.ResultsFile.read">
 <tt class="descname">read</tt><big>(</big><em>filename</em>, <em>skip=0</em>, <em>readmax=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.ResultsFile.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read results from disc</p>
+<p>The filename parameter can be either a single filename, in
+case it is assumed that it is a ProtoMS3.0 results file, i.e.
+it contains several snapshots
+if it is a list of strings, two behaviors are supported:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>if the length of the list is 2, and the first filename</li>
+</ol>
+</div></blockquote>
+<p>is a dictionary, a glob is used to list all filenames in that
+directory that starts with the second filename in the list</p>
+<blockquote>
+<div><ol class="arabic simple" start="2">
+<li>if the length is not two or you give two filenames,</li>
+</ol>
+</div></blockquote>
+<p>each of them are processed individually and treated as individual
+snapshots</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -3681,6 +4073,41 @@ Three numbers defines coordinates for the center as separate x,y,z</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-tools.split_jawswater">
+<span id="tools-split-jawswater-module"></span><h2>tools.split_jawswater module<a class="headerlink" href="#module-tools.split_jawswater" title="Permalink to this headline">¶</a></h2>
+<p>Routine to split JAWS-1 water into PDBs for JAWS-2</p>
+<p>This module defines a single public function:
+split_water</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.split_jawswater.split_waters">
+<tt class="descclassname">tools.split_jawswater.</tt><tt class="descname">split_waters</tt><big>(</big><em>waters</em><big>)</big><a class="headerlink" href="#tools.split_jawswater.split_waters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split waters in a PDB file to many PDB-files for JAWS-2</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>waters</strong> : string or PDBFile object</p>
+<blockquote>
+<div><p>the PDB structure</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">PDBSet</p>
+<blockquote>
+<div><p>single waters</p>
+</div></blockquote>
+<p>PDBSet</p>
+<blockquote class="last">
+<div><p>excluding single waters</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-tools">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tools" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -3698,18 +4125,22 @@ Three numbers defines coordinates for the center as separate x,y,z</p>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-tools.ambertools">tools.ambertools module</a></li>
 <li><a class="reference internal" href="#module-tools.build_template">tools.build_template module</a></li>
+<li><a class="reference internal" href="#tools-build-template-py-bak-module">tools.build_template.py.bak module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_bar">tools.calc_bar module</a></li>
-<li><a class="reference internal" href="#tools-calc-replicapath-module">tools.calc_replicapath module</a></li>
-<li><a class="reference internal" href="#tools-calc-series-module">tools.calc_series module</a></li>
+<li><a class="reference internal" href="#module-tools.calc_density">tools.calc_density module</a></li>
+<li><a class="reference internal" href="#module-tools.calc_replicapath">tools.calc_replicapath module</a></li>
+<li><a class="reference internal" href="#module-tools.calc_series">tools.calc_series module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_ti">tools.calc_ti module</a></li>
-<li><a class="reference internal" href="#tools-clear-gcmcbox-module">tools.clear_gcmcbox module</a></li>
+<li><a class="reference internal" href="#module-tools.clear_gcmcbox">tools.clear_gcmcbox module</a></li>
 <li><a class="reference internal" href="#module-tools.convertatomnames">tools.convertatomnames module</a></li>
 <li><a class="reference internal" href="#module-tools.convertwater">tools.convertwater module</a></li>
+<li><a class="reference internal" href="#module-tools.distribute_waters">tools.distribute_waters module</a></li>
+<li><a class="reference internal" href="#module-tools.divide_pdb">tools.divide_pdb module</a></li>
 <li><a class="reference internal" href="#module-tools.generate_input">tools.generate_input module</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-tools.make_dummy">tools.make_dummy module</a></li>
-<li><a class="reference internal" href="#tools-make-gcmcbox-module">tools.make_gcmcbox module</a></li>
+<li><a class="reference internal" href="#module-tools.make_gcmcbox">tools.make_gcmcbox module</a></li>
 <li><a class="reference internal" href="#module-tools.make_single">tools.make_single module</a></li>
 <li><a class="reference internal" href="#module-tools.merge_templates">tools.merge_templates module</a></li>
 <li><a class="reference internal" href="#module-tools.pms2pymbar">tools.pms2pymbar module</a></li>
@@ -3718,6 +4149,7 @@ Three numbers defines coordinates for the center as separate x,y,z</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-tools.solvate">tools.solvate module</a></li>
+<li><a class="reference internal" href="#module-tools.split_jawswater">tools.split_jawswater module</a></li>
 <li><a class="reference internal" href="#module-tools">Module contents</a></li>
 </ul>
 </li>

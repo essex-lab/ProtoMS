@@ -416,7 +416,8 @@ def _prep_singletopology(pdbs,templates1,settings) :
   logger.info("")
   logger.info("Setting up single-topology correspondance map and templates...")
   eletem,vdwtem,cmap = tools.make_single(tem1,tem2,pdbs[0],pdbs[1],settings.singlemap)
-  
+  tools.summarize(eletem,vdwtem,logger.debug)  
+
   pdbs.pop(1)
   templates1.pop(1)
   templates2 = list(templates1)

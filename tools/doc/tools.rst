@@ -20,6 +20,14 @@ tools.build_template module
     :undoc-members:
     :show-inheritance:
 
+tools.build_template.py.bak module
+----------------------------------
+
+.. automodule:: tools.build_template.py.bak
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tools.calc_bar module
 ---------------------
 
@@ -27,17 +35,25 @@ tools.calc_bar module
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
+tools.calc_density module
+-------------------------
+
+.. automodule:: tools.calc_density
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tools.calc_replicapath module
----------------------
+-----------------------------
 
 .. automodule:: tools.calc_replicapath
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
 tools.calc_series module
----------------------
+------------------------
 
 .. automodule:: tools.calc_series
     :members:
@@ -51,9 +67,9 @@ tools.calc_ti module
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
 tools.clear_gcmcbox module
---------------------
+--------------------------
 
 .. automodule:: tools.clear_gcmcbox
     :members:
@@ -76,6 +92,22 @@ tools.convertwater module
     :undoc-members:
     :show-inheritance:
 
+tools.distribute_waters module
+------------------------------
+
+.. automodule:: tools.distribute_waters
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tools.divide_pdb module
+-----------------------
+
+.. automodule:: tools.divide_pdb
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tools.generate_input module
 ---------------------------
 
@@ -83,9 +115,9 @@ tools.generate_input module
     :members:
     :undoc-members:
     :show-inheritance:
-    
+
 tools.make_dummy module
-------------------------
+-----------------------
 
 .. automodule:: tools.make_dummy
     :members:
@@ -93,7 +125,7 @@ tools.make_dummy module
     :show-inheritance:
 
 tools.make_gcmcbox module
-------------------------
+-------------------------
 
 .. automodule:: tools.make_gcmcbox
     :members:
@@ -144,6 +176,14 @@ tools.solvate module
 --------------------
 
 .. automodule:: tools.solvate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tools.split_jawswater module
+----------------------------
+
+.. automodule:: tools.split_jawswater
     :members:
     :undoc-members:
     :show-inheritance:

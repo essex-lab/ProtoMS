@@ -10,6 +10,7 @@ Routines to make ProtoMS single topology template
 This module defines these public function
 make_single
 write_map
+summarize
 
 Can be executed from the command line as a stand-alone program
 """
@@ -511,6 +512,50 @@ def write_map(cmap,filename) :
       else :
         f.write("%s %s\n"%(atm1,atm2))
 
+def summarize(eletem,vdwtem,loggfunc) :
+  """
+  Print single topology parameter summary
+
+  Parameters
+  ----------
+  eletem : TemplateFile 
+    template for electrostatic perturbation
+  vdwtem : TemplateFile
+    template for van der Waals perturbation
+  loggfunc : logger function
+    the logger function to use to print the summary
+  """
+  loggfunc("")
+  loggfunc("Atom    Ele perturbation                                        ||         Vdw perturbation")
+  for atom1,atom2 in zip(eletem.templates[0].atoms,vdwtem.templates[0].atoms) :
+    ele0,ele1 = atom1.param0,atom1.param1
+    vdw0,vdw1 = atom2.param0,atom2.param1
+    def get_param(param) :
+      if isinstance(param,int) :
+        return "%7.3f %7.3f %7.3f"%(0.000,0.000,0.000)
+      else :
+        return "%7.3f %7.3f %7.3f"%(float(param.params[2]),float(param.params[3]),float(param.params[4]))
+    def get_diff(param1,param2) :
+      if isinstance(param2,int) and not isinstance(param1,int):
+        return "***"
+      else :
+        strout = ""
+        if abs(float(param1.params[2])-float(param2.params[2])) > 0.000001 : 
+          strout += "c"
+        if abs(float(param1.params[3])-float(param2.params[3])) > 0.000001 : strout += "lj"        
+        return "%3s"%strout
+    loggfunc("%5s : %s ==> %s %s || %s ==> %s %s" %(atom1.name,get_param(ele0),get_param(ele1),get_diff(ele0,ele1),get_param(vdw0),get_param(vdw1),get_diff(vdw0,vdw1)))
+
+  loggfunc("")
+  loggfunc("Z-matrix connectivities that changes parameter: ")
+  for con in vdwtem.templates[0].connectivity :
+    if con.param0 is not None : loggfunc(con)
+
+  loggfunc("")
+  loggfunc("Variable geometries: ")
+  for comment,var in zip(vdwtem.templates[0].variables[:-1:2],vdwtem.templates[0].variables[1::2]) :
+    loggfunc("%s %s"%(var,comment))
+
 #
 # If this is run from the command-line
 #
@@ -541,34 +586,5 @@ if __name__ == '__main__' :
   if args.map is None : write_map(cmap,args.out+"_cmap.dat")
 
   # Write out a summary
-  logger.info("")
-  logger.info("Atom    Ele perturbation                                        ||         Vdw perturbation")
-  for atom1,atom2 in zip(eletem.templates[0].atoms,vdwtem.templates[0].atoms) :
-    ele0,ele1 = atom1.param0,atom1.param1
-    vdw0,vdw1 = atom2.param0,atom2.param1
-    def get_param(param) :
-      if isinstance(param,int) :
-        return "%7.3f %7.3f %7.3f"%(0.000,0.000,0.000)
-      else :
-        return "%7.3f %7.3f %7.3f"%(float(param.params[2]),float(param.params[3]),float(param.params[4]))
-    def get_diff(param1,param2) :
-      if isinstance(param2,int) and not isinstance(param1,int):
-        return "***"
-      else :
-        strout = ""
-        if abs(float(param1.params[2])-float(param2.params[2])) > 0.000001 : 
-          strout += "c"
-        if abs(float(param1.params[3])-float(param2.params[3])) > 0.000001 : strout += "lj"        
-        return "%3s"%strout
-    logger.info("%5s : %s ==> %s %s || %s ==> %s %s" %(atom1.name,get_param(ele0),get_param(ele1),get_diff(ele0,ele1),get_param(vdw0),get_param(vdw1),get_diff(vdw0,vdw1)))
-
-  logger.info("")
-  logger.info("Z-matrix connectivities that changes parameter: ")
-  for con in vdwtem.templates[0].connectivity :
-    if con.param0 is not None : logger.info(con)
-
-  logger.info("")
-  logger.info("Variable geometries: ")
-  for comment,var in zip(vdwtem.templates[0].variables[:-1:2],vdwtem.templates[0].variables[1::2]) :
-    logger.info("%s %s"%(var,comment))
+  summarize(eletem,vdwtem,logger.info)
  

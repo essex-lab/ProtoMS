@@ -14,7 +14,7 @@ from solvate import solvate
 from build_template import build_template
 from convertwater import convertwater
 from merge_templates import merge_templates
-from make_single import make_single,write_map
+from make_single import make_single,write_map,summarize
 from make_dummy import make_dummy
 from clear_gcmcbox import clear_gcmcbox
 from make_gcmcbox import make_gcmcbox
