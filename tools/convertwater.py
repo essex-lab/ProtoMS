@@ -133,6 +133,32 @@ def rotatewat(watcoords,alpha,beta,gamma):
   return( rotated.transpose() + watcoords[0] )							# Translating back to the location of the original oxygen.
 
 
+def rotatesolute(solutecoords,alpha,beta,gamma):
+  """ 
+  Rotates a molecule about the centre of geometry (the mean of x,y,z of each atom in the molecule).
+
+  Parameters
+  ----------        
+  solutecoords : numpy array 
+  	  the coordinates of the molecule.
+  alpha : float or integer
+      the angle (in radians) by which rotation is performed about the x-axis.
+  beta : float or integer
+      the angle (in radians) by which rotation is performed about the y-axis.
+  gamma : float or integer 
+      the angle (in radians) by which rotation is performed about the z-axis.
+
+  Returns
+  -------
+  numpy array
+      the rotated set of molecule coordinates.
+  """
+  newmat = np.mat(solutecoords-np.mean(solutecoords,axis=0)).transpose()				# Centering the oxgen at the origin.
+  rotated = rotmat_x(alpha)*rotmat_y(beta)*rotmat_x(gamma)*newmat						# Rotating about the orgin
+  return( rotated.transpose() + np.mean(solutecoords,axis=0))							# Translating back to the location of the original oxygen.
+
+
+
 def alignhydrogens(watcoords,template,tol=0.05):
   """ 
   Rotates a template water molecule such that it has the same orientation as a reference water molecule. Useful for converting between different water models in cases when one wishes to retain the same orientations of hydrogens. It assumes that both the template and the reference water have maching oxygen locations.
