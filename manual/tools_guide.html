@@ -433,41 +433,61 @@ This tool converts water molecules to a specific model.
 <code><h2><a name="distribute_waters">distribute_waters.py</a></h2></code>
 <b>Syntax:</b>
 <p> 
-<code>distribute_waters.py  </code>
+<code>distribute_waters.py -b box -m molecules [-o outfile] [--model t3p|t4p ] [--resname resname] [--number number]  </code>
 <pre>
 <ul>
-<li>
+<li>-b box = the dimensions of the box where the (water) molecules will be distributed. Six arguments expected: origin (x,y,z) & length (x,y,z)
+<li>-m molecules = either the file containing the molecules to distribute, or the number of water molecules to distribute in the box
+<li>-o outfile = the name of the file where the distributed molecules will be saved
+    optional, default = ghostmolecules.pdb
+<li>--model t3p|t4p = the water model used when a number is especified in '-m molecules'
+    optional, default =  t4p
+    t4p = tip4p water model
+    t3p = tip3p water model
+<li>--resname resname = the residue name used in the outfile when a number is especified in '-m molecules'
+    optional, default = WAT
+<li>--number number = the required number of molecules in the box when it differs from the number of molecules in the file specified in '-m molecules'
+    optional, default = None (only the molecules in the file will be distributed in the box)
 </ul>
 </pre>
 <b>Examples:</b>
 <pre>
-distribute_waters.py
+distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m 12
+distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m 12 --model t3p --resname T3P
+distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m myonewater.pdb --number 12 -o mywatersinbox.pdb
 </pre>
 <p></p>
 <br>
 <b>Description:</b>
 <p></p>
-This tool places water molecules at random within a GCMC or JAWS-1 simulation box.
+This tool can place water molecules at random within a GCMC or JAWS-1 simulation box.
+<p> It can place molecules in random positions and orientations with their geometry center restricted to the given dimensions of a box.</p>
 <p></p>
 <hr align="center" size="2"/>
 <code><h2><a name="divide_pdb">divide_pdb.py</a></h2></code>
 <b>Syntax:</b>
 <p> 
-<code>divide_pdb.py </code>
+<code>divide_pdb.py [-i input] [-o output] [-p path] </code>
 <pre>
 <ul>
-<li>-p 
+<li>-i input = the name of your multi-pdb file
+    optional, default = all.pdb
+<li>-o output = the beginning of the name of your individual pdb files
+    optional, default = snapshot_
+<li>-p path = the directory where the input should be found and the output printed
+    optional, default = ./
 </ul>
 </pre>
 <b>Examples:</b>
 <pre>
 divide_pdb.py
+divide_pdb.py -i mypmsout.pdb -o individual -p outfolder/ 
 </pre>
 <p></p>
 <br>
 <b>Description:</b>
 <p></p>
-This tool split up a PDB file with multiple structures into several PDB files.
+This tool splits up a PDB file with multiple models (the keyword END defines the end of a model) into several PDB files.
 <p></p>
 <hr align="center" size="2"/>
 <code><h2><a name="generate_input">generate_input.py</a></h2></code>
