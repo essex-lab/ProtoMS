@@ -117,6 +117,11 @@ class Residue(object):
         coords = np.array ( [ atom.coords for atom in self.atoms ] )
         self.center = coords[:,0].mean(), coords[:,1].mean(), coords[:,2].mean()
         #return self.center            
+    def isAminoacid (self):
+        """
+        Checks is the residue name is an aminoacid name
+        """
+        return self.name.upper() in  ['GLH', 'ILE', 'GLN', 'GLY', 'GLU', 'HIP', 'HIS', 'SER', 'LYS', 'PRO', 'CYX', 'HIE', 'LYN', 'ASH', 'ASN', 'CYS', 'VAL', 'THR', 'ASP', 'TRP', 'PHE', 'ALA', 'MET', 'LEU', 'ARG', 'TYR']
     def __str__(self):
         """
         Produces a string representation, viz. lines of ATOM records
@@ -268,6 +273,7 @@ class PDBFile:
                         atom.resindex = i
                     s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                     f.write ( s )
+                if i < len(self.residues.keys()) and not self.residues[self.residues.keys()[i]].isAminoacid() : f.write ( "TER \n" )     
             if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
             if solvents :
                 l = sorted ( self.solvents.keys() )

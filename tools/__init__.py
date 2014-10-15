@@ -20,4 +20,4 @@ from clear_gcmcbox import clear_gcmcbox
 from make_gcmcbox import make_gcmcbox
 from split_jawswater import split_waters
 from divide_pdb import divide_print
-from distribute_waters import distribute_waters
+from distribute_waters import distribute_particles

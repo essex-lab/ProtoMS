@@ -19,7 +19,7 @@ import numpy as np
 
 import tools
 from tools import simulationobjects
-#from tools import distribute_waters
+#from tools import distribute_particles
 
 def _is_float(num) :
   """
@@ -478,7 +478,7 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
     if not (box_origen_below and box_end_avobe) or all(i < 0.5 for i in waterbox['len']) :
       # re-distribute the waters if required according to provided box
       logger.info("\nRedistributing your GCMC / JAWS1 waters according to the specified box\n")
-      arranged_name = tools.distribute_waters(box,water_file,out=out_name)
+      arranged_name = tools.distribute_particles(box,water_file,out=out_name)
       arraged_obj = simulationobjects.PDBFile(filename=arranged_name)
       return arraged_obj, arranged_name
     else :
@@ -512,7 +512,7 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
       for sol in ghostobj.solvents :
         for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
     elif settings.gcmcwater.isdigit() :
-      ghost_name = tools.distribute_waters(box,settings.gcmcwater,out=ghost_name)
+      ghost_name = tools.distribute_particles(box,settings.gcmcwater,out=ghost_name)
       ghostobj = simulationobjects.PDBFile(filename=ghost_name)
     else :
       ghostobj, ghost_name = arrage_wats(box,settings.gcmcwater,ghost_name)
@@ -540,7 +540,7 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
       for sol in ghostobj.solvents :
         for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
     elif settings.gcmcwater.isdigit() :
-      ghost_name = tools.distribute_waters(settings.gcmcbox,settings.gcmcwater,out=ghost_name)
+      ghost_name = tools.distribute_particles(settings.gcmcbox,settings.gcmcwater,out=ghost_name)
       ghostobj = simulationobjects.PDBFile(filename=ghost_name)
     else:
       ghostobj, ghost_name = arrage_wats(box,settings.gcmcwater,ghost_name)
@@ -573,7 +573,7 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
       for sol in ghostobj.solvents :
         for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
     elif settings.gcmcwater.isdigit() :
-      ghost_name = tools.distribute_waters(box,settings.gcmcwater,out=ghost_name)
+      ghost_name = tools.distribute_particles(box,settings.gcmcwater,out=ghost_name)
       ghostobj = simulationobjects.PDBFile(filename=ghost_name)
   else : 
     msg = "Cannot define a GCMC or JAWS-1 simulation box without a ligand and without the gcmcbox setting"
