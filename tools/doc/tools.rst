@@ -44,6 +44,14 @@ tools.calc_density module
     :undoc-members:
     :show-inheritance:
 
+tools.calc_dg module
+--------------------
+
+.. automodule:: tools.calc_dg
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tools.calc_replicapath module
 -----------------------------
 

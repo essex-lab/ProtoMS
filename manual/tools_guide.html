@@ -12,6 +12,7 @@ These are the available tools in ProtoMS3.0
 	<li><a href="#build_template">build_template.py</a></li>
 	<li><a href="#calc_bar">calc_bar.py</a></li>
 	<li><a href="#calc_density">calc_density.py</a></li>
+   <li><a href="#calc_dg">calc_dg.py</a></li>  	
 	<li><a href="#calc_replicapath">calc_replicapath.py</a></li>
 	<li><a href="#calc_series">calc_series.py</a></li>
 	<li><a href="#calc_ti">calc_ti.py</a></li>
@@ -113,7 +114,7 @@ If the solute needs parameter not in the GAFF release, they should be supplied w
 <li>-d directory = name of output directory of the simulation
     optional, default = current working directory (.)
 <li>-r results = the beginning of the name of the file to analyse
-    optional, default = results
+    optional, default = results_inst
 <li>-s nskip = the number of snapshots to skip at the beginning of the simulation
     optional, default = 0
 <li>-m nmax = the maximum number of snapshots to process
@@ -201,6 +202,60 @@ This tool discretises atoms on a grid, thereby representing a simulation output 
 It will extract the coordinates of all atoms with name equal to <code>atom</code> in residues with name equal to <code>residue</code> in all input files and discretise them on a grid. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
 <p>The produced density can be visualized with most programs, e.g.
 <pre>vmd -m all.pdb grid.dx</pre></p></p>
+<p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="calc_dg">calc_dg.py</a></h2></code>
+<b>Syntax:</b>
+<p>
+<code>calc_dg.py [-d directory directory2 ...] [-r results] [-e ti|bar|mbar] [-s nskip] [-m nmax] [-t temperature]  [-b nbootstraps]  [-pe] [-pg] [-gr] [--analytical] [--numerical both|back|forw ] </code>
+<pre>
+<ul>
+<li>-d directory directory2 ... = name of output directories of simulations
+    optional, default = current working directory (.)
+    one or more directories can be specified
+<li>-r results = the beginning of the name of the file to analyse
+    optional, default = results_inst
+<li>-e ti|bar|mbar = the free energy estimator
+    optional, default = ti bar mbar
+    one or more estimators can be specified
+<li>-s nskip = the number of snapshots to skip at the beginning of the simulation
+    optional, default = 0
+<li>-m nmax = the maximum number of snapshots to process
+    optional, default = the total number of snapshot in the results file, excluding nskip
+<li>-t temperature = the simulation temperature in degree Celsius 
+    optional, default = 25 degrees
+<li>-b nbootstraps = the number of bootstraps samples to use in uncertainty estimation 
+    optional, default = 100    
+<li>-pe  = flag that turns <i>off</i> the printing of free energy for each directory
+    optional, default = on    
+<li>-pg  = flag that turns <i>off</i> the printing of the gradient
+    optional, default = on
+<li>-gr  = flag that turns <i>on</i> the plotting of the gradient
+    optional, default = off        
+<li>--analytical = turns <i>on</i> the use of analytical gradients
+  optional, default = off
+<li>--numerical = turns <i>on</i> the use of numerical gradients and selects the kind
+  optional, default = both
+  both = uses the free energy in both backward and forward direction to compute the free energy gradient
+  back = uses the free energy in the backward direction to compute the free energy gradient
+  forw = uses the free energy in the forward direction to compute the free energy gradient
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+calc_dg.py -d out_free/
+calc_dg.py -d out_free1/ out_free2/ out_free3/ -s 200
+calc_dg.py -d out_free1/ out_free2/ out_free3/ -m 200
+calc_dg.py -d out_free1/ out_free2/ out_free3/ -e ti bar
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool calculates free energies using the method of thermodynamic integration (TI), Bennet's Acceptance Ratio (BAR) and Multi BAR (MBAR).
+<p>The program expects that in the <code>directory</code>, <code>directory2</code> etc. there exist an output folder for each &lambda;-value, eg. <code>lam-0.000</code> and <code>lam-1.000</code></p>
+<p>If the <code>-gr</code> flag is set the gradient with respect to &lambda; is plotted and saved to a file called <code>gradient.png</code></p>
+<p>The MBAR estimator only works if PyMBAR is properly installed and can be loaded as a python library. </p>
 <p></p>
 <hr align="center" size="2"/>
 <code><h2><a name="calc_replicapath">calc_replicapath.py</a></h2></code>
@@ -292,7 +347,7 @@ This tools plots and analyses time series.
 <li>-d directory = name of output directory of the simulation
     optional, default = current working directory (.)
 <li>-r results = the beginning of the name of the file to analyse
-    optional, default = results
+    optional, default = results_inst
 <li>-s nskip = the number of snapshots to skip at the beginning of the simulation
     optional, default = 0
 <li>-m nmax = the maximum number of snapshots to process

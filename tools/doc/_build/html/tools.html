@@ -474,6 +474,10 @@ writeDX</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-tools.calc_dg">
+<span id="tools-calc-dg-module"></span><h2>tools.calc_dg module<a class="headerlink" href="#module-tools.calc_dg" title="Permalink to this headline">¶</a></h2>
+<p>Program to calculate free energies using TI, BAR and MBAR</p>
+</div>
 <div class="section" id="module-tools.calc_replicapath">
 <span id="tools-calc-replicapath-module"></span><h2>tools.calc_replicapath module<a class="headerlink" href="#module-tools.calc_replicapath" title="Permalink to this headline">¶</a></h2>
 <p>Program to analyze and plot replica paths</p>
@@ -1100,6 +1104,42 @@ convertwater</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.convertwater.rotatesolute">
+<tt class="descclassname">tools.convertwater.</tt><tt class="descname">rotatesolute</tt><big>(</big><em>solutecoords</em>, <em>alpha</em>, <em>beta</em>, <em>gamma</em><big>)</big><a class="headerlink" href="#tools.convertwater.rotatesolute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates a molecule about the centre of geometry (the mean of x,y,z of each atom in the molecule).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>solutecoords</strong> : numpy array</p>
+<blockquote>
+<div><p>the coordinates of the molecule.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the x-axis.</p>
+</div></blockquote>
+<p><strong>beta</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the y-axis.</p>
+</div></blockquote>
+<p><strong>gamma</strong> : float or integer</p>
+<blockquote>
+<div><p>the angle (in radians) by which rotation is performed about the z-axis.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote class="last">
+<div><p>the rotated set of molecule coordinates.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.convertwater.rotatewat">
 <tt class="descclassname">tools.convertwater.</tt><tt class="descname">rotatewat</tt><big>(</big><em>watcoords</em>, <em>alpha</em>, <em>beta</em>, <em>gamma</em><big>)</big><a class="headerlink" href="#tools.convertwater.rotatewat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotates a water molecule about the oxygen atom, which is assumed to be the first element in the coordinate array.</p>
@@ -1210,21 +1250,21 @@ convertwater</p>
 </div>
 <div class="section" id="module-tools.distribute_waters">
 <span id="tools-distribute-waters-module"></span><h2>tools.distribute_waters module<a class="headerlink" href="#module-tools.distribute_waters" title="Permalink to this headline">¶</a></h2>
-<p>Program to generate a set of n waters contained within given box dimenstions
-or to redistribute waters given in a pdb object or file within the given box dimensions</p>
+<p>Program to generate a set of n molecules contained within given box dimenstions
+or to redistribute molecules given in a pdb object or file within the given box dimensions</p>
 <p>This program takes the box dimensions as a list of strings convertible to floats,
 in the following order :</p>
 <blockquote>
 <div>origin in x | origin in y | origin in z | length in x | length in y | length in z</div></blockquote>
-<p>And either the number of waters as a string convertible to integer,
+<p>And either the number of molecules as a string convertible to integer,
 or the pdb, which can be provided as a string with the name of the file, or an object.</p>
-<p>It produces a pdb file with the randomly distributed waters with their oxigen atoms
+<p>It produces a pdb file with the randomly distributed molecules with their oxigen atoms
 within the box limits.</p>
-<p>Initially thought to generate JAWS or GCMC waters</p>
+<p>Initially thought to generate JAWS or GCMC molecules</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.distribute_waters.create_res">
-<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">create_res</tt><big>(</big><em>atnames=['O00'], resname='sol', positions=[array([ 0.,  0.,  0.])]</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.create_res" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">create_res</tt><big>(</big><em>atnames=['O00'], resname='sol', positions=[array([ 0.,  0.,  0.])], resind=1</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.create_res" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a residue object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1257,9 +1297,9 @@ the atoms in the residue</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="tools.distribute_waters.distribute_waters">
-<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">distribute_waters</tt><big>(</big><em>box</em>, <em>waters</em>, <em>watermodel='t4p'</em>, <em>out='ghostwaters.pdb'</em>, <em>resname='WAT'</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.distribute_waters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Randomly distribute waters in a box</p>
+<dt id="tools.distribute_waters.distribute_particles">
+<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">distribute_particles</tt><big>(</big><em>box</em>, <em>particles</em>, <em>watermodel='t4p'</em>, <em>out='ghostmolecules.pdb'</em>, <em>resname='WAT'</em>, <em>partnumb=None</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.distribute_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomly distribute molecules in a box</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1267,29 +1307,35 @@ the atoms in the residue</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>box</strong> : a list or dictionary</p>
 <blockquote>
 <div><p>the origin and lenght of the box
-where the waters will be placed</p>
+where the molecules will be placed</p>
 </div></blockquote>
-<p><strong>waters</strong> : string or PDB object</p>
+<p><strong>particles</strong> : string or PDB object</p>
 <blockquote>
 <div><p>the number of waters to include in the box
-or the pdb object or filename with the waters
+or the pdb object or filename with the molecules
 to include in the box</p>
 </div></blockquote>
 <p><strong>watermodel</strong> : string, optional</p>
 <blockquote>
-<div><p>(only used when waters is a string)
+<div><p>(only used when particles is a number)
 either &#8220;t4p&#8221; or &#8220;t3p&#8221;
 the water model for the generated waters</p>
 </div></blockquote>
 <p><strong>out</strong> : string, optional</p>
 <blockquote>
-<div><p>the name of the pdb file to write the waters to</p>
+<div><p>the name of the pdb file to write the molecules to</p>
+</div></blockquote>
+<p><strong>partnumb</strong> : string,optional</p>
+<blockquote>
+<div><p>(only used when particles is a file)
+the number of particles. If not specified it is set
+to be as many as there are in the file</p>
 </div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">string</p>
 <blockquote class="last">
-<div><p>the pdb file name of the file with the waters
+<div><p>the pdb file name of the file with the molecules
 distributed randomly in the box</p>
 </div></blockquote>
 </td>
@@ -2360,6 +2406,90 @@ merge_templates</p>
 <div class="section" id="module-tools.pms2pymbar">
 <span id="tools-pms2pymbar-module"></span><h2>tools.pms2pymbar module<a class="headerlink" href="#module-tools.pms2pymbar" title="Permalink to this headline">¶</a></h2>
 <p>Program to prepare ProtoMS output for pymbar</p>
+<p>This module defines two public functions:
+extract_energies
+mbar</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.pms2pymbar.extract_energies">
+<tt class="descclassname">tools.pms2pymbar.</tt><tt class="descname">extract_energies</tt><big>(</big><em>path</em>, <em>res_tem</em>, <em>skip</em>, <em>maxread</em><big>)</big><a class="headerlink" href="#tools.pms2pymbar.extract_energies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract total energies from a number of folders</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> : string</p>
+<blockquote>
+<div><p>the directory to find lambda folders</p>
+</div></blockquote>
+<p><strong>res_tem</strong> : string</p>
+<blockquote>
+<div><p>the prefix of the results files</p>
+</div></blockquote>
+<p><strong>skip</strong> : int</p>
+<blockquote>
+<div><p>number of snapshots to ignore</p>
+</div></blockquote>
+<p><strong>maxread</strong> : int</p>
+<blockquote>
+<div><p>maximum number of snapshots to read</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of float</p>
+<blockquote>
+<div><p>the lambda values</p>
+</div></blockquote>
+<p>list of numpy array</p>
+<blockquote>
+<div><p>all total energies</p>
+</div></blockquote>
+<p>list of strings</p>
+<blockquote class="last">
+<div><p>the path of the lambda folders</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.pms2pymbar.mbar">
+<tt class="descclassname">tools.pms2pymbar.</tt><tt class="descname">mbar</tt><big>(</big><em>lambdas</em>, <em>energies</em>, <em>RT</em><big>)</big><a class="headerlink" href="#tools.pms2pymbar.mbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the MBAR free energy using the PyMBAR package</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lambdas</strong> : numpy array</p>
+<blockquote>
+<div><p>the lambda values</p>
+</div></blockquote>
+<p><strong>energies</strong> : list of numpy array</p>
+<blockquote>
+<div><p>the energy values at each lambda and each snapshot</p>
+</div></blockquote>
+<p><strong>RT</strong> : float</p>
+<blockquote>
+<div><p>the gas constant multiplied by the absolute temperature</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote>
+<div><p>the free energy matrix</p>
+</div></blockquote>
+<p>numpy array</p>
+<blockquote class="last">
+<div><p>the uncertainty in the free energy matrix</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.scoop">
 <span id="tools-scoop-module"></span><h2>tools.scoop module<a class="headerlink" href="#module-tools.scoop" title="Permalink to this headline">¶</a></h2>
@@ -3181,6 +3311,9 @@ information to check that a parameter exists</p>
 <tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.Residue.getCenter" title="tools.simulationobjects.Residue.getCenter"><tt class="xref py py-obj docutils literal"><span class="pre">getCenter</span></tt></a>()</td>
 <td>Sets the center of coordinates for this residue</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.Residue.isAminoacid" title="tools.simulationobjects.Residue.isAminoacid"><tt class="xref py py-obj docutils literal"><span class="pre">isAminoacid</span></tt></a>()</td>
+<td>Checks is the residue name is an aminoacid name</td>
+</tr>
 </tbody>
 </table>
 <dl class="method">
@@ -3205,6 +3338,12 @@ information to check that a parameter exists</p>
 <dt id="tools.simulationobjects.Residue.getCenter">
 <tt class="descname">getCenter</tt><big>(</big><big>)</big><a class="headerlink" href="#tools.simulationobjects.Residue.getCenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the center of coordinates for this residue</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.simulationobjects.Residue.isAminoacid">
+<tt class="descname">isAminoacid</tt><big>(</big><big>)</big><a class="headerlink" href="#tools.simulationobjects.Residue.isAminoacid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks is the residue name is an aminoacid name</p>
 </dd></dl>
 
 </dd></dl>
@@ -4128,6 +4267,7 @@ split_water</p>
 <li><a class="reference internal" href="#tools-build-template-py-bak-module">tools.build_template.py.bak module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_bar">tools.calc_bar module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_density">tools.calc_density module</a></li>
+<li><a class="reference internal" href="#module-tools.calc_dg">tools.calc_dg module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_replicapath">tools.calc_replicapath module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_series">tools.calc_series module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_ti">tools.calc_ti module</a></li>

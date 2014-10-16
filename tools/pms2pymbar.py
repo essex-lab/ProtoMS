@@ -6,6 +6,12 @@
 
 """
 Program to prepare ProtoMS output for pymbar
+
+This module defines two public functions:
+extract_energies
+mbar
+
+Can be executed from the command line as a stand-alone program
 """
 
 import glob
@@ -52,7 +58,7 @@ def _parse_folder(path,res_tem,skip,maxread) :
       totalenergies[i,j] = snapshot.feenergies[lam]
   return results_file.snapshots[0].lam,totalenergies
     
-def _extract_energies(path,res_tem,skip,maxread) :
+def extract_energies(path,res_tem,skip,maxread) :
   """
   Extract total energies from a number of folders
   
@@ -118,6 +124,37 @@ def _write_file(filename,fromname,lam,energies) :
     for i,ene in enumerate(energies) :
       f.write("%12.1f 0.0000 %s 1.000\n"%(i," ".join("%20.8E"%e for e in ene)))
 
+def mbar(lambdas,energies,RT) :
+  """
+  Calculates the MBAR free energy using the PyMBAR package
+
+  Parameters
+  ----------
+  lambdas : numpy array
+    the lambda values
+  energies : list of numpy array
+    the energy values at each lambda and each snapshot
+  RT : float
+    the gas constant multiplied by the absolute temperature
+  
+  Returns
+  -------
+  numpy array
+    the free energy matrix
+  numpy array
+    the uncertainty in the free energy matrix
+  """
+  import pymbar
+
+  nstates = len(energies)
+  N_k = np.zeros(nstates) 
+  for i,e in enumerate(energies) : N_k[i] = e.shape[0]
+  u_kln = np.zeros([nstates,nstates,N_k.max()]) 
+  for i,e in enumerate(energies) :
+    u_kln[i,:,:e.shape[0]] = e.T / RT
+  MBAR = pymbar.MBAR(u_kln,N_k)
+  return MBAR.getFreeEnergyDifferences(uncertainty_method='svd-ew')  
+
 #
 # If this is run from the command-line
 #
@@ -128,7 +165,7 @@ if __name__ == '__main__' :
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to extract ProtoMS results for pymbar")
   parser.add_argument('-d','--directory',help="the root directory that contains all the output files of the simulation. Default is cwd.",default="./")
-  parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results")
+  parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results_inst")
   parser.add_argument('-o','--out',help="the name of the file to write. Default is pymbar_energy. ",default="pymbar_energy")
   parser.add_argument('-s','--skip',type=int,help="the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0",default=0)
   parser.add_argument('-m','--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)#
@@ -139,7 +176,7 @@ if __name__ == '__main__' :
   # Setup the logger
   logger = simulationobjects.setup_logger()
 
-  lambdas,energies,paths = _extract_energies(args.directory,args.results,args.skip,args.max)
+  lambdas,energies,paths = extract_energies(args.directory,args.results,args.skip,args.max)
   for lam,ene,path in zip(lambdas,energies,paths) :
     filename = os.path.join(path,args.out)
     _write_file(filename,args.results,lam,ene)
@@ -153,12 +190,5 @@ if __name__ == '__main__' :
       quit()
     
     RT = 1.9872041*(args.temperature+273.15)/1000.00
-    nstates = len(energies)
-    N_k = np.zeros(nstates) 
-    for i,e in enumerate(energies) : N_k[i] = e.shape[0]
-    u_kln = np.zeros([nstates,nstates,N_k.max()]) 
-    for i,e in enumerate(energies) :
-      u_kln[i,:,:e.shape[0]] = e.T / RT
-    MBAR = pymbar.MBAR(u_kln,N_k)
-    (Deltaf_ij, dDeltaf_ij) = MBAR.getFreeEnergyDifferences(uncertainty_method='svd-ew')
-    print "MBAR estimate: %-6.2f +- %-6.2f"%(Deltaf_ij[0,nstates-1]*RT,dDeltaf_ij[0,nstates-1]*RT)
+    (Deltaf_ij, dDeltaf_ij) = mbar(lambdas,energies,RT)
+    print "MBAR estimate: %-6.2f +- %-6.2f"%(Deltaf_ij[0,-1]*RT,dDeltaf_ij[0,-1]*RT)
