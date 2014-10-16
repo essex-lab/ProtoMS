@@ -778,7 +778,7 @@ class SnapshotResults :
     self.internal_energies = {}
     self.interaction_energies = {}
     while line :
-      if line.startswith("Internal ")  :
+      if line.startswith("Internal ") or  line.startswith(" Internal ") :
         cols = line.strip().split()  
         if cols[4] == "solute" :
           key = cols[6]

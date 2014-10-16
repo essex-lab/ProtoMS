@@ -413,7 +413,7 @@ def _label0(label) :
   if label.find("[") == -1 : return label 
 
   l = "_".join(label.split()[:-1])
-  l.replace("/","_")    
+  l = l.replace("/","_")    
   return l
 
 def plot_series(ys,yprop,labels,offset,plotkind,outprefix) :
