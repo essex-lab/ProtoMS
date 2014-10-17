@@ -19,7 +19,6 @@ import numpy as np
 
 import tools
 from tools import simulationobjects
-#from tools import distribute_particles
 
 def _is_float(num) :
   """
@@ -822,7 +821,7 @@ if __name__ == "__main__":
   if args.gcmcbox is not None and len(args.gcmcbox) is 1:
     gcmcbox = _locate_file(args.gcmcbox[0],args.folders)
     if gcmcbox is None :
-      raise simulationobjects.SetupError("File %s given as gcmcwater could not be found."%args.gcmcbox[0])
+      raise simulationobjects.SetupError("File %s given as gcmcbox could not be found."%args.gcmcbox[0])
     args.gcmcbox = gcmcbox
   elif args.gcmcbox is not None and len(args.gcmcbox) < 6 :
     raise simulationobjects.SetupError("6 arguments expected to define the GCMC/JAWS1 box dimensions, %d provided: %s"%(len(args.gcmcbox)," ".join(args.gcmcbox)))
