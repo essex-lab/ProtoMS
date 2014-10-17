@@ -92,11 +92,6 @@ def solvate(box, ligand=None, protein=None, geometry="box",
   params["br"] = (3.60,0.31)
   params["i"] = (3.83,0.40)
 
-  # Add buffer to sigmas to avoid over-filling cavities in protein
-  # (Equivalent to a 1A increase in vdW radii)
-  #offset = 0.89
-  #offset = 20
-
   for element in params:
     params[element] = (params[element][0]+offset,params[element][1])
 
@@ -155,13 +150,13 @@ def solvate(box, ligand=None, protein=None, geometry="box",
     for i in prot_pdb.residues :
       for j in range(len(prot_pdb.residues[i].atoms)) :
         prot_pdb.residues[i].atoms[j].getElement()
-        solute["atoms"].append(prot_pdb.residues[i].atoms[j].element)
+        solute["atoms"].append(prot_pdb.residues[i].atoms[j].element.lower())
         solute["xyz"].append(prot_pdb.residues[i].atoms[j].coords)
     for i in prot_pdb.solvents :
       xyz = []
       for j in range(len(prot_pdb.solvents[i].atoms)) :
         prot_pdb.solvents[i].atoms[j].getElement()
-        solute["atoms"].append(prot_pdb.solvents[i].atoms[j].element)
+        solute["atoms"].append(prot_pdb.solvents[i].atoms[j].element.lower())
         solute["xyz"].append(prot_pdb.solvents[i].atoms[j].coords)
         xyz.append(prot_pdb.solvents[i].atoms[j].coords)
       xyz = np.array(xyz)

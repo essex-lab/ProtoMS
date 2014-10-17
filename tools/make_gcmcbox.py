@@ -58,12 +58,22 @@ if __name__ == "__main__":
   parser.add_argument('-s','--solute',help="the name of the PDB-file containing the solute.")
   parser.add_argument('-p','--padding',type=float,help="the padding in A,default=2",default=2.0)
   parser.add_argument('-o','--out',help="the name of the box PDB-file",default="gcmc_box.pdb")
+  parser.add_argument('-b','--box',nargs='+',help="Either the centre of the box (x,y,z), or the centre of box AND length (x,y,z,x,y,z). If the centre is specified and the length isn't, twice the 'padding' will be the lengths of a cubic box.",default=None)
   args = parser.parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("make_gcmcbox_py.log")
 
-  if args.solute is None : 
+  if args.solute is None and args.box is None : 
     print "Nothing to do! Exiting."
   
-  make_gcmcbox(args.solute,args.out,args.padding)
+  if args.box is None :
+    make_gcmcbox(args.solute,args.out,args.padding)
+  elif len(args.box) == 3:
+    box = {"center":np.array([float(args.box[0]),float(args.box[1]),float(args.box[2])]),"len":np.array([args.padding*2]*3)}
+    simulationobjects.write_box(args.out,box)
+  elif len(args.box) == 6:
+    box = {"center":np.array([float(args.box[0]),float(args.box[1]),float(args.box[2])]),"len":np.array([float(args.box[3]),float(args.box[4]),float(args.box[5])])}
+    simulationobjects.write_box(args.out,box)
+  else : 
+    print "\nError with 'box' arguement. Please specify either three arguements for the centre of the box, or six arguements for the centre of the box AND the lengths of the sides.\n"
