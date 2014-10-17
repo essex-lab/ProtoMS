@@ -702,7 +702,7 @@ if __name__ == "__main__":
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
-  parser.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box")
+  parser.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box, or a list of origin(x,y,z) and lenght(x,y,z) coordinates")
   parser.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
   parser.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   parser.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
