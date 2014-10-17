@@ -178,7 +178,7 @@ def writeDX(grid,origin,spacing,filename) :
   f.write('component "data" value 3\n')
   f.close()
   
-def calc_density(pdbfiles,residue,atom,padding=2.0,extent=1.0,spacing=0.5,norm=None,smoothing="sphere") :
+def calc_density(pdbfiles,molname,atomname,padding=2.0,extent=1.0,spacing=0.5,norm=None,smoothing="sphere") :
   """
   Calculate the density from a set of PDB files
   
@@ -210,8 +210,8 @@ def calc_density(pdbfiles,residue,atom,padding=2.0,extent=1.0,spacing=0.5,norm=N
   dictionary
     grid properties, keys = spacing, min, and max
   """
-  residue = residue.lower()
-  atom    = atom.lower()
+  residue = molname.lower()
+  atom    = atomname.lower()
   
   # Extract coordinates from PDB-files
   xyz = []
@@ -220,15 +220,15 @@ def calc_density(pdbfiles,residue,atom,padding=2.0,extent=1.0,spacing=0.5,norm=N
   for pdb in pdbfiles.pdbs :
     found = 0
     for i,res in pdb.residues.iteritems() :
-      if res.name.lower() != residue : continue
+      if res.name.lower() != molname : continue
       for atom in res.atoms :
-        if atom.name.strip().lower() == atom :
-          xyz.append(atom.xyz)
+        if atom.name.strip().lower() == atomname :
+          xyz.append(atom.coords)
           found = found + 1
     for i,sol in pdb.solvents.iteritems() :
-      if sol.name.lower() != residue : continue
+      if sol.name.lower() != molname : continue
       for iatom in sol.atoms :
-        if iatom.name.strip().lower() == atom :
+        if iatom.name.strip().lower() == atomname :
           xyz.append(iatom.coords)
           found = found + 1
     nfound.append(found)
@@ -289,7 +289,7 @@ if __name__ == "__main__":
       pdb = simulationobjects.PDBFile(filename=filename)
       pdbfiles.pdbs.append(pdb)
       
-  nextracted,grid,prop = calc_density(pdbfiles,args.residue,args.atom,padding=args.padding,extent=args.extent,spacing=args.spacing,norm=args.norm,smoothing=args.type)
+  nextracted,grid,prop = calc_density(pdbfiles,args.residue.lower(),args.atom.lower(),padding=args.padding,extent=args.extent,spacing=args.spacing,norm=args.norm,smoothing=args.type)
   
   print "Extracted atoms in each PDB: %s"%", ".join("%d"%i for i in nextracted)
   print "Extracted %.3f on average"%nextracted.mean()
