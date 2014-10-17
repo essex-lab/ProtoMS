@@ -71,8 +71,11 @@ class Atom(object):
         self.element = self.name[k]
         while self.element.isdigit():
             k = k + 1
-            self.element = self.name[k]
-        self.element = self.element.lower()
+        if len(self.name) > k+1 :
+            if self.name[k].lower() + self.name[k+1].lower() in ["cl","br","mg","mn"]:
+                self.element = self.name[k].lower() + self.name[k+1].lower()
+        else:
+            self.element = self.name[k].lower()
     def __str__(self):
         """
         Produces a string representation, viz. a standard ATOM record
