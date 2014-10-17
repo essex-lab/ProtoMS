@@ -25,7 +25,7 @@ import simulationobjects
 logger = logging.getLogger('protoms')
 
 def solvate(box, ligand=None, protein=None, geometry="box",
-            padding=10.0, radius=30.0, center="cent", namescheme="ProtoMS"):
+            padding=10.0, radius=30.0, center="cent", namescheme="ProtoMS",offset=0.89):
 
   """
   Function to solvate ligand and/or protein structures using a pre-equilibrated box of waters.
@@ -94,7 +94,8 @@ def solvate(box, ligand=None, protein=None, geometry="box",
 
   # Add buffer to sigmas to avoid over-filling cavities in protein
   # (Equivalent to a 1A increase in vdW radii)
-  offset = 0.89
+  #offset = 0.89
+  #offset = 20
 
   for element in params:
     params[element] = (params[element][0]+offset,params[element][1])
@@ -104,30 +105,6 @@ def solvate(box, ligand=None, protein=None, geometry="box",
   # Utility routines
   # -----------------
   #
-
-  def element(atm) :
-    """ 
-    Extract the element from a pdb-type atom name
-    
-    Parameters
-    ----------
-    atm : string 
-      the atom name
-
-    Returns
-    -------
-    string
-      the element
-    """
-    atm = atm.strip()
-    atm = atm.lower()
-    if isinstance(atm[0],int) :
-      atm = atm[1:]
-    if len(atm) > 1 and atm[0:2] == 'cl' : return 'cl'
-    if len(atm) > 1 and atm[0:2] == 'om' : return 'om'
-    if len(atm) > 1 and atm[0:2] == 'br' : return 'br'
-    return atm[0]
-
 
   def read_solute(sol_pdb,solute) :
     """ 
@@ -148,7 +125,9 @@ def solvate(box, ligand=None, protein=None, geometry="box",
    """
     for i in sol_pdb.residues :
       for j in range(len(sol_pdb.residues[i].atoms)) :
-        solute["atoms"].append(element(sol_pdb.residues[i].atoms[j].name))
+        sol_pdb.residues[i].atoms[j].getElement()
+        solute["atoms"].append(sol_pdb.residues[i].atoms[j].element.lower())
+        print sol_pdb.residues[i].atoms[j].name
         solute["xyz"].append(sol_pdb.residues[i].atoms[j].coords)
 
   def read_protein(prot_pdb,solute,solvent) :
@@ -175,12 +154,14 @@ def solvate(box, ligand=None, protein=None, geometry="box",
     solvent["xyz"] = []
     for i in prot_pdb.residues :
       for j in range(len(prot_pdb.residues[i].atoms)) :
-        solute["atoms"].append(element(prot_pdb.residues[i].atoms[j].name))
+        prot_pdb.residues[i].atoms[j].getElement()
+        solute["atoms"].append(prot_pdb.residues[i].atoms[j].element)
         solute["xyz"].append(prot_pdb.residues[i].atoms[j].coords)
     for i in prot_pdb.solvents :
       xyz = []
       for j in range(len(prot_pdb.solvents[i].atoms)) :
-        solute["atoms"].append(element(prot_pdb.solvents[i].atoms[j].name))
+        prot_pdb.solvents[i].atoms[j].getElement()
+        solute["atoms"].append(prot_pdb.solvents[i].atoms[j].element)
         solute["xyz"].append(prot_pdb.solvents[i].atoms[j].coords)
         xyz.append(prot_pdb.solvents[i].atoms[j].coords)
       xyz = np.array(xyz)
@@ -248,7 +229,11 @@ def solvate(box, ligand=None, protein=None, geometry="box",
     """
 
     # Return 0 for undefined atoms
-    if element not in params : return 0.0
+    if element not in params : 
+      print "Warning: element name `%s' not found, assigning the vdW parameters of a carbon atoms. Please check the names of your PDB file." %element
+      element = 'c'
+      #print "Warning: element name `%s' not found, assigning no vdW parameters. Please check the names of your PDB file to make sure this is okay." %element
+      #return 0.0
 
     r2 = np.sum((atomxyz-oxyz)**2)
     # Return 0 beyond a 5 A cut-off
@@ -259,6 +244,7 @@ def solvate(box, ligand=None, protein=None, geometry="box",
     eps = np.sqrt(params[element][1]*0.15)
 
     sigr2 = sigma*sigma/r2
+    #print "element found", element
     return 4.0*eps*(sigr2**6-sigr2**3)
 
 
@@ -620,6 +606,7 @@ if __name__ == '__main__' :
   parser.add_argument('-r','--radius',type=float,help="the radius of the droplet, default=30A",default=30.0)
   parser.add_argument('-c','--center',help="definition of center, default='cent'",default="cent")
   parser.add_argument('-n','--names',choices=["Amber","ProtoMS"],help="the naming convention, should be either Amber or ProtoMS",default="ProtoMS")
+  parser.add_argument('--offset',type=float,help="the offset to be added to vdW radii of the atoms to avoid overfilling cavities with water.",default=0.89)
   args = parser.parse_args()
 
   # Setup the logger
@@ -641,5 +628,5 @@ if __name__ == '__main__' :
   if args.solute == "" : args.solute = None
   if args.protein == "" : args.protein = None
 
-  boxpdb = solvate(args.box,args.solute,args.protein,args.geometry,args.padding,args.radius,args.center,args.names)
+  boxpdb = solvate(args.box,args.solute,args.protein,args.geometry,args.padding,args.radius,args.center,args.names,args.offset)
   boxpdb.write(args.out)
