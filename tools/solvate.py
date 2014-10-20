@@ -122,7 +122,6 @@ def solvate(box, ligand=None, protein=None, geometry="box",
       for j in range(len(sol_pdb.residues[i].atoms)) :
         sol_pdb.residues[i].atoms[j].getElement()
         solute["atoms"].append(sol_pdb.residues[i].atoms[j].element.lower())
-        print sol_pdb.residues[i].atoms[j].name
         solute["xyz"].append(sol_pdb.residues[i].atoms[j].coords)
 
   def read_protein(prot_pdb,solute,solvent) :
