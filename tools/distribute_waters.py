@@ -128,7 +128,7 @@ def distribute_particles(box, particles, watermodel="t4p", out="ghostmolecules.p
       particles = pdbobj
     if particles.residues :
       parts = particles.residues
-    elif particle.solutes : 
+    elif particles.solvents : 
       parts = particles.solvents
     else :
       raise simulationobjects.SetupError("No molecule could be found in %s"% particles)
