@@ -302,8 +302,14 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
   def make_variable(atom) :
     """ Add variable geometry to a molecular template
     """
+    # Skip this if the atom is bonded to a dummy atom
+    if atom.bondedto in ["DM1","DM2","DM3"] : return
+    # This flags the creating of a dummy angle
+    defangle = not atom.angleto in ["DM1","DM2","DM3"]
+
     # Store away z-matrix atoms and their names
-    zmatatoms = [atom,atom.bondedto,atom.angleto]
+    zmatatoms = [atom,atom.bondedto]
+    if defangle : zmatatoms.append(atom.angleto)
     zmatnames1 = [zatom.name.upper() for zatom in zmatatoms]
     zmatnames2 = [cmap[zatom.name.upper()] for zatom in zmatatoms]
     atomtypes1 = [zatom.param0.params[0] for zatom in zmatatoms] # Atom types for template 1
@@ -320,17 +326,21 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
       if usepdb :
         _make_dict(zmatnames2,tem2.templates[0],pdb2.residues[1],objdict2,onlypdb=True)  
         bond2 = find_pdbparam(zmatnames2[:2],objdict2)
-        angle1 = find_pdbparam(zmatnames1,objdict1)
-        angle2 = find_pdbparam(zmatnames2,objdict2)
+        if defangle :
+          angle1 = find_pdbparam(zmatnames1,objdict1)
+          angle2 = find_pdbparam(zmatnames2,objdict2)
       else :
         dummy,bond2 = find_param(atomtypes2[:2],temsets["bond"],gaffsets["bond"])      
-        dummy,angle1 = find_param(atomtypes1,temsets["angle"],gaffsets["angle"])       
-        dummy,angle2 = find_param(atomtypes2,temsets["angle"],gaffsets["angle"])   
+        if defangle :
+          dummy,angle1 = find_param(atomtypes1,temsets["angle"],gaffsets["angle"])       
+          dummy,angle2 = find_param(atomtypes2,temsets["angle"],gaffsets["angle"])   
       # Add variable geometry for bond and angle
-      tem1.templates[0].variables.append("# %s to %s at atoms %s"%("-".join(atomtypes1[:2]),"-".join(atomtypes2[:2]),"-".join(zmatnames1[:2])))
-      tem1.templates[0].variables.append("variable %s %s bond %.3f %.3f"%(atom.name,atom.residue,bond1,bond2))     
-      tem1.templates[0].variables.append("# %s to %s at atoms %s"%("-".join(atomtypes1),"-".join(atomtypes2),"-".join(zmatnames1)))
-      tem1.templates[0].variables.append("variable %s %s angle %.3f %.3f"%(atom.name,atom.residue,angle1,angle2)) 
+      if bond1 != bond2 :
+        tem1.templates[0].variables.append("# %s to %s at atoms %s"%("-".join(atomtypes1[:2]),"-".join(atomtypes2[:2]),"-".join(zmatnames1[:2])))
+        tem1.templates[0].variables.append("variable %s %s bond %.3f %.3f"%(atom.name,atom.residue,bond1,bond2))     
+      if defangle and angle1 != angle2 :
+        tem1.templates[0].variables.append("# %s to %s at atoms %s"%("-".join(atomtypes1),"-".join(atomtypes2),"-".join(zmatnames1)))
+        tem1.templates[0].variables.append("variable %s %s angle %.3f %.3f"%(atom.name,atom.residue,angle1,angle2)) 
 
   # MAIN routine
 
@@ -386,6 +396,7 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
   objdict1 = _make_dict([atom.name for atom in atomlist],tem1.templates[0],pdb1.residues[1],onlypdb=True)
   objdict2 = _make_dict([cmap[atom.name.upper()] for atom in atomlist if cmap[atom.name.upper()] != "DUM"],tem2.templates[0],pdb2.residues[1],onlypdb=True)
   variablemade = [False]*len(tem1.templates[0].atoms)
+  newdihedrals = []
   for atom in atomlist :
     # Add variable geometry to this atom
     make_variable(atom)
@@ -402,7 +413,7 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
       atomtypes0 = ["dum" if isinstance(catom.param0,int) else catom.param0.params[0] for catom in con.atoms]
       atomtypes1 = ["dum" if isinstance(catom.param1,int) else catom.param1.params[0] for catom in con.atoms]
       if isinstance(atom.param1,int) : # Check if we have inserted a dummy parameter
-        con.param0 = con.param1 = 0 # This connectivity should not be sampled          
+        con.param0 = con.param1 = 0 # This connectivity should not be sampled                      
       else : # Have parameters in cljparams...
         if "dum" in atomtypes0 or "dum" in atomtypes1 : continue # Take care of this if above
         con.param0,equil0 = find_param(atomtypes0,temsets[con.type],gaffsets[con.type]) # Find parameter index and equilibrium value
@@ -413,6 +424,43 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
           con.param0 = con.param1 = None
 
   return tem1
+
+def _make_comb_tem(eletem,vdwtem) :
+  """
+  Make new single topology template file for combined perturbation
+  
+  Parameters
+  ----------
+  eletem : TemplateFile
+    the electrostatic template
+  vdwtem : TemplateFile
+    the van der Waals template
+
+  Returns
+  -------
+  TemplateFile
+    the created template file
+  """
+  
+  combtem = copy.deepcopy(vdwtem)
+  nlj = len(eletem.cljparams)
+  nlj2 = nlj / 2
+
+  # Replaces the first half of the CLJ parameters, i.e. the V0 state
+  for i in range(nlj2) :
+    combtem.cljparams[i].params = copy.deepcopy(eletem.cljparams[i].params)
+
+  # Replaces the V0 param of all the atoms
+  for atom_ele,atom_comb in zip(eletem.templates[0].atoms,combtem.templates[0].atoms) :
+    if isinstance(atom_ele.param0,int) :
+      atom_comb.param0 = atom_ele.param0 
+    else :
+      for clj in combtem.cljparams :
+        if clj.index == atom_ele.param0.index :
+          atom_comb.param0 = clj
+          break
+
+  return combtem
   
 def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
   """
@@ -437,6 +485,8 @@ def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
     a template file for the electrostatic leg
   TemplateFile
     a template file for the van der Waals leg
+  TemplateFile
+    a template file for a combined transformation
   dictionary of strings
     the full map of correspondance
 
@@ -489,8 +539,9 @@ def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
   _make_map(tem1,tem2,pdb1,pdb2,cmap)
   eletem = _make_ele_tem(tem1,tem2,cmap)
   vdwtem = _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap)
+  combtem = _make_comb_tem(eletem,vdwtem)
   
-  return eletem,vdwtem,cmap
+  return eletem,vdwtem,combtem,cmap
   
 def write_map(cmap,filename) :
   """
@@ -580,11 +631,13 @@ if __name__ == '__main__' :
   if args.tem0 is None or args.tem1 is None or args.pdb0 is None or args.pdb1 is None :
     sim.SetupError("Not all four necessary input files given. Cannot setup single-topology")
 
-  eletem,vdwtem,cmap = make_single(args.tem0,args.tem1,args.pdb0,args.pdb1,args.map)
+  eletem,vdwtem,combtem,cmap = make_single(args.tem0,args.tem1,args.pdb0,args.pdb1,args.map)
   eletem.write(args.out+"_ele.tem")
   vdwtem.write(args.out+"_vdw.tem")
+  combtem.write(args.out+"_comb.tem")
   if args.map is None : write_map(cmap,args.out+"_cmap.dat")
 
   # Write out a summary
   summarize(eletem,vdwtem,logger.info)
+
  

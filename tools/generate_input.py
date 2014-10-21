@@ -368,7 +368,10 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
         self.setParameter("pressure","1")
     if protein is None :
       for i,sol in enumerate(solutes) :
-        self.setChunk("transrot %d 0.0"%(i+1))
+        if solvent is None :
+          self.setChunk("transrot %d 0.0 0.0"%(i+1))
+        else :
+          self.setChunk("transrot %d 0.0"%(i+1))
     else :
       self.setParameter("pdbparams","on")
 
@@ -454,7 +457,7 @@ class Sampling(ProteinLigandSimulation) :
     self.setDump("averages reset",dumpfreq)
     
     moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
-    self.setChunk("equilibrate %d %s"%(nequil,moves))        
+    if nequil > 0 : self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
 class DualTopology(ProteinLigandSimulation) :
@@ -917,6 +920,8 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
     the command file for the ligand simulation
   bnd_cmd : ProtoMSSimulation
     the command file for the protein simulation
+  gas_cmd : ProtoMSSimulation
+    the command file for the gas simulation
   """
   
   logger.debug("Running generate_input with arguments: ")
@@ -934,7 +939,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
   logger.debug("\tsettings      = %s"%settings)
   logger.debug("This will make an input file for ProtoMS")
   
-  free_cmd = bnd_cmd = None
+  free_cmd = bnd_cmd = gas_cmd = None
   
   if settings.simulation == "equilibration" :
     if ligands is not None :
@@ -1005,6 +1010,12 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       rest_solutes.append(0) 
       rest_solutes.append(1)
 
+    if settings.simulation == "singletopology" and settings.dovacuum :
+      return None,None,cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
+                              templates=templates,solvent=None,
+                              lambdaval=lambdavals,nequil=settings.nequil,
+                              nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_gas",restrained=rest_solutes)
+
     free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
                             lambdaval=lambdavals,nequil=settings.nequil,
@@ -1048,7 +1059,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
                      nequil=settings.nequil,jbias=settings.jawsbias,
                      nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder) 
                      
-  return free_cmd,bnd_cmd  
+  return free_cmd,bnd_cmd,gas_cmd  
 
 if __name__ == "__main__":
 
@@ -1079,8 +1090,10 @@ if __name__ == "__main__":
   # Setup the logger
   logger = simulationobjects.setup_logger("generate_input_py.log")
 
-  free_cmd,bnd_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args) 
+  free_cmd,bnd_cmd,gas_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args) 
   if free_cmd is not None : 
     free_cmd.writeCommandFile(args.out+"_free.cmd")
   if bnd_cmd is not None : 
     bnd_cmd.writeCommandFile(args.out+"_bnd.cmd")    
+  if gas_cmd is not None : 
+    gas_cmd.writeCommandFile(args.out+"_gas.cmd")    

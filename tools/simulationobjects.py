@@ -1366,7 +1366,10 @@ class MolTemplate :
     fileobj.write("%s %s\n"%(self.type,self.name))
     fileobj.write("info translate %.3f rotate %.3f\n"%(self.translate,self.rotate))
     for atom in self.atoms : fileobj.write("%s\n"%atom)
-    for con in self.connectivity : fileobj.write("%s\n"%con)
+    for con in self.connectivity : 
+      # This was added to prevent angles and dihedral with dummy parameters from being sampled
+      if len(con.atoms) > 2 and con.flex is not None and con.param0 == 0 and con.param1 == 0 : fileobj.write("#")
+      fileobj.write("%s\n"%con)
     for var in self.variables : fileobj.write("%s\n"%var)
   def write_zmat(self,filename) :
     """
