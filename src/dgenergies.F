@@ -114,8 +114,7 @@ c       now reset the parameters
         call recalculateGeometries
 
 c     Now we have up to date energies to print
-      endif
-      
+      endif   
 
 c     write headers
       call prettyLine(RESULTS,'FREE ENERGY DATA')

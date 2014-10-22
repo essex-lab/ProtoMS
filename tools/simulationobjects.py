@@ -20,6 +20,8 @@ import os
 import glob
 import logging
 import copy
+import gettext
+import argparse
 
 import numpy as np
 
@@ -68,14 +70,16 @@ class Atom(object):
         Set the element of this atom        
         """
         k = 0
-        self.element = self.name[k]
+        name = self.name.strip()
+        self.element = name[k]
         while self.element.isdigit():
             k = k + 1
-        if len(self.name) > k+1 :
-            if self.name[k].lower() + self.name[k+1].lower() in ["cl","br","mg","mn"]:
-                self.element = self.name[k].lower() + self.name[k+1].lower()
+            self.element = name[k]
+        if len(name) > k+1 :
+            if name[k].lower() + name[k+1].lower() in ["cl","br","mg","mn"]:
+                self.element = name[k].lower() + name[k+1].lower()
         else:
-            self.element = self.name[k].lower()
+            self.element = name[k].lower()
     def __str__(self):
         """
         Produces a string representation, viz. a standard ATOM record
@@ -1671,6 +1675,109 @@ class TemplateFile() :
         for param in self.cljparams : f.write("%s\n"%param)
       if self.templates :
         for template in self.templates : template.write_to(f)
+
+#----------------------------
+# Classes to extend Argparse
+#----------------------------
+
+class _FullHelpAction(argparse.Action):
+    """
+    Class to initiate full help action
+    """
+    def __init__(self,
+                 option_strings,
+                 dest=argparse.SUPPRESS,
+                 default=argparse.SUPPRESS,
+                 help=None):
+        super(_FullHelpAction, self).__init__(
+            option_strings=option_strings,
+            dest=dest,
+            default=default,
+            nargs=0,
+            help=help)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        parser.print_fullhelp()
+        parser.exit()
+
+class MyArgumentParser(argparse.ArgumentParser) :
+    """
+    Extention to ArgumentParser to allow separation of of help in to 
+    help for most common options and full help that list all arguments
+    """
+    def __init__(self,
+                 prog=None,
+                 usage=None,
+                 description=None,
+                 epilog=None,
+                 version=None,
+                 parents=[],
+                 formatter_class=argparse.HelpFormatter,
+                 prefix_chars='-',
+                 fromfile_prefix_chars=None,
+                 argument_default=None,
+                 conflict_handler='error',
+                 add_help=True,
+                 add_fullhelp=True):
+        super(MyArgumentParser,self).__init__(
+                  prog,usage,description,epilog,version,parents,formatter_class,
+                  prefix_chars,fromfile_prefix_chars,argument_default,
+                  conflict_handler,add_help)
+               
+        self.add_fullhelp = add_fullhelp          
+        self.register('action', 'fullhelp', _FullHelpAction)
+                  
+        if '-' in prefix_chars:
+            default_prefix = '-'
+        else:
+            default_prefix = prefix_chars[0]
+        if self.add_fullhelp:
+            self.add_argument(
+                default_prefix*2+'fullhelp',
+                action='fullhelp', default=argparse.SUPPRESS,
+                help=gettext.gettext('show full help and exit'))
+
+        self._action_groups[1].title = "Most common arguments"
+
+    def format_help(self,fullhelp=False):
+        formatter = self._get_formatter()
+
+        # usage
+        formatter.add_usage(self.usage, self._actions,
+                            self._mutually_exclusive_groups)
+
+        # description
+        formatter.add_text(self.description)
+
+        # positionals, optionals and user-defined groups
+        if fullhelp :
+          grps = self._action_groups
+        else :
+          grps = self._action_groups[:2]
+        for action_group in grps :
+            formatter.start_section(action_group.title)
+            formatter.add_text(action_group.description)
+            formatter.add_arguments(action_group._group_actions)
+            formatter.end_section()
+
+        # epilog
+        formatter.add_text(self.epilog)
+        
+        if not fullhelp :  
+          formatter.add_text("Type %s --fullhelp for complete list of all arguments"%self.prog)
+
+        # determine help from format above
+        return formatter.format_help()
+
+    def print_help(self, file=None):
+        if file is None:
+            file = sys.stdout
+        self._print_message(self.format_help(fullhelp=False), file)
+
+    def print_fullhelp(self, file=None):
+        if file is None:
+            file = sys.stdout
+        self._print_message(self.format_help(fullhelp=True), file)
 
 #-----------------------
 # Other useful routines

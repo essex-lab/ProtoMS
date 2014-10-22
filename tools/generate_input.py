@@ -1010,8 +1010,8 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       rest_solutes.append(0) 
       rest_solutes.append(1)
 
-    if settings.simulation == "singletopology" and settings.dovacuum :
-      return None,None,cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
+    if settings.simulation == "singletopology"  :
+      gas_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                               templates=templates,solvent=None,
                               lambdaval=lambdavals,nequil=settings.nequil,
                               nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_gas",restrained=rest_solutes)

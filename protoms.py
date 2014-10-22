@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 # Authors: Richard Bradshaw
 #          Ana Cabedo Martinez
 #          Chris Cave-Ayland
@@ -31,7 +32,7 @@ def _is_float(num) :
   
   Returns
   -------
-  volean
+  boolean
     whether the string is convertible to float
   """
   try :
@@ -90,7 +91,7 @@ def _locate_file(filename,folders) :
   # If we haven't found it up to now, give up and return None
   return None
 
-def _merge_templates(templates) :
+def _merge_templates(templates,tarlist) :
   """
   Merge template files
   
@@ -98,12 +99,15 @@ def _merge_templates(templates) :
   ----------
   templates : list of string
     names of all the template files
+  tarlist : list of string
+    name of files that can be stored away
 
   Returns
   -------
   list of strings
     modify list of names
   """
+  for tem in templates : tarlist.append(tem) # All of the original templates can safely be stored away
   temfile = tools.merge_templates(templates)
   allnames = "-".join(t.name.lower() for t in temfile.templates)
   templates = [allnames+".tem"]
@@ -144,7 +148,7 @@ def _load_ligand_pdb(ligprefix,folders) :
 
   return pdbfile,simulationobjects.PDBFile(filename=pdbfile)
 
-def _prep_ligand(files,charge,ligobj12,folders,settings) :
+def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
   """ 
   Prepare a ligand completely so that a ProtoMS
   templatefile and a box of water around the ligand exist
@@ -153,12 +157,16 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
   ----------   
   files : dictionary
     filenames and a PDBFile object associated with this ligand
+  first : bool
+    flag to indicate if the ligand is the first one
   charge : int
     the net charge of the ligand
   ligobj12 : PDBFile
     an instance consisting of the first two ligands merged
   folders : list of string
     folders where to look for the ligand files
+  tarlist : list of string
+    name of files that can be stored away
   settings : Namespace (from argparse) 
     additional settings
 
@@ -216,12 +224,14 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
       # Here we need to run Antechamber
       logger.info("Running antechamber. Please check the output carefully")
       files["prepi"] = tools.run_antechamber(files["pdb"],charge,resnam)
-      logger.info("Created prepi-file: %s"%files["prepi"])
+      logger.info("Created prepi-file: %s"%files["prepi"]) 
+      tarlist.append(files["prepi"])
     if files["frcmod"] is None :
       # Here we need to run parmchk
       logger.info("Running parmchk. Please check the output carefully")
       files["frcmod"] = tools.run_parmchk(files["pdb"])
       logger.info("Created frcmod-file: %s"%files["frcmod"])
+      tarlist.append(files["frcmod"])
      
     # By this stage we should have all necessary files to make the template file
     files["tem"] = ligprefix+".tem"
@@ -232,7 +242,9 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
       files["zmat"] = ligprefix+".zmat"
       tem.templates[0].write_zmat(files["zmat"])
       logger.info("Created zmatrix (%s) for ligand. Please check the output carefully"%files["zmat"])
+      tarlist.append(files["zmat"])
     logger.info("Created ProtoMS template-file (%s) for ligand. Please check the output carefully"%files["tem"])
+    tarlist.append(files["tem"])
                           
   # Check to see if we have solvated the ligand
   if files["wat"] is None :
@@ -249,10 +261,12 @@ def _prep_ligand(files,charge,ligobj12,folders,settings) :
                            namescheme="ProtoMS")
     boxpdb.write(files["wat"])
     logger.info("Created waterbox-file: %s"%(files["wat"]))
+    if (settings.simulation in ["dualtopology","singletopology"] and not first) or (settings.simulation in ["gcmc","jaws1","jaws2"]) :
+      tarlist.append(files["wat"])
 
   return files
   
-def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
+def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
   """ 
   Prepare a protein completely such that a scoop pdb-file
   and a droplet of water exists
@@ -267,6 +281,8 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
     the filename of the water sphere
   folders : list of strings
     folders where to look for the protein files
+  tarlist : list of string
+    name of files that can be stored away
   settings : Namespace (from argparse) 
     additional settings
 
@@ -356,11 +372,12 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
 
     nresdiff = len(protobj.residues)-len(protobj_scooped.residues)
     protein_scoop_file = _get_prefix(protein_orig_file)+"_scoop.pdb"
-    logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))
+    logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))    
     if nresdiff < settings.scooplimit:
       protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
       logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file))
       protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file)
+      tarlist.append(protein_scoop_file)
       protein_scoop_file = None
     else :
       protobj = protobj_scooped
@@ -389,7 +406,7 @@ def _prep_protein(protprefix,ligands,watprefix,folders,settings) :
   else:
     return protein_scoop_file,protein_water
 
-def _prep_singletopology(pdbs,templates1,settings) :
+def _prep_singletopology(pdbs,templates1,tarlist,settings) :
   """
   Prepare templates for single topology
   
@@ -399,6 +416,8 @@ def _prep_singletopology(pdbs,templates1,settings) :
     names of ligand pdb files
   templares1 : list of strings
     names of ligand template files
+  tarlist : list of string
+    name of files that can be stored away
   settings : Namespace (from argparse) 
     additional settings
     
@@ -411,6 +430,10 @@ def _prep_singletopology(pdbs,templates1,settings) :
   """
   tem1 = simulationobjects.TemplateFile(templates1[0])
   tem2 = simulationobjects.TemplateFile(templates1[1])
+
+  # The original templates file can now be stored away
+  tarlist.append(templates1[0])
+  tarlist.append(templates1[1])
 
   logger.info("")
   logger.info("Setting up single-topology correspondance map and templates...")
@@ -435,13 +458,15 @@ def _prep_singletopology(pdbs,templates1,settings) :
   logger.info("Created template %s for van der Waals-perturbation. Please check the output carefully."%templates2[0])
   logger.info("Created template %s for combined perturbation. Please check the output carefully."%templates3[0])
   
-  if args.singlemap is None : settings.singlemap = "single_cmap.dat"
+  if args.singlemap is None : 
+    settings.singlemap = "single_cmap.dat"
+    tarlist.append(settings.singlemap)
   tools.write_map(cmap,settings.singlemap)
   logger.info("Saved correspondance map to: %s"%settings.singlemap)
 
   return templates1,templates2,templates3
 
-def _prep_gcmc(ligands,ligand_files,waters,settings) :
+def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
   """
   Prepare water box for GCMC or JAWS-1 calculations
   
@@ -453,6 +478,8 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
     files and objects associated with each ligand
   waters : string
     the name of the filename containing solvation waters
+  tarlist : list of string
+    name of files that can be stored away
   settings : Namespace (from argparse) 
     additional settings
     
@@ -490,6 +517,26 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
       waterobj.header = "HEADER box %.3f %.3f %.3f %.3f %.3f %.3f \n" %box_extremes
       return waterobj, out_name
 
+  # Check consistency of command-line arguments
+  if settings.gcmcwater is not None and not settings.gcmcwater.isdigit():
+    gcmcwater = _locate_file(settings.gcmcwater,settings.folders)
+    if gcmcwater is None :
+      msg = "File %s given as gcmcwater could not be found."%settings.gcmcwater
+      logger.error(msg)
+      raise simulationobjects.SetupError(msg)
+    settings.gcmcwater = gcmcwater
+  if settings.gcmcbox is not None and len(settings.gcmcbox) is 1:
+    gcmcbox = _locate_file(settings.gcmcbox[0],settings.folders)
+    if gcmcbox is None :
+      msg = "File %s given as gcmcbox could not be found."%settings.gcmcbox[0]
+      logger.error(msg)
+      raise simulationobjects.SetupError(msg)
+    settings.gcmcbox = gcmcbox
+  elif settings.gcmcbox is not None and len(settings.gcmcbox) < 6 :
+    msg = "6 arguments expected to define the GCMC/JAWS1 box dimensions, %d provided: %s"%(len(settings.gcmcbox)," ".join(settings.gcmcbox))
+    logger.error(msg)
+    raise simulationobjects.SetupError(msg)
+
   ghost_name = "%s_wat.pdb"%settings.simulation
   write = True
 
@@ -506,6 +553,7 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
       boxpdb = settings.gcmcbox
     if "center" in box :
       box['origin'] = np.array([coord-box["len"][ind]/2 for ind,coord in enumerate(box["center"])])
+
     # Fill the box with waters
     if settings.gcmcwater is None :
       ghostobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
@@ -595,10 +643,96 @@ def _prep_gcmc(ligands,ligand_files,waters,settings) :
   if nrem > 0 :
     waters2_name = _get_prefix(str(waters2))+"_clr.pdb"
     logger.info("Created water cap-file: %s"%waters2_name)
+    tarlist.append(waters)
     waters2.write(waters2_name)
     waters = waters2_name
   
   return ghost_name,waters
+
+def _prep_jaws2(water_file,tarlist,settings) :
+  """
+  Prepare files for JAWS-2 simulation
+
+  Parameters
+  ----------
+  water_file : string
+    the name of the filename containing solvation waters
+  tarlist : list of string
+    name of files that can be stored away
+  settings : Namespace (from argparse) 
+    additional settings
+
+  Returns
+  -------
+  PDBSet
+    the set of single water molecule PDB files
+  PDBSet
+    the set of other water molecule PDB files
+  string
+    the name of the solvation waters
+
+  Raises
+  ------
+  SetupError
+    no gcmcwater specified in the settings
+  """
+
+  if settings.gcmcwater is None :
+    msg = "You must set gcmcwater settings when preparing JAWS-2 input"
+    logger.error(msg)
+    raise simulationobjects.SetupError(msg)
+
+  single_wat,other_wat = tools.split_waters(settings.gcmcwater)
+  logger.info("")
+  logger.info("Creating water PDB-files for JAWS-2 called jaws2_wat*.pdb and jaws2_not*.pdb")
+  single_wat.write(["jaws2_wat%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
+  other_wat.write(["jaws2_not%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
+
+  nrem = 0
+  for count,watobj in enumerate(single_wat.pdbs) :
+    for k in watobj.solvents : boxcoords = watobj.solvents[k].atoms[0].coords
+    for i,coord in enumerate(boxcoords[:3]) :
+      boxcoords[i] = coord-1.5
+      boxcoords = np.append(boxcoords,coord+1.5)
+    watobj.header = watobj.header + "REMARK box"
+    for coord in boxcoords :
+      watobj.header = watobj.header + " %.3f"%coord
+    watobj.header = watobj.header + "\n"
+    # Clear the JAWS-2 box from solvation waters
+    watobj.name = "jaws2_wat%d.pdb"%(count+1)
+    n,water_file = tools.clear_gcmcbox(watobj,water_file)
+    nrem = nrem + n
+  if nrem > 0 :
+    waters2_name = _get_prefix(str(water_file))+"_clr.pdb"
+    logger.info("Created water cap-file: %s"%waters2_name)
+    tarlist.append(water_file)
+    water_file.write(waters2_name)
+    water_file = waters2_name
+  else :
+    water_file = water_file.name
+ 
+  return single_wat,other_wat,water_file
+
+def _cleanup(tarlist) :
+  """
+  Clean up extra files
+  
+  Parameters
+  ----------
+  tarlist : list of string
+    the files to be cleaned up
+  """
+  tarlist2 = []
+  for filename in tarlist :
+    if filename in tarlist2 : continue
+    if filename.find(os.environ["PROTOMSHOME"]) == 0 : continue
+    tarlist2.append(filename)
+  
+  logger.info("")
+  logger.info("Cleaning up and saving extra files to prep_files.tar")
+  logger.debug("The files are: %s"%" ".join(tarlist2))
+  subprocess.call("tar -cf prep_files.tar %s"%" ".join(tarlist2),shell=True)
+  subprocess.call("rm -f %s"%" ".join(tarlist2),shell=True)
 
 def _wizard(settings) :
 
@@ -676,44 +810,49 @@ def _wizard(settings) :
 if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
-  parser = argparse.ArgumentParser(description="Program setup and run a ProtoMS simulations")
+  parser = simulationobjects.MyArgumentParser(description="Program setup and run a ProtoMS simulations")
   parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc","jaws1","jaws2"],help="the kind of simulation to setup",default="none")
   parser.add_argument('-f','--folders',nargs="+",help="folders to search for files ",default=["."])
   parser.add_argument('-p','--protein',help="the prefix of the protein")
   parser.add_argument('-l','--ligand',nargs="+",help="the prefix of the ligand(s)")
   parser.add_argument('-w','--water',help="the prefix of the water/solvent",default="water")
   parser.add_argument('-c','--cmdfile',help="the prefix of the command file",default="run")
-  parser.add_argument('-o','--scoop',help="the name of your protein scoop")
+  parser.add_argument('-sc','--scoop',help="the name of your protein scoop")
   parser.add_argument('-t','--template',nargs="+",help="the template files for your ligands")
   parser.add_argument('-r','--repeats',help="the number of repeats to be run (if more than 1) or a name for your repeat",default="") 
   # General control variables
-  parser.add_argument('--outfolder',help="the ProtoMS output folder",default="")
-  parser.add_argument('--atomnames',help="a file with atom name conversions")
-  parser.add_argument('--watmodel',help="the name of the water model. Default = tip4p",choices=[ 'tip3p', 'tip4p'],default='tip4p')
-  parser.add_argument('--waterbox',help="a file with pre-equilibrated water molecules")
+  cntrlgroup = parser.add_argument_group("General control variables")
+  cntrlgroup.add_argument('--outfolder',help="the ProtoMS output folder",default="")
+  cntrlgroup.add_argument('--atomnames',help="a file with atom name conversions")
+  cntrlgroup.add_argument('--watmodel',help="the name of the water model. Default = tip4p",choices=[ 'tip3p', 'tip4p'],default='tip4p')
+  cntrlgroup.add_argument('--waterbox',help="a file with pre-equilibrated water molecules")
   # Ligand setup variables
-  parser.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
-  parser.add_argument('--singlemap',help="the correspondance map for single-topology")
+  liggroup = parser.add_argument_group("Ligand setup variables")
+  liggroup.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
+  liggroup.add_argument('--singlemap',help="the correspondance map for single-topology")
   # Protein setup variables
-  parser.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)
-  parser.add_argument('--innercut',type=float,help="maximum distance from ligand defining inner region of the scoop",default=16.0)
-  parser.add_argument('--outercut',type=float,help="maximum distance from ligand defining outer region of the scoop",default=20.0)
-  parser.add_argument('--flexin',choices=[ 'sidechain', 'flexible', 'rigid' ],help="the flexibility of the inner region",default="flexible")
-  parser.add_argument('--flexout',choices=[ 'sidechain', 'flexible', 'rigid' ],help="the flexibility of the outer region",default="sidechain")
-  parser.add_argument('--scooplimit',help="the minimum difference between number of residues in protein and scoop for scoop to be retained",default=10)
-  parser.add_argument('--capradius',type=float,help="the radius of the droplet around the protein",default=30.0)
+  protgroup = parser.add_argument_group("Protein setup variables")
+  protgroup.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)
+  protgroup.add_argument('--innercut',type=float,help="maximum distance from ligand defining inner region of the scoop",default=16.0)
+  protgroup.add_argument('--outercut',type=float,help="maximum distance from ligand defining outer region of the scoop",default=20.0)
+  protgroup.add_argument('--flexin',choices=[ 'sidechain', 'flexible', 'rigid' ],help="the flexibility of the inner region",default="flexible")
+  protgroup.add_argument('--flexout',choices=[ 'sidechain', 'flexible', 'rigid' ],help="the flexibility of the outer region",default="sidechain")
+  protgroup.add_argument('--scooplimit',help="the minimum difference between number of residues in protein and scoop for scoop to be retained",default=10)
+  protgroup.add_argument('--capradius',type=float,help="the radius of the droplet around the protein",default=30.0)
   # Simulation parameters
-  parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
-  parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
-  parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
-  parser.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box, or a list of origin(x,y,z) and lenght(x,y,z) coordinates")
-  parser.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
-  parser.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
-  parser.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
-  parser.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
-  parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
-  parser.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
-  parser.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
+  simgroup = parser.add_argument_group("Simulatiom parameters")
+  simgroup.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
+  simgroup.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
+  simgroup.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
+  simgroup.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box, or a list of origin(x,y,z) and lenght(x,y,z) coordinates")
+  simgroup.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
+  simgroup.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
+  simgroup.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
+  simgroup.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
+  simgroup.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
+  simgroup.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
+  simgroup.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
+  simgroup.add_argument('--cleanup',action='store_true',help="Clean up extra files. Default=False",default=False)
   args = parser.parse_args()
  
   # Setup the logger
@@ -746,6 +885,9 @@ if __name__ == "__main__":
     msg = "Could not find file (%s) with pre-equilibrated waters"%waterbox
     logger.error(msg)
     raise simulationobjects.SetupError(msg)
+
+  # Setup list of files to be stored away
+  tarlist = []
      
   # Prepare each given ligand
   ligand_files = {} # This will be filled with a dictionary of filenames for each ligand
@@ -787,14 +929,14 @@ if __name__ == "__main__":
  
     # Now do the preparations
     for i,l in enumerate(args.ligand) :
-      if l[0] == "*" : continue # Skip ligands created in the script
+      if l[0] == "*" : continue # Skip ligands created in the script, i.e. the dummy
       if args.charge is not None and i < len(args.charge): 
         charge = args.charge[i]
       else :
         charge = 0
       if i > 1 : ligobj12 = None
       prefix = _get_prefix(l)
-      _prep_ligand(ligand_files[prefix],charge,ligobj12,args.folders,args) 
+      _prep_ligand(ligand_files[prefix],i==0,charge,ligobj12,args.folders,tarlist,args) 
 
     ligpdbs = [ligand_files[l]["pdb"] for l in ligands]
     ligtems = [ligand_files[l]["tem"] for l in ligands]
@@ -802,71 +944,29 @@ if __name__ == "__main__":
  
     # Here we need to make single topology templates, if requested
     if args.simulation == "singletopology" :
-      ligtems,ligtems2,ligtems3 = _prep_singletopology(ligpdbs,ligtems,args)
+      ligtems,ligtems2,ligtems3 = _prep_singletopology(ligpdbs,ligtems,tarlist,args)
 
     # Here we will merge ligand template files if there is more than one
     if len(ligtems) > 1 :
       logger.info("")
-      ligtems = _merge_templates(ligtems)
+      ligtems = _merge_templates(ligtems,tarlist)
       if args.simulation == "singletopology" : 
-        ligtems2 = _merge_templates(ligtems2)    
-        ligtems3 = _merge_templates(ligtems3)    
+        ligtems2 = _merge_templates(ligtems2,tarlist)    
+        ligtems3 = _merge_templates(ligtems3,tarlist)    
     
   # Prepare the protein
   protein_file = None
   water_file = None
   if args.protein is not None or args.scoop is not None:
-    protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,args)
+    protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,tarlist,args)
 
-  # Extra preparation for GCMC or JAWS-1
-  if args.gcmcwater is not None and not args.gcmcwater.isdigit():
-    gcmcwater = _locate_file(args.gcmcwater,args.folders)
-    if gcmcwater is None :
-      raise simulationobjects.SetupError("File %s given as gcmcwater could not be found."%args.gcmcwater)
-    args.gcmcwater = gcmcwater
-  if args.gcmcbox is not None and len(args.gcmcbox) is 1:
-    gcmcbox = _locate_file(args.gcmcbox[0],args.folders)
-    if gcmcbox is None :
-      raise simulationobjects.SetupError("File %s given as gcmcbox could not be found."%args.gcmcbox[0])
-    args.gcmcbox = gcmcbox
-  elif args.gcmcbox is not None and len(args.gcmcbox) < 6 :
-    raise simulationobjects.SetupError("6 arguments expected to define the GCMC/JAWS1 box dimensions, %d provided: %s"%(len(args.gcmcbox)," ".join(args.gcmcbox)))
-      
+  # Extra preparation for GCMC or JAWS-1     
   if args.simulation in ["gcmc","jaws1"] :
-    args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,args)    
+    args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,tarlist,args)    
   
   # Extra preparation for JAWS-2
   if args.simulation == "jaws2"  :
-    if args.gcmcwater is None :
-      msg = "You must set gcmcwater settings when preparing JAWS-2 input"
-      logger.error(msg)
-      raise simulationobjects.SetupError(msg)
-    single_wat,other_wat = tools.split_waters(args.gcmcwater)
-    logger.info("")
-    logger.info("Creating water PDB-files for JAWS-2 called jaws2_wat*.pdb and jaws2_not*.pdb")
-    single_wat.write(["jaws2_wat%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
-    other_wat.write(["jaws2_not%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
-    nrem = 0
-    for count,watobj in enumerate(single_wat.pdbs) :
-      for k in watobj.solvents : boxcoords = watobj.solvents[k].atoms[0].coords
-      for i,coord in enumerate(boxcoords[:3]) :
-        boxcoords[i] = coord-1.5
-        boxcoords = np.append(boxcoords,coord+1.5)
-      watobj.header = watobj.header + "REMARK box"
-      for coord in boxcoords :
-        watobj.header = watobj.header + " %.3f"%coord
-      watobj.header = watobj.header + "\n"
-      # Clear the JAWS-2 box from solvation waters
-      watobj.name = "jaws2_wat%d.pdb"%(count+1)
-      n,water_file = tools.clear_gcmcbox(watobj,water_file)
-      nrem = nrem + n
-    if nrem > 0 :
-      waters2_name = _get_prefix(str(water_file))+"_clr.pdb"
-      logger.info("Created water cap-file: %s"%waters2_name)
-      water_file.write(waters2_name)
-      water_file = waters2_name
-    else :
-      water_file = water_file.name
+    single_wat,other_wat,water_file = _prep_jaws2(water_file,tarlist,args)
 
   # Check of test run
   if args.testrun :
@@ -913,6 +1013,7 @@ if __name__ == "__main__":
       args.gcmcwater = "jaws2_wat%d.pdb"%idx
       jaws2wat = "jaws2_not%d.pdb"%idx
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,args)
+
     if free_cmd is not None : 
       free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")
     if bnd_cmd is not None : 
@@ -921,7 +1022,8 @@ if __name__ == "__main__":
       gas_cmd.writeCommandFile(args.cmdfile+repeat+"_gas.cmd")   
       
     
-      
+  if args.cleanup :
+    _cleanup(tarlist)
     
 
 

@@ -82,6 +82,7 @@ def solvate(box, ligand=None, protein=None, geometry="box",
   #
   params = {}
   params["h"] = (1.71,0.01)
+  params["m"] = (1.71,0.01) # Lone-pair in TIP4P
   params["o"] = (3.04,0.19)
   params["c"] = (3.40,0.09)
   params["n"] = (3.25,0.17)
