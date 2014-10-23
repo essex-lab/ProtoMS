@@ -1308,7 +1308,7 @@ class MolTemplate :
   translate : float
     the translation displacement
   rot : float
-    the rotational displacement
+    the rotational displacement  
   atoms : list of TemplateAtom objects
     the atoms in this template
   connectivity : list of TemplateConnectivity objects
@@ -1323,6 +1323,9 @@ class MolTemplate :
     self.type = ""
     self.translate = 0.0
     self.rotate = 0.0
+    self.jtheta = None
+    self.jcorr = None
+    self.jpmf = None
     self.atoms = []
     self.connectivity = []
     self.variables = []
@@ -1348,6 +1351,12 @@ class MolTemplate :
         cols = line.strip().split()
         self.translate = float(cols[2])
         self.rotate = float(cols[4])
+      elif line.startswith("jtheta") :
+        self.jtheta = float(line.strip().split()[1])
+      elif line.startswith("jcorr") :
+        self.jcorr = float(line.strip().split()[1])
+      elif line.startswith("jpmf") :
+        self.jpmf = map(float,line.strip().split()[1:])
       elif line.startswith("atom") :
         self.atoms.append(self.atomclass(record=line))
       elif line.startswith("bond") or line.startswith("angle") or line.startswith("dihedral")  :
@@ -1369,6 +1378,12 @@ class MolTemplate :
     fileobj.write("mode template\n")
     fileobj.write("%s %s\n"%(self.type,self.name))
     fileobj.write("info translate %.3f rotate %.3f\n"%(self.translate,self.rotate))
+    if self.jtheta is not None :
+      fileobj.write("jtheta %.3f\n"%self.jtheta)
+    if self.jcorr is not None :
+      fileobj.write("jcorr %.3f\n"%self.jcorr)
+    if self.jpmf is not None :
+      fileobj.write("jpmf %s\n"%(" ".join("%.4f"%p for p in self.jpmf)))
     for atom in self.atoms : fileobj.write("%s\n"%atom)
     for con in self.connectivity : 
       # This was added to prevent angles and dihedral with dummy parameters from being sampled
