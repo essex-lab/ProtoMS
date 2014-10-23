@@ -508,9 +508,9 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     if not (box_origen_below and box_end_avobe) or np.all(waterbox['len'] < 0.5) :
       # re-distribute the waters if required according to provided box
       logger.info("\nRedistributing your GCMC / JAWS1 waters according to the specified box\n")
-      arranged_name = tools.distribute_particles(box,water_file,out=out_name)
-      arraged_obj = simulationobjects.PDBFile(filename=arranged_name)
-      return arraged_obj, arranged_name
+      arranged_obj = tools.distribute_particles(box,water_file)
+      arranged_obj.write(filename=out_name)
+      return arranged_obj, out_name
     else :
       # make sure the header in the waterobj is the box dimensions which will be used in this simulation
       box_extremes = tuple(box['origin']) + tuple(np.add(box['origin'],box['len']))
@@ -527,8 +527,8 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       for sol in ghostobj.solvents :
         for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
     elif settings.gcmcwater.isdigit() :
-      ghost_name = tools.distribute_particles(box,settings.gcmcwater,out=ghost_name)
-      ghostobj = simulationobjects.PDBFile(filename=ghost_name)
+      ghostobj = tools.distribute_particles(box,settings.gcmcwater)
+      ghostobj.write(filename=ghost_name)
     else :
       ghostobj, ghost_name = arrange_wats(box,settings.gcmcwater,ghost_name)
     return ghostobj, ghost_name

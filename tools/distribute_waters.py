@@ -68,7 +68,7 @@ def create_res(atnames=["O00"],resname="sol",positions=[np.array([0.0,0.0,0.0])]
 
 
 
-def distribute_particles(box, particles, watermodel="t4p", out="ghostmolecules.pdb",resname="WAT",partnumb=None) :
+def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb=None) :
   """
   Randomly distribute molecules in a box
   
@@ -85,8 +85,6 @@ def distribute_particles(box, particles, watermodel="t4p", out="ghostmolecules.p
     (only used when particles is a number)
     either "t4p" or "t3p"
     the water model for the generated waters
-  out : string, optional
-    the name of the pdb file to write the molecules to
   partnumb : string,optional
     (only used when particles is a file)
     the number of particles. If not specified it is set
@@ -94,8 +92,8 @@ def distribute_particles(box, particles, watermodel="t4p", out="ghostmolecules.p
 
   Returns
   -------
-  string
-    the pdb file name of the file with the molecules
+  pdb object
+    the pdb object with the molecules
     distributed randomly in the box
   """
 
@@ -151,8 +149,7 @@ def distribute_particles(box, particles, watermodel="t4p", out="ghostmolecules.p
     h_parts = particles.header.strip().split()
     particles.header = "%s %.4f %s %.4f " %(" ".join(h_parts[:ind]),coord," ".join(h_parts[ind:ind*2]),coord+length[ind])
   particles.header = "HEADER box %s\n"%particles.header
-  particles.write(filename=out)
-  return out
+  return particles
     
 
 if __name__ == "__main__":
@@ -171,6 +168,7 @@ if __name__ == "__main__":
   if len(args.box) < 6 :
     raise simulationobjects.SetupError("Not enough information regarding box dimensions: %s"%args.box)
 
-  outfile = distribute_particles(args.box,args.molecules,args.model,args.outfile,args.resname,args.number)
-  print "\nMolecules printed in %s"%outfile
+  outobj = distribute_particles(args.box,args.molecules,args.model,args.resname,args.number)
+  outobj.write(filename=args.outfile)
+  print "\nMolecules printed in %s"%args.outfile
 
