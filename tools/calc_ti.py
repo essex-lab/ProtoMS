@@ -20,6 +20,8 @@ import logging
 import matplotlib.pyplot as pl
 import numpy as np
 
+from scipy.stats import spearmanr
+
 import simulationobjects
 
 logger = logging.getLogger('protoms')
@@ -197,6 +199,50 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     stds.append(std)
   return np.array(lambdas),np.array(gradients),np.array(stds)
 
+def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
+  """
+  Fit the PMF to a polynomial function
+  Parameters
+  ----------
+  lambdas : list
+    list of lambda values
+  pmf : list
+    list of pmf values for each lambda
+  orderfit : int, optional
+    the order of the polynomial to fit your pmf to
+  upperfit : int, optional
+    the maximum order of the polynomial to fit to
+  plotfile : string, optional
+    the name of the file where to plot of the fit
+
+  Returns
+  -------
+  numpy array
+    the coefictients of the fit
+  """
+
+  pl.plot(lambdas,pmf,label="PMF",linewidth=2)
+  pl.savefig("initial.png")
+
+  for order in range(orderfit,upperfit) :
+    fit = np.poly1d(np.polyfit(lambdas,pmf,order))
+    pmfpred = np.array([fit(xval) for xval in lambdas])
+    pl.plot(lambdas,pmfpred)
+    ydiff = np.absolute(pmfpred - pmf)
+    r = np.corrcoef(pmf,pmfpred)
+    r2 = np.square(r)
+    rho,p = spearmanr(pmf,pmfpred)
+    if p < 0.05 :
+      logger.info("\nPMF fitted to a %d order polynomial:"%order)
+      logger.info(np.poly1d(fit))
+      logger.info("With an R^2 of %.3f and Spearman's rho of %.3f"%(r2.item(1,0),rho))
+      pl.savefig(plotfile)
+      logger.info("Open %s to visualize the fit.\n"%plotfile)
+      return fit.c
+  logger.info("No polynomial of orders between %d and %d could be successfully fitted to your PMF" %(orderfit,upperfit))
+  return None
+    
+
 def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   """
   Do thermodynamic integration
@@ -230,6 +276,7 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     pmf at each lambda value
   numpy array
     standard deviation of the pmf at each lambda value
+
   """
 
   # Calculate the gradient
@@ -279,6 +326,7 @@ if __name__ == '__main__' :
   parser.add_argument('-pu','--print-uncert',dest='printUncert',action='store_false',help="turns off printing of uncertainties",default=True)
   parser.add_argument('-pl','--print-lam',dest='printLam',action='store_false',help="turns off printing of lambda-values",default=True)
   parser.add_argument('-gr','--plot-grads',dest='plotGrad',action='store_true',help="turns on producing plot of gradients",default=False)
+  parser.add_argument('-pf','--print-fit',dest='fitPMF',action='store_true',help="turns on fitting the pmf to a polynomial",default=False)
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   args = parser.parse_args()
@@ -293,7 +341,11 @@ if __name__ == '__main__' :
     args.skip = -1
   # Do thermodynamic integration
   verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam}
-  lambdas,gradients,grad_std,pmf,pmf_std = ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
+  lambdas,gradients,grad_std,pmf,pmf_std= ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
+
+  # Do the fit
+  if args.fitPMF :
+    fitcoef = fit_pmf(lambdas,pmf)
 
   # Plot the gradient
   if args.plotGrad :
