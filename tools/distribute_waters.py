@@ -23,11 +23,12 @@ Can be executed from the command line as a stand-alone program
 """
 
 import simulationobjects
+import logging
 import random
 import convertwater
 import numpy as np
 
-
+logger = logging.getLogger('protoms')
 
 def create_res(atnames=["O00"],resname="sol",positions=[np.array([0.0,0.0,0.0])],resind=1) :
   """
@@ -97,6 +98,19 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb
     distributed randomly in the box
   """
 
+  logger.debug("Running distribute_particles with arguments: ")
+  if isinstance(box,dict) :
+    logger.debug("\tbox = %s"%" ".join(box[key] for key in box.keys()))
+  else :
+    logger.debug("\tbox = %s"%" ".join(box)) 
+  if isinstance(particles,str) :
+    logger.debug("\tparticles = %s"%particles)
+  else :
+    logger.debug("\tparticles %s"%particles.name)
+  logger.debug("\twatermodel %s"%watermodel)
+  logger.debug("\tpartnumb %s"%partnumb)
+  logger.debug("This will distribute the molecules given in 'particles' randomly in the box given in box. If a number is given in 'particles', it assumes them to be waters.")
+
   if isinstance(box,list) :
     try :
       box = [float(val) for val in box]
@@ -112,7 +126,7 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb
     watnumb = int(particles)
     particles = simulationobjects.PDBFile()
     for i in range(1,watnumb+1) :
-      oxpos = np.array([coord_len*random.random()+orig[jnd] for jnd,coord_len in enumerate(length)])
+      oxpos = np.random.rand(len(length))*np.array(length) + np.array(orig)
       particles.solvents[i] = create_res(resname=resname,positions=[oxpos])
     particles = convertwater.convertwater(particles,watermodel,"y",watresname=resname)
 
@@ -140,7 +154,7 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb
     for ind,keypart in enumerate(parts) :
       parts[keypart].getCenter()
       displace = [coord_len*random.random() + orig[jnd] - parts[keypart].center[jnd] for jnd,coord_len in enumerate(length)]
-      rotated_coords = convertwater.rotatesolute(np.array([myat.coords for myat in parts[keypart].atoms]),random.uniform(0,2*3.142),random.uniform(0,2*3.142),random.uniform(0,2*3.142))
+      rotated_coords = convertwater.rotatesolute(np.array([myat.coords for myat in parts[keypart].atoms]),random.uniform(0,2*np.pi),random.uniform(0,2*np.pi),random.uniform(0,2*np.pi))
       for jnd,atom in enumerate(parts[keypart].atoms) :
         atom.coords = np.array([rotated_coords.item((jnd,i)) + displace[i] for i in range(3)])
       
@@ -157,7 +171,7 @@ if __name__ == "__main__":
   import argparse
   
   parser = argparse.ArgumentParser(description="Randomly distribute n molecules within box dimensions")
-  parser.add_argument('-b','--box',nargs='+',help="Dimensions of the box. Six arguments expected: origin (x,y,z) & length (x,y,z)")
+  parser.add_argument('-b','--box',nargs=6,help="Dimensions of the box. Six arguments expected: origin (x,y,z) & length (x,y,z)")
   parser.add_argument('-m','--molecules',help="Molecules to distribute in the box. Either the number of waters or a pdb file containing all of them")
   parser.add_argument('-o','--outfile',help="Name of the pdb file to write the molecules to. Default='ghostmolecules.pdb'",default='ghostmolecules.pdb')
   parser.add_argument('--model', help="Water model. Used when only the amount of waters is specified. Options: 't4p','t3p'. Default='t4p'",default='t4p')
@@ -165,8 +179,7 @@ if __name__ == "__main__":
   parser.add_argument('--number',help="Required number of molecules when it differs from the number of residues in the file.",default=None)
   args = parser.parse_args()
 
-  if len(args.box) < 6 :
-    raise simulationobjects.SetupError("Not enough information regarding box dimensions: %s"%args.box)
+  logger = simulationobjects.setup_logger("distribute_waters_py.log")
 
   outobj = distribute_particles(args.box,args.molecules,args.model,args.resname,args.number)
   outobj.write(filename=args.outfile)
