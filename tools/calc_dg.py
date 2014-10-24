@@ -66,7 +66,12 @@ if __name__ == '__main__' :
       lambdas,gradients,grad_std,pmf,pmf_std = calc_ti.ti(directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
       all_gradients.append(gradients)
       all_grad_std.append(grad_std)
-      if args.printEach or len(args.directories) == 1:
+      if args.printGrad and len(args.directories) == 1 :
+        print "\n%6s %12s %8s"%("lambda","gradient","std")
+        for i in range(len(lambdas)) :
+          print "%-6.3f %12.4f %8.4f"%(lambdas[i],gradients[i],grad_std[i])
+        print ""
+      if args.printEach or len(args.directories) == 1:        
         print "TI (%s) : %.3f +- %.3f"%(directory,pmf[-1],np.sqrt(pmf_std[-1]))
     if len(all_gradients) == 1 :    
       if args.plotGrad :

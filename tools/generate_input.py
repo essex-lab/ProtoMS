@@ -58,7 +58,7 @@ def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
   pgcsolu = 0.0
 
   accel_prot = 5					# The amount by which the protein be accelerated over the solvent.
-  accel_solu = accel_prot*10		# The amount by which the solute be accelerated over the solvent.
+  accel_solu = accel_prot				# The amount by which the solute be accelerated over the solvent.
   addto = 1000.0					# Move proportion add up to this number. This is just for clarity.
 
   if protein is not None:
@@ -942,48 +942,51 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
   free_cmd = bnd_cmd = gas_cmd = None
   
   if settings.simulation == "equilibration" :
-    if ligands is not None :
+
+    if protein is not None : # Setup a protein simulation
+      bnd_cmd = Equilibration(protein=protein,solutes=ligands, 
+                              templates=templates,solvent=protein_water,outfolder=settings.outfolder+"_bnd",
+                              nsteps=args.nequil,pdbfile="equil_bnd.pdb")
+    elif ligands is not None :      
       if settings.dovacuum : 
         solvent = None
+        prestr = "gas"
       else :
         solvent = ligand_water
+        prestr = "free"
+
       free_cmd = Equilibration(protein=None,solutes=ligands[:min(len(ligands),2)], 
                               templates=templates,
-                              solvent=solvent,outfolder=settings.outfolder+"_free",
-                              nsteps=settings.nequil,pdbfile="equil_free.pdb")
-      
-    if protein is not None :
+                              solvent=solvent,outfolder=settings.outfolder+"_"+prestr,
+                              nsteps=settings.nequil,pdbfile="equil_%s.pdb"%prestr)
       if settings.dovacuum :
-        solvent = None
-      else :
-        solvent = protein_water  
-      bnd_cmd = Equilibration(protein=protein,solutes=ligands, 
-                              templates=templates,solvent=solvent,outfolder=settings.outfolder+"_bnd",
-                              nsteps=args.nequil,pdbfile="equil_bnd.pdb")
+        gas_cmd = free_cmd
+        free_cmd = None
       
   elif settings.simulation == "sampling" :
-    if ligands is not None :
-      if settings.dovacuum : 
-        solvent = None
-      else :
-        solvent = ligand_water
-      free_cmd = Sampling(protein=None,solutes=ligands[:min(len(ligands),2)], 
-                         templates=templates,
-                         solvent=solvent,outprefix="free_",
-                         nequil=settings.nequil,outfolder=settings.outfolder+"_free",
-                         nprod=settings.nprod,dumpfreq=settings.dumpfreq)
-      
-    if protein is not None :
-      if settings.dovacuum :
-        solvent = None
-      else :
-        solvent = protein_water  
+    if protein is not None : # Setup a protein simulation
       bnd_cmd = Sampling(protein=protein,solutes=ligands, 
-                         templates=templates,solvent=solvent,
+                         templates=templates,solvent=protein_water,
                          outprefix="bnd_",
                          nequil=settings.nequil,outfolder=settings.outfolder+"_bnd",
                          nprod=settings.nprod,dumpfreq=settings.dumpfreq)
-            
+    elif ligands is not None :      
+      if settings.dovacuum : 
+        solvent = None
+        prestr = "gas"
+      else :
+        solvent = ligand_water
+        prestr = "free"
+
+      free_cmd = Sampling(protein=None,solutes=ligands[:min(len(ligands),2)], 
+                         templates=templates,
+                         solvent=solvent,outprefix=prestr+"_",
+                         nequil=settings.nequil,outfolder=settings.outfolder+"_"+prestr,
+                         nprod=settings.nprod,dumpfreq=settings.dumpfreq)
+      if settings.dovacuum :
+        gas_cmd = free_cmd
+        free_cmd = None
+          
   elif settings.simulation in ["dualtopology","singletopology"] :
   
     cmdcls = {"dualtopology":DualTopology,"singletopology":SingleTopology}
