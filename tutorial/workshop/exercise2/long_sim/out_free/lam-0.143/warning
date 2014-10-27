@@ -1,0 +1,24 @@
+Overwriting bond parameter for cd-cd, parameter 1261 with parameter 1262
+atm cd cd     1262
+Overwriting bond parameter for cf-cf, parameter 1296 with parameter 1297
+atm cf cf     1297
+Overwriting bond parameter for ch-ch, parameter 1317 with parameter 1318
+atm ch ch     1318
+Overwriting bond parameter for n1-n1, parameter 1466 with parameter 1467
+atm n1 n1     1467
+Overwriting bond parameter for nd-nd, parameter 1578 with parameter 1579
+atm nd nd     1579
+Overwriting bond parameter for nf-nf, parameter 1593 with parameter 1594
+atm nf nf     1594
+Overwriting bond parameter for pf-pf, parameter 1714 with parameter 1715
+atm pf pf     1715
+Overwriting angle parameter for n1-n1-s , parameter 2254 with parameter 4454
+atm n1 n1 s     4454
+Overwriting angle parameter for n1-c1-n1, parameter 1220 with parameter 4462
+atm n1 c1 n1    4462
+Overwriting angle parameter for na-c1-na, parameter 4504 with parameter 4505
+atm na c1 na    4505
+Overwriting angle parameter for na-c1-na, parameter 4505 with parameter 4506
+atm na c1 na    4506
+Overwriting clj parameter  100, atm=DU, new atm=DU
+par   100   DU    00      0.0000    0.0000    0.0000  # dummy atom

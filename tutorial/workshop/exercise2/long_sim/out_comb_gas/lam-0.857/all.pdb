@@ -1,0 +1,4401 @@
+HEADER Simulation output from ProtoMS
+MODEL        1
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.386   2.035  -0.015
+ATOM      4 H07  ETH     1      -1.045   1.217  -0.464
+ATOM      3 H06  ETH     1      -0.665   1.285  -0.830
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        2
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.637   1.272  -0.129
+ATOM      4 H07  ETH     1      -0.741   1.238  -0.837
+ATOM      3 H06  ETH     1      -0.559   1.514  -0.420
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        3
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.639   1.282  -1.498
+ATOM      4 H07  ETH     1      -0.588   1.513  -0.380
+ATOM      3 H06  ETH     1      -1.039   1.236  -0.429
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        4
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.517   1.361  -1.473
+ATOM      4 H07  ETH     1      -0.621   1.509  -0.345
+ATOM      3 H06  ETH     1      -1.046   1.214  -0.472
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        5
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.613   1.307  -0.079
+ATOM      4 H07  ETH     1      -0.760   1.228  -0.835
+ATOM      3 H06  ETH     1      -0.549   1.512  -0.438
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        6
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.543   1.344  -1.480
+ATOM      4 H07  ETH     1      -0.614   1.510  -0.353
+ATOM      3 H06  ETH     1      -1.045   1.219  -0.462
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        7
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.684   1.255  -1.501
+ATOM      4 H07  ETH     1      -0.578   1.514  -0.394
+ATOM      3 H06  ETH     1      -1.035   1.244  -0.414
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        8
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.553   1.994   0.117
+ATOM      4 H07  ETH     1      -1.045   1.191  -0.530
+ATOM      3 H06  ETH     1      -0.611   1.325  -0.807
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL        9
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.219   2.047  -0.218
+ATOM      4 H07  ETH     1      -1.027   1.258  -0.391
+ATOM      3 H06  ETH     1      -0.738   1.240  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       10
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.091   2.009  -0.490
+ATOM      4 H07  ETH     1      -0.981   1.313  -0.322
+ATOM      3 H06  ETH     1      -0.826   1.198  -0.817
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       11
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.598   1.307  -1.492
+ATOM      4 H07  ETH     1      -0.599   1.512  -0.368
+ATOM      3 H06  ETH     1      -1.042   1.228  -0.443
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       12
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.179   2.043  -0.284
+ATOM      4 H07  ETH     1      -1.017   1.272  -0.371
+ATOM      3 H06  ETH     1      -0.761   1.228  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       13
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.492   1.379  -1.465
+ATOM      4 H07  ETH     1      -0.629   1.507  -0.338
+ATOM      3 H06  ETH     1      -1.047   1.210  -0.481
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       14
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.891   1.144  -1.482
+ATOM      4 H07  ETH     1      -0.538   1.510  -0.459
+ATOM      3 H06  ETH     1      -1.008   1.284  -0.355
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       15
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.699   1.133  -0.382
+ATOM      4 H07  ETH     1      -0.659   1.289  -0.828
+ATOM      3 H06  ETH     1      -0.621   1.509  -0.346
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       16
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.477   1.457   0.097
+ATOM      4 H07  ETH     1      -0.838   1.193  -0.812
+ATOM      3 H06  ETH     1      -0.516   1.498  -0.519
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       17
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.008   1.091  -1.447
+ATOM      4 H07  ETH     1      -0.521   1.503  -0.499
+ATOM      3 H06  ETH     1      -0.985   1.309  -0.326
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       18
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.631   1.287  -1.497
+ATOM      4 H07  ETH     1      -0.590   1.513  -0.378
+ATOM      3 H06  ETH     1      -1.040   1.234  -0.431
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       19
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.403   2.032   0.001
+ATOM      4 H07  ETH     1      -1.046   1.214  -0.471
+ATOM      3 H06  ETH     1      -0.659   1.289  -0.828
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       20
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.109   2.020  -0.436
+ATOM      4 H07  ETH     1      -0.991   1.302  -0.333
+ATOM      3 H06  ETH     1      -0.809   1.205  -0.823
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       21
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.409   2.031   0.006
+ATOM      4 H07  ETH     1      -1.046   1.213  -0.474
+ATOM      3 H06  ETH     1      -0.657   1.291  -0.828
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       22
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.057   1.766   0.264
+ATOM      4 H07  ETH     1      -0.974   1.161  -0.701
+ATOM      3 H06  ETH     1      -0.516   1.430  -0.684
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       23
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.409   2.031   0.007
+ATOM      4 H07  ETH     1      -1.046   1.213  -0.474
+ATOM      3 H06  ETH     1      -0.657   1.291  -0.828
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       24
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.578   1.351  -0.020
+ATOM      4 H07  ETH     1      -0.784   1.217  -0.831
+ATOM      3 H06  ETH     1      -0.536   1.510  -0.462
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       25
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.304   2.046  -0.103
+ATOM      4 H07  ETH     1      -1.039   1.235  -0.429
+ATOM      3 H06  ETH     1      -0.698   1.264  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       26
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.301   2.046  -0.107
+ATOM      4 H07  ETH     1      -1.039   1.236  -0.428
+ATOM      3 H06  ETH     1      -0.699   1.263  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       27
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.388   2.035  -0.013
+ATOM      4 H07  ETH     1      -1.045   1.217  -0.465
+ATOM      3 H06  ETH     1      -0.664   1.285  -0.830
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       28
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.079   1.999  -0.531
+ATOM      4 H07  ETH     1      -0.972   1.321  -0.313
+ATOM      3 H06  ETH     1      -0.838   1.193  -0.812
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       29
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.423   2.028   0.019
+ATOM      4 H07  ETH     1      -1.046   1.211  -0.479
+ATOM      3 H06  ETH     1      -0.652   1.294  -0.826
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       30
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.330   2.043  -0.073
+ATOM      4 H07  ETH     1      -1.042   1.229  -0.441
+ATOM      3 H06  ETH     1      -0.687   1.271  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       31
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.119   2.025  -0.410
+ATOM      4 H07  ETH     1      -0.996   1.297  -0.339
+ATOM      3 H06  ETH     1      -0.801   1.209  -0.826
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       32
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.675   1.206  -0.238
+ATOM      4 H07  ETH     1      -0.704   1.260  -0.837
+ATOM      3 H06  ETH     1      -0.585   1.514  -0.384
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       33
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.357   1.483  -1.401
+ATOM      4 H07  ETH     1      -0.676   1.494  -0.304
+ATOM      3 H06  ETH     1      -1.044   1.189  -0.537
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       34
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.457   1.404  -1.452
+ATOM      4 H07  ETH     1      -0.640   1.505  -0.329
+ATOM      3 H06  ETH     1      -1.047   1.204  -0.495
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       35
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.739   1.223  -1.501
+ATOM      4 H07  ETH     1      -0.565   1.514  -0.411
+ATOM      3 H06  ETH     1      -1.029   1.254  -0.397
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       36
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.638   1.271  -0.131
+ATOM      4 H07  ETH     1      -0.741   1.239  -0.837
+ATOM      3 H06  ETH     1      -0.560   1.514  -0.419
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       37
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.619   1.294  -1.495
+ATOM      4 H07  ETH     1      -0.593   1.513  -0.374
+ATOM      3 H06  ETH     1      -1.041   1.232  -0.436
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       38
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.584   1.316  -1.489
+ATOM      4 H07  ETH     1      -0.602   1.512  -0.364
+ATOM      3 H06  ETH     1      -1.043   1.226  -0.447
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       39
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.435   2.025   0.029
+ATOM      4 H07  ETH     1      -1.047   1.209  -0.484
+ATOM      3 H06  ETH     1      -0.648   1.297  -0.825
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       40
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.808   1.185  -1.496
+ATOM      4 H07  ETH     1      -0.552   1.513  -0.432
+ATOM      3 H06  ETH     1      -1.020   1.268  -0.377
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       41
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.233   2.048  -0.197
+ATOM      4 H07  ETH     1      -1.029   1.254  -0.397
+ATOM      3 H06  ETH     1      -0.731   1.244  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       42
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.699   1.076  -0.520
+ATOM      4 H07  ETH     1      -0.622   1.316  -0.813
+ATOM      3 H06  ETH     1      -0.659   1.500  -0.315
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       43
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.615   1.297  -1.495
+ATOM      4 H07  ETH     1      -0.594   1.513  -0.373
+ATOM      3 H06  ETH     1      -1.041   1.231  -0.437
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       44
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.381   2.036  -0.020
+ATOM      4 H07  ETH     1      -1.045   1.218  -0.462
+ATOM      3 H06  ETH     1      -0.667   1.284  -0.830
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       45
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.672   1.262  -1.500
+ATOM      4 H07  ETH     1      -0.580   1.514  -0.390
+ATOM      3 H06  ETH     1      -1.036   1.242  -0.418
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       46
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.207   2.046  -0.237
+ATOM      4 H07  ETH     1      -1.024   1.262  -0.385
+ATOM      3 H06  ETH     1      -0.745   1.237  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       47
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.575   1.355  -0.016
+ATOM      4 H07  ETH     1      -0.786   1.216  -0.830
+ATOM      3 H06  ETH     1      -0.536   1.509  -0.464
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       48
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.689   1.171  -0.304
+ATOM      4 H07  ETH     1      -0.683   1.273  -0.834
+ATOM      3 H06  ETH     1      -0.601   1.512  -0.366
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       49
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.574   1.987   0.130
+ATOM      4 H07  ETH     1      -1.044   1.188  -0.538
+ATOM      3 H06  ETH     1      -0.605   1.330  -0.804
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       50
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.760   1.211  -1.500
+ATOM      4 H07  ETH     1      -0.561   1.514  -0.417
+ATOM      3 H06  ETH     1      -1.027   1.258  -0.391
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       51
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.197   2.045  -0.254
+ATOM      4 H07  ETH     1      -1.022   1.265  -0.380
+ATOM      3 H06  ETH     1      -0.750   1.234  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       52
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.694   1.156  -0.333
+ATOM      4 H07  ETH     1      -0.674   1.279  -0.832
+ATOM      3 H06  ETH     1      -0.609   1.511  -0.358
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       53
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.642   1.265  -0.140
+ATOM      4 H07  ETH     1      -0.737   1.240  -0.837
+ATOM      3 H06  ETH     1      -0.562   1.514  -0.416
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       54
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.425   2.027   0.021
+ATOM      4 H07  ETH     1      -1.046   1.210  -0.480
+ATOM      3 H06  ETH     1      -0.651   1.295  -0.826
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       55
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.187   2.044  -0.271
+ATOM      4 H07  ETH     1      -1.019   1.269  -0.375
+ATOM      3 H06  ETH     1      -0.756   1.231  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       56
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.532   1.351  -1.477
+ATOM      4 H07  ETH     1      -0.617   1.509  -0.349
+ATOM      3 H06  ETH     1      -1.045   1.217  -0.466
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       57
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.593   1.311  -1.491
+ATOM      4 H07  ETH     1      -0.600   1.512  -0.367
+ATOM      3 H06  ETH     1      -1.042   1.227  -0.444
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       58
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.337   2.042  -0.065
+ATOM      4 H07  ETH     1      -1.042   1.228  -0.444
+ATOM      3 H06  ETH     1      -0.684   1.272  -0.834
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       59
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.702   1.101  -0.458
+ATOM      4 H07  ETH     1      -0.638   1.304  -0.821
+ATOM      3 H06  ETH     1      -0.641   1.504  -0.328
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       60
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.300   1.532  -1.360
+ATOM      4 H07  ETH     1      -0.699   1.486  -0.291
+ATOM      3 H06  ETH     1      -1.039   1.181  -0.563
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       61
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.700   1.126  -0.397
+ATOM      4 H07  ETH     1      -0.655   1.292  -0.827
+ATOM      3 H06  ETH     1      -0.625   1.508  -0.342
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       62
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.415   1.436  -1.433
+ATOM      4 H07  ETH     1      -0.654   1.501  -0.318
+ATOM      3 H06  ETH     1      -1.046   1.198  -0.512
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       63
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.270   2.048  -0.145
+ATOM      4 H07  ETH     1      -1.035   1.244  -0.414
+ATOM      3 H06  ETH     1      -0.713   1.254  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       64
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.773   1.204  -1.500
+ATOM      4 H07  ETH     1      -0.559   1.514  -0.421
+ATOM      3 H06  ETH     1      -1.025   1.261  -0.387
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       65
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.434   2.025   0.029
+ATOM      4 H07  ETH     1      -1.047   1.209  -0.484
+ATOM      3 H06  ETH     1      -0.648   1.297  -0.825
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       66
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.739   1.223  -1.501
+ATOM      4 H07  ETH     1      -0.566   1.514  -0.410
+ATOM      3 H06  ETH     1      -1.029   1.254  -0.397
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       67
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.311   2.045  -0.095
+ATOM      4 H07  ETH     1      -1.040   1.234  -0.432
+ATOM      3 H06  ETH     1      -0.695   1.266  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       68
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.689   1.173  -0.301
+ATOM      4 H07  ETH     1      -0.684   1.272  -0.834
+ATOM      3 H06  ETH     1      -0.600   1.512  -0.367
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       69
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.166   2.040  -0.309
+ATOM      4 H07  ETH     1      -1.014   1.277  -0.364
+ATOM      3 H06  ETH     1      -0.769   1.224  -0.834
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       70
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.255   2.048  -0.165
+ATOM      4 H07  ETH     1      -1.033   1.248  -0.407
+ATOM      3 H06  ETH     1      -0.720   1.250  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       71
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.294   2.047  -0.115
+ATOM      4 H07  ETH     1      -1.038   1.238  -0.425
+ATOM      3 H06  ETH     1      -0.702   1.261  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       72
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.549   1.339  -1.482
+ATOM      4 H07  ETH     1      -0.612   1.510  -0.354
+ATOM      3 H06  ETH     1      -1.045   1.220  -0.460
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       73
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.559   1.992   0.121
+ATOM      4 H07  ETH     1      -1.044   1.190  -0.532
+ATOM      3 H06  ETH     1      -0.609   1.327  -0.806
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       74
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.702   1.106  -0.445
+ATOM      4 H07  ETH     1      -0.642   1.301  -0.822
+ATOM      3 H06  ETH     1      -0.638   1.505  -0.331
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       75
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.598   1.979   0.144
+ATOM      4 H07  ETH     1      -1.042   1.185  -0.547
+ATOM      3 H06  ETH     1      -0.599   1.335  -0.799
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       76
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.428   2.027   0.023
+ATOM      4 H07  ETH     1      -1.046   1.210  -0.481
+ATOM      3 H06  ETH     1      -0.650   1.295  -0.825
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       77
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.233   2.048  -0.196
+ATOM      4 H07  ETH     1      -1.029   1.254  -0.397
+ATOM      3 H06  ETH     1      -0.731   1.244  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       78
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.329   2.043  -0.074
+ATOM      4 H07  ETH     1      -1.042   1.229  -0.440
+ATOM      3 H06  ETH     1      -0.687   1.270  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       79
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.363   2.039  -0.038
+ATOM      4 H07  ETH     1      -1.044   1.222  -0.455
+ATOM      3 H06  ETH     1      -0.674   1.279  -0.832
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       80
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.661   1.234  -0.190
+ATOM      4 H07  ETH     1      -0.720   1.250  -0.837
+ATOM      3 H06  ETH     1      -0.573   1.514  -0.399
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       81
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.702   1.108  -0.439
+ATOM      4 H07  ETH     1      -0.643   1.300  -0.823
+ATOM      3 H06  ETH     1      -0.636   1.506  -0.332
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       82
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.693   1.159  -0.329
+ATOM      4 H07  ETH     1      -0.675   1.278  -0.832
+ATOM      3 H06  ETH     1      -0.607   1.511  -0.359
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       83
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.933   1.124  -1.472
+ATOM      4 H07  ETH     1      -0.531   1.508  -0.474
+ATOM      3 H06  ETH     1      -1.000   1.293  -0.344
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       84
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.461   1.401  -1.454
+ATOM      4 H07  ETH     1      -0.639   1.505  -0.330
+ATOM      3 H06  ETH     1      -1.047   1.205  -0.493
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       85
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.693   1.160  -0.326
+ATOM      4 H07  ETH     1      -0.676   1.278  -0.833
+ATOM      3 H06  ETH     1      -0.607   1.511  -0.360
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       86
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.119  -0.415
+ATOM      4 H07  ETH     1      -0.650   1.295  -0.825
+ATOM      3 H06  ETH     1      -0.630   1.507  -0.338
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       87
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.663   1.956   0.178
+ATOM      4 H07  ETH     1      -1.037   1.178  -0.571
+ATOM      3 H06  ETH     1      -0.582   1.350  -0.787
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       88
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.680   1.196  -0.256
+ATOM      4 H07  ETH     1      -0.698   1.264  -0.836
+ATOM      3 H06  ETH     1      -0.589   1.513  -0.379
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       89
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.570   1.326  -1.487
+ATOM      4 H07  ETH     1      -0.606   1.511  -0.360
+ATOM      3 H06  ETH     1      -1.044   1.223  -0.452
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       90
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.507   2.007   0.086
+ATOM      4 H07  ETH     1      -1.046   1.197  -0.512
+ATOM      3 H06  ETH     1      -0.625   1.314  -0.815
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       91
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.399   2.033  -0.003
+ATOM      4 H07  ETH     1      -1.046   1.215  -0.470
+ATOM      3 H06  ETH     1      -0.660   1.288  -0.829
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       92
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.498   1.375  -1.467
+ATOM      4 H07  ETH     1      -0.627   1.508  -0.340
+ATOM      3 H06  ETH     1      -1.046   1.211  -0.479
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       93
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.697   1.144  -0.358
+ATOM      4 H07  ETH     1      -0.666   1.284  -0.830
+ATOM      3 H06  ETH     1      -0.615   1.510  -0.352
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       94
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.895   1.142  -1.481
+ATOM      4 H07  ETH     1      -0.537   1.510  -0.461
+ATOM      3 H06  ETH     1      -1.007   1.285  -0.354
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       95
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.664   1.266  -1.500
+ATOM      4 H07  ETH     1      -0.582   1.514  -0.388
+ATOM      3 H06  ETH     1      -1.037   1.240  -0.421
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       96
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.198   2.045  -0.251
+ATOM      4 H07  ETH     1      -1.022   1.265  -0.381
+ATOM      3 H06  ETH     1      -0.749   1.234  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       97
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.655   1.243  -0.175
+ATOM      4 H07  ETH     1      -0.725   1.247  -0.838
+ATOM      3 H06  ETH     1      -0.570   1.514  -0.404
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       98
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.694   1.059  -0.570
+ATOM      4 H07  ETH     1      -0.609   1.326  -0.806
+ATOM      3 H06  ETH     1      -0.673   1.496  -0.306
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL       99
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.436   1.420  -1.443
+ATOM      4 H07  ETH     1      -0.647   1.503  -0.324
+ATOM      3 H06  ETH     1      -1.047   1.201  -0.503
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      100
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.281   2.047  -0.131
+ATOM      4 H07  ETH     1      -1.037   1.241  -0.419
+ATOM      3 H06  ETH     1      -0.708   1.257  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      101
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.749   1.921   0.214
+ATOM      4 H07  ETH     1      -1.028   1.171  -0.601
+ATOM      3 H06  ETH     1      -0.563   1.369  -0.768
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      102
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.695   1.152  -0.341
+ATOM      4 H07  ETH     1      -0.671   1.281  -0.832
+ATOM      3 H06  ETH     1      -0.611   1.511  -0.356
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      103
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.300   2.046  -0.107
+ATOM      4 H07  ETH     1      -1.039   1.236  -0.428
+ATOM      3 H06  ETH     1      -0.699   1.263  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      104
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.807   1.186  -1.496
+ATOM      4 H07  ETH     1      -0.552   1.513  -0.432
+ATOM      3 H06  ETH     1      -1.021   1.267  -0.377
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      105
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.484   2.013   0.069
+ATOM      4 H07  ETH     1      -1.047   1.201  -0.504
+ATOM      3 H06  ETH     1      -0.632   1.309  -0.818
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      106
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.450   2.022   0.042
+ATOM      4 H07  ETH     1      -1.047   1.206  -0.490
+ATOM      3 H06  ETH     1      -0.642   1.301  -0.823
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      107
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.738   1.926   0.210
+ATOM      4 H07  ETH     1      -1.029   1.172  -0.597
+ATOM      3 H06  ETH     1      -0.566   1.366  -0.771
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      108
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.445   2.023   0.038
+ATOM      4 H07  ETH     1      -1.047   1.207  -0.488
+ATOM      3 H06  ETH     1      -0.644   1.300  -0.823
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      109
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.200   2.046  -0.249
+ATOM      4 H07  ETH     1      -1.023   1.265  -0.381
+ATOM      3 H06  ETH     1      -0.749   1.234  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      110
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.294   2.047  -0.114
+ATOM      4 H07  ETH     1      -1.038   1.237  -0.425
+ATOM      3 H06  ETH     1      -0.702   1.261  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      111
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.251   2.048  -0.170
+ATOM      4 H07  ETH     1      -1.033   1.249  -0.406
+ATOM      3 H06  ETH     1      -0.722   1.249  -0.838
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      112
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.233   1.596  -1.298
+ATOM      4 H07  ETH     1      -0.731   1.474  -0.277
+ATOM      3 H06  ETH     1      -1.029   1.172  -0.597
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      113
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.646   1.258  -0.151
+ATOM      4 H07  ETH     1      -0.733   1.243  -0.837
+ATOM      3 H06  ETH     1      -0.564   1.514  -0.412
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      114
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.211   2.047  -0.231
+ATOM      4 H07  ETH     1      -1.025   1.261  -0.387
+ATOM      3 H06  ETH     1      -0.743   1.238  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      115
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.664   1.015  -0.718
+ATOM      4 H07  ETH     1      -0.576   1.356  -0.781
+ATOM      3 H06  ETH     1      -0.716   1.480  -0.283
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      116
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.158   2.038  -0.325
+ATOM      4 H07  ETH     1      -1.011   1.280  -0.360
+ATOM      3 H06  ETH     1      -0.774   1.222  -0.833
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      117
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.264   1.631   0.225
+ATOM      4 H07  ETH     1      -0.919   1.168  -0.761
+ATOM      3 H06  ETH     1      -0.504   1.466  -0.612
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      118
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.160   2.039  -0.320
+ATOM      4 H07  ETH     1      -1.012   1.279  -0.362
+ATOM      3 H06  ETH     1      -0.772   1.222  -0.833
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      119
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.566   1.365  -0.003
+ATOM      4 H07  ETH     1      -0.791   1.213  -0.829
+ATOM      3 H06  ETH     1      -0.533   1.508  -0.469
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      120
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.221   2.047  -0.215
+ATOM      4 H07  ETH     1      -1.027   1.258  -0.392
+ATOM      3 H06  ETH     1      -0.737   1.241  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      121
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.176   2.042  -0.290
+ATOM      4 H07  ETH     1      -1.016   1.273  -0.369
+ATOM      3 H06  ETH     1      -0.763   1.227  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      122
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.718   1.235  -1.502
+ATOM      4 H07  ETH     1      -0.570   1.514  -0.404
+ATOM      3 H06  ETH     1      -1.032   1.250  -0.404
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      123
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.700   1.126  -0.397
+ATOM      4 H07  ETH     1      -0.655   1.292  -0.827
+ATOM      3 H06  ETH     1      -0.625   1.508  -0.342
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      124
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.667   1.222  -0.211
+ATOM      4 H07  ETH     1      -0.713   1.255  -0.837
+ATOM      3 H06  ETH     1      -0.578   1.514  -0.393
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      125
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.517   1.361  -1.473
+ATOM      4 H07  ETH     1      -0.621   1.509  -0.345
+ATOM      3 H06  ETH     1      -1.046   1.214  -0.472
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      126
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.478   1.389  -1.460
+ATOM      4 H07  ETH     1      -0.633   1.506  -0.335
+ATOM      3 H06  ETH     1      -1.047   1.208  -0.486
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      127
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.543   1.344  -1.480
+ATOM      4 H07  ETH     1      -0.614   1.510  -0.353
+ATOM      3 H06  ETH     1      -1.045   1.219  -0.462
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      128
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.165   2.040  -0.312
+ATOM      4 H07  ETH     1      -1.013   1.277  -0.364
+ATOM      3 H06  ETH     1      -0.770   1.224  -0.833
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      129
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.194   2.045  -0.258
+ATOM      4 H07  ETH     1      -1.021   1.266  -0.379
+ATOM      3 H06  ETH     1      -0.752   1.233  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      130
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.349   1.489  -1.396
+ATOM      4 H07  ETH     1      -0.679   1.493  -0.302
+ATOM      3 H06  ETH     1      -1.043   1.188  -0.540
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      131
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.508   2.007   0.087
+ATOM      4 H07  ETH     1      -1.046   1.197  -0.513
+ATOM      3 H06  ETH     1      -0.624   1.315  -0.814
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      132
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.229   2.048  -0.203
+ATOM      4 H07  ETH     1      -1.029   1.255  -0.395
+ATOM      3 H06  ETH     1      -0.733   1.243  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      133
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.642   1.265  -0.140
+ATOM      4 H07  ETH     1      -0.737   1.240  -0.837
+ATOM      3 H06  ETH     1      -0.562   1.514  -0.416
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      134
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.618   1.300  -0.089
+ATOM      4 H07  ETH     1      -0.756   1.230  -0.835
+ATOM      3 H06  ETH     1      -0.551   1.513  -0.434
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      135
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.087   2.006  -0.503
+ATOM      4 H07  ETH     1      -0.978   1.316  -0.319
+ATOM      3 H06  ETH     1      -0.830   1.197  -0.816
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      136
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.878   1.150  -1.485
+ATOM      4 H07  ETH     1      -0.540   1.510  -0.455
+ATOM      3 H06  ETH     1      -1.010   1.282  -0.358
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      137
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.693   1.158  -0.330
+ATOM      4 H07  ETH     1      -0.675   1.278  -0.832
+ATOM      3 H06  ETH     1      -0.608   1.511  -0.359
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      138
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.744   1.220  -1.501
+ATOM      4 H07  ETH     1      -0.564   1.514  -0.412
+ATOM      3 H06  ETH     1      -1.029   1.255  -0.396
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      139
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.064   1.981  -0.594
+ATOM      4 H07  ETH     1      -0.959   1.334  -0.302
+ATOM      3 H06  ETH     1      -0.857   1.186  -0.803
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      140
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.620   1.294  -1.495
+ATOM      4 H07  ETH     1      -0.593   1.513  -0.374
+ATOM      3 H06  ETH     1      -1.041   1.232  -0.435
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      141
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.704   1.243  -1.502
+ATOM      4 H07  ETH     1      -0.573   1.514  -0.400
+ATOM      3 H06  ETH     1      -1.033   1.248  -0.408
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      142
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.120  -0.412
+ATOM      4 H07  ETH     1      -0.651   1.295  -0.826
+ATOM      3 H06  ETH     1      -0.629   1.507  -0.338
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      143
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.618   1.300  -0.089
+ATOM      4 H07  ETH     1      -0.756   1.230  -0.835
+ATOM      3 H06  ETH     1      -0.551   1.513  -0.435
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      144
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.651   1.251  -0.162
+ATOM      4 H07  ETH     1      -0.730   1.245  -0.837
+ATOM      3 H06  ETH     1      -0.567   1.514  -0.409
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      145
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.389   2.034  -0.012
+ATOM      4 H07  ETH     1      -1.045   1.217  -0.466
+ATOM      3 H06  ETH     1      -0.664   1.286  -0.830
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      146
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.238   2.048  -0.190
+ATOM      4 H07  ETH     1      -1.030   1.253  -0.400
+ATOM      3 H06  ETH     1      -0.729   1.246  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      147
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.692   1.163  -0.320
+ATOM      4 H07  ETH     1      -0.678   1.276  -0.833
+ATOM      3 H06  ETH     1      -0.605   1.512  -0.361
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      148
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.123  -0.404
+ATOM      4 H07  ETH     1      -0.653   1.293  -0.826
+ATOM      3 H06  ETH     1      -0.627   1.508  -0.341
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      149
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.658   1.239  -0.181
+ATOM      4 H07  ETH     1      -0.723   1.249  -0.838
+ATOM      3 H06  ETH     1      -0.571   1.514  -0.402
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      150
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.937   1.123  -1.471
+ATOM      4 H07  ETH     1      -0.531   1.508  -0.475
+ATOM      3 H06  ETH     1      -0.999   1.293  -0.343
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      151
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.467   2.018   0.056
+ATOM      4 H07  ETH     1      -1.047   1.203  -0.497
+ATOM      3 H06  ETH     1      -0.637   1.305  -0.820
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      152
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.226   2.048  -0.208
+ATOM      4 H07  ETH     1      -1.028   1.256  -0.394
+ATOM      3 H06  ETH     1      -0.735   1.242  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      153
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.442   1.415  -1.446
+ATOM      4 H07  ETH     1      -0.645   1.503  -0.325
+ATOM      3 H06  ETH     1      -1.047   1.202  -0.501
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      154
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.401   1.448  -1.426
+ATOM      4 H07  ETH     1      -0.660   1.499  -0.315
+ATOM      3 H06  ETH     1      -1.046   1.195  -0.518
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      155
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.438   1.419  -1.444
+ATOM      4 H07  ETH     1      -0.647   1.503  -0.324
+ATOM      3 H06  ETH     1      -1.047   1.201  -0.502
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      156
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.343   2.042  -0.059
+ATOM      4 H07  ETH     1      -1.043   1.226  -0.446
+ATOM      3 H06  ETH     1      -0.682   1.274  -0.834
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      157
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.467   1.397  -1.456
+ATOM      4 H07  ETH     1      -0.637   1.505  -0.332
+ATOM      3 H06  ETH     1      -1.047   1.206  -0.491
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      158
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.643   1.000  -0.785
+ATOM      4 H07  ETH     1      -0.562   1.369  -0.767
+ATOM      3 H06  ETH     1      -0.737   1.472  -0.275
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      159
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.634   1.967   0.163
+ATOM      4 H07  ETH     1      -1.040   1.181  -0.560
+ATOM      3 H06  ETH     1      -0.590   1.343  -0.793
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      160
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.568   0.974  -0.951
+ATOM      4 H07  ETH     1      -0.534   1.403  -0.726
+ATOM      3 H06  ETH     1      -0.790   1.447  -0.262
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      161
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.673   1.952   0.183
+ATOM      4 H07  ETH     1      -1.036   1.178  -0.574
+ATOM      3 H06  ETH     1      -0.580   1.352  -0.785
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      162
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.700   1.130  -0.389
+ATOM      4 H07  ETH     1      -0.657   1.290  -0.828
+ATOM      3 H06  ETH     1      -0.623   1.508  -0.344
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      163
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.462   2.019   0.051
+ATOM      4 H07  ETH     1      -1.047   1.204  -0.495
+ATOM      3 H06  ETH     1      -0.639   1.304  -0.821
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      164
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.670   1.263  -1.500
+ATOM      4 H07  ETH     1      -0.581   1.514  -0.389
+ATOM      3 H06  ETH     1      -1.037   1.241  -0.419
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      165
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.163   2.039  -0.315
+ATOM      4 H07  ETH     1      -1.013   1.278  -0.363
+ATOM      3 H06  ETH     1      -0.771   1.223  -0.833
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      166
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.492   0.969  -1.071
+ATOM      4 H07  ETH     1      -0.518   1.427  -0.689
+ATOM      3 H06  ETH     1      -0.830   1.425  -0.259
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      167
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.688   1.174  -0.298
+ATOM      4 H07  ETH     1      -0.684   1.272  -0.834
+ATOM      3 H06  ETH     1      -0.600   1.512  -0.367
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      168
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.084   1.787  -1.041
+ATOM      4 H07  ETH     1      -0.833   1.423  -0.259
+ATOM      3 H06  ETH     1      -0.976   1.161  -0.699
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      169
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.296   2.046  -0.113
+ATOM      4 H07  ETH     1      -1.038   1.237  -0.426
+ATOM      3 H06  ETH     1      -0.701   1.262  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      170
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.515   1.363  -1.473
+ATOM      4 H07  ETH     1      -0.622   1.509  -0.345
+ATOM      3 H06  ETH     1      -1.046   1.214  -0.472
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      171
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.367   2.038  -0.034
+ATOM      4 H07  ETH     1      -1.044   1.221  -0.456
+ATOM      3 H06  ETH     1      -0.672   1.280  -0.832
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      172
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.122  -0.408
+ATOM      4 H07  ETH     1      -0.652   1.294  -0.826
+ATOM      3 H06  ETH     1      -0.628   1.507  -0.340
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      173
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.237   2.048  -0.190
+ATOM      4 H07  ETH     1      -1.030   1.253  -0.399
+ATOM      3 H06  ETH     1      -0.729   1.245  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      174
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.883   1.148  -1.484
+ATOM      4 H07  ETH     1      -0.539   1.510  -0.457
+ATOM      3 H06  ETH     1      -1.009   1.283  -0.357
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      175
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.858   1.160  -1.489
+ATOM      4 H07  ETH     1      -0.543   1.511  -0.449
+ATOM      3 H06  ETH     1      -1.013   1.278  -0.363
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      176
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.702   1.106  -0.444
+ATOM      4 H07  ETH     1      -0.642   1.301  -0.822
+ATOM      3 H06  ETH     1      -0.638   1.505  -0.331
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      177
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.191   1.640  -1.248
+ATOM      4 H07  ETH     1      -0.754   1.464  -0.270
+ATOM      3 H06  ETH     1      -1.020   1.167  -0.621
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      178
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.684   1.254  -1.501
+ATOM      4 H07  ETH     1      -0.578   1.514  -0.394
+ATOM      3 H06  ETH     1      -1.035   1.244  -0.414
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      179
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.605   1.317  -0.064
+ATOM      4 H07  ETH     1      -0.766   1.225  -0.834
+ATOM      3 H06  ETH     1      -0.545   1.512  -0.444
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      180
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.495   1.377  -1.466
+ATOM      4 H07  ETH     1      -0.628   1.507  -0.339
+ATOM      3 H06  ETH     1      -1.046   1.210  -0.480
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      181
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.290   2.047  -0.120
+ATOM      4 H07  ETH     1      -1.038   1.239  -0.423
+ATOM      3 H06  ETH     1      -0.704   1.260  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      182
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.815   1.182  -1.495
+ATOM      4 H07  ETH     1      -0.551   1.513  -0.434
+ATOM      3 H06  ETH     1      -1.020   1.269  -0.375
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      183
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.592   1.311  -1.491
+ATOM      4 H07  ETH     1      -0.600   1.512  -0.366
+ATOM      3 H06  ETH     1      -1.043   1.227  -0.445
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      184
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.563   1.330  -1.485
+ATOM      4 H07  ETH     1      -0.608   1.511  -0.358
+ATOM      3 H06  ETH     1      -1.044   1.222  -0.455
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      185
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.457   1.405  -1.452
+ATOM      4 H07  ETH     1      -0.640   1.505  -0.329
+ATOM      3 H06  ETH     1      -1.047   1.204  -0.495
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      186
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.493   1.378  -1.466
+ATOM      4 H07  ETH     1      -0.629   1.507  -0.339
+ATOM      3 H06  ETH     1      -1.046   1.210  -0.481
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      187
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.627   1.287  -0.107
+ATOM      4 H07  ETH     1      -0.750   1.234  -0.836
+ATOM      3 H06  ETH     1      -0.554   1.513  -0.428
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      188
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.700   1.130  -0.390
+ATOM      4 H07  ETH     1      -0.657   1.290  -0.828
+ATOM      3 H06  ETH     1      -0.623   1.508  -0.344
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      189
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.642   1.280  -1.498
+ATOM      4 H07  ETH     1      -0.587   1.513  -0.381
+ATOM      3 H06  ETH     1      -1.039   1.236  -0.428
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      190
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.690   1.167  -0.311
+ATOM      4 H07  ETH     1      -0.681   1.274  -0.833
+ATOM      3 H06  ETH     1      -0.603   1.512  -0.364
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      191
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.796   1.192  -1.498
+ATOM      4 H07  ETH     1      -0.554   1.513  -0.428
+ATOM      3 H06  ETH     1      -1.022   1.265  -0.381
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      192
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.599   1.979   0.145
+ATOM      4 H07  ETH     1      -1.042   1.185  -0.547
+ATOM      3 H06  ETH     1      -0.598   1.336  -0.799
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      193
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.118   2.025  -0.413
+ATOM      4 H07  ETH     1      -0.996   1.297  -0.338
+ATOM      3 H06  ETH     1      -0.802   1.208  -0.826
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      194
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.837   1.171  -1.492
+ATOM      4 H07  ETH     1      -0.547   1.512  -0.442
+ATOM      3 H06  ETH     1      -1.016   1.273  -0.369
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      195
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.220   1.015  -1.337
+ATOM      4 H07  ETH     1      -0.505   1.480  -0.577
+ATOM      3 H06  ETH     1      -0.932   1.356  -0.285
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      196
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.274   2.048  -0.140
+ATOM      4 H07  ETH     1      -1.036   1.243  -0.416
+ATOM      3 H06  ETH     1      -0.711   1.256  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      197
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.658   1.010  -0.740
+ATOM      4 H07  ETH     1      -0.571   1.360  -0.776
+ATOM      3 H06  ETH     1      -0.723   1.478  -0.280
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      198
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.658   1.238  -0.183
+ATOM      4 H07  ETH     1      -0.722   1.249  -0.838
+ATOM      3 H06  ETH     1      -0.572   1.514  -0.402
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      199
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.221   2.047  -0.214
+ATOM      4 H07  ETH     1      -1.027   1.258  -0.392
+ATOM      3 H06  ETH     1      -0.737   1.241  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      200
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.618   1.300  -0.089
+ATOM      4 H07  ETH     1      -0.756   1.230  -0.835
+ATOM      3 H06  ETH     1      -0.551   1.513  -0.434
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      201
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.648   1.256  -0.154
+ATOM      4 H07  ETH     1      -0.732   1.243  -0.837
+ATOM      3 H06  ETH     1      -0.565   1.514  -0.411
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      202
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.775   1.203  -1.499
+ATOM      4 H07  ETH     1      -0.558   1.514  -0.422
+ATOM      3 H06  ETH     1      -1.025   1.261  -0.387
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      203
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.212   2.047  -0.228
+ATOM      4 H07  ETH     1      -1.025   1.260  -0.387
+ATOM      3 H06  ETH     1      -0.742   1.238  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      204
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.509   2.007   0.087
+ATOM      4 H07  ETH     1      -1.046   1.197  -0.513
+ATOM      3 H06  ETH     1      -0.624   1.315  -0.814
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      205
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.487   1.383  -1.463
+ATOM      4 H07  ETH     1      -0.631   1.507  -0.337
+ATOM      3 H06  ETH     1      -1.047   1.209  -0.483
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      206
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.651   1.251  -0.163
+ATOM      4 H07  ETH     1      -0.729   1.245  -0.837
+ATOM      3 H06  ETH     1      -0.567   1.514  -0.408
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      207
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.295   1.536  -1.356
+ATOM      4 H07  ETH     1      -0.702   1.486  -0.290
+ATOM      3 H06  ETH     1      -1.038   1.180  -0.566
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      208
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.690   1.170  -0.305
+ATOM      4 H07  ETH     1      -0.682   1.273  -0.834
+ATOM      3 H06  ETH     1      -0.601   1.512  -0.365
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      209
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.686   1.254  -1.501
+ATOM      4 H07  ETH     1      -0.577   1.514  -0.394
+ATOM      3 H06  ETH     1      -1.035   1.244  -0.414
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      210
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.235   2.048  -0.194
+ATOM      4 H07  ETH     1      -1.030   1.254  -0.398
+ATOM      3 H06  ETH     1      -0.730   1.245  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      211
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.188   2.044  -0.268
+ATOM      4 H07  ETH     1      -1.020   1.268  -0.376
+ATOM      3 H06  ETH     1      -0.755   1.231  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      212
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.655   1.272  -1.499
+ATOM      4 H07  ETH     1      -0.584   1.514  -0.385
+ATOM      3 H06  ETH     1      -1.038   1.238  -0.424
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      213
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.666   1.224  -0.207
+ATOM      4 H07  ETH     1      -0.714   1.254  -0.837
+ATOM      3 H06  ETH     1      -0.577   1.514  -0.394
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      214
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.581   1.348  -0.025
+ATOM      4 H07  ETH     1      -0.782   1.218  -0.831
+ATOM      3 H06  ETH     1      -0.537   1.510  -0.460
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      215
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.681   1.194  -0.261
+ATOM      4 H07  ETH     1      -0.696   1.265  -0.836
+ATOM      3 H06  ETH     1      -0.590   1.513  -0.378
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      216
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.670   1.216  -0.220
+ATOM      4 H07  ETH     1      -0.710   1.256  -0.837
+ATOM      3 H06  ETH     1      -0.580   1.514  -0.390
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      217
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.506   1.369  -1.470
+ATOM      4 H07  ETH     1      -0.625   1.508  -0.342
+ATOM      3 H06  ETH     1      -1.046   1.212  -0.476
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      218
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.633   1.279  -0.119
+ATOM      4 H07  ETH     1      -0.745   1.236  -0.837
+ATOM      3 H06  ETH     1      -0.557   1.514  -0.424
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      219
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.235   2.048  -0.194
+ATOM      4 H07  ETH     1      -1.030   1.253  -0.398
+ATOM      3 H06  ETH     1      -0.730   1.245  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      220
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.356   1.483  -1.400
+ATOM      4 H07  ETH     1      -0.676   1.494  -0.304
+ATOM      3 H06  ETH     1      -1.044   1.189  -0.537
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      221
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.601   1.323  -0.057
+ATOM      4 H07  ETH     1      -0.769   1.224  -0.834
+ATOM      3 H06  ETH     1      -0.544   1.512  -0.447
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      222
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.507   0.969  -1.050
+ATOM      4 H07  ETH     1      -0.520   1.423  -0.696
+ATOM      3 H06  ETH     1      -0.823   1.429  -0.259
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      223
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.246   2.048  -0.178
+ATOM      4 H07  ETH     1      -1.032   1.250  -0.403
+ATOM      3 H06  ETH     1      -0.725   1.248  -0.838
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      224
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.452   2.021   0.044
+ATOM      4 H07  ETH     1      -1.047   1.206  -0.491
+ATOM      3 H06  ETH     1      -0.642   1.301  -0.822
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      225
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.657   1.240  -0.180
+ATOM      4 H07  ETH     1      -0.723   1.248  -0.838
+ATOM      3 H06  ETH     1      -0.571   1.514  -0.403
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      226
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.464   2.018   0.053
+ATOM      4 H07  ETH     1      -1.047   1.204  -0.496
+ATOM      3 H06  ETH     1      -0.638   1.304  -0.821
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      227
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.357   2.040  -0.044
+ATOM      4 H07  ETH     1      -1.044   1.223  -0.452
+ATOM      3 H06  ETH     1      -0.676   1.278  -0.833
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      228
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.334   2.043  -0.069
+ATOM      4 H07  ETH     1      -1.042   1.228  -0.442
+ATOM      3 H06  ETH     1      -0.685   1.272  -0.834
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      229
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.255   2.048  -0.166
+ATOM      4 H07  ETH     1      -1.033   1.248  -0.407
+ATOM      3 H06  ETH     1      -0.720   1.250  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      230
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.132   2.030  -0.381
+ATOM      4 H07  ETH     1      -1.002   1.291  -0.346
+ATOM      3 H06  ETH     1      -0.792   1.213  -0.829
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      231
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.774   1.204  -1.500
+ATOM      4 H07  ETH     1      -0.558   1.514  -0.422
+ATOM      3 H06  ETH     1      -1.025   1.261  -0.387
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      232
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.296   2.047  -0.113
+ATOM      4 H07  ETH     1      -1.038   1.237  -0.426
+ATOM      3 H06  ETH     1      -0.701   1.261  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      233
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.249   2.048  -0.174
+ATOM      4 H07  ETH     1      -1.032   1.249  -0.405
+ATOM      3 H06  ETH     1      -0.723   1.249  -0.838
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      234
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.450   2.022   0.042
+ATOM      4 H07  ETH     1      -1.047   1.206  -0.490
+ATOM      3 H06  ETH     1      -0.643   1.301  -0.823
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      235
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.362   2.039  -0.038
+ATOM      4 H07  ETH     1      -1.044   1.222  -0.454
+ATOM      3 H06  ETH     1      -0.674   1.279  -0.832
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      236
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.454   2.021   0.045
+ATOM      4 H07  ETH     1      -1.047   1.205  -0.492
+ATOM      3 H06  ETH     1      -0.641   1.302  -0.822
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      237
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.411   2.030   0.008
+ATOM      4 H07  ETH     1      -1.046   1.213  -0.474
+ATOM      3 H06  ETH     1      -0.656   1.291  -0.827
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      238
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.614   1.297  -1.494
+ATOM      4 H07  ETH     1      -0.595   1.513  -0.373
+ATOM      3 H06  ETH     1      -1.041   1.231  -0.437
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      239
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.516   1.418   0.058
+ATOM      4 H07  ETH     1      -0.818   1.201  -0.820
+ATOM      3 H06  ETH     1      -0.522   1.503  -0.498
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      240
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.681   1.034  -0.649
+ATOM      4 H07  ETH     1      -0.591   1.342  -0.794
+ATOM      3 H06  ETH     1      -0.695   1.488  -0.293
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      241
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.732   1.928   0.208
+ATOM      4 H07  ETH     1      -1.030   1.172  -0.595
+ATOM      3 H06  ETH     1      -0.567   1.365  -0.772
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      242
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.636   1.283  -1.497
+ATOM      4 H07  ETH     1      -0.589   1.513  -0.379
+ATOM      3 H06  ETH     1      -1.039   1.235  -0.430
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      243
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.483   2.014   0.068
+ATOM      4 H07  ETH     1      -1.047   1.201  -0.503
+ATOM      3 H06  ETH     1      -0.632   1.309  -0.818
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      244
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.261   2.048  -0.157
+ATOM      4 H07  ETH     1      -1.034   1.246  -0.410
+ATOM      3 H06  ETH     1      -0.717   1.252  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      245
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.786   1.197  -1.499
+ATOM      4 H07  ETH     1      -0.556   1.513  -0.425
+ATOM      3 H06  ETH     1      -1.023   1.263  -0.383
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      246
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.857   1.160  -1.489
+ATOM      4 H07  ETH     1      -0.543   1.511  -0.448
+ATOM      3 H06  ETH     1      -1.013   1.277  -0.364
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      247
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.848   1.165  -1.490
+ATOM      4 H07  ETH     1      -0.545   1.512  -0.445
+ATOM      3 H06  ETH     1      -1.014   1.276  -0.366
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      248
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.342   2.042  -0.060
+ATOM      4 H07  ETH     1      -1.043   1.227  -0.446
+ATOM      3 H06  ETH     1      -0.682   1.274  -0.834
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      249
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.366   2.038  -0.035
+ATOM      4 H07  ETH     1      -1.044   1.221  -0.456
+ATOM      3 H06  ETH     1      -0.673   1.280  -0.832
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      250
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.488   1.382  -1.464
+ATOM      4 H07  ETH     1      -0.630   1.507  -0.337
+ATOM      3 H06  ETH     1      -1.047   1.209  -0.483
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      251
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.213   2.047  -0.227
+ATOM      4 H07  ETH     1      -1.025   1.260  -0.388
+ATOM      3 H06  ETH     1      -0.741   1.238  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      252
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.726   1.230  -1.502
+ATOM      4 H07  ETH     1      -0.568   1.514  -0.406
+ATOM      3 H06  ETH     1      -1.031   1.252  -0.401
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      253
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.582   1.346  -0.026
+ATOM      4 H07  ETH     1      -0.781   1.218  -0.831
+ATOM      3 H06  ETH     1      -0.538   1.510  -0.459
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      254
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.372   2.037  -0.029
+ATOM      4 H07  ETH     1      -1.045   1.220  -0.458
+ATOM      3 H06  ETH     1      -0.670   1.281  -0.831
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      255
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.700   1.125  -0.400
+ATOM      4 H07  ETH     1      -0.654   1.292  -0.827
+ATOM      3 H06  ETH     1      -0.626   1.508  -0.341
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      256
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.674   1.209  -0.233
+ATOM      4 H07  ETH     1      -0.705   1.259  -0.837
+ATOM      3 H06  ETH     1      -0.584   1.514  -0.386
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      257
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.843   1.168  -1.491
+ATOM      4 H07  ETH     1      -0.545   1.512  -0.444
+ATOM      3 H06  ETH     1      -1.015   1.274  -0.367
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      258
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.621   1.293  -1.495
+ATOM      4 H07  ETH     1      -0.593   1.513  -0.375
+ATOM      3 H06  ETH     1      -1.041   1.232  -0.435
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      259
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.617   1.302  -0.086
+ATOM      4 H07  ETH     1      -0.757   1.230  -0.835
+ATOM      3 H06  ETH     1      -0.550   1.513  -0.436
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      260
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.382   2.036  -0.019
+ATOM      4 H07  ETH     1      -1.045   1.218  -0.462
+ATOM      3 H06  ETH     1      -0.667   1.284  -0.830
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      261
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.698   1.071  -0.535
+ATOM      4 H07  ETH     1      -0.618   1.319  -0.811
+ATOM      3 H06  ETH     1      -0.663   1.499  -0.313
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      262
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.195   2.045  -0.256
+ATOM      4 H07  ETH     1      -1.021   1.266  -0.379
+ATOM      3 H06  ETH     1      -0.751   1.233  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      263
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.141   2.034  -0.360
+ATOM      4 H07  ETH     1      -1.005   1.287  -0.351
+ATOM      3 H06  ETH     1      -0.785   1.216  -0.830
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      264
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.391   2.034  -0.010
+ATOM      4 H07  ETH     1      -1.045   1.217  -0.466
+ATOM      3 H06  ETH     1      -0.663   1.286  -0.829
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      265
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.684   1.185  -0.278
+ATOM      4 H07  ETH     1      -0.691   1.268  -0.835
+ATOM      3 H06  ETH     1      -0.595   1.513  -0.373
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      266
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.685   1.182  -0.282
+ATOM      4 H07  ETH     1      -0.689   1.269  -0.835
+ATOM      3 H06  ETH     1      -0.596   1.513  -0.372
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      267
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.747   1.218  -1.501
+ATOM      4 H07  ETH     1      -0.564   1.514  -0.413
+ATOM      3 H06  ETH     1      -1.028   1.256  -0.395
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      268
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.632   1.280  -0.118
+ATOM      4 H07  ETH     1      -0.746   1.236  -0.837
+ATOM      3 H06  ETH     1      -0.557   1.513  -0.424
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      269
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.162   2.039  -0.317
+ATOM      4 H07  ETH     1      -1.012   1.278  -0.362
+ATOM      3 H06  ETH     1      -0.771   1.223  -0.833
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      270
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.463   1.400  -1.454
+ATOM      4 H07  ETH     1      -0.638   1.505  -0.331
+ATOM      3 H06  ETH     1      -1.047   1.205  -0.492
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      271
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.766   1.208  -1.500
+ATOM      4 H07  ETH     1      -0.560   1.514  -0.419
+ATOM      3 H06  ETH     1      -1.026   1.259  -0.389
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      272
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.436   2.025   0.030
+ATOM      4 H07  ETH     1      -1.047   1.208  -0.485
+ATOM      3 H06  ETH     1      -0.647   1.297  -0.824
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      273
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.581   1.318  -1.489
+ATOM      4 H07  ETH     1      -0.603   1.512  -0.363
+ATOM      3 H06  ETH     1      -1.043   1.225  -0.449
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      274
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.659   1.238  -0.184
+ATOM      4 H07  ETH     1      -0.722   1.249  -0.838
+ATOM      3 H06  ETH     1      -0.572   1.514  -0.401
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      275
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.382   2.036  -0.018
+ATOM      4 H07  ETH     1      -1.045   1.218  -0.463
+ATOM      3 H06  ETH     1      -0.666   1.284  -0.830
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      276
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.673   1.210  -0.231
+ATOM      4 H07  ETH     1      -0.706   1.259  -0.837
+ATOM      3 H06  ETH     1      -0.583   1.514  -0.387
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      277
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.295   2.047  -0.114
+ATOM      4 H07  ETH     1      -1.038   1.237  -0.425
+ATOM      3 H06  ETH     1      -0.702   1.261  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      278
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.610   1.310  -0.074
+ATOM      4 H07  ETH     1      -0.762   1.227  -0.835
+ATOM      3 H06  ETH     1      -0.547   1.512  -0.440
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      279
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.702   1.111  -0.432
+ATOM      4 H07  ETH     1      -0.645   1.299  -0.824
+ATOM      3 H06  ETH     1      -0.634   1.506  -0.334
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      280
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.695   1.061  -0.564
+ATOM      4 H07  ETH     1      -0.611   1.325  -0.807
+ATOM      3 H06  ETH     1      -0.671   1.496  -0.307
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      281
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.748   1.218  -1.501
+ATOM      4 H07  ETH     1      -0.564   1.514  -0.413
+ATOM      3 H06  ETH     1      -1.028   1.256  -0.395
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      282
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.673   1.211  -0.230
+ATOM      4 H07  ETH     1      -0.706   1.258  -0.837
+ATOM      3 H06  ETH     1      -0.583   1.514  -0.387
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      283
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.445   1.414  -1.447
+ATOM      4 H07  ETH     1      -0.644   1.504  -0.326
+ATOM      3 H06  ETH     1      -1.047   1.202  -0.500
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      284
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.645   1.260  -0.148
+ATOM      4 H07  ETH     1      -0.734   1.242  -0.837
+ATOM      3 H06  ETH     1      -0.564   1.514  -0.413
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      285
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.607   1.301  -1.493
+ATOM      4 H07  ETH     1      -0.596   1.513  -0.371
+ATOM      3 H06  ETH     1      -1.042   1.230  -0.439
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      286
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.565   1.366  -0.002
+ATOM      4 H07  ETH     1      -0.792   1.213  -0.829
+ATOM      3 H06  ETH     1      -0.533   1.508  -0.470
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      287
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.636   1.274  -0.127
+ATOM      4 H07  ETH     1      -0.742   1.238  -0.837
+ATOM      3 H06  ETH     1      -0.559   1.514  -0.421
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      288
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.974   1.106  -1.459
+ATOM      4 H07  ETH     1      -0.526   1.505  -0.487
+ATOM      3 H06  ETH     1      -0.992   1.301  -0.334
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      289
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.595   1.330  -0.047
+ATOM      4 H07  ETH     1      -0.773   1.222  -0.833
+ATOM      3 H06  ETH     1      -0.542   1.511  -0.451
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      290
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.652   1.250  -0.165
+ATOM      4 H07  ETH     1      -0.729   1.245  -0.837
+ATOM      3 H06  ETH     1      -0.567   1.514  -0.408
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      291
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.825   1.888   0.238
+ATOM      4 H07  ETH     1      -1.018   1.166  -0.627
+ATOM      3 H06  ETH     1      -0.549   1.384  -0.750
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      292
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.121  -0.409
+ATOM      4 H07  ETH     1      -0.652   1.294  -0.826
+ATOM      3 H06  ETH     1      -0.628   1.507  -0.339
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      293
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.335   2.043  -0.067
+ATOM      4 H07  ETH     1      -1.042   1.228  -0.443
+ATOM      3 H06  ETH     1      -0.685   1.272  -0.834
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      294
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.659   1.237  -0.185
+ATOM      4 H07  ETH     1      -0.722   1.249  -0.838
+ATOM      3 H06  ETH     1      -0.572   1.514  -0.401
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      295
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.091  -0.481
+ATOM      4 H07  ETH     1      -0.632   1.309  -0.818
+ATOM      3 H06  ETH     1      -0.648   1.503  -0.323
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      296
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.594   1.310  -1.491
+ATOM      4 H07  ETH     1      -0.600   1.512  -0.367
+ATOM      3 H06  ETH     1      -1.042   1.228  -0.444
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      297
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.679   1.196  -0.256
+ATOM      4 H07  ETH     1      -0.698   1.264  -0.836
+ATOM      3 H06  ETH     1      -0.589   1.513  -0.379
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      298
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.042   1.077  -1.434
+ATOM      4 H07  ETH     1      -0.518   1.500  -0.511
+ATOM      3 H06  ETH     1      -0.978   1.316  -0.319
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      299
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.730   1.228  -1.502
+ATOM      4 H07  ETH     1      -0.567   1.514  -0.408
+ATOM      3 H06  ETH     1      -1.030   1.252  -0.400
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      300
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.196   2.045  -0.256
+ATOM      4 H07  ETH     1      -1.022   1.266  -0.379
+ATOM      3 H06  ETH     1      -0.751   1.233  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      301
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.496   2.010   0.078
+ATOM      4 H07  ETH     1      -1.046   1.199  -0.508
+ATOM      3 H06  ETH     1      -0.628   1.312  -0.816
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      302
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.054   1.767   0.264
+ATOM      4 H07  ETH     1      -0.975   1.161  -0.700
+ATOM      3 H06  ETH     1      -0.516   1.429  -0.685
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      303
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.736   1.224  -1.501
+ATOM      4 H07  ETH     1      -0.566   1.514  -0.410
+ATOM      3 H06  ETH     1      -1.030   1.254  -0.398
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      304
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.883   1.148  -1.484
+ATOM      4 H07  ETH     1      -0.539   1.510  -0.457
+ATOM      3 H06  ETH     1      -1.009   1.283  -0.357
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      305
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.665   1.227  -0.202
+ATOM      4 H07  ETH     1      -0.716   1.253  -0.837
+ATOM      3 H06  ETH     1      -0.576   1.514  -0.395
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      306
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.860   1.159  -1.488
+ATOM      4 H07  ETH     1      -0.542   1.511  -0.449
+ATOM      3 H06  ETH     1      -1.013   1.278  -0.363
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      307
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.116  -0.421
+ATOM      4 H07  ETH     1      -0.648   1.297  -0.825
+ATOM      3 H06  ETH     1      -0.632   1.507  -0.336
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      308
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.210   2.047  -0.232
+ATOM      4 H07  ETH     1      -1.025   1.261  -0.386
+ATOM      3 H06  ETH     1      -0.743   1.238  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      309
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.358   2.039  -0.042
+ATOM      4 H07  ETH     1      -1.044   1.223  -0.453
+ATOM      3 H06  ETH     1      -0.675   1.278  -0.832
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      310
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.122  -0.407
+ATOM      4 H07  ETH     1      -0.652   1.294  -0.826
+ATOM      3 H06  ETH     1      -0.628   1.507  -0.340
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      311
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.182   1.688   0.248
+ATOM      4 H07  ETH     1      -0.943   1.164  -0.738
+ATOM      3 H06  ETH     1      -0.507   1.453  -0.642
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      312
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.782   1.199  -1.499
+ATOM      4 H07  ETH     1      -0.557   1.513  -0.424
+ATOM      3 H06  ETH     1      -1.024   1.263  -0.384
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      313
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.575   1.322  -1.488
+ATOM      4 H07  ETH     1      -0.605   1.511  -0.362
+ATOM      3 H06  ETH     1      -1.044   1.224  -0.451
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      314
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.341   2.042  -0.061
+ATOM      4 H07  ETH     1      -1.043   1.227  -0.445
+ATOM      3 H06  ETH     1      -0.682   1.273  -0.834
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      315
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.324   2.044  -0.079
+ATOM      4 H07  ETH     1      -1.041   1.230  -0.438
+ATOM      3 H06  ETH     1      -0.689   1.269  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      316
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.845   1.166  -1.491
+ATOM      4 H07  ETH     1      -0.545   1.512  -0.444
+ATOM      3 H06  ETH     1      -1.015   1.275  -0.367
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      317
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.138   1.704  -1.167
+ATOM      4 H07  ETH     1      -0.787   1.448  -0.262
+ATOM      3 H06  ETH     1      -1.004   1.163  -0.655
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      318
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.694   1.157  -0.333
+ATOM      4 H07  ETH     1      -0.674   1.279  -0.832
+ATOM      3 H06  ETH     1      -0.608   1.511  -0.358
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      319
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.575   1.322  -1.488
+ATOM      4 H07  ETH     1      -0.605   1.511  -0.362
+ATOM      3 H06  ETH     1      -1.044   1.224  -0.451
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      320
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.325   1.510  -1.379
+ATOM      4 H07  ETH     1      -0.689   1.490  -0.296
+ATOM      3 H06  ETH     1      -1.041   1.184  -0.551
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      321
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.175   2.042  -0.292
+ATOM      4 H07  ETH     1      -1.016   1.273  -0.369
+ATOM      3 H06  ETH     1      -0.763   1.227  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      322
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.195   2.045  -0.257
+ATOM      4 H07  ETH     1      -1.021   1.266  -0.379
+ATOM      3 H06  ETH     1      -0.751   1.233  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      323
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.192   2.045  -0.261
+ATOM      4 H07  ETH     1      -1.021   1.267  -0.378
+ATOM      3 H06  ETH     1      -0.753   1.232  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      324
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.677   1.202  -0.245
+ATOM      4 H07  ETH     1      -0.701   1.261  -0.836
+ATOM      3 H06  ETH     1      -0.586   1.514  -0.382
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      325
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.686   1.181  -0.285
+ATOM      4 H07  ETH     1      -0.689   1.269  -0.835
+ATOM      3 H06  ETH     1      -0.596   1.513  -0.371
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      326
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.287   2.047  -0.123
+ATOM      4 H07  ETH     1      -1.037   1.239  -0.422
+ATOM      3 H06  ETH     1      -0.705   1.259  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      327
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.755   1.214  -1.501
+ATOM      4 H07  ETH     1      -0.562   1.514  -0.415
+ATOM      3 H06  ETH     1      -1.027   1.257  -0.393
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      328
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.618   1.300  -0.089
+ATOM      4 H07  ETH     1      -0.757   1.230  -0.835
+ATOM      3 H06  ETH     1      -0.551   1.513  -0.435
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      329
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.702   1.097  -0.466
+ATOM      4 H07  ETH     1      -0.636   1.306  -0.820
+ATOM      3 H06  ETH     1      -0.644   1.504  -0.326
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      330
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.116  -0.422
+ATOM      4 H07  ETH     1      -0.648   1.297  -0.825
+ATOM      3 H06  ETH     1      -0.632   1.507  -0.336
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      331
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.286   2.047  -0.125
+ATOM      4 H07  ETH     1      -1.037   1.240  -0.421
+ATOM      3 H06  ETH     1      -0.706   1.259  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      332
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.685   1.254  -1.501
+ATOM      4 H07  ETH     1      -0.577   1.514  -0.394
+ATOM      3 H06  ETH     1      -1.035   1.244  -0.414
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      333
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.275   2.048  -0.138
+ATOM      4 H07  ETH     1      -1.036   1.242  -0.417
+ATOM      3 H06  ETH     1      -0.710   1.256  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      334
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.699   1.075  -0.523
+ATOM      4 H07  ETH     1      -0.621   1.317  -0.813
+ATOM      3 H06  ETH     1      -0.660   1.500  -0.315
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      335
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.213   2.047  -0.227
+ATOM      4 H07  ETH     1      -1.025   1.260  -0.388
+ATOM      3 H06  ETH     1      -0.741   1.238  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      336
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.237   2.048  -0.191
+ATOM      4 H07  ETH     1      -1.030   1.253  -0.399
+ATOM      3 H06  ETH     1      -0.729   1.245  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      337
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.437   2.025   0.031
+ATOM      4 H07  ETH     1      -1.047   1.208  -0.485
+ATOM      3 H06  ETH     1      -0.647   1.298  -0.824
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      338
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.684   1.184  -0.278
+ATOM      4 H07  ETH     1      -0.691   1.268  -0.835
+ATOM      3 H06  ETH     1      -0.595   1.513  -0.373
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      339
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.120  -0.412
+ATOM      4 H07  ETH     1      -0.651   1.295  -0.826
+ATOM      3 H06  ETH     1      -0.629   1.507  -0.339
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      340
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.192   2.045  -0.262
+ATOM      4 H07  ETH     1      -1.021   1.267  -0.378
+ATOM      3 H06  ETH     1      -0.753   1.232  -0.836
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      341
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.607   0.984  -0.874
+ATOM      4 H07  ETH     1      -0.546   1.387  -0.746
+ATOM      3 H06  ETH     1      -0.765   1.459  -0.267
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      342
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.406   2.031   0.003
+ATOM      4 H07  ETH     1      -1.046   1.214  -0.472
+ATOM      3 H06  ETH     1      -0.658   1.290  -0.828
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      343
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.115   2.023  -0.420
+ATOM      4 H07  ETH     1      -0.995   1.299  -0.337
+ATOM      3 H06  ETH     1      -0.804   1.207  -0.825
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      344
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.985   1.101  -1.455
+ATOM      4 H07  ETH     1      -0.524   1.504  -0.491
+ATOM      3 H06  ETH     1      -0.990   1.304  -0.331
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      345
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.209   2.046  -0.234
+ATOM      4 H07  ETH     1      -1.025   1.261  -0.386
+ATOM      3 H06  ETH     1      -0.744   1.237  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      346
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.792   1.194  -1.498
+ATOM      4 H07  ETH     1      -0.555   1.513  -0.427
+ATOM      3 H06  ETH     1      -1.023   1.264  -0.382
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      347
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.651   1.274  -1.499
+ATOM      4 H07  ETH     1      -0.585   1.514  -0.384
+ATOM      3 H06  ETH     1      -1.038   1.238  -0.425
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      348
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.494   1.377  -1.466
+ATOM      4 H07  ETH     1      -0.628   1.507  -0.339
+ATOM      3 H06  ETH     1      -1.046   1.210  -0.480
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      349
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.462   2.019   0.051
+ATOM      4 H07  ETH     1      -1.047   1.204  -0.495
+ATOM      3 H06  ETH     1      -0.639   1.304  -0.821
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      350
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.457   2.020   0.048
+ATOM      4 H07  ETH     1      -1.047   1.205  -0.493
+ATOM      3 H06  ETH     1      -0.640   1.303  -0.822
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      351
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.520   2.003   0.095
+ATOM      4 H07  ETH     1      -1.046   1.195  -0.518
+ATOM      3 H06  ETH     1      -0.620   1.318  -0.813
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      352
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.324   2.044  -0.079
+ATOM      4 H07  ETH     1      -1.041   1.230  -0.438
+ATOM      3 H06  ETH     1      -0.689   1.269  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      353
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.692   1.164  -0.317
+ATOM      4 H07  ETH     1      -0.679   1.276  -0.833
+ATOM      3 H06  ETH     1      -0.604   1.512  -0.362
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      354
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.806   1.187  -1.496
+ATOM      4 H07  ETH     1      -0.552   1.513  -0.432
+ATOM      3 H06  ETH     1      -1.021   1.267  -0.378
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      355
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.258   2.048  -0.161
+ATOM      4 H07  ETH     1      -1.034   1.247  -0.409
+ATOM      3 H06  ETH     1      -0.718   1.251  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      356
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.466   2.018   0.054
+ATOM      4 H07  ETH     1      -1.047   1.203  -0.496
+ATOM      3 H06  ETH     1      -0.637   1.305  -0.821
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      357
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.375   2.037  -0.025
+ATOM      4 H07  ETH     1      -1.045   1.220  -0.460
+ATOM      3 H06  ETH     1      -0.669   1.282  -0.831
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      358
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.376   0.979  -1.207
+ATOM      4 H07  ETH     1      -0.506   1.454  -0.639
+ATOM      3 H06  ETH     1      -0.880   1.394  -0.265
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      359
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.697   1.145  -0.356
+ATOM      4 H07  ETH     1      -0.667   1.284  -0.830
+ATOM      3 H06  ETH     1      -0.615   1.510  -0.352
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      360
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.613   1.307  -0.079
+ATOM      4 H07  ETH     1      -0.760   1.228  -0.835
+ATOM      3 H06  ETH     1      -0.549   1.512  -0.438
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      361
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.626   1.289  -0.104
+ATOM      4 H07  ETH     1      -0.751   1.233  -0.836
+ATOM      3 H06  ETH     1      -0.554   1.513  -0.429
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      362
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.439   1.418  -1.444
+ATOM      4 H07  ETH     1      -0.646   1.503  -0.324
+ATOM      3 H06  ETH     1      -1.047   1.201  -0.502
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      363
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.664   1.015  -0.721
+ATOM      4 H07  ETH     1      -0.575   1.357  -0.780
+ATOM      3 H06  ETH     1      -0.717   1.480  -0.283
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      364
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.121  -0.410
+ATOM      4 H07  ETH     1      -0.651   1.294  -0.826
+ATOM      3 H06  ETH     1      -0.629   1.507  -0.339
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      365
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.453   2.021   0.044
+ATOM      4 H07  ETH     1      -1.047   1.205  -0.491
+ATOM      3 H06  ETH     1      -0.642   1.302  -0.822
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      366
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.106   1.736   0.261
+ATOM      4 H07  ETH     1      -0.963   1.161  -0.716
+ATOM      3 H06  ETH     1      -0.512   1.439  -0.668
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      367
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.245   2.048  -0.179
+ATOM      4 H07  ETH     1      -1.031   1.250  -0.403
+ATOM      3 H06  ETH     1      -0.725   1.248  -0.838
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      368
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.617   1.295  -1.495
+ATOM      4 H07  ETH     1      -0.594   1.513  -0.374
+ATOM      3 H06  ETH     1      -1.041   1.232  -0.436
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      369
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.696   1.148  -0.350
+ATOM      4 H07  ETH     1      -0.669   1.282  -0.831
+ATOM      3 H06  ETH     1      -0.613   1.510  -0.354
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      370
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.376   2.037  -0.025
+ATOM      4 H07  ETH     1      -1.045   1.219  -0.460
+ATOM      3 H06  ETH     1      -0.669   1.282  -0.831
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      371
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.431   2.026   0.026
+ATOM      4 H07  ETH     1      -1.047   1.209  -0.482
+ATOM      3 H06  ETH     1      -0.649   1.296  -0.825
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      372
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.325   2.044  -0.079
+ATOM      4 H07  ETH     1      -1.041   1.230  -0.438
+ATOM      3 H06  ETH     1      -0.689   1.269  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      373
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.117  -0.419
+ATOM      4 H07  ETH     1      -0.649   1.296  -0.825
+ATOM      3 H06  ETH     1      -0.631   1.507  -0.337
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      374
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.702   1.102  -0.453
+ATOM      4 H07  ETH     1      -0.639   1.303  -0.821
+ATOM      3 H06  ETH     1      -0.640   1.505  -0.329
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      375
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.648   1.003  -0.770
+ATOM      4 H07  ETH     1      -0.565   1.366  -0.770
+ATOM      3 H06  ETH     1      -0.732   1.474  -0.277
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      376
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.571   1.325  -1.487
+ATOM      4 H07  ETH     1      -0.606   1.511  -0.360
+ATOM      3 H06  ETH     1      -1.044   1.223  -0.452
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      377
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.365   2.039  -0.036
+ATOM      4 H07  ETH     1      -1.044   1.222  -0.455
+ATOM      3 H06  ETH     1      -0.673   1.280  -0.832
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      378
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.589   1.313  -1.490
+ATOM      4 H07  ETH     1      -0.601   1.512  -0.365
+ATOM      3 H06  ETH     1      -1.043   1.227  -0.446
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      379
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.582   1.984   0.135
+ATOM      4 H07  ETH     1      -1.043   1.187  -0.541
+ATOM      3 H06  ETH     1      -0.603   1.332  -0.802
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      380
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.712   1.238  -1.502
+ATOM      4 H07  ETH     1      -0.571   1.514  -0.402
+ATOM      3 H06  ETH     1      -1.032   1.249  -0.406
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      381
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.654   1.246  -0.170
+ATOM      4 H07  ETH     1      -0.727   1.246  -0.838
+ATOM      3 H06  ETH     1      -0.569   1.514  -0.406
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      382
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.525   1.409   0.048
+ATOM      4 H07  ETH     1      -0.814   1.203  -0.822
+ATOM      3 H06  ETH     1      -0.524   1.504  -0.493
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      383
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.627   1.288  -0.106
+ATOM      4 H07  ETH     1      -0.750   1.234  -0.836
+ATOM      3 H06  ETH     1      -0.554   1.513  -0.428
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      384
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.731   1.227  -1.502
+ATOM      4 H07  ETH     1      -0.567   1.514  -0.408
+ATOM      3 H06  ETH     1      -1.030   1.253  -0.400
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      385
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.413   1.514   0.148
+ATOM      4 H07  ETH     1      -0.865   1.183  -0.798
+ATOM      3 H06  ETH     1      -0.509   1.490  -0.549
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      386
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.479   1.455   0.095
+ATOM      4 H07  ETH     1      -0.837   1.194  -0.813
+ATOM      3 H06  ETH     1      -0.516   1.499  -0.517
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      387
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.116  -0.420
+ATOM      4 H07  ETH     1      -0.649   1.296  -0.825
+ATOM      3 H06  ETH     1      -0.631   1.507  -0.337
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      388
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.746   1.219  -1.501
+ATOM      4 H07  ETH     1      -0.564   1.514  -0.413
+ATOM      3 H06  ETH     1      -1.029   1.256  -0.395
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      389
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.538   1.395   0.032
+ATOM      4 H07  ETH     1      -0.807   1.206  -0.824
+ATOM      3 H06  ETH     1      -0.526   1.506  -0.486
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      390
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.471   2.017   0.059
+ATOM      4 H07  ETH     1      -1.047   1.203  -0.498
+ATOM      3 H06  ETH     1      -0.636   1.306  -0.820
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      391
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.221   2.047  -0.215
+ATOM      4 H07  ETH     1      -1.027   1.258  -0.392
+ATOM      3 H06  ETH     1      -0.737   1.241  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      392
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.317   2.045  -0.088
+ATOM      4 H07  ETH     1      -1.041   1.232  -0.435
+ATOM      3 H06  ETH     1      -0.692   1.267  -0.835
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      393
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.690   1.049  -0.599
+ATOM      4 H07  ETH     1      -0.602   1.332  -0.802
+ATOM      3 H06  ETH     1      -0.681   1.493  -0.301
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      394
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.494   1.378  -1.466
+ATOM      4 H07  ETH     1      -0.629   1.507  -0.339
+ATOM      3 H06  ETH     1      -1.046   1.210  -0.481
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      395
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.651   1.251  -0.163
+ATOM      4 H07  ETH     1      -0.729   1.245  -0.837
+ATOM      3 H06  ETH     1      -0.567   1.514  -0.408
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      396
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -1.701   1.121  -0.409
+ATOM      4 H07  ETH     1      -0.652   1.294  -0.826
+ATOM      3 H06  ETH     1      -0.628   1.507  -0.339
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      397
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.226   2.048  -0.207
+ATOM      4 H07  ETH     1      -1.028   1.256  -0.394
+ATOM      3 H06  ETH     1      -0.734   1.242  -0.837
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      398
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.588   1.314  -1.490
+ATOM      4 H07  ETH     1      -0.601   1.512  -0.365
+ATOM      3 H06  ETH     1      -1.043   1.226  -0.446
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      399
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.887   1.146  -1.483
+ATOM      4 H07  ETH     1      -0.538   1.510  -0.458
+ATOM      3 H06  ETH     1      -1.008   1.283  -0.356
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL
+MODEL      400
+ATOM      2 C05  ETH     1      -0.722   1.244  -0.510
+ATOM      1 C01  ETH     1      -0.047   0.064  -0.025
+ATOM      8 H04  ETH     1      -0.477  -0.829  -0.487
+ATOM      5 H08  ETH     1      -0.721   1.233  -1.502
+ATOM      4 H07  ETH     1      -0.569   1.514  -0.405
+ATOM      3 H06  ETH     1      -1.031   1.251  -0.403
+ATOM      6 H02  ETH     1      -0.157  -0.010   1.059
+ATOM      7 H03  ETH     1       1.017   0.118  -0.275
+TER
+ENDMDL

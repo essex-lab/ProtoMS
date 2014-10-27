@@ -263,7 +263,7 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
-
+    
   Returns
   -------
   numpy array

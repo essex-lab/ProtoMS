@@ -72,7 +72,7 @@ if __name__ == '__main__' :
           print "%-6.3f %12.4f %8.4f"%(lambdas[i],gradients[i],grad_std[i])
         print ""
       if args.printEach or len(args.directories) == 1:        
-        print "TI (%s) : %.3f +- %.3f"%(directory,pmf[-1],np.sqrt(pmf_std[-1]))
+        print "TI (%s) : %.3f +- %.3f"%(directory,pmf[-1],pmf_std[-1])
     if len(all_gradients) == 1 :    
       if args.plotGrad :
         plt.plot(lambdas,all_gradients[0],color='c')
