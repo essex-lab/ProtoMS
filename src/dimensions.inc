@@ -165,7 +165,7 @@ c     the value of a NULL name
       parameter(NULLNAME = "    ")
 c     now the parameters corresponding to the solutes...
       integer MAXSOLUTES
-      parameter(MAXSOLUTES=50)
+      parameter(MAXSOLUTES=60)
       integer MAXSOLUTERESIDUES
       parameter(MAXSOLUTERESIDUES=10)
       integer MAXSOLUTEATOMSPERRESIDUE
