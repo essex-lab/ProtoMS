@@ -841,6 +841,22 @@ if __name__ == "__main__":
   simgroup.add_argument('--cleanup',action='store_true',help="Clean up extra files. Default=False",default=False)
   args = parser.parse_args()
  
+  print r"""
+            __|\
+         .-'    '-.
+        / .--, _ a L
+      .J (  '-' "'--'
+     '-'-.)  .~~~~~~~~~~~~~~~~~~~~.
+             |                    |     __
+             |    Welcome to      | ,.-'e ''-'7
+             |    protoms.py      |  '--.    (
+             |                    |      ),   \
+             '~~~~~~~~~~~~~~~~~~~~'      ` )  :
+                                      ,__.'_.'
+                                      '-, (
+                                        '--'  """
+  print ""
+
   # Setup the logger
   logger = simulationobjects.setup_logger("protoms_py.log")
   logger.debug("Running protoms.py at %s"%time.strftime("%d/%m/%Y - %H:%M:%S"))

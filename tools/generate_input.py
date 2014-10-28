@@ -332,7 +332,7 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     self.setForceField("$PROTOMSHOME/parameter/amber99.ff")
     self.setForceField("$PROTOMSHOME/parameter/solvents.ff")
     self.setForceField("$PROTOMSHOME/parameter/amber99-residues.ff")
-    self.setForceField("$PROTOMSHOME/parameter/gaff.ff")
+    self.setForceField("$PROTOMSHOME/parameter/gaff14.ff")
     if templates is not None and templates :
       for tem in templates :
         self.setForceField(tem)
