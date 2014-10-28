@@ -220,14 +220,14 @@ def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
   numpy array
     the coefictients of the fit
   """
-
-  pl.plot(lambdas,pmf,label="PMF",linewidth=2)
+  thetas = 1-lambdas
+  pl.plot(thetas,pmf,label="PMF",linewidth=2)
   pl.savefig("initial.png")
 
   for order in range(orderfit,upperfit) :
-    fit = np.poly1d(np.polyfit(lambdas,pmf,order))
-    pmfpred = np.array([fit(xval) for xval in lambdas])
-    pl.plot(lambdas,pmfpred)
+    fit = np.poly1d(np.polyfit(thetas,pmf,order))
+    pmfpred = np.array([fit(xval) for xval in thetas])
+    pl.plot(thetas,pmfpred)
     ydiff = np.absolute(pmfpred - pmf)
     r = np.corrcoef(pmf,pmfpred)
     r2 = np.square(r)
@@ -263,7 +263,7 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
-    
+
   Returns
   -------
   numpy array
