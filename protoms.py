@@ -884,7 +884,7 @@ if __name__ == "__main__":
   if args.waterbox is None :
     args.waterbox = simulationobjects.standard_filename("wbox_"+args.watmodel.lower()+".pdb","data")
   if not os.path.isfile(args.waterbox) : 
-    msg = "Could not find file (%s) with pre-equilibrated waters"%waterbox
+    msg = "Could not find file (%s) with pre-equilibrated waters"%args.waterbox
     logger.error(msg)
     raise simulationobjects.SetupError(msg)
 
