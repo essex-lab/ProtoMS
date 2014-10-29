@@ -1,0 +1,25 @@
+HETATM    1  C1  DCB A 400      25.976   5.310   4.765  1.00 20.05           C
+HETATM    2  C2  DCB A 400      26.400   5.043   3.464  1.00 21.25           C
+HETATM    3  C3  DCB A 400      27.349   5.863   2.855  1.00 26.80           C
+HETATM    4  C4  DCB A 400      27.877   6.952   3.547  1.00 21.02           C
+HETATM    5  C5  DCB A 400      27.454   7.220   4.849  1.00 25.56           C
+HETATM    6  C6  DCB A 400      26.504   6.402   5.460  1.00 26.48           C
+HETATM    7 CL1  DCB A 400      24.795   4.270   5.490  1.00  0.00          Cl
+HETATM    8  H2  DCB A 400      25.986   4.193   2.926  1.00  0.00           H
+HETATM    9  H3  DCB A 400      27.678   5.653   1.839  1.00  0.00           H
+HETATM   10  H4  DCB A 400      28.618   7.592   3.073  1.00  0.00           H
+HETATM   11  H5  DCB A 400      27.864   8.069   5.392  1.00  0.00           H
+HETATM   12 CL6  DCB A 400      26.003   6.765   7.078  1.00  0.00          Cl
+CONECT    1    2    6    7
+CONECT    2    1    3    8
+CONECT    3    2    4    9
+CONECT    4    3    5   10
+CONECT    5    4   11    6
+CONECT    6    1    5   12
+CONECT    7    1
+CONECT   12    6
+CONECT    8    2
+CONECT    9    3
+CONECT   10    4
+CONECT   11    5
+END
