@@ -160,8 +160,11 @@ c     Re-setting all running averages
 
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
       write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
-      do i=1,nOpenFiles    
+      do i=1,nOpenFiles            
         fileappend(i) = .True.
+        if (i.eq.streamhandle(RESTART)-40) then
+          fileappend(i) = .False.
+        endif
         fileopened(i) = .False.
         call split2(openfiles(i),"/")
         tempstr2 = words2(nwords2-1)

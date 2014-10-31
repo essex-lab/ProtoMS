@@ -15,8 +15,7 @@ c################################################################
       integer lgth,lineLength,FILE,opfile
 
 c     get the file that this stream is connected to
-      FILE = streamhandle(stream)
-      
+      FILE = streamhandle(stream)      
 c     don't output the line if this stream is not connected to a file
       if (FILE.lt.0) return
       

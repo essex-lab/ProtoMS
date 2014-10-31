@@ -14,9 +14,10 @@
 
       logical getLogical,printdummies,showhidden,printstd,append,newfile,getoption
       double precision printsolvent,getDouble,lb,lf,lambda
-      integer lgth,j,iprnt,ilgth,lineLength,openFILE,getint
+      integer lgth,j,iprnt,ilgth,lineLength,openFILE,getint,i
       integer numb
       character*64 line,tempstring
+      character*600 tempname,cmd
 
       
       call split(line)
@@ -186,17 +187,26 @@ c                   enddo
             else if (words(2).eq.'write') then
               if (nwords.ge.3) then
 c               redirect the stream to 'filename'
+                if (numb.gt.1) then
+                  do i=1,nOpenFiles
+                    if (i.eq.(streamhandle(RESTART)-40)) then
+                      tempname=openfiles(i)(1:lineLength(openfiles(i)))//".prev"
+                      write(cmd,"(4A)")"mv ",openfiles(i)(1:lineLength(openfiles(i)))," ",tempname(1:lineLength(tempname))
+                      call system(cmd)
+                      fileopened(i)=.false. 
+                    endif
+                  enddo         
+                endif
                 ilgth = lineLength(words(3))
                 streamhandle(RESTART) = openFile(words(3)(1:ilgth))
 c               restart files will never be appended
                 fileappend(streamhandle(RESTART)-40) = .FALSE.
               endif
-              
               if (numb.le.1) call prettyLine(INFO,"Writing restart file")
-              if (numb.ne.0) then
-                write(tempstring,"(A,I4)")"RESTART FILE ",numb
-                call prettyline(RESTART, tempstring)
-              endif  
+c              if (numb.ne.0) then
+c                write(tempstring,"(A,I4)")"RESTART FILE ",numb
+c                call prettyline(RESTART, tempstring)
+c              endif  
               call writeRestart()
             else
               call printLine(WARNING,"Cannot interpret restart line")

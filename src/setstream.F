@@ -35,6 +35,8 @@ c         ensure that the FATAL and WARNING streams are always on
             if (i.eq.FATAL .or. i.eq.WARNING) then
               streamhandle(i) = STDERR
             endif
+          else
+            fileappend(streamhandle(i)-40) = (.not.(i.eq.RESTART))
           endif
           return
         endif
