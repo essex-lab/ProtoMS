@@ -17,6 +17,9 @@ import os
 import logging
 
 import numpy as np
+import matplotlib
+if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
+  matplotlib.use('Agg') 
 import matplotlib.pylab as plt
 
 import simulationobjects

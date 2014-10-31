@@ -17,6 +17,9 @@ import glob
 import os
 import logging
 
+import matplotlib
+if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
+  matplotlib.use('Agg') 
 import matplotlib.pyplot as pl
 import numpy as np
 

@@ -25,6 +25,9 @@ import os
 import logging
 
 import numpy as np
+import matplotlib
+if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
+  matplotlib.use('Agg') 
 import matplotlib.pylab as plt
 from scipy.stats import spearmanr
 from scipy.stats import kendalltau
@@ -441,7 +444,7 @@ def plot_series(ys,yprop,labels,offset,plotkind,outprefix) :
 
   ys = np.array(ys)
   x = np.arange(1,ys.shape[1]+1)+offset
-  
+
   # Subtract either first or last point from each series
   if plotkind.startswith("single_") :
     for i in range(ys.shape[0]) :
@@ -490,9 +493,10 @@ def plot_series(ys,yprop,labels,offset,plotkind,outprefix) :
   
   if plotkind != "sep" :
     currfig.savefig(outprefix+".png",format="png")
-    currfig.show()
-    print "\nType enter to quit\n>",
-    raw_input()
+    if "DISPLAY" in os.environ and os.environ["DISPLAY"] != "" : 
+      currfig.show()
+      print "\nType enter to quit\n>",
+      raw_input()
 
 def write_series(ys,yprop,labels,offset,filekind,outprefix) :
   """
