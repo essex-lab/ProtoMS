@@ -385,7 +385,7 @@ writeDX</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.calc_density.calc_density">
-<tt class="descclassname">tools.calc_density.</tt><tt class="descname">calc_density</tt><big>(</big><em>pdbfiles</em>, <em>residue</em>, <em>atom</em>, <em>padding=2.0</em>, <em>extent=1.0</em>, <em>spacing=0.5</em>, <em>norm=None</em>, <em>smoothing='sphere'</em><big>)</big><a class="headerlink" href="#tools.calc_density.calc_density" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.calc_density.</tt><tt class="descname">calc_density</tt><big>(</big><em>pdbfiles</em>, <em>molname</em>, <em>atomname</em>, <em>padding=2.0</em>, <em>extent=1.0</em>, <em>spacing=0.5</em>, <em>norm=None</em>, <em>smoothing='sphere'</em><big>)</big><a class="headerlink" href="#tools.calc_density.calc_density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the density from a set of PDB files</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -514,6 +514,49 @@ but paths are only made for the replicas with these labels</p>
 <p>list</p>
 <blockquote class="last">
 <div><p>list of the labels for all input files</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tools.calc_rmsd">
+<span id="tools-calc-rmsd-module"></span><h2>tools.calc_rmsd module<a class="headerlink" href="#module-tools.calc_rmsd" title="Permalink to this headline">¶</a></h2>
+<p>Routine to calculate the RMSD of the center of a ligand</p>
+<p>This module defines a these public functions:
+calc_rmsd</p>
+<p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.calc_rmsd.calc_rmsd">
+<tt class="descclassname">tools.calc_rmsd.</tt><tt class="descname">calc_rmsd</tt><big>(</big><em>ref</em>, <em>structures</em>, <em>resname</em>, <em>atomname=None</em><big>)</big><a class="headerlink" href="#tools.calc_rmsd.calc_rmsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate RMSD of ligand centre or a specific atom</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ref</strong> : PDBFile object</p>
+<blockquote>
+<div><p>the reference structure</p>
+</div></blockquote>
+<p><strong>structures</strong> : PDBSet object</p>
+<blockquote>
+<div><p>the trajectory to analyze</p>
+</div></blockquote>
+<p><strong>resname</strong> : string</p>
+<blockquote>
+<div><p>the residue name of the ligand to analyze</p>
+</div></blockquote>
+<p><strong>atomname</strong> : string, optional</p>
+<blockquote>
+<div><p>the atom name to analyze, if not set will analyze geometric centre</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float :</p>
+<blockquote class="last">
+<div><p>the RMSD in Angstroms</p>
 </div></blockquote>
 </td>
 </tr>
@@ -854,6 +897,39 @@ over all input files</p>
 <p>This module defines a single public function:
 ti</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.calc_ti.fit_pmf">
+<tt class="descclassname">tools.calc_ti.</tt><tt class="descname">fit_pmf</tt><big>(</big><em>lambdas</em>, <em>pmf</em>, <em>orderfit=4</em>, <em>upperfit=5</em>, <em>plotfile='fit.png'</em><big>)</big><a class="headerlink" href="#tools.calc_ti.fit_pmf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the PMF to a polynomial function
+Parameters
+&#8212;&#8212;&#8212;-
+lambdas : list</p>
+<blockquote>
+<div>list of lambda values</div></blockquote>
+<dl class="docutils">
+<dt>pmf <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>list of pmf values for each lambda</dd>
+<dt>orderfit <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>the order of the polynomial to fit your pmf to</dd>
+<dt>upperfit <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>the maximum order of the polynomial to fit to</dd>
+<dt>plotfile <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
+<dd>the name of the file where to plot of the fit</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy array</p>
+<blockquote class="last">
+<div><p>the coefictients of the fit</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="function">
 <dt id="tools.calc_ti.ti">
 <tt class="descclassname">tools.calc_ti.</tt><tt class="descname">ti</tt><big>(</big><em>path</em>, <em>res_tem</em>, <em>skip</em>, <em>maxread</em>, <em>verbose</em>, <em>numkind</em>, <em>useanalytical</em><big>)</big><a class="headerlink" href="#tools.calc_ti.ti" title="Permalink to this definition">¶</a></dt>
@@ -1298,7 +1374,7 @@ the atoms in the residue</p>
 
 <dl class="function">
 <dt id="tools.distribute_waters.distribute_particles">
-<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">distribute_particles</tt><big>(</big><em>box</em>, <em>particles</em>, <em>watermodel='t4p'</em>, <em>out='ghostmolecules.pdb'</em>, <em>resname='WAT'</em>, <em>partnumb=None</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.distribute_particles" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.distribute_waters.</tt><tt class="descname">distribute_particles</tt><big>(</big><em>box</em>, <em>particles</em>, <em>watermodel='t4p'</em>, <em>resname='WAT'</em>, <em>partnumb=None</em><big>)</big><a class="headerlink" href="#tools.distribute_waters.distribute_particles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomly distribute molecules in a box</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1321,10 +1397,6 @@ to include in the box</p>
 either &#8220;t4p&#8221; or &#8220;t3p&#8221;
 the water model for the generated waters</p>
 </div></blockquote>
-<p><strong>out</strong> : string, optional</p>
-<blockquote>
-<div><p>the name of the pdb file to write the molecules to</p>
-</div></blockquote>
 <p><strong>partnumb</strong> : string,optional</p>
 <blockquote>
 <div><p>(only used when particles is a file)
@@ -1333,9 +1405,9 @@ to be as many as there are in the file</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">string</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">pdb object</p>
 <blockquote class="last">
-<div><p>the pdb file name of the file with the molecules
+<div><p>the pdb object with the molecules
 distributed randomly in the box</p>
 </div></blockquote>
 </td>
@@ -2186,8 +2258,12 @@ ligands contains at least one valid filename a ligand simulation is setup.</p>
 <div><p>the command file for the ligand simulation</p>
 </div></blockquote>
 <p><strong>bnd_cmd</strong> : ProtoMSSimulation</p>
-<blockquote class="last">
+<blockquote>
 <div><p>the command file for the protein simulation</p>
+</div></blockquote>
+<p><strong>gas_cmd</strong> : ProtoMSSimulation</p>
+<blockquote class="last">
+<div><p>the command file for the gas simulation</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2306,6 +2382,10 @@ summarize</p>
 <p>TemplateFile</p>
 <blockquote>
 <div><p>a template file for the van der Waals leg</p>
+</div></blockquote>
+<p>TemplateFile</p>
+<blockquote>
+<div><p>a template file for a combined transformation</p>
 </div></blockquote>
 <p>dictionary of strings</p>
 <blockquote>
@@ -2902,6 +2982,95 @@ or end of file</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="tools.simulationobjects.MyArgumentParser">
+<em class="property">class </em><tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">MyArgumentParser</tt><big>(</big><em>prog=None</em>, <em>usage=None</em>, <em>description=None</em>, <em>epilog=None</em>, <em>version=None</em>, <em>parents=</em>, <span class="optional">[</span><span class="optional">]</span><em>formatter_class=&lt;class 'argparse.HelpFormatter'&gt;</em>, <em>prefix_chars='-'</em>, <em>fromfile_prefix_chars=None</em>, <em>argument_default=None</em>, <em>conflict_handler='error'</em>, <em>add_help=True</em>, <em>add_fullhelp=True</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.MyArgumentParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></tt></p>
+<p>Extention to ArgumentParser to allow separation of of help in to 
+help for most common options and full help that list all arguments</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_argument</span></tt>(dest,&nbsp;...[,&nbsp;name,&nbsp;name])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_argument_group</span></tt>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_mutually_exclusive_group</span></tt>(**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_subparsers</span></tt>(**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">convert_arg_line_to_args</span></tt>(arg_line)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">error</span></tt>(message:&nbsp;string)</td>
+<td>Prints a usage message incorporating the message to stderr and exits.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">exit</span></tt>([status,&nbsp;message])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.MyArgumentParser.format_help" title="tools.simulationobjects.MyArgumentParser.format_help"><tt class="xref py py-obj docutils literal"><span class="pre">format_help</span></tt></a>([fullhelp])</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">format_usage</span></tt>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">format_version</span></tt>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_default</span></tt>(dest)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">parse_args</span></tt>([args,&nbsp;namespace])</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">parse_known_args</span></tt>([args,&nbsp;namespace])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.MyArgumentParser.print_fullhelp" title="tools.simulationobjects.MyArgumentParser.print_fullhelp"><tt class="xref py py-obj docutils literal"><span class="pre">print_fullhelp</span></tt></a>([file])</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.MyArgumentParser.print_help" title="tools.simulationobjects.MyArgumentParser.print_help"><tt class="xref py py-obj docutils literal"><span class="pre">print_help</span></tt></a>([file])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">print_usage</span></tt>([file])</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">print_version</span></tt>([file])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">register</span></tt>(registry_name,&nbsp;value,&nbsp;object)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">set_defaults</span></tt>(**kwargs)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.simulationobjects.MyArgumentParser.format_help">
+<tt class="descname">format_help</tt><big>(</big><em>fullhelp=False</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.MyArgumentParser.format_help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.simulationobjects.MyArgumentParser.print_fullhelp">
+<tt class="descname">print_fullhelp</tt><big>(</big><em>file=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.MyArgumentParser.print_fullhelp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.simulationobjects.MyArgumentParser.print_help">
+<tt class="descname">print_help</tt><big>(</big><em>file=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.MyArgumentParser.print_help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="tools.simulationobjects.PDBFile">
 <em class="property">class </em><tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">PDBFile</tt><big>(</big><em>filename=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for holding the atoms and residues of a PDB file</p>
@@ -2948,7 +3117,7 @@ or end of file</p>
 <tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read" title="tools.simulationobjects.PDBFile.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
 <td>Read a pdb-file from disc</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read_from" title="tools.simulationobjects.PDBFile.read_from"><tt class="xref py py-obj docutils literal"><span class="pre">read_from</span></tt></a>(f)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read_from" title="tools.simulationobjects.PDBFile.read_from"><tt class="xref py py-obj docutils literal"><span class="pre">read_from</span></tt></a>(f[,&nbsp;resname])</td>
 <td>Read a pdb structure from a fileobject</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filename[,&nbsp;renumber,&nbsp;header,&nbsp;solvents])</td>
@@ -3042,7 +3211,7 @@ not the Residue and Atom objects themselves</p>
 
 <dl class="method">
 <dt id="tools.simulationobjects.PDBFile.read_from">
-<tt class="descname">read_from</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.read_from" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">read_from</tt><big>(</big><em>f</em>, <em>resname=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBFile.read_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a pdb structure from a fileobject</p>
 <p>Terminates reading when found a record starting with END</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -3050,8 +3219,12 @@ not the Residue and Atom objects themselves</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>f</strong> : file object</p>
-<blockquote class="last">
+<blockquote>
 <div><p>the object to read from</p>
+</div></blockquote>
+<p><strong>resname</strong> : string, optional</p>
+<blockquote class="last">
+<div><p>the name of the residue to read, only read this</p>
 </div></blockquote>
 </td>
 </tr>
@@ -3117,7 +3290,7 @@ not the Residue and Atom objects themselves</p>
 <tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.from_residues" title="tools.simulationobjects.PDBSet.from_residues"><tt class="xref py py-obj docutils literal"><span class="pre">from_residues</span></tt></a>(pdbfile)</td>
 <td>Split a PDB file into a set by residue</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.read" title="tools.simulationobjects.PDBSet.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.read" title="tools.simulationobjects.PDBSet.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename[,&nbsp;resname])</td>
 <td>Read a set of pdb structures from a file</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBSet.write" title="tools.simulationobjects.PDBSet.write"><tt class="xref py py-obj docutils literal"><span class="pre">write</span></tt></a>(filenames[,&nbsp;solvents])</td>
@@ -3145,15 +3318,19 @@ not the Residue and Atom objects themselves</p>
 
 <dl class="method">
 <dt id="tools.simulationobjects.PDBSet.read">
-<tt class="descname">read</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBSet.read" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">read</tt><big>(</big><em>filename</em>, <em>resname=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.PDBSet.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a set of pdb structures from a file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string</p>
-<blockquote class="last">
+<blockquote>
 <div><p>the name of the file to read</p>
+</div></blockquote>
+<p><strong>resname</strong> : string, optional</p>
+<blockquote class="last">
+<div><p>the name of the residue to read, only read this</p>
 </div></blockquote>
 </td>
 </tr>
@@ -4141,7 +4318,7 @@ solvate</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.solvate.solvate">
-<tt class="descclassname">tools.solvate.</tt><tt class="descname">solvate</tt><big>(</big><em>box</em>, <em>ligand=None</em>, <em>protein=None</em>, <em>geometry='box'</em>, <em>padding=10.0</em>, <em>radius=30.0</em>, <em>center='cent'</em>, <em>namescheme='ProtoMS'</em><big>)</big><a class="headerlink" href="#tools.solvate.solvate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.solvate.</tt><tt class="descname">solvate</tt><big>(</big><em>box</em>, <em>ligand=None</em>, <em>protein=None</em>, <em>geometry='box'</em>, <em>padding=10.0</em>, <em>radius=30.0</em>, <em>center='cent'</em>, <em>namescheme='ProtoMS'</em>, <em>offset=0.89</em><big>)</big><a class="headerlink" href="#tools.solvate.solvate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to solvate ligand and/or protein structures using a pre-equilibrated box of waters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -4269,6 +4446,7 @@ split_water</p>
 <li><a class="reference internal" href="#module-tools.calc_density">tools.calc_density module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_dg">tools.calc_dg module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_replicapath">tools.calc_replicapath module</a></li>
+<li><a class="reference internal" href="#module-tools.calc_rmsd">tools.calc_rmsd module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_series">tools.calc_series module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_ti">tools.calc_ti module</a></li>
 <li><a class="reference internal" href="#module-tools.clear_gcmcbox">tools.clear_gcmcbox module</a></li>

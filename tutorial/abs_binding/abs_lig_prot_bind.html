@@ -1,7 +1,8 @@
 <HTML>
-<HEADER>
+<HEAD>
 <TITLE>Binding free energy of benzene to T4 lysozyme</TITLE>
-</HEADER>
+<link href="../style.css" rel="stylesheet" type="text/css">
+</HEAD>
 <BODY>
 <H1>Binding free energy of benzene to T4 lysozyme</H1>
 In this tutorial, you will setup, run and analyse the calculation of the binding free energy of benzene to the protein T4 lysozyne.
@@ -17,7 +18,7 @@ Both the benzene and protein needs to be prepared before they are used with Prot
 <h5>Setup</h5>
 The simplest way to setup the simulation is by typing the following
 <p>
-<code>$PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute</code>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute</pre>
 <p>
 this sets up one simulation for the bound leg and one for the free leg of the double-decoupling free energy cycle.<p> The simulations will run 5 m equilibration steps and 50 m production steps for each of the 16 &lambda;-values. Output will be printed to files every 100 k moves and Hamiltonian replica-exchanges between neighbouring &lambda;-values will be attempted every 200 k moves.  
 <p>
@@ -33,11 +34,10 @@ vmd -m benzene.pdb benzene_dummy.pdb protein.pdb water.pdb
 <p> 
 <h5>Execution</h5>
 To run the bound and free legs of the simulation you need to execute
-<p>
-<code>mpirun -np 16 $PROTOMSHOME/protoms3 run_bnd.cmd</code>
-<br>
-<code>mpirun -np 16 $PROTOMSHOME/protoms3 run_free.cmd</code>
-<p>
+<pre>
+mpirun -np 16 $PROTOMSHOME/protoms3 run_bnd.cmd
+mpirun -np 16 $PROTOMSHOME/protoms3 run_free.cmd
+</pre>
 This is most conveniently done on a computer cluster. The calculations will take approximately 24 h to complete.
 <p>
 <h5>Analysis</h5>
@@ -85,21 +85,20 @@ There are two arguments that you can invoke to run a longer simulation
 	<li><code>--nprod</code> - this controls the number of production steps</li>
 </ul>  
 by typing for instance
-<p>
-<code>$PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute --nequil 10E6 --nprod 50E6</code>
-<p>
+<pre>
+python2.7 $PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute --nequil 10E6 --nprod 50E6
+</pre>
 you will run 10 m equiliration steps and 50 m production steps (instead of the 5 m and 40 m that is default)
 <p>
 <h5>Running with more &lambda;-values</h5>
 The argument that controls the number of &lambda;-values is called <code>--lambdas</code>.
 <p>
 by typing for instance
-<p>
-<code>$PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute --lambdas 24</code>
-<p> 
+<pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute --lambdas 24</pre>
+
 you will initiate 24 &lambda;-values rather than default 16. You can also give individual &lambda;-values to the argument. For instance
 <p>
-<code>$PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute --lambdas 0.000 0.033 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 0.967 1.000</code>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute --lambdas 0.000 0.033 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 0.967 1.000</pre>
 <p> 
 will add two new &lambda;-values at 0.033 and 0.967 to the 16 created by default.
 <p>
@@ -107,10 +106,30 @@ will add two new &lambda;-values at 0.033 and 0.967 to the 16 created by default
 Usually it is wise to run several indepent repeats of your calculation to check for convergence and to obtain a good estimate of the statistical uncertainty. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
 <p>
 by typing for instance
-<p>
-<code>$PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute -r 5</code>
-<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute -r 5</pre>
 you will create 5 input files for the bound leg and 5 input files for the free leg. Therefore, you also need to execute ProtoMS 10 times with the different input files. The output will be in 10 different folders, e.g. <code>out1_bnd</code> and <code>out2_bnd</code>.
+<p>
+</p>
+<h5><a name="restraint">Optimizing the harmonic restraint</a></h5>
+The harmonic restraint added by <code>protoms.py</code> is by default 1 kcal/mol/A<sup>2</sup>. It can sometimes be necessary to optimize it so that the free energy is not affected by the magnitude of the restraint. This can be done by running a short unrestrained simulation and estimate the force constant from the root mean square deviation by applying the equipartition theorem. 
+<p>To setup the short unrestrained simulation, first make a separate folder for the simulation. Then you can type</p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s sampling -p protein.pdb -l benzene.pdb --nprod 500E3 --nequil 0 --dumpfreq 1E3
+
+$PROTOMSHOME/protoms3 run_bnd.cmd
+</pre> 
+this 50 k simulation should only take about five minutes to execute. The simulation output can be found in <code>out_bnd</code>. 
+<p>To calculate the RMSD and estimate an appropriate force constant, type
+</p>
+<pre>python2.7 $PROTOMSHOME/tools/calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -l BNZ -a C4
+</pre>
+where <code>BNZ</code> is the residue name of the ligand, and <code>C4</code> is the atom the restraint is applied to. The output should be something like this.  
+<pre>The RMSD of the atom c4 is 0.898 A
+
+This corresponds to a spring constant of 2.205 kcal/mol/A2
+(to use this as an harmonic restraint in ProtoMS, specify 1.102)
+
+</pre>
+and we can see that the default force constant is appropriate. The force consant is estimated from <i>k</i> = 3 <i>RT</i> / &lt;RMSD<sup>2</sup>&gt;, where <i>R</i> and <i>T</i> are the gas constant and the absolute temperature, respectively. Notice that in the ProtoMS input you specify 1/2<i>k</i> rather than <i>k</i>.
 <p>
 <hr align="center"/>
 <p> 
@@ -140,29 +159,29 @@ You can read more about the setup of proteins here.
 </ul>
 You can read more about the input files in the ProtoMS manual. However, some sections of it is worth mentioning here
 <p>
-<code>
-dualtopology1 1 2 synctrans syncrot<br>
-softcore1 solute 1<br>
-softcore2 solute 2<br>
-softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 6 soft66 <br>
-</code>
+<pre>
+dualtopology1 1 2 synctrans syncrot
+softcore1 solute 1
+softcore2 solute 2
+softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 6 soft66
+</pre>
 <br>
 this section, which exist in both input files setup the dual topology simulation with appropriate soft-core parameters. It could be worth trying to optimize the soft-core parameters if your simulation is not performing well. 
 <p>  
-<code>
-lambdare 200000 0.000 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 1.000<br>
-</code>
+<pre>
+lambdare 200000 0.000 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 1.000
+</pre>
 <br>
 this section, which exists in both input file setup the &lambda;-replica exchange. You can add more &lambda;-values manually if there are regions where the simulation is not performing well.
 <p>
-<code>
-chunk id add 1 solute 1 C4 BNZ<br>
-chunk restraint add 1 cartesian harmonic 27.837 6.921 3.569 10<br>
-chunk id add 2 solute 2 C1 DDD<br>
-chunk restraint add 2 cartesian harmonic 26.911 6.126 4.178 10<br>
-</code> 
+<pre>
+chunk id add 1 solute 1 C4 BNZ
+chunk restraint add 1 cartesian harmonic 27.837 6.921 3.569 1
+chunk id add 2 solute 2 C1 DDD
+chunk restraint add 2 cartesian harmonic 26.911 6.126 4.178 1
+</pre> 
 <br>
-this section, which is unique for the bound-leg simulation, restrains the benzene and the dummy particle to the binding site with harmonic restraints. It could be worth trying to optimize the weight of the restraint or try another type of restraint if your simulation is not performing well.
+this section, which is unique for the bound-leg simulation, restrains the benzene and the dummy particle to the binding site with harmonic restraints. It could be worth trying to optimize the weight of the restraint or try another type of restraint if your simulation is not performing well. This is discussed <a href="#restraint">here</a>.
 <p>
 <hr align="center"/>
 <p> 
@@ -173,35 +192,35 @@ We will start setting up the free-leg simulation. However, it should be noted th
 <p>
 <li>First we need to make sure that the very first line of the <code>benzene.pdb</code> contains a directive, telling ProtoMS the name of the solute. The line should read <code>HEADER BNZ</code> and can be added by typing
 <p>
-<code>sed -i "1iHEADER BNZ" benzene.pdb</code>
+<pre>sed -i "1iHEADER BNZ" benzene.pdb</pre>
 <p>
 <li>Thereafter, we will create the force field for the benzene molecule using AmberTools. The force field will be GAFF with AM1-BCC charge. Type
 <p>
-<code>$PROTOMSHOME/tools/ambertools.py -f benzene.pdb -n BNZ</code>
+<pre>python2.7 $PROTOMSHOME/tools/ambertools.py -f benzene.pdb -n BNZ</pre>
 <P>
 and this will execute the AmberTools programs <code>antechamber</code> and <code>parmchk</code>, creating the files <code>benzene.prepi</code> and <code>benzene.frcmod</code>, respectively. 
 <p>
 <li>These files are in Amber format and in order to use them in ProtoMS we need to reformat them into a ProtoMS template file. This file will also contain a z-matrix that describes how benzene will be sampled during the simulation. To do this, you can type
 <p>
-<code>$PROTOMSHOME/tools/build_template.py -p benzene.prepi -f benzene.frcmod -o benzene.tem -n BNZ</code>
+<pre>python2.7 $PROTOMSHOME/tools/build_template.py -p benzene.prepi -f benzene.frcmod -o benzene.tem -n BNZ</pre>
 <p>
 this will creates the files <code>benzene.tem</code> containing the ProtoMS template file and <code>benzene.zmat</code>. It is a good idea to check this files to see if the script has defined the molecule properly.
 <p>
 <li>The next thing we will do is to solvate the benzene molecule in a box of TIP4P water molecules. Type
 <p>
-<code>$PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -o benzene_box.pdb</code>
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -o benzene_box.pdb</pre>
 <p> 
 this will solvate benzene using standard settings, i.e. it will be 10 A between the solute and the edge of the box. A pre-equilibrated box of TIP4P water molecules located in <code>$PROTOMSHOME/data/</code> is used. The box is written to the file <code>benzene_box.pdb</code>.
 <p> 
 <li>Now we have setup benzene, but to complete the setup we need the dummy particle that benzene will be perturbed into. This is created by typing
 <p> 
-<code>$PROTOMSHOME/tools/make_dummy.py -f benzene.pdb -o benzene_dummy.pdb</code>
+<pre>python2.7 $PROTOMSHOME/tools/make_dummy.py -f benzene.pdb -o benzene_dummy.pdb</pre>
 <p> 
 creating <code>benzene_dummy.pdb that contains the particle.</code>
 <p>
 <li>Finally, we need to combine the template file of benzene with the template file of the dummy particle. Type
 <p> 
-<code>$PROTOMSHOME/tools/merge_templates.py -f benzene.tem $PROTOMSHOME/data/dummy.tem -o bnz-dummy.tem</code>
+<pre>python2.7 $PROTOMSHOME/tools/merge_templates.py -f benzene.tem $PROTOMSHOME/data/dummy.tem -o bnz-dummy.tem</pre>
 <p> 
 creating <code>bnz-dummy.tem</code>. The template file of the dummy particle is located in <code>$PROTOMSHOME/data/</code>.
 <p>
@@ -209,36 +228,36 @@ Now we have all the files to run the free-leg of the simulation. The input file 
 <h5>Setting up the bound leg</h5>
 <li>First, we will change the name of atom and residue names in the protein PDB-file such that they agree with the ProtoMS naming convention. Type
 <p> 
-<code>$PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -o protein_pms.pdb -s amber -c $PROTOMSHOME/data/atomnamesmap.dat</code>
+<pre>python2.7 $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -o protein_pms.pdb -s amber -c $PROTOMSHOME/data/atomnamesmap.dat</pre>
 <p> 
 The converted structure will be in <code>protein_pms.pdb</code>. This execution assumes that the Amber naming convention is used in <code>protein.pdb</code>. 
 <p> 
 <li>We have crystallographic water in the protein structure and we need to convert them to the water model we will be using in the simulation (TIP4P). This can be done by 
 <p> 
-<code>python2.7 $PROTOMSHOME/tools/convertwater.py -p protein_pms.pdb -o protein_pms_t4p.pdb</code>
+<pre>python2.7 $PROTOMSHOME/tools/convertwater.py -p protein_pms.pdb -o protein_pms_t4p.pdb</pre>
 <p>
 creating <code>protein_pms_t4p.pdb</code>. 
 <p>
 <li>Next step is to truncate to protein, creating a scoop. This will enable us to solvate the protein is a droplet and thereby reducing the number of simulated particles. The command is
 <p>
-<code>$PROTOMSHOME/tools/scoop.py -p protein_pms_t4p.pdb -l benzene.pdb -o protein_scoop.pdb</code> 
+<pre>python2.7 $PROTOMSHOME/tools/scoop.py -p protein_pms_t4p.pdb -l benzene.pdb -o protein_scoop.pdb</pre> 
 <p> 
 The protein scoop is centred on the benzene molecule and all residue further than 20 A are cut-away. The scoop is written to <code>protein_scoop.pdb</code>
 <p>
 <li>As a final step, we will solvate the protein and ligand in a droplet of TIP4P water molecules. To this, type:
 <p> 
-<code>$PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -pr protein_scoop.pdb -o water.pdb -g droplet</code> 
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -pr protein_scoop.pdb -o water.pdb -g droplet</pre> 
 <p>
 this will create a droplet with 30 A radius centred on the benzene molecule. The droplet is written to <code>water.pdb</code>
 <p> 
 <li> The <code>solvate.py</code> script adds the crystallographic waters from the scoop to the droplet. Therefore, we need to remove them from the scoop PDB-file.<p> 
-<code>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</code>
+<pre>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</pre>
 <p>
 Now we have all the files need to run the simulation. As you noticed, this step-by-step procedure create a few files that <code>protoms.py</code> does not generate.
 <h5>Making ProtoMS input files</h5>
 To make the input files for ProtoMS type
 <p>
-<code>$PROTOMSHOME/tools/generate_input.py -s dualtopology -p protein_scoop.pdb -l benzene.pdb benzene_dummy.pdb -t bnz-dummy.tem -pw water.pdb -lw benzene_box.pdb --absolute -o run</code>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s dualtopology -p protein_scoop.pdb -l benzene.pdb benzene_dummy.pdb -t bnz-dummy.tem -pw water.pdb -lw benzene_box.pdb --absolute -o run</pre>
 <p> 
 creating <code>run_bnd.cmd</code> and <code>run_free.cmd</code>.
 </BODY>
