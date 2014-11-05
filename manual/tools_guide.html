@@ -14,6 +14,7 @@ These are the available tools in ProtoMS3.0
 	<li><a href="#calc_density">calc_density.py</a></li>
    <li><a href="#calc_dg">calc_dg.py</a></li>  	
 	<li><a href="#calc_replicapath">calc_replicapath.py</a></li>
+	<li><a href="#calc_rmsd">calc_rmsd.py</a></li>
 	<li><a href="#calc_series">calc_series.py</a></li>
 	<li><a href="#calc_ti">calc_ti.py</a></li>
 	<li><a href="#clear_gcmcbox">clear_gcmcbox.py</a></li>
@@ -288,6 +289,35 @@ This tools plots the path of different replicas in a replica exchange simulation
 <p>At the moment only paths from a &lambda; replica exchange simulation is supported. Hence, the <code>-k</code> argument is reduntant.</p>
 <p>If the kind of replicas is from &lambda; replica exchange the <code>replica1</code> and <code>replica2</code> etc should be individual &lambda;-values to plot. </p>
 <p></p>
+<hr align="center" size="2"/>
+<code><h2><a name="calc_rmsd">calc_rmsd.py</a></h2></code>
+<b>Syntax:</b>
+<p> 
+<code>calc_rmsd.py -i pdbfile -f file1 [file2 ...] -l ligand [-a atom] [-t temperature]</code>
+<pre>
+<ul>
+<li>-i pdbfile = the reference, initial PDB file
+<li>-f file1 file2 ... = the name(s) of ProtoMS results file(s)
+    at least one file needs to be given
+<li>-l ligand = the residue name of the ligand
+<li>-a atom = the atom to calculate the RMSD of
+    optional, if not set the program will calculate the RMSD of the geometric center
+<li>-t temperature = the simulation temperature in K
+    optional, default = 298 K
+</ul>
+</pre>
+<b>Examples:</b>
+<pre>
+calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz
+calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz -a c4
+</pre>
+<p></p>
+<br>
+<b>Description:</b>
+<p></p>
+This tool calculate the RMSD of a ligand in a simulation.
+<p>If the <code>atom</code> name is given, the tool will calculate the RMSD of that atom with respect to its position in <code>pdbfile</code>. Otherwise, the program will calculate the RMSD of the geometric centre with respect to <code>pdbfile</code>.
+<p>A force constant to keep the ligand constrained is estimated from the RMSD using the equipartition theorem.</p>
 <hr align="center" size="2"/>
 <code><h2><a name="calc_series">calc_series.py</a></h2></code>
 <b>Syntax:</b>

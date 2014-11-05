@@ -30,6 +30,9 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
+# Default force constant for absolute binding free energies
+FORCE_CONSTANT = 1
+
 def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
   """ 
   Assigns move probabilities for protein, solute, solvent and box
@@ -542,7 +545,7 @@ class DualTopology(ProteinLigandSimulation) :
               for atom in pdbobj.residues[1].atoms :
                 if atom.name in resatom[1] : atmcoords = atom.coords
         self.setChunk("id add %d solute %d %s %s"%(restsol+1,restsol+1,resatom[1],resname))
-        self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f 10"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2]))
+        self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f %d"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2],FORCE_CONSTANT))
     
     moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        

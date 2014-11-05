@@ -196,7 +196,7 @@ class PDBFile:
         self.name = filename
         with open ( filename ) as f:
           self.read_from(f)
-    def read_from(self,f) :
+    def read_from(self,f,resname=None) :
         """
         Read a pdb structure from a fileobject
         
@@ -206,7 +206,8 @@ class PDBFile:
         ----------
         f : file object
           the object to read from
-        
+        resname : string, optional
+          the name of the residue to read, only read this        
         """
         residues = {}
         solvents = {}
@@ -215,9 +216,14 @@ class PDBFile:
         prevres = -1
         while line :
           if line[:6] in ["ATOM  ","HETATM"] :           
+              restype = line[17:20]
+              # Check if should skip this line
+              if resname is not None and restype.lower() != resname.lower() : 
+                line = f.readline()
+                continue
+
               index = int(line[6:11].strip())
               atname = line[12:16].strip()
-              restype = line[17:20]
               resnum = int(line[22:26].strip())
               if resnum != prevres :
                 nres = nres + 1
@@ -370,7 +376,7 @@ class  PDBSet :
           self.pdbs.append(PDBFile()) 
           self.pdbs[-1].solvents[soli] = sol
           self.pdbs[-1].header = pdbfile.header
-    def read(self,filename) :
+    def read(self,filename,resname=None) :
         """
         Read a set of pdb structures from a file
         
@@ -378,12 +384,14 @@ class  PDBSet :
         ----------
         filename : string
           the name of the file to read
+        resname : string, optional
+          the name of the residue to read, only read this
         """
         self.pdbs = []
         with open(filename,"r") as f :
             while True :
                 pdb = PDBFile()
-                pdb.read_from(f)
+                pdb.read_from(f,resname=resname)
                 if not (pdb.residues or pdb.solvents) :
                     break
                 else :

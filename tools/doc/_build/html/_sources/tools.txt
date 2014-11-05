@@ -60,6 +60,14 @@ tools.calc_replicapath module
     :undoc-members:
     :show-inheritance:
 
+tools.calc_rmsd module
+----------------------
+
+.. automodule:: tools.calc_rmsd
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tools.calc_series module
 ------------------------
 
