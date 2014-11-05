@@ -100,7 +100,10 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb
 
   logger.debug("Running distribute_particles with arguments: ")
   if isinstance(box,dict) :
-    logger.debug("\tbox = %s"%" ".join(box[key] for key in box.keys()))
+    tmpstr = "\tbox = "
+    for key in box:
+      tmpstr = tmpstr + "%s %s, "%(key,str(box[key]))
+    logger.debug(tmpstr.strip(" ,"))
   else :
     logger.debug("\tbox = %s"%" ".join(box)) 
   if isinstance(particles,str) :

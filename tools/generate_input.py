@@ -946,7 +946,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
     if protein is not None : # Setup a protein simulation
       bnd_cmd = Equilibration(protein=protein,solutes=ligands, 
                               templates=templates,solvent=protein_water,outfolder=settings.outfolder+"_bnd",
-                              nsteps=args.nequil,pdbfile="equil_bnd.pdb")
+                              nsteps=settings.nequil,pdbfile="equil_bnd.pdb")
     elif ligands is not None :      
       if settings.dovacuum : 
         solvent = None
