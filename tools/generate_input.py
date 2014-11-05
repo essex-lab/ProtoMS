@@ -1081,7 +1081,7 @@ if __name__ == "__main__":
   parser.add_argument('-pw','--protwater',help="the name of the solvent for protein")
   parser.add_argument('-lw','--ligwater',help="the name of the solvent for ligand")
   parser.add_argument('-o','--out',help="the prefix of the name of the command file",default="run")
-  parser.add_argument('--outfolder',help="the ProtoMS output folder",default="")
+  parser.add_argument('--outfolder',help="the ProtoMS output folder",default="out")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
   parser.add_argument('--jawsbias',nargs="+",type=float,help="the bias for the JAWS-2",default=0)

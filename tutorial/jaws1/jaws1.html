@@ -1,10 +1,11 @@
 <HTML>
 <HEAD>
 <TITLE>Locating waters in HSP90 binding cavity</TITLE>
+<link href="../style.css" rel="stylesheet" type="text/css">
 </HEAD>
 <BODY>
 <H1>Locating waters in HSP90 binding cavity</H1>
-In this tutorial, you will estimate the possition of the waters in the binding cavity of N-terminal domain of HSP90 with a small fragment bound. To acchieve this we will use the JAWS<sup>1</sup> technique.
+In this tutorial, you will estimate the possition of the waters in the binding cavity of N-terminal domain of HSP90 with a small fragment bound<sup>1</sup>. To acchieve this we will use the JAWS<sup>2</sup> technique.
 <H3>Prerequisites</H3>
 <ul>
 	<li><code>fragment.pdb</code> - the structure of the small fragment molecule in PDB format</li>
@@ -140,111 +141,96 @@ You can read more about the setup of proteins here.
 	<li><code>water_clr.pdb</code> = the cap of water solvating the protein-ligand system, minus any water molecule which was overlapping with the JAWS simulation area</li>
 	<li><code>run_bnd.cmd</code> = the ProtoMS input file for the JAWS simulation</li>
 </ul>
-You can read more about the input files in the ProtoMS manual. However, some sections of it is worth mentioning here
-<p>
+You can read more about the input files in the ProtoMS manual. However, some sections of it is worth mentioning here:
 <pre>
-dualtopology1 1 2 synctrans syncrot<br>
-softcore1 solute 1<br>
-softcore2 solute 2<br>
-softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 6 soft66 <br>
+jaws1 0
+softcore1 solute all
+softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 6 soft66
 </pre>
 <br>
-this section, which exist in both input files setup the dual topology simulation with appropriate soft-core parameters. It could be worth trying to optimize the soft-core parameters if your simulation is not performing well. 
-<p>  
-<code>
-lambdare 200000 0.000 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 1.000<br>
-</code>
-<br>
-this section, which exists in both input file setup the &lambda;-replica exchange. You can add more &lambda;-values manually if there are regions where the simulation is not performing well.
+The lines seen above, which appear in the input file, set the appropriate soft-core parameters applied to the interactions between the partially on jaws waters. It could be worth trying to optimize the soft-core parameters if your simulation is not performing well. The <code>jaws1</code> line indicates the initial value of &theta; for the jaws-waters.
 <p>
-<code>
-chunk id add 1 solute 1 C4 BNZ<br>
-chunk restraint add 1 cartesian harmonic 27.837 6.921 3.569 10<br>
-chunk id add 2 solute 2 C1 DDD<br>
-chunk restraint add 2 cartesian harmonic 26.911 6.126 4.178 10<br>
-</code> 
+<pre>
+originx 59.774
+originy 31.007
+originz 20.931
+x 13.02
+y 8.188
+z 8.402
+</pre> 
 <br>
-this section, which is unique for the bound-leg simulation, restrains the benzene and the dummy particle to the binding site with harmonic restraints. It could be worth trying to optimize the weight of the restraint or try another type of restraint if your simulation is not performing well.
+These lines include the dimensions of the jaws-box, to which the jaws-waters are constrained. The <code>originx, originy, originz, x, y, z</code> parameters indicate the origin and length of the jaws-box in each spatial coordinate.
 <p>
 <hr align="center"/>
 <p> 
 <h3><a name="tools">Setting up the simulation with individual tools</a></h3>
-In this advanced section we will go through the setup of the simulations step-by-step using individual setup scripts rather than <code>protoms.py</code>
-<h5>Setting up the free leg</h5>
-We will start setting up the free-leg simulation. However, it should be noted that some of the files created in this section will also be used in the bound-leg simulation.
+In this advanced section we will go through the setup of the simulations step-by-step using individual setup scripts rather than <code>protoms.py</code>. This is relevant in cases where you are interested in specifying certain parameters which are pre-determined by <code>protoms.py</code>.
+<h5>Setting up the ligand</h5>
+We will start setting up the ligand from the initial <code>fragment.pdb</code>.
 <p>
-<li>First we need to make sure that the very first line of the <code>benzene.pdb</code> contains a directive, telling ProtoMS the name of the solute. The line should read <code>HEADER BNZ</code> and can be added by typing
+<li>First we need to make sure that the very first line of the <code>fragment.pdb</code> contains a directive, telling ProtoMS the name of the solute. The line should read <code>HEADER XDK</code>, where <code>xdk</code> is the residue name in the fragment, and can be added by typing
 <p>
-<code>sed -i "1iHEADER BNZ" benzene.pdb</code>
+<pre>sed -i "1iHEADER XDK" fragment.pdb</pre>
 <p>
-<li>Thereafter, we will create the force field for the benzene molecule using AmberTools. The force field will be GAFF with AM1-BCC charge. Type
+<li>Thereafter, we will create the force field for the fragment using AmberTools. The force field will be GAFF with AM1-BCC charge. Type
 <p>
-<code>$PROTOMSHOME/tools/ambertools.py -f benzene.pdb -n BNZ</code>
+<pre>python2.7 $PROTOMSHOME/tools/ambertools.py -f fragment.pdb -n XDK</pre>
 <P>
-and this will execute the AmberTools programs <code>antechamber</code> and <code>parmchk</code>, creating the files <code>benzene.prepi</code> and <code>benzene.frcmod</code>, respectively. 
+and this will execute the AmberTools programs <code>antechamber</code> and <code>parmchk</code>, creating the files <code>fragment.prepi</code> and <code>fragment.frcmod</code>, respectively. 
 <p>
-<li>These files are in Amber format and in order to use them in ProtoMS we need to reformat them into a ProtoMS template file. This file will also contain a z-matrix that describes how benzene will be sampled during the simulation. To do this, you can type
+<li>These files are in Amber format and in order to use them in ProtoMS we need to reformat them into a ProtoMS template file. This file will also contain a z-matrix that describes how the ligand will be sampled during the simulation. To do this, you can type
 <p>
-<code>$PROTOMSHOME/tools/build_template.py -p benzene.prepi -f benzene.frcmod -o benzene.tem -n BNZ</code>
+<pre>python2.7 $PROTOMSHOME/tools/build_template.py -p fragment.prepi -f fragment.frcmod -o fragment.tem -n XDK</pre>
 <p>
-this will creates the files <code>benzene.tem</code> containing the ProtoMS template file and <code>benzene.zmat</code>. It is a good idea to check this files to see if the script has defined the molecule properly.
-<p>
-<li>The next thing we will do is to solvate the benzene molecule in a box of TIP4P water molecules. Type
-<p>
-<code>$PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -o benzene_box.pdb</code>
+this will creates the files <code>fragment.tem</code> containing the ProtoMS template file and <code>fragment.zmat</code>. It is a good idea to check this files to see if the script has defined the molecule properly.
 <p> 
-this will solvate benzene using standard settings, i.e. it will be 10 A between the solute and the edge of the box. A pre-equilibrated box of TIP4P water molecules located in <code>$PROTOMSHOME/data/</code> is used. The box is written to the file <code>benzene_box.pdb</code>.
-<p> 
-<li>Now we have setup benzene, but to complete the setup we need the dummy particle that benzene will be perturbed into. This is created by typing
-<p> 
-<code>$PROTOMSHOME/tools/make_dummy.py -f benzene.pdb -o benzene_dummy.pdb</code>
-<p> 
-creating <code>benzene_dummy.pdb that contains the particle.</code>
+<li>Now we have setup the fragment, but there is another "ligand" that we have not mentioned: the water molecules used for the JAWS calculation. These are considered by protoms as "grad canonical solutes", and will be generated latter, but it is important to mention here that they will, as well, need a template. However, there is no need to generate this template, since it contains some particularities and it can be found in <code>$PROTOMSHOME/data/gcmc_wat.tem</code>.
 <p>
-<li>Finally, we need to combine the template file of benzene with the template file of the dummy particle. Type
-<p> 
-<code>$PROTOMSHOME/tools/merge_templates.py -f benzene.tem $PROTOMSHOME/data/dummy.tem -o bnz-dummy.tem</code>
-<p> 
-creating <code>bnz-dummy.tem</code>. The template file of the dummy particle is located in <code>$PROTOMSHOME/data/</code>.
-<p>
-Now we have all the files to run the free-leg of the simulation. The input file for ProtoMS will be created when we have prepared to bound-leg.
-<h5>Setting up the bound leg</h5>
+<h5>Setting up the protein</h5>
 <li>First, we will change the name of atom and residue names in the protein PDB-file such that they agree with the ProtoMS naming convention. Type
 <p> 
-<code>$PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -o protein_pms.pdb -s amber -c $PROTOMSHOME/data/atomnamesmap.dat</code>
+<pre>python2.7 $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -o protein_pms.pdb -s amber -c $PROTOMSHOME/data/atomnamesmap.dat</pre>
 <p> 
 The converted structure will be in <code>protein_pms.pdb</code>. This execution assumes that the Amber naming convention is used in <code>protein.pdb</code>. 
 <p> 
 <li>We have crystallographic water in the protein structure and we need to convert them to the water model we will be using in the simulation (TIP4P). This can be done by 
 <p> 
-<code>python2.7 $PROTOMSHOME/tools/convertwater.py -p protein_pms.pdb -o protein_pms_t4p.pdb</code>
+<pre>python2.7 $PROTOMSHOME/tools/convertwater.py -p protein_pms.pdb -o protein_pms_t4p.pdb</pre>
 <p>
 creating <code>protein_pms_t4p.pdb</code>. 
 <p>
-<li>Next step is to truncate to protein, creating a scoop. This will enable us to solvate the protein is a droplet and thereby reducing the number of simulated particles. The command is
+<li>Next step is to truncate the protein, creating a scoop. This will enable us to solvate the protein is a droplet and thereby reducing the number of simulated particles. The command is
 <p>
-<code>$PROTOMSHOME/tools/scoop.py -p protein_pms_t4p.pdb -l benzene.pdb -o protein_scoop.pdb</code> 
+<pre>python2.7 $PROTOMSHOME/tools/scoop.py -p protein_pms_t4p.pdb -l fragment.pdb -o protein_scoop.pdb</pre> 
 <p> 
-The protein scoop is centred on the benzene molecule and all residue further than 20 A are cut-away. The scoop is written to <code>protein_scoop.pdb</code>
+The protein scoop is centred on the fragment molecule and all residue further than 20 A are cut-away. The scoop is written to <code>protein_scoop.pdb</code>
 <p>
-<li>As a final step, we will solvate the protein and ligand in a droplet of TIP4P water molecules. To this, type:
+<h5>Setting up the solvation and jaws-waters</h5>
+<li>First we will create a droplet of TIP4P water molecules around both ligand and protein. To this, type:
 <p> 
-<code>$PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -pr protein_scoop.pdb -o water.pdb -g droplet</code> 
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s fragment.pdb -pr protein_scoop.pdb -o water.pdb -g droplet</pre> 
 <p>
-this will create a droplet with 30 A radius centred on the benzene molecule. The droplet is written to <code>water.pdb</code>
+this will create a droplet with 30 A radius centred on the fragment molecule. The droplet is written to <code>water.pdb</code>
 <p> 
-<li> The <code>solvate.py</code> script adds the crystallographic waters from the scoop to the droplet. Therefore, we need to remove them from the scoop PDB-file.<p> 
-<code>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</code>
+<li> The <code>solvate.py</code> script adds the crystallographic waters from the scoop to the droplet. Therefore, we need to remove them from the scoop PDB-file, to avoid duplicates.<p> 
+<pre>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</pre>
 <p>
-Now we have all the files need to run the simulation. As you noticed, this step-by-step procedure create a few files that <code>protoms.py</code> does not generate.
+<li>Next we need to create the set of waters that will form our jaws-waters. This can be done by typing:
+<pre>python2.7 $PROTOMSHOME/tools/distribute_waters.py -b 59 31 23 8 8 8 -m 10 -o jaws1_wat.pdb </pre>
+<p>
+with this command, the file <code>jaws1_water.pdb</code> will be generated. It will contain 10 water molecules (flag <code>-m</code>). The box dimensions to which the waters will be constrained are specified with the flag <code>-b</code>, and this information on the box limits is stored in the first line of the <code>jaws1_water.pdb</code> file.
+<li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the jaws-box. Do this by typing:
+<pre>python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b jaws1_wat.pdb -s water.pdb -o water_clr.pdb</pre>
+<p>Feel free to check the difference between <code>water.pdb</code> and <code>water_clr.pdb</code>, there may be a few less waters in the later, but there might be no difference at all.
+Now we have all the files need to run the simulation. As you noticed, there is some difference in the files produced with this step-by-step procedure and those created with <code>protoms.py</code>.
 <h5>Making ProtoMS input files</h5>
 To make the input files for ProtoMS type
 <p>
-<code>$PROTOMSHOME/tools/generate_input.py -s dualtopology -p protein_scoop.pdb -l benzene.pdb benzene_dummy.pdb -t bnz-dummy.tem -pw water.pdb -lw benzene_box.pdb --absolute -o run</code>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s jaws1 -p protein_scoop.pdb -l fragment.pdb -t fragment.tem -pw water_clr.pdb --gcmcwater jaws1_wat.pdb -o run</pre>
 <p> 
-creating <code>run_bnd.cmd</code> and <code>run_free.cmd</code>.
+creating <code>run_bnd.cmd</code>.
 <H3>References</H3>
-<p>1. Michelle et.al. <i>J. Phys. Chem. B,</i> 2009, 113(40), pp 13337–13346</p>
-<p>2.
+<p>1. Murray et.al. <i>J. Med. Chem.,</i> 2010, 53(16), pp 5942-5955</p>
+<p>2. Michelle et.al. <i>J. Phys. Chem. B,</i> 2009, 113(40), pp 13337-13346</p>
 </BODY>
 </HTML>
