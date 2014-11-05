@@ -1,3 +1,8 @@
-glob: src/*.o
-glob: tools/*.pyc
+syntax: glob
+
+protoms3
+src/*.o
+tools/*.pyc
+src/makefile.*
+src/idme.inc
 
