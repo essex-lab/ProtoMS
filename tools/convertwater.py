@@ -246,7 +246,7 @@ def convertwater(pdb_in,watermodel,ignorH=False,watresname=None):
   PDBFile
       a pdb file whose solvent elements have the geometry of the desired solvent model
   """
-  
+
   logger.debug("Running convertwater with arguments: ")
   logger.debug("\tpdb_in     = %s"%pdb_in) 
   logger.debug("\twatermodel = %s"%watermodel) 
@@ -291,12 +291,13 @@ if __name__ == "__main__":
     parser.add_argument('-o','--out',help="the output PDB-file",default="convertedwater.pdb")
     parser.add_argument('-m','--model',help="the water model,default=tip4p",default="tip4p")
     parser.add_argument('-i','--ignoreh',action='store_true',help="whether to ignore hydrogens in input water. If no hydrogens are present, waters are randomly orientated. default=No",default=False)
+    parser.add_argument('-n','--resname',help="the residue name that will be applied to the water molecules. When it is not specified, it is chosen based on the water model",default=None)
     args = parser.parse_args()
 
     # Setup the logger
     logger = simulationobjects.setup_logger("convertwater_py.log")
 
     pdb_in = simulationobjects.PDBFile(filename=args.pdb)
-    pdb_out = convertwater(pdb_in,args.model,ignorH=args.ignoreh)	# Possibly add a check for whether the solvent contains hydrogens before this line.
+    pdb_out = convertwater(pdb_in,args.model,ignorH=args.ignoreh,watresname=args.resname)	# Possibly add a check for whether the solvent contains hydrogens before this line.
     pdb_out.write(args.out)
 
