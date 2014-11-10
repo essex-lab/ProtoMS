@@ -1,0 +1,235 @@
+<HTML>
+<HEAD>
+<TITLE>Estimating the binding affinity of water molecules</TITLE>
+<link href="../style.css" rel="stylesheet" type="text/css">
+</HEAD>
+<BODY>
+<H1>Estimating the binding affinity of water molecules</H1>
+In this tutorial, you will estimate the binding affinity of three conserved water molecules in the binding cavity of the N-terminal domain of HSP90 with a small fragment bound<sup>1</sup>. To acchieve this we will use the JAWS<sup>2</sup> technique.
+<H3>Prerequisites</H3>
+<ul>
+	<li><code>fragment.pdb</code> - the structure of the small fragment molecule in PDB format</li>
+	<li><code>protein.pdb</code> - the structure of the N-terminal domain of HSP90 in PDB format</li>
+        <li><code>jaws2_waters.pdb</code> - The structure of the waters which binding affinity we will determine</li>
+</ul>
+Both the fragment and protein need to be prepared before they are used with ProtoMS. For instance, you must make sure that they are protonated. You can read more about setting up structures here.
+<p>
+The waters pdb needs to be in the appropriate format. If you wish to run JAWS stage 2 from the output clusters from a JAWS stage 1 calculation, you do not need to make any changes to the format. In the appropriate section below, there is an explanaition on how to change the format of your waters to the appropriate format for this calculations. For the purpose of this tutorial, your file <code>jaws2_waters.pdb</code> is already in the correct format.
+<p>
+<hr align="center"/>
+<h3>Simple setup</h3>
+<h5>Setup</h5>
+The simplest way to setup the simulation is by typing the following
+</p>
+<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s jaws2 -l fragment.pdb  -p protein.pdb --gcmcwater jaws2_waters.pdb --jawsbias 8 10 12 14 </pre>
+</p>
+this sets up one JAWS stage 2 simulation, to estimate the binding affinty of the waters given in jaws2-waters.pdb, assuming the an on/off ration close to one will be obtained with jawsbias of 8 to 14. This command will produce one protoms input file per water molecule. Each of the simulations will run 5 m equilibration steps and 40 m production steps. Output will be printed to files every 100 k moves.
+<p>
+The <code>-s jaws2</code> argument tells the script to setup a JAWS stage 2 simulation. The <code>-p</code> and <code>-l</code> arguments specifies the protein and the ligand, respectively. After the <code>--gcmcwater</code> flag, the pdb file with the waters which binding affinities we want to calculate should be specified. The <code>--jawsbias</code> flag corresponds to a JAWS stage 2 specific parameter. It can be understood as a force applied to the water molecules, increasing their likelyhood of being off as we increase the value of the bias. We wish to apply a jawsbias such that the ratio of simulation steps during which the considered water was at high theta values (on) with respect to the time spent at low thetas (off) is as close to 1 as possible. More on jawsbias can be read in the protoms manual. 
+</p> 
+You can read more about the files that the setup script creates further down on this <a href="#files">page</a>.
+<h5>Execution</h5>
+To run the simulation for one of the waters molecules you need to execute
+<p>
+<pre>mpirun -np 4 $PROTOMSHOME/protoms3 run_jaws2-w1_bnd.cmd > run_w1.out</pre>
+<p>
+Where the number after <code>-np</code> stands for the number of cores which the simulation will use, and should be set to as many as jawsbias values.
+The calculations will take approximately ?? h to complete.
+<p>
+<h5>Analysis</h5>
+When the simulations are finished you need to analyse the simulations to produce an estimate for the binding affinity of each of your waters. The analysis will be independent to each of the water molecules.</p>
+<p>In the out folder produced (<code>out_jaws2-w1</code>), different directories for each jawsbias value will be placed, and a <code>results</code> can be found in each of these. Within this results file, information on the proportion of moves spent at high and low theta values is printed at the end of each information dump (starting with the line <code>RESULTS FILE</code>). All of the simulation moves are taken into acount in the last information dump, so we only really need to look at the last lines of the file. These last lines will look similar to this:</p>
+<p><pre>
+####################################################
+JAWS-2 moves with theta above 0.95 - centre position
+####################################################
+ HIGH     6388141   9.3299999999999983       -3.7555000000000001        11.519750000000000
+####################################################
+JAWS-2 moves with theta below 0.05 - centre position
+####################################################
+ LOW        1200   9.3299999999999983       -3.7555000000000001        11.519750000000000
+</pre></p>
+<p>Look for the jawsbias for which the ratio between the <code>HIGH</code> and the <code>LOW</code> moves is closer to one. Now an estimation on whether the ratio is close enough to one has to be made. As a guide, a ratio between 0.8 and 1.2 is probably acceptable. If such ratio is not found in any of your jawsbias, you are advised to re-run this simulations with a more appropriate range of jawsbias.</p>
+<p>When the desired jawsbias output has been chosen, the binding free energy of the water can be estimated following the formula shown below:
+<img src="binding_formula.png"  alt="" />
+<p>where P(&theta;&rarr;1)/P(&theta;&rarr;0) is approximated from the proportion of moves spent at high theta values with respect to the moves spent at low theta values.</p>
+<p>This same analysis procedure should be followed for each of the water molecules which binding affinity is to be calculated.</p>
+<p> 
+<h3>Exploring more options</h3>
+<p>
+<h5>Changing the format of the water pdb file</h5>
+For the JAWS stage 2 calculation to work, the pdb file containing the waters which binding affinity is to be calculated, needs to fullfil a specific format. An example of this format is displayed below:
+<pre>
+HEADER WAT
+ATOM      1 O00  WAT  2137      61.033  30.884  27.763        
+ATOM      2 H01  WAT  2137      60.475  31.645  27.603        
+ATOM      3 H02  WAT  2137      60.548  30.084  27.561        
+ATOM      4 M03  WAT  2137      60.891  30.879  27.714   
+TER     
+ATOM      1 O00  WAT  2139      60.771  34.710  23.191        
+ATOM      2 H01  WAT  2139      61.285  34.865  23.983        
+ATOM      3 H02  WAT  2139      60.076  34.079  23.379        
+ATOM      4 M03  WAT  2139      60.746  34.645  23.324   
+TER     
+ATOM      1 O00  WAT  2068      62.808  32.279  29.365        
+ATOM      2 H01  WAT  2068      62.660  32.932  30.049        
+ATOM      3 H02  WAT  2068      62.376  31.460  29.608        
+ATOM      4 M03  WAT  2068      62.729  32.256  29.491    
+</pre>
+<p>
+When the water pdb file was obtained by any other method which is not the result of a JAWS stage 1 calculation, it is likely that the format does not correspond to that shown above. However, the transformation to the desired format should be as easy as typing:
+</p>
+<p><pre>
+python2.7 $PROTOMSHOME/tools/convertwater.py -p waters_in.pdb -o jaws2_waters.pdb -n WAT
+</pre></p>
+<p>
+Where the name of the pdb files containing the waters in the original format is introduced after the flag <code> -p </code> and the name of the ouput pdb file after <code> -o </code>. This script will tranform your waters to Tip4p-like waters, but with the necesary residue and atom names. Please, check the output generated by this script. In case no satisfactory changes were made, try changing the residue name of your original pdb to <code>'SOL'</code> or <code>'HOH'</code> and then type the command given above.
+</p>
+<p>Once the waters are in the correct format, please rememeber to include the header in the first line, as displayed in the example above.</p>
+<h5>Running independent simulations for each jawsbias</h5>
+<p>It is also posible to set up the input files and run protoms for one individual jawsbias. The whole procedure is basically identical. The execution command will differ:</p>
+<pre>$PROTOMSHOME/protoms3 run_jaws2-w1_bnd.cmd</pre>
+<p>and in the generated out folder <code>out_jaws2-w1</code> there will be no folders for each bias.
+<h5>Running longer simulations</h5>
+There are two arguments that you can invoke to run a longer simulation
+<ul>
+	<li><code>--nequil</code> - this controls the number of equilibration steps</li>
+	<li><code>--nprod</code> - this controls the number of production steps</li>
+</ul>  
+by typing for instance
+<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s jaws2 -p protein.pdb -l fragment.pdb --gcmcwater jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 10E6 --nprod 50E6</pre>
+<p>
+you will run 10 m equiliration steps and 50 m production steps (instead of the 5 m and 40 m that is default)
+<p>
+<h5>Running independent repeats</h5>
+Usually it is wise to run several indepent repeats of your calculation to check for convergence. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
+<p>
+by typing for instance
+<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s jaws2 -p protein.pdb -l fragment.pdb --gcmcwater jaws2_waters.pdb --jawsbias 8 10 12 14 -r 5</pre>
+<p>
+you will create 5 input files for the JAWS calculation. Therefore, you also need to execute ProtoMS 5 times per water molecule with the different input files. The output will be in 5 different folders per water molecule, e.g. <code>out1_jaws2-w1</code> and <code>out2_jaws2-w1</code>.
+<p>
+<hr align="center"/>
+<p> 
+<h3><a name="files">Files created by the setup script</a></h3>
+<h5>Files describing the fragment</h5>
+<ul>
+	<li><code>fragment.prepi </code> = the z-matrix and atom types of the fragment in Amber format</li>
+	<li><code>fragment.frcmod </code> =  additional parameters not in GAFF</li>
+	<li><code>fragment.zmat</code> = the z-matrix of the fragment used to sample it in the MC simulation</li>
+	<li><code>fragment.tem</code> = the complete template (force field) file for the fragment in ProtoMS format</li>
+</ul>
+You can read more about the setup of ligands here.
+<h5>Files describing the protein</h5>
+<ul>
+	<li><code>protein_scoop.pdb</code> = the truncated protein structure</li>
+</ul>
+You can read more about the setup of proteins here.
+<h5>Simulation specific files</h5>
+A few of the files generated are related the the jaws2 waters:
+<ul>
+	<li><code>jaws2_wat1.pdb </code> = the pdb of the first of the jaws2 water molecules, in isolation</li>
+	<li><code>jaws2_wat2.pdb </code> = the pdb of the second of the jaws2 water molecules, in isolation</li>
+	<li><code>jaws2_not1.pdb</code> = the pdb of all the jaws2 waters except for the first. It is used as part of the simulation solvent when jaws2 is run for the first water</li>
+	<li><code>jaws2_not2.pdb</code> = the pdb of all the jaws2 waters except for the second. It is used as part of the simulation solvent when jaws2 is run for the second water</li>
+</ul>
+whilst others are general simulation files:
+<ul>
+	<li><code>water.pdb</code> = the cap of water solvating the protein-ligand system</li>
+	<li><code>run_jaws2-w1_bnd.cmd</code> = the ProtoMS input file for the JAWS stage 2 simulation on the first water of those provided</li>
+	<li><code>run_jaws2-w2_bnd.cmd</code> = the ProtoMS input file for the JAWS stage 2 simulation on the second water of those provided</li>
+</ul>
+You can read more about the input files in the ProtoMS manual. However, some sections of it is worth mentioning here:
+<pre>
+jaws2 1
+multijaws2 8.000 10.000 12.000 14.000
+</pre>
+In the lines seen above, the <code>jaws2</code> line indicates the initial value of &theta; for the jaws2 water being considered. The <code>multijaws2</code> line sets the different values of jawsbias at which the simulation will be run. When only one jawsbias has been especified, the equivalent line in the input file starts with <code>jbias</code> instead.
+<p>
+<pre>
+originx 59.533
+originy 29.384
+originz 26.263
+x 3.0
+y 3.0
+z 3.0
+</pre> 
+<br>
+These lines include the dimensions of the jaws-box, to which the jaws2-water is constrained. The <code>originx, originy, originz, x, y, z</code> parameters indicate the origin and length of the jaws-box in each spatial coordinate.
+<p>
+<hr align="center"/>
+<p> 
+<h3><a name="tools">Setting up the simulation with individual tools</a></h3>
+In this advanced section we will go through the setup of the simulations step-by-step using individual setup scripts rather than <code>protoms.py</code>. This is relevant in cases where you are interested in specifying certain parameters which are pre-determined by <code>protoms.py</code>.
+<h5>Setting up the ligand</h5>
+We will start setting up the ligand from the initial <code>fragment.pdb</code>.
+<p>
+<li>First we need to make sure that the very first line of the <code>fragment.pdb</code> contains a directive, telling ProtoMS the name of the solute. The line should read <code>HEADER XDK</code>, where <code>xdk</code> is the residue name in the fragment, and can be added by typing
+<p>
+<pre>sed -i "1iHEADER XDK" fragment.pdb</pre>
+<p>
+<li>Thereafter, we will create the force field for the fragment using AmberTools. The force field will be GAFF with AM1-BCC charge. Type
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/ambertools.py -f fragment.pdb -n XDK</pre>
+<P>
+and this will execute the AmberTools programs <code>antechamber</code> and <code>parmchk</code>, creating the files <code>fragment.prepi</code> and <code>fragment.frcmod</code>, respectively. 
+<p>
+<li>These files are in Amber format and in order to use them in ProtoMS we need to reformat them into a ProtoMS template file. This file will also contain a z-matrix that describes how the ligand will be sampled during the simulation. To do this, you can type
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/build_template.py -p fragment.prepi -f fragment.frcmod -o fragment.tem -n XDK</pre>
+<p>
+this will creates the files <code>fragment.tem</code> containing the ProtoMS template file and <code>fragment.zmat</code>. It is a good idea to check this files to see if the script has defined the molecule properly.
+<p> 
+<li>Now we have setup the fragment, but there is another "ligand" that we have not mentioned: the water molecules used for the JAWS calculation. These are considered by protoms as "grad canonical solutes", and will be generated latter, but it is important to mention here that they will, as well, need a template. However, there is no need to generate this template, since it contains some particularities and it can be found in <code>$PROTOMSHOME/data/gcmc_wat.tem</code>.
+<p>
+<h5>Setting up the protein</h5>
+<li>First, we will change the name of atom and residue names in the protein PDB-file such that they agree with the ProtoMS naming convention. Type
+<p> 
+<pre>python2.7 $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -o protein_pms.pdb -s amber -c $PROTOMSHOME/data/atomnamesmap.dat</pre>
+<p> 
+The converted structure will be in <code>protein_pms.pdb</code>. This execution assumes that the Amber naming convention is used in <code>protein.pdb</code>. 
+<p> 
+<li>We have crystallographic water in the protein structure and we need to convert them to the water model we will be using in the simulation (TIP4P). This can be done by 
+<p> 
+<pre>python2.7 $PROTOMSHOME/tools/convertwater.py -p protein_pms.pdb -o protein_pms_t4p.pdb</pre>
+<p>
+creating <code>protein_pms_t4p.pdb</code>. 
+<p>
+<li>Next step is to truncate the protein, creating a scoop. This will enable us to solvate the protein is a droplet and thereby reducing the number of simulated particles. The command is
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/scoop.py -p protein_pms_t4p.pdb -l fragment.pdb -o protein_scoop.pdb</pre> 
+<p> 
+The protein scoop is centred on the fragment molecule and all residue further than 20 A are cut-away. The scoop is written to <code>protein_scoop.pdb</code>
+<p>
+<h5>Setting up the solvation and jaws-waters</h5>
+<li>First we will create a droplet of TIP4P water molecules around both ligand and protein. To this, type:
+<p> 
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s fragment.pdb -pr protein_scoop.pdb -o water.pdb -g droplet</pre> 
+<p>
+this will create a droplet with 30 A radius centred on the fragment molecule. The droplet is written to <code>water.pdb</code>
+<p> 
+<li> The <code>solvate.py</code> script adds the crystallographic waters from the scoop to the droplet. Therefore, we need to remove them from the scoop PDB-file, to avoid duplicates.<p> 
+<pre>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</pre>
+<p>
+<li>Next we need to create the set of waters that will form our jaws-waters. This can be done by typing:
+<pre>python2.7 $PROTOMSHOME/tools/distribute_waters.py -b 59 31 23 8 8 8 -m 10 -o jaws1_wat.pdb </pre>
+<p>
+with this command, the file <code>jaws1_water.pdb</code> will be generated. It will contain 10 water molecules (flag <code>-m</code>). The box dimensions to which the waters will be constrained are specified with the flag <code>-b</code>, and this information on the box limits is stored in the first line of the <code>jaws1_water.pdb</code> file.
+<li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the jaws-box. Do this by typing:
+<pre>python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b jaws1_wat.pdb -s water.pdb -o water_clr.pdb</pre>
+<p>Feel free to check the difference between <code>water.pdb</code> and <code>water_clr.pdb</code>, there may be a few less waters in the later, but there might be no difference at all.
+Now we have all the files need to run the simulation. As you noticed, there is some difference in the files produced with this step-by-step procedure and those created with <code>protoms.py</code>.
+<h5>Making ProtoMS input files</h5>
+To make the input files for ProtoMS type
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s jaws1 -p protein_scoop.pdb -l fragment.pdb -t fragment.tem -pw water_clr.pdb --gcmcwater jaws1_wat.pdb -o run</pre>
+<p> 
+creating <code>run_bnd.cmd</code>.
+<H3>References</H3>
+<p>1. Murray et.al. <i>J. Med. Chem.,</i> 2010, 53(16), pp 5942-5955</p>
+<p>2. Michel et.al. <i>J. Phys. Chem. B,</i> 2009, 113(40), pp 13337-13346</p>
+</BODY>
+</HTML>
