@@ -35,7 +35,7 @@ To run the simulation for one of the waters molecules you need to execute
 <pre>mpirun -np 4 $PROTOMSHOME/protoms3 run_jaws2-w1_bnd.cmd > run_w1.out</pre>
 <p>
 Where the number after <code>-np</code> stands for the number of cores which the simulation will use, and should be set to as many as jawsbias values.
-The calculations will take approximately ?? h to complete.
+The calculations will take approximately 10 h to complete.
 <p>
 <h5>Analysis</h5>
 When the simulations are finished you need to analyse the simulations to produce an estimate for the binding affinity of each of your waters. The analysis will be independent to each of the water molecules.</p>
@@ -44,17 +44,18 @@ When the simulations are finished you need to analyse the simulations to produce
 ####################################################
 JAWS-2 moves with theta above 0.95 - centre position
 ####################################################
- HIGH     6388141   9.3299999999999983       -3.7555000000000001        11.519750000000000
+ HIGH     2197270   59.785316428542785        31.516200149459788        27.603962363437134
 ####################################################
 JAWS-2 moves with theta below 0.05 - centre position
 ####################################################
- LOW        1200   9.3299999999999983       -3.7555000000000001        11.519750000000000
+ LOW     2591119   59.587933149584636        30.699611271801380        27.297105422389237
 </pre></p>
 <p>Look for the jawsbias for which the ratio between the <code>HIGH</code> and the <code>LOW</code> moves is closer to one. Now an estimation on whether the ratio is close enough to one has to be made. As a guide, a ratio between 0.8 and 1.2 is probably acceptable. If such ratio is not found in any of your jawsbias, you are advised to re-run this simulations with a more appropriate range of jawsbias.</p>
 <p>When the desired jawsbias output has been chosen, the binding free energy of the water can be estimated following the formula shown below:
 <img src="binding_formula.png"  alt="" />
 <p>where P(&theta;&rarr;1)/P(&theta;&rarr;0) is approximated from the proportion of moves spent at high theta values with respect to the moves spent at low theta values.</p>
 <p>This same analysis procedure should be followed for each of the water molecules which binding affinity is to be calculated.</p>
+<p>As an example, if the <code>results</code> file shown above is found with an applied jawsbias of +10kcal/mol, the consquent binding free energy of the water molecule is estimated to be -3.4kcal/mol. This was the case of one run for the first of the waters in the <code>jaws2_waters.pdb</code> file provided. Please, bare in mind this method is inherently noisy.
 <p> 
 <h3>Exploring more options</h3>
 <p>
@@ -214,20 +215,20 @@ this will create a droplet with 30 A radius centred on the fragment molecule. Th
 <li> The <code>solvate.py</code> script adds the crystallographic waters from the scoop to the droplet. Therefore, we need to remove them from the scoop PDB-file, to avoid duplicates.<p> 
 <pre>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</pre>
 <p>
-<li>Next we need to create the set of waters that will form our jaws-waters. This can be done by typing:
-<pre>python2.7 $PROTOMSHOME/tools/distribute_waters.py -b 59 31 23 8 8 8 -m 10 -o jaws1_wat.pdb </pre>
+<li>Next we need to split the jaws2 waters into pdbs with individual waters and with all waters except one. It can be done by running:
+<pre>python2.7 $PROTOMSHOME/tools/split_jawswater.py -w jaws2_waters.pdb -o jaws2_ --jaws2box</pre>
 <p>
-with this command, the file <code>jaws1_water.pdb</code> will be generated. It will contain 10 water molecules (flag <code>-m</code>). The box dimensions to which the waters will be constrained are specified with the flag <code>-b</code>, and this information on the box limits is stored in the first line of the <code>jaws1_water.pdb</code> file.
-<li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the jaws-box. Do this by typing:
-<pre>python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b jaws1_wat.pdb -s water.pdb -o water_clr.pdb</pre>
-<p>Feel free to check the difference between <code>water.pdb</code> and <code>water_clr.pdb</code>, there may be a few less waters in the later, but there might be no difference at all.
-Now we have all the files need to run the simulation. As you noticed, there is some difference in the files produced with this step-by-step procedure and those created with <code>protoms.py</code>.
+with this command, the files <code>jaws2_watX.pdb</code> and <code>jaws2_notX.pdb</code> will be generated (where X is a number that goes from 1 to the number of jaws2 waters). They should contain all required information on the jaws2-waters. </p>
+<li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the any of the jaws2-box. Do this by typing:
+<pre>python2.7 ~/ProtoMS3.0/tools/clear_gcmcbox.py -b jaws2_wat1.pdb -s water.pdb -o water.pdb</pre>
+<p>This command should be run again for each of the pdb files of the individual water molecules.</p>
+<p>Now we have all the files need to run the simulation. As you noticed, there is some difference in the files produced with this step-by-step procedure and those created with <code>protoms.py</code>.
 <h5>Making ProtoMS input files</h5>
 To make the input files for ProtoMS type
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s jaws1 -p protein_scoop.pdb -l fragment.pdb -t fragment.tem -pw water_clr.pdb --gcmcwater jaws1_wat.pdb -o run</pre>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s jaws2 -p protein_scoop.pdb -l fragment.pdb -t fragment.tem -pw "water.pdb jaws2_not1.pdb" -o run_jaws2-w1 --jawsbias 8 10 12 14 --gcmcwater jaws2_wat1.pdb  --outfolder out_jaws2-w1</pre>
 <p> 
-creating <code>run_bnd.cmd</code>.
+creating <code>run_jaws2-w1_bnd.cmd</code>. Remember to repeat this command for each of the jaws2 water molecules.
 <H3>References</H3>
 <p>1. Murray et.al. <i>J. Med. Chem.,</i> 2010, 53(16), pp 5942-5955</p>
 <p>2. Michel et.al. <i>J. Phys. Chem. B,</i> 2009, 113(40), pp 13337-13346</p>

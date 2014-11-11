@@ -65,6 +65,35 @@ def split_waters(waters) :
 
   return single_waters,other_waters
 
+def set_jaws2_box(water_files,length=3) :
+  """
+  Sets the header of the pdbs containing one single
+  solvent molecule to define a box around the first atom
+
+  Parameters:
+  ----------
+  water_files : PDBSet
+    a pdb set containing the pdb files with one molecule
+    of solvent
+  length : int, optional
+    the dimensions of the box around the molecule
+
+  Returns:
+  --------
+  PDBSet
+    the same input PDBSet, with changed headers
+  """
+  for count,watobj in enumerate(water_files.pdbs) :
+    boxcoords= np.zeros(3)
+    for i,coord in enumerate(watobj.solvents[watobj.solvents.keys()[0]].atoms[0].coords) :
+      boxcoords[i] = coord-1.5
+      boxcoords = np.append(boxcoords,coord+1.5)
+    watobj.header = watobj.header + "REMARK box"
+    for coord in boxcoords :
+      watobj.header = watobj.header + " %.3f"%coord
+    watobj.header = watobj.header + "\n"
+  return water_files
+
 if __name__ == "__main__":
 
   import argparse
@@ -73,6 +102,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Program to split JAWS-1 waters to a number of PDB-files for JAWS-2")
   parser.add_argument('-w','--waters',help="the name of the PDB-file containing the waters.")
   parser.add_argument('-o','--out',help="the prefix of the output PDB-files",default="")
+  parser.add_argument('--jaws2box',action='store_true',help="whether to apply a header box for jaws2 to the pdb files of individual waters",default=False)
   args = parser.parse_args()
 
   # Setup the logger
@@ -83,5 +113,18 @@ if __name__ == "__main__":
   
   single_waters,other_waters = split_waters(args.waters)
 
+  if args.jaws2box :
+    set_jaws2_box(single_waters)
+
   single_waters.write([args.out+"wat%d.pdb"%(i+1) for i in range(len(single_waters.pdbs))])
   other_waters.write([args.out+"not%d.pdb"%(i+1) for i in range(len(single_waters.pdbs))])
+
+
+
+
+
+
+
+
+
+

@@ -669,6 +669,7 @@ def _prep_jaws2(water_file,tarlist,settings) :
     raise simulationobjects.SetupError(msg)
 
   single_wat,other_wat = tools.split_waters(settings.gcmcwater)
+  single_wat = tools.set_jaws2_box(single_wat)
   logger.info("")
   logger.info("Creating water PDB-files for JAWS-2 called jaws2_wat*.pdb and jaws2_not*.pdb")
   single_wat.write(["jaws2_wat%d.pdb"%(i+1) for i in range(len(single_wat.pdbs))])
@@ -676,14 +677,6 @@ def _prep_jaws2(water_file,tarlist,settings) :
 
   nrem = 0
   for count,watobj in enumerate(single_wat.pdbs) :
-    for k in watobj.solvents : boxcoords = watobj.solvents[k].atoms[0].coords
-    for i,coord in enumerate(boxcoords[:3]) :
-      boxcoords[i] = coord-1.5
-      boxcoords = np.append(boxcoords,coord+1.5)
-    watobj.header = watobj.header + "REMARK box"
-    for coord in boxcoords :
-      watobj.header = watobj.header + " %.3f"%coord
-    watobj.header = watobj.header + "\n"
     # Clear the JAWS-2 box from solvation waters
     watobj.name = "jaws2_wat%d.pdb"%(count+1)
     n,water_file = tools.clear_gcmcbox(watobj,water_file)
