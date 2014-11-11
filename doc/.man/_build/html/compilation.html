@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Compilation and Installation &mdash; ProtoMS 3.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ProtoMS 3.0 documentation" href="index.html" />
+    <link rel="next" title="Design of ProtoMS" href="protoms.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+  </head>
+  <body>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci"/></a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="protoms.html" title="Design of ProtoMS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Compilation and Installation</a><ul>
+<li><a class="reference internal" href="#programming-language">Programming Language</a></li>
+<li><a class="reference internal" href="#building-protoms">Building ProtoMS</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="protoms.html"
+                        title="next chapter">Design of ProtoMS</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/compilation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="compilation-and-installation">
+<h1>Compilation and Installation<a class="headerlink" href="#compilation-and-installation" title="Permalink to this headline">¶</a></h1>
+<p>The ProtoMS package supplies the following files and directories;</p>
+<ul class="simple">
+<li><strong>README</strong> File that contains brief installation instructions for ProtoMS, and any last minute addendums or errata that arrived too late to make it into the manual!</li>
+<li><strong>tutorials</strong> This directory contains a number of examples that demonstrate applications of ProtoMS.</li>
+<li><strong>interfaces</strong> This directory contains interfaces for ProtoMS to common scripting languages. Currently interfaces to the Perl and Python languages are provided.</li>
+<li><strong>manual.pdf</strong> This manual!</li>
+<li><strong>parameter</strong> This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.</li>
+<li><strong>src</strong> This directory contains all of the source code.</li>
+</ul>
+<div class="section" id="programming-language">
+<h2>Programming Language<a class="headerlink" href="#programming-language" title="Permalink to this headline">¶</a></h2>
+<p>ProtoMS is written in slightly extended Fortran 77. The extensions used are</p>
+<ul class="simple">
+<li>The maximum line length is up to 132 characters, rather than 72.</li>
+<li>Variable, subroutine and function names are greater than 6 characters.</li>
+<li><tt class="docutils literal"><span class="pre">do/enddo</span></tt> loops are used rather than <tt class="docutils literal"><span class="pre">do/continue</span></tt>.</li>
+<li>Fortran <tt class="docutils literal"><span class="pre">include</span></tt> is used to include the contents of other files.</li>
+<li>The <tt class="docutils literal"><span class="pre">flush</span></tt>, <tt class="docutils literal"><span class="pre">getarg</span></tt> and <tt class="docutils literal"><span class="pre">getenv</span></tt> non-standard intrinsic functions are used.</li>
+<li>ProtoMS performs string manipulation using the <tt class="docutils literal"><span class="pre">len</span></tt> function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.</li>
+<li>The <tt class="docutils literal"><span class="pre">Date</span></tt> and <tt class="docutils literal"><span class="pre">Time</span></tt> Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in <tt class="docutils literal"><span class="pre">getoptions.F</span></tt>, though you will need to provide a random number seed manually.</li>
+</ul>
+<p>ProtoMS has been written using the GNU Fortran compiler, g77, version 3.3.4, on the Linux operating system. ProtoMS is thus known to work well with g77 and Linux. ProtoMS has also been compiled and tested using the Portland Group Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use g77 of pgf77 with ProtoMS.</p>
+</div>
+<div class="section" id="building-protoms">
+<h2>Building ProtoMS<a class="headerlink" href="#building-protoms" title="Permalink to this headline">¶</a></h2>
+<p>Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of <tt class="docutils literal"><span class="pre">make</span></tt> that supports the GNU Makefile format. Simply go into the <tt class="docutils literal"><span class="pre">src</span></tt> directory and edit the <tt class="docutils literal"><span class="pre">Makefile</span></tt> that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the <tt class="docutils literal"><span class="pre">Makefile</span></tt> you can then run <tt class="docutils literal"><span class="pre">make</span></tt>. After about 5 minutes, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called <tt class="docutils literal"><span class="pre">protoms3</span></tt> on UNIX/Linux, and <tt class="docutils literal"><span class="pre">protoms2.exe</span></tt> on Windows. This executable should be run from the command line, or via a script. You should then change into the example directory and try out some of the examples. You should also try some of the tests as well to ensure that your version of ProtoMS is working correctly.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="protoms.html" title="Design of ProtoMS"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

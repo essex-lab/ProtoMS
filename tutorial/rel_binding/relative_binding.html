@@ -42,29 +42,31 @@ mpirun -np 16 $PROTOMSHOME/protoms3 run_free.cmd
 This is most conveniently done on a computer cluster. The calculations will take approximately 48 h to complete.
 <p>
 <h5>Analysis</h5>
-When the simulations are finished you need to analyse the simulation and extract the free energy of the bound and free legs. We will start with looking at some time series. Type
+When the simulations are finished you need to analyse the simulation and extract the free energy of the bound and free legs. We will start with looking at some energy series to investigate whether the simulations are converged. Type
 <pre>
-$PROTOMSHOME/tools/calc_series.py -f out_free/lam-0.000/results
+python2.7 $PROTOMSHOME/tools/calc_series.py -f out_free/lam-0.000/results
 </pre>
-to look at time series for the free leg at &lambda;=0.0. In the wizard that appears you can type <code>gradient</code> followed by enter. This will plot the numerical gradient as a function of simulation snapshot. It should look something like this:<br> 
-<img src="gradient_free.png" width="33%" height="33%" alt="" /><br>
-the program will also give you some indicating on the equilibration of this time series. In this case, you should see equilibration fairly early in the simulation. 
-<p>Run the program again by this time type <code>total</code> to plot the total energy. It should look something like this: <br> <img src="total_free.png" width="33%" height="33%" alt="" /></p>
-<p>Next, we will analyse how effect this &lambda; replica exchange was. Type</p>
+to look at time series for the free leg at &lambda;=0.0. In the wizard that appears you can type <code>total</code> followed by enter. This will plot the total energy as a function of simulation snapshot. It should look something like this:<br> 
+<img src="results_total_free.png" width="33%" height="33%" alt="" /><br>
+the program will also give you some indicating on the equilibration of this time series. In this case, you should see equilibration fairly early in the simulation. Thus, we have to discard very little of the simulation when we compute the free energy.
+<p>Next, we will analyse how effective the &lambda; replica exchange was. Type</p>
 <pre>
-$PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0.067 -o replica_path_free.png
+grep "lambda swaps" out_free/lam-0.000/info
 </pre>
-<p>to plot the path of the first two &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="30%" height="30%" alt="" /><br> as is clear, these two replicas was not able to traverse the full &lambda;-space within the simulation time. Hence, the replica exchange was not fully efficient.</p>
-<p>Now, we will estimate the free energy. We will do this both with thermodynamic integration and Bennet's acceptance ratio (BAR). To do this you can type</p>
+and this will give you the overall acceptance ratio of the &lambda; swaps. It should be around 50% for this perturbation, indicating that the overall effectiveness is acceptable. Next, we will look at individual replicas and see how they exchange &lambda;-value throughout the simulation. This can be done with
 <pre>
-$PROTOMSHOME/tools/calc_ti.py -d out_free/ -s 100
-$PROTOMSHOME/tools/calc_bar.py -d out_free/ -s 100
+python2.7 $PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0.2 0.8 1.0 -o replica_path_free.png
 </pre>
-<p>A typical result is about -0.5 kcal/mol. Notice that 100 snapshots are removed from the 400 snapshots when calculating the free energy, because the analysis with <code>calc_series.py</code> indicated that the simulation was equilibrated from approximately this point.</p>
-<p>It is important to study the gradient of the TI calculation. It should be smoot in order for the TI to work properly. For the free leg it should look something like this <br>
+<p>to plot the path of the first two &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="33%" alt="" /><br> as is clear, these the replicas was not able to traverse the full &lambda;-space within the simulation time. Also the replica starting with &lambda;=1.0 or 0.0, did not exchange very much at all. Hence, the replica exchange was not fully efficient.</p>
+<p>Now, we will estimate the free energy. We will do this both with thermodynamic integration, Bennet's acceptance ratio (BAR) and multi BAR (MBAR). To do this you can type</p>
+<pre>
+python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_free/ -s 10
+</pre>
+<p>A typical result is between 0 and 1 kcal/mol. Notice that only 10 snapshots are removed from the 400 snapshots when calculating the free energy, because the analysis with <code>calc_series.py</code> indicated that the simulation was equilibrated very much from the start.</p>
+<p>It is important to study the gradient of the TI calculation. It should be smooth in order for the TI to work properly. For the free leg it should look something like this <br>
 <img src="gradients.png" width="%" height="33%" alt="" /></p>
 
-<p>Now, we need to repeat the analysis for the bound leg. You will notice that the equilibration of this simulation is much worse. The computed free energy should be around -1.1 kcal/mol (depending on TI or BAR and equilibration removed). This gives a relative binding free energy of about -0.5 kcal/mol. </p>
+<p>Now, we need to repeat the analysis for the bound leg. You will notice that the equilibration of this simulation is much worse. The computed free energy should be between 6.5 and 7.5 kcal/mol (depending on TI or BAR and equilibration removed). </p>This gives a relative binding free energy of about -0.5 kcal/mol. </p>
 <p>
 <hr align="center"/>
 <p> 
