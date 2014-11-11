@@ -192,6 +192,12 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
   logger.info("")
   logger.info("Setting up ligand: %s..."%files["pdb"])
 
+  if len(files["obj"].residues) < 1 :
+    if len(files["obj"].solvents) > 0 :
+      raise simulationobjects.SetupError("Your ligand in %s is recognized as solvent. Please change the residue name." %files["obj"].name)
+    else :
+      raise simulationobjects.SetupError("No residues found in %s."%files["obj"].name)
+
   # Get the ligand name from the pdb header
   if 'HEADER' in files["obj"].header:
     words = files["obj"].header.strip().split()
