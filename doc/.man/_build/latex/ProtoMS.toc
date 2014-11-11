@@ -1,0 +1,56 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}Formatting}{3}{section.1.1}
+\contentsline {chapter}{\numberline {2}Compilation and Installation}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}Programming Language}{5}{section.2.1}
+\contentsline {section}{\numberline {2.2}Building ProtoMS}{6}{section.2.2}
+\contentsline {chapter}{\numberline {3}Design of ProtoMS}{7}{chapter.3}
+\contentsline {section}{\numberline {3.1}Proteins / Solutes / Solvents / GCSolutes}{7}{section.3.1}
+\contentsline {section}{\numberline {3.2}Classical forcefields}{10}{section.3.2}
+\contentsline {section}{\numberline {3.3}Perturbations}{13}{section.3.3}
+\contentsline {section}{\numberline {3.4}Generic Moves}{15}{section.3.4}
+\contentsline {chapter}{\numberline {4}Run ProtoMS}{21}{chapter.4}
+\contentsline {section}{\numberline {4.1}File output}{21}{section.4.1}
+\contentsline {section}{\numberline {4.2}Simulation parameters}{22}{section.4.2}
+\contentsline {section}{\numberline {4.3}Specifying input files}{26}{section.4.3}
+\contentsline {section}{\numberline {4.4}Running a Simulation}{27}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Equilibration and Production}{27}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Results and Restarts}{29}{subsection.4.4.2}
+\contentsline {subsection}{\numberline {4.4.3}PDB Output}{30}{subsection.4.4.3}
+\contentsline {subsection}{\numberline {4.4.4}Restraints}{30}{subsection.4.4.4}
+\contentsline {subsection}{\numberline {4.4.5}Miscellaneous}{32}{subsection.4.4.5}
+\contentsline {section}{\numberline {4.5}Setup and analysis tools}{33}{section.4.5}
+\contentsline {chapter}{\numberline {5}Input Files}{35}{chapter.5}
+\contentsline {section}{\numberline {5.1}Parameter / Forcefield Files}{35}{section.5.1}
+\contentsline {section}{\numberline {5.2}Templates}{39}{section.5.2}
+\contentsline {section}{\numberline {5.3}Protein File}{47}{section.5.3}
+\contentsline {section}{\numberline {5.4}Solute File}{47}{section.5.4}
+\contentsline {section}{\numberline {5.5}GCsolute File}{48}{section.5.5}
+\contentsline {section}{\numberline {5.6}Solvent File}{48}{section.5.6}
+\contentsline {section}{\numberline {5.7}Restart File}{49}{section.5.7}
+\contentsline {chapter}{\numberline {6}protoms.py}{51}{chapter.6}
+\contentsline {chapter}{\numberline {7}Tools}{55}{chapter.7}
+\contentsline {section}{\numberline {7.1}ambertools.py}{55}{section.7.1}
+\contentsline {section}{\numberline {7.2}build\_template.py}{55}{section.7.2}
+\contentsline {section}{\numberline {7.3}calc\_bar.py}{56}{section.7.3}
+\contentsline {section}{\numberline {7.4}calc\_density.py}{57}{section.7.4}
+\contentsline {section}{\numberline {7.5}calc\_dg.py}{58}{section.7.5}
+\contentsline {section}{\numberline {7.6}calc\_replicapath.py}{59}{section.7.6}
+\contentsline {section}{\numberline {7.7}calc\_rmsd.py}{59}{section.7.7}
+\contentsline {section}{\numberline {7.8}calc\_series.py}{60}{section.7.8}
+\contentsline {section}{\numberline {7.9}calc\_ti.py}{61}{section.7.9}
+\contentsline {section}{\numberline {7.10}clear\_gcmcbox.py}{62}{section.7.10}
+\contentsline {section}{\numberline {7.11}convertatomnames.py}{62}{section.7.11}
+\contentsline {section}{\numberline {7.12}convertwater.py}{63}{section.7.12}
+\contentsline {section}{\numberline {7.13}distribute\_waters.py}{63}{section.7.13}
+\contentsline {section}{\numberline {7.14}divide\_pdb.py}{64}{section.7.14}
+\contentsline {section}{\numberline {7.15}generate\_input.py}{64}{section.7.15}
+\contentsline {section}{\numberline {7.16}make\_dummy.py}{65}{section.7.16}
+\contentsline {section}{\numberline {7.17}make\_gcmcbox.py}{66}{section.7.17}
+\contentsline {section}{\numberline {7.18}make\_single.py}{66}{section.7.18}
+\contentsline {section}{\numberline {7.19}merge\_templates.py}{67}{section.7.19}
+\contentsline {section}{\numberline {7.20}pms2pymbar.py}{67}{section.7.20}
+\contentsline {section}{\numberline {7.21}scoop.py}{68}{section.7.21}
+\contentsline {section}{\numberline {7.22}solvate.py}{69}{section.7.22}
+\contentsline {section}{\numberline {7.23}split\_jawswater.py}{70}{section.7.23}
+\contentsline {chapter}{\numberline {8}Indices and tables}{73}{chapter.8}

@@ -129,6 +129,7 @@ class ProtoMSSimulation :
         string = "\n".join(self._lines)           
         return string        
     def _setkey(self,key,value):
+      #print [key in line.split()[0] for line in self._lines]
       self._lines.append("%s %s"%(key,value))        
     def clear(self):
         """
@@ -315,7 +316,7 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
                     solutes=["solute.pdb"],
                     solvent="water.pdb",
                     templates=["solute.tem"],
-                    outfolder="") :
+                    outfolder=None) :
     """
     Parameters
     ----------
@@ -354,7 +355,7 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
             break 
       except :
         pass      
-    self.setParameter("outfolder",outfolder)
+    if outfolder is not None: self.setParameter("outfolder",outfolder)
     self.setStream("header","off")
     self.setStream("detail","off")
     for s in ["warning","info","fatal","results","accept",] :
@@ -697,8 +698,8 @@ class GCMC(ProteinLigandSimulation) :
       no GCMC water given
       no Adam values givens
     """      
-    if len(outfolder) == 0 : outfolder = "out_gcmc"
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
+    #if len(outfolder) == 0 : outfolder = "out_gcmc"
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
      
     if adamval is None :
       raise simulationobjects.SetupError("Must give at least one Adam value")
@@ -713,13 +714,15 @@ class GCMC(ProteinLigandSimulation) :
     self.setParameter("gcmc","0")
     self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
     self.setParameter("grand1",gcmcwater)
+    #self.setParameter("outfolder",outfolder)
     if isinstance(adamval,float) or isinstance(adamval,int):
       self.setParameter("potential","%.3f"%adamval)
     elif len(adamval) == 1 :
       self.setParameter("potential","%.3f"%adamval[0])
+      #self.setParameter("outfolder",outfolder)
     else :
       self.setParameter("multigcmc"," ".join("%.3f"%a for a in adamval))
-    self.setParameter("refolder",outfolder)
+      #self.setParameter("refolder",outfolder)
     _setbox(self,gcmcwater,gcmcbox)
     self.setParameter("#"," End of GCMC specific parameters")
   

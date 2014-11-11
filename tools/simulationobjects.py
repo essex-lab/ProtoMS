@@ -330,9 +330,9 @@ class PDBFile:
           the center, length and origin of the box
         """
         if reslist is 'all' :
-          reslist = list(set([self.residues[i].name for i in self.residues] + [self.solvents[i].name for i in self.solvents]))	
+          reslist = list(set([self.residues[i].name for i in self.residues] + [self.solvents[i].name for i in self.solvents]))	 
         if atomlist is 'all' :
-          atomlist = list(set([atom.name for i in self.residues for atom in self.residues[i].atoms]))
+          atomlist = list(set([atom.name for i in self.residues for atom in self.residues[i].atoms] + [atom.name for i in self.solvents for atom in self.solvents[i].atoms]))
         minxyz = np.zeros(3)+1E6
         maxxyz = np.zeros(3)-1E6
         for res in self.residues :

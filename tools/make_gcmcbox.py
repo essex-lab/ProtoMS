@@ -65,10 +65,13 @@ if __name__ == "__main__":
   logger = simulationobjects.setup_logger("make_gcmcbox_py.log")
 
   if args.solute is None and args.box is None : 
-    print "Nothing to do! Exiting."
-  
+    print "Nothing to do! Exiting."  
+
+
   if args.box is None :
-    make_gcmcbox(args.solute,args.out,args.padding)
+    pdbobj = simulationobjects.PDBFile()
+    pdbobj.read(args.solute)
+    make_gcmcbox(pdbobj,args.out,args.padding)
   elif len(args.box) == 3:
     box = {"center":np.array([float(args.box[0]),float(args.box[1]),float(args.box[2])]),"len":np.array([args.padding*2]*3)}
     simulationobjects.write_box(args.out,box)
