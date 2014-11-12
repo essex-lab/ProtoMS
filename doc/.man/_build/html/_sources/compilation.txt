@@ -4,17 +4,22 @@ Compilation and Installation
 
 The ProtoMS package supplies the following files and directories;
 
+* **data** This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
+
+* **doc** This directory contains documentation
+
 * **README** File that contains brief installation instructions for ProtoMS, and any last minute addendums or errata that arrived too late to make it into the manual!
-
-* **tutorials** This directory contains a number of examples that demonstrate applications of ProtoMS.
-
-* **interfaces** This directory contains interfaces for ProtoMS to common scripting languages. Currently interfaces to the Perl and Python languages are provided.
-
-* **manual.pdf** This manual!
 
 * **parameter** This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
 
-* **src** This directory contains all of the source code.
+* **src** This directory contains all of the source code for the main program
+
+* **tools** This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+
+* **tutorial** This directory contains a number of examples that demonstrate applications of ProtoMS.
+
+
+.. _fortran77:
 
 ====================
 Programming Language
@@ -36,7 +41,9 @@ ProtoMS is written in slightly extended Fortran 77. The extensions used are
 
 * The ``Date`` and ``Time`` Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in ``getoptions.F``, though you will need to provide a random number seed manually.
 
-ProtoMS has been written using the GNU Fortran compiler, g77, version 3.3.4, on the Linux operating system. ProtoMS is thus known to work well with g77 and Linux. ProtoMS has also been compiled and tested using the Portland Group Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use g77 of pgf77 with ProtoMS.
+ProtoMS has been written using the GNU Fortran compiler, g77, version 3.3.4, on the Linux operating system. ProtoMS is thus known to work well with g77 and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use g77 of ifort with ProtoMS.
+
+The tools are written in python and should be compatible with the standard implementation version 2.7. It is known that is does not work with 2.6 and it has not been tested with version 3.0 or more.
 
 =================
 Building ProtoMS

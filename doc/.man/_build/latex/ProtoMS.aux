@@ -19,9 +19,9 @@
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{introduction:welcome-to-the-protoms-documentation}{{1}{3}{Introduction\relax }{chapter.1}{}}
 \newlabel{introduction:introduction}{{1}{3}{Introduction\relax }{chapter.1}{}}
 \newlabel{introduction::doc}{{1}{3}{Introduction\relax }{chapter.1}{}}
-\newlabel{introduction:welcome-to-protoms-s-documentation}{{1}{3}{Introduction\relax }{chapter.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}Formatting}{3}{section.1.1}}
 \newlabel{introduction:formatting}{{1.1}{3}{Formatting\relax }{section.1.1}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Compilation and Installation}{5}{chapter.2}}
@@ -30,6 +30,7 @@
 \newlabel{compilation:compilation-and-installation}{{2}{5}{Compilation and Installation\relax }{chapter.2}{}}
 \newlabel{compilation::doc}{{2}{5}{Compilation and Installation\relax }{chapter.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Programming Language}{5}{section.2.1}}
+\newlabel{compilation:fortran77}{{2.1}{5}{Programming Language\relax }{section.2.1}{}}
 \newlabel{compilation:programming-language}{{2.1}{5}{Programming Language\relax }{section.2.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}Building ProtoMS}{6}{section.2.2}}
 \newlabel{compilation:building-protoms}{{2.2}{6}{Building ProtoMS\relax }{section.2.2}{}}
@@ -40,32 +41,75 @@
 \newlabel{protoms::doc}{{3}{7}{Design of ProtoMS\relax }{chapter.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.1}Proteins / Solutes / Solvents / GCSolutes}{7}{section.3.1}}
 \newlabel{protoms:proteins-solutes-solvents-gcsolutes}{{3.1}{7}{Proteins / Solutes / Solvents / GCSolutes\relax }{section.3.1}{}}
+\newlabel{protoms:bbatoms}{{3.1}{8}{Proteins / Solutes / Solvents / GCSolutes\relax }{section*.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Four atoms from each protein residue are designated as backbone atoms (bbatoms). For most residues these atoms are the N, CA, C and O atoms respectively. The four backbone atoms for two neighbouring residues are shown above. The protein backbone move moves the last three bbatoms of one residue and the first bbatom of the next residue. This is because the moves assumes that these four bbatoms form a rigid triangle (as is shown by the grey lines). The four atoms are translated and rotated as a rigid triangle, with the origin of rotation of the triangle centered on the intersection of the vector between bbatoms 2 and 1, and the vector between bbatoms 3 and 4 (marked as a red dot directly above the C=O bond). Because this triangle is translated and rotated as a rigid unit, all atoms connected to the atoms of this triangle will also be translated and rotated as a rigid unit.}}{9}{figure.3.1}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Table 1.0 The default value of the maximum number of proteins, GCsolutes, solutes and solvents that may be loaded simultaneously by ProtoMS. These values may be changed by editing the dimensions.inc file located in the src directory, and recompiling ProtoMS.}}{9}{table.3.1}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}Classical forcefields}{10}{section.3.2}}
+\newlabel{protoms:index-5}{{3.2}{10}{Classical forcefields\relax }{section.3.2}{}}
 \newlabel{protoms:classical-forcefields}{{3.2}{10}{Classical forcefields\relax }{section.3.2}{}}
+\newlabel{protoms:equation-intermol1}{{3.2}{10}{Classical forcefields\relax }{section*.4}{}}
+\newlabel{protoms-intermol1}{{3.1}{10}{Classical forcefields\relax }{equation.3.1}{}}
+\newlabel{protoms:equation-intermol2}{{3.2}{10}{Classical forcefields\relax }{section*.5}{}}
+\newlabel{protoms-intermol2}{{3.2}{10}{Classical forcefields\relax }{equation.3.2}{}}
+\newlabel{protoms:equation-arithmetriccomb}{{3.2}{10}{Classical forcefields\relax }{section*.6}{}}
+\newlabel{protoms-arithmetriccomb}{{3.3}{10}{Classical forcefields\relax }{equation.3.3}{}}
+\newlabel{protoms:equation-geometriccomb}{{3.2}{10}{Classical forcefields\relax }{section*.7}{}}
+\newlabel{protoms-geometriccomb}{{3.4}{10}{Classical forcefields\relax }{equation.3.4}{}}
+\newlabel{protoms:equation-bondpot}{{3.2}{10}{Classical forcefields\relax }{section*.8}{}}
+\newlabel{protoms-bondpot}{{3.5}{10}{Classical forcefields\relax }{equation.3.5}{}}
+\newlabel{protoms:equation-angpot}{{3.2}{11}{Classical forcefields\relax }{section*.9}{}}
+\newlabel{protoms-angpot}{{3.6}{11}{Classical forcefields\relax }{equation.3.6}{}}
+\newlabel{protoms:equation-ubpot}{{3.2}{11}{Classical forcefields\relax }{section*.10}{}}
+\newlabel{protoms-ubpot}{{3.7}{11}{Classical forcefields\relax }{equation.3.7}{}}
+\newlabel{protoms:equation-dihepot}{{3.2}{11}{Classical forcefields\relax }{section*.11}{}}
+\newlabel{protoms-dihepot}{{3.8}{11}{Classical forcefields\relax }{equation.3.8}{}}
+\newlabel{protoms:equation-intrapot1}{{3.2}{11}{Classical forcefields\relax }{section*.12}{}}
+\newlabel{protoms-intrapot1}{{3.9}{11}{Classical forcefields\relax }{equation.3.9}{}}
+\newlabel{protoms:equation-intrapot2}{{3.2}{12}{Classical forcefields\relax }{section*.13}{}}
+\newlabel{protoms-intrapot2}{{3.10}{12}{Classical forcefields\relax }{equation.3.10}{}}
+\newlabel{protoms:equation-intrapot3}{{3.2}{12}{Classical forcefields\relax }{section*.14}{}}
+\newlabel{protoms-intrapot3}{{3.11}{12}{Classical forcefields\relax }{equation.3.11}{}}
+\newlabel{protoms:equation-gb1}{{3.2}{12}{Classical forcefields\relax }{section*.15}{}}
+\newlabel{protoms-gb1}{{3.12}{12}{Classical forcefields\relax }{equation.3.12}{}}
+\newlabel{protoms:equation-gb2}{{3.2}{12}{Classical forcefields\relax }{section*.16}{}}
+\newlabel{protoms-gb2}{{3.13}{12}{Classical forcefields\relax }{equation.3.13}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.3}Perturbations}{13}{section.3.3}}
+\newlabel{protoms:index-14}{{3.3}{13}{Perturbations\relax }{section.3.3}{}}
 \newlabel{protoms:perturbations}{{3.3}{13}{Perturbations\relax }{section.3.3}{}}
+\newlabel{protoms:equation-lambdamix}{{3.3}{14}{Perturbations\relax }{section*.17}{}}
+\newlabel{protoms-lambdamix}{{3.14}{14}{Perturbations\relax }{equation.3.14}{}}
+\newlabel{protoms:equation-dihmix}{{3.3}{14}{Perturbations\relax }{section*.18}{}}
+\newlabel{protoms-dihmix}{{3.15}{14}{Perturbations\relax }{equation.3.15}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Geometry variations allow for a smoother transition between two systems, for example here a methyl group is smoothly converted into a hydrogen.}}{14}{figure.3.2}}
-\newlabel{protoms:equation-uljsoftmod}{{3.3}{15}{Perturbations\relax }{section*.3}{}}
-\newlabel{protoms-uljsoftmod}{{3.1}{15}{Perturbations\relax }{equation.3.1}{}}
-\newlabel{protoms:equation-uljsoftmod2}{{3.3}{15}{Perturbations\relax }{section*.4}{}}
-\newlabel{protoms-uljsoftmod2}{{3.2}{15}{Perturbations\relax }{equation.3.2}{}}
-\newlabel{protoms:equation-uljsoftmod3}{{3.3}{15}{Perturbations\relax }{section*.5}{}}
-\newlabel{protoms-uljsoftmod3}{{3.3}{15}{Perturbations\relax }{equation.3.3}{}}
+\newlabel{protoms:equation-doubletopu}{{3.3}{15}{Perturbations\relax }{section*.19}{}}
+\newlabel{protoms-doubletopu}{{3.16}{15}{Perturbations\relax }{equation.3.16}{}}
+\newlabel{protoms:equation-uljsoftmod}{{3.3}{15}{Perturbations\relax }{section*.20}{}}
+\newlabel{protoms-uljsoftmod}{{3.17}{15}{Perturbations\relax }{equation.3.17}{}}
+\newlabel{protoms:equation-uljsoftmod2}{{3.3}{15}{Perturbations\relax }{section*.21}{}}
+\newlabel{protoms-uljsoftmod2}{{3.18}{15}{Perturbations\relax }{equation.3.18}{}}
+\newlabel{protoms:equation-uljsoftmod3}{{3.3}{15}{Perturbations\relax }{section*.22}{}}
+\newlabel{protoms-uljsoftmod3}{{3.19}{15}{Perturbations\relax }{equation.3.19}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}Generic Moves}{15}{section.3.4}}
 \newlabel{protoms:generic-moves}{{3.4}{15}{Generic Moves\relax }{section.3.4}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Run ProtoMS}{21}{chapter.4}}
+\newlabel{protoms:moves}{{3.4}{15}{Generic Moves\relax }{section.3.4}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Executing ProtoMS}{21}{chapter.4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{protoms:run-protoms}{{4}{21}{Run ProtoMS\relax }{chapter.4}{}}
+\newlabel{protoms:executing-protoms}{{4}{21}{Executing ProtoMS\relax }{chapter.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}File output}{21}{section.4.1}}
 \newlabel{protoms:file-output}{{4.1}{21}{File output\relax }{section.4.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Simulation parameters}{22}{section.4.2}}
-\newlabel{protoms:simulation-parameters}{{4.2}{22}{Simulation parameters\relax }{section.4.2}{}}
+\newlabel{protoms:index-27}{{4.1}{21}{File output\relax }{section.4.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Simulation parameters}{23}{section.4.2}}
+\newlabel{protoms:parameters}{{4.2}{23}{Simulation parameters\relax }{section.4.2}{}}
+\newlabel{protoms:simulation-parameters}{{4.2}{23}{Simulation parameters\relax }{section.4.2}{}}
+\newlabel{protoms:equation-bval}{{4.2}{26}{Simulation parameters\relax }{section*.23}{}}
+\newlabel{protoms-bval}{{4.1}{26}{Simulation parameters\relax }{equation.4.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.3}Specifying input files}{26}{section.4.3}}
 \newlabel{protoms:specifying-input-files}{{4.3}{26}{Specifying input files\relax }{section.4.3}{}}
+\newlabel{protoms:incmd}{{4.3}{26}{Specifying input files\relax }{section.4.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}Running a Simulation}{27}{section.4.4}}
 \newlabel{protoms:running-a-simulation}{{4.4}{27}{Running a Simulation\relax }{section.4.4}{}}
+\newlabel{protoms:runcmd}{{4.4}{27}{Running a Simulation\relax }{section.4.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Equilibration and Production}{27}{subsection.4.4.1}}
 \newlabel{protoms:equilibration-and-production}{{4.4.1}{27}{Equilibration and Production\relax }{subsection.4.4.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Results and Restarts}{29}{subsection.4.4.2}}
@@ -73,9 +117,11 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}PDB Output}{30}{subsection.4.4.3}}
 \newlabel{protoms:pdb-output}{{4.4.3}{30}{PDB Output\relax }{subsection.4.4.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4.4}Restraints}{30}{subsection.4.4.4}}
+\newlabel{protoms:index-66}{{4.4.4}{30}{Restraints\relax }{subsection.4.4.4}{}}
 \newlabel{protoms:restraints}{{4.4.4}{30}{Restraints\relax }{subsection.4.4.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4.5}Miscellaneous}{32}{subsection.4.4.5}}
 \newlabel{protoms:miscellaneous}{{4.4.5}{32}{Miscellaneous\relax }{subsection.4.4.5}{}}
+\newlabel{protoms:misccmd}{{4.4.5}{32}{Miscellaneous\relax }{subsection.4.4.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.5}Setup and analysis tools}{33}{section.4.5}}
 \newlabel{protoms:setup-and-analysis-tools}{{4.5}{33}{Setup and analysis tools\relax }{section.4.5}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {5}Input Files}{35}{chapter.5}}
@@ -83,17 +129,23 @@
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{protoms:input-files}{{5}{35}{Input Files\relax }{chapter.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.1}Parameter / Forcefield Files}{35}{section.5.1}}
+\newlabel{protoms:parfil}{{5.1}{35}{Parameter / Forcefield Files\relax }{section.5.1}{}}
 \newlabel{protoms:parameter-forcefield-files}{{5.1}{35}{Parameter / Forcefield Files\relax }{section.5.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.2}Templates}{39}{section.5.2}}
 \newlabel{protoms:templates}{{5.2}{39}{Templates\relax }{section.5.2}{}}
+\newlabel{protoms:temref}{{5.2}{39}{Templates\relax }{section.5.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.3}Protein File}{47}{section.5.3}}
 \newlabel{protoms:protein-file}{{5.3}{47}{Protein File\relax }{section.5.3}{}}
+\newlabel{protoms:protpdb}{{5.3}{47}{Protein File\relax }{section.5.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.4}Solute File}{47}{section.5.4}}
+\newlabel{protoms:solpdb}{{5.4}{47}{Solute File\relax }{section.5.4}{}}
 \newlabel{protoms:solute-file}{{5.4}{47}{Solute File\relax }{section.5.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.5}GCsolute File}{48}{section.5.5}}
+\newlabel{protoms:gcpdb}{{5.5}{48}{GCsolute File\relax }{section.5.5}{}}
 \newlabel{protoms:gcsolute-file}{{5.5}{48}{GCsolute File\relax }{section.5.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.6}Solvent File}{48}{section.5.6}}
 \newlabel{protoms:solvent-file}{{5.6}{48}{Solvent File\relax }{section.5.6}{}}
+\newlabel{protoms:solventpdb}{{5.6}{48}{Solvent File\relax }{section.5.6}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.7}Restart File}{49}{section.5.7}}
 \newlabel{protoms:restart-file}{{5.7}{49}{Restart File\relax }{section.5.7}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {6}protoms.py}{51}{chapter.6}}
@@ -152,7 +204,4 @@
 \newlabel{tools:solvate-py}{{7.22}{69}{solvate.py\relax }{section.7.22}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7.23}split\_jawswater.py}{70}{section.7.23}}
 \newlabel{tools:split-jawswater-py}{{7.23}{70}{split\_jawswater.py\relax }{section.7.23}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Indices and tables}{73}{chapter.8}}
-\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{index:indices-and-tables}{{8}{73}{Indices and tables\relax }{chapter.8}{}}
+\@writefile{toc}{\contentsline {chapter}{Index}{73}{section*.24}}
