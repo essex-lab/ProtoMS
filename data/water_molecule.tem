@@ -23,14 +23,14 @@ par 8005  ??  0 -1.040  0.0      0.0
 mode template
 solute WA1
 info translate 0.15 rotate 15
-atom   O00 WAT 8003  8003   DM3 DUM  DM2 DUM  DM1 DUM
-atom   H01 WAT 8004  8004   O00 WAT  DM3 DUM  DM2 DUM   
-atom   H02 WAT 8004  8004   O00 WAT  H01 WAT  DM3 DUM    
-atom   M03 WAT 8005  8005   O00 WAT  H01 WAT  H02 WAT
-bond   H01 WAT O00 WAT param 0 0
-bond   H02 WAT O00 WAT param 0 0
-bond   M03 WAT O00 WAT param 0 0
-angle H01 WAT O00 WAT M03 WAT param 0 0
-angle H02 WAT O00 WAT M03 WAT param 0 0
-angle H01 WAT O00 WAT H02 WAT param 0 0
+atom   O00 WA1 8003  8003   DM3 DUM  DM2 DUM  DM1 DUM
+atom   H01 WA1 8004  8004   O00 WA1  DM3 DUM  DM2 DUM   
+atom   H02 WA1 8004  8004   O00 WA1  H01 WA1  DM3 DUM    
+atom   M03 WA1 8005  8005   O00 WA1  H01 WA1  H02 WA1
+bond   H01 WA1 O00 WA1 param 0 0
+bond   H02 WA1 O00 WA1 param 0 0
+bond   M03 WA1 O00 WA1 param 0 0
+angle H01 WA1 O00 WA1 M03 WA1 param 0 0
+angle H02 WA1 O00 WA1 M03 WA1 param 0 0
+angle H01 WA1 O00 WA1 H02 WA1 param 0 0
 
