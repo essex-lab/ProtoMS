@@ -2,17 +2,18 @@
 Design of ProtoMS
 ********************
 
+.. index::
+  single: design
+
 ProtoMS is a powerful simulation program that is capable of being used in many different ways. ProtoMS was originally designed to perform Monte Carlo free energy calculations on protein-ligand systems, so a lot of the terminology and ideas associated with ProtoMS derive from protein-ligand Monte Carlo methodology. While the code was originally designed with this use in mind, the framework is sufficiently flexible to allow the study of a wide range of different systems, using a wide range of simulation methodology.
 
 At the core of ProtoMS are four central concepts;
 
-* **Proteins/Solutes/Solvents** ProtoMS divides all molecules to be simulated into ‘proteins’, ‘solutes’ and ‘solvent’.
-
-* **GCSolutes** ProtoMS can also simulate solvents using the Grand Canonical Ensemble
+* **Proteins/Solutes/Solvents/GCSolutes** ProtoMS divides all molecules to be simulated into ‘proteins’, ‘solutes’ and ‘solvent’.
 
 * **Classical Forcefields** ProtoMS Uses a generic classical forcefield to calculate the energy of the molecules. This forcefield may be specialised such that ProtoMS is able to implement a wide range of modern molecular mechanics forcefields.
 
-* **Perturbation and λ** ProtoMS provides support for free energy calculations by allowing forcefields and geometries to be perturbed using a λ coordinate. The forcefield for any protein, solute or solvent may be perturbed, and the geometry of any solute may be perturbed.
+* **Perturbations and :math:`\lambda`** ProtoMS provides support for free energy calculations by allowing forcefields and geometries to be perturbed using a :math:`\lambda` coordinate. The forcefield for any protein, solute or solvent may be perturbed, and the geometry of any solute may be perturbed.
 
 * **Generic Moves** ProtoMS is designed around the concept a ‘move’. The move can do anything, from a Monte Carlo translation of solvent to a docking type move on a solute. A simulation is constructed by stringing a collection of moves together.
 
@@ -30,54 +31,74 @@ ProtoMS divides all of the molecules loaded within a system into solvents, GCsol
 
 * **proteins** A protein is any flexible chain molecule (polymer). A protein is composed of a linear chain of residues, with interresidue bonds connecting one residue to the next. By default, ProtoMS can load up to 3 proteins simultaneously, each protein consisting of 500 residues, each consisting of up to 34 atoms.
 
+.. index::
+  single: Solvents
+
 **Solvents**
 
-Solvents are loaded into ProtoMS from PDB files (see section 3.8.6). Each solvent molecule is identified by its residue name (the fourth column in the PDB file), e.g. ProtoMS identifies the TIP4P solvent with the residue name ‘T4P’. ProtoMS loads the coordinates of the solvent from the PDB file, and then assigns the parameters for the solvent from a solvent template (see section 3.1.1). The solvent template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Note that this version of ProtoMS uses the coordinates of the solvent molecule that are present in the PDB file. ProtoMS does not yet have the capability to modify these coordinates to ensure that the internal geometry of the solvent is correct for the solvent model. This means that as solvents are only translated and rotated, the internal geometry of
+Solvents are loaded into ProtoMS from PDB files (see section :ref:`solventpdb`). Each solvent molecule is identified by its residue name (the fourth column in the PDB file), e.g. ProtoMS identifies the TIP4P solvent with the residue name ‘T4P’. ProtoMS loads the coordinates of the solvent from the PDB file, and then assigns the parameters for the solvent from a solvent template (see section :ref:`temref`). The solvent template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Note that this version of ProtoMS uses the coordinates of the solvent molecule that are present in the PDB file. ProtoMS does not yet have the capability to modify these coordinates to ensure that the internal geometry of the solvent is correct for the solvent model. This means that as solvents are only translated and rotated, the internal geometry of
 the solvent molecule loaded at the start of the simulation will be identical to that at the end of the simulation. 
 
 ProtoMS can also generate a large solvent box by replicating a smaller solvent box. An equilibrated box of TIP4P molecules is provided with the program and a tutorial demonstrates how to use such feature.
 
+.. index::
+  single: GCSolutes
+
 **GCSolutes**
-Like solvents, GCsolutes are loaded into ProtoMS from PDB files (see section 3.8.5). Each GCsolute molecule is identified by its residue name (the fourth column in the PDB file). ProtoMS loads the coordinates of the GCsolute from the PDB file, and then assigns the parameters for the GCsolute from a GCsolute template (see section 3.1.1). This template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Alongside translational and rotational moves, the intermolecular energy between the GCsolute and the system can be sampled.
+
+Like solvents, GCsolutes are loaded into ProtoMS from PDB files (see section :ref:`gcpdb`). Each GCsolute molecule is identified by its residue name (the fourth column in the PDB file). ProtoMS loads the coordinates of the GCsolute from the PDB file, and then assigns the parameters for the GCsolute from a GCsolute template (see section :ref:`temref`). This template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Alongside translational and rotational moves, the intermolecular energy between the GCsolute and the system can be sampled.
+
+.. index::
+  single: Solutes
 
 **Solutes**
-Solutes are also loaded into ProtoMS from PDB files (see section 3.8.4). Each solute molecule is identified by its solute name, which is given in the ‘HEADER’ record of the PDB file. ProtoMS obtains the coordinates of the solute from the PDB file, and will then find a solute template that matches this solute name (see section 3.8.2). The solute template is used to build the z-matrix for the solute, and to assign all of the forcefield parameters. The solute template is also used to assign the connectivity of the solute and to define the flexible internal coordinates. The solute molecule is constructed using the z-matrix, with the reference being three automatically added dummy atoms, called ‘DM1’, ‘DM2’ and ‘DM3’, all part of residue ‘DUM’. These dummy atoms are automatically added by ProtoMS at the geometric center of the solute, as a right angled set of atoms pointing along the major and minor axes of the solute.
+
+Solutes are also loaded into ProtoMS from PDB files (see section :ref:`solpdb`). Each solute molecule is identified by its solute name, which is given in the HEADER record of the PDB file. ProtoMS obtains the coordinates of the solute from the PDB file, and will then find a solute template that matches this solute name (see :ref:`temref`). The solute template is used to build the z-matrix for the solute, and to assign all of the forcefield parameters. The solute template is also used to assign the connectivity of the solute and to define the flexible internal coordinates. The solute molecule is constructed using the z-matrix, with the reference being three automatically added dummy atoms, called ‘DM1’, ‘DM2’ and ‘DM3’, all part of residue ‘DUM’. These dummy atoms are automatically added by ProtoMS at the geometric center of the solute, as a right angled set of atoms pointing along the major and minor axes of the solute.
+
+.. index::
+  single: Proteins
 
 **Proteins**
-Proteins are loaded into ProtoMS via PDB files (see section 3.8.3). Each PDB file may only contain a single protein chain. ProtoMS constructs the linear chain of molecules based on the order of residues that it reads from the PDB file, and will ignore the residue number read from the PDB file. This means that you must ensure that you have the residues ordered correctly within the PDB file. ProtoMS assigns to each residue both a chain template (see section 3.8.2), that describes the backbone of the residue, and a residue template (see section 3.8.2), that describes the sidechain. The residue template is located based on the name of the residue given in the fourth column in the PDB file (e.g. ‘ASP’ or ‘HIS’). The chain template is located based on the chain template associated with the residue template for the position of the residue within the chain. For example, residue ‘ASP’ has a standard amino acid backbone chain template if this residue was in the middle of the chain, an NH+ capped backbone chain template 3 if this was the first residue of the chain (and thus at the n-terminus), and a CO-- capped backbone chain template 2 if this were the last residue of the chain (and thus at the c-terminus). If the protein consisted of only one residue, then the zwitterionic amino acid chain template would be used for ‘ASP’. 
+Proteins are loaded into ProtoMS via PDB files (see section :ref:`protpdb`). Each PDB file may only contain a single protein chain. ProtoMS constructs the linear chain of molecules based on the order of residues that it reads from the PDB file, and will ignore the residue number read from the PDB file. This means that you must ensure that you have the residues ordered correctly within the PDB file. ProtoMS assigns to each residue both a chain template (see section :ref:`temref`), that describes the backbone of the residue, and a residue template (see section :ref:`temref`), that describes the sidechain. The residue template is located based on the name of the residue given in the fourth column in the PDB file (e.g. ‘ASP’ or ‘HIS’). The chain template is located based on the chain template associated with the residue template for the position of the residue within the chain. For example, residue ‘ASP’ has a standard amino acid backbone chain template if this residue was in the middle of the chain, an NH+ capped backbone chain template 3 if this was the first residue of the chain (and thus at the n-terminus), and a CO-- capped backbone chain template 2 if this were the last residue of the chain (and thus at the c-terminus). If the protein consisted of only one residue, then the zwitterionic amino acid chain template would be used for ‘ASP’. 
 
 ProtoMS obtains the coordinates of each residue from the PDB file, and will then use the residue and chain templates to build the z-matrix for each residue, and to assign all of the forcefield parameters. 
 
-Proteins are moved in a different manner in ProtoMS compared to other Monte Carlo packages that are available. Each residue is moved independently, using both the internal geometry moves defined by the template z-matrix, and by backbone translation and rotation moves of the chain atoms (see figure 3.1).
+.. _bbatoms:
+
+Proteins are moved in a different manner in ProtoMS compared to other Monte Carlo packages that are available. Each residue is moved independently, using both the internal geometry moves defined by the template z-matrix, and by backbone translation and rotation moves of the chain atoms (see figure above).
 
 .. figure:: backbone.png 
   :scale: 50 %
 
   Four atoms from each protein residue are designated as backbone atoms (bbatoms). For most residues these atoms are the N, CA, C and O atoms respectively. The four backbone atoms for two neighbouring residues are shown above. The protein backbone move moves the last three bbatoms of one residue and the first bbatom of the next residue. This is because the moves assumes that these four bbatoms form a rigid triangle (as is shown by the grey lines). The four atoms are translated and rotated as a rigid triangle, with the origin of rotation of the triangle centered on the intersection of the vector between bbatoms 2 and 1, and the vector between bbatoms 3 and 4 (marked as a red dot directly above the C=O bond). Because this triangle is translated and rotated as a rigid unit, all atoms connected to the atoms of this triangle will also be translated and rotated as a rigid unit.
 
-Four special backbone atoms (bbatoms) are identified in the chain-backbone of each residue. These atoms form the reference from which the rest of the residue atoms are built. These four atoms can be translated and rotated as a rigid unit via protein backbone moves (see figure 3.1). As the rest of the residue is constructed from these bbatoms, the rest of the residue is thus also translated and rotated. Because the bbatoms are translated and rotated as a rigid unit, the internal geometry of these backbone atoms are held constant throughout the simulation. This means that the internal geometry of the bbatoms is taken from the PDB file, and may not be modified by the chain or residue templates. It is also not possible to build missing bbatoms, so they must all be present in the PDB file.
+Four special backbone atoms (bbatoms) are identified in the chain-backbone of each residue. These atoms form the reference from which the rest of the residue atoms are built. These four atoms can be translated and rotated as a rigid unit via protein backbone moves (see figure above). As the rest of the residue is constructed from these bbatoms, the rest of the residue is thus also translated and rotated. Because the bbatoms are translated and rotated as a rigid unit, the internal geometry of these backbone atoms are held constant throughout the simulation. This means that the internal geometry of the bbatoms is taken from the PDB file, and may not be modified by the chain or residue templates. It is also not possible to build missing bbatoms, so they must all be present in the PDB file.
 
 Once the coordinates and z-matrices of each residue have been assigned, interresidue bonds are added between the first bbatom of each residue and the third bbatom of the previous residue (e.g. for ‘ASP’, bonds would be added from the ‘N’ atom of the ‘ASP’ residue to the ‘C’ atom of the preceeding amino acid residue). If the length of this bond is less than 4 A then this bond is added as a real bond, and its energy is evaluated as part of the forcefield. However, if the length is greater than 4 A, then this bond will be added as a dummy bond, and a warning message output. This is useful in cases where you wish to load up a protein scoop, e.g. from around the active site. This option should be used with care in conjunction with backbone moves.
 
-==========================  ============================================= =========
-Parameter                   Description                                   Values
-==========================  ============================================= =========
-MAXPROTEINS                 Maximum number of proteins                    3 
-MAXRESIDUES                 Maximum number of residues per protein        500
-MAXSCATOMS                  Maximum number of atoms per protein residue   30
-MAXSOLUTES                  Maximum number of solutes                     25
-MAXSOLUTERESIDUES           Maximum number of residues per solute         25
-MAXSOLUTEATOMSPERRESIDUE    Maximum number of solute atoms per residue    50
-MAXSOLVENTS                 Maximum number of solvent molecules           10000
-MAXSOLVENTS                 Maximum number of GCsolute molecules          10000
-MAXSOLVENTATOMS             Maximum number of atoms per solvent           10
-==========================  ============================================= =========
+.. table:: Table 1.0 The default value of the maximum number of proteins, GCsolutes, solutes and solvents that may be loaded simultaneously by ProtoMS. These values may be changed by editing the ``dimensions.inc`` file located in the src directory, and recompiling ProtoMS.
 
-  The default value of the maximum number of proteins, GCsolutes, solutes and solvents that may be loaded simultaneously by ProtoMS. These values may be changed by editing the ``dimensions.inc`` file located in the src directory, and recompiling ProtoMS.
+  ==========================  ============================================= =========
+  Parameter                   Description                                   Values
+  ==========================  ============================================= =========
+  MAXPROTEINS                 Maximum number of proteins                    3 
+  MAXRESIDUES                 Maximum number of residues per protein        500
+  MAXSCATOMS                  Maximum number of atoms per protein residue   30
+  MAXSOLUTES                  Maximum number of solutes                     25
+  MAXSOLUTERESIDUES           Maximum number of residues per solute         25
+  MAXSOLUTEATOMSPERRESIDUE    Maximum number of solute atoms per residue    50
+  MAXSOLVENTS                 Maximum number of solvent molecules           10000
+  MAXSOLVENTS                 Maximum number of GCsolute molecules          10000
+  MAXSOLVENTATOMS             Maximum number of atoms per solvent           10
+  ==========================  ============================================= =========
 
 
 **Limits**
-ProtoMS is written using slightly extended Fortran 77 (see chapter ??). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 3.2 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.
+
+ProtoMS is written using slightly extended Fortran 77 (see :ref:`fortran77`). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 1.0 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.
+
+.. index::
+  single: Forcefields
 
 ======================
 Classical forcefields
@@ -87,13 +108,17 @@ ProtoMS was designed to perform simulations using a range of different molecular
 
 The forcefield in ProtoMS is comprised of several terms;
 
+.. index::
+  single: Intermolecular Potential
+  single: Coulomb Potential
+  single: van der Waals Potential  
+
 **Intermolecular Potential**
 
 An intermolecular potential acts between all molecules within the system. The intermolecular potential between a pair of molecules, *A* and *B*, :math:`U_{molecule} (A, B)`, with *A* consisting of :math:`n_A` atoms and *B* consisting of :math:`n_B` atoms, is formed as the sum of the non-bonded potential, :math:`U_{nb} (i, j)` between each pair of atom sites, *i* and *j*, between the two molecules, scaled by a constant, *scl*, e.g.
 
-.. math::
-
-  U_{molecule}(A,B) = scl(R)\times\biggl( \sum_{i=1}^{n_A} \sum_{j=1}^{n_B} U_{nb}(i,j) \biggr)
+.. math:: U_{molecule}(A,B) = scl(R)\times\biggl( \sum_{i=1}^{n_A} \sum_{j=1}^{n_B} U_{nb}(i,j) \biggr)
+  :label: intermol1
 
 
 where *R* is the shortest distance between a pair of atom sites between the molecules. The scaling factor is set according to
@@ -111,36 +136,39 @@ where :math:`r_{cut}` and :math:`r_{feather}` are the non-bonded cutoff and feat
 
 The non-bonded potential between the pair of atoms is evaluated as the sum of the Coulombic and Lennard-Jones (LJ) potentials between the atoms,
 
-.. math::
+.. math:: U_{nb}(i,j) = \frac{q_i q_j}{4\pi\epsilon_{0} r(i,j)} + 4\epsilon_{ij}\biggl[ \biggl(\frac{\sigma_{ij}}{r(i,j)}\biggr)^{12} - \biggl(\frac{\sigma_{ij}}{r(i,j)}\biggr)^6 \biggr],
+  :label: intermol2
 
-  U_{nb}(i,j) = \frac{q_i q_j}{4\pi\epsilon_{0} r(i,j)} + 4\epsilon_{ij}\biggl[ \biggl(\frac{\sigma_{ij}}{r(i,j)}\biggr)^{12} - \biggl(\frac{\sigma_{ij}}{r(i,j)}\biggr)^6 \biggr],
+where :math:`q_i` and :math:`q_j` are the partial charges on the two atom sites, *r(i, j)* is the distance between the atom sites, :math:`\epsilon_0` is the permittivity of free space and :math:`\sigma_{ij}` and :math:`\epsilon_{ij}` are the Lennard Jones parameters for the atom site pair *i* and *j*. The LJ parameters for an atom site pair are calculated as the average of the LJ parameters for the same site pair.
 
-where :math:`q_i` and :math:`q_j` are the partial charges on the two atom sites, *r(i, j)* is the distance between the atom sites, :math:`\epsilon_0` is the permittivity of free space and :math:`\sigma_{ij}` and :math:`\epsilon_{ij}` are the Lennard Jones parameters for the atom site pair *i* and *j*. The LJ parameters for an atom site pair are calculated as the average of the LJ parameters for the same site pair, e.g.
+.. index::
+  single: combination rules
 
-.. math::
+Either the arithmetic average is used, or the geometric average is used, e.g.
 
-  \sigma_{ij} = 0.5\times(\sigma_{ii} + \sigma_{jj}).
+.. math:: \sigma_{ij} = 0.5\times(\sigma_{ii} + \sigma_{jj}).
+  :label: arithmetriccomb
 
-Either the arithmetic average (shown in equation 3.4) is used, or the geometric average is used, e.g.
-
-.. math::
-
-  \epsilon_{ij} = \sqrt{\epsilon_{ii}\times\epsilon_{jj}}.
+.. math:: \epsilon_{ij} = \sqrt{\epsilon_{ii}\times\epsilon_{jj}}.
+  :label: geometriccomb
 
 
 The AMBER family of forcefields use the arithmetic average for :math:`\sigma`, and the geometric average for :math:`\epsilon`, while the OPLS family of forcefields use the geometric average for both parameters. The intermolecular potential is formed as the sum of the non-bonded potential over all pairs of atom sites. It should be noted that an atom site does not necessarily need to lie at the center of each atom, and it may lie between atoms, or at the location of any lone pairs. Individual atoms may possess many atom sites, or even no atom sites.
 
+.. index::
+  single: Bond Potential
 
 **Bond Potential**
 
 A bond potential acts over all of the explicitly added, non-dummy bonds within a molecule. ProtoMS makes no attempt to find any implicit bonds within a molecule, and it is not possible to add a bond between atoms of different molecules. The energy of each bond, :math:`U_{bond}` , is evaluated according to
 
-.. math::
-
-  U_{bond}(r) = k_{bond}\bigl(r-r_0\bigr)^2,
+.. math:: U_{bond}(r) = k_{bond}\bigl(r-r_0\bigr)^2,
+  :label: bondpot
 
 where *r* is the bond length, :math:`k_{bond}` is the force constant for the bond, and :math:`r_0` is the equilibrium bond length. The total bond energy of a molecule is the sum of the bond energies for all of the bonds within the molecule, and the total bond energy of the system is the sum of the bond energies for each of the molecules in the system.
 
+.. index::
+  single: Angle Potential
 
 **Angle Potential**
 
@@ -148,31 +176,38 @@ An angle potential acts over all angles between atoms that are connected by non-
 non-dummy angles that have been explicitly added to the molecule. The energy of each angle, Uangle , is evaluated
 according to
 
-.. math::
-
-  U_{angle}(\theta) = k_{angle}\bigl(\theta-\theta_0\bigr)^2,
+.. math:: U_{angle}(\theta) = k_{angle}\bigl(\theta-\theta_0\bigr)^2,
+  :label: angpot  
 
 where :math:`\theta` is the size of the angle, :math:`k_{angle}` is the force constant for the angle, and :math:`\theta_0` is the equilibrium angle size. The total angle energy of a molecule is the sum of the angle energies for each of the angles within the molecule, and the total energy of the system is the sum of the angle energies for each of the molecules in the system.
 
+.. index::
+  single: Urey-Bradley Potential
 
 **Urey-Bradley Potential**
 
 A Urey-Bradley potential may act between the first and third atoms of some of the angles that are evaluated for the angle potential. If this is the case, then a Urey-Bradley energy is added onto the angle energy. The Urey-Bradley energy, :math:`U_{uby}`, is evaluated according to
 
-.. math::
-  U_{uby}(x) = k_{uby}\bigl(x-x_0\bigr)^2,
+.. math:: U_{uby}(x) = k_{uby}\bigl(x-x_0\bigr)^2,
+  :label: ubpot
 
 where *x* is the distance between the first and third atoms, :math:`k_{uby}` is the Urey-Bradley force constant, and :math:`x_0` is the equilibrium distance.
 
+
+.. index::
+  single: Dihedral Potential
 
 **Dihedral Potential**
 
 A dihedral potential acts over all dihedrals between atoms that are connected by non-dummy bonds, and over all non-dummy dihedrals that have been explicitly added to the molecule. Such explicitly added dihedrals may be used to add improper dihedrals that maintain the stereochemistry of chiral centers. The energy for each dihedral, :math:`U_{dihedral}`, is formed as the sum of *n* cosine terms,
 
-.. math::
-  U_{dihedral}(\phi) = \sum_{i=1}^{n} k_{i1}\bigl[1.0 + k_{i2}\bigl(cos(k_{i3}\phi + k_{i4})\bigr)\bigr],
+.. math:: U_{dihedral}(\phi) = \sum_{i=1}^{n} k_{i1}\bigl[1.0 + k_{i2}\bigl(cos(k_{i3}\phi + k_{i4})\bigr)\bigr],
+  :label: dihepot
 
 where :math:`k_{i1}` to :math:`k_{i4}` are dihedral parameters and :math:`\phi` is the size of the dihedral. The total dihedral energy of a molecule is the sum of the dihedral energies for each of the dihedrals in the molecule, and the total dihedral energy of the system is the sum of the dihedral energies of each of the molecules.
+
+.. index::
+  single: Intramolecular non-bonded Potential
 
 **Intramolecular non-bonded Potential**
 
@@ -180,46 +215,41 @@ An intramolecular non-bonded potential acts between all intramolecular pairs of 
 
 The intramolecular non-bonded potential of a molecule, :math:`U_{intra}` is the sum of the non-bonded energy between all 1-5 and above pairs of atoms within the molecule, plus the sum of the non-bonded energy between all 1-4 atoms scaled by a 1-4 scaling factor, e.g.
 
-.. math::
-
-  U_{intra} = &\sum_{\text{1-5+ i j pairs}} U_{coul}(i,j) + U_{lj}(i,j) +
-  \sum_{\text{1-4 i j pairs}} scl_{coul} U_{coul}(i,j) + scl_{lj} U_{lj}(i,j),
-
+.. math::  U_{intra} = &\sum_{\text{1-5+ i j pairs}} U_{coul}(i,j) + U_{lj}(i,j) + \sum_{\text{1-4 i j pairs}} scl_{coul} U_{coul}(i,j) + scl_{lj} U_{lj}(i,j),
+  :label: intrapot1
 
 where
 
-.. math::
-  
-  U_{coul}(i,j) = \frac{q_i q_j}{4\pi\epsilon_{0} r},
+.. math:: U_{coul}(i,j) = \frac{q_i q_j}{4\pi\epsilon_{0} r},
+  :label: intrapot2
 
 and
 
-.. math::
+.. math:: U_{lj}(i,j) = 4\epsilon_{ij}\biggl[ \biggl(\frac{\sigma_{ij}}{r}\biggr)^{12} - \biggl(\frac{\sigma_{ij}}{r}\biggr)^6 \biggr].
+  :label: intrapot3
 
-  U_{lj}(i,j) = 4\epsilon_{ij}\biggl[ \biggl(\frac{\sigma_{ij}}{r}\biggr)^{12} - \biggl(\frac{\sigma_{ij}}{r}\biggr)^6 \biggr].
+Equations :eq:`intrapot2` and :eq:`intrapot3` are the Coulomb and Lennard Jones equations, as seen in the intermolecular potential in equations :eq:`intermol1` and :eq:`intermol2`. :math:`scl_{coul}` and :math:`scl_{lj}` are the Coulomb and Lennard Jones scaling factors.
 
-Equations 3.11 and 3.12 are the Coulomb and Lennard Jones equations, as seen in the intermolecular potential in equations 3.1 and 3.3. :math:`scl_{coul}` and :math:`scl_{lj}` are the Coulomb and Lennard Jones scaling factors.
-
+.. index::
+  single: GBSA Potential
 
 
 **Generalized Born Surface Area potential**
 
 While free energy simulations are usually conducted in explicit solvent, ProtoMS supports Generalized Born Surface Area (GBSA) implicit solvent models. Relatively few free energy implicit solvent studies have been conducted and such option should be tested carefully before embarking onto expensive free energy simulations. The GBSA theory assumes that the total solvation free energy of a molecule A is a sum of a polar and non-polar energy term:
 
-.. math::
-
-  \Delta G_{solv} = \Delta G_{pol} + \Delta G_{nonpol}
+.. math:: \Delta G_{solv} = \Delta G_{pol} + \Delta G_{nonpol}
+  :label: gb1
   
 
 The second term, is simply proportional to the solvent accessible surface area (SASA) of the molecule, times a parameter that depends on the atom types present in the molecule. The first term is more complex and derived from the following equation :
 
-.. math::
-
-  \Delta G_{pol} = -\frac{1}{2}(\frac{1}{\epsilon_{vac}}-\frac{1}{\epsilon_{solv}})  \sum_{i}\sum_{j} \frac{q_{i}q_{j}}{\sqrt{r^{2}_{ij} + B_{i}B_{j} e^{\frac{-r^{2}_{ij}}{4B_{i}B_{j}}}   } }
+.. math:: \Delta G_{pol} = -\frac{1}{2}(\frac{1}{\epsilon_{vac}}-\frac{1}{\epsilon_{solv}})  \sum_{i}\sum_{j} \frac{q_{i}q_{j}}{\sqrt{r^{2}_{ij} + B_{i}B_{j} e^{\frac{-r^{2}_{ij}}{4B_{i}B_{j}}}   } }
+  :label: gb2
 
 :math:`\epsilon_{vac}` and :math:`\epsilon_{solv}` are the dielectric constants of the vacuum and the solvent respectively, :math:`q_{i}` the atomic partial charge of atom *i*, :math:`r_{ij}` the distance between a pair of atoms *ij*, and :math:`B_{i}` is the effective Born radius of atom *i*.
 
-The effective Born Radius $B_{i}$ is in essence the spherically averaged distance of the solute atom to the solvent. An accurate estimate of this quantity is essential to calculate high quality solvation free energies. It is however fairly complex to compute as it formalyl involves an integral over the position of all the atoms in the system. While numerical techniques can calculate such value, they are too slow to be of practical use in a simulation. In ProtoMS, the effective Born radii are calculated using the Pairwise Descreening Approximation (PDA) method. 
+The effective Born Radius :math:`B_{i}` is in essence the spherically averaged distance of the solute atom to the solvent. An accurate estimate of this quantity is essential to calculate high quality solvation free energies. It is however fairly complex to compute as it formalyl involves an integral over the position of all the atoms in the system. While numerical techniques can calculate such value, they are too slow to be of practical use in a simulation. In ProtoMS, the effective Born radii are calculated using the Pairwise Descreening Approximation (PDA) method. 
 
 .. math::
 
@@ -235,7 +265,7 @@ The effective Born Radius $B_{i}$ is in essence the spherically averaged distanc
 
   U_{ij} &= r_{ij} + S_{j}\alpha_{j} \quad if \quad \alpha{i} <  r_{ij} + S_{j}\alpha_{j}\\
 
-In equation 3.15 :math:`r_{ij}` is the distance between a pair of atoms *ij* and :math:`\alpha_{i}` is the intrinsic Born radius of atom *i*, that is, the Born radius that atom *i* would adopt if it was completely isolated. Finally :math:`S_{j}` is a scaling factor which compensates for systematic errors introduced by this approximate Born radii calculation.
+where :math:`r_{ij}` is the distance between a pair of atoms *ij* and :math:`\alpha_{i}` is the intrinsic Born radius of atom *i*, that is, the Born radius that atom *i* would adopt if it was completely isolated. Finally :math:`S_{j}` is a scaling factor which compensates for systematic errors introduced by this approximate Born radii calculation.
 
 As the name says, the technique approximate the descreening (the extent to which a nearby atom j displaces a volume that would have otherwise been occupied by solvent) by a fast summation of pairwise terms. It is however not rigorous and has to be parameterised carefully to yield robust performance. The PDA method tend to systematically underestimate the Born radius of buried atoms because it incorrectly assign high dielectric constants to numerous small voids and crevices that exist between atoms in a protein and are not occupied by water. To increase accuracy, a re-scaling technique has been implemented. 
 
@@ -263,8 +293,10 @@ ProtoMS implements this forcefield mostly as described. However there are a few 
 
 * **solutes** ProtoMS evaluates the forcefield of solute molecules exactly as described, with no shortcuts. proteins ProtoMS implements a protein as a chain of residues. As these molecules can be large, and typically larger than the non-bonded cutoff, ProtoMS implements the non-bonded cutoff differently for 
 
-* **proteins**. Instead of evaluating the non-bonded cutoff for the protein as a whole, ProtoMS implements a residue-based cutoff, with the cutoff scaling factors evaluated individually for each residue. Additionally, the intramolecular non-bonded energy is also scaled according to the non-bonded cutoffs given in equation 3.3. If you do not want to use residue based cutoffs, then it is possible to tell ProtoMS to use a molecule based cutoff, in which case the forcefield for proteins will be evaluated exactly as described with no shortcuts.
+* **proteins**. Instead of evaluating the non-bonded cutoff for the protein as a whole, ProtoMS implements a residue-based cutoff, with the cutoff scaling factors evaluated individually for each residue. Additionally, the intramolecular non-bonded energy is also scaled according to the non-bonded cutoffs given in equation :eq:`intermol1`. If you do not want to use residue based cutoffs, then it is possible to tell ProtoMS to use a molecule based cutoff, in which case the forcefield for proteins will be evaluated exactly as described with no shortcuts.
 
+.. index::
+  single: Perturbations
 
 =================================
 Perturbations
@@ -278,19 +310,20 @@ ProtoMS implements two methods of perturbing between systems A and B;
 
 * **Dual topology** System A and B are simulated together, with :math:`\lambda` scaling the total energies of A and B such that one system is turned off as the other is turned on.
 
+.. index::
+  single: Single Topology
+
 **Single Topology Calculations**
 
 ProtoMS assigns two sets of parameters to every single forcefield term; one parameter represents that term at :math:`\lambda=0.0` (:math:`par_0`), the other represents that term at :math:`\lambda=1.0` (:math:`par_1`). :math:`\lambda` is used to linearly scale between these two parameters to obtain the value of the parameter at each value of :math:`\lambda` (:math:`par_\lambda`)
 
-.. math::
+.. math:: par_\lambda = (1.0-\lambda) \times par_0 + \lambda \times par_1.
+  :label: lambdamix
 
-  par_\lambda = (1.0-\lambda) \times par_0 + \lambda \times par_1.
+This equation is used to scale the charge, :math:`\sigma` and :math:`\epsilon` parameters assigned to each atom site (see equations :eq:`intermol1`), and the force constants (:math:`k_{bond}`, :math:`k_{angle}` and :math:`k_{uby}`) and equilibrium sizes (:math:`r_0`, :math:`\theta_0` and :math:`x_0`) for the bond, angle and Urey-Bradley terms (see equations :eq:`bondpot`, :eq:`angpot` and :eq:`ubpot`). This equation is not used to scale the dihedral parameters, as the functional form of the dihedral potential is more complicated. Rather than scale the dihedral parameters, ProtoMS uses :math:`\lambda` to scale the total energy of each dihedral;
 
-This equation is used to scale the charge, :math:`\sigma` and :math:`\epsilon` parameters assigned to each atom site (see equations ?? and ??), and the force constants (:math:`k_{bond}`, :math:`k_{angle}` and :math:`k_{uby}`) and equilibrium sizes (:math:`r_0`, :math:`\theta_0` and :math:`x_0`) for the bond, angle and Urey-Bradley terms (see equations ??, ?? and ??). This equation is not used to scale the dihedral parameters, as the functional form of the dihedral potential is more complicated. Rather than scale the dihedral parameters, ProtoMS uses :math:`\lambda` to scale the total energy of each dihedral;
-
-.. math::
-
-  U_{dihedral}(\phi)_\lambda = (1.0-\lambda)\times U_{dihedral}(\phi)_0 + \lambda \times U_{dihedral}(\phi)_1,
+.. math:: U_{dihedral}(\phi)_\lambda = (1.0-\lambda)\times U_{dihedral}(\phi)_0 + \lambda \times U_{dihedral}(\phi)_1,
+  :label: dihmix
 
 where :math:`U_{dihedral}(\phi)_0` is the dihedral energy using the parameters for :math:`\lambda=0.0`, :math:`U_{dihedral}(\phi)_1` is the dihedral energy using the parameters for :math:`\lambda=1.0`, and :math:`U_{dihedral}(\phi)_\lambda` is the scaled dihedral energy at that value of :math:`\lambda`.
 
@@ -301,17 +334,17 @@ Any and all parts of the forcefield can be scaled. This includes all of the forc
   
   Geometry variations allow for a smoother transition between two systems, for example here a methyl group is smoothly converted into a hydrogen.
 
-As well as enabling smooth transitions between systems, geometry variations may be used to calculate potentials of mean force along structural coordinates. An example of this use for calculating the potential of mean force along an intermolecular separation axis is given in section ?. 
+As well as enabling smooth transitions between systems, geometry variations may be used to calculate potentials of mean force along structural coordinates.
 
+.. index::
+  single: Dual Topology
 
 **Dual Topology Calculations**
 
 A dual topology method to calculate free energy changes is also available in ProtoMS. In the single topology method force field terms were linearly interpolated so that they match the force field parameters suitable for particular molecule at either end of the perturbation (:math:`\lambda` 0.0 or :math:`\lambda` 1.0). As two molecules often differ not only in their force field terms but also their geometry, it is often necessary to modify the internal coordinates as well. This is relatively easy In simple cases (morphing a methyl group into a hydrogen group) but for larger, complex, perturbations this is often cumbersome if not impossible. In the dual topology method no geometry variations are attempted. However, the interaction energy of a pair of solutes with their surroundings (solvent, protein, other solutes), is gradually turned on or off with the coupling parameter. 
 
-.. math::
-
-  U(\lambda) = U_{0} + \lambda U(S_{2}) + (1 - \lambda) U(S_{1})
-  :label:doubletopu
+.. math:: U(\lambda) = U_{0} + \lambda U(S_{2}) + (1 - \lambda) U(S_{1})
+  :label: doubletopu
 
 Equation :eq:`doubletopu` thus shows that at any given value of :math:`\lambda`, the total energy of the system consists in a term :math:`U_{0}` that is independent of the perturbation and a term :math:`U(S_{2})` and :math:`U(S_{1})` which is a function of the intermolecular energies of the pair of solutes for which a free energy change is to be calculated. 
 
@@ -336,6 +369,9 @@ Third, the soft-core implementation in the latest version of the Amber package i
 .. math:: U_{non bonded,\lambda}= (1-\lambda) 4{\epsilon}_{ij} \left[ \left( \frac{ \sigma_{ij}^{12} }{ ( \lambda \delta \sigma_{ij}^6 + r_{ij}^{6} )^{2}} \right) - \left( \frac{ \sigma_{ij}^{6} }{ \lambda \delta \sigma_{iJ}^6 + r_{ij}^{6} } \right) \right] +  \frac{(1-\lambda)^{n} q_{i}q_{j}} {4\pi{\epsilon}_{0} \sqrt{( \lambda \delta_c +  r_{ij}^{2})}}
    :label: uljsoftmod3
 
+
+.. _moves:
+
 ==============
 Generic Moves
 ==============
@@ -358,10 +394,12 @@ ProtoMS conducts a simulation by performing a sequence of moves on the system. T
 
 * **Theta moves** MC moves which sample the value of θ on a GCsolute molecule
 
-* **Sample moves** MC moves which sample the value of θ on a GCsolute molecule whilst applying a biasing potential λ-moves Monte Carlo moves that change λ. These may be used to perform umbrella sampling free energy simulations.
+* **Sample moves** MC moves which sample the value of θ on a GCsolute molecule whilst applying a biasing potential :math:`\lambda`-moves Monte Carlo moves that change :math:`\lambda`. These may be used to perform umbrella sampling free energy simulations.
 
 * **Dual potential moves** Works only with implicit solvent simulations. Allows to sample rapidly configurations with a crude potential but correct for errors with a specific acceptance test.
 
+.. index::
+  single: Residue Moves
 
 **Residue Moves**
 A residue move is a Monte Carlo move on a single protein residue. Obviously, for a residue move to be be performed, at least one protein that has flexible residues must be loaded. Each residue move comprises the following steps
@@ -370,15 +408,18 @@ A residue move is a Monte Carlo move on a single protein residue. Obviously, for
 
 2. One of the flexible residues within the protein is chosen randomly from the set of all flexible residues in the protein. Again, there is no weighting of residues, so each flexible residue has an even chance of being chosen, despite the size of each residue.
 
-3. If the backbone of this residue is flexible, then a random number between 1 and 3 is generated. If the random number is equal to 1, then only a backbone move on the residue will be attempted (see figure 3.1). If the random number is equal to 2 then only a sidechain move will be attempted, where all of the flexible internals of the residue are moved. If the random number is equal to 3 then a backbone and sidechain move are attempted simultaneously. If the backbone of this residue is fixed, then only a sidechain move is attempted.
+3. If the backbone of this residue is flexible, then a random number between 1 and 3 is generated. If the random number is equal to 1, then only a backbone move on the residue will be attempted. If the random number is equal to 2 then only a sidechain move will be attempted, where all of the flexible internals of the residue are moved. If the random number is equal to 3 then a backbone and sidechain move are attempted simultaneously. If the backbone of this residue is fixed, then only a sidechain move is attempted.
 
 4. The change in energy that results from this move is evaluated, and then tested according to the Metropolis criterion to decide whether or not to accept the move.
 
 5. If the move is accepted, then the new configuration of the residue is saved. If the move was rejected then the original configuration of the residue is restored.
 
 
-You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section 3.6.5. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see section 3.8.2). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was :math:`5.0^\circ` , then the angle will be changed by a random value generated evenly between :math:`-5.0^\circ` and :math:`+5.0^\circ`.
+You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section :ref:`misccmd`. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see :ref:`temref`). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was :math:`5.0^\circ` , then the angle will be changed by a random value generated evenly between :math:`-5.0^\circ` and :math:`+5.0^\circ`.
 
+
+.. index::
+  single: Solute Moves
 
 **Solute Moves**
 A solute move is a Monte Carlo move on a single solute molecule. Obviously, for a solute move to be performed, at least one solute molecule must be loaded. Each solute move comprises the following steps
@@ -391,14 +432,16 @@ A solute move is a Monte Carlo move on a single solute molecule. Obviously, for 
 
 4. The change in energy associated with this move is evaluated and then tested via the Metropolis criterion to decide whether or not to accept the move.
 
-5. If the move is accepted then the new configuration of the solute is saved. If the move was rejected then the original configuration is restored. You can control the maximum amounts that the solute moves via the solute template (see section 3.8.2).
+5. If the move is accepted then the new configuration of the solute is saved. If the move was rejected then the original configuration is restored. You can control the maximum amounts that the solute moves via the solute template (see :ref:`temref`).
 
+.. index::
+  single: Solvent Moves
 
 **Solvent Moves**
 
 A solvent move is a Monte Carlo move on a single solvent molecule. Obviously, for a solvent move to be performed, at least one solvent molecule must be loaded. Each solvent move comprises the following steps
 
-1. A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see sections 3.4), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
+1. A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see :ref:`parameters`), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
 
 2. The solvent molecule is randomly translated and rotated around its center of geometry.
 
@@ -406,21 +449,27 @@ A solvent move is a Monte Carlo move on a single solvent molecule. Obviously, fo
 
 4. If the move was accepted then the new solvent configuration is saved, otherwise the original configuration is restored.
 
-You can control the maximum amounts that the solvent is translated and rotated by by editing its solvent template (see section 3.1.1).
+You can control the maximum amounts that the solvent is translated and rotated by by editing its solvent template (see :ref:`temref`).
 
+
+.. index::
+  single: Volume Moves
 
 **Volume Moves**
 
-A volume move is a Monte Carlo move that changes the volume of the system. This is needed to be able to perform Monte Carlo simulations at constant pressure (i.e. using the NPT ensemble). For a volume move to be performed you need to have loaded a box of solvent molecules, and be running using periodic boundary conditions (see
-section 3.8.6). A volume move is comprised of the following steps
+A volume move is a Monte Carlo move that changes the volume of the system. This is needed to be able to perform Monte Carlo simulations at constant pressure (i.e. using the NPT ensemble). For a volume move to be performed you need to have loaded a box of solvent molecules, and be running using periodic boundary conditions. A volume move is comprised of the following steps
 
-1. A random change in volume is chosen within the range set via the maxvolchange command (see section 3.4).
+1. A random change in volume is chosen within the range set via the maxvolchange command (see :ref:`parameters`).
 
 2. The volume of the system is changed by this amount by scaling all of the coordinates evenly from the center of the simulation box.
 
-3. The change in energy associated with this change in volume is evaluated and used to decide whether or not to accept this move via the constant pressure Monte Carlo test (see appendix B), for the system pressure set via the pressure command (see section 3.4).
+3. The change in energy associated with this change in volume is evaluated and used to decide whether or not to accept this move via the constant pressure Monte Carlo test, for the system pressure set via the pressure command (see :ref:`parameters`).
 
 4. If the move is accepted then the new system configuration is saved, otherwise the original system configuration is restored.
+
+
+.. index::
+  single: GCSolute Moves
 
 
 **GCsolute Moves**
@@ -431,11 +480,15 @@ A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolu
 
 2. The GCsolute molecule is randomly translated and rotated around its center of geometry. If it attempts to leave the confines of its predefined cubic region then it experiences a huge energetic penalty, ensuring that the Metropolis move is rejected.
 
-3. The change in energy associated with this move is evaluated and used to decide whether or not to accept this move via the Metropolis criterion(see appendex B).
+3. The change in energy associated with this move is evaluated and used to decide whether or not to accept this move via the Metropolis criterion.
 
 4. If the move was accepted then the new GCsolute configuration is saved, otherwise the original configuration is restored. 
 
-You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see section 3.1.1).
+You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see :ref:`temref`).
+
+
+.. index::
+  single: Insertion Moves
 
 
 **Insertion Moves**
@@ -452,6 +505,9 @@ An insertion move is a Monte Carlo move on a single GCsolute molecule, whereby t
 4. If the move was accepted then the new value of :math:`\theta` for that GCsolute molecule is saved, otherwise the original value of 0 is restored.
 
 
+.. index::
+  single: Deletion Moves
+
 **Deletion Moves**
 
 A deletion move is a Monte Carlo move on a single GCsolute molecule, whereby the :math:`\theta` value of a GCsolute is turned from 1 to 0. Each deletion move comprises the following steps
@@ -463,6 +519,10 @@ A deletion move is a Monte Carlo move on a single GCsolute molecule, whereby the
 3. The change in energy associated with this move is evaluated and used to decide whether or not to accept this move via the Metropolis criterion.
 
 4. If the move was accepted then the new value of :math:`\theta` for that GCsolute molecule is saved, otherwise the original value of 1 is restored.
+
+
+.. index::
+  single: Theta Moves
 
 **Theta Moves**
 
@@ -476,6 +536,9 @@ A theta move is a Monte Carlo move on a single GCsolute molecule, whereby the :m
 
 4. If the move was accepted then the new value of :math:`\theta` for that GCsolute molecule is saved, otherwise the original value of :math:`\theta` is restored.
 
+
+.. index::
+  single: Sample Moves
 
 **Sample Moves**
 
@@ -494,15 +557,18 @@ A sample move is a Monte Carlo move on a single GCsolute molecule, whereby the :
 6. If the move was accepted then the new value of :math:`\theta` for that GCsolute molecule is saved, otherwise the original value of :math:`\theta` is restored.
 
 
+.. index::
+  single: Move Probabilities
+
 **Relative Move Probabilities**
 
-You can specify which moves should be run by passing arguments to the simulate and equilibrate commands (see section 3.6.1). You can use these commands to assign a weight to each type of move, e.g. 100 for solvent moves, 10 for protein moves, 1 for solute moves and 0 for volume move. The type of move chosen for each step of the simulation is generated randomly based on these set relative weights. These weights mean that on average, in 111 moves, 100 of these moves will be solvent moves, 10 of these moves will be protein moves, 1 of these moves will be solute moves and none of the moves will be volume moves (e.g. no volume moves will be performed). Note that you need to perform some volume moves if you wish to sample from the NPT ensemble!
+You can specify which moves should be run by passing arguments to the simulate and equilibrate commands (see :ref:`runcmd`). You can use these commands to assign a weight to each type of move, e.g. 100 for solvent moves, 10 for protein moves, 1 for solute moves and 0 for volume move. The type of move chosen for each step of the simulation is generated randomly based on these set relative weights. These weights mean that on average, in 111 moves, 100 of these moves will be solvent moves, 10 of these moves will be protein moves, 1 of these moves will be solute moves and none of the moves will be volume moves (e.g. no volume moves will be performed). Note that you need to perform some volume moves if you wish to sample from the NPT ensemble!
 
 
 
   
 ***********************
-Run ProtoMS
+Executing ProtoMS
 ***********************
 
 
@@ -514,7 +580,16 @@ into a file and have ProtoMS read commands from that file. You specify the comma
 
   protoms3 mycmdfile.txt
 
-Note that the ProtoMS is insensitive to whether commands, variables or contents of files are uppercase or lowercase, so you are free to mix and match capitals and small case wherever you want. The only exception to this is in the specification of filenames, where your operating system may care about case!
+Note that the ProtoMS is insensitive to whether commands, variables or contents of files are uppercase or lowercase, so you are free to mix and match capitals and small case wherever you want. The only exception to this is in the specification of filenames, where your operating system may care about case.
+
+For replica exchange or ensemble type calculations, you have to execeute ProtoMS through the OpenMPI program, e.g. ::
+
+  mpirun -np 16 protoms3 mycmdfile.txt
+
+
+.. index::
+  single: Output
+  single: Streams
 
 ===================
 File output
@@ -564,74 +639,136 @@ where `STREAM` is the name of the stream that you wish to direct (e.g. streamINF
 
   streaminfo stdout
 
-However, your operating system may be sensitive to case so you should ensure that you use the correct case for
-filenames.
+However, your operating system may be sensitive to case so you should ensure that you use the correct case for filenames.
 
 You are free to direct multiple streams into a single file, or to turn undesired streams off. If a stream is output to STDOUT or STDERR then the name of the stream is prepended to the start of each line. The name is not attached if the stream is directed into a file. The WARNING and FATAL streams are special as unlike the other
 streams, these two cannot be turned off. These two streams will be directed to STDERR if they have not been directed elsewhere.
 
 By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, the WARNING and FATAL streams are directed to STDERR, and the remaining streams are switched off. Bear this in mind if you think that you should be getting output and you are not - make sure that the stream that contains your output is directed to something!
 
-The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section ??.
+The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section :ref:`misccmd`.
+
+.. _parameters:
 
 ======================
 Simulation parameters
 ======================
 
-There are many commands to set parameters that you can use to control your simulation. These are ::
+There are many commands to set parameters that you can use to control your simulation. These are 
+
+.. index::
+  single: debug
+
+::
   
   debug logical
 
-where `logical` is `true` or `false`, `yes` or `no`, `on` or `off` (depending on your personal preference). This turns
-on or off debugging output that may be useful for ProtoMS developers. By default ``debug`` is `off`. ::
+where ``logical`` is *true* or *false*, *yes* or *no*, *on* or *off* (depending on your personal preference). This turns
+on or off debugging output that may be useful for ProtoMS developers. By default ``debug`` is *off*. 
+
+.. index::
+  single: testenergy
+
+::
 
   testenergy logical
 
-where `logical` has the same values as for ``debug``. This is used to set whether or not to turn on testing of energies. This is useful if you are developing ProtoMS. By default ``testenergy`` is off. ::
+where ``logical`` has the same values as for ``debug``. This is used to set whether or not to turn on testing of energies. This is useful if you are developing ProtoMS. By default ``testenergy`` is *off*. 
+
+.. index::
+  single: prettyprint
+
+::
 
   prettyprint logical
 
-Turn on or off pretty printing. With pretty printing turned on, you will see nice starry boxes drawn highlighting certain parts of the output. By default, ``prettyprint`` is on. ::
+Turn on or off pretty printing. With pretty printing turned on, you will see nice starry boxes drawn highlighting certain parts of the output. By default, ``prettyprint`` is *on*. 
+
+
+.. index::
+  single: dryrun
+
+::
 
   dryrun logical
 
-Whether or not to perform a dry run of the simulation. If this is true then all of the files will be loaded up and your commands parsed. If there are any problems then these will be reported in the WARNING stream. No actual simulation will be run, though any files that would be created may be created. While this option is very useful for testing your commands, it is not perfect and cannot check everything. I thus recommend that you also perform a short version of your simulation before you commit yourself to full production. By default ``dryrun`` is off. ::
+Whether or not to perform a dry run of the simulation. If this is true then all of the files will be loaded up and your commands parsed. If there are any problems then these will be reported in the WARNING stream. No actual simulation will be run, though any files that would be created may be created. While this option is very useful for testing your commands, it is not perfect and cannot check everything. I thus recommend that you also perform a short version of your simulation before you commit yourself to full production. By default ``dryrun`` is off. 
+
+.. index::
+  single: ranseed
+
+::
 
   ranseed integer
 
-where `integer` is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducable simulations. If you don’t specify a random number seed then a seed is generated based on the time and date that the simulation started. ::
+where ``integer`` is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducable simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started. 
+
+.. index::
+  single: temperature
+
+::
 
   temperature float
 
-where `float` is any floating point number. Use this command to specify the simulation temperature in celsius. By default temperature is 25.0 C. ::
+where ``float`` is any floating point number. Use this command to specify the simulation temperature in *Celsius*. By default temperature is 25.0 C. 
+
+.. index::
+  single: lambda
+
+::
 
   lambda float
 
-where `float` is a number between 0.0 and 1.0. Specify the value of :math:`\lambda`. If a single value is given then that is used for :math:`\lambda`. If three values are given then these are used for :math:`\lambda`, and :math:`\lambda` in the forwards and backwards windows, e.g. ::
+where ``float`` is a number between 0.0 and 1.0. Specify the value of :math:`\lambda`. If a single value is given then that is used for :math:`\lambda`. If three values are given then these are used for :math:`\lambda`, and :math:`\lambda` in the forwards and backwards windows, e.g. ::
 
   lambda 0.5 0.6 0.4
 
-would set :math:`\lambda` for the reference state to 0.5, :math:`\lambda` for the forwards perturbed state to 0.6, and :math:`\lambda` for the backwards perturbed state to 0.4. By default all values of :math:`\lambda` are 0.0. ::
+would set :math:`\lambda` for the reference state to 0.5, :math:`\lambda` for the forwards perturbed state to 0.6, and :math:`\lambda` for the backwards perturbed state to 0.4. By default all values of :math:`\lambda` are 0.0. 
+
+.. index::
+  single: cutoff
+
+::
 
   cutoff float
 
-where `float` is any positive number. This command is used to set the size of the non-bonded cutoff, in Angstroms, used to truncate the intermolecular non-bonded potentials (see equation 3.2). By default the non-bonded cutoff is 15A. ::
+where ``float`` is any positive number. This command is used to set the size of the non-bonded cutoff, in Angstroms, used to truncate the intermolecular non-bonded potentials (see eq :eq:`intermol1`). By default the non-bonded cutoff is 15A. 
+
+.. index::
+  single: feather
+
+::
   
   feather float
 
-To prevent an abrupt cutoff, the non-bonded energy is scaled quadratically down to zero over the last part of the cutoff (see equation 3.2). The feather command sets the distance over which this scaling occurs, e.g. ::
+To prevent an abrupt cutoff, the non-bonded energy is scaled quadratically down to zero over the last part of the cutoff (see eq :eq:`intermol1`). The feather command sets the distance over which this scaling occurs, e.g. ::
 
   feather 1.3
 
-sets this feathering to occur over the last 1.3A. The default value of the feather is 0.5A. ::
+sets this feathering to occur over the last 1.3A. The default value of the feather is 0.5A. 
+
+.. index::
+  single: cuttype
+
+::
 
   cuttype type
 
-where `type` is either `residue` or `molecule`. This specifies the type of non-bonded cutting to use; either residue, where the cutoff is between protein residues, solute molecules and solvent molecules, or molecule, where the cutoff is between protein molecules, solutes molecules and solvent molecules. This was described in more detail in section 3.1.2. By default the ``cuttype`` is `residue`. ::
+where ``type`` is either *residue* or *molecule*. This specifies the type of non-bonded cutting to use; either residue, where the cutoff is between protein residues, solute molecules and solvent molecules, or molecule, where the cutoff is between protein molecules, solutes molecules and solvent molecules. By default the ``cuttype`` is *residue*. 
+
+.. index::
+  single: pressure
+
+::
   
   pressure float
 
-This command sets the pressure of the system in atmospheres. By setting the pressure to a non-zero value you will be able to perform a simulation in the NPT isothermal-isobaric ensemble. Note that you need to perform volume moves (see section 3.1.4) to be able to run in the NPT ensemble. By default the pressure is equal to zero, and thus a NPT simulation is not performed. ::
+This command sets the pressure of the system in atmospheres. By setting the pressure to a non-zero value you will be able to perform a simulation in the NPT isothermal-isobaric ensemble. Note that you need to perform volume moves (see :ref:`moves`) to be able to run in the NPT ensemble. By default the pressure is equal to zero, and thus a NPT simulation is not performed. 
+
+.. index::
+  single: maxvolchange
+
+::
 
   maxvolchange float
 
@@ -639,7 +776,12 @@ This command sets the maximum change in volume for a volume move in cubic Angstr
 
   prefsampling integer
 
-This command is used to turn on preferential sampling of the solvent (see section 3.1.4), and to specify which solute is used to define the center of the preferential sampling sphere. The command ::
+This command is used to turn on preferential sampling of the solvent, and to specify which solute is used to define the center of the preferential sampling sphere. The command 
+
+.. index::
+  single: prefsampling
+
+::
 
   prefsampling 1
 
@@ -647,11 +789,19 @@ means that the solvents closest to solute 1 will be moved more frequently than t
 
   prefsampling 1 100.0
 
-will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focussed the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off.  ::
+will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focussed the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off. 
+
+
+::
 
   dualtopologyint int1 int2 synctrans syncrot
 
-This turns on the dual topology method of calculating relative free energies, where `int1` is the perturbed solute at :math:`\lambda` = 0.0 and `in2` is the solute at :math:`\lambda` = 1.0 . If `synctrans` is set, the rigid body translations of the two solutes will be synchronised. If `syncrot` is set, the rigid body rotations of the two solutes will also be synchronised. ::
+This turns on the dual topology method of calculating relative free energies, where `int1` is the perturbed solute at :math:`\lambda` = 0.0 and `in2` is the solute at :math:`\lambda` = 1.0 . If ``synctrans`` is set, the rigid body translations of the two solutes will be synchronised. If ``syncrot`` is set, the rigid body rotations of the two solutes will also be synchronised. 
+
+.. index::
+  single: boundary
+
+::
 
   boundary none
 
@@ -659,59 +809,93 @@ This turns off any boundary conditions, i.e. the simulation will be performed in
 
   boundary periodic dimx dimy dimz
 
-This turns on periodic boundaries, using a orthorhombic box centered on the origin, with dimensions `dimx` A by `dimy` A by `dimz` A. Note that these dimensions may be modified by any loaded solvent file :: 
+This turns on periodic boundaries, using a orthorhombic box centered on the origin, with dimensions ``dimx`` A by ``dimy`` A by ``dimz`` A. Note that these dimensions may be modified by any loaded solvent file :: 
 
   boundary periodic ox oy oz tx ty tz
 
-This turns on periodic boundaries using an orthorhombic box with the bottom-left-back corner at coordinates (`ox`,`oy`,`oz`) A and the top-right-front corner at (`tx`,`ty`,`tz`) A. Note that these dimensions may be modified by any loaded solvent file. ::
+This turns on periodic boundaries using an orthorhombic box with the bottom-left-back corner at coordinates (``ox`` , ``oy`` , ``oz``) A and the top-right-front corner at (``tx`` , ``ty`` , ``tz``) A. Note that these dimensions may be modified by any loaded solvent file. ::
 
   boundary cap ox oy oz rad k
 
-This turns on solvent cap boundary conditions. Protein and solute molecules will experience no boundary conditions, while solvent molecules will be restrained within a spherical region of radius rad A, centered at coordinates (`ox`,`oy`,`oz`) A. A half-harmonic restraint with force constant `k` kcal.mol-1.A-2 is added to the solvent energy if it moves outside of this sphere. ::
+This turns on solvent cap boundary conditions. Protein and solute molecules will experience no boundary conditions, while solvent molecules will be restrained within a spherical region of radius rad A, centered at coordinates (``ox`` , ``oy`` , ``oz``) A. A half-harmonic restraint with force constant ``k`` kcal.mol-1.A-2 is added to the solvent energy if it moves outside of this sphere. ::
 
   boundary solvent
 
-This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section 3.8.6. ::
+This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section :ref:`solventpdb` 
 
-  softcoreint solute int*
+.. index::
+  single: softcore
 
-This causes the intermolecular energy of solute int to be softened. Alternatively, you can write ’all’ instead of the solute index and all solutes will have their non bonded energy softened. The softcore is only supported for solutes. ::
+::
+
+  softcoreint solute int
+
+This causes the intermolecular energy of solute int to be softened. Alternatively, you can write ``all`` instead of the solute index and all solutes will have their non bonded energy softened. The softcore is only supported for solutes. 
+
+.. index::
+  single: softcoreparams
+
+::
 
   softcoreparams coul 1 delta 1.5 gb 0 old
 
-This causes the solutes non bonded energy to be softened with a parameter *n* set to 1 and :math:`\delta` set to 1.5. (see eq 3.20). The old keyword selects the original soft-core implementation and can be omitted. If conducting a GBSA simulation, this also causes the GB energy to be softened as well. It is recommended to use the same parameter for the Coulombic and Generalised Born energy. The values listed here, seem to work well for a number of relative binding free energy calculations but actual optimum values of these parameters will depend on your system. ::
+This causes the solutes non bonded energy to be softened with a parameter *n* set to 1 and :math:`\delta` set to 1.5. (see eq :eq:`uljsoftmod`). The old keyword selects the original soft-core implementation and can be omitted. If conducting a GBSA simulation, this also causes the GB energy to be softened as well. It is recommended to use the same parameter for the Coulombic and Generalised Born energy. The values listed here, seem to work well for a number of relative binding free energy calculations but actual optimum values of these parameters will depend on your system. ::
 
   softcoreparams coul 1 delta 0.2 deltacoul 2.0 soft66
 
-This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.2 and :math:`\delta_c` set to 2.0. (see eq 3.21 ). The soft66 keyword selects the second soft-core implementation, eq 3.21 . ::
+This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.2 and :math:`\delta_c` set to 2.0. (see eq :eq:`uljsoftmod2`). The soft66 keyword selects the second soft-core implementation, eq :eq:`uljsoftmod2` . ::
 
   softcoreparams coul 1 delta 0.5 deltacoul 12.0 amber
 
-This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.5 and :math:`\delta_c`  set to 12.0. (see eq 3.22 ). The amber keyword selects the third soft-core implementation, eq 3.22 . The values listed here are the default values in the Amber package. ::
+This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.5 and :math:`\delta_c`  set to 12.0. (see eq :eq:`uljsoftmod3` ). The amber keyword selects the third soft-core implementation, eq :eq:`uljsoftmod3`. The values listed here are the default values in the Amber package.
+
+.. index::
+  single: surface
+
+::
 
   surface quality 3 probe 1.4
 
-This command will cause surface area calculations to be performed during the simulation. `quality` can be set to 1,2,3,4 and will result in increasingly precise surface area calculations. For typical simulations, 3 should be fine and 2 will not give a huge error. `Probe` is the radius of the probe and should be set to 1.4 if you want to calculate the solvent accessible surface area of water, but can be set to 0 if you want to calculate the van der waals surface area of a molecule. ::
+This command will cause surface area calculations to be performed during the simulation. ``quality`` can be set to 1,2,3,4 and will result in increasingly precise surface area calculations. For typical simulations, 3 should be fine and 2 will not give a huge error. ``probe`` is the radius of the probe and should be set to 1.4 if you want to calculate the solvent accessible surface area of water, but can be set to 0 if you want to calculate the van der waals surface area of a molecule. 
+
+.. index::
+  single: born
+
+::
 
   born cut 20 threshold 0.005 proteins
 
 This command will enable Generalised Born energy calculations. Thus to run a full GBSA simulation you should use both the surface and born keywords. cut controls the cutoff distance for the computation of the Born radii. If you work with a medium sized protein scoop of circa 100-150 residues, 20 should be fine but you may want a larger value for simulations of large proteins. threshold controls the number of pairwise terms that are not updated when the effective Born radii must be calculated by the Pairwise descreening approximation. The default value
 0.005 appear to be a good tradeoff. Increasing it will make the simulation faster but less accurate. proteins activates the rescaling of the Born radii to compensate for systematic errors of the Pairwise Descreening Approximation in large biomolecules. It should be used only when simulating proteins and then its effectiveness has not been yet
-convincingly demonstrated. ::
+convincingly demonstrated. 
 
-  GCMC 0
+.. index::
+  single: gcmc
 
-This command tells ProtoMS that it is to perform a GCMC simulation, and that the starting value of :math:`\Theta` all of the GCsolutes is 0. ::
+::
+
+  gcmc 0
+
+This command tells ProtoMS that it is to perform a GCMC simulation, and that the starting value of :math:`\Theta` all of the GCsolutes is 0. 
+
+.. index::
+  single: potential
+
+::
 
   potential -8
 
-This command will set a B value of -8 for moves in the Grand Canonical Ensemble. The value of B can be related to the excess chemical by equation 3.24: 
+This command will set a *B*-value of -8 for moves in the Grand Canonical Ensemble. The value of *B* can be related to the excess chemical by the following equation: 
 
-.. math::
+.. math:: B = \frac{\mu'}{k_{B}T}+\ln \bar{n}
+  :label: bval
 
-  B = \frac{\mu'}{k_{B}T}+\ln \bar{n}
+In the equation, :math:`\bar{n}` is the number density of the GCsolute multiplied by the simulation subvolume. 
 
-In equation 3.24, :math:`\bar{n}` is the number density of the GCsolute multiplied by the simulation subvolume. ::
+.. index::
+  single: origin
+
+::
 
   originx 10
 
@@ -735,31 +919,57 @@ This command will set the distance along the Y coordinate from originy to be 3 :
 
   z 3
 
-This command will set the distance along the Z coordinate from originz to be 3 ::
+This command will set the distance along the Z coordinate from originz to be 3 
+
+
+.. index::
+  single: jaws1
+
+::
 
   jaws1 0
 
-This command tells ProtoMS that it is to perform a JAWS stage one simulation, and that the starting value of :math:`\theta` all of the GCsolutes is 0. ::
+This command tells ProtoMS that it is to perform a JAWS stage one simulation, and that the starting value of :math:`\theta` all of the GCsolutes is 0. 
+
+.. index::
+  single: thres
+
+::
 
   thres 0.95
 
-This command will set the :math:`\theta` threshold for defining whether a molecule is ’on’ in the first stage of the JAWS method to be 0.95 (default) ::
+This command will set the :math:`\theta` threshold for defining whether a molecule is *on* in the first stage of the JAWS method to be 0.95 (default) 
+
+.. index::
+  single: jaws2
+
+::
 
   jaws2 1
 
-This command tells ProtoMS that it is to perform a JAWS stage two simulation, and that the starting value of :math:`\theta` all of the GCsolutes is 1. ::
+This command tells ProtoMS that it is to perform a JAWS stage two simulation, and that the starting value of :math:`\theta` all of the GCsolutes is 1. 
+
+.. index::
+  single: jbias
+
+::
 
   jbias 14
 
 This command will set the value of the biasing potential in the second stage of the JAWS algorithm to be 14 kcal/mol.
 
-
+.. _incmd:
 
 =======================
 Specifying input files
 =======================
 
-As well as controlling the simulation, commands are also used to specify the names of the input files that describe the system and forcefield for the simulation. These input files are specified using the following commands ::
+As well as controlling the simulation, commands are also used to specify the names of the input files that describe the system and forcefield for the simulation. These input files are specified using the following commands 
+
+.. index::
+  single: protein, command
+
+::
 
   proteinN filename 
   
@@ -767,28 +977,48 @@ Specifies the name of the Nth protein file, e.g. ::
 
   protein1 protein.pdb
 
-specifies that protein 1 should be loaded from the file protein.pdb. Note that proteins must be numbered sequentially from 1 to MAXPROTEINS. The format of a protein file is described below ::
+specifies that protein 1 should be loaded from the file protein.pdb. Note that proteins must be numbered sequentially from 1 to MAXPROTEINS. The format of a protein file is described in :ref:`protpdb`. 
+
+.. index::
+  single: solute, command
+
+::
 
   soluteN filename
   
-specifies the name of the Nth solute file. Note that the solutes must be numbered sequentially from 1 to MAXSOLUTES. The format of a solute file is described in section 3.8.4. ::
+specifies the name of the Nth solute file. Note that the solutes must be numbered sequentially from 1 to MAXSOLUTES. The format of a solute file is described in section :ref:`solpdb`. ::
 
   solventN filename
   
-specifies the name of the Nth solvent file. Unlike the protein and solute files, the solvent file may contain multiple solvent molecules, though the total number of solvent molecules cannot exceed MAXSOLVENTS. The format of a solvent file is described in section 3.8.6. ::
+specifies the name of the Nth solvent file. Unlike the protein and solute files, the solvent file may contain multiple solvent molecules, though the total number of solvent molecules cannot exceed MAXSOLVENTS. The format of a solvent file is described in section :ref:`solventpdb`. 
+
+.. index::
+  single: grand
+
+::
 
   grandN filename
 
-specifies the name of the Nth GCsolute file. Unlike the protein and solute files, the GCsolute file may contain multiple GCsolute molecules, though the total number of GCsolute molecules cannot exceed MAXSOLVENTS. The format of a GCsolute file is described in section 3.8.5. ::
+specifies the name of the Nth GCsolute file. Unlike the protein and solute files, the GCsolute file may contain multiple GCsolute molecules, though the total number of GCsolute molecules cannot exceed MAXSOLVENTS. The format of a GCsolute file is described in section :ref:`gcpdb`. 
+
+.. index::
+  single: parfile
+
+::
 
   parfileN filename
 
-Specify the name of the Nth parameter file. You can specify as many parameter files as you wish, as long as you number them sequentially from 1 upwards. Each parameter file is read in sequence. If a parameter is repeated in a later parameter file then the parameter is overwritten. The last read value of a parameter is the value used in the simulation. The format of the parameter file is described in section 3.8.1.
+Specify the name of the Nth parameter file. You can specify as many parameter files as you wish, as long as you number them sequentially from 1 upwards. Each parameter file is read in sequence. If a parameter is repeated in a later parameter file then the parameter is overwritten. The last read value of a parameter is the value used in the simulation. The format of the parameter file is described in section :ref:`parfil` .
 
+.. _runcmd:
 
 =======================
 Running a Simulation
 =======================
+
+
+.. index::
+  single: chunk
 
 A simulation is run as a sequence of chunks. Different things may be accomplished in each chunk, e.g. running some steps of equilibration, printing the protein coordinates to a PDB or redirecting a stream to a new file. Chunks may be mixed and matched, and you can run as many chunks as you desire within a single simulation. You specify a chunk using the command ::
 
@@ -800,17 +1030,32 @@ Chunks are executed in the order they appear in the command file.
 Equilibration and Production
 -----------------------------
 
-The meat of a simulation is equilibration and production. In ProtoMS equilibration is defined as sampling without the collection of free energy or energy averages, while production is sampling with the collection of free en- ergy and energy averages. Equilibration and production are specified using the equilibrate and simulate chunks, e.g.  :: 
+The meat of a simulation is equilibration and production. In ProtoMS equilibration is defined as sampling without the collection of free energy or energy averages, while production is sampling with the collection of free energy and energy averages. Equilibration and production are specified using the equilibrate and simulate chunks, e.g.  
+
+.. index::
+  single: equilibrate
+
+:: 
 
   chunk equilibrate 50
   
-performs 50 steps of equilibration. ::
+performs 50 steps of equilibration. 
+
+.. index::
+  single: simulate
+
+::
 
   chunk simulate 1000
    
 performs 1000 steps of production.
 
-Additional options may be passed to these two chunks to control the probability of different types of move and the frequency of printing out move and energy details to the MOVE and ENERGY streams. These options are ::
+Additional options may be passed to these two chunks to control the probability of different types of move and the frequency of printing out move and energy details to the MOVE and ENERGY streams. These options are 
+
+.. index::
+  single: printmove
+
+::
 
   printmove=N
 
@@ -870,11 +1115,21 @@ Perform 100 steps of equilibration. Because this chunk will inherit from the pre
 
   chunk simulate 500 printmove=1 newprob volume=1 solvent=300
   
-Now perform 500 steps of production, printing move and energy information every move, performing no protein moves, and 1 volume move for every 300 solvent moves. ::
+Now perform 500 steps of production, printing move and energy information every move, performing no protein moves, and 1 volume move for every 300 solvent moves. 
+
+.. index::
+  single: splitgbsasimulate
+
+::
 
   chunk splitgbsasimulate 100 10 solute=1 protein=9
   
-The above command should only be used if you are doing an implicit solvent simulation (e.g, you turned on the surface and born keywords). This will cause to run 10 moves with a crude GBSA potential and then perform an acceptance test based on the difference of energies between the crude GBSA potential and the GBSA potential you set with the cutoff, born and surface keywords. This will be repeated 100 times. Here the move probabilities were set to 1 and 9 for solute and protein, but could be other figures. After this keyword has been used it is advised to use the following keyword. ::
+The above command should only be used if you are doing an implicit solvent simulation (e.g, you turned on the surface and born keywords). This will cause to run 10 moves with a crude GBSA potential and then perform an acceptance test based on the difference of energies between the crude GBSA potential and the GBSA potential you set with the cutoff, born and surface keywords. This will be repeated 100 times. Here the move probabilities were set to 1 and 9 for solute and protein, but could be other figures. After this keyword has been used it is advised to use the following keyword. 
+
+.. index::
+  single: resetgb
+
+::
 
   chunk resetgb
   
@@ -884,7 +1139,12 @@ This will cause the total energy of the system to be calculated fully and the Bo
 Results and Restarts
 ---------------------
 
-As well as controlling the sampling, you can also control the collection and output of results using simulation chunks, and the reading and writing of restart files. ::
+As well as controlling the sampling, you can also control the collection and output of results using simulation chunks, and the reading and writing of restart files. 
+
+.. index::
+  single: averages
+
+::
   
   chunk averages reset
   
@@ -896,7 +1156,12 @@ Write out the energy and free energy averages to the RESULTS stream. It is proba
 
   chunk averages write myfile.txt
   
-Does the same as above, but redirects the RESULTS stream to myfile.txt before the results are written. ::
+Does the same as above, but redirects the RESULTS stream to myfile.txt before the results are written. 
+
+.. index::
+  single: restart command
+
+::
 
   chunk restart write
   
@@ -913,6 +1178,9 @@ Read in a restart file from the file myfile.txt.
 -----------
 PDB Output
 -----------
+
+.. index::
+  single: pdb command
 
 You can use a simulation chunk to output a PDB of the current configuration. The output can be tailored to include only the parts of the system that you are interested in. This is useful if you are trying to conserve disk usage. You can output PDBs using the ‘pdb’ chunk ::
 
@@ -962,6 +1230,11 @@ Redirect the PDB stream to myfile.txt then print the PDB. ::
   
 Output a PDB that have a more standard format than normal, such that it can be viewed and interpreted correctly in most programs.
 
+
+
+.. index::
+  single: restraints
+
 -----------
 Restraints
 -----------
@@ -975,7 +1248,12 @@ Once you have specified a few ids, you can create restraints using these ids and
 
   restraint add id1[-id2-id3-id4] type1 type2 [other parameters] 
   
-where `id1` to `id4` designate up to four ids. `type1` designate the type of the restraint. It can be either `cartesian`,`bond` or `dihedral`. In the first case the restraint is applied in cartesian coordinates and will apply to only one atom (`id1`). In the second case, it is applied in internal coordinates, and will apply to only two atoms (`id1`-`id2`). In the last case it is applied to four atoms (`id1`-`id2`-`id3`-`id4`) and in internal coordinates. `type2` designate the functional form of the restraint. It can be `harmonic` or `flatbottom`. Each functional form requires additional parameters. The following options are currently possible: ::
+where `id1` to `id4` designate up to four ids. `type1` designate the type of the restraint. It can be either `cartesian`,`bond` or `dihedral`. In the first case the restraint is applied in cartesian coordinates and will apply to only one atom (`id1`). In the second case, it is applied in internal coordinates, and will apply to only two atoms (`id1`-`id2`). In the last case it is applied to four atoms (`id1`-`id2`-`id3`-`id4`) and in internal coordinates. `type2` designate the functional form of the restraint. It can be `harmonic` or `flatbottom`. Each functional form requires additional parameters. The following options are currently possible: 
+
+.. index::
+  single: Cartesian restraint
+
+::
 
   restraint add id1 cartesian harmonic xrest yrest zrest krest
         
@@ -983,11 +1261,22 @@ For a cartesian harmonic restraint you need to specify the coordinates of the an
 
   restraint add id1 cartesian flattbottom xrest yrest zrest krest wrest
   
-For a flatbottom restraint you must in addition specify the width of the flat region of the potential. ::
+For a flatbottom restraint you must in addition specify the width of the flat region of the potential. 
+
+.. index::
+  single: bond restraint
+
+::
 
   restraint add id1-id2 bond harmonic krest
 
-For a bond restraint you must specify only the force constant ::
+For a bond restraint you must specify only the force constant
+
+
+.. index::
+  single: dihedral restraint
+
+::
 
   restraint add id1-id2-id3-id4 dihedral harmonic theta krest
   
@@ -1007,6 +1296,10 @@ This chunk will create id number 2 which will point to protein pdb loaded as pro
                             
 This chunk will cause a restraint to be added between the atoms id 1 and 2 points to. The functional form of this restraint will be a harmonic potential that is function of the distance between these two atoms. The force constant will be 5 kcal mol - 1. A - 2 and the equilibrium distance 3.33 angstrom.
 
+
+.. index::
+  single: hardwall restraint
+
 Applying a hardwall restraint is slightly different ::
 
   chunk id add 1 SOLUTE 2 O00 WAT
@@ -1017,23 +1310,46 @@ This chunk will create id number 1 which will point to solute number 2, looking 
   
 This chunk will apply a hardwall restraint to atom O00 based at [25.890,16.895,59.083]. The form of this restraint is spherical, with a radius of 1.8 If the solute atom attempts to leave this radius then a huge penalty is applied, preventing the move. Equally, if other atom try to occupy the hardwall region then the penalty is applied.
 
+.. _misccmd:
+
 --------------
 Miscellaneous
 --------------
 
-As well as running the simulation, there are also a collection of other things that you can do in a simulation chunk. These are ::
+As well as running the simulation, there are also a collection of other things that you can do in a simulation chunk. These are 
+
+.. index::
+  single: singlepoint
+
+::
 
   chunk singlepoint
   
-Calculate the energy of the current system and output it to the SPENERGY stream. This is useful if you just want to use ProtoMS to evaluate a forcefield energy. You can set up the input files, turn off all streams, direct stream SPENERGY to STDOUT and run a simulation that only consists of this ‘singlepoint’ chunk. ::
+Calculate the energy of the current system and output it to the SPENERGY stream. This is useful if you just want to use ProtoMS to evaluate a forcefield energy. You can set up the input files, turn off all streams, direct stream SPENERGY to STDOUT and run a simulation that only consists of this ‘singlepoint’ chunk. 
+
+.. index::
+  single: solutenergy
+
+::
 
   chunk soluteenergy N
   
-Calculate the energy of solute N. This calculates the energy of solute N and outputs the components of this energy in great detail. This is useful for debugging a forcefield or for collecting average energy components that are more finely divided than those normally collected. ::
+Calculate the energy of solute N. This calculates the energy of solute N and outputs the components of this energy in great detail. This is useful for debugging a forcefield or for collecting average energy components that are more finely divided than those normally collected. 
+
+.. index::
+  single: retienergy
+
+::
 
   chunk retienergy 0.2
   
-The RETI free energy method requires the calculation of the energy at the neighbouring two :math:`\lambda` windows at the end of the simulation. This chunk will calculate the energy at :math:`\lambda` windows 0.2 above and below the reference state, and will output the results to the RETI stream. ::
+The RETI free energy method requires the calculation of the energy at the neighbouring two :math:`\lambda` windows at the end of the simulation. This chunk will calculate the energy at :math:`\lambda` windows 0.2 above and below the reference state, and will output the results to the RETI stream. 
+
+
+.. index::
+  single: lambda chunk
+
+::
 
   chunk lambda 0.5
 
@@ -1045,11 +1361,21 @@ As above, except set the :math:`\lambda` values of the forwards and backwards wi
 
   chunk lambda delta 0.1
 
-As above except instead of directly setting :math:`\lambda`, change :math:`\lambda` by 0.1. This will also increase the value of :math:`\lambda` for the for- wards and backwards windows by 0.1. ::
+As above except instead of directly setting :math:`\lambda`, change :math:`\lambda` by 0.1. This will also increase the value of :math:`\lambda` for the for- wards and backwards windows by 0.1. 
+
+.. index::
+  single: freeenergy
+
+::
 
   chunk freeenergy 0.3 0.5
   
-Calculate quantities need for free energy estimators. This will calculate the derivative of the potential with respect to :math:`\lambda` as needed for thermodynamic integration, and energies at :math:`\lambda` =0.3 and :math:`\lambda` =0.5 as needed for Bennett Acceptance Ratio method. All of these energies will be printed to the INFO and ENERGY streams. ::
+Calculate quantities need for free energy estimators. This will calculate the derivative of the potential with respect to :math:`\lambda` as needed for thermodynamic integration, and energies at :math:`\lambda` =0.3 and :math:`\lambda` =0.5 as needed for Bennett Acceptance Ratio method. All of these energies will be printed to the INFO and ENERGY streams. 
+
+.. index::
+  single: fixresidues
+
+::
 
   chunk fixresidues 1 all
   
@@ -1061,7 +1387,12 @@ Fix the residues of protein 1. Only fix residues 1 to 10, 12, 14 and 16 to 20. :
 
   chunk fixresidues 1 none
 
-Unfix all of the residues of protein 1. ::
+Unfix all of the residues of protein 1. 
+
+.. index::
+  single: fixbackbone
+
+::
 
   chunk fixbackbone 1 all
   
@@ -1073,7 +1404,12 @@ Unfix all of the residues of protein 1, then fix the backbone of residues 20-35.
 
   chunk12 transrot 1 0.0 0.0
   
-Set the translation and rotation displacements for solute 1 to zero. This overrides the values read in the template file. The first floating point number is the translation displacement and the second one is the rotation displacement and is optional. Can be useful for pure solvent and gas-phase calculations. ::
+Set the translation and rotation displacements for solute 1 to zero. This overrides the values read in the template file. The first floating point number is the translation displacement and the second one is the rotation displacement and is optional. Can be useful for pure solvent and gas-phase calculations. 
+
+.. index::
+  single: setstream
+
+::
 
   setstream info=stdout move=off
   
@@ -1081,7 +1417,12 @@ Direct the INFO stream to STDOUT and turn the MOVE stream off. ::
 
   setstream restart=myfile.txt warning=stderr
   
-Direct the RESTART stream to myfile.txt and the WARNING stream to STDERR. solvate] ::
+Direct the RESTART stream to myfile.txt and the WARNING stream to STDERR. solvate] 
+
+.. index::
+  single: solvent chunk
+
+::
 
   chunk solvent box xdim ydim zdim [xorig yorig zorig xmax ymax zmax]
     
@@ -1115,11 +1456,16 @@ ProtoMS can read in five types of input file
 ProtoMS is insensitive to case, so you can mix upper case and lower case within these files without affecting how
 they are read.
 
+
+.. _parfil:
+
 ==============================
 Parameter / Forcefield Files
 ==============================
 
 The parameter file is the most powerful, and hence the most complicated of all of the input files read by ProtoMS. The parameter file provides all of the forcefield parameters that are used in a simulation, and it also provides all of the templates that provide the connectivity and z-matrices of all of the loaded molecules. The parameter file uses a word based format, meaning that you can leave as many spaces between words on a line as you like, and you do not have to worry about lining up data into particular columns. 
+
+
 
 The general format of a parameter file is shown below::
 
@@ -1158,12 +1504,15 @@ How ProtoMS reads the parameter file is controlled by which ``mode`` the file ha
 
 * **dihedral** This mode is used to read in the dihedral parameters.
 
-* **template** This mode is used to read in the templates (z-matricies) used in the simulation. The template format is quite complex, so is described in the next section (section 3.8.2).
+* **template** This mode is used to read in the templates (z-matricies) used in the simulation. The template format is quite complex, so is described in the next section.
 
 ProtoMS will only read lines that are valid within the mode that is being read. If ProtoMS could not read a line, or finds an incorrectly formatted line, then ProtoMS will print a message to the WARNING stream and will skip that line. It is therefore very important that you check the WARNING stream if you are writing or modifying a parameter file. To help you, ProtoMS will write out detailed information about a loaded parameter file to the DETAIL stream. You should check this output to ensure that any changes you make to a parameter file are being
 correctly loaded by ProtoMS.
 
 ProtoMS can be asked to load as many forcefield files as you desire. Each parameter or template within the forcefield files has either a numerical or name based ID. If two forcefield files have parameters or templates that share the same ID, then ProtoMS will use the value that was read last. ProtoMS will of course warn you that it has overwritten an earlier parameter (by outputting a message to the WARNING stream) but this behaviour could still trip you up! To help you, all of the parameters that use numerical IDs in the forcefield files supplied with ProtoMS use IDs that are between 1 and 2999. You can thus use numerical IDs that are greater than or equal to 3000 without worrying about a clash.
+
+.. index::
+  single: mode info
 
 **mode info**
 
@@ -1171,20 +1520,23 @@ This mode is used to read in control information for the forcefield. This inform
 
   ljcombine type
 
-where *type* can be `arithmetic` or `geometric`. This sets the combining rules used for the Lennard Jones :math:`\sigma` parameter to either the arithmetic mean (as used by AMBER), or the geometric mean (as used by OPLS). See equations 3.4 and 3.5 for the functional forms of these combining rules. ::
+where *type* can be `arithmetic` or `geometric`. This sets the combining rules used for the Lennard Jones :math:`\sigma` parameter to either the arithmetic mean (as used by AMBER), or the geometric mean (as used by OPLS). See equations :eq:`arithmetriccomb` and :eq:`geometriccomb` for the functional forms of these combining rules. ::
 
   scl14coul float
 
-This sets the 1-4 coulombic scaling factor, e.g. for OPLS the value should be 0.5 (see equation 3.2). ::
+This sets the 1-4 coulombic scaling factor, e.g. for OPLS the value should be 0.5 (see eq :eq:`intrapot1`). ::
 
   scl14lj float
 
-This sets the 1-4 Lennard Jones scaling factor, e.g. for OPLS the value should be 0.5 (see equation 3.2). 
+This sets the 1-4 Lennard Jones scaling factor, e.g. for OPLS the value should be 0.5 (see eq :eq:`intrapot1`). 
 
+
+.. index::
+  single: mode clj
 
 **mode clj**
 
-This mode is used to read in the charge and Lennard Jones (clj) parameters used by the simulation (see equations 3.3, 3.11 and 3.12). Only one type of line is valid within this mode ::
+This mode is used to read in the charge and Lennard Jones (clj) parameters used by the simulation (see equations :eq:`intermol1` and :eq:`intrapot3`). Only one type of line is valid within this mode ::
 
   par id amber proton-number charge sigma epsilon
 
@@ -1202,6 +1554,10 @@ specifies the clj parameter for oxygen in TIP3P water, with parameter number 200
 
 Parameter ID 0 is a special clj parameter used to represent a null atom. This null atom has charge, :math:`\sigma` and :math:`\epsilon` values of 0.0, an AMBER atom type of ‘DM’ and a proton number of 0.
 
+
+.. index::
+  single: mode bond
+
 **mode bond**
 
 This mode is used to read in the bond parameters used by the simulation. Two types of line are valid within this mode ::
@@ -1210,7 +1566,7 @@ This mode is used to read in the bond parameters used by the simulation. Two typ
 
 ``id`` is an identifying number from 1 to MAXBNDPARAM (default 5000) that is used to uniquely identify a bond. As in the case of the clj parameters, new parameters with the same ID number will overwrite old parameters with that ID number, and the parameter files supplied with ProtoMS will only use IDs from 1 to 2999, so you can safely use parameters 3000 and up.
 
-``force-constant`` is the force constant (:math:`k_{bond}`) for the bond parameter. The units of kbond are kcal mol-1 A-2 . ``bond-length`` is the equilibrium bond length (:math:`r_0` ), in units of A.
+``force-constant`` is the force constant (:math:`k_{bond}`, see eq :eq:`bondpot`) for the bond parameter. The units of :math:`k_{bond}` are kcal mol-1 A-2 . ``bond-length`` is the equilibrium bond length (:math:`r_0` ), in units of A.
 
 The second type of line valid in this mode is used to associate a pair of AMBER atom types with a bond parameter ::
 
@@ -1220,6 +1576,9 @@ This line specifies the bond between atoms with AMBER atom types ``amb1`` and ``
 
 These bond atm lines are indexed by the AMBER pair amber1-amber2. If this AMBER pair has already been loaded then its parameter is overwritten with the new parameter. Note that bonds are symmetrical, thus bond index amb1-amb2 is equal to amb2-amb1.
 
+
+.. index::
+  single: mode angle
 
 **mode angle**
 
@@ -1231,14 +1590,16 @@ and ::
 
   atm amb1 amb2 amb3 id
 
-``id`` is an indentifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. ``force-constant`` is the force constant (:math:`k_{angle}` , see equation 3.7) for the angle parameter, in units of kcal mol-1 degree-2 . ``angle-size`` is the equilibrium angle size (:math:`\theta_0`) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999. 
+``id`` is an indentifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. ``force-constant`` is the force constant (:math:`k_{angle}` , see eq :eq:`angpot`) for the angle parameter, in units of kcal mol-1 degree-2 . ``angle-size`` is the equilibrium angle size (:math:`\theta_0`) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999. 
 
 The atm line is again very similar to that in the bond mode, with in this case the angle between atoms with AMBER types ``amb1-amb2-amb3`` being assigned angle parameter id. Angles are also symmetric, so ``amb1-amb2-amb3`` is equivalent to ``amb3-amb2-amb1``. Like the bond mode, any angle involving dummy atoms (AMBER type ‘DM’) will automatically be set to use the angle parameter 0. It is not possible to use a non-null angle parameter over an angle involving dummy atoms.
 
+.. index::
+  single: mode ureybradley
 
 **mode ureybradley**
 
-This mode is used to read in Urey-Bradley parameters (see equation 3.8), and its format is identical to that of the angle mode. There are only two valid lines in this mode ::
+This mode is used to read in Urey-Bradley parameters (see eq :eq:`ubpot`), and its format is identical to that of the angle mode. There are only two valid lines in this mode ::
 
   par id force-constant uby-size
 
@@ -1249,13 +1610,16 @@ and ::
 In this case force-constant refers to the Urey-Bradley force constant (:math:`k_{uby}` ), in units of kcal mol-1 A -2 and ``uby-size`` refers to the equilibrium Urey-Bradley length (:math:`x_0` ) in units of A. Everything else about this mode is identical to that of the bond mode.
 
 
+.. index::
+  single: mode dihedral
+
 **mode dihedral**
 
 This mode is used to read in the dihedral parameters that are used in the simulation. There are three types of line that are value in this mode. The first of these is used to provide the parameters for a single dihedral cosine term :
 
   term term-id k1 k2 k3 k4
 
-``term-id`` is an ID number from 1 to MAXDIHTERMS (default 5000) that uniquely identifies this dihedral cosine term. ``k1`` to ``k4`` are the values of the four constants (:math:`k_1` to :math:`k_4` ) that control the dihedral cosine term (see equation 3.9). ``k1`` has units of kcal mol-1 , ``k2`` and ``k3`` are dimensionless, and ``k4`` is in units of degrees.
+``term-id`` is an ID number from 1 to MAXDIHTERMS (default 5000) that uniquely identifies this dihedral cosine term. ``k1`` to ``k4`` are the values of the four constants (:math:`k_1` to :math:`k_4` ) that control the dihedral cosine term (see eq :eq:`dihepot`). ``k1`` has units of kcal mol-1 , ``k2`` and ``k3`` are dimensionless, and ``k4`` is in units of degrees.
 
 A full dihedral parameter is composed from the sum of individual dihedral cosine terms. The second valid line in the dihedral mode specifies which terms are associated with which parameters, e.g ::
 
@@ -1270,6 +1634,9 @@ As in the case of the bond, angle and ureybradley modes, the AMBER atom set is u
 Because dihedrals are symmetrical, ``amb1-amb2-amb3-amb4`` is equivalent to ``amb4-amb3-amb2-amb1``.
 
 
+.. index::
+  single: mode born
+
 **mode born**
 
 This mode is used to read the Generalised Born parameters that are used in the simulation. A valid line is ::
@@ -1279,6 +1646,9 @@ This mode is used to read the Generalised Born parameters that are used in the s
 where ``atype`` is an AMBER/GAFF atom type, ``iborn`` is an intrinsic born radius and scalefac a scaling factor for Pairwise Descreening Approximation calculations. These parameters have been optimised to be used with the AMBER or GAFF force fields.
 
 
+.. index::
+  single: mode surface
+
 **mode surface**
 
 This mode is used to read surface area parameters that are used in the simulation. A valid line is ::
@@ -1287,12 +1657,13 @@ This mode is used to read surface area parameters that are used in the simulatio
 
 where ``atype`` is an AMBER/GAFF atom type, ``radius`` is the radius of the atom and ``surftens`` the surface tension of this atom type, which relates the solvent accessible surface area of this atom to a non polar energy. These parameters have been optimised to be used with the AMBER or GAFF force fields.
 
+.. _temref:
 
 ===========================
 Templates
 ===========================
 
-Templates are used to assign the z-matrix and forcefield parameters to loaded molecules. Templates are read in using the template mode of the parameter / forcefield files (see section 3.8.1). Different types of template are used with the different types of molecules in ProtoMS
+Templates are used to assign the z-matrix and forcefield parameters to loaded molecules. Templates are read in using the template mode of the parameter / forcefield file. Different types of template are used with the different types of molecules in ProtoMS
 
 
 * **proteins** The backbone of each protein residue is assigned via a chain template. The sidechain of each residue is assigned via a residue template.
@@ -1316,11 +1687,11 @@ The valid lines that comprise a chain template are ::
 
   bbatom id nam par0 par1
 
-This line identifies which are the four bbatoms of the residue (see section 3.1.1 and figure 3.1). ``id`` identifies which bbatom this atom is (from 1 to 4), ``nam`` gives the name of the atom (maximum of four characters), and ``par0`` and ``par1`` are the CLJ parameters for this atom at :math:`\lambda` = 0.0 and :math:`\lambda` = 1.0, and these must refer to a valid CLJ parameter (from 0 to MAXCLJ, default 10000). Note that CLJ parameter 0 is used to assign a dummy atom. The name of the atom is the same as that given in the PDB file for the protein, and is limited to a maximum of four characters. The atom name must uniquely identify the atom within the residue, so this name must not be used elsewhere within this chain template, or in any residue templates that connect to this chain template ::
+This line identifies which are the four bbatoms of the residue. ``id`` identifies which bbatom this atom is (from 1 to 4), ``nam`` gives the name of the atom (maximum of four characters), and ``par0`` and ``par1`` are the CLJ parameters for this atom at :math:`\lambda` = 0.0 and :math:`\lambda` = 1.0, and these must refer to a valid CLJ parameter (from 0 to MAXCLJ, default 10000). Note that CLJ parameter 0 is used to assign a dummy atom. The name of the atom is the same as that given in the PDB file for the protein, and is limited to a maximum of four characters. The atom name must uniquely identify the atom within the residue, so this name must not be used elsewhere within this chain template, or in any residue templates that connect to this chain template ::
 
   atom nam par0 par1 bndnam angnam dihnam
 
-This line identifies any extra atoms that are part of the backbone. ``nam``, ``par0`` and ``par1`` have the same meanings as for the bbatom line. This is a z-matrix line (see appendix ??), and ``bndnam``, ``angnam`` and ``dihnam`` are the names of the atoms that are the reference from which the coordinates of this atom are generated (bond, angle and dihedral atoms). Note that this line does not state that there is a bond, angle or dihedral with these atoms. This line only says that these three atoms are used to construct this extra atom. Note that the atoms in a residue are built in sequence, so the bond, angle and dihedral atoms in this line must refer to atoms that were previously listed in the chain template. ::
+This line identifies any extra atoms that are part of the backbone. ``nam``, ``par0`` and ``par1`` have the same meanings as for the bbatom line. This is a z-matrix line, and ``bndnam``, ``angnam`` and ``dihnam`` are the names of the atoms that are the reference from which the coordinates of this atom are generated (bond, angle and dihedral atoms). Note that this line does not state that there is a bond, angle or dihedral with these atoms. This line only says that these three atoms are used to construct this extra atom. Note that the atoms in a residue are built in sequence, so the bond, angle and dihedral atoms in this line must refer to atoms that were previously listed in the chain template. ::
 
   zmat nam bndval angval dihval
 
@@ -1626,18 +1997,18 @@ where ``name`` is the uniquely identifying name of the GCsolute template. As in 
 
 which states that the GCsolute atom called ``nam`` has CLJ parameters ``par0`` at :math:`\lambda`  = 0.0 and ``par1`` at :math:`\lambda` = 1.0. GCsolute templates should have values of CLJ parameters used in the files ranging from 8001 to 8999.
 
-
+.. _protpdb:
 
 ===========================
 Protein File
 ===========================
 
-Proteins are loaded from protein files. The names of the protein files are specified using the proteinN command described in section 3.4. The protein file is just a standard PDB format file. The name of the protein contained within this file is taken from the HEADER line of the PDB. e.g.::
+Proteins are loaded from protein files. The names of the protein files are specified using the proteinN command described in section :ref:`incmd`. The protein file is just a standard PDB format file. The name of the protein contained within this file is taken from the HEADER line of the PDB. e.g.::
 
   HEADER p38 kinase
 
 
-The protein name may contain spaces, though ProtoMS will strip any spaces before or after the name, and will collapse multiple spaces into a single space (much like it does with the solute name, as described in section 3.8.2).
+The protein name may contain spaces, though ProtoMS will strip any spaces before or after the name, and will collapse multiple spaces into a single space (much like it does with the solute name).
 
 ProtoMS tries to follow the PDB format when it reads in PDB lines (see http://www.rcsb.org/pdb/docs/format/pdbguide2.2/guide2.2 frame.html). Atom names and coordinates are given on lines that start with ATOM or HETATM. As with the rest of ProtoMS, the capitalisation of these keywords is not important. Unlike the rest of ProtoMS, these lines have a strict format with respect to in which column each piece of data is recorded.
 
@@ -1645,6 +2016,7 @@ ProtoMS constructs the protein chain from the residue order that it reads in fro
 
 ProtoMS can only read a single protein chain from a PDB file. This means that you must split multi-chain PDB files into several files, and that PDBs using the ‘A’ or ‘B’ chain notation will be read incorrectly. If ProtoMS reads TER line, then it will print a message to the WARNING stream, and will then skip the rest of the PDB file. ProtoMS is capable of reading a wide variety of PDB files, and of fixing many of the errors that it encounters. Despite this, I would recommend that you do not just use a PDB direct from the databank, but that you first preprocess the PDB with another software package to ensure that the PDB is correct, and that polar hydrogens and titratable residues are included correctly.
 
+.. _solpdb:
 
 ===========================
 Solute File
@@ -1656,13 +2028,13 @@ Solute input files are very similar to protein input files. Solute files are sta
 
 The solute name is used to locate the solute template, which is used to assign the z-matrix and forcefield parameters of the solute.
 
-The solute PDB file has the same format as a standard PDB (see figure 3.13), with the requirements that all atoms belonging to a residue are together in the PDB, that each residue name is unique, and that all atom names within a residue are unique. 
+The solute PDB file has the same format as a standard PDB, with the requirements that all atoms belonging to a residue are together in the PDB, that each residue name is unique, and that all atom names within a residue are unique. 
 
 As is the case for protein files, ProtoMS will only read a single solute from each solute PDB file, and will skip the rest of the solute PDB if it encounters a TER line. It is intended that a future version of ProtoMS will remove this restriction.
 
 ProtoMS will use the solute name to find the solute template for this molecule, and will then try to locate each atom from the template within the PDB file. If the atom does not exist then ProtoMS can automatically build the missing atom as long as its zmat information has been provided. If ProtoMS cannot build the atom then it skips it, after writing severe messages to the WARNING stream. If the PDB contains atoms that are not listed in the template then these atoms are ignored.
 
-
+.. _gcpdb:
 
 ===========================
 GCsolute File
@@ -1670,6 +2042,8 @@ GCsolute File
 
 GCsolute input files are very similar to protein input files, except that multiple GCsolutes can be loaded at once. GCsolute files are standard PDB format coordinate files. An example is shown below in figure 3.15 The name of each solvent molecule is taken from the residue name, and it is this name that is used to locate the template for each GCsolute molecule.
 
+
+.. _solventpdb:
 
 ===========================
 Solvent File
@@ -1696,7 +2070,7 @@ This states that the solvent file contains a box of solvent with the bottom-left
 
 This states that the solvent file contains solvent molecules restrained to be within a spherical cap of `radius` rad A, centered at coordinates (`ox`,`oy`,`oz`) A, using a half-harmonic force constant of k kcal mol-1 A -2 . ProtoMS will not check to see whether or not this information is accurate.
 
-Only one HEADER line may be included in each solvent file. How ProtoMS interprets these HEADER lines depends on which boundary conditions had been set for the simulation (see section 3.4). 
+Only one HEADER line may be included in each solvent file. How ProtoMS interprets these HEADER lines depends on which boundary conditions had been set for the simulation. 
 
 1. If no boundaries had been set for the simulation, then any information in the solvent files is ignored.
 

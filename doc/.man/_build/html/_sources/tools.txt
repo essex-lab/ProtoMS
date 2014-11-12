@@ -48,8 +48,10 @@ build_template.py
 ``build_template.py -p prepifile [-f frcmodfile] [-z zmatfile] [-o outfile] [-n name] [-t trans] [-r rot]``
 
 * ``-p prepifile`` = the name of an Amber prepi file containing the z-matrix and atom types of a solute
+
 * ``-f frcmodfile`` = the name of an Amber frcmod file
     optional, no default
+
 * ``-z zmatfile`` = the name of a file containing the ProtoMS z-matrix of a solute
     optional, no default
 * ``-o outfile`` = the name of a ProtoMS template file
