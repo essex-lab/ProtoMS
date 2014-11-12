@@ -161,7 +161,7 @@ html_static_path = ['_static']
 #html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 #html_show_sphinx = True
@@ -199,7 +199,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'ProtoMS.tex', u'ProtoMS Documentation',
-   u'C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez', 'manual'),
+   u'C. J. Woods, \\and J. Michel, \\and M. Bodnarchuk, \\and S. Genheden, \\and R. Bradshaw, \\and G. Ross, \\and C. Cave-Ayland, \\and A. I. Cabedo Martinez', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
