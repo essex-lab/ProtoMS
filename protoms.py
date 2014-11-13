@@ -741,7 +741,7 @@ def _wizard(settings) :
     plt.show()
     return
   while instr not in valid :
-    print "Please type a number between 1 and 5!"
+    print "Please type a number between 1 and 7!"
     print ">",
     instr = raw_input()
   if instr == "" : return
@@ -756,13 +756,14 @@ def _wizard(settings) :
   if instr != "" : settings.protein = instr
 
   print "\nDo you have a ligand that you would like to setup and simulate?"
-  print "\tPlease enter the ligand name or a PDB filename."
-  if settings.simulation not in ["dualtopology","singletopology"] : print "\tPress enter if you don't have a ligand."
-  print ">",
-  instr = raw_input()
-  if settings.simulation in ["dualtopology","singletopology"] :
+  if settings.simulation not in ["dualtopology","singletopology"] :
+    print "\tPlease enter the ligand name or a PDB filename. \n\tPress enter if you don't have a ligand."
+    print ">",
+    instr = raw_input()
+    if instr != "" : args.ligand = [instr]
+  else :
     while instr == "" :
-      print "For the type of simulation you have selected, two ligands needs to be given. \n\tPlease enter a ligand name or a PDB filename"
+      print "For the type of simulation you have selected, two ligands need to be given. \n\tPlease enter a ligand name or a PDB filename"
       print ">",
       instr = raw_input()
     args.ligand = [instr]     
@@ -771,9 +772,10 @@ def _wizard(settings) :
     while instr == "" :
       print ">",
       instr = raw_input()
+      if instr == "" :
+        print "\tPlease note that absolute free energies cannot currently be set up via the wizard.\n\tPlease see protoms.py --fullhelp for details of how to set these up!"
+        print "\tPlease enter the second ligand name or a PDB filename."
     args.ligand.append(instr)
-  else :
-    if instr != "" : args.ligand = [instr]
 
   print "\nDo you have a co-factor or another solute that you would like to setup and simulate?"
   print "\tPlease enter the solute name or a PDB filename."
