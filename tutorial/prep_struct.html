@@ -1,0 +1,148 @@
+<html>
+<head>
+<title>Setting up ligands and proteins</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Setting up structures to use with ProtoMS</h1>
+This short document helps you prepare ligand and protein structure so that they can be used by the ProtoMS setup tools. It is not intended as a complete guide but contains references to tools and programs that can aid in the setup.
+<h3>Ligand setup</h3>
+<h5>Source of structure</h5>
+If you are setting up a protein-ligand simulation, you will typically find the ligand or a related ligand bound to the protein. Then you can extract the coordinates of the ligand from the PDB files.<p></p>
+If this is not the case you have to create the structure manually. One option is to draw in a 2D drawing program like <a href="http://www.chemaxon.com/products/marvin/">Marvin</a>. Such tools can typically convert it to a reasonable 3D structure. If it is a common ligand you can retrieve the SMILE string from <a href="http://www.chemspider.com/">ChemSpider</a> and paste the SMILE string into your drawing program. Alternatively, you can paste the SMILE string into a web-service that directly converts it to a 3D structure. One such site is Cactus, available at <a href="http://cactus.nci.nih.gov/translate/">http://cactus.nci.nih.gov/translate/</a>
+<h5>Protonation</h5>
+Next, you need to protonate the ligand. This can be done with several programs such as
+<ul>
+	<li><a href="http://openbabel.org">Babel</a></li>
+	<li><a href="http://biophysics.cs.vt.edu/">H++</a></li>
+	<li><a href="https://www.cgl.ucsf.edu/chimera/">UCSF Chimera</a></li>
+	<li><a href="http://www.chemcomp.com/MOE-Molecular_Operating_Environment.htm">MOE</a></li>
+</ul>
+Ot is important to consider the environment that surrounds the ligand. If it is surrounded by charged residues or co-factors the ligand can become charged. Therefore, it is important to check this prior to protonation as most of the software package above does not account for this.
+<p>
+It is also important to consider tautomeric states. Marvin Sketch can suggest the appropriate tautomer at a specific pH from a set of rules. However, be careful to check this.</p> 
+<h5>Minimization</h5>
+It is recommended to minimize the ligand because typically bonds and only a limited number of angles are sampled during the Monte Carlo simulation. This can be done with program in the AmberTools package. Below, we assume that the files <code>ligand.pdb</code> exists and that the files <code>ligand.prepi</code> and <code>ligand.frcmod</code> has been created previously. The latter can be done with <code>protoms.py</code> for instance. 
+<p>First, we will set the name of the ligand to an environment variable so that we can use more general scripts </p>
+<pre>
+export name=ligand</pre>
+then we will create a script for <code>tleap</code> and execute it, thereby creating Amber prmtop and prmcrd files.
+<pre>
+cat << EOF > leap.in
+source leaprc.gaff
+loadamberprep ${name}.prepi
+loadamberparams ${name}.frcmod
+x=loadpdb ${name}.pdb
+saveamberparm x prmtop prmcrd
+quit
+EOF
+
+tleap -f leap.in >& leap.out
+</pre>
+next we will create input to the MD program <code>sander</code> and run a short 100 step minimization.
+<pre>
+cat << EOF > min.in
+  
+  &cntrl
+     irest=0,ntx=1,
+     imin=1,maxcyc=100,drms=0.0001,ntmin=2,
+     ntc=1,ntf=1,
+     cut=20.0,
+     ntpr=100,ntwx=0,ntwv=0,ntwe=0,
+     ipol=0,igb=0,ntb=0,
+   &end
+EOF
+
+sander -O -i min.in -o min.out -p prmtop -c prmcrd -r mincrd
+</pre>
+the minimized coordinates are found in <code>mincrd</code>. To convert this to a PDB file we can use
+<pre>ambpdb -p prmtop < mincrd > mincrd.pdb 
+</pre>
+Finally, if you want to put the minimized coordinates back into your original PDB file you can type the following
+<pre>header=$(sed -n '1p' ${name}.pdb)
+echo $header > ${name}.pdb
+sed "/REMARK/d" mincrd.pdb >> ${name}.pdb
+</pre>
+<p><br></p>
+<h3>Protein setup</h3>
+<h5>Missing residues</h5>
+It is common for protein structures to be incomplete. This is because certain protein regions can be extremely flexible, causing them to produce a diffuse diffraction pattern, rendering them unresolved. There are techniques available to tackle this problem. One such technique is homology modeling.
+<p></p>
+There are online tools that enable the addition of missing residues to your protein structure, for example <a href="http://modbase.compbio.ucsf.edu/modloop/">Modloop</a>.
+<h5>Protonation</h5>
+After examining the PDB file and its content, missing hydrogens can be added to the protein structure. There are several concepts that one must consider when performing protonation. These include:
+<ul>
+    <li>Elecrostatics (pKa and charge)
+    <li>pH
+    <li>Residue Tautomers
+</ul>
+There are several software packages that are able to protonate a protein. These are:
+<ul>
+    <li><a href="http://molprobity.biochem.duke.edu/">Molprobity</a>
+    <li><a href="http://swift.cmbi.ru.nl/whatif/">Whatif</a>
+    <li><a href="http://biophysics.cs.vt.edu/">H++</a></li>
+</ul>
+After adding hydrogens it is always a good idea to use visual inspection to validate whether the protonation is reasonable.
+<h5>A simple checklist</h5>
+This is a list that you go through whenever you setup a new protein. You need to use some kind of visualization program to look at your protein residues. It is a good idea to save separate files during the setup, instead of modifying the original pdb-file from the Proteinbank (use appropriate names)
+<ol>
+    <li>Start with a pdb-file from the Protein Databank
+    <li>Read the article that describe the structure. Read all the initial rows in the pdb-file that occurs before the actual coordinates. Make notes on missing residues and crystallization conditions (e.g. pH)
+    <li>If there are ligands or co-factor that needs to be included, parameterize them.
+    <li>Determine the protonation state of charged residues<br>
+        Usually Asp, Glu, Arg, Lys and Cys residues have their normal protonation state at pH 7. Exceptions can be:<br>
+        Is the residue buried without any ion-pair partner?<br>
+        Is the residue bound to a metal ion?<br>
+        Is the residue involved in interactions with ligands or co-factors?<br>
+        You need to check this for buried residues.<br>
+    </li>
+    <li>Determine the protonate state of histidine residues<br>
+        His residues are special and have typically one three protonation states: 1) protonated on the ND1 atom, 2) protonated on the NE2 atom, or 3) protonated on both positions.<br>
+        This is determined by the environment<br>
+        Try to avoid double protonated residues, as this increase the total charge of the protein<br>
+        NE2 protonated residues are most common, so use this as a default<br>
+        Look at all residues within 3A of the ring and try to located hydrogen-bonding partners<br>
+        Look out for ring flips. Sometimes the crystallographer swaps N and C atoms in the ring.<br>
+        Try a few prediction tools and see what they suggest<br>
+        Rename residues: HID (ND1), HIE (NE2), or HIP (both).<br>
+    </li>     
+    <li>Find residues with alternative conformations.<br>
+        You can only keep one in the simulation, so pick one with the highest occupancy (or any if the occupancy is 0.5).<br>
+    </li>
+    <li>Locate cystein-cystein bridges.<br>
+        Change their names to CYX and make a note of their residue numbers.<br>
+    </li>
+    <li>Remove buffer molecules</li>
+    <li>Optionally, remove the ligand and co-factors (you can add them back later)</li>
+    <li>Add hydrogens to the system using leap, e.g.</li>
+</ol>
+<pre>
+  cat << EOF > leap.in
+  source leaprc.ff99SB  
+  x=loadpdb protein.pdb
+  savepdb x protein_protonated.pdb
+  saveamberparm x prmtop prmcrd
+  quit
+  EOF
+  tleap -f leap.in  
+</pre>
+for further reading, please consult the latest Amber manual at <a href="www.ambermd.org">www.ambermd.org</a>
+<h5>Minimization</h5>
+Sometimes it is a good idea to minimize the protein before starting the Monte Carlo simulation. If you for instance modelled in a large bit of undefined residues. The procedure below assumes that the name of the PDB file is <code>protein.pdb</code>
+<p>First, we will set the name of the ligand to an environment variable so that we can use more general scripts </p>
+<pre>
+export name=protein</pre>
+then we will create a script for <code>tleap</code> and execute it, thereby creating Amber prmtop and prmcrd files.
+<pre>
+cat << EOF > leap.in
+source leaprc.ff99SB
+x=loadpdb ${name}.pdb
+saveamberparm x prmtop prmcrd
+quit
+EOF
+
+tleap -f leap.in >& leap.out
+</pre>
+The rest of the procedure follows from the minimization of ligands shown above.
+</body>
+</html>

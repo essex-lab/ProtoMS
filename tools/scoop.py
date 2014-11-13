@@ -246,8 +246,8 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
     header += "REMARK flexibility of the inner part : %s\n" % flexin
     header += "REMARK flexibility of the outer part : %s\n" % flexout
     header += "REMARK ProtoMS keyword to use\n"
-    header += "REMARK chunk fixbackbone 1 %s\n" % outBB
-    header += "REMARK chunk fixresidues 1 %s\n" % outSC
+    if not len(rigidBB) == 0 : header += "REMARK chunk fixbackbone 1 %s\n" % outBB
+    if not len(rigidSC) == 0 : header += "REMARK chunk fixresidues 1 %s\n" % outSC
 
     header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
     header += "REMARK of the ligand\n"

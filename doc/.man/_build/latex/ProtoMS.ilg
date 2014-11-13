@@ -1,0 +1,7 @@
+This is makeindex, version 2.14 [02-Oct-2002] (kpathsea + Thai support).
+Scanning style file ./python.ist......done (6 attributes redefined, 0 ignored).
+Scanning input file ProtoMS.idx....done (91 entries accepted, 0 rejected).
+Sorting entries....done (593 comparisons).
+Generating output file ProtoMS.ind....done (151 lines written, 0 warnings).
+Output written in ProtoMS.ind.
+Transcript written in ProtoMS.ilg.

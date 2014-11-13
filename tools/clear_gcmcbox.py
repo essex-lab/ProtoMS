@@ -45,7 +45,8 @@ def clear_gcmcbox(gcmcbox,waters) :
   logger.debug("\tgcmcbox = %s"%gcmcbox) 
   logger.debug("\twaters = %s"%waters) 
   logger.debug("This will remove solvent molecules within the GCMC/JAWS box")
-  
+
+  extend = 1.0					# The amount to clear in excess of the box limits, as only the oxygen atoms of the water molecules are used to decide whether the water molecule is in the box or not.  
   if isinstance(gcmcbox,basestring) :
     gcmcbox = simulationobjects.PDBFile(filename=gcmcbox)
   if isinstance(waters,basestring) :
@@ -66,7 +67,7 @@ def clear_gcmcbox(gcmcbox,waters) :
   removethese = []
   for soli in waters.solvents :
     xyz = waters.solvents[soli].atoms[0].coords
-    if np.all(xyz < box_max) and np.all(xyz > box_min) :
+    if np.all(xyz < (box_max + extend)) and np.all(xyz > (box_min - extend)) :
       logger.debug("Removing water %d from %s"%(soli,waters))
       nrem = nrem + 1
       removethese.append(soli)

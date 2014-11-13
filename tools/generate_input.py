@@ -30,6 +30,9 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
+# Default force constant for absolute binding free energies
+FORCE_CONSTANT = 1
+
 def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
   """ 
   Assigns move probabilities for protein, solute, solvent and box
@@ -126,6 +129,7 @@ class ProtoMSSimulation :
         string = "\n".join(self._lines)           
         return string        
     def _setkey(self,key,value):
+      #print [key in line.split()[0] for line in self._lines]
       self._lines.append("%s %s"%(key,value))        
     def clear(self):
         """
@@ -312,7 +316,7 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
                     solutes=["solute.pdb"],
                     solvent="water.pdb",
                     templates=["solute.tem"],
-                    outfolder="") :
+                    outfolder=None) :
     """
     Parameters
     ----------
@@ -351,7 +355,7 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
             break 
       except :
         pass      
-    self.setParameter("outfolder",outfolder)
+    if outfolder is not None: self.setParameter("outfolder",outfolder)
     self.setStream("header","off")
     self.setStream("detail","off")
     for s in ["warning","info","fatal","results","accept",] :
@@ -542,7 +546,7 @@ class DualTopology(ProteinLigandSimulation) :
               for atom in pdbobj.residues[1].atoms :
                 if atom.name in resatom[1] : atmcoords = atom.coords
         self.setChunk("id add %d solute %d %s %s"%(restsol+1,restsol+1,resatom[1],resname))
-        self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f 10"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2]))
+        self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f %d"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2],FORCE_CONSTANT))
     
     moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
@@ -694,8 +698,8 @@ class GCMC(ProteinLigandSimulation) :
       no GCMC water given
       no Adam values givens
     """      
-    if len(outfolder) == 0 : outfolder = "out_gcmc"
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates)
+    #if len(outfolder) == 0 : outfolder = "out_gcmc"
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
      
     if adamval is None :
       raise simulationobjects.SetupError("Must give at least one Adam value")
@@ -710,13 +714,15 @@ class GCMC(ProteinLigandSimulation) :
     self.setParameter("gcmc","0")
     self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
     self.setParameter("grand1",gcmcwater)
+    #self.setParameter("outfolder",outfolder)
     if isinstance(adamval,float) or isinstance(adamval,int):
       self.setParameter("potential","%.3f"%adamval)
     elif len(adamval) == 1 :
       self.setParameter("potential","%.3f"%adamval[0])
+      #self.setParameter("outfolder",outfolder)
     else :
       self.setParameter("multigcmc"," ".join("%.3f"%a for a in adamval))
-    self.setParameter("refolder",outfolder)
+      #self.setParameter("refolder",outfolder)
     _setbox(self,gcmcwater,gcmcbox)
     self.setParameter("#"," End of GCMC specific parameters")
   
@@ -789,7 +795,7 @@ class Jaws1(ProteinLigandSimulation) :
     self.setParameter("#"," JAWS-1 specific parameters")
     self.setParameter("jaws1","0")
     self.setParameter("softcore1","solute all")
-    self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6 soft66")
+    self.setParameter("softcoreparams","coul 1 delta 1.5")
     self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
     self.setParameter("grand1",jawswater)
     _setbox(self,jawswater,jawsbox)
@@ -946,7 +952,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
     if protein is not None : # Setup a protein simulation
       bnd_cmd = Equilibration(protein=protein,solutes=ligands, 
                               templates=templates,solvent=protein_water,outfolder=settings.outfolder+"_bnd",
-                              nsteps=args.nequil,pdbfile="equil_bnd.pdb")
+                              nsteps=settings.nequil,pdbfile="equil_bnd.pdb")
     elif ligands is not None :      
       if settings.dovacuum : 
         solvent = None
@@ -1078,7 +1084,7 @@ if __name__ == "__main__":
   parser.add_argument('-pw','--protwater',help="the name of the solvent for protein")
   parser.add_argument('-lw','--ligwater',help="the name of the solvent for ligand")
   parser.add_argument('-o','--out',help="the prefix of the name of the command file",default="run")
-  parser.add_argument('--outfolder',help="the ProtoMS output folder",default="")
+  parser.add_argument('--outfolder',help="the ProtoMS output folder",default="out")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
   parser.add_argument('--jawsbias',nargs="+",type=float,help="the bias for the JAWS-2",default=0)

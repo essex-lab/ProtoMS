@@ -91,7 +91,7 @@ c       extraEnergy = extraEnergy + DihedralHarmonicRestraintEnergy(savenrg,inrg
       endif
 
       if (NHardwallPotential.gt.0) then
-c       calculate the energy of harmonic restraints
+c       calculate the energy of hardwall restraints
         extraEnergy = extraEnergy + hardwallEnergy(savenrg,inrgb,inrgf)
         nrgb = nrgb + inrgb
         nrgf = nrgf + inrgf
