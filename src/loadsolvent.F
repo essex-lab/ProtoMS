@@ -21,7 +21,7 @@ c#############################################################
       integer isvn,iatm,ioldres,nsvn
       integer atnum,iresnum
       character*4 atnam
-      character*3 iresnam
+      character*4 iresnam
       double precision getDouble
       double precision ix,iy,iz
       double precision iorig(3),itop(3),ipos(3),irad,ik

@@ -22,7 +22,7 @@ c#############################################################
       integer igcs,iatm,ioldres,ngcs
       integer atnum,iresnum
       character*4 atnam
-      character*3 iresnam
+      character*4 iresnam
       double precision ix,iy,iz
       logical ok
       integer lineLength,lgth,linenum
