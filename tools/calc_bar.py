@@ -177,7 +177,10 @@ def _do_bar(work_back,work_forw,RT,nboots) :
 
   # Iterative BAR estimate
   def iter_bar(workB,workF,dG,RT) :
-
+    
+    TOL = 1.0e-11
+    MAX_ITER = 1000
+    
     summa = 0.0
     beta=1/RT
     NF = workF.shape[0]
@@ -185,29 +188,46 @@ def _do_bar(work_back,work_forw,RT,nboots) :
     NTot = NF + NR
     M = np.log(float(NF)/float(NR))
     C = dG + M*RT
-    for i in range(50) :
+    Old = dG
+    niter = 0
+    
+    vf = np.vectorize(fermi, otypes=[np.float])
+    
+    while niter == 0 or abs(dG-Old) > TOL :
+
       summa = 0
-      for i in range(NF) :
-        summa = summa + fermi(beta*(workF[i]+C))
+      
+      #for i in range(NF) :
+      #  summa = summa + fermi(beta*(workF[i]+C))
+      summa = vf(beta*(workF+C)).sum()
       lFF = np.log(summa)
       summa = 0
-      for i in range(NR) :
-        summa = summa + fermi(beta*(workB[i]-C))
+      #for i in range(NR) :
+      #  summa = summa + fermi(beta*(workB[i]-C))
+      summa = vf(beta*(workB-C)).sum()
       lFR = np.log(summa)
+      
+      Old = dG
       dG = (lFF-lFR-M+beta*C) * RT
       C = dG + M*RT
-  
+      
+      niter = niter + 1
+      
+      if niter > MAX_ITER : break
+        
     return dG
 
   # Calculate the free energy iteratively
   dg = iter_bar(work_back,work_forw,0.0,RT)
-
+  
+  if nboots == 0 : return dg,0.0
+  
   # Bootstrap standard deviation
   dgboots = np.zeros(nboots) 
   for i in range(nboots) :
     idxb = np.random.randint(work_back.shape[0],size=work_back.shape[0])
     idxf = np.random.randint(work_forw.shape[0],size=work_forw.shape[0])
-    dgboots[i] = iter_bar(work_back[idxb],work_forw[idxf],0.0,RT)
+    dgboots[i] = iter_bar(work_back[idxb],work_forw[idxf],dg,RT)
   std = dgboots.std()
 
   return dg,std
