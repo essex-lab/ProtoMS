@@ -420,7 +420,7 @@ def _prep_singletopology(pdbs,templates1,tarlist,settings) :
   ----------
   pdbs : list of strings
     names of ligand pdb files
-  templares1 : list of strings
+  templates1 : list of strings
     names of ligand template files
   tarlist : list of string
     name of files that can be stored away
@@ -434,8 +434,13 @@ def _prep_singletopology(pdbs,templates1,tarlist,settings) :
   list of string
     the template files for the van der Waals leg
   """
-  tem1 = simulationobjects.TemplateFile(templates1[0])
-  tem2 = simulationobjects.TemplateFile(templates1[1])
+  try:
+    tem1 = simulationobjects.TemplateFile(templates1[0])
+    tem2 = simulationobjects.TemplateFile(templates1[1])
+  except IndexError:
+    msg = "Single topology calculations require two ligand templates to perturb between.\nYou only have one: %s \nIf you are trying to run an absolute free energy calculation\n(i.e. perturb to nothing), please use dual topology." %templates1[0]
+    logger.error(msg)
+    raise simulationobjects.SetupError(msg)
 
   # The original templates file can now be stored away
   tarlist.append(templates1[0])
@@ -908,17 +913,24 @@ if __name__ == "__main__":
       ligand_files[prefix]["pdb"],ligand_files[prefix]["obj"] = _load_ligand_pdb(prefix,args.folders)
 
     # Make a dummy PDB structure
-    if args.simulation == "dualtopology" and args.absolute :
-      ligands.insert(1,"*dummy")
-      prefix0 = ligands[0]
-      dummy_name = os.path.basename(_get_prefix(prefix0))+"_dummy.pdb"
-      ligand_files["*dummy"] = {}
-      ligand_files["*dummy"]["pdb"] = dummy_name
-      ligand_files["*dummy"]["obj"] = tools.make_dummy(ligand_files[prefix0]["obj"])
-      ligand_files["*dummy"]["obj"].write(ligand_files["*dummy"]["pdb"])
-      ligand_files["*dummy"]["tem"] = simulationobjects.standard_filename("dummy.tem","data")
-      logger.info("")
-      logger.info("Creating dummy PDB-file for ligand: %s"%ligand_files["*dummy"]["pdb"])
+    if args.simulation == "dualtopology" and len(ligands) < 2 :
+      if args.absolute :
+#    if args.simulation == "dualtopology" and args.absolute :
+        ligands.insert(1,"*dummy")
+        prefix0 = ligands[0]
+        dummy_name = os.path.basename(_get_prefix(prefix0))+"_dummy.pdb"
+        ligand_files["*dummy"] = {}
+        ligand_files["*dummy"]["pdb"] = dummy_name
+        ligand_files["*dummy"]["obj"] = tools.make_dummy(ligand_files[prefix0]["obj"])
+        ligand_files["*dummy"]["obj"].write(ligand_files["*dummy"]["pdb"])
+        ligand_files["*dummy"]["tem"] = simulationobjects.standard_filename("dummy.tem","data")
+        logger.info("")
+        logger.info("Creating dummy PDB-file for ligand: %s"%ligand_files["*dummy"]["pdb"])
+      else :
+        msg = "You are trying to run a dual topology simulation but with only one ligand! (%s.pdb)\nIf you meant to run an absolute free energy calculation, rerun with the --absolute option."%ligands[0]
+        logger.error(msg)
+        raise simulationobjects.SetupError(msg)
+
 
     # Create merged pdb objects
     if len(ligands) >= 2 :
