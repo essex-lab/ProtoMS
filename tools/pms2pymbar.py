@@ -154,6 +154,46 @@ def mbar(lambdas,energies,RT) :
     u_kln[i,:,:e.shape[0]] = e.T / RT
   MBAR = pymbar.MBAR(u_kln,N_k)
   return MBAR.getFreeEnergyDifferences(uncertainty_method='svd-ew')  
+  
+def bar(energies,RT) :
+  """
+  Calculates the BAR free energy using the PyMBAR package
+
+  Parameters
+  ----------
+  lambdas : numpy array
+    the lambda values
+  energies : list of numpy array
+    the energy values at each lambda and each snapshot
+  RT : float
+    the gas constant multiplied by the absolute temperature
+  
+  Returns
+  -------
+  float
+    the free energy
+  float 
+    the uncertainty in the free energy
+  """
+  
+  import pymbar
+  
+  nstates = len(energies)
+  
+  N_k = np.zeros(nstates) 
+  for i,e in enumerate(energies) : N_k[i] = e.shape[0]
+  u_kln = np.zeros([nstates,nstates,N_k.max()]) 
+  for i,e in enumerate(energies) :
+    u_kln[i,:,:e.shape[0]] = e.T / RT
+  
+  DeltaF = np.zeros(nstates-1)
+  dDeltaF = np.zeros(nstates-1)
+  for k in range(nstates-1) :
+     # Calculate the reverse and forward work value
+     w_R = u_kln[k+1,k,0:N_k[k+1]] - u_kln[k+1,k+1,0:N_k[k+1]]
+     w_F = u_kln[k,k+1,0:N_k[k]] - u_kln[k,k,0:N_k[k]] 
+     DeltaF[k],dDeltaF[k] = pymbar.BAR(w_F, w_R)
+  return DeltaF.sum(),(dDeltaF*dDeltaF).sum()   
 
 #
 # If this is run from the command-line
@@ -171,6 +211,7 @@ if __name__ == '__main__' :
   parser.add_argument('-m','--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)#
   parser.add_argument('-t','--temperature',type=float,help="the simulation temperature in degrees. Default is 25.0",default=25.0)
   parser.add_argument('--run',action='store_true',help="whether to run pymbar",default=False)
+  parser.add_argument('--nobar',action='store_true',help="whether to run bar",default=False)
   args = parser.parse_args()  
 
   # Setup the logger
@@ -192,3 +233,7 @@ if __name__ == '__main__' :
     RT = 1.9872041*(args.temperature+273.15)/1000.00
     (Deltaf_ij, dDeltaf_ij) = mbar(lambdas,energies,RT)
     print "MBAR estimate: %-6.2f +- %-6.2f"%(Deltaf_ij[0,-1]*RT,dDeltaf_ij[0,-1]*RT)
+    
+    if not args.nobar : 
+      DeltaF,dDeltaF = bar(energies,RT)
+      print "BAR estimate: %-6.2f +- %-6.2f"%(DeltaF*RT,dDeltaF*RT)
