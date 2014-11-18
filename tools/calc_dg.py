@@ -11,16 +11,14 @@ Program to calculate free energies using TI, BAR and MBAR
 import os
 import logging
 
-import matplotlib
-if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
-  matplotlib.use('Agg') 
-import matplotlib.pyplot as plt
 import numpy as np
 
 import simulationobjects
 import calc_ti
 import calc_bar
 import pms2pymbar
+
+import matplotlib.pyplot as plt
 
 logger = logging.getLogger('protoms')
 

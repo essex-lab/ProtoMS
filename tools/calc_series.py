@@ -90,6 +90,10 @@ def stat_inefficiency(y) :
   -------
   float
     g, the inefficiency
+    or None if variance is too small
+  float
+    neff, the number of samples 
+    or None if variance is too small
   """
   n = len(y)
   dy = y - y.mean()
@@ -133,6 +137,9 @@ def maximize_samples(y,atleast=50) :
   neff = np.zeros([n-atleast])
   for i in range(0,n-atleast) :
     gt[i],neff[i] = stat_inefficiency(y[i:])
+    # If stat_inefficiency return None, we set g and neff to 0
+    if np.isnan(gt[i]) :
+      gt[i],neff[i] = 0.0,0.0
   
   neff_max = neff.max()
   t = neff.argmax()
