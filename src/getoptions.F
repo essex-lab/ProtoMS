@@ -104,17 +104,17 @@ c     are we trying to match Sire?
 c     whether we are going to use chunks from protein pdb
       PdbParams = .false.
       if (getOption('pdbparams')) then
-        if (words(1).eq.'on') then
-          PdbParams = .true.
-        endif
+        PdbParams = getLogical(words(1), PdbParams)
+        write(6,*) 'PdbParams'
+        write(6,*) PdbParams
       endif  
 
 c     whether jaws2 information on each move will be printed to results
       everyjaws2 = .false.
       if (getOption('everyjaws2')) then
-        if (words(1).eq.'on') then
-          everyjaws2 = .true.
-        endif
+        everyjaws2 = getLogical(words(1), everyjaws2)
+        write(6,*) 'everyjaws2'
+        write(6,*) everyjaws2
       endif    
 
 

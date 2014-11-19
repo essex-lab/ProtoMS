@@ -654,7 +654,18 @@ The streamSTREAM command is used to specify the direction of the stream at the s
 Simulation parameters
 ======================
 
-There are many commands to set parameters that you can use to control your simulation. These are 
+There are many commands to set parameters that you can use to control your simulation. To make it easier to search for those relevant to your calculations, these will be divided in several subsections.
+
+In the subsections below, unless otherwise specified:
+
+* ``locical`` stands for *true* or *false*, *yes* or *no*, *on* or *off* (depending on your personal preference)
+* ``integer`` or ``int`` stands for any integer number
+* ``float`` stands for any floating point number
+* ``string`` stands for a string of characters
+
+-------------------------
+Parameters for developers
+-------------------------
 
 .. index::
   single: debug
@@ -663,8 +674,7 @@ There are many commands to set parameters that you can use to control your simul
   
   debug logical
 
-where ``logical`` is *true* or *false*, *yes* or *no*, *on* or *off* (depending on your personal preference). This turns
-on or off debugging output that may be useful for ProtoMS developers. By default ``debug`` is *off*. 
+This turns on or off debugging output that may be useful for ProtoMS developers. By default ``debug`` is *off*. 
 
 .. index::
   single: testenergy
@@ -673,7 +683,11 @@ on or off debugging output that may be useful for ProtoMS developers. By default
 
   testenergy logical
 
-where ``logical`` has the same values as for ``debug``. This is used to set whether or not to turn on testing of energies. This is useful if you are developing ProtoMS. By default ``testenergy`` is *off*. 
+This is used to set whether or not to turn on testing of energies. This is useful if you are developing ProtoMS. By default ``testenergy`` is *off*. 
+
+------------------
+General parameters
+------------------
 
 .. index::
   single: prettyprint
@@ -710,20 +724,17 @@ where ``integer`` is any positive integer. This command is used to set the rando
 
   temperature float
 
-where ``float`` is any floating point number. Use this command to specify the simulation temperature in *Celsius*. By default temperature is 25.0 C. 
+Use this command to specify the simulation temperature in *Celsius*. By default temperature is 25.0 C. 
 
 .. index::
-  single: lambda
+  single: pdbparam
 
 ::
 
-  lambda float
+  pdbparam logical
 
-where ``float`` is a number between 0.0 and 1.0. Specify the value of :math:`\lambda`. If a single value is given then that is used for :math:`\lambda`. If three values are given then these are used for :math:`\lambda`, and :math:`\lambda` in the forwards and backwards windows, e.g. ::
+Whether or not to automatically detect and use, in the simulation, any chunks which might be included in the input PDB files after REMARK. It is most commonly used to include the fixresidues and fixbackbone commands often found at the beginning of a protein scoop. Any chunks included in pdb files will be applied before any other chunk. By default `pdbparam` is on.
 
-  lambda 0.5 0.6 0.4
-
-would set :math:`\lambda` for the reference state to 0.5, :math:`\lambda` for the forwards perturbed state to 0.6, and :math:`\lambda` for the backwards perturbed state to 0.4. By default all values of :math:`\lambda` are 0.0. 
 
 .. index::
   single: cutoff
@@ -752,9 +763,9 @@ sets this feathering to occur over the last 1.3A. The default value of the feath
 
 ::
 
-  cuttype type
+  cuttype string
 
-where ``type`` is either *residue* or *molecule*. This specifies the type of non-bonded cutting to use; either residue, where the cutoff is between protein residues, solute molecules and solvent molecules, or molecule, where the cutoff is between protein molecules, solutes molecules and solvent molecules. By default the ``cuttype`` is *residue*. 
+where ``string`` is either *residue* or *molecule*. This specifies the type of non-bonded cutting to use; either residue, where the cutoff is between protein residues, solute molecules and solvent molecules, or molecule, where the cutoff is between protein molecules, solutes molecules and solvent molecules. By default the ``cuttype`` is *residue*. 
 
 .. index::
   single: pressure
@@ -791,13 +802,6 @@ means that the solvents closest to solute 1 will be moved more frequently than t
 
 will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focussed the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off. 
 
-
-::
-
-  dualtopologyint int1 int2 synctrans syncrot
-
-This turns on the dual topology method of calculating relative free energies, where `int1` is the perturbed solute at :math:`\lambda` = 0.0 and `in2` is the solute at :math:`\lambda` = 1.0 . If ``synctrans`` is set, the rigid body translations of the two solutes will be synchronised. If ``syncrot`` is set, the rigid body rotations of the two solutes will also be synchronised. 
-
 .. index::
   single: boundary
 
@@ -823,31 +827,9 @@ This turns on solvent cap boundary conditions. Protein and solute molecules will
 
 This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section :ref:`solventpdb` 
 
-.. index::
-  single: softcore
-
-::
-
-  softcoreint solute int
-
-This causes the intermolecular energy of solute int to be softened. Alternatively, you can write ``all`` instead of the solute index and all solutes will have their non bonded energy softened. The softcore is only supported for solutes. 
-
-.. index::
-  single: softcoreparams
-
-::
-
-  softcoreparams coul 1 delta 1.5 gb 0 old
-
-This causes the solutes non bonded energy to be softened with a parameter *n* set to 1 and :math:`\delta` set to 1.5. (see eq :eq:`uljsoftmod`). The old keyword selects the original soft-core implementation and can be omitted. If conducting a GBSA simulation, this also causes the GB energy to be softened as well. It is recommended to use the same parameter for the Coulombic and Generalised Born energy. The values listed here, seem to work well for a number of relative binding free energy calculations but actual optimum values of these parameters will depend on your system. ::
-
-  softcoreparams coul 1 delta 0.2 deltacoul 2.0 soft66
-
-This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.2 and :math:`\delta_c` set to 2.0. (see eq :eq:`uljsoftmod2`). The soft66 keyword selects the second soft-core implementation, eq :eq:`uljsoftmod2` . ::
-
-  softcoreparams coul 1 delta 0.5 deltacoul 12.0 amber
-
-This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.5 and :math:`\delta_c`  set to 12.0. (see eq :eq:`uljsoftmod3` ). The amber keyword selects the third soft-core implementation, eq :eq:`uljsoftmod3`. The values listed here are the default values in the Amber package.
+---------------
+GBSA parameters
+---------------
 
 .. index::
   single: surface
@@ -869,6 +851,98 @@ This command will enable Generalised Born energy calculations. Thus to run a ful
 0.005 appear to be a good tradeoff. Increasing it will make the simulation faster but less accurate. proteins activates the rescaling of the Born radii to compensate for systematic errors of the Pairwise Descreening Approximation in large biomolecules. It should be used only when simulating proteins and then its effectiveness has not been yet
 convincingly demonstrated. 
 
+-----------------------------------
+Free energy calculation parameters
+-----------------------------------
+
+To be able to run a single simulation for a given lambda value, you will need to use the following parameters:
+
+.. index::
+  single: lambda
+
+::
+
+  lambda float
+
+where ``float`` is a number between 0.0 and 1.0. Specify the value of :math:`\lambda`. If a single value is given then that is used for :math:`\lambda`. If three values are given then these are used for :math:`\lambda`, and :math:`\lambda` in the forwards and backwards windows, e.g. ::
+
+  lambda 0.5 0.6 0.4
+
+would set :math:`\lambda` for the reference state to 0.5, :math:`\lambda` for the forwards perturbed state to 0.6, and :math:`\lambda` for the backwards perturbed state to 0.4. By default all values of :math:`\lambda` are 0.0. 
+
+To be able to run several lambdas in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the chances of convergence.
+
+.. index::
+  single: lambdare
+
+::
+
+  lambdare integer float float float
+
+is the right command to set a replica exchange calculation between the different :math:`\lambda` given as floats, where ``float`` is a number between 0.0 and 1.0. In principle, any desired number of :math:`\lambda` values can be used, and the simulation will require to be runned in as many cores as :math:`\lambda` values are provided. The integer value stands for the frequency at which the exchange between the different :math:`\lambda` values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+
+As an example::
+
+  lambdare 20 0.000 0.333 0.667 1.000
+
+corresponds to a simulation which will run at four different :math:`\lambda` windows in parallel, and will attempt swaps between the conformations of different :math:`\lambda` windows each 20 moves.
+
+.. index::
+  single: lambdare
+
+::
+
+  dlambda float
+
+where ``float`` is a number between 0.0 and 1.0 (often of the order of 0.001). This command sets the gradient for a free energy calculation. It is required for thermodynamic integration (TI) to be applied on the simulation results.
+
+.. index::
+  single: printfe
+
+::
+
+  printfe string
+
+where ``string`` should be either ``off``, ``bar`` or ``mbar``. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into acount that this estimates will take some time. Your simulations may run faster when this option is set to off (default).
+
+In case dual topology is desired, whether it is for a single or multiple :math:`\lambda` simulation, the following parameters must be used:
+
+::
+
+  dualtopologyint integer1 integer2 synctrans syncrot
+
+This turns on the dual topology method of calculating relative free energies, where `int1` is the perturbed solute at :math:`\lambda` = 0.0 and `in2` is the solute at :math:`\lambda` = 1.0 . If ``synctrans`` is set, the rigid body translations of the two solutes will be synchronised. If ``syncrot`` is set, the rigid body rotations of the two solutes will also be synchronised. 
+
+.. index::
+  single: softcore
+
+::
+
+  softcoreint solute integer
+
+This causes the intermolecular energy of solute integer to be softened. Alternatively, you can write ``all`` instead of the solute index and all solutes will have their non bonded energy softened. The softcore is only supported for solutes. 
+
+.. index::
+  single: softcoreparams
+
+::
+
+  softcoreparams coul 1 delta 1.5 gb 0 old
+
+This causes the solutes non bonded energy to be softened with a parameter *n* set to 1 and :math:`\delta` set to 1.5. (see eq :eq:`uljsoftmod`). The old keyword selects the original soft-core implementation and can be omitted. If conducting a GBSA simulation, this also causes the GB energy to be softened as well. It is recommended to use the same parameter for the Coulombic and Generalised Born energy. The values listed here, seem to work well for a number of relative binding free energy calculations but actual optimum values of these parameters will depend on your system. ::
+
+  softcoreparams coul 1 delta 0.2 deltacoul 2.0 soft66
+
+This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.2 and :math:`\delta_c` set to 2.0. (see eq :eq:`uljsoftmod2`). The soft66 keyword selects the second soft-core implementation, eq :eq:`uljsoftmod2` . ::
+
+  softcoreparams coul 1 delta 0.5 deltacoul 12.0 amber
+
+This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.5 and :math:`\delta_c`  set to 12.0. (see eq :eq:`uljsoftmod3` ). The amber keyword selects the third soft-core implementation, eq :eq:`uljsoftmod3`. The values listed here are the default values in the Amber package.
+
+-------------------------
+GCMC and JAWS parameters
+-------------------------
+
 .. index::
   single: gcmc
 
@@ -883,9 +957,9 @@ This command tells ProtoMS that it is to perform a GCMC simulation, and that the
 
 ::
 
-  potential -8
+  potential float
 
-This command will set a *B*-value of -8 for moves in the Grand Canonical Ensemble. The value of *B* can be related to the excess chemical by the following equation: 
+This command will set a *B*-value of ``float`` (i.e. -8) for moves in the Grand Canonical Ensemble. The value of *B* can be related to the excess chemical by the following equation: 
 
 .. math:: B = \frac{\mu'}{k_{B}T}+\ln \bar{n}
   :label: bval
@@ -893,33 +967,70 @@ This command will set a *B*-value of -8 for moves in the Grand Canonical Ensembl
 In the equation, :math:`\bar{n}` is the number density of the GCsolute multiplied by the simulation subvolume. 
 
 .. index::
+  single: potential
+
+::
+
+  multigcmc float float float
+
+is the right command to several gcmc simulations running in parallel for different B values. Each ``float`` is the B value for each independent calculation. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel in as many cores as B values.
+
+.. index::
   single: origin
 
 ::
 
-  originx 10
+  originx float
 
-This command will set the X origin of the defined GCsolute sampling subvolume to be 10 ::
+This command will set the X origin of the defined GCsolute sampling subvolume to be the specified ``float`` ::
 
-  originy 15
+  originy float
 
-This command will set the Y origin of the defined GCsolute sampling subvolume to be 15 ::
+This command will set the Y origin of the defined GCsolute sampling subvolume to be the specified ``float`` ::
 
-  originz 12
+  originz float
 
-This command will set the Z origin of the defined GCsolute sampling subvolume to be 12 ::
+This command will set the Z origin of the defined GCsolute sampling subvolume to be the specified ``float`` ::
 
-  x 3
+  x float
 
-This command will set the distance along the X coordinate from originx to be 3 ::
+This command will set the distance along the X coordinate from originx to be the specified ``float`` ::
 
-  y 3
+  y float
 
-This command will set the distance along the Y coordinate from originy to be 3 ::
+This command will set the distance along the Y coordinate from originy to be the specified ``float`` ::
 
-  z 3
+  z float
 
-This command will set the distance along the Z coordinate from originz to be 3 
+This command will set the distance along the Z coordinate from originz to be the specified ``float`` 
+
+Alternatively to the origin, the position of the box may be set using its center::
+
+  centerx float
+
+This command will set the X center of the defined GCsolute sampling subvolume to be the specified ``float`` ::
+
+  centery float
+
+This command will set the Y center of the defined GCsolute sampling subvolume to be the specified ``float`` ::
+
+  centerz float
+
+This command will set the Z center of the defined GCsolute sampling subvolume to be 9 
+
+A different, equally valid expression for the distance or length of the box is the keyword `len?`::
+
+  lenx float
+
+This command will set the distance along the X coordinate from originx to be the specified ``float`` ::
+
+  leny float
+
+This command will set the distance along the Y coordinate from originy to be the specified ``float`` ::
+
+  lenz float
+
+This command will set the distance along the Z coordinate from originz to be the specified ``float`` 
 
 
 .. index::
@@ -929,7 +1040,7 @@ This command will set the distance along the Z coordinate from originz to be 3
 
   jaws1 0
 
-This command tells ProtoMS that it is to perform a JAWS stage one simulation, and that the starting value of :math:`\theta` all of the GCsolutes is 0. 
+This command tells ProtoMS that it is to perform a JAWS stage one simulation, and that the starting value of :math:`\theta` all of the GCsolutes is 0.
 
 .. index::
   single: thres
@@ -939,6 +1050,8 @@ This command tells ProtoMS that it is to perform a JAWS stage one simulation, an
   thres 0.95
 
 This command will set the :math:`\theta` threshold for defining whether a molecule is *on* in the first stage of the JAWS method to be 0.95 (default) 
+
+Note here that, in order to run a JAWS stage 1 calculation, you will also need to include softcores. The parameters to do this can be found among the `Free energy calculation parameters`_.
 
 .. index::
   single: jaws2
@@ -954,9 +1067,9 @@ This command tells ProtoMS that it is to perform a JAWS stage two simulation, an
 
 ::
 
-  jbias 14
+  jbias float
 
-This command will set the value of the biasing potential in the second stage of the JAWS algorithm to be 14 kcal/mol.
+This command will set the value of the biasing potential in the second stage of the JAWS algorithm to be ``float``, in kcal/mol (i.e. 14).
 
 .. _incmd:
 
@@ -1006,9 +1119,9 @@ specifies the name of the Nth GCsolute file. Unlike the protein and solute files
 
 ::
 
-  parfileN filename
+  parfile filename
 
-Specify the name of the Nth parameter file. You can specify as many parameter files as you wish, as long as you number them sequentially from 1 upwards. Each parameter file is read in sequence. If a parameter is repeated in a later parameter file then the parameter is overwritten. The last read value of a parameter is the value used in the simulation. The format of the parameter file is described in section :ref:`parfil` .
+Specify the name of a forcefield parameter file. You can specify as many parameter files as you wish. The list of parameter files is read from top to bottom, such that if any paramater files contain contradictory information, the last parameters read by ProtoMS are used. The format of the parameter file is described in section :ref:`parfil` .
 
 .. _runcmd:
 
@@ -1020,7 +1133,9 @@ Running a Simulation
 .. index::
   single: chunk
 
-A simulation is run as a sequence of chunks. Different things may be accomplished in each chunk, e.g. running some steps of equilibration, printing the protein coordinates to a PDB or redirecting a stream to a new file. Chunks may be mixed and matched, and you can run as many chunks as you desire within a single simulation. You specify a chunk using the command ::
+There are two main keywords related to running a simulation. These are `chunk` and `dump`. All individual actions (commands which ProtoMS should perform only as it is prompted to do so) are handled with `chunk` lines. Actions which ProtoMS should perform with a certain frequency *while* the simulation is running, are handled with `dump` lines. We can start by talking about chunks. 
+
+A simulation can be run as a sequence of chunks. Different things may be accomplished in each chunk, e.g. running some steps of equilibration, printing the protein coordinates to a PDB or redirecting a stream to a new file. Chunks may be mixed and matched, and you can run as many chunks as you desire within a single simulation. You specify a chunk using the command ::
 
   chunk chunk command
 
@@ -1117,6 +1232,8 @@ Perform 100 steps of equilibration. Because this chunk will inherit from the pre
   
 Now perform 500 steps of production, printing move and energy information every move, performing no protein moves, and 1 volume move for every 300 solvent moves. 
 
+A couple of *simulate-like* commands are especifically related to GBSA simulations.
+
 .. index::
   single: splitgbsasimulate
 
@@ -1174,6 +1291,10 @@ Does the same as above, but redirects the RESTART stream to myfile.txt before th
   chunk restart read myfile.txt
   
 Read in a restart file from the file myfile.txt.
+
+Note that all the `chunk averages` lines above are equally valid, if `results` is written instead of `averages`::
+
+  chunk results write myfile.txt
 
 -----------
 PDB Output
@@ -1308,7 +1429,46 @@ This chunk will create id number 1 which will point to solute number 2, looking 
 
   hardwall 1 25.890 16.895 59.083 1.8 1000000000
   
-This chunk will apply a hardwall restraint to atom O00 based at [25.890,16.895,59.083]. The form of this restraint is spherical, with a radius of 1.8 If the solute atom attempts to leave this radius then a huge penalty is applied, preventing the move. Equally, if other atom try to occupy the hardwall region then the penalty is applied.
+This chunk will apply a hardwall restraint to the center of geometry of the solute number 2. The form of this restraint is spherical, with a radius of 1.8 and will be centered at the point defined by the coordinates 25.890 16.895 59.083. If the center of geometry of the molecule attempts to leave this radius then a huge penalty is applied, preventing the move. Equally, if any atom from another molecule tries to occupy the hardwall region then the penalty is applied.
+
+A hardwall restraint can also be applied on the initial position of the center of geometry of a ligand. In this case, no coordinates need to be specified, and the lines results::
+
+  hardwall 1 1.8 1000000000
+
+This option should be quite useful when the ligand simply wants to be kept in its initial position.
+
+---------------------------
+Frequent output generation
+---------------------------
+
+Incidental generation of output files might not be convenient either for the production of results and restart files nor for PDB outputs. Consistently, there is an alternative option which allows for the generation of these files *while* the `simulate` chunk is running.
+
+.. index::
+  single: dump files
+
+This is controlled with the alternative key word dump::
+
+  dump frequency command
+  
+This manner of output generation can be applied to all commands included in `Results and Restarts`_ secction, as well as `PDB output`_ section.
+
+An example of a dump line would be::
+
+  dump 100000 results write results
+
+This line, given as input for ProtoMS, will append results information to the `results` file every 100000 moves, thoughout the `simulate` part of your simulation.
+
+It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time. Consistently these imput lines::
+
+  dump 100 results write results
+  dump 100 pdb all file=all.pdb
+  dump 100 restart write restart
+  dump 100 averages reset
+  chunk simulate 400 solvent=10 solute=5 volume=1
+
+Will generate four results reports all appended to the file `results`, four PDB conformations of the system appended to `all.pdb`, but only one restart report (the last printed) in the file `restart`.
+
+Dump lines can be written in any order, and they all will be applied while the `simulate` chunk is running.
 
 .. _misccmd:
 
