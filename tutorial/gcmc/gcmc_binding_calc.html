@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<TITLE>GCMC binding free energy of a water molecule to BPTI</TITLE>
+<link href="../style.css" rel="stylesheet" type="text/css">
+</HEAD>
+<BODY>
+<H1>GCMC binding free energy of a water molecule to BPTI</H1>
+This tutorial will cover the basics behind setting-up, running and analysing GCMC simulations with ProtoMS. Using GCMC, we will calculate the binding free energy of a water molecule to a small cavity in  bovine pancreatic trypsin inhibitor (BPTI). BPTI is the first protein ever to be simulated using molecular dynamics, which makes it a very worthy model system.
+<H3>Prerequisites</H3>
+<ul>
+	<li><code>wat.pdb</code> - the PDB structure of a water molecule</li>
+	<li><code>protein.pdb</code> - the structure of the BPTI in PDB format</li>
+</ul>
+<p>
+The protein has already been protonated and had it's atoms in the ProtoMS naming scheme. Note that there are 3 disulfied bonds in the protein, which are labelled as CYX. The water molecule is the tip4p model, and is already located in the BPTI cavity. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
+<p>
+We will be performing GCMC on the single water molecule, wat.pdb, at a range of different chemical potentials. From the average occupancy of the water as a function of chemical potential, we will estimate it's binding free energy. As you'll see below, we actually use something called the "Adams" value rather than the chemical potential. This is for technical reasons, and the two are related to each other by an additive constant.
+<p>
+<hr align="center"/>
+<h3>Simple setup</h3>
+<h5>Setup</h5>
+First, let's create a box around our water of interest. This will constrain the water to the cavity and stop any solvent water molecules from entering.
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s wat.pdb</pre>
+<p>
+This has created a file called gcmc_box.pdb. Next, we'll use the automatic capabilities of protoms.py to do the rest of the set-up.
+<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12 -13 -14 -15 -16 -17 -18 -19 -20 -21 -22 -23 -24 -25 -26 --capradius 26</pre>
+<p>
+We've input which Adams values (i.e. chemical potentials) we will use with <code>--adams</code>. These can be chosen after some preliminary analysis that we'll come to later. As the protein was already in the ProtoMS format, we gave it the flag <code>-sc</code> (for scoop). We also specified the radius of the water droplet with <code>--capradius</code>; the default radius in protoms.py is 30 Angstroms, which is unnecessary for such a small protein.
+<p>
+Have a look at the simulation system we've created with your favourite molecular viewer. For instance, with vmd:
+<p>
+<pre>vmd -m protein.pdb water.pdb wat.pdb gcmc_box.pdb</pre>
+<p>
+You should see something like this <br>
+<img src="setup.png" width="%" height="50%" alt="" /><br>
+While your visualising the system, have a look at the cystein bridges. These need to be restrained in ProtoMS. Open up the command file <code>run_bnd.cmd</code>, and add  
+
+<pre>chunk fixresidues 1 5 14 30 38 51 55
+chunk fixbackbone 1 2 4 6 13 15 29 31 37 39 50 52 54 56</pre>
+
+To the top of the list of "chunks". This fixes the cystein residues, as well as the neighbouring residues. If you don't include the above, the cysteine bonds will break due to a quirk in ProtoMS. 
+</p>
+<p> 
+<h5>Execution</h5>
+
+Notice that in the command file <code>run_bnd.cmd</code> file there is the line
+
+<pre>multigcmc -11.000 -12.000 -13.000 -14.000 -15.000 -16.000 -17.000 -18.000 -19.000 -20.000 -21.000 -22.000 -23.000 -24.000 -25.000 -26.000</pre>
+
+These sixteen Adams values mean that sixteen cores will be needed to run these simulations. ProtoMS is designed to run mpi, so to execute, enter
+<pre>
+mpirun -np 16 $PROTOMSHOME/protoms3 run_bnd.cmd
+</pre>
+This will take approximately five to six hours to run. The length of time and number of jobs means that it is more convenient to run on a computer cluster than your work-station.
+
+<p>
+<h5>Analysis</h5>
+Visually inspect your simulations in VMD or your favourite viewer and make sure nothing untoward has happened. VMD has a problem with simulations that change the total number of molecules. To view a movie of the simulation, we must remove the water molecules from the simulation. In one of the folders within <code>out</code>, try
+
+<pre>grep -v WAT all.pdb > all_nowat.pdb
+vmd all_nowat.pdb</pre>
+
+and make sure the simulation looks okay.
+<p>
+We can look at the occupancy of the water molecule in each of the simulations. At less negative Adams values, the water has a greater probability to be inserted for the majority of the simulation. In simulations with low Adams values, the water may completely vacant from the cavity. Intermediate Adams values will produce a large number of insertions and deletions. Lets have a look at one such intermediate value. For instance, type
+
+<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f out3/b_-19.000/results -s solventson</pre>
+
+You may see something like this<br>
+<img src="B-19_solventson.png" width="%" height="50%" alt="" /><br>
+Have a look at the corresponding plots for the other simulations.
+<p>
+Each simulation at a different Adams value can be used to estimate the excess chemical potential of the water molecule in the protein cavity via the equation
+<p>
+<em>B</em> = <em>&mu;</em><sub>ex</sub> + ln &lsaquo;<em>N</em>&rsaquo;,
+<p>
+where <em>B</em> is the Adams value,  &lsaquo;<em>N</em>&rsaquo; is the average number of water molecules, and <em>&mu;</em><sub>ex</sub> is the excess chemical potential. We will use <em>&mu;</em><sub>ex</sub> to approximate the coupling free energy of the water. This approximation is more accurate the lower Adams value is. However, at low Adams values - when the occupancy of the water is very low - the data becomes noisier. Just as with previous studies, we will use human judgement to circumvent these issues. We can do this interactively by typing
+
+<pre>python2.7 $PROTOMSHOME/tools/calc_gcsingle.py -d out/b_-*</pre>
+
+which brings up a plot for the estimates of the excess chemical potential. You will then be prompted to input the range of Adams values from which the excess chemical potential will be estimated. You should chose the range over which the estimates for excess chemical appears constant. For instance, for the plot<br>
+
+<img src="excess_chem.png" width="%" height="50%" alt="" /><br>
+One could enter
+<pre> -17 -24 </pre>
+
+as the line seems flatest between these values. The excess chemical potential is averaged over this range, which produces our estimate for the coupling free energy. You should the predict the coupling free energy to be about -12 kcal/mol.
+<p>
+<h3>Exploring more options</h3>
+Here, we'll consider some points that will help with the set-up and execution of GCMC on a single water molecule.
+
+<p>
+<h5>Setting the Adams values</h5>
+The Adams parameter affects the probability to accept and insert or deletion move. Lowering the Adams value makes it more likely to empty the GCMC simulation region, while raising the Adams value increases the occupancy of the cavity.   
+<ul>
+	<li><code>--adams</code> - input the Adam(s) value(s) you want to simulate at.</li>
+
+</ul>  
+If only one value is entered, for instance 
+
+<pre>python2.7 ~/ProtoMS3/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 </pre>
+
+the command file <code>run_bnd.cmd</code> will have the line
+
+<pre>potential -11.000</pre>
+
+On the other hand, if one were to enter multiple Adams values, for instance
+
+<pre>python2.7 ~/ProtoMS3/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12</pre>
+
+one would find this line in <code>run_bnd.cmd</code>:
+
+<pre>multigcmc -11.000 -12.000 </pre>
+
+The difference between these two commands determines whether one needs to run ProtoMS with MPI. For one Adams value, ProtoMS is executed with
+
+<pre>$PROTOMSHOME/protoms3 run_bnd.cmd</pre>
+
+With more than one value, ProtoMS is executed with
+
+<pre>mpirun -np 16 $PROTOMSHOME/protoms3 run_bnd.cmd</pre>
+
+<p>
+To choose <em>which</em> Adams values to simulate at, start by simulating with values between -16 and 0 and analysing the results. You can choose more Adams values to simulate with if you didn't get reliable free energy estimates from the runs you already have.
+<p>
+
+<p>
+<h5>Running independent repeats</h5>
+Multiple independant repeats are essential for well resolved free energy estimates. Every GCMC simulation counts as an individual repeat, and one can always run additional simulations at different Adams values. If you're sure of the Adams value(s) from the start and want, say, 3 repeats, typing
+
+<pre>python2.7 ~/ProtoMS3/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -19 -20 -21 -r 3</pre>
+
+will create 3 command files called <code>run1_bnd.cmd</code>, <code>run2_bnd.cmd</code>, and <code>run3_bnd.cmd</code>, which, when executed, create the output folders <code>out1</code>, <code>out2</code>, and <code>out3</code>. Analysing the results from multiple directories is trivial; all you need to do is enter the directories that contain the ProtoMS <code>results</code> files. For instance, one can type
+
+<pre>python2.7 $PROTOMSHOME/tools/calc_gcsingle.py -d out1/b_-* out2/b_-* out3/b_-*</pre>
+
+to analyse all the simulation data in one go.
+
+<h5>Setting the move proportions for GCMC</h5>
+The default behaviour in <code>protoms.py</code> when assigning move proportions is to dedicate half of all trial moves to grand canonical solute moves. A typical <code>run_bnd.cmd</code> created by <code>protoms.py</code> for BPTI will contains the lines
+
+<pre>chunk equilibrate 5000000 solvent=440 protein=60 solute=0 insertion=167 deletion=167 gcsolute=167
+chunk simulate 40000000 solvent=440 protein=60 solute=0 insertion=167 deletion=167 gcsolute=167</pre>
+
+Note how the numbers to the right of each "=" sign roughly add up to 1000. The terms <code>insertion</code>, <code>deletion</code>, and <code>gcsolute</code> are specific to GCMC. As 167+167+167&asymp;500, the proportion of moves dedicated to GCMC is 500/1000=1/2. This default behaviour was designed for cases when the GCMC region would contain tens of water molecules, and not just one water molecule as we have with BPTI. By trailing too many moves on the single water molecule in the BPTI case, we run the risk of undersampling the rest of the system with respect to the water molecule. While that isn't the case with BPTI, it may be for other systems, so it's worth experimenting with different move proportions. Altering the chunks to read
+
+<pre>chunk equilibrate 5000000 solvent=440 protein=60 solute=0 insertion=50 deletion=50 gcsolute=50
+chunk simulate 40000000 solvent=440 protein=60 solute=0 insertion=50 deletion=50 gcsolute=50</pre>
+
+means that one fifth of all moves will be dedicated to sampling the grand canonical water molecule. The free energy calculated from such simulations is not significantly different to what we calculated before for BPTI, which lends confidense in our estimate.
+
+
+<p>
+<hr align="center"/>
+<p> 
+<h3><a name="files">Files created by the setup script</a></h3>
+<h5>Simulation specific files</h5>
+Running <code>make_gcmcbox.py</code> and <code>protoms.py</code> created the following files:
+<ul>
+	<li><code>gcmc_box.pdb </code> = the box that marks out the volume where GCMC will be carried out; created by mark_gcmcbox.py</li>
+	<li><code>gcmc_wat.pdb </code> = a water molecule that GCMC moves will be performed on</li>
+	<li><code>water.pdb</code> = the droplet of solvent water that surrounds the protein </li>
+	<li><code>run_bnd.cmd</code> = the command file that tells ProtoMS what to simulate and how</li>
+</ul>
+
+If there were any molecules from water.pdb that were within the GCMC box, they would be removed and the file <code>water_clr.pdb</code> will be created as well. 
+
+<p>
+<hr align="center"/>
+<p> 
+<h3><a name="tools">Setting up the simulation with individual tools</a></h3>
+Here, we'll go through through the set-up of the ProtoMS files step by step, we'll also d without the help of the automatisation  in <code>protoms.py</code>. Doing so will grant us some extra flexiblity.
+
+<h5>Setting up the GCMC box</h5>
+Before running GCMC, you have to be very clear what region you want to allow GCMC moves. In the example BPTI example at the top of the page, we used <code>make_gcmcbox.py</code> to delineate the volume around the structure <code>wat.pdb</code>. If you don't have such a structure to draw a box around, you can also specify the size and centre of the box instead. For instance,
+
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -b 32.67 4.32 10.34 -p 2 -o gcmc_box.pdb </pre>
+<p>
+
+will create <code>gcmc_box_temp.pdb</code> centered around x=32.67, y=4.32 and x=10.34, with 2 Angstroms either side of the centre such that the box has a volume 4&times;4&times;4 Angstroms cubed. Alternatively, one can create the same box by specifying
+
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -b 32.67 4.32 10.34 4 4 4 -o gcmc_box.pdb </pre>
+<p>
+
+Here, we've explicitly stated the size of the box in each direction, meaning we can create a cuboid, as opposed to the a cube with the <code>-p</code> flag. 
+
+<h5>Solvating the system</h5>
+
+To solvate the protein with a sphere of water, up to a radius of 26 Angstroms, one can enter the following:
+
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -pr protein.pdb -g droplet -r 26 -b $PROTOMSHOME/wbox_tip4p.pdb -o water.pdb</pre>
+<p>
+
+This makes <code>water.pdb</code>.
+
+We need to specify the water molecules that we'll be sampling with GCMC. We'll use <code>solvate.py</code> again to fill the volume specified by <code>gcmc_box.pdb</code>. 
+
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -pr gcmc_box.pdb -g flood -b $PROTOMSHOME/data/wbox_tip4p.pdb -o gcmc_wat.pdb</pre>
+<p>
+
+with output <code>gcmc_wat.pdb</code>.
+
+When running Monte Carlo, ProtoMS will not allow any bulk water molecules (specified in <code>water.pdb</code>) to enter or leave the dimentions specified in <code>gcmc_box.pdb</code>. So that we don't block the movement of the grand canonical water molcules (specified in <code>gcmc_wat.pdb</code>), we need to remove any block water molecules that are with the box:
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b gcmc_box.pdb -s water.pdb -o water_clr.pdb</pre>
+<p>
+
+In the BPTI test case, no water molcules in <code>water.pdb</code> are within the GCMC region, so no waters are cleared and, in this case, we don't need the created file <code>water_clr.pdb</code>.
+
+<h5>Making the ProtoMS input file</h5>
+The make the input file for the Monte Carlo simulation, we reference the files created thus far
+
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -p protein.pdb -pw water.pdb --gcmcwater gcmc_wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12 -13 -14 -15 -16 -17 -18 -19 -20 -21 -22 -23 -24 -25 -26 -o run</pre>
+<p>
+
+creating <code>run_bnd.cmd</code>.
+</BODY>
+</HTML>
