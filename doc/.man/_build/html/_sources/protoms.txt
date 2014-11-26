@@ -1232,7 +1232,7 @@ Perform 100 steps of equilibration. Because this chunk will inherit from the pre
   
 Now perform 500 steps of production, printing move and energy information every move, performing no protein moves, and 1 volume move for every 300 solvent moves. 
 
-A couple of *simulate-like* commands are especifically related to GBSA simulations.
+A couple of *simulate-like* commands are specifically related to GBSA simulations.
 
 .. index::
   single: splitgbsasimulate

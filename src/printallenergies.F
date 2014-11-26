@@ -498,7 +498,7 @@ c     print out free energy stuff
       call dGEnergies
  
       if (NThetaSolutes.gt.0) then
-        write(printstring,*) "Printing individual theta values for solutes"
+        write(printstring,"(A,I3,A)") " Individual theta solute values for ",NThetaSolutes," solutes"
         call prettyLine(RESULTS,printstring)
         do i=1,NThetaSolutes
           write(printstring,*) "theta" ,i,SoluteTheta(i)

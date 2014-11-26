@@ -621,6 +621,61 @@ class ParameterSet:
         except IndexError:
             return [ i for i in self.params 
                      if i.ats[1:3] in [ ats[1:3], ats[1:3:-1] ] ][0]
+#--------------------------------------------------
+# Classes to read and store ProtoMS restart files
+#--------------------------------------------------
+
+class RestartFile :
+  """
+  Class to hold the information on a
+  restart file
+  
+  Attributes
+  ----------
+  filename : string
+    the name of the restart file
+  nsolutes : int
+    the number of solute molecules
+  ngcsolutes : int
+    the number of gcsolute molecules
+  solutesdic : dict
+    the correlation of solute ids
+    with residue names
+  gcsolutesdic : dict
+    the correlation of gcsolutes ids
+    with residue names
+  """
+  def __init__(self,filename=None) : 
+    self.filename = ""
+    self.nsolutes = None
+    self.ngcsolutes = None
+    self.solutesdic = {}
+    self.gcsolutesdic = {}
+    if filename is not None :
+      self.read(filename=filename)
+
+  def read(self,filename) :
+    """
+    Read the restart file from disc
+    
+    Parameters
+    ----------
+    filename : string
+      the name of the file to read
+    """
+
+    with open(filename,"r") as f :
+      for line in f.readlines() :
+        cols = line.strip().split()
+        if 'nsolutes' in cols[0].lower() :
+          self.nsolutes = int(cols[1])
+        elif 'gcsolutes' in cols[0].lower() :
+          self.ngcsolutes = int(cols[1])
+        elif 'solute' in cols[0].lower() :
+          self.solutesdic[int(cols[1])] = cols[3]
+        elif 'gc-solute' in cols[0].lower() :
+          self.gcsolutesdic[int(cols[1])] = cols[3]
+
 
 #--------------------------------------------------
 # Classes to read and store ProtoMS results files
@@ -708,8 +763,10 @@ class SnapshotResults :
     the index of the lambda replica
   temperature : float
     the temperature of the simulation
-  ngcsolutes : in
+  ngcsolutes : int
     the number of GC solutes
+  nthetasolutes : int
+    the number of theta solutes
   bvalue : float
     the Adams value
   solventson : int
@@ -742,8 +799,12 @@ class SnapshotResults :
     the analytical gradient of lambda
   thetavals : list of float
     the theta values of all GC solutes
+  thetasolvals : list of float
+    the theta values of all theta solutes
   """
   def __init__(self,fileobj=None) :
+    self.thetavals = []
+    self.thetasolvals = []
     if fileobj is not None :
       self.parse(fileobj) 
   def parse(self,fileobj) : 
@@ -853,11 +914,17 @@ class SnapshotResults :
         self.gradient = float(cols[1])
         if len(cols) > 2 :
           self.agradient = float(cols[2])
-      elif line.startswith(" Printing individual") :
+      elif line.startswith(" Individual theta values"):
         self.thetavals = [None]*self.ngcsolutes
         line = fileobj.readline() # Dummy line
         for i in range(self.ngcsolutes) :
           self.thetavals[i] = (fileobj.readline().strip().split()[2])
+      elif line.startswith(" Individual theta solute values"):
+        self.nthetasolutes = int(line[36:39])
+        self.thetasolvals = [None]*self.nthetasolutes
+        line = fileobj.readline() # Dummy line
+        for i in range(self.nthetasolutes) :
+          self.thetasolvals[i] = (fileobj.readline().strip().split()[2])
         
       line = fileobj.readline()
       if line.startswith("  -") : break
