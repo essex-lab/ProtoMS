@@ -671,10 +671,10 @@ class RestartFile :
           self.nsolutes = int(cols[1])
         elif 'gcsolutes' in cols[0].lower() :
           self.ngcsolutes = int(cols[1])
-        elif 'solute' in cols[0].lower() :
-          self.solutesdic[int(cols[1])] = cols[3]
         elif 'gc-solute' in cols[0].lower() :
           self.gcsolutesdic[int(cols[1])] = cols[3]
+        elif 'solute' in cols[0].lower() :
+          self.solutesdic[int(cols[1])] = cols[3]
 
 
 #--------------------------------------------------

@@ -51,8 +51,8 @@ def solname_to_id(molecule,restart='restart') :
   """
 
   restart_obj = simulationobjects.RestartFile(filename=restart)
-  sol_list = [key for key in restart_obj.solutesdic if restart_obj.solutesdic[key] in molecule.lower()]
-  gcsol_list = [key for key in restart_obj.gcsolutesdic if restart_obj.gcsolutesdic[key] in molecule.lower()]
+  sol_list = [key for key in restart_obj.solutesdic if restart_obj.solutesdic[key].lower() in molecule.lower()]
+  gcsol_list = [key for key in restart_obj.gcsolutesdic if restart_obj.gcsolutesdic[key].lower() in molecule.lower()]
 
   if not sol_list :
     return gcsol_list, "gcsolute"
@@ -92,7 +92,7 @@ def find_solute_theta(molecule,restart='restart',results='results') :
   for snap in results_obj.snapshots :
     if mol_type is "solute" :
       res_thetavals = snap.thetasolvals
-    elif moltype is "gcsolute" :
+    elif mol_type is "gcsolute" :
       res_thetavals = snap.thetavals
     for ind,res_theta in enumerate(res_thetavals) :
       thetas[ind+1].append(res_theta)
