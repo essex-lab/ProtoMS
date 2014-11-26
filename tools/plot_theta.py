@@ -98,24 +98,46 @@ def find_solute_theta(molecule,restart='restart',results='results') :
       thetas[ind+1].append(res_theta)
   return thetas
 
-def plot_theta_dist(thetas) :
+
+def plot_dist(dict_th,plotname="theta_dist",xlab="theta") :
   """
-  Plot a distribution of thetas
+  Plot a distribution of dictonary values
+  in form of lists
+
+  Parameters
+  ----------
+  dict_th : dict
+    a dictionary with several keys
+    which 'values' are lists of floats
+    to plot in a histogram
+  plotname : string, optional
+    the beginning of the file name
+    for the plots produced
+  xlab : string, optional
+    what to write in the x axes label
+    of the histogram
+
+  Return
+  ------
+  Nothing
+    the plots will be saved in png files
   """
+
+  if xlab == "theta" : xlab = r"$\theta$"
   def set_axes() :
-    plt.xlabel(r"$\theta$",fontsize=20)
+    plt.xlabel(xlab,fontsize=20)
     plt.ylabel("Frequency",fontsize=15)
 
-  thetas_values = np.array(thetas.values(),float)
+  thetas_values = np.array(dict_th.values(),float)
 
   n, bins, patches = plt.hist(np.reshape(thetas_values,newshape=-1),bins=100,facecolor=simulationobjects.color(0),histtype='stepfilled')
   set_axes()
-  plt.savefig("theta_dist_all.png")
+  plt.savefig(plotname+"_all.png")
   plt.clf()
 
   n, bins, patches = plt.hist(np.transpose(thetas_values),bins=100,histtype="step")
   set_axes()
-  plt.savefig("theta_dist_each.png")
+  plt.savefig(plotname+"_each.png")
   
   
 
@@ -131,8 +153,9 @@ if __name__ == '__main__' :
   parser.add_argument('-r','--results',help="the name of the results file. Deafult='results'",default='results')
   parser.add_argument('-s','--restart',help="the replica values to plot. Default='restart'",default='restart')
   parser.add_argument('-m','--molecule',help="the residue name of the JAWS molecule. Default='WAT'",default="WAT")
+  parser.add_argument('-p','--plotname',help="the start of the filename for the plots generated. Default='theta_dist'",default="theta_dist")
   args = parser.parse_args()
 
   thetas_dic = find_solute_theta(args.molecule,args.restart,args.results)
 
-  plot_theta_dist(thetas_dic)
+  plot_dist(thetas_dic,plotname=args.plotname)

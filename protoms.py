@@ -516,7 +516,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     # check whether the box of the water oxygens is within the box provided as argument
     box_origen_below = np.all(box['origin']< waterbox['origin'])
     box_end_avobe = np.all(box['origin']+box['len'] > waterbox['origin']+waterbox['len'])
-    if not (box_origen_below and box_end_avobe) or np.all(waterbox['len'] < 0.5) :
+    if not (box_origen_below and box_end_avobe) or (np.all(waterbox['len'] < 0.5) and len(waterobj.solvents) > 1) :
       # re-distribute the waters if required according to provided box
       logger.info("\nRedistributing your GCMC / JAWS1 waters according to the specified box\n")
       arranged_obj = tools.distribute_particles(box,water_file)
