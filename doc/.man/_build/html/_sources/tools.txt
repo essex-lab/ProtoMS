@@ -2,7 +2,7 @@
 Tools
 *************
 
-In the ``$PROTOMSHOME/tools`` folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the ``protoms.py`` setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at this page.
+In the ``$PROTOMSHOME/tools`` folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the ``protoms.py`` setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at the Python code manual in the ``.doc`` folder.
 
 ----------------------------
 ambertools.py
@@ -139,6 +139,44 @@ Block estimates can be constructed by combining ``nskip`` and ``nmax``. For inst
   calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
   done
 
+-----------------------
+calc_clusters.py
+-----------------------
+
+**Syntax:**
+
+``calc_clusters.py -f file1 [file2 ...]  [-o outfile] [-m molecule] [-a atom] [-t type] [-c cutoff]``
+
+* ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
+    at least one file needs to be specified
+    can read a PDB trajectory
+* ``-o outfile`` = the produced clusters in PDB format
+    optional, clusters.pdb
+* ``-m molecuke`` = the name of the molecule to cluster
+    optional, default = wat
+* ``-a atom`` = the name of the atom in the residue to cluster
+    optional, no default
+    if not specified, the entire molecule will be clustered
+* ``-t type`` = the clustering algorith
+    optional, default = average
+    can be any of average, single, complete, weighted and centroid
+* ``-c cutoff`` = the cluster cut-off
+    optional, default = 2.0 A
+
+**Examples:**
+
+::
+
+  calc_clusters.py -f all.pdb
+  calc_clusters.py -f all.pdb all2.pdb
+  calc_clusters.py -f all.pdb -o all_clusters.pdb
+  calc_clusters.py -f all.pdb -t complete
+
+**Description:**
+
+This tool cluster molecules from a simulation
+
+It will extract the coordinates of all atoms with name equal to ``atom`` in residues with name equal to ``molecule`` in all input files and cluster them using the selected algorithm.  If no atom is specified, the entire molecule will be clustered. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.
 
 -----------------------
 calc_density.py
@@ -150,6 +188,7 @@ calc_density.py
 
 * ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
     at least one file needs to be specified
+    can read a PDB trajectory
 * ``-o outfile`` = the produced density in DX-format
     optional, default = grid.dx
 * ``-r residue`` = the name of the residue to make a grid on
@@ -251,6 +290,38 @@ If the ``-gr`` flag is set the gradient with respect to :math:`\lambda` is plott
 
 The MBAR estimator only works if PyMBAR is properly installed and can be loaded as a python library. 
 
+
+-----------------------
+calc_gcsingle.py
+-----------------------
+
+**Syntax:**
+ 
+``calc_gcsingle.py -d directories [-f file] [-s nskip] [-r A B] [--plot]``
+
+* ``-d directories`` = the output directories from GCMC
+* ``-f file`` = the name of ProtoMS results file
+  optional, default =results
+* ``-s nskip`` = the number of initial snapshots to discard
+  optional, default = 0 
+* ``-r A B`` = the range of the Adams value to make the estimate on
+  optional
+  if not set the program will use all data
+* ``--plot`` = whether to plot the estimated excess chemical potential
+  optional, default = yes
+
+**Examples:**
+
+::
+
+  calc_gcsingle.py -d out_gcmc
+  calc_gcsingle.py -d out_gcmc -s 100
+  calc_gcsingle.py -d out_gcmc -r -8 -12
+
+
+**Description:**
+
+This tool analyse and plot free energies from GCMC simulations
 
 -----------------------
 calc_replicapath.py
@@ -768,7 +839,7 @@ The user may also write the corresponding atoms to a file and provide it as ``ma
 
 Currently, dummy atoms are not supported in the solute at :math:`\lambda=0.0`. Therefore, this solute needs to be the larger one.
 
-The tool will write two ProtoMS template files, one for the electrostatic perturbation and one for the van der Waals perturbation. These template files will end in ``_ele.tem`` and ``_vdw.tem`` respectively. 
+The tool will write two ProtoMS template files, one for the electrostatic perturbation, one for the van der Waals perturbation and one for the combined perturbation. These template files will end in ``_ele.tem``, ``_vdw.tem``, ``_comb.tem`` respectively. 
 
 A summary of the charges and van der Waals parameters in the four states will be printed to the screen. This information should be checked carefully. 
 
@@ -818,6 +889,8 @@ pms2pymbar.py
 * ``-t temperature`` = the simulation temperature in degree Celsius 
     optional, default = 25 degrees 
 * ``--run`` = flag indicating if to run pymbar
+    optional, default = No
+* ``--nobar`` = flag indicating if to estimate BAR
     optional, default = No
 
 **Examples:**

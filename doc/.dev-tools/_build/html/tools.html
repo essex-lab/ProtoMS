@@ -54,10 +54,11 @@
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-tools.ambertools">tools.ambertools module</a></li>
 <li><a class="reference internal" href="#module-tools.build_template">tools.build_template module</a></li>
-<li><a class="reference internal" href="#tools-build-template-py-bak-module">tools.build_template.py.bak module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_bar">tools.calc_bar module</a></li>
+<li><a class="reference internal" href="#tools-calc-clusters-module">tools.calc_clusters module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_density">tools.calc_density module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_dg">tools.calc_dg module</a></li>
+<li><a class="reference internal" href="#tools-calc-gcsingle-module">tools.calc_gcsingle module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_replicapath">tools.calc_replicapath module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_rmsd">tools.calc_rmsd module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_series">tools.calc_series module</a></li>
@@ -378,9 +379,6 @@ has not been defined and where the bond has not been traversed</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-build-template-py-bak-module">
-<h2>tools.build_template.py.bak module<a class="headerlink" href="#tools-build-template-py-bak-module" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-tools.calc_bar">
 <span id="tools-calc-bar-module"></span><h2>tools.calc_bar module<a class="headerlink" href="#module-tools.calc_bar" title="Permalink to this headline">¶</a></h2>
 <p>Program to do BAR</p>
@@ -442,6 +440,91 @@ bar</p>
 </tbody>
 </table>
 </dd></dl>
+
+</div>
+<div class="section" id="tools-calc-clusters-module">
+<h2>tools.calc_clusters module<a class="headerlink" href="#tools-calc-clusters-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tools.calc_clusters"></span><dl class="function">
+<dt id="tools.calc_clusters.GetMolTemplate">
+<tt class="descclassname">tools.calc_clusters.</tt><tt class="descname">GetMolTemplate</tt><big>(</big><em>FileName</em>, <em>MolName</em><big>)</big><a class="headerlink" href="#tools.calc_clusters.GetMolTemplate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_clusters.cluster_coords">
+<tt class="descclassname">tools.calc_clusters.</tt><tt class="descname">cluster_coords</tt><big>(</big><em>confs</em>, <em>clustmethod='average'</em>, <em>cutoff=2.0</em><big>)</big><a class="headerlink" href="#tools.calc_clusters.cluster_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clusters the supplied conformations in a hierarchical fasion</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>conformations</strong> : Numpy array</p>
+<blockquote>
+<div><p>Array of the coordinates of the different conformations</p>
+</div></blockquote>
+<p><strong>method</strong> : String</p>
+<blockquote>
+<div><p>the hierarchical clustering method</p>
+</div></blockquote>
+<p><strong>cutoff</strong> : Float</p>
+<blockquote>
+<div><p>the RMSD cutoff that specifies whether conformations are in the same cluster.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumpyArray</p>
+<blockquote>
+<div><p>the coordinates of the cluster representatives</p>
+</div></blockquote>
+<p>NumpyArray</p>
+<blockquote class="last">
+<div><p>the coordinates of the cluster centroids</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_clusters.get_coords">
+<tt class="descclassname">tools.calc_clusters.</tt><tt class="descname">get_coords</tt><big>(</big><em>pdbfiles</em>, <em>molname</em>, <em>atomname</em><big>)</big><a class="headerlink" href="#tools.calc_clusters.get_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the coordinates of a specified molecule name or a named atom from supplied PDB files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>pdbfiles</strong> : PDBSet</p>
+<blockquote>
+<div><p>the PDB files</p>
+</div></blockquote>
+<p><strong>residue</strong> : string</p>
+<blockquote>
+<div><p>the residue to extract</p>
+</div></blockquote>
+<p><strong>atom</strong> : string</p>
+<blockquote>
+<div><p>the name of the atom to extract (optional)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumpyArray of coordinates</p>
+<blockquote>
+<div><p>the x,y,z coordinates of the specified molecule or atom</p>
+</div></blockquote>
+<p>Integer</p>
+<blockquote class="last">
+<div><p>the number of molecules or atoms matching the names.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_clusters.printpdb">
+<tt class="descclassname">tools.calc_clusters.</tt><tt class="descname">printpdb</tt><big>(</big><em>coords</em>, <em>molpdb</em>, <em>resid</em>, <em>theta</em>, <em>filename</em><big>)</big><a class="headerlink" href="#tools.calc_clusters.printpdb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-tools.calc_density">
@@ -546,6 +629,9 @@ writeDX</p>
 <span id="tools-calc-dg-module"></span><h2>tools.calc_dg module<a class="headerlink" href="#module-tools.calc_dg" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate free energies using TI, BAR and MBAR</p>
 </div>
+<div class="section" id="tools-calc-gcsingle-module">
+<h2>tools.calc_gcsingle module<a class="headerlink" href="#tools-calc-gcsingle-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tools.calc_gcsingle"></span></div>
 <div class="section" id="module-tools.calc_replicapath">
 <span id="tools-calc-replicapath-module"></span><h2>tools.calc_replicapath module<a class="headerlink" href="#module-tools.calc_replicapath" title="Permalink to this headline">¶</a></h2>
 <p>Program to analyze and plot replica paths</p>
@@ -3636,6 +3722,67 @@ information to check that a parameter exists</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="tools.simulationobjects.RestartFile">
+<em class="property">class </em><tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">RestartFile</tt><big>(</big><em>filename=None</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.RestartFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to hold the information on a
+restart file</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>filename</td>
+<td>(string) the name of the restart file</td>
+</tr>
+<tr class="row-even"><td>nsolutes</td>
+<td>(int) the number of solute molecules</td>
+</tr>
+<tr class="row-odd"><td>ngcsolutes</td>
+<td>(int) the number of gcsolute molecules</td>
+</tr>
+<tr class="row-even"><td>solutesdic</td>
+<td>(dict) the correlation of solute ids with residue names</td>
+</tr>
+<tr class="row-odd"><td>gcsolutesdic</td>
+<td>(dict) the correlation of gcsolutes ids with residue names</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.RestartFile.read" title="tools.simulationobjects.RestartFile.read"><tt class="xref py py-obj docutils literal"><span class="pre">read</span></tt></a>(filename)</td>
+<td>Read the restart file from disc</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.simulationobjects.RestartFile.read">
+<tt class="descname">read</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#tools.simulationobjects.RestartFile.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the restart file from disc</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename</strong> : string</p>
+<blockquote class="last">
+<div><p>the name of the file to read</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="tools.simulationobjects.ResultsFile">
 <em class="property">class </em><tt class="descclassname">tools.simulationobjects.</tt><tt class="descname">ResultsFile</tt><a class="headerlink" href="#tools.simulationobjects.ResultsFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to store a collection of results</p>
@@ -3783,55 +3930,61 @@ objects, for the various energy components.</p>
 <td>(float) the temperature of the simulation</td>
 </tr>
 <tr class="row-odd"><td>ngcsolutes</td>
-<td>(in) the number of GC solutes</td>
+<td>(int) the number of GC solutes</td>
 </tr>
-<tr class="row-even"><td>bvalue</td>
+<tr class="row-even"><td>nthetasolutes</td>
+<td>(int) the number of theta solutes</td>
+</tr>
+<tr class="row-odd"><td>bvalue</td>
 <td>(float) the Adams value</td>
 </tr>
-<tr class="row-odd"><td>solventson</td>
+<tr class="row-even"><td>solventson</td>
 <td>(int) the number of GC solutes that are turned on</td>
 </tr>
-<tr class="row-even"><td>pressure</td>
+<tr class="row-odd"><td>pressure</td>
 <td>(float) the pressure</td>
 </tr>
-<tr class="row-odd"><td>volume</td>
+<tr class="row-even"><td>volume</td>
 <td>(float) the volume</td>
 </tr>
-<tr class="row-even"><td>seed</td>
+<tr class="row-odd"><td>seed</td>
 <td>(int) the random seed</td>
 </tr>
-<tr class="row-odd"><td>backfe</td>
+<tr class="row-even"><td>backfe</td>
 <td>(float) the free energy to the previous lambda</td>
 </tr>
-<tr class="row-even"><td>forwfe</td>
+<tr class="row-odd"><td>forwfe</td>
 <td>(float) the free energy to the next lambda</td>
 </tr>
-<tr class="row-odd"><td>total</td>
+<tr class="row-even"><td>total</td>
 <td>(EnergyResults object) the total energy</td>
 </tr>
-<tr class="row-even"><td>internal_energies</td>
+<tr class="row-odd"><td>internal_energies</td>
 <td>(dictionary of lists of EnergyResults object) the internal energies</td>
 </tr>
-<tr class="row-odd"><td>interaction_energies</td>
+<tr class="row-even"><td>interaction_energies</td>
 <td>(dictionary of lists of EnergyResults objects) the interaction energies</td>
 </tr>
-<tr class="row-even"><td>capenergy</td>
+<tr class="row-odd"><td>capenergy</td>
 <td>(EnergyResults object) the energy of the cap</td>
 </tr>
-<tr class="row-odd"><td>extraenergy</td>
+<tr class="row-even"><td>extraenergy</td>
 <td>(EnergyResults object) all extra energies</td>
 </tr>
-<tr class="row-even"><td>feenergies</td>
+<tr class="row-odd"><td>feenergies</td>
 <td>(dictionary of float) the total energy at various lambda values</td>
 </tr>
-<tr class="row-odd"><td>gradient</td>
+<tr class="row-even"><td>gradient</td>
 <td>(float) the numerical gradient of lambda</td>
 </tr>
-<tr class="row-even"><td>agradient</td>
+<tr class="row-odd"><td>agradient</td>
 <td>(float) the analytical gradient of lambda</td>
 </tr>
-<tr class="row-odd"><td>thetavals</td>
+<tr class="row-even"><td>thetavals</td>
 <td>(list of float) the theta values of all GC solutes</td>
+</tr>
+<tr class="row-odd"><td>thetasolvals</td>
+<td>(list of float) the theta values of all theta solutes</td>
 </tr>
 </tbody>
 </table>

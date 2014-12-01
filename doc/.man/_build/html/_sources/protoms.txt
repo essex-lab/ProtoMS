@@ -2201,7 +2201,7 @@ ProtoMS will use the solute name to find the solute template for this molecule, 
 GCsolute File
 ===========================
 
-GCsolute input files are very similar to protein input files, except that multiple GCsolutes can be loaded at once. GCsolute files are standard PDB format coordinate files. An example is shown below in figure 3.15 The name of each solvent molecule is taken from the residue name, and it is this name that is used to locate the template for each GCsolute molecule.
+GCsolute input files are very similar to protein input files, except that multiple GCsolutes can be loaded at once. GCsolute files are standard PDB format coordinate files. The name of each solvent molecule is taken from the residue name, and it is this name that is used to locate the template for each GCsolute molecule.
 
 
 .. _solventpdb:

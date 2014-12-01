@@ -20,18 +20,18 @@ tools.build_template module
     :undoc-members:
     :show-inheritance:
 
-tools.build_template.py.bak module
-----------------------------------
-
-.. automodule:: tools.build_template.py.bak
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 tools.calc_bar module
 ---------------------
 
 .. automodule:: tools.calc_bar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tools.calc_clusters module
+---------------------
+
+.. automodule:: tools.calc_clusters
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,6 +48,14 @@ tools.calc_dg module
 --------------------
 
 .. automodule:: tools.calc_dg
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tools.calc_gcsingle module
+---------------------
+
+.. automodule:: tools.calc_gcsingle
     :members:
     :undoc-members:
     :show-inheritance:
