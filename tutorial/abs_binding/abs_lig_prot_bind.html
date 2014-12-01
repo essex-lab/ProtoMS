@@ -12,7 +12,7 @@ In this tutorial, you will setup, run and analyse the calculation of the binding
 	<li><code>benzene.pdb</code> - the structure of the benzene molecule in PDB format</li>
 	<li><code>protein.pdb</code> - the structure of the T4 lysozyme in PDB format</li>
 </ul>
-Both the benzene and protein needs to be prepared before they are used with ProtoMS. For instance, you must make sure that they are protonated. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
+Both the benzene and protein need to be prepared before they are used with ProtoMS. For instance, you must make sure that they are correctly protonated. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
 <p>
 <hr align="center"/>
 <h3>Simple setup</h3>
@@ -26,7 +26,7 @@ this sets up one simulation for the bound leg and one for the free leg of the do
 the <code>-s dualtopology</code> argument tells the script to setup a dual topology free energy simulation and the <code>--absolute</code> argument tells the script that no second ligand exists and that the given ligand should be perturbed to a dummy particle (nothing). The <code>-p</code> and <code>-l</code> arguments specifies the protein and the ligand, respectively.
 <p> 
 You can read more about the files that the setup script creates further down on this <a href="#files">page</a>.
-<p>You can visualise the systems that will be simulated with for instance VMD:
+<p>You can visualise the systems that will be simulated with (for instance) VMD:
 <pre>vmd -m benzene.pdb benzene_dummy.pdb benzene_box.pdb
 vmd -m benzene.pdb benzene_dummy.pdb protein.pdb water.pdb
 </pre> <img src="setup.png"  alt="" /> &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; <img src="setup_bnd.png"  alt="" />
@@ -46,9 +46,9 @@ When the simulations are finished you need to analyse the simulation and extract
 <pre>
 python2.7 $PROTOMSHOME/tools/calc_series.py -f out_free/lam-0.000/results
 </pre>
-to look at time series for the free leg at &lambda;=0.0. In the wizard that appears you can type <code>total</code> followed by enter. This will plot the total energy as a function of simulation snapshot. It should look something like this:<br> 
+to look at time series for the free leg at &lambda;=0.0. In the wizard that appears you can type <code>total</code> followed by enter twice. This will plot the total energy as a function of simulation snapshot. It should look something like this:<br> 
 <img src="results_total_free.png" width="33%" height="33%" alt="" /><br>
-the program will also give you some indicating on the equilibration of this time series. In this case, you should see equilibration fairly early in the simulation. Thus, we have to discard very little of the simulation when we compute the free energy.
+the program will also give you some indication of the equilibration of this time series. In this case, you should see equilibration fairly early in the simulation. Thus, we have to discard very little of the simulation when we compute the free energy.
 <p>Next, we will analyse how effective the &lambda; replica exchange was. Type</p>
 <pre>
 grep "lambda swaps" out_free/lam-0.000/info
@@ -57,21 +57,21 @@ and this will give you the overall acceptance ratio of the &lambda; swaps. It sh
 <pre>
 python2.7 $PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0.2 0.8 1.0 -o replica_path_free.png
 </pre>
-<p>to plot the path of the first two &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="33%" alt="" /><br> as is clear, these the replicas was not able to traverse the full &lambda;-space within the simulation time. Also the replica starting with &lambda;=1.0, did not exchange a single time throughout the simulation. Hence, the replica exchange was not fully efficient.</p>
-<p>Now, we will estimate the free energy. We will do this both with thermodynamic integration, Bennet's acceptance ratio (BAR) and multi BAR (MBAR). To do this you can type</p>
+<p>to plot the path of the first few &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="33%" alt="" /><br> as is clear, these the replicas was not able to traverse the full &lambda;-space within the simulation time. Also the replica starting with &lambda;=1.0, did not exchange a single time throughout the simulation. Hence, the replica exchange was not fully efficient.</p>
+<p>Now, we will estimate the free energy. We will do this both with thermodynamic integration, Bennett's acceptance ratio (BAR) and multistate BAR (MBAR). To do this you can type</p>
 <pre>
 python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_free/ -s 10
 </pre>
 <p>A typical result is between 0 and 1 kcal/mol. The experimental hydration free energy of benzene is -0.9 kcal/mol, thus this free-leg should be fairly accurate. Notice that only 10 snapshots are removed from the 400 snapshots when calculating the free energy, because the analysis with <code>calc_series.py</code> indicated that the simulation was equilibrated very much from the start.</p>
-<p>It is important to study the gradient of the TI calculation. It should be smoot in order for the TI to work properly. For the free leg it should look something like this <br>
+<p>It is important to study the gradient of the TI calculation. It should be smooth in order for the TI to work properly. For the free leg it should look something like this <br>
 <img src="gradients.png" width="%" height="33%" alt="" /></p>
 
-<p>Now, we need to repeat the analysis for the bound leg. When you plot the evolution of the total energy using <code>calc_series.py</code> you often find that it takes a very long time for the total energy to converge. This is because in the bound simulation, the total energy is dominated by solvent-solvent and protein-solvent interactions that has very little effect on the free energy of binding. Thus we should not look at the total energy when investigation convergence, rather we should look at the interaction between the ligand and either protein or solvent.
+<p>Now, we need to repeat the analysis for the bound leg. When you plot the evolution of the total energy using <code>calc_series.py</code> you will often find that it takes a very long time for the total energy to converge. This is because in the bound simulation, the total energy is dominated by solvent-solvent and protein-solvent interactions that have very little effect on the free energy of binding. Thus we should not look at the total energy when investigating convergence, rather we should look at the interaction between the ligand and either protein or solvent.
 <br>
 Type
 <pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f out_bnd/lam-0.000/results
 </pre>
-and when your prompted for the series to analyze, type the following series
+and when you're prompted for the series to analyze, type the following series
 <pre>total
 inter/solvent-solvent/sum
 inter/protein1-solvent/sum
@@ -83,7 +83,7 @@ and when asked for the type of plot, simply select option <code>5</code>. The pl
 <img src="results_total_bnd.png" width="33%" height="33%" alt="" /><br>
  You will notice that the interaction energy between the ligand and its surrounding equilibrates very quickly. The computed free energy should be between 9.0 and 10.0 kcal/mol (depending on estimator and equilibration removed). </p>
 <p>
-In a double-decoupling simulation you need to calculate the free energy of adding the harmonic restraint as well as taking into account the symmetry of benzene, &sigma; (which is 12). Therefore, we need to evaluate the following &Delta;<em>G</em><sub>rest</sub> = <em>RT</em> ln &sigma;<em>V</em><sub>sim</sub> / <em>V</em><sub>0</sub>. Where <em>RT</em> is the gas constant multiplied by the absolute temperature and <em>V</em><sub>0</sub>=1660 A<sup>3</sup>. The simulation volume of benzene <em>V</em><sub>sim</sub> can be estimated from (<i>2&pi;RT / k</i>)<sup>3/2</sup> where <i>k</i> is the harmoni spring constant. With a spring constant of 2 kcal / mol, this free energy evaluates to -2.34 kcal/mol. (Note that ProtoMS defines the harmonic restraint using <em>k</em>, rather than 0.5 <em>k</em>, the above formula for the simulation volume is correct for a restraint with 0.5 <em>k</em>)
+In a double-decoupling simulation you need to calculate the free energy of adding the harmonic restraint as well as taking into account the symmetry of benzene, &sigma; (which is 12). Therefore, we need to evaluate the following: &Delta;<em>G</em><sub>rest</sub> = <em>RT</em> ln &sigma;<em>V</em><sub>sim</sub> / <em>V</em><sub>0</sub>, where <em>RT</em> is the gas constant multiplied by the absolute temperature and <em>V</em><sub>0</sub>=1660 A<sup>3</sup>. The simulation volume of benzene <em>V</em><sub>sim</sub> can be estimated from (<i>2&pi;RT / k</i>)<sup>3/2</sup> where <i>k</i> is the harmonic spring constant. With a spring constant of 2 kcal / mol, this free energy evaluates to -2.34 kcal/mol. (Note that ProtoMS defines the harmonic restraint using <em>k</em>, rather than 0.5 <em>k</em>, the above formula for the simulation volume is correct for a restraint with 0.5 <em>k</em>)
 <p>The standard binding free energy of benzene can the be estimated from:
 </p>
 <p>
@@ -94,7 +94,7 @@ In a double-decoupling simulation you need to calculate the free energy of addin
 <hr align="center"/>
 <p> 
 <h3>Exploring more options</h3>
-By running <code>protoms.py</code> as above, you accept the standard number of &lambda;-values, simulation length etcs. The values of these parameter were chosen from experience and should work for most systems. However, there are situations when you want to do something else. Here, we will go through some of the many available options. To know about other options you have to read the manuals for the tools or the MC program. You might also have to setup your system by executing the individual tools separately.
+By running <code>protoms.py</code> as above, you accept the standard number of &lambda;-values, simulation length etc. The values of these parameters were chosen from experience and should work for most systems. However, there are situations when you may want to do something else. Here, we will go through some of the many available options. To know about other options you have to read the manuals for the tools or the overall MC program. You might also have to set up your system by executing the individual tools separately.
 <p>
 <h5>Running longer simulations</h5>
 There are two arguments that you can invoke to run a longer simulation
@@ -121,7 +121,7 @@ you will initiate 24 &lambda;-values rather than default 16. You can also give i
 will add two new &lambda;-values at 0.033 and 0.967 to the 16 created by default.
 <p>
 <h5>Running independent repeats</h5>
-Usually it is wise to run several indepent repeats of your calculation to check for convergence and to obtain a good estimate of the statistical uncertainty. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
+Usually it is wise to run several independent repeats of your calculation to check for convergence and to obtain a good estimate of the statistical uncertainty. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
 <p>
 by typing for instance
 <pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute -r 5</pre>
@@ -147,7 +147,7 @@ This corresponds to a spring constant of 2.205 kcal/mol/A2
 (to use this as an harmonic restraint in ProtoMS, specify 1.102)
 
 </pre>
-and we can see that the default force constant is appropriate. The force consant is estimated from <i>k</i> = 3 <i>RT</i> / &lt;RMSD<sup>2</sup>&gt;, where <i>R</i> and <i>T</i> are the gas constant and the absolute temperature, respectively. Notice that in the ProtoMS input you specify 1/2<i>k</i> rather than <i>k</i>.
+and we can see that the default force constant is appropriate. The force constant is estimated from <i>k</i> = 3 <i>RT</i> / &lt;RMSD<sup>2</sup>&gt;, where <i>R</i> and <i>T</i> are the gas constant and the absolute temperature, respectively. Notice that in the ProtoMS input you specify 1/2<i>k</i> rather than <i>k</i>.
 <p>
 <hr align="center"/>
 <p> 
@@ -159,12 +159,12 @@ and we can see that the default force constant is appropriate. The force consant
 	<li><code>benzene.zmat</code> = the z-matrix of benzene used to sample it in the MC simulation</li>
 	<li><code>benzene.tem</code> = the complete template (force field) file for the ligand in ProtoMS format</li>
 </ul>
-You can read more about the setup of ligands here.
+You can read more about the setup of ligands <a href="../prep_struct.html">here</a>.
 <h5>Files describing the protein</h5>
 <ul>
 	<li><code>protein_scoop.pdb</code> = the truncated protein structure</li>
 </ul>
-You can read more about the setup of proteins here.
+You can read more about the setup of proteins <a href="../prep_struct.html">here</a>.
 <p> 
 <h5>Simulation specific files</h5>
 <ul>
@@ -175,7 +175,7 @@ You can read more about the setup of proteins here.
 	<li><code>run_bnd.cmd</code> = the ProtoMS input file for the bound-leg simulation</li>
 	<li><code>run_free.cmd</code> = the ProtoMS input file for the free-leg simulation</li>
 </ul>
-You can read more about the input files in the ProtoMS manual. However, some sections of it is worth mentioning here
+You can read more about the input files in the ProtoMS manual. However, some sections of it are worth mentioning here
 <p>
 <pre>
 dualtopology1 1 2 synctrans syncrot
@@ -184,13 +184,13 @@ softcore2 solute 2
 softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 6 soft66
 </pre>
 <br>
-this section, which exist in both input files setup the dual topology simulation with appropriate soft-core parameters. It could be worth trying to optimize the soft-core parameters if your simulation is not performing well. 
+this section, which exists in both input files, sets up the dual topology simulation with appropriate soft-core parameters. It could be worth trying to optimize the soft-core parameters if your simulation is not performing well. 
 <p>  
 <pre>
 lambdare 200000 0.000 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 1.000
 </pre>
 <br>
-this section, which exists in both input file setup the &lambda;-replica exchange. You can add more &lambda;-values manually if there are regions where the simulation is not performing well.
+this section, which exists in both input files, sets up the &lambda;-replica exchange. You can add more &lambda;-values manually if there are regions where the simulation is not performing well.
 <p>
 <pre>
 chunk id add 1 solute 1 C4 BNZ
@@ -222,7 +222,7 @@ and this will execute the AmberTools programs <code>antechamber</code> and <code
 <p>
 <pre>python2.7 $PROTOMSHOME/tools/build_template.py -p benzene.prepi -f benzene.frcmod -o benzene.tem -n BNZ</pre>
 <p>
-this will creates the files <code>benzene.tem</code> containing the ProtoMS template file and <code>benzene.zmat</code>. It is a good idea to check this files to see if the script has defined the molecule properly.
+this will creates the files <code>benzene.tem</code> containing the ProtoMS template file and <code>benzene.zmat</code>. It is a good idea to check these files to see if the script has defined the molecule properly.
 <p>
 <li>The next thing we will do is to solvate the benzene molecule in a box of TIP4P water molecules. Type
 <p>
@@ -230,7 +230,7 @@ this will creates the files <code>benzene.tem</code> containing the ProtoMS temp
 <p> 
 this will solvate benzene using standard settings, i.e. it will be 10 A between the solute and the edge of the box. A pre-equilibrated box of TIP4P water molecules located in <code>$PROTOMSHOME/data/</code> is used. The box is written to the file <code>benzene_box.pdb</code>.
 <p> 
-<li>Now we have setup benzene, but to complete the setup we need the dummy particle that benzene will be perturbed into. This is created by typing
+<li>Now we have set up benzene, but to complete the setup we need the dummy particle that benzene will be perturbed into. This is created by typing
 <p> 
 <pre>python2.7 $PROTOMSHOME/tools/make_dummy.py -f benzene.pdb -o benzene_dummy.pdb</pre>
 <p> 
@@ -242,9 +242,9 @@ creating <code>benzene_dummy.pdb that contains the particle.</code>
 <p> 
 creating <code>bnz-dummy.tem</code>. The template file of the dummy particle is located in <code>$PROTOMSHOME/data/</code>.
 <p>
-Now we have all the files to run the free-leg of the simulation. The input file for ProtoMS will be created when we have prepared to bound-leg.
+Now we have all the files to run the free-leg of the simulation. The input file for ProtoMS will be created when we have prepared the bound-leg.
 <h5>Setting up the bound leg</h5>
-<li>First, we will change the name of atom and residue names in the protein PDB-file such that they agree with the ProtoMS naming convention. Type
+<li>First, we will change the atom and residue names in the protein PDB-file such that they agree with the ProtoMS naming convention. Type
 <p> 
 <pre>python2.7 $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -o protein_pms.pdb -s amber -c $PROTOMSHOME/data/atomnamesmap.dat</pre>
 <p> 
@@ -256,11 +256,11 @@ The converted structure will be in <code>protein_pms.pdb</code>. This execution 
 <p>
 creating <code>protein_pms_t4p.pdb</code>. 
 <p>
-<li>Next step is to truncate to protein, creating a scoop. This will enable us to solvate the protein is a droplet and thereby reducing the number of simulated particles. The command is
+<li>Next step is to truncate to protein, creating a scoop. This will enable us to solvate the protein in a droplet and thereby reduce the number of simulated particles. The command is
 <p>
 <pre>python2.7 $PROTOMSHOME/tools/scoop.py -p protein_pms_t4p.pdb -l benzene.pdb -o protein_scoop.pdb</pre> 
 <p> 
-The protein scoop is centred on the benzene molecule and all residue further than 20 A are cut-away. The scoop is written to <code>protein_scoop.pdb</code>
+The protein scoop is centred on the benzene molecule and all residues further than 20 A are cut-away. The scoop is written to <code>protein_scoop.pdb</code>
 <p>
 <li>As a final step, we will solvate the protein and ligand in a droplet of TIP4P water molecules. To this, type:
 <p> 

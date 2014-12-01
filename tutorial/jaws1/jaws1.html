@@ -5,19 +5,19 @@
 </HEAD>
 <BODY>
 <H1>Locating waters in HSP90 binding cavity</H1>
-In this tutorial, you will estimate the possition of the waters in the binding cavity of N-terminal domain of HSP90 with a small fragment bound<sup>1</sup>. To acchieve this we will use the JAWS<sup>2</sup> technique.
+In this tutorial, you will estimate the position of the waters in the binding cavity of N-terminal domain of HSP90 with a small fragment bound<sup>1</sup>. To achieve this we will use the JAWS<sup>2</sup> technique.
 <p>To come back to the tutorial index, click <a href="../tutorials.html">here</a>.
 <H3>Prerequisites</H3>
 <ul>
 	<li><code>fragment.pdb</code> - the structure of the small fragment molecule in PDB format</li>
 	<li><code>protein.pdb</code> - the structure of the N-terminal domain of HSP90 in PDB format</li>
 </ul>
-Both the fragment and protein need to be prepared before they are used with ProtoMS. For instance, you must make sure that they are protonated. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
+Both the fragment and protein need to be prepared before they are used with ProtoMS. For instance, you must make sure that they are correctly protonated. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
 <p>
 <hr align="center"/>
 <h3>Simple setup</h3>
 <h5>Setup</h5>
-The simplest way to setup the simulation is by typing the following
+The simplest way to set up the simulation is by typing the following
 </p>
 <p>
 <pre>python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb </pre>
@@ -42,11 +42,11 @@ To run the simulation you need to execute
 The calculations will take approximately 10 h to complete.
 <p>
 <h5>Analysis</h5>
-When the simulations are finished you need to analyse the simulation and conclude on a location for the waters in the binding site. We shold start by separating the global pdb of your simulation into individual snapshots. Go to the directory called out and run:
+When the simulations are finished you need to analyse the simulation and conclude on a location for the waters in the binding site. We should start by separating the global pdb of your simulation into individual snapshots. Go to the directory called <code>out</code> and run:
 <pre>
 python2.7 $PROTOMSHOME/tools/divide_pdb.py
 </pre>
-and then, to visualize the positions of the waters at one given point in the simultion, for example, at the middle of your production run, type:
+and then, to visualize the positions of the waters at one given point in the simulation, for example, at the middle of your production run, type:
 <pre>
 vmd snapshot_200.pdb
 </pre>
@@ -109,7 +109,7 @@ by typing for instance
 you will run 10 m equiliration steps and 50 m production steps (instead of the 5 m and 40 m that is default)
 <p>
 <h5>Running independent repeats</h5>
-Usually it is wise to run several indepent repeats of your calculation to check for convergence. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
+Usually it is wise to run several independent repeats of your calculation to check for convergence. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
 <p>
 by typing for instance
 <p>
@@ -216,11 +216,11 @@ this will create a droplet with 30 A radius centred on the fragment molecule. Th
 <li> The <code>solvate.py</code> script adds the crystallographic waters from the scoop to the droplet. Therefore, we need to remove them from the scoop PDB-file, to avoid duplicates.<p> 
 <pre>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</pre>
 <p>
-<li>Next we need to create the set of waters that will form our jaws-waters. This can be done by typing:
+<li>Next we need to create the set of waters that will form our JAWS-waters. This can be done by typing:
 <pre>python2.7 $PROTOMSHOME/tools/distribute_waters.py -b 59 31 23 8 8 8 -m 10 -o jaws1_wat.pdb </pre>
 <p>
 with this command, the file <code>jaws1_water.pdb</code> will be generated. It will contain 10 water molecules (flag <code>-m</code>). The box dimensions to which the waters will be constrained are specified with the flag <code>-b</code>, and this information on the box limits is stored in the first line of the <code>jaws1_water.pdb</code> file.
-<li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the jaws-box. Do this by typing:
+<li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the JAWS-box. Do this by typing:
 <pre>python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b jaws1_wat.pdb -s water.pdb -o water_clr.pdb</pre>
 <p>Feel free to check the difference between <code>water.pdb</code> and <code>water_clr.pdb</code>, there may be a few less waters in the later, but there might be no difference at all.
 Now we have all the files need to run the simulation. As you noticed, there is some difference in the files produced with this step-by-step procedure and those created with <code>protoms.py</code>.
