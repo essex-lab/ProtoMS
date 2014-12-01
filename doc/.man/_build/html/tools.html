@@ -55,8 +55,10 @@
 <li><a class="reference internal" href="#ambertools-py">ambertools.py</a></li>
 <li><a class="reference internal" href="#build-template-py">build_template.py</a></li>
 <li><a class="reference internal" href="#calc-bar-py">calc_bar.py</a></li>
+<li><a class="reference internal" href="#calc-clusters-py">calc_clusters.py</a></li>
 <li><a class="reference internal" href="#calc-density-py">calc_density.py</a></li>
 <li><a class="reference internal" href="#calc-dg-py">calc_dg.py</a></li>
+<li><a class="reference internal" href="#calc-gcsingle-py">calc_gcsingle.py</a></li>
 <li><a class="reference internal" href="#calc-replicapath-py">calc_replicapath.py</a></li>
 <li><a class="reference internal" href="#calc-rmsd-py">calc_rmsd.py</a></li>
 <li><a class="reference internal" href="#calc-series-py">calc_series.py</a></li>
@@ -105,7 +107,7 @@
             
   <div class="section" id="tools">
 <h1>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
-<p>In the <tt class="docutils literal"><span class="pre">$PROTOMSHOME/tools</span></tt> folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the <tt class="docutils literal"><span class="pre">protoms.py</span></tt> setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at this page.</p>
+<p>In the <tt class="docutils literal"><span class="pre">$PROTOMSHOME/tools</span></tt> folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the <tt class="docutils literal"><span class="pre">protoms.py</span></tt> setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at the Python code manual in the <tt class="docutils literal"><span class="pre">.doc</span></tt> folder.</p>
 <div class="section" id="ambertools-py">
 <h2>ambertools.py<a class="headerlink" href="#ambertools-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
@@ -278,6 +280,62 @@ done
 </pre></div>
 </div>
 </div>
+<div class="section" id="calc-clusters-py">
+<h2>calc_clusters.py<a class="headerlink" href="#calc-clusters-py" title="Permalink to this headline">¶</a></h2>
+<p><strong>Syntax:</strong></p>
+<p><tt class="docutils literal"><span class="pre">calc_clusters.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-m</span> <span class="pre">molecule]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-t</span> <span class="pre">type]</span> <span class="pre">[-c</span> <span class="pre">cutoff]</span></tt></p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
+<dd><p class="first last">at least one file needs to be specified
+can read a PDB trajectory</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the produced clusters in PDB format</dt>
+<dd><p class="first last">optional, clusters.pdb</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">molecuke</span></tt> = the name of the molecule to cluster</dt>
+<dd><p class="first last">optional, default = wat</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">-a</span> <span class="pre">atom</span></tt> = the name of the atom in the residue to cluster</dt>
+<dd><p class="first last">optional, no default
+if not specified, the entire molecule will be clustered</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">type</span></tt> = the clustering algorith</dt>
+<dd><p class="first last">optional, default = average
+can be any of average, single, complete, weighted and centroid</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">cutoff</span></tt> = the cluster cut-off</dt>
+<dd><p class="first last">optional, default = 2.0 A</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre>calc_clusters.py -f all.pdb
+calc_clusters.py -f all.pdb all2.pdb
+calc_clusters.py -f all.pdb -o all_clusters.pdb
+calc_clusters.py -f all.pdb -t complete
+</pre></div>
+</div>
+<p><strong>Description:</strong></p>
+<p>This tool cluster molecules from a simulation</p>
+<p>It will extract the coordinates of all atoms with name equal to <tt class="docutils literal"><span class="pre">atom</span></tt> in residues with name equal to <tt class="docutils literal"><span class="pre">molecule</span></tt> in all input files and cluster them using the selected algorithm.  If no atom is specified, the entire molecule will be clustered. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
+</div>
 <div class="section" id="calc-density-py">
 <h2>calc_density.py<a class="headerlink" href="#calc-density-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
@@ -285,7 +343,8 @@ done
 <ul>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
-<dd><p class="first last">at least one file needs to be specified</p>
+<dd><p class="first last">at least one file needs to be specified
+can read a PDB trajectory</p>
 </dd>
 </dl>
 </li>
@@ -447,6 +506,31 @@ calc_dg.py -d out_free1/ out_free2/ out_free3/ -e ti bar
 <p>The program expects that in the <tt class="docutils literal"><span class="pre">directory</span></tt>, <tt class="docutils literal"><span class="pre">directory2</span></tt> etc. there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <tt class="docutils literal"><span class="pre">lam-0.000</span></tt> and <tt class="docutils literal"><span class="pre">lam-1.000</span></tt></p>
 <p>If the <tt class="docutils literal"><span class="pre">-gr</span></tt> flag is set the gradient with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> is plotted and saved to a file called <tt class="docutils literal"><span class="pre">gradient.png</span></tt></p>
 <p>The MBAR estimator only works if PyMBAR is properly installed and can be loaded as a python library.</p>
+</div>
+<div class="section" id="calc-gcsingle-py">
+<h2>calc_gcsingle.py<a class="headerlink" href="#calc-gcsingle-py" title="Permalink to this headline">¶</a></h2>
+<p><strong>Syntax:</strong></p>
+<p><tt class="docutils literal"><span class="pre">calc_gcsingle.py</span> <span class="pre">-d</span> <span class="pre">directories</span> <span class="pre">[-f</span> <span class="pre">file]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-r</span> <span class="pre">A</span> <span class="pre">B]</span> <span class="pre">[--plot]</span></tt></p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">-d</span> <span class="pre">directories</span></tt> = the output directories from GCMC</li>
+<li><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file</span></tt> = the name of ProtoMS results file
+optional, default =results</li>
+<li><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></tt> = the number of initial snapshots to discard
+optional, default = 0</li>
+<li><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">A</span> <span class="pre">B</span></tt> = the range of the Adams value to make the estimate on
+optional
+if not set the program will use all data</li>
+<li><tt class="docutils literal"><span class="pre">--plot</span></tt> = whether to plot the estimated excess chemical potential
+optional, default = yes</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre>calc_gcsingle.py -d out_gcmc
+calc_gcsingle.py -d out_gcmc -s 100
+calc_gcsingle.py -d out_gcmc -r -8 -12
+</pre></div>
+</div>
+<p><strong>Description:</strong></p>
+<p>This tool analyse and plot free energies from GCMC simulations</p>
 </div>
 <div class="section" id="calc-replicapath-py">
 <h2>calc_replicapath.py<a class="headerlink" href="#calc-replicapath-py" title="Permalink to this headline">¶</a></h2>
@@ -1082,7 +1166,7 @@ make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -
 <p>The program will automatically try to match atoms in <tt class="docutils literal"><span class="pre">template0</span></tt> with atoms in <tt class="docutils literal"><span class="pre">template1</span></tt>. It will do this by looking for atoms with the same atom type that are on top of each other in <tt class="docutils literal"><span class="pre">pdbfile0</span></tt> and <tt class="docutils literal"><span class="pre">pdbfile1</span></tt>. A cut-off of 0.02 A2 will be used for this. All atoms that cannot be identified in this way are written to the screen and the user has to enter the corresponding atoms. If no corresponding atom exists, i.e., the atom should be perturbed to a dummy, the user may enter blank.</p>
 <p>The user may also write the corresponding atoms to a file and provide it as <tt class="docutils literal"><span class="pre">map</span></tt> above. In this file there should be one atom pair on each line, separated by white-space. A dummy atom should be denoted as <tt class="docutils literal"><span class="pre">DUM</span></tt>. If <tt class="docutils literal"><span class="pre">map</span></tt> is not given, the program will write the created correspondence map to a file based on the <tt class="docutils literal"><span class="pre">outfile</span></tt> string.</p>
 <p>Currently, dummy atoms are not supported in the solute at <img class="math" src="_images/math/3d52aae84bb4dafbecb3cbaa1d1f3c34d2f0b067.png" alt="\lambda=0.0"/>. Therefore, this solute needs to be the larger one.</p>
-<p>The tool will write two ProtoMS template files, one for the electrostatic perturbation and one for the van der Waals perturbation. These template files will end in <tt class="docutils literal"><span class="pre">_ele.tem</span></tt> and <tt class="docutils literal"><span class="pre">_vdw.tem</span></tt> respectively.</p>
+<p>The tool will write two ProtoMS template files, one for the electrostatic perturbation, one for the van der Waals perturbation and one for the combined perturbation. These template files will end in <tt class="docutils literal"><span class="pre">_ele.tem</span></tt>, <tt class="docutils literal"><span class="pre">_vdw.tem</span></tt>, <tt class="docutils literal"><span class="pre">_comb.tem</span></tt> respectively.</p>
 <p>A summary of the charges and van der Waals parameters in the four states will be printed to the screen. This information should be checked carefully.</p>
 </div>
 <div class="section" id="merge-templates-py">
@@ -1144,6 +1228,12 @@ make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">--run</span></tt> = flag indicating if to run pymbar</dt>
+<dd><p class="first last">optional, default = No</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">--nobar</span></tt> = flag indicating if to estimate BAR</dt>
 <dd><p class="first last">optional, default = No</p>
 </dd>
 </dl>

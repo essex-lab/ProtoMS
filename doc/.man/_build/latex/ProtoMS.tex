@@ -2563,7 +2563,7 @@ ProtoMS will use the solute name to find the solute template for this molecule, 
 
 \section{GCsolute File}
 \label{protoms:gcpdb}\label{protoms:gcsolute-file}
-GCsolute input files are very similar to protein input files, except that multiple GCsolutes can be loaded at once. GCsolute files are standard PDB format coordinate files. An example is shown below in figure 3.15 The name of each solvent molecule is taken from the residue name, and it is this name that is used to locate the template for each GCsolute molecule.
+GCsolute input files are very similar to protein input files, except that multiple GCsolutes can be loaded at once. GCsolute files are standard PDB format coordinate files. The name of each solvent molecule is taken from the residue name, and it is this name that is used to locate the template for each GCsolute molecule.
 
 
 \section{Solvent File}
@@ -2656,12 +2656,12 @@ Just Add Waters, stage 1 and 2 (JAWS-1, JAWS-2)
 
 \end{itemize}
 
-The program will create files and inputs based on experience that should work in most situations. However there might be situations where the created settings are not appropriate. One can then use individual tools to make a more custom setup, see this . One might also have to edit the files manually.
+The program will create files and inputs based on experience that should work in most situations. However there might be situations where the created settings are not appropriate. One can then use individual tools to make a more custom setup, see this. One might also have to edit the files manually.
 
 \textbf{Syntax:}
 \begin{quote}
 
-\code{protoms.py {[}-s none\textbar{}equilibration\textbar{}sampling\textbar{}dualtopology\textbar{}singletopology\textbar{}gcmc\textbar{}jaws1\textbar{}jaws2{]} {[}-f folder1 folder2{]} {[}-p protein.pdb{]} {[}-o scoop.pdb{]} {[}-l lig1.pdb lig2.pdb ...{]} {[}-t template1 template2 ...{]} {[}-w water.pdb{]} {[}-c cmdfile{]} {[}-r nrepeats \textbar{} prefix{]} {[}-{-}outfolder folder{]} {[}-{-}atomnames namefile{]} {[}-{-}watmodel tip4p\textbar{}tip3p{]} {[}-{-}waterbox watbox{]} {[}-{-}charge charge1 charge2{]} {[}-{-}singlemap mapfile{]}  {[}-{-}center cent{]} {[}-{-}innercut icut{]} {[}-{-}outercut ocut{]} {[}-{-}flexin sidechain\textbar{}flexible\textbar{}rigid{]} {[}-{-}flexout sidechain\textbar{}flexible\textbar{}rigid{]} {[}-{-}scooplimit N{]} {[}-{-}capradius radius{]} {[}-{-}lambdas nlambdas \textbar{} lambda1 lambda2 ...{]} {[}-{-}adams B1 B2 ...{]} {[}-{-}jawsbias bias{]} {[}-{-}gcmcwater wat.pdb{]} {[}-{-}gcmcbox box.pdb{]} {[}-{-}nequil N{]} {[}-{-}nprod N{]} {[}-{-}dumpfreq N{]} {[}-{-}absolute{]} {[}-{-}dovacuum{]} {[}-{-}testrun{]}}
+\code{protoms.py {[}-s none\textbar{}equilibration\textbar{}sampling\textbar{}dualtopology\textbar{}singletopology\textbar{}gcmc\textbar{}jaws1\textbar{}jaws2{]} {[}-f folder1 folder2{]} {[}-p protein.pdb{]} {[}-sc scoop.pdb{]} {[}-l lig1.pdb lig2.pdb ...{]} {[}-t template1 template2 ...{]} {[}-w water.pdb{]} {[}-c cmdfile{]} {[}-r nrepeats \textbar{} prefix{]} {[}-{-}outfolder folder{]} {[}-{-}atomnames namefile{]} {[}-{-}watmodel tip4p\textbar{}tip3p{]} {[}-{-}waterbox watbox{]} {[}-{-}charge charge1 charge2{]} {[}-{-}singlemap mapfile{]}  {[}-{-}center cent{]} {[}-{-}innercut icut{]} {[}-{-}outercut ocut{]} {[}-{-}flexin sidechain\textbar{}flexible\textbar{}rigid{]} {[}-{-}flexout sidechain\textbar{}flexible\textbar{}rigid{]} {[}-{-}scooplimit N{]} {[}-{-}capradius radius{]} {[}-{-}lambdas nlambdas \textbar{} lambda1 lambda2 ...{]} {[}-{-}adams B1 B2 ...{]} {[}-{-}jawsbias bias{]} {[}-{-}gcmcwater wat.pdb \textbar{} N{]} {[}-{-}gcmcbox box.pdb \textbar{} X Y Z A B C{]} {[}-{-}nequil N{]} {[}-{-}nprod N{]} {[}-{-}dumpfreq N{]} {[}-{-}absolute{]} {[}-{-}dovacuum{]} {[}-{-}testrun{]} {[}-{-}cleanup{]}}
 \end{quote}
 \begin{itemize}
 \item {} \begin{description}
@@ -2827,14 +2827,16 @@ optional, default = 0
 \end{description}
 
 \item {} \begin{description}
-\item[{\code{-{-}gcmcwater wat.pdb} = the name of a PDB file with reservoir waters for GCMC and JAWS-1}] \leavevmode
+\item[{\code{-{-}gcmcwater wat.pdb \textbar{} N} = the name of a PDB file with reservoir waters for GCMC and JAWS-1 or an integer}] \leavevmode
 optional, no default
+if an integer is given this corresponds to the number of water to add to the GCMC/JAWS-1 box
 
 \end{description}
 
 \item {} \begin{description}
-\item[{\code{-{-}gcmcbox box.pdb} = the name of a PDB file with GCMC or JAWS-1 simulation box dimension}] \leavevmode
+\item[{\code{-{-}gcmcbox box.pdb \textbar{} X Y X A B C} = the name of a PDB file with GCMC or JAWS-1 simulation box dimension or the box dimensions}] \leavevmode
 optional, no default
+if six numbers are given this corresponds to the origin (first three) and the length (last three) of the box
 
 \end{description}
 
@@ -2870,6 +2872,12 @@ optional, default = off
 
 \item {} \begin{description}
 \item[{\code{-{-}testrun} = turns \emph{on} the setup of a short simulations appropiate for tests}] \leavevmode
+optional, default = off
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-{-}cleanup} = cleans up extraenous files and put them in a tar-ball}] \leavevmode
 optional, default = off
 
 \end{description}
@@ -2945,6 +2953,9 @@ In addition, for single-topology simulations the following files are created:
 \item {} 
 \code{li1-li2\_vdw.tem} = the ProtoMS template file for van der Waals single-topology perturbation
 
+\item {} 
+\code{li1-li2\_comb.tem} = the ProtoMS template file for combined/single-step single-topology perturbation
+
 \item {} \begin{description}
 \item[{\code{settings.singlemap} = the created correspondance map for single topology}] \leavevmode
 only named like this if the --singlemap argument is not set
@@ -2990,14 +3001,14 @@ It will create at most three ProtoMS command files, one for the protein simulati
 
 \textbf{Prerequisites:}
 
-The program assumes that both the ligand and the protein is prepared before. This includes for instance protonation. One can read more about setting up ligands and proteins here.
+The program assumes that both the ligand and the protein is prepared before. This includes for instance protonation. At the moment \emph{only} Amber naming convention is supported.
 
 The progam requires AmberTools to make force field for small molecules.
 
 
 \chapter{Tools}
 \label{tools:tools}\label{tools::doc}
-In the \code{\$PROTOMSHOME/tools} folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the \code{protoms.py} setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at this page.
+In the \code{\$PROTOMSHOME/tools} folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the \code{protoms.py} setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at the Python code manual in the \code{.doc} folder.
 
 
 \section{ambertools.py}
@@ -3200,6 +3211,69 @@ done
 \end{Verbatim}
 
 
+\section{calc\_clusters.py}
+\label{tools:calc-clusters-py}
+\textbf{Syntax:}
+
+\code{calc\_clusters.py -f file1 {[}file2 ...{]}  {[}-o outfile{]} {[}-m molecule{]} {[}-a atom{]} {[}-t type{]} {[}-c cutoff{]}}
+\begin{itemize}
+\item {} \begin{description}
+\item[{\code{-f file1 file2} ... = name(s) of PDB-file(s) containing simulation snapshots}] \leavevmode
+at least one file needs to be specified
+can read a PDB trajectory
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-o outfile} = the produced clusters in PDB format}] \leavevmode
+optional, clusters.pdb
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-m molecuke} = the name of the molecule to cluster}] \leavevmode
+optional, default = wat
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-a atom} = the name of the atom in the residue to cluster}] \leavevmode
+optional, no default
+if not specified, the entire molecule will be clustered
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-t type} = the clustering algorith}] \leavevmode
+optional, default = average
+can be any of average, single, complete, weighted and centroid
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-c cutoff} = the cluster cut-off}] \leavevmode
+optional, default = 2.0 A
+
+\end{description}
+
+\end{itemize}
+
+\textbf{Examples:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+calc\PYGZus{}clusters.py \PYGZhy{}f all.pdb
+calc\PYGZus{}clusters.py \PYGZhy{}f all.pdb all2.pdb
+calc\PYGZus{}clusters.py \PYGZhy{}f all.pdb \PYGZhy{}o all\PYGZus{}clusters.pdb
+calc\PYGZus{}clusters.py \PYGZhy{}f all.pdb \PYGZhy{}t complete
+\end{Verbatim}
+
+\textbf{Description:}
+
+This tool cluster molecules from a simulation
+
+It will extract the coordinates of all atoms with name equal to \code{atom} in residues with name equal to \code{molecule} in all input files and cluster them using the selected algorithm.  If no atom is specified, the entire molecule will be clustered. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.
+
+
 \section{calc\_density.py}
 \label{tools:calc-density-py}
 \textbf{Syntax:}
@@ -3209,6 +3283,7 @@ done
 \item {} \begin{description}
 \item[{\code{-f file1 file2} ... = name(s) of PDB-file(s) containing simulation snapshots}] \leavevmode
 at least one file needs to be specified
+can read a PDB trajectory
 
 \end{description}
 
@@ -3388,6 +3463,47 @@ The program expects that in the \code{directory}, \code{directory2} etc. there e
 If the \code{-gr} flag is set the gradient with respect to \(\lambda\) is plotted and saved to a file called \code{gradient.png}
 
 The MBAR estimator only works if PyMBAR is properly installed and can be loaded as a python library.
+
+
+\section{calc\_gcsingle.py}
+\label{tools:calc-gcsingle-py}
+\textbf{Syntax:}
+
+\code{calc\_gcsingle.py -d directories {[}-f file{]} {[}-s nskip{]} {[}-r A B{]} {[}-{-}plot{]}}
+\begin{itemize}
+\item {} 
+\code{-d directories} = the output directories from GCMC
+
+\item {} 
+\code{-f file} = the name of ProtoMS results file
+optional, default =results
+
+\item {} 
+\code{-s nskip} = the number of initial snapshots to discard
+optional, default = 0
+
+\item {} 
+\code{-r A B} = the range of the Adams value to make the estimate on
+optional
+if not set the program will use all data
+
+\item {} 
+\code{-{-}plot} = whether to plot the estimated excess chemical potential
+optional, default = yes
+
+\end{itemize}
+
+\textbf{Examples:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+calc\PYGZus{}gcsingle.py \PYGZhy{}d out\PYGZus{}gcmc
+calc\PYGZus{}gcsingle.py \PYGZhy{}d out\PYGZus{}gcmc \PYGZhy{}s 100
+calc\PYGZus{}gcsingle.py \PYGZhy{}d out\PYGZus{}gcmc \PYGZhy{}r \PYGZhy{}8 \PYGZhy{}12
+\end{Verbatim}
+
+\textbf{Description:}
+
+This tool analyse and plot free energies from GCMC simulations
 
 
 \section{calc\_replicapath.py}
@@ -4159,7 +4275,7 @@ The user may also write the corresponding atoms to a file and provide it as \cod
 
 Currently, dummy atoms are not supported in the solute at \(\lambda=0.0\). Therefore, this solute needs to be the larger one.
 
-The tool will write two ProtoMS template files, one for the electrostatic perturbation and one for the van der Waals perturbation. These template files will end in \code{\_ele.tem} and \code{\_vdw.tem} respectively.
+The tool will write two ProtoMS template files, one for the electrostatic perturbation, one for the van der Waals perturbation and one for the combined perturbation. These template files will end in \code{\_ele.tem}, \code{\_vdw.tem}, \code{\_comb.tem} respectively.
 
 A summary of the charges and van der Waals parameters in the four states will be printed to the screen. This information should be checked carefully.
 
@@ -4235,6 +4351,12 @@ optional, default = 25 degrees
 
 \item {} \begin{description}
 \item[{\code{-{-}run} = flag indicating if to run pymbar}] \leavevmode
+optional, default = No
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-{-}nobar} = flag indicating if to estimate BAR}] \leavevmode
 optional, default = No
 
 \end{description}

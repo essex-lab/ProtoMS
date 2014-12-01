@@ -92,10 +92,10 @@
 <li>Grand Canonical Monte Carlo (GCMC)</li>
 <li>Just Add Waters, stage 1 and 2 (JAWS-1, JAWS-2)</li>
 </ul>
-<p>The program will create files and inputs based on experience that should work in most situations. However there might be situations where the created settings are not appropriate. One can then use individual tools to make a more custom setup, see this . One might also have to edit the files manually.</p>
+<p>The program will create files and inputs based on experience that should work in most situations. However there might be situations where the created settings are not appropriate. One can then use individual tools to make a more custom setup, see <a class="reference external" href="tools.html">this</a>. One might also have to edit the files manually.</p>
 <p><strong>Syntax:</strong></p>
 <blockquote>
-<div><tt class="docutils literal"><span class="pre">protoms.py</span> <span class="pre">[-s</span> <span class="pre">none|equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2]</span> <span class="pre">[-f</span> <span class="pre">folder1</span> <span class="pre">folder2]</span> <span class="pre">[-p</span> <span class="pre">protein.pdb]</span> <span class="pre">[-o</span> <span class="pre">scoop.pdb]</span> <span class="pre">[-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...]</span> <span class="pre">[-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...]</span> <span class="pre">[-w</span> <span class="pre">water.pdb]</span> <span class="pre">[-c</span> <span class="pre">cmdfile]</span> <span class="pre">[-r</span> <span class="pre">nrepeats</span> <span class="pre">|</span> <span class="pre">prefix]</span> <span class="pre">[--outfolder</span> <span class="pre">folder]</span> <span class="pre">[--atomnames</span> <span class="pre">namefile]</span> <span class="pre">[--watmodel</span> <span class="pre">tip4p|tip3p]</span> <span class="pre">[--waterbox</span> <span class="pre">watbox]</span> <span class="pre">[--charge</span> <span class="pre">charge1</span> <span class="pre">charge2]</span> <span class="pre">[--singlemap</span> <span class="pre">mapfile]</span>&nbsp; <span class="pre">[--center</span> <span class="pre">cent]</span> <span class="pre">[--innercut</span> <span class="pre">icut]</span> <span class="pre">[--outercut</span> <span class="pre">ocut]</span> <span class="pre">[--flexin</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--flexout</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--scooplimit</span> <span class="pre">N]</span> <span class="pre">[--capradius</span> <span class="pre">radius]</span> <span class="pre">[--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambda2</span> <span class="pre">...]</span> <span class="pre">[--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...]</span> <span class="pre">[--jawsbias</span> <span class="pre">bias]</span> <span class="pre">[--gcmcwater</span> <span class="pre">wat.pdb]</span> <span class="pre">[--gcmcbox</span> <span class="pre">box.pdb]</span> <span class="pre">[--nequil</span> <span class="pre">N]</span> <span class="pre">[--nprod</span> <span class="pre">N]</span> <span class="pre">[--dumpfreq</span> <span class="pre">N]</span> <span class="pre">[--absolute]</span> <span class="pre">[--dovacuum]</span> <span class="pre">[--testrun]</span></tt></div></blockquote>
+<div><tt class="docutils literal"><span class="pre">protoms.py</span> <span class="pre">[-s</span> <span class="pre">none|equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2]</span> <span class="pre">[-f</span> <span class="pre">folder1</span> <span class="pre">folder2]</span> <span class="pre">[-p</span> <span class="pre">protein.pdb]</span> <span class="pre">[-sc</span> <span class="pre">scoop.pdb]</span> <span class="pre">[-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...]</span> <span class="pre">[-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...]</span> <span class="pre">[-w</span> <span class="pre">water.pdb]</span> <span class="pre">[-c</span> <span class="pre">cmdfile]</span> <span class="pre">[-r</span> <span class="pre">nrepeats</span> <span class="pre">|</span> <span class="pre">prefix]</span> <span class="pre">[--outfolder</span> <span class="pre">folder]</span> <span class="pre">[--atomnames</span> <span class="pre">namefile]</span> <span class="pre">[--watmodel</span> <span class="pre">tip4p|tip3p]</span> <span class="pre">[--waterbox</span> <span class="pre">watbox]</span> <span class="pre">[--charge</span> <span class="pre">charge1</span> <span class="pre">charge2]</span> <span class="pre">[--singlemap</span> <span class="pre">mapfile]</span>&nbsp; <span class="pre">[--center</span> <span class="pre">cent]</span> <span class="pre">[--innercut</span> <span class="pre">icut]</span> <span class="pre">[--outercut</span> <span class="pre">ocut]</span> <span class="pre">[--flexin</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--flexout</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--scooplimit</span> <span class="pre">N]</span> <span class="pre">[--capradius</span> <span class="pre">radius]</span> <span class="pre">[--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambda2</span> <span class="pre">...]</span> <span class="pre">[--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...]</span> <span class="pre">[--jawsbias</span> <span class="pre">bias]</span> <span class="pre">[--gcmcwater</span> <span class="pre">wat.pdb</span> <span class="pre">|</span> <span class="pre">N]</span> <span class="pre">[--gcmcbox</span> <span class="pre">box.pdb</span> <span class="pre">|</span> <span class="pre">X</span> <span class="pre">Y</span> <span class="pre">Z</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C]</span> <span class="pre">[--nequil</span> <span class="pre">N]</span> <span class="pre">[--nprod</span> <span class="pre">N]</span> <span class="pre">[--dumpfreq</span> <span class="pre">N]</span> <span class="pre">[--absolute]</span> <span class="pre">[--dovacuum]</span> <span class="pre">[--testrun]</span> <span class="pre">[--cleanup]</span></tt></div></blockquote>
 <ul>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">none|equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2</span></tt> = the type of simulation to perform</dt>
@@ -260,14 +260,16 @@ if a list of values are given, this is the <img class="math" src="_images/math/1
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><tt class="docutils literal"><span class="pre">--gcmcwater</span> <span class="pre">wat.pdb</span></tt> = the name of a PDB file with reservoir waters for GCMC and JAWS-1</dt>
-<dd><p class="first last">optional, no default</p>
+<dt><tt class="docutils literal"><span class="pre">--gcmcwater</span> <span class="pre">wat.pdb</span> <span class="pre">|</span> <span class="pre">N</span></tt> = the name of a PDB file with reservoir waters for GCMC and JAWS-1 or an integer</dt>
+<dd><p class="first last">optional, no default
+if an integer is given this corresponds to the number of water to add to the GCMC/JAWS-1 box</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><tt class="docutils literal"><span class="pre">--gcmcbox</span> <span class="pre">box.pdb</span></tt> = the name of a PDB file with GCMC or JAWS-1 simulation box dimension</dt>
-<dd><p class="first last">optional, no default</p>
+<dt><tt class="docutils literal"><span class="pre">--gcmcbox</span> <span class="pre">box.pdb</span> <span class="pre">|</span> <span class="pre">X</span> <span class="pre">Y</span> <span class="pre">X</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span></tt> = the name of a PDB file with GCMC or JAWS-1 simulation box dimension or the box dimensions</dt>
+<dd><p class="first last">optional, no default
+if six numbers are given this corresponds to the origin (first three) and the length (last three) of the box</p>
 </dd>
 </dl>
 </li>
@@ -303,6 +305,12 @@ if a list of values are given, this is the <img class="math" src="_images/math/1
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">--testrun</span></tt> = turns <em>on</em> the setup of a short simulations appropiate for tests</dt>
+<dd><p class="first last">optional, default = off</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">--cleanup</span></tt> = cleans up extraenous files and put them in a tar-ball</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
@@ -362,6 +370,8 @@ protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6
 </li>
 <li><p class="first"><tt class="docutils literal"><span class="pre">li1-li2_vdw.tem</span></tt> = the ProtoMS template file for van der Waals single-topology perturbation</p>
 </li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">li1-li2_comb.tem</span></tt> = the ProtoMS template file for combined/single-step single-topology perturbation</p>
+</li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">settings.singlemap</span></tt> = the created correspondance map for single topology</dt>
 <dd><p class="first last">only named like this if the &#8211;singlemap argument is not set</p>
@@ -393,7 +403,7 @@ protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6
 </pre></div>
 </div>
 <p><strong>Prerequisites:</strong></p>
-<p>The program assumes that both the ligand and the protein is prepared before. This includes for instance protonation. One can read more about setting up ligands and proteins here.</p>
+<p>The program assumes that both the ligand and the protein is prepared before. This includes for instance protonation. At the moment <em>only</em> Amber naming convention is supported.</p>
 <p>The progam requires AmberTools to make force field for small molecules.</p>
 </div>
 
