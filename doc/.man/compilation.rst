@@ -41,14 +41,16 @@ ProtoMS is written in slightly extended Fortran 77. The extensions used are
 
 * The ``Date`` and ``Time`` Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in ``getoptions.F``, though you will need to provide a random number seed manually.
 
-ProtoMS has been written using the GNU Fortran compiler, g77, version 3.3.4, on the Linux operating system. ProtoMS is thus known to work well with g77 and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use g77 of ifort with ProtoMS.
-
 The tools are written in python and should be compatible with the standard implementation version 2.7. It is known that is does not work with 2.6 and it has not been tested with version 3.0 or more.
 
 =================
 Building ProtoMS
 =================
 
-Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of ``make`` that supports the GNU Makefile format. Simply go into the ``src`` directory and edit the ``Makefile`` that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the ``Makefile`` you can then run ``make``. After about 5 minutes, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called ``protoms3`` on UNIX/Linux, and ``protoms2.exe`` on Windows. This executable should be run from the command line, or via a script. You should then change into the example directory and try out some of the examples. You should also try some of the tests as well to ensure that your version of ProtoMS is working correctly.
+ProtoMS has been written using the GNU Fortran compilers, on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.
+
+You also need the OpenMPI package as ProtoMS contains instructions that operates on multiple processes. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77
+
+Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of ``make`` that supports the GNU Makefile format. Simply go into the ``src`` directory and edit the ``Makefile`` that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the ``Makefile`` you can then run ``make``. After about a minute, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called ``protoms3`` on UNIX/Linux. This executable should be run from the command line, or via a script.
 
 

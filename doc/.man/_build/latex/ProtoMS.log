@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.11.14)  24 NOV 2014 16:51
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.11.13)  1 DEC 2014 10:46
 entering extended mode
  %&-line parsing enabled.
 **ProtoMS.tex
@@ -623,10 +623,6 @@ Package: parskip 2001/04/09 non-zero parskip adjustments
 (/usr/share/texmf/tex/latex/base/alltt.sty
 Package: alltt 1997/06/16 v2.0g defines alltt environment
 )
-(/usr/share/texmf/tex/latex/upquote/upquote.sty
-Package: upquote 2003/08/11 v1.1 Covington's upright-quote modification to verb
-atim and verb
-)
 (/usr/share/texmf/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
@@ -708,17 +704,6 @@ File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
 Package: hypcap 2006/02/20 v1.5 Adjusting anchors of captions (HO)
 )
 \DUlineblockindent=\skip74
-
-(/usr/share/texmf/tex/latex/float/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count121
-\float@exts=\toks31
-\float@box=\box40
-\@float@everytoks=\toks32
-\@floatcapt=\box41
-)
-\@float@every@literal-block=\toks33
-\c@literal-block=\count122
 )
 (/usr/share/texmf/tex/latex/multirow/multirow.sty
 \bigstrutjot=\dimen137
@@ -731,33 +716,33 @@ Writing index file ProtoMS.idx
 (./ProtoMS.aux)
 \openout1 = `ProtoMS.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 121.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 121.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 117.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 117.
 
  (/usr/share/texmf/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 121.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 117.
+LaTeX Font Info:    ... okay on input line 117.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 117.
 
 (/usr/share/texmf/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
-Package hyperref Info: Link coloring ON on input line 121.
+Package hyperref Info: Link coloring ON on input line 117.
 
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
@@ -765,37 +750,44 @@ Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
 (/usr/share/texmf/tex/latex/oberdiek/refcount.sty
 Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
-\c@section@level=\count123
+\c@section@level=\count121
 )
-LaTeX Info: Redefining \ref on input line 121.
-LaTeX Info: Redefining \pageref on input line 121.
+LaTeX Info: Redefining \ref on input line 117.
+LaTeX Info: Redefining \pageref on input line 117.
  (./ProtoMS.out)
 (./ProtoMS.out)
 \@outlinefile=\write6
 \openout6 = `ProtoMS.out'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 124--124
+Underfull \hbox (badness 10000) in paragraph at lines 120--120
 
  []
 
-LaTeX Font Info:    Try loading font information for T1+phv on input line 124.
+<logo.png, id=208, 510.90875pt x 361.35pt>
+File: logo.png Graphic file (type png)
+ <use logo.png>
+File: logo.png Graphic file (type png)
+ <use logo.png>
+LaTeX Font Info:    Try loading font information for T1+phv on input line 120.
+
 (/usr/share/texmf/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 120.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 124.
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 120.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 120.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 120.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 120.
  [1
 
-{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2
+{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map} <./logo.png (PNG copy)>] 
+[2
 
 ] (./ProtoMS.toc
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
@@ -808,23 +800,24 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
 \tf@toc=\write7
 \openout7 = `ProtoMS.toc'.
 
- [2] [1
+ [2]
+[1
 
 ] [2
 
 ]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 131.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 127.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 131.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 127.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 131.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 144.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 127.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 140.
 (/usr/share/texmf/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 156.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 152.
 
 
 (/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd
@@ -837,13 +830,13 @@ Chapter 2.
 Chapter 3.
 [7
 
-] <backbone.png, id=321, 1246.6575pt x 487.8225pt>
+] <backbone.png, id=323, 1246.6575pt x 487.8225pt>
 File: backbone.png Graphic file (type png)
  <use backbone.png>
 File: backbone.png Graphic file (type png)
 
 <use backbone.png> [8] [9 <./backbone.png (PNG copy)>] [10] [11] [12] [13]
-<alchemy.png, id=397, 803.0pt x 401.5pt>
+<alchemy.png, id=399, 803.0pt x 401.5pt>
 File: alchemy.png Graphic file (type png)
  <use alchemy.png>
 File: alchemy.png Graphic file (type png)
@@ -854,26 +847,19 @@ File: alchemy.png Graphic file (type png)
 Chapter 4.
 [21] [22]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 955.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 951.
  [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35]
-[36] [37] [38]
+[36]
 Chapter 5.
-LaTeX Font Info:    Try loading font information for TS1+pcr on input line 1922
-.
-(/usr/share/texmf/tex/latex/psnfss/ts1pcr.fd
-File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
-) [39
+[37
 
-] [40] [41] [42] [43] [44]
-[45] [46] [47] [48] [49] [50] [51]
+] [38] [39] [40] [41] [42] [43] [44] [45] [46] [47] [48]
 Underfull \hbox (badness 10000) in paragraph at lines 2540--2541
 []\T1/ptm/m/n/10 ProtoMS tries to fol-low the PDB for-mat when it reads in PDB 
 lines (see
  []
 
-[52] [53] [54] [55] [56
-
-]
+[49] [50] [51] [52]
 Chapter 6.
 
 Overfull \hbox (108.24506pt too wide) in paragraph at lines 2664--2665
@@ -951,7 +937,9 @@ Underfull \hbox (badness 10000) in paragraph at lines 2698--2700
 []
  []
 
-[57]
+[53
+
+]
 Underfull \hbox (badness 10000) in paragraph at lines 2780--2785
 []\T1/ptm/m/n/10 optional,
  []
@@ -978,12 +966,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 2836--2838
 
 LaTeX Font Info:    Font shape `T1/ptm/bx/it' in size <10> not available
 (Font)              Font shape `T1/ptm/b/it' tried instead on input line 2860.
-[58]
+[54]
 Underfull \hbox (badness 10000) in paragraph at lines 2933--2935
 []\T1/ptm/m/n/10 only cre-ated if the --
  []
 
-[59] [60]
+[55] [56]
 Chapter 7.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3007--3008
@@ -997,7 +985,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 3051--3052
 -o outfile] [-n
  []
 
-[61
+[57
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 3118--3119
@@ -1010,13 +998,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 3151--3153
 []\T1/ptm/m/n/10 optional, de-
  []
 
-[62]
+[58]
 Underfull \hbox (badness 10000) in paragraph at lines 3207--3208
 []\T1/pcr/m/n/10 calc_density.py -f file1 [file2 ...] [-o outfile] [-r residue]
  [-a atom] [-p
  []
 
-[63]
+[59]
 Underfull \hbox (badness 10000) in paragraph at lines 3296--3297
 []\T1/pcr/m/n/10 calc_dg.py [-d directory directory2 ...] [-r results] [-e ti|b
 ar|mbar]
@@ -1033,7 +1021,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 3337--3339
 []\T1/ptm/m/n/10 optional, de-
  []
 
-[64]
+[60]
 Underfull \hbox (badness 10000) in paragraph at lines 3397--3398
 []\T1/pcr/m/n/10 calc_replicapath.py -f file1 [file2 ...] -p replica1 [replica2
  ...] -k
@@ -1045,7 +1033,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 3446--3447
 m] [-t
  []
 
-[65]
+[61]
 Underfull \hbox (badness 10000) in paragraph at lines 3488--3489
 []\T1/pcr/m/n/10 calc_series.py -f file1 [file2 ...] [-o outprefix] [-s series 
 series2 ...]
@@ -1067,13 +1055,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 3538--3540
 []\T1/ptm/m/n/10 optional,
  []
 
-[66]
+[62]
 Underfull \hbox (badness 10000) in paragraph at lines 3575--3576
 []\T1/pcr/m/n/10 calc_ti.py [-d directory] [-r results] [-s nskip] [-m nmax] [-
 pg] [-pp] [-pl]
  []
 
-[67] [68]
+[63] [64]
 Underfull \hbox (badness 10000) in paragraph at lines 3803--3804
 []\T1/pcr/m/n/10 distribute_waters.py -b box -m molecules [-o outfile] [--model
  t3p|t4p ]
@@ -1084,7 +1072,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 3812--3814
 []\T1/ptm/m/n/10 optional, de-fault =
  []
 
-[69]
+
 Overfull \hbox (21.09084pt too wide) in paragraph at lines 3826--3828
 []
  []
@@ -1094,7 +1082,7 @@ Overfull \hbox (201.46878pt too wide) in paragraph at lines 3832--3834
 []
  []
 
-
+[65]
 Overfull \hbox (70.245pt too wide) in paragraph at lines 3897--3898
 []\T1/pcr/m/n/10 generate_input.py [-s equilibration|sampling|dualtopology|sing
 letopology|gcmc|jaws1|jaws2]
@@ -1129,7 +1117,7 @@ Overfull \hbox (132.06357pt too wide) in paragraph at lines 3900--3902
 []
  []
 
-[70]
+
 Underfull \hbox (badness 10000) in paragraph at lines 3918--3920
 []
  []
@@ -1139,7 +1127,7 @@ Overfull \hbox (19.64603pt too wide) in paragraph at lines 3948--3952
 []
  []
 
-
+[66]
 Underfull \hbox (badness 10000) in paragraph at lines 3968--3970
 []
  []
@@ -1149,19 +1137,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 3974--3976
 []
  []
 
-[71]
+[67]
 Underfull \hbox (badness 10000) in paragraph at lines 4116--4117
 []\T1/pcr/m/n/10 make_single.py -t0 template0 -t1 template1 -p0 pdbfile0 -p1 pd
 bfile1 [-m map]
  []
 
-[72] [73]
+[68]
 Underfull \hbox (badness 10000) in paragraph at lines 4198--4199
 []\T1/pcr/m/n/10 pms2pymbar.py [-d directory] [-r results] [-o outfile] [-s nsk
 ip] [-m nmax]
  []
 
-
+[69]
 Underfull \hbox (badness 10000) in paragraph at lines 4268--4269
 []\T1/pcr/m/n/10 scoop.py -p proteinfile [-l ligandfile] [-o outfile] [--center
  center]
@@ -1179,7 +1167,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 4268--4269
 |neutralize]
  []
 
-[74]
+
 Underfull \hbox (badness 10000) in paragraph at lines 4304--4309
 []\T1/ptm/m/n/10 optional,
  []
@@ -1194,7 +1182,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 4322--4327
 []
  []
 
-[75]
+[70]
 Underfull \hbox (badness 10000) in paragraph at lines 4377--4378
 []\T1/pcr/m/n/10 solvate.py -b boxfile [-s solutefile] [-pr proteinfile] [-o ou
 tfile] [-g
@@ -1205,19 +1193,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 4428--4432
 []\T1/ptm/m/n/10 optional, de-fault = Pro-toMS
  []
 
-[76] (./ProtoMS.ind [77] [78
+[71] [72] (./ProtoMS.ind [73] [74
 
-] [79
+] [75
 
-] [80
+] [76
 
 ]) (./ProtoMS.aux) ) 
 Here is how much of TeX's memory you used:
- 6842 strings out of 256216
- 88008 string characters out of 1917071
- 160849 words of memory out of 1500000
- 9681 multiletter control sequences out of 10000+200000
- 68804 words of font info for 73 fonts, out of 1200000 for 2000
+ 6744 strings out of 256216
+ 86597 string characters out of 1917071
+ 159029 words of memory out of 1500000
+ 9598 multiletter control sequences out of 10000+200000
+ 68511 words of font info for 72 fonts, out of 1200000 for 2000
  646 hyphenation exceptions out of 8191
  38i,18n,51p,1869b,513s stack positions out of 5000i,500n,6000p,200000b,15000s
 {/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/t
@@ -1234,9 +1222,9 @@ b></usr/share/texmf/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf/fonts
 /type1/urw/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmbi8a.pfb
 ></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on ProtoMS.pdf (84 pages, 668207 bytes).
+Output written on ProtoMS.pdf (80 pages, 655741 bytes).
 PDF statistics:
- 1004 PDF objects out of 1200 (max. 8388607)
- 235 named destinations out of 1000 (max. 131072)
- 431 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 989 PDF objects out of 1000 (max. 8388607)
+ 231 named destinations out of 1000 (max. 131072)
+ 436 words of extra memory for PDF output out of 10000 (max. 10000000)
 

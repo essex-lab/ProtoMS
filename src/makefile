@@ -4,9 +4,6 @@
 #       October 2004
 #-----------------------------------------------
 
-# Do you want to compile the RETI handler? (HAVE YOU GOT MPI?)
-HAVE_MPI = 1
-
 # What is the name of the fortran compiler that you want to use?
 fortrancompiler = gfortran
 mpi_fortrancompiler = mpif77
@@ -703,9 +700,7 @@ PRJS = $(OBJS:%.o=%.prj)
 
 FFLAGS = $(fflags)
 
-ifneq ($(HAVE_MPI),0)
-	fortrancompiler = $(mpi_fortrancompiler)
-endif
+fortrancompiler = $(mpi_fortrancompiler)
 
 %.o : %.F $(commons)
 	@echo "$(Fp)Compiling $(Fb)$<...$(Fr)"
@@ -755,14 +750,6 @@ depend:
 	@./sfmakedepend $(SRCS)
 	@echo -e "$(Fc)Please rebuild protomc via 'make rebuild'.$(n)"
 
-# Make the documentation
-docs:
-	@echo -e "$(Fg)Generating autodocs...$(Fr)"
-	@./parsefortran.py ../../manual/trunk/
-	@echo -e "$(Fg)Generating manual.pdf...$(Fr)"
-	@cd ../../manual/trunk/ ; make
-	@echo -e "$(Fc)Manual now available as ../manual.pdf$(n)"
-        
 # DO NOT DELETE THIS LINE - used by make depend
 addacid.o: proteins.inc dimensions.inc printer.inc
 addacid.o:

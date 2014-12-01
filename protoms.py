@@ -739,9 +739,9 @@ def _wizard(settings) :
   print ">",
   valid = ["","1","2","3","4","5","6","7"]
   instr = raw_input()
-  if instr == "jon" :
+  if instr in ["jon","dev"] :
     import matplotlib.pylab as plt
-    img = np.load(simulationobjects.standard_filename("ee.npz","tools"))["jon"]
+    img = np.load(simulationobjects.standard_filename(".ee.npz","tools"))[instr]
     plt.imshow(img)
     plt.show()
     return

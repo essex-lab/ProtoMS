@@ -10,4 +10,4 @@ amber99-residues.ff : The protein residue templates for amber99.ff
 gold-residues.ff    : Protein residue templates for GOLD-like flexibility of the protein 
                       (e.g, polar hydrogens can rotate)
 gaff.ff             : The General Amber Force Field 
-
+gaff14.ff           : The General Amber Force Field, version 14

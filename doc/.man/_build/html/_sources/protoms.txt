@@ -13,7 +13,7 @@ At the core of ProtoMS are four central concepts;
 
 * **Classical Forcefields** ProtoMS Uses a generic classical forcefield to calculate the energy of the molecules. This forcefield may be specialised such that ProtoMS is able to implement a wide range of modern molecular mechanics forcefields.
 
-* **Perturbations and :math:`\lambda`** ProtoMS provides support for free energy calculations by allowing forcefields and geometries to be perturbed using a :math:`\lambda` coordinate. The forcefield for any protein, solute or solvent may be perturbed, and the geometry of any solute may be perturbed.
+* **Perturbations** ProtoMS provides support for free energy calculations by allowing forcefields and geometries to be perturbed using a :math:`\lambda` coordinate. The forcefield for any protein, solute or solvent may be perturbed, and the geometry of any solute may be perturbed.
 
 * **Generic Moves** ProtoMS is designed around the concept a ‘move’. The move can do anything, from a Monte Carlo translation of solvent to a docking type move on a solute. A simulation is constructed by stringing a collection of moves together.
 
@@ -23,13 +23,13 @@ Proteins / Solutes / Solvents / GCSolutes
 
 ProtoMS divides all of the molecules loaded within a system into solvents, GCsolutes, solutes and proteins
 
-* **solvents**  A solvent is any rigid molecule. Solvents may only be translated and rotated, and by default, 10000 solvent molecules may be loaded, each consisting of up to 10 atoms. Solvent molecules do not have to be small - a rigid lipid molecule could be modelled as a solvent. There is no requirement for the solvents loaded in a system to be the same. Indeed every solvent loaded could be a different type of molecule!
+* **solvents**  A solvent is any rigid molecule. Solvents may only be translated and rotated, and by default, 75000 solvent molecules may be loaded, each consisting of up to 10 atoms. Solvent molecules do not have to be small - a rigid lipid molecule could be modelled as a solvent. There is no requirement for the solvents loaded in a system to be the same. Indeed every solvent loaded could be a different type of molecule!
 
 * **GCsolutes** Like a solvent molecule, GCsolutes are rigid. They have the same properties as previously described for solvents, except GCsolutes are restrained to a defined region in the simulation.
 
-* **solutes** A solute is any flexible molecule. Solutes can be translated and rotated, and change their internal geometry. By default 25 solutes, each composed of 25 residues, each composed of 50 atoms may be loaded simultaneously. Solute molecules are described using z-matrices, thus a solute molecule is perhaps what you would be most familiar with from other Monte Carlo simulation programs. Note that you can describe a protein molecule as a solute, and that you do not need to load it up as a ‘protein’.
+* **solutes** A solute is any flexible molecule. Solutes can be translated and rotated, and change their internal geometry. By default 60 solutes, each composed of 10 residues, each composed of 100 atoms may be loaded simultaneously. Solute molecules are described using z-matrices, thus a solute molecule is perhaps what you would be most familiar with from other Monte Carlo simulation programs. Note that you can describe a protein molecule as a solute, and that you do not need to load it up as a ‘protein’.
 
-* **proteins** A protein is any flexible chain molecule (polymer). A protein is composed of a linear chain of residues, with interresidue bonds connecting one residue to the next. By default, ProtoMS can load up to 3 proteins simultaneously, each protein consisting of 500 residues, each consisting of up to 34 atoms.
+* **proteins** A protein is any flexible chain molecule (polymer). A protein is composed of a linear chain of residues, with interresidue bonds connecting one residue to the next. By default, ProtoMS can load up to 3 proteins simultaneously, each protein consisting of 1000 residues, each consisting of up to 34 atoms.
 
 .. index::
   single: Solvents
@@ -38,8 +38,6 @@ ProtoMS divides all of the molecules loaded within a system into solvents, GCsol
 
 Solvents are loaded into ProtoMS from PDB files (see section :ref:`solventpdb`). Each solvent molecule is identified by its residue name (the fourth column in the PDB file), e.g. ProtoMS identifies the TIP4P solvent with the residue name ‘T4P’. ProtoMS loads the coordinates of the solvent from the PDB file, and then assigns the parameters for the solvent from a solvent template (see section :ref:`temref`). The solvent template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Note that this version of ProtoMS uses the coordinates of the solvent molecule that are present in the PDB file. ProtoMS does not yet have the capability to modify these coordinates to ensure that the internal geometry of the solvent is correct for the solvent model. This means that as solvents are only translated and rotated, the internal geometry of
 the solvent molecule loaded at the start of the simulation will be identical to that at the end of the simulation. 
-
-ProtoMS can also generate a large solvent box by replicating a smaller solvent box. An equilibrated box of TIP4P molecules is provided with the program and a tutorial demonstrates how to use such feature.
 
 .. index::
   single: GCSolutes
@@ -82,13 +80,13 @@ Once the coordinates and z-matrices of each residue have been assigned, interres
   Parameter                   Description                                   Values
   ==========================  ============================================= =========
   MAXPROTEINS                 Maximum number of proteins                    3 
-  MAXRESIDUES                 Maximum number of residues per protein        500
+  MAXRESIDUES                 Maximum number of residues per protein        1000
   MAXSCATOMS                  Maximum number of atoms per protein residue   30
-  MAXSOLUTES                  Maximum number of solutes                     25
-  MAXSOLUTERESIDUES           Maximum number of residues per solute         25
-  MAXSOLUTEATOMSPERRESIDUE    Maximum number of solute atoms per residue    50
-  MAXSOLVENTS                 Maximum number of solvent molecules           10000
-  MAXSOLVENTS                 Maximum number of GCsolute molecules          10000
+  MAXSOLUTES                  Maximum number of solutes                     60
+  MAXSOLUTERESIDUES           Maximum number of residues per solute         10
+  MAXSOLUTEATOMSPERRESIDUE    Maximum number of solute atoms per residue    100
+  MAXSOLVENTS                 Maximum number of solvent molecules           75000
+  MAXSOLVENTS                 Maximum number of GCsolute molecules          75000
   MAXSOLVENTATOMS             Maximum number of atoms per solvent           10
   ==========================  ============================================= =========
 
@@ -291,9 +289,9 @@ ProtoMS implements this forcefield mostly as described. However there are a few 
 
 * **solvents** As solvents are rigid, there is no need to evaluate any of the intramolecular potentials. ProtoMS thus only evaluates the intermolecular energy of solvent molecules. 
 
-* **solutes** ProtoMS evaluates the forcefield of solute molecules exactly as described, with no shortcuts. proteins ProtoMS implements a protein as a chain of residues. As these molecules can be large, and typically larger than the non-bonded cutoff, ProtoMS implements the non-bonded cutoff differently for 
+* **solutes** ProtoMS evaluates the forcefield of solute molecules exactly as described, with no shortcuts.
 
-* **proteins**. Instead of evaluating the non-bonded cutoff for the protein as a whole, ProtoMS implements a residue-based cutoff, with the cutoff scaling factors evaluated individually for each residue. Additionally, the intramolecular non-bonded energy is also scaled according to the non-bonded cutoffs given in equation :eq:`intermol1`. If you do not want to use residue based cutoffs, then it is possible to tell ProtoMS to use a molecule based cutoff, in which case the forcefield for proteins will be evaluated exactly as described with no shortcuts.
+* **proteins**. ProtoMS implements a protein as a chain of residues. As these molecules can be large, and typically larger than the non-bonded cutoff, ProtoMS implements the non-bonded cutoff differently for proteins. Instead of evaluating the non-bonded cutoff for the protein as a whole, ProtoMS implements a residue-based cutoff, with the cutoff scaling factors evaluated individually for each residue. Additionally, the intramolecular non-bonded energy is also scaled according to the non-bonded cutoffs given in equation :eq:`intermol1`. If you do not want to use residue based cutoffs, then it is possible to tell ProtoMS to use a molecule based cutoff, in which case the forcefield for proteins will be evaluated exactly as described with no shortcuts.
 
 .. index::
   single: Perturbations
@@ -1597,6 +1595,9 @@ As before but the output will be a spherical cap of solvent centered at the spec
 Setup and analysis tools
 =========================
 
+As there are many options that can be set in ProtoMS, we provide a range of setup tools that can be used to setup the most common type of simulations. The main tool is called ``protoms.py`` and is document in the next `chapter <protomspy.html>`_. For more advanced use, one can use the individual setup tools as documented `here <tools.html>`_.
+
+In order to perform analysis of the ProtoMS simulations, there is a range of tools than be used. They are documented `here <tools.html>`_.
 
 ***********************
 Input Files

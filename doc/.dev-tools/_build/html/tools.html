@@ -28,7 +28,7 @@
   <body>
 
 <div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
-<a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci"/></a>
+<a href="index.html"><img src="_static/logo.gif" border="0" alt="py4sci" style="width: 10em"/></a>
 </div>
 
     <div class="related">
@@ -911,8 +911,14 @@ over all input files</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote>
+<div><p>g, the inefficiency
+or None if variance is too small</p>
+</div></blockquote>
+<p>float</p>
 <blockquote class="last">
-<div><p>g, the inefficiency</p>
+<div><p>neff, the number of samples 
+or None if variance is too small</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1809,7 +1815,7 @@ equilibrate and production run</p>
 
 <dl class="class">
 <dt id="tools.generate_input.ProteinLigandSimulation">
-<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">ProteinLigandSimulation</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder=''</em><big>)</big><a class="headerlink" href="#tools.generate_input.ProteinLigandSimulation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">tools.generate_input.</tt><tt class="descname">ProteinLigandSimulation</tt><big>(</big><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder=None</em><big>)</big><a class="headerlink" href="#tools.generate_input.ProteinLigandSimulation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProtoMSSimulation" title="tools.generate_input.ProtoMSSimulation"><tt class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProtoMSSimulation</span></tt></a></p>
 <p>This a generic command file for a protein-ligand simulation
 Generates input for proteins, solutes and solvent but does not write any chunks</p>
@@ -2558,6 +2564,42 @@ merge_templates</p>
 extract_energies
 mbar</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.pms2pymbar.bar">
+<tt class="descclassname">tools.pms2pymbar.</tt><tt class="descname">bar</tt><big>(</big><em>energies</em>, <em>RT</em><big>)</big><a class="headerlink" href="#tools.pms2pymbar.bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the BAR free energy using the PyMBAR package</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lambdas</strong> : numpy array</p>
+<blockquote>
+<div><p>the lambda values</p>
+</div></blockquote>
+<p><strong>energies</strong> : list of numpy array</p>
+<blockquote>
+<div><p>the energy values at each lambda and each snapshot</p>
+</div></blockquote>
+<p><strong>RT</strong> : float</p>
+<blockquote>
+<div><p>the gas constant multiplied by the absolute temperature</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote>
+<div><p>the free energy</p>
+</div></blockquote>
+<p>float</p>
+<blockquote class="last">
+<div><p>the uncertainty in the free energy</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="function">
 <dt id="tools.pms2pymbar.extract_energies">
 <tt class="descclassname">tools.pms2pymbar.</tt><tt class="descname">extract_energies</tt><big>(</big><em>path</em>, <em>res_tem</em>, <em>skip</em>, <em>maxread</em><big>)</big><a class="headerlink" href="#tools.pms2pymbar.extract_energies" title="Permalink to this definition">¶</a></dt>
@@ -4463,6 +4505,20 @@ Three numbers defines coordinates for the center as separate x,y,z</p>
 <p>This module defines a single public function:
 split_water</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.split_jawswater.set_jaws2_box">
+<tt class="descclassname">tools.split_jawswater.</tt><tt class="descname">set_jaws2_box</tt><big>(</big><em>water_files</em>, <em>length=3</em><big>)</big><a class="headerlink" href="#tools.split_jawswater.set_jaws2_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the header of the pdbs containing one single
+solvent molecule to define a box around the first atom</p>
+<dl class="docutils">
+<dt>water_files <span class="classifier-delimiter">:</span> <span class="classifier">PDBSet</span></dt>
+<dd>a pdb set containing the pdb files with one molecule
+of solvent</dd>
+<dt>length <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>the dimensions of the box around the molecule</dd>
+</dl>
+</dd></dl>
+
 <dl class="function">
 <dt id="tools.split_jawswater.split_waters">
 <tt class="descclassname">tools.split_jawswater.</tt><tt class="descname">split_waters</tt><big>(</big><em>waters</em><big>)</big><a class="headerlink" href="#tools.split_jawswater.split_waters" title="Permalink to this definition">¶</a></dt>
