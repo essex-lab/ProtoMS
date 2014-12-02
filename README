@@ -28,6 +28,7 @@ There are some examples of using ProtoMS in the tutorial directory.
 Use these examples to test that ProtoMS is working correctly.
 
 Contents of directory:
+
 *data 		: This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
 *doc 		: This directory contains documentation
 *README 	: This file
