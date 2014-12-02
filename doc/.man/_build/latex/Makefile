@@ -9,10 +9,6 @@ ARCHIVEPRREFIX =
 # Additional LaTeX options
 LATEXOPTS =
 
-LATEX = latex
-PDFLATEX = pdflatex
-MAKEINDEX = makeindex
-
 all: $(ALLPDF)
 all-pdf: $(ALLPDF)
 all-dvi: $(ALLDVI)
@@ -47,20 +43,20 @@ bz2: tar
 # The number of LaTeX runs is quite conservative, but I don't expect it
 # to get run often, so the little extra time won't hurt.
 %.dvi: %.tex
-	$(LATEX) $(LATEXOPTS) '$<'
-	$(LATEX) $(LATEXOPTS) '$<'
-	$(LATEX) $(LATEXOPTS) '$<'
-	-$(MAKEINDEX) -s python.ist '$(basename $<).idx'
-	$(LATEX) $(LATEXOPTS) '$<'
-	$(LATEX) $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
+	-makeindex -s python.ist '$(basename $<).idx'
+	latex $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
 
 %.pdf: %.tex
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	-$(MAKEINDEX) -s python.ist '$(basename $<).idx'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
+	-makeindex -s python.ist '$(basename $<).idx'
+	pdflatex $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
 
 clean:
 	rm -f *.dvi *.log *.ind *.aux *.toc *.syn *.idx *.out *.ilg *.pla

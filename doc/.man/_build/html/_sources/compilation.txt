@@ -53,4 +53,6 @@ You also need the OpenMPI package as ProtoMS contains instructions that operates
 
 Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of ``make`` that supports the GNU Makefile format. Simply go into the ``src`` directory and edit the ``Makefile`` that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the ``Makefile`` you can then run ``make``. After about a minute, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called ``protoms3`` on UNIX/Linux. This executable should be run from the command line, or via a script.
 
+We recommend to set the environmental variable ``$PROTOMSHOME`` to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.
+
 

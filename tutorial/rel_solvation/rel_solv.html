@@ -283,7 +283,7 @@ Likewise a different pre-equilibrated box can be used by specifying the location
 <p> 
 <li>Now we have set up ethane, repeat the relevant steps for methanol. Finally, we need to combine the template file of ethane with the template file of methanol, and make combined templates for the single topology protocols. Type:
 <p> 
-<pre>python2.7 /home/rtb1c13/WORK/Hg/ProtoMS3.0/tools/make_single.py -t0 ethane.tem -t1 methanol.tem -p0 ethane.pdb -p1 methanol.pdb -m single_cmap.dat -o ethtmeo</pre>
+<pre>python2.7 $PROTOMSHOME/tools/make_single.py -t0 ethane.tem -t1 methanol.tem -p0 ethane.pdb -p1 methanol.pdb -m single_cmap.dat -o ethtmeo</pre>
 <p> 
 creating <code>ethtmeo_comb.tem</code>, <code>ethtmeo_ele.tem</code> and <code>ethtmeo_vdw.tem</code>. Note that this also requires the <code>single_cmap.dat</code> text file, which contains a table (2 columns, n rows) of corresponding ethane atoms in methanol. Dummies are denoted by DUM.</p>
 <p>
