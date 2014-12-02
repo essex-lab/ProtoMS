@@ -137,7 +137,7 @@ c          write(6,*)"Task = ",myid," lambda= ",mylambda," folder = ",lrefolder(
 
       if (doLambdaRE.and.(lrefreq.gt.0)) then       
         write(printstring,"(A,2I6,A,F8.3,A)")
-     .     "Attempted/succesful lambda swaps: ",nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
+     .     "Attempted/successful lambda swaps: ",nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
      
