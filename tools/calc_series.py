@@ -36,11 +36,13 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
+EQUIL_LIMIT=10
+
 ################################
 # Data series analysis routines
 ################################
 
-def find_equilibration(x,y,atleast=50,threshold=0.05,nperm=0) :
+def find_equilibration(x,y,atleast=EQUIL_LIMIT,threshold=0.05,nperm=0) :
   """
   Find the equilibration time of a data series
 
@@ -110,7 +112,7 @@ def stat_inefficiency(y) :
   neff = float(n) / float(g)
   return g,neff
 
-def maximize_samples(y,atleast=50) :
+def maximize_samples(y,atleast=EQUIL_LIMIT) :
   """
   Find the minimum of the statistical inefficiency by varying
   the equlibration period, i.e. maximizing the number of 
@@ -463,7 +465,7 @@ def plot_series(ys,yprop,labels,offset,plotkind,outprefix) :
   if plotkind != "sep" :
     currfig = plt.figure(1)
 
-  if plotkind != "sub" :
+  if plotkind not in ["sep","sub"] :
     ymax = ys.max() + 0.1*(ys.max()-ys.min())
     ymin = ys.min() - 0.1*(ys.max()-ys.min())
 
@@ -472,10 +474,12 @@ def plot_series(ys,yprop,labels,offset,plotkind,outprefix) :
       currfig = plt.figure(i+1)
     if plotkind == "sub" :
       ax = currfig.add_subplot(2,ncols,i+1)
-      ymax = y.max() + 0.1*(y.max()-y.min())
-      ymin = y.min() - 0.1*(y.max()-y.min())
     else :
       ax = currfig.gca()
+
+    if plotkind in ["sep","sub"] :
+      ymax = y.max() + 0.1*(y.max()-y.min())
+      ymin = y.min() - 0.1*(y.max()-y.min())
 
     ax.plot(x,y,label=label,color=simulationobjects.color(i))
     ax.plot([prop["equil"],prop["equil"]],[ymin,ymax],'--',color=simulationobjects.color(i))
@@ -693,11 +697,19 @@ if __name__ == '__main__' :
       ys[i] = moving(y,args.moving)    
 
   # Compute the equilibration time and other properties for each series to plot  
-  yprop = [{} for y in ys]
+  yprop = [{"equil":0,"g":0,"neff":0,"t_opt":0,"neff_max":0,"g_min":0} for y in ys]
   x = np.arange(1,ys[0].shape[0]+1)+offset
   print ""
   for i,(y,prop,label) in enumerate(zip(ys,yprop,labels)) :
+    if len(y) <= EQUIL_LIMIT :
+      print "%i snapshots or less found in %s, will not evaluate equilibration"%(EQUIL_LIMIT,_label0(label)) 
+      continue
     prop["equil"] = find_equilibration(y,x,nperm=args.nperm,threshold=args.threshold) + offset
+    if prop["equil"] == EQUIL_LIMIT :
+      print "No point of equilibration found for %s"%_label0(label) 
+      prop["equil"] = 0 
+      continue
+
     print "Equilibration found at snapshot %d for %s, value=%.3f"%(prop["equil"],_label0(label),ys[i][prop["equil"]])    
     prop["g"],prop["neff"] = stat_inefficiency(y[prop["equil"]:])
     if prop["g"] is not None :
