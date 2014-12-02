@@ -29,18 +29,18 @@ Use these examples to test that ProtoMS is working correctly.
 
 Contents of directory:
 
-*data 		: This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
+* data 		: This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
 
-*doc 		: This directory contains documentation
+* doc 		: This directory contains documentation
 
-*README 	: This file
+* README 	: This file
 
-*parameter 	: This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
+* parameter 	: This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
 
-*protoms.py	: A tool to setup common ProtoMS calculations
+* protoms.py	: A tool to setup common ProtoMS calculations
 
-*src 		: This directory contains all of the source code for the main program
+* src 		: This directory contains all of the source code for the main program
 
-*tools 		: This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+* tools 		: This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
 
-*tutorial 	: This directory contains a number of examples that demonstrate applications of ProtoMS.
+* tutorial 	: This directory contains a number of examples that demonstrate applications of ProtoMS.
