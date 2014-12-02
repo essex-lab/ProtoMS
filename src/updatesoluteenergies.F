@@ -8,7 +8,7 @@ c############################################################
 c
 c     This routine updates the total energies of solute
 c     isol, and with the rest of the system, after
-c     a succesful solute move. The energies are updated
+c     a successful solute move. The energies are updated
 c     as;
 c
 c     oldSol??? = newSol??? (since they are calculated as 1)

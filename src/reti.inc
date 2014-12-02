@@ -52,11 +52,11 @@ c     PT energy dist pointer
       integer enediststream(MAXLAMBDAS)
 c     Attempted number of RETI swaps
       integer nretitry
-c     Succesful RETI swaps
+c     Successful RETI swaps
       integer nretiswap
 c     Attempted number of PT swaps
       integer npttry(MAXLAMBDAS)
-c     Succesful PT swaps
+c     Successful PT swaps
       integer nptswap(MAXLAMBDAS)
       
       common /RETIVAR/ lambdaval,lambdacurr,retitemp,mt_beta_t,niter,nretiblock,nlambda,nretitry,nretiswap,slave,outdir,
