@@ -5,17 +5,9 @@
 --------------------------------
  Prototype Molecular Simulation
 
-          Version 3.0
+Version 3.0
 
-    (C) Christopher Woods,
-         Julien Michel,
-         Michael Bodnarchuk,
-         Samuel Genheden,
-         Richard Bradshaw,
-         Gregory Ross,
-         Chris Cave-Ayland,
-         Ana I. Cabedo Martinez
-          2002-2014
+(C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez 2002-2014
       
   Released under the GNU GPL
         (see LICENSE)
@@ -36,13 +28,11 @@ There are some examples of using ProtoMS in the tutorial directory.
 Use these examples to test that ProtoMS is working correctly.
 
 Contents of directory:
-data 		: This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
-doc 		: This directory contains documentation
-README 		: This file
-parameter 	: This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
-protoms.py	: A tool to setup common ProtoMS calculations
-src 		: This directory contains all of the source code for the main program
-tools 		: This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
-tutorial 	: This directory contains a number of examples that demonstrate applications of ProtoMS.
-
-
+*data 		: This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
+*doc 		: This directory contains documentation
+*README 	: This file
+*parameter 	: This directory contains all of the standard parameter files that describe the standard forcefields implemented in *ProtoMS.
+*protoms.py	: A tool to setup common ProtoMS calculations
+*src 		: This directory contains all of the source code for the main program
+*tools 		: This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+*tutorial 	: This directory contains a number of examples that demonstrate applications of ProtoMS.
