@@ -223,6 +223,7 @@ def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
   numpy array
     the coefictients of the fit
   """
+
   thetas = 1-lambdas
   pl.plot(thetas,pmf,label="PMF",linewidth=2)
   pl.savefig("initial.png")

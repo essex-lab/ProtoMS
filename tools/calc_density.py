@@ -257,7 +257,11 @@ def calc_density(pdbfiles,molname,atomname,padding=2.0,extent=1.0,spacing=0.5,no
   prop["min"] = [e[0] for e in edges]
   prop["max"] = [e[-1] for e in edges]
   return np.array(nfound),grid,prop
-      
+
+
+#
+# If this is run from the command-line
+#      
 if __name__ == "__main__":
 
   import argparse

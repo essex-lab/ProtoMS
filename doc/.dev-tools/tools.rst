@@ -29,7 +29,7 @@ tools.calc_bar module
     :show-inheritance:
 
 tools.calc_clusters module
----------------------
+---------------------------
 
 .. automodule:: tools.calc_clusters
     :members:
@@ -53,7 +53,7 @@ tools.calc_dg module
     :show-inheritance:
 
 tools.calc_gcsingle module
----------------------
+---------------------------
 
 .. automodule:: tools.calc_gcsingle
     :members:

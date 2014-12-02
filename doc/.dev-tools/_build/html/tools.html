@@ -58,10 +58,10 @@
 <li><a class="reference internal" href="#module-tools.ambertools">tools.ambertools module</a></li>
 <li><a class="reference internal" href="#module-tools.build_template">tools.build_template module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_bar">tools.calc_bar module</a></li>
-<li><a class="reference internal" href="#tools-calc-clusters-module">tools.calc_clusters module</a></li>
+<li><a class="reference internal" href="#module-tools.calc_clusters">tools.calc_clusters module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_density">tools.calc_density module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_dg">tools.calc_dg module</a></li>
-<li><a class="reference internal" href="#tools-calc-gcsingle-module">tools.calc_gcsingle module</a></li>
+<li><a class="reference internal" href="#module-tools.calc_gcsingle">tools.calc_gcsingle module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_replicapath">tools.calc_replicapath module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_rmsd">tools.calc_rmsd module</a></li>
 <li><a class="reference internal" href="#module-tools.calc_series">tools.calc_series module</a></li>
@@ -445,13 +445,10 @@ bar</p>
 </dd></dl>
 
 </div>
-<div class="section" id="tools-calc-clusters-module">
-<h2>tools.calc_clusters module<a class="headerlink" href="#tools-calc-clusters-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-tools.calc_clusters"></span><dl class="function">
-<dt id="tools.calc_clusters.GetMolTemplate">
-<tt class="descclassname">tools.calc_clusters.</tt><tt class="descname">GetMolTemplate</tt><big>(</big><em>FileName</em>, <em>MolName</em><big>)</big><a class="headerlink" href="#tools.calc_clusters.GetMolTemplate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<div class="section" id="module-tools.calc_clusters">
+<span id="tools-calc-clusters-module"></span><h2>tools.calc_clusters module<a class="headerlink" href="#module-tools.calc_clusters" title="Permalink to this headline">¶</a></h2>
+<p>Routines to cluster molecules from simulations.</p>
+<p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.calc_clusters.cluster_coords">
 <tt class="descclassname">tools.calc_clusters.</tt><tt class="descname">cluster_coords</tt><big>(</big><em>confs</em>, <em>clustmethod='average'</em>, <em>cutoff=2.0</em><big>)</big><a class="headerlink" href="#tools.calc_clusters.cluster_coords" title="Permalink to this definition">¶</a></dt>
@@ -523,11 +520,6 @@ bar</p>
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="function">
-<dt id="tools.calc_clusters.printpdb">
-<tt class="descclassname">tools.calc_clusters.</tt><tt class="descname">printpdb</tt><big>(</big><em>coords</em>, <em>molpdb</em>, <em>resid</em>, <em>theta</em>, <em>filename</em><big>)</big><a class="headerlink" href="#tools.calc_clusters.printpdb" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </div>
 <div class="section" id="module-tools.calc_density">
@@ -632,9 +624,10 @@ writeDX</p>
 <span id="tools-calc-dg-module"></span><h2>tools.calc_dg module<a class="headerlink" href="#module-tools.calc_dg" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate free energies using TI, BAR and MBAR</p>
 </div>
-<div class="section" id="tools-calc-gcsingle-module">
-<h2>tools.calc_gcsingle module<a class="headerlink" href="#tools-calc-gcsingle-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-tools.calc_gcsingle"></span></div>
+<div class="section" id="module-tools.calc_gcsingle">
+<span id="tools-calc-gcsingle-module"></span><h2>tools.calc_gcsingle module<a class="headerlink" href="#module-tools.calc_gcsingle" title="Permalink to this headline">¶</a></h2>
+<p>Program to analyze GCMC simulations</p>
+</div>
 <div class="section" id="module-tools.calc_replicapath">
 <span id="tools-calc-replicapath-module"></span><h2>tools.calc_replicapath module<a class="headerlink" href="#module-tools.calc_replicapath" title="Permalink to this headline">¶</a></h2>
 <p>Program to analyze and plot replica paths</p>

@@ -8,8 +8,6 @@
 Program to plot the theta distribution, resulting from a JAWS
 stage one simulation
 
-This module defines the following public functions:
-
 Can be executed from the command line as a stand-alone program
 """
 
