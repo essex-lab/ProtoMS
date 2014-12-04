@@ -578,7 +578,7 @@ into a file and have ProtoMS read commands from that file. You specify the comma
 
   protoms3 mycmdfile.txt
 
-Note that the ProtoMS is insensitive to whether commands, variables or contents of files are uppercase or lowercase, so you are free to mix and match capitals and small case wherever you want. The only exception to this is in the specification of filenames, where your operating system may care about case.
+Note that ProtoMS is insensitive to whether commands, variables or contents of files are uppercase or lowercase, so you are free to mix and match capitals and small case wherever you want. The only exception to this is in the specification of filenames, where your operating system may care about case. As an example, depending on your operating system, ProtoMS may fail when the file containing the commands is named in upper case letters.
 
 For replica exchange or ensemble type calculations, you have to execeute ProtoMS through the OpenMPI program, e.g. ::
 
@@ -1365,7 +1365,7 @@ ProtoMS supports a number of restraining potentials which can be used to modify 
 where `int1` is the index numberr for this id. So if this if the first id you create you may want to use the number 1. type can be SOLUTE or SOLVENT or PROTEIN depending on where the atom you want to tagg is. `atname` is the name of the atom (e.g CA), `resname` is the name of the residue the atom is in if you are dealing with a SOLUTE or SOLVENT. However if it the atom is in a protein, then you must use the PDB residue number.
 Once you have specified a few ids, you can create restraints using these ids and the following command ::
 
-  restraint add id1[-id2-id3-id4] type1 type2 [other parameters] 
+  chunk restraint add id1[-id2-id3-id4] type1 type2 [other parameters] 
   
 where `id1` to `id4` designate up to four ids. `type1` designate the type of the restraint. It can be either `cartesian`,`bond` or `dihedral`. In the first case the restraint is applied in cartesian coordinates and will apply to only one atom (`id1`). In the second case, it is applied in internal coordinates, and will apply to only two atoms (`id1`-`id2`). In the last case it is applied to four atoms (`id1`-`id2`-`id3`-`id4`) and in internal coordinates. `type2` designate the functional form of the restraint. It can be `harmonic` or `flatbottom`. Each functional form requires additional parameters. The following options are currently possible: 
 
@@ -1374,11 +1374,11 @@ where `id1` to `id4` designate up to four ids. `type1` designate the type of the
 
 ::
 
-  restraint add id1 cartesian harmonic xrest yrest zrest krest
+  chunk restraint add id1 cartesian harmonic xrest yrest zrest krest
         
 For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. ::
 
-  restraint add id1 cartesian flattbottom xrest yrest zrest krest wrest
+  chunk restraint add id1 cartesian flattbottom xrest yrest zrest krest wrest
   
 For a flatbottom restraint you must in addition specify the width of the flat region of the potential. 
 
@@ -1387,7 +1387,7 @@ For a flatbottom restraint you must in addition specify the width of the flat re
 
 ::
 
-  restraint add id1-id2 bond harmonic krest
+  chunk restraint add id1-id2 bond harmonic krest
 
 For a bond restraint you must specify only the force constant
 
@@ -1397,7 +1397,7 @@ For a bond restraint you must specify only the force constant
 
 ::
 
-  restraint add id1-id2-id3-id4 dihedral harmonic theta krest
+  chunk restraint add id1-id2-id3-id4 dihedral harmonic theta krest
   
 For a dihedral harmonic restraint you must specify the target equilibrium angle and the force constant. This restraint does not work on solvent molecules and on protein backbone atoms.
 
@@ -1411,7 +1411,7 @@ This chunk will create id number 1 which will point to solute atom 1 (the first 
   
 This chunk will create id number 2 which will point to protein pdb loaded as protein1 by ProtoMS. The atom named O in residue 318 will be selected. Note that 318 is the residue number that appear in the PDB file. It is not necessarily the 318th residue to be loaded by ProtoMS in this protein. ::
 
-  restraint add 1-2 bond harmonic 5.0 3.33
+  chunk restraint add 1-2 bond harmonic 5.0 3.33
                             
 This chunk will cause a restraint to be added between the atoms id 1 and 2 points to. The functional form of this restraint will be a harmonic potential that is function of the distance between these two atoms. The force constant will be 5 kcal mol - 1. A - 2 and the equilibrium distance 3.33 angstrom.
 
@@ -1425,13 +1425,13 @@ Applying a hardwall restraint is slightly different ::
 
 This chunk will create id number 1 which will point to solute number 2, looking at the O00 atom of resname WAT ::
 
-  hardwall 1 25.890 16.895 59.083 1.8 1000000000
+  chunk hardwall 1 25.890 16.895 59.083 1.8 1000000000
   
 This chunk will apply a hardwall restraint to the center of geometry of the solute number 2. The form of this restraint is spherical, with a radius of 1.8 and will be centered at the point defined by the coordinates 25.890 16.895 59.083. If the center of geometry of the molecule attempts to leave this radius then a huge penalty is applied, preventing the move. Equally, if any atom from another molecule tries to occupy the hardwall region then the penalty is applied.
 
 A hardwall restraint can also be applied on the initial position of the center of geometry of a ligand. In this case, no coordinates need to be specified, and the lines results::
 
-  hardwall 1 1.8 1000000000
+  chunk hardwall 1 1.8 1000000000
 
 This option should be quite useful when the ligand simply wants to be kept in its initial position.
 
