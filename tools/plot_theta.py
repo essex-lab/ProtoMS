@@ -93,7 +93,7 @@ def find_solute_theta(molecule,restart='restart',results='results') :
     elif mol_type is "gcsolute" :
       res_thetavals = snap.thetavals
     for ind,res_theta in enumerate(res_thetavals) :
-      thetas[ind+1].append(res_theta)
+      if ind+1 in thetas.keys() : thetas[ind+1].append(res_theta)
   return thetas
 
 
