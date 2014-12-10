@@ -27,6 +27,25 @@ import numpy as np
 
 boltz = 0.00198717076 # kcal.mol-1K-1
 
+def is_solvent(name) :
+  """
+  Check whether a given residue name
+  is a solvent residue name
+  
+  Parameters
+  ----------
+  name : string
+    the residue name
+ 
+  Return
+  ------
+  Boolean
+    whether the residue name
+    is a solvent residue name
+  """
+  return name in ['WAT','wat','HOH','hoh','DOD','dod','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']
+    
+
 class SetupError(Exception) :
     """ A general exception class to be raised by setup code
     """
@@ -233,7 +252,7 @@ class PDBFile:
               newatom = Atom(index=index,name=atname,resindex=nres,
                              resname=restype,coords=coords)
               # If solvent
-              if restype not in ['WAT','wat','HOH','hoh','DOD','dod','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']:
+              if not is_solvent(restype) :
                   try:
                       residues[nres]
                   except KeyError:

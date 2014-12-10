@@ -22,6 +22,8 @@ import matplotlib.pylab as plt
 
 import simulationobjects
 
+from calc_clusters import cluster_coords
+
 logger = logging.getLogger('protoms')
 
 def solname_to_id(molecule,restart='restart') :
@@ -60,7 +62,7 @@ def solname_to_id(molecule,restart='restart') :
     return [gcsol_list,sol_list], "both"
 
 
-def find_solute_theta(molecule,restart='restart',results='results') :
+def find_solute_theta(molecule,restart='restart',results='results',print_average=False) :
   """
   Given a solute / gcsolute residue name, find
   and store its corresponding values of theta through
@@ -94,6 +96,10 @@ def find_solute_theta(molecule,restart='restart',results='results') :
       res_thetavals = snap.thetavals
     for ind,res_theta in enumerate(res_thetavals) :
       if ind+1 in thetas.keys() : thetas[ind+1].append(res_theta)
+  if print_average : 
+    for solid in thetas :
+      average = np.sum(np.array(thetas[solid],float))/(len(thetas[solid])+1)
+      print "Theta average for solute %s: %f"%(solid,average)
   return thetas
 
 
@@ -122,8 +128,11 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta") :
   """
 
   def set_axes(xname,yname) :
-    plt.xlabel(xname,fontsize=20)
-    plt.ylabel(yname,fontsize=15)
+    fontsizex = fontsizey = 15
+    if '$' in xname : fontsizex = 20
+    if '$' in yname : fontsizey = 20
+    plt.xlabel(xname,fontsize=fontsizex)
+    plt.ylabel(yname,fontsize=fontsizey)
 
   if xlab == "theta" : xlab = r"$\theta$"
 
@@ -141,7 +150,7 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta") :
 
   for i in dict_th :
     plt.plot(dict_th[i])
-  set_axes(r"$\theta$","Snapshot")
+  set_axes("Snapshot",xlab)
   plt.savefig(plotname+"_snapshot.png")
   
     
@@ -174,20 +183,29 @@ def extract_theta_pdb (thetas_dic, theta_range, pdbfile, outpdb, residue) :
     molecules within the given theta range
   """
 
+  outpdb = "%s_%s-%s.pdb"%(outpdb,theta_range[0],theta_range[1])
+
   try :
     theta_range = [float(limit) for limit in theta_range]
   except :
     raise simulationobjects.SetupError("The limits of the theta range could not be undestood")
 
   pdbin_obj = simulationobjects.PDBSet()
-  pdbin_obj.read(filename=pdbfile, resname=residue)
+  pdbin_obj.read(filename=pdbfile)
+
+
+  pdbout_obj = simulationobjects.PDBFile()
+  pdbout_obj.header = "HEADER   %s molecules found with theta between %3.3f and %3.3f\n"%(residue, theta_range[0], theta_range[1])
   
   for sol_id  in thetas_dic :
-      for snapshot, each_theta in enumerate([float(theta) for theta in thetas_dic[sol_id]]) :
-        if theta_range[0] <= each_theta <= theta_range[1] :
-          print each_theta
-          print sol_id
-          print pdbin_obj.pdbs[snapshot].residues[sol_id]
+    for snapshot, each_theta in enumerate([float(theta) for theta in thetas_dic[sol_id]]) :
+      if theta_range[0] <= each_theta <= theta_range[1] :
+        if simulationobjects.is_solvent(residue) :
+          pdbout_obj.residues[sol_id*snapshot] = pdbin_obj.pdbs[snapshot].solvents[sol_id+min(pdbin_obj.pdbs[snapshot].solvents.keys())-1]
+        else :
+          pdbout_obj.residues[sol_id*snapshot] = pdbin_obj.pdbs[snapshot].residues[sol_id+min(pdbin_obj.pdbs[snapshot].residues.keys())-1]
+  pdbout_obj.write(filename=outpdb)
+          
 
 #
 # If this is run from the command-line
@@ -202,12 +220,15 @@ if __name__ == '__main__' :
   parser.add_argument('-s','--restart',help="the replica values to plot. Default='restart'",default='restart')
   parser.add_argument('-m','--molecule',help="the residue name of the JAWS molecule. Default='WAT'",default="WAT")
   parser.add_argument('-p','--plotname',help="the start of the filename for the plots generated. Default='theta_dist'",default="theta_dist")
+  parser.add_argument('-a','--average',action="store-true",help="whether to print an average of all theta values. Default = False",default=False)
   parser.add_argument('-tr','--thetarange',nargs=2,help="the range of thetas which correponding molecules will be extracted, specified by a lower and an upper limit. By default, no molecules will be extracted.")
   parser.add_argument('-pdb','--pdbfile',help="the pdb file result of protoms. Only required if when molecules are extracted for a range of thetas. Default = 'all.pdb'",default='all.pdb')
-  parser.add_argument('-op','--outpdb',help="the name of the file where the molecules for a given range of thetas are to be extracted. Default = 'out_thetas.pdb'",default='out_thetas.pdb')
+  parser.add_argument('-op','--outpdb',help="the name of the file where the molecules for a given range of thetas are to be extracted. Default = 'out_thetas'",default='out_thetas')
   args = parser.parse_args()
 
-  thetas_dic = find_solute_theta(args.molecule,args.restart,args.results)
+  logger = simulationobjects.setup_logger("plot_theta.log")
+
+  thetas_dic = find_solute_theta(args.molecule,args.restart,args.results,args.average)
 
   plot_dist(thetas_dic,plotname=args.plotname)
 
