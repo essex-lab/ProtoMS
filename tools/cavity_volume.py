@@ -7,6 +7,9 @@
 """ 
 Routines to estimate the free volume within certain box.
 
+It also estimates an upperlimit on how many solutes are needed to
+fill the cavity volume.
+
 This set of routines are grid based, where distance between
 grid points and the approximation to the "Van de Waals radius"
 of my protein atoms can be modified.
@@ -134,9 +137,12 @@ def clear_grid(grid,at_vdw=1.5,pdbfiles=None) :
       pdbfile = load_pdb(pdbfile)
       for res in pdbfile.residues :
         for atom in pdbfile.residues[res].atoms :
+           at_dist = at_vdw
+           atom.getElement()
+           if atom.element.lower() in 'h' or atom.element.lower() in 'm' : at_dist = at_vdw*0.5
            for point in cleared_grid :
              dist = (np.sum([(at_coord-point[jnd])**2 for jnd,at_coord in enumerate(atom.coords)]))**0.5
-             if dist < at_vdw :
+             if dist < at_dist :
                pdb_grids[ind].append(point)
            cleared_grid = [point for point in cleared_grid if not point in pdb_grids[ind]]
     pdb_grids[ind] = np.array(pdb_grids[ind])
@@ -227,7 +233,10 @@ def cavity_volume(box,grid_dist,vdw_rad=1.5,cav_pdbs=None,sol_pdbs=None) :
 
   if cav_pdbs : grid,cav_grids = clear_grid(grid,pdbfiles=cav_pdbs)
 
-  grid_to_pdb(grid)
+  pdbname="cavity_grid.pdb"
+  grid_to_pdb(grid,pdbname=pdbname)
+
+  logger.info("Grid pdb for %s printed in %s"%("cavity",pdbname))
 
   cavity_vol = len(grid)*grid_dist**3
 
@@ -240,8 +249,12 @@ def cavity_volume(box,grid_dist,vdw_rad=1.5,cav_pdbs=None,sol_pdbs=None) :
       box_sol["len"] = box_sol["len"] + 2.0*vdw_rad
       solbox_grid = set_grid(box_sol,grid_dist)
       null_grid,sol_grid = clear_grid(solbox_grid,pdbfiles=[sol_obj])
-      grid_to_pdb(sol_grid[0],pdbname="pdb%d_grid.pdb"%(ind+1))
+      gridpdb_name = "pdb%d_grid.pdb"%(ind+1)
+      grid_to_pdb(sol_grid[0],pdbname=gridpdb_name)
       grid_vols.append(len(sol_grid[0]))
+
+      logger.info("Grid pdb for %s printed in %s"%("solute %d"%(ind+1),gridpdb_name))
+
     each_copies = [round(len(grid)/grid_vol) for grid_vol in grid_vols]
     all_copies = round(len(grid)/sum(grid_vols)) 
 
@@ -257,14 +270,14 @@ if __name__ == '__main__' :
  
   import argparse
 
-  parser = argparse.ArgumentParser(description="")
-  parser.add_argument('-o','--boxorigin',nargs='+')
-  parser.add_argument('-l','--boxlength',nargs='+')
-  parser.add_argument('-d','--distance',default=1)
-  parser.add_argument('-w','--vdwrad',default=1.5)
-  parser.add_argument('-c','--cavpdbs',nargs='+',default=None)
-  parser.add_argument('-s','--solpdbs',nargs='+',default=None)
-  parser.add_argument('-v','--volume',action="store_true",default=False)
+  parser = argparse.ArgumentParser(description="Program to estimate the volume of a cavity and generate an upper limit estimate of the number of copies of solutes required to fill the cavity")
+  parser.add_argument('-o','--boxorigin',nargs='+',help="The coordinates of the bottom left down corner of the box")
+  parser.add_argument('-l','--boxlength',nargs='+',help="The coordinates of the length of the box")
+  parser.add_argument('-d','--distance',default=1,help="The distance between two grid points.Default=1(A)")
+  parser.add_argument('-w','--vdwrad',default=1.5,help="The estimated Van de Waals radius for most atoms. It is halved for hydrogen and the lone pair in T4P. Default=1.5(A)")
+  parser.add_argument('-c','--cavpdbs',nargs='+',default=None,help="The pdb files of the molecules definining the cavity")
+  parser.add_argument('-s','--solpdbs',nargs='+',default=None,help="The pdb files of the solutes that we wish to fit in the cavity")
+  parser.add_argument('-v','--volume',action="store_true",default=False,help="Whether to print the volume of the cavity. Default=False")
   args = parser.parse_args()
 
   # Setup the logger
@@ -290,10 +303,10 @@ if __name__ == '__main__' :
 
   if args.solpdbs :
 
-    logger.info("\nFor identical number of copies per solute, estimated %d copies of each solute to fill cavity volume" %all_copies)
+    logger.info("\nUpper-estimate: %d copies of each solute to fill cavity volume" %all_copies)
 
     for ind,solute in enumerate(args.solpdbs) :
-      logger.info("\nEstimated %d copies of solute %s to fill cavity volume" %(each_copies[ind],solute))
+      logger.info("\nUpper-estimate: %d copies of solute %s to fill cavity volume" %(each_copies[ind],solute))
 
 
 
