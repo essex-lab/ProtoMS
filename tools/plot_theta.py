@@ -220,7 +220,7 @@ if __name__ == '__main__' :
   parser.add_argument('-s','--restart',help="the replica values to plot. Default='restart'",default='restart')
   parser.add_argument('-m','--molecule',help="the residue name of the JAWS molecule. Default='WAT'",default="WAT")
   parser.add_argument('-p','--plotname',help="the start of the filename for the plots generated. Default='theta_dist'",default="theta_dist")
-  parser.add_argument('-a','--average',action="store-true",help="whether to print an average of all theta values. Default = False",default=False)
+  parser.add_argument('-a','--average',action="store_true",help="whether to print an average of all theta values. Default = False",default=False)
   parser.add_argument('-tr','--thetarange',nargs=2,help="the range of thetas which correponding molecules will be extracted, specified by a lower and an upper limit. By default, no molecules will be extracted.")
   parser.add_argument('-pdb','--pdbfile',help="the pdb file result of protoms. Only required if when molecules are extracted for a range of thetas. Default = 'all.pdb'",default='all.pdb')
   parser.add_argument('-op','--outpdb',help="the name of the file where the molecules for a given range of thetas are to be extracted. Default = 'out_thetas'",default='out_thetas')
