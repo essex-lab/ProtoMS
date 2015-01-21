@@ -197,13 +197,14 @@ def extract_theta_pdb (thetas_dic, theta_range, pdbfile, outpdb, residue) :
   pdbout_obj = simulationobjects.PDBFile()
   pdbout_obj.header = "HEADER   %s molecules found with theta between %3.3f and %3.3f\n"%(residue, theta_range[0], theta_range[1])
   
-  for sol_id  in thetas_dic :
-    for snapshot, each_theta in enumerate([float(theta) for theta in thetas_dic[sol_id]]) :
-      if theta_range[0] <= each_theta <= theta_range[1] :
-        if simulationobjects.is_solvent(residue) :
-          pdbout_obj.residues[sol_id*snapshot] = pdbin_obj.pdbs[snapshot].solvents[sol_id+min(pdbin_obj.pdbs[snapshot].solvents.keys())-1]
-        else :
-          pdbout_obj.residues[sol_id*snapshot] = pdbin_obj.pdbs[snapshot].residues[sol_id+min(pdbin_obj.pdbs[snapshot].residues.keys())-1]
+  for snapshot, pdbin_file in enumerate(pdbin_obj.pdbs) :
+    dic_inresidues = pdbin_file.residues
+    if simulationobjects.is_solvent(residue) : dic_inresidues = pdbin_file.solvents 
+    my_inresidues = [dic_inresidues[reskey] for reskey in dic_inresidues if dic_inresidues[reskey].name in residue]
+    for ind, myres in enumerate(my_inresidues) :
+      if theta_range[0] <= float(thetas_dic[thetas_dic.keys()[ind]][snapshot]) <= theta_range[1] :
+        pdbout_obj.residues[(snapshot+1)*(ind+1)] = myres
+
   pdbout_obj.write(filename=outpdb)
           
 
