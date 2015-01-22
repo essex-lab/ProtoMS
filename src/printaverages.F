@@ -112,6 +112,12 @@ c      write out the random number seed used to generate this trajectory
 43     format('Total Energy ',f18.8,' ( ',f8.3,' ) | ',f18.8,' ( ',f8.3,' ) ',f18.8,' ( ',f8.3,' )')
        call printLine(RESULTS,printstring)
 
+       if ((pmeblocks.gt.0).and.(AvgPmeEnergy.ne.ZERO)) then
+         write(printstring,78)AvgPmeEnergy,AvgPmeEnergyF,AvgPmeEnergyB
+78       format('PME Energy ',f18.8,' | ',f18.8,' | ',f18.8)
+         call printLine(RESULTS,printstring)
+       endif
+
        if (NProteins.gt.0) then
          do i=1,NProteins
            if (NBonds(i).gt.0) then

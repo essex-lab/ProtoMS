@@ -16,6 +16,7 @@ c###########################################################
       double precision oldlamf,oldlamb
       double precision nrg,nrgb,nrgf
       double precision inrgb,inrgf
+      double precision pme,pmeb,pmef
       double precision totalEnergy
       double precision ExtraEnergy
 
@@ -56,6 +57,14 @@ c     what this will cause to the running averages.
       nrgf = nrgf + inrgf
 
       call clearMoveList
+
+c     PME
+      if (pmeblocks.gt.0) then
+        call pmePerturbeEnergy(pme,pmeb,pmef)
+        nrg = nrg + pme
+        nrgb = nrgb + pmeb
+        nrgf = nrgf + pmef
+      endif
 
 c     now reset the parameters
       lambdaf = oldlamf

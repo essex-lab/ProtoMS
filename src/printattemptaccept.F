@@ -19,6 +19,13 @@ c#############################################################
       integer i,j,itry,iacp,igcs,isol
       integer lgth,lineLength
       double precision iprcnt
+
+      if (NEwaldTry.gt.0) then
+        write(printstring,*) "Attempted ",NEwaldTry," Ewald moves. Accepted ",NEwaldAcp," (",
+     .                      100.0*dble(NEwaldAcp)/dble(NEwaldTry),"%)"
+        call printLine(ACCPT,printstring)
+      endif
+
       if (NVolTry.gt.0) then
         write(printstring,*) "Attempted ",NVolTry," volume moves. Accepted ",NVolAcp," (",
      .                      100.0*dble(NVolAcp)/dble(NVolTry),"%)"

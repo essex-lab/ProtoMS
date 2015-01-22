@@ -6,6 +6,7 @@
 
 # What is the name of the fortran compiler that you want to use?
 fortrancompiler = gfortran
+cppcompiler = gcc
 mpi_fortrancompiler = mpif77
 
 # The GNU gfortran compiler
@@ -165,6 +166,7 @@ OBJS = addacid.o \
        elementname.o \
        epslon.o \
        equilibrate.o \
+       equilibratepme.o \
        extraenergy.o \
        fakesimulate.o \
        findangleindex.o \
@@ -298,6 +300,7 @@ OBJS = addacid.o \
        lambdare.o	\
        lreenergy.o	\
        lambdamove.o \
+       loadstate.o	\
        leftjustify.o \
        linelength.o \
        loadgc.o \
@@ -335,6 +338,9 @@ OBJS = addacid.o \
        parseargs.o \
        parsefile.o \
        perturbforcefield.o \
+       pmeenergy.o	\
+       pmeperturbeenergy.o	\
+       pmetest.o	\
        popallresidueenergy.o \
        popdeletesolventcoords.o \
        popgcsolutecoords.o \
@@ -370,6 +376,7 @@ OBJS = addacid.o \
        processsolventline.o \
        proteingcsenergy.o \
        proteinintraenergy.o \
+       proteinpmeenergy.o	\
        proteinproteinenergy.o \
        proteinresresbondlist.o \
        proteinsoluteenergy.o \
@@ -477,6 +484,7 @@ OBJS = addacid.o \
        rotatevector.o \
        samplemove.o \
        savepoint.o \
+       savestate.o	\
        scanforvariablegroups.o \
        sepresresenergy.o \
        setallmoved.o \
@@ -506,6 +514,7 @@ OBJS = addacid.o \
        shutdown.o \
        sigma.o \
        simulate.o \
+       simulatepme.o \
        simulation.o \
        singlepointenergy.o \
        savesolutegb.o \
@@ -520,6 +529,7 @@ OBJS = addacid.o \
        soluteintraenergy.o \
        soluteintragbenergy.o \
        solutemove.o \
+       solutepmeenergy.o	\
        solutesinglegcsoluteenergy.o \
        solutesinglesolventenergy.o \
        solutesoluteborninterpda.o \
@@ -535,8 +545,10 @@ OBJS = addacid.o \
        solventintragbenergy.o \
        solventsolventintergbenergy.o \
        solventmove.o \
+       solventpmeenergy.o	\
        solventsolventborninterpda.o \
        solventsolventbulkenergy.o \
+       solventsolventeleenergy.o	\
        solventsolventenergy.o \
        solventsolventsingleenergy.o \
        solventsurface.o \
@@ -620,6 +632,10 @@ OBJS = addacid.o \
        zeroallpdacont.o \
        zeropdacont.o 
 
+PMEOBJS = Pme/fftpack.o	\
+          Pme/PME.o	\
+          Pme/mesh_energy.o
+
 #
 #*********************************************************************
 #  You shouldn't need to modify anything below. These lines compile
@@ -638,6 +654,8 @@ nl = \033[\n
 #
 FC = $(fortrancompiler)
 FC_MPI = $(fortrancompiler)
+CC = $(cppcompiler)
+CCFLAGS = $(ccflags)
 
 # Flags for ftnchek:
 CHEK1 = -pretty=no-long-line
@@ -707,15 +725,18 @@ fortrancompiler = $(mpi_fortrancompiler)
 	@$(FC_MPI) -c $(FFLAGS) $< -o $@
 	@echo "$(n)"
 
+.cpp.o:
+	$(CC) $(CCFLAGS) $< -o $@
+
 # Build the program
-../protoms3: $(OBJS)
+../protoms3: $(OBJS) $(PMEOBJS)
 ifneq ($(NOPYTHON2),1)
 	@echo "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
 endif
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o
 	@echo "$(Fg)Linking the executable...$(Fr)"
-	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o
+	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) $(PMEOBJS) -lstdc++ printheader.o
 
 	@echo "$(Fg)Build complete. Go to the tutorials directory for"
 	@echo "guidance on how to use this program.$(n)"
