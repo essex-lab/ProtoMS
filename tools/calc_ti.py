@@ -224,14 +224,13 @@ def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
     the coefictients of the fit
   """
 
-  thetas = 1-lambdas
-  pl.plot(thetas,pmf,label="PMF",linewidth=2)
+  pl.plot(lambdas,pmf,label="PMF",linewidth=2)
   pl.savefig("initial.png")
 
   for order in range(orderfit,upperfit) :
-    fit = np.poly1d(np.polyfit(thetas,pmf,order))
-    pmfpred = np.array([fit(xval) for xval in thetas])
-    pl.plot(thetas,pmfpred)
+    fit = np.poly1d(np.polyfit(lambdas,pmf,order))
+    pmfpred = np.array([fit(xval) for xval in lambdas])
+    pl.plot(lambdas,pmfpred)
     ydiff = np.absolute(pmfpred - pmf)
     r = np.corrcoef(pmf,pmfpred)
     r2 = np.square(r)
