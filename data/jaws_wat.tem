@@ -1,0 +1,21 @@
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1) 
+par 8003    OW    8    0.000    3.15363    0.1550
+par 8004    HW    1    0.520    0.0    0.0
+par 8005    ??    0    -1.040    0.0    0.0
+mode template
+solute WA1
+info translate 0.150 rotate 15.000
+jtheta 0.150
+jcorr 1.000
+jpmf -1.7027 15.6419 -34.6801 26.8842 -0.0315
+atom  O00 WA1 8003 8003  DM3 DUM  DM2 DUM  DM1 DUM
+atom  H01 WA1 8004 8004  O00 WA1  DM3 DUM  DM2 DUM
+atom  H02 WA1 8004 8004  O00 WA1  H01 WA1  DM3 DUM
+atom  M03 WA1 8005 8005  O00 WA1  H01 WA1  H02 WA1
+bond  H01 WA1  O00 WA1 param 0 0
+bond  H02 WA1  O00 WA1 param 0 0
+bond  M03 WA1  O00 WA1 param 0 0
+angle  H01 WA1  O00 WA1  M03 WA1 param 0 0
+angle  H02 WA1  O00 WA1  M03 WA1 param 0 0
+angle  H01 WA1  O00 WA1  H02 WA1 param 0 0
