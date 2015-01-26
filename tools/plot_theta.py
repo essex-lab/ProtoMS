@@ -96,10 +96,6 @@ def find_solute_theta(molecule,restart='restart',results='results',print_average
       res_thetavals = snap.thetavals
     for ind,res_theta in enumerate(res_thetavals) :
       if ind+1 in thetas.keys() : thetas[ind+1].append(res_theta)
-  if print_average : 
-    for solid in thetas :
-      average = np.sum(np.array(thetas[solid],float))/(len(thetas[solid])+1)
-      print "Theta average for solute %s: %f"%(solid,average)
   return thetas
 
 

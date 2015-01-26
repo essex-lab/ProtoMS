@@ -27,13 +27,13 @@
     <link rel="next" title="Design of ProtoMS" href="protoms.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
   </head>
-  <body>
+  <body role="document">
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
 <a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
 </div>-->
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -51,7 +51,7 @@
       </ul>
     </div>
 
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/dolphin.png" alt="Logo"/>
@@ -71,7 +71,7 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="protoms.html"
                         title="next chapter">Design of ProtoMS</a></p>
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -90,7 +90,7 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="compilation-and-installation">
 <h1>Compilation and Installation<a class="headerlink" href="#compilation-and-installation" title="Permalink to this headline">¶</a></h1>
@@ -110,11 +110,11 @@
 <ul class="simple">
 <li>The maximum line length is up to 132 characters, rather than 72.</li>
 <li>Variable, subroutine and function names are greater than 6 characters.</li>
-<li><tt class="docutils literal"><span class="pre">do/enddo</span></tt> loops are used rather than <tt class="docutils literal"><span class="pre">do/continue</span></tt>.</li>
-<li>Fortran <tt class="docutils literal"><span class="pre">include</span></tt> is used to include the contents of other files.</li>
-<li>The <tt class="docutils literal"><span class="pre">flush</span></tt>, <tt class="docutils literal"><span class="pre">getarg</span></tt> and <tt class="docutils literal"><span class="pre">getenv</span></tt> non-standard intrinsic functions are used.</li>
-<li>ProtoMS performs string manipulation using the <tt class="docutils literal"><span class="pre">len</span></tt> function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.</li>
-<li>The <tt class="docutils literal"><span class="pre">Date</span></tt> and <tt class="docutils literal"><span class="pre">Time</span></tt> Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in <tt class="docutils literal"><span class="pre">getoptions.F</span></tt>, though you will need to provide a random number seed manually.</li>
+<li><code class="docutils literal"><span class="pre">do/enddo</span></code> loops are used rather than <code class="docutils literal"><span class="pre">do/continue</span></code>.</li>
+<li>Fortran <code class="docutils literal"><span class="pre">include</span></code> is used to include the contents of other files.</li>
+<li>The <code class="docutils literal"><span class="pre">flush</span></code>, <code class="docutils literal"><span class="pre">getarg</span></code> and <code class="docutils literal"><span class="pre">getenv</span></code> non-standard intrinsic functions are used.</li>
+<li>ProtoMS performs string manipulation using the <code class="docutils literal"><span class="pre">len</span></code> function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.</li>
+<li>The <code class="docutils literal"><span class="pre">Date</span></code> and <code class="docutils literal"><span class="pre">Time</span></code> Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in <code class="docutils literal"><span class="pre">getoptions.F</span></code>, though you will need to provide a random number seed manually.</li>
 </ul>
 <p>The tools are written in python and should be compatible with the standard implementation version 2.7. It is known that is does not work with 2.6 and it has not been tested with version 3.0 or more.</p>
 </div>
@@ -122,8 +122,8 @@
 <h2>Building ProtoMS<a class="headerlink" href="#building-protoms" title="Permalink to this headline">¶</a></h2>
 <p>ProtoMS has been written using the GNU Fortran compilers, on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.</p>
 <p>You also need the OpenMPI package as ProtoMS contains instructions that operates on multiple processes. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77</p>
-<p>Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of <tt class="docutils literal"><span class="pre">make</span></tt> that supports the GNU Makefile format. Simply go into the <tt class="docutils literal"><span class="pre">src</span></tt> directory and edit the <tt class="docutils literal"><span class="pre">Makefile</span></tt> that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the <tt class="docutils literal"><span class="pre">Makefile</span></tt> you can then run <tt class="docutils literal"><span class="pre">make</span></tt>. After about a minute, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called <tt class="docutils literal"><span class="pre">protoms3</span></tt> on UNIX/Linux. This executable should be run from the command line, or via a script.</p>
-<p>We recommend to set the environmental variable <tt class="docutils literal"><span class="pre">$PROTOMSHOME</span></tt> to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.</p>
+<p>Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of <code class="docutils literal"><span class="pre">make</span></code> that supports the GNU Makefile format. Simply go into the <code class="docutils literal"><span class="pre">src</span></code> directory and edit the <code class="docutils literal"><span class="pre">Makefile</span></code> that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the <code class="docutils literal"><span class="pre">Makefile</span></code> you can then run <code class="docutils literal"><span class="pre">make</span></code>. After about a minute, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called <code class="docutils literal"><span class="pre">protoms3</span></code> on UNIX/Linux. This executable should be run from the command line, or via a script.</p>
+<p>We recommend to set the environmental variable <code class="docutils literal"><span class="pre">$PROTOMSHOME</span></code> to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.</p>
 </div>
 </div>
 
@@ -133,7 +133,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -150,9 +150,9 @@
  
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2014, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
     </div>
   </body>
 </html>
