@@ -23,7 +23,7 @@ c#############################################################
       if (NEwaldTry.gt.0) then
         write(printstring,*) "Attempted ",NEwaldTry," Ewald moves. Accepted ",NEwaldAcp," (",
      .                      100.0*dble(NEwaldAcp)/dble(NEwaldTry),"%)"
-        call printLine(ACCPT,printstring)
+        call prettyLine(ACCPT,printstring)
       endif
 
       if (NVolTry.gt.0) then

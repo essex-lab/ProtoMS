@@ -97,7 +97,11 @@ c                   everything else that was printed
             endif
 
             if (numb.ne.0) then
-              write(tempstring,"(A,I4)")"MODEL     ",numb
+              if (numb.le.9999) then
+                write(tempstring,"(A,I4)")"MODEL     ",numb
+              else
+                write(tempstring,"(A,I8)")"MODEL     ",numb
+              endif
               call printline(PDB, tempstring)
             endif  
                     
@@ -204,7 +208,7 @@ c               restart files will never be appended
               endif
               if (numb.le.1) call prettyLine(INFO,"Writing restart file")
 c              if (numb.ne.0) then
-c                write(tempstring,"(A,I4)")"RESTART FILE ",numb
+c                write(tempstring,"(A,I10)")"RESTART FILE ",numb
 c                call prettyline(RESTART, tempstring)
 c              endif  
               call writeRestart()
@@ -251,7 +255,7 @@ c               the new file is the third word
                 call printline(RESULTS, "  -  ")
               endif
               if (numb.ne.0) then
-                write(tempstring,"(A,I4)")"RESULTS FILE ",numb
+                write(tempstring,"(A,I10)")"RESULTS FILE ",numb
                 call prettyline(RESULTS, tempstring)
               endif  
               if (words(2)(1:9).eq.'writeinst') then
