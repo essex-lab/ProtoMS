@@ -93,7 +93,7 @@ c     the maximum number of dihedral types
       parameter(MAXDIHPARAM=5000)
 c     the maximum number of dihedral terms
       integer MAXDIHTERMS
-      parameter(MAXDIHTERMS=5000)
+      parameter(MAXDIHTERMS=6000)
 c     the maximum number of terms in each dihedral
       integer MAXDIHTERMSPERDIHEDRAL
       parameter(MAXDIHTERMSPERDIHEDRAL=6)
