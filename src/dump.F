@@ -14,6 +14,7 @@
 
       logical getLogical,printdummies,showhidden,printstd,append,newfile,getoption
       double precision printsolvent,getDouble,lb,lf,lambda
+      double precision nrg,nrgb,nrgf
       integer lgth,j,iprnt,ilgth,lineLength,openFILE,getint,i
       integer numb
       character*64 line,tempstring
@@ -276,7 +277,10 @@ c               the new file is the third word
                 streamhandle(PDB) = STDOUT
               endif  
               call split(line)
-            endif       
+            endif  
+
+          else if (words(1).eq.'pmeenergy') then
+            call pmePerturbeEnergy(nrg,nrgb,nrgf)                   
           endif   
 
   100 return
