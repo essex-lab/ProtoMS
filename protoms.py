@@ -226,8 +226,8 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
   # Check to see if we have a template file
   if files["tem"] is None : 
     #jfragments_mod below
-    if settings.jawsfrags :
-      if ligprefix.strip('_lig') in ' '.join(frag.strip('.pdb') for frag in settings.jawsfrags): 
+    if settings.jfragmol :
+      if ligprefix.strip('_lig') in ' '.join(frag.strip('.pdb') for frag in settings.jfragmol): 
         raise simulationobjects.SetupError("To run a fragment JAWS simulation you need to provide the template for your theta-solutes")
     #jfragments_mod avobe
     resnam = files["obj"].residues[1].name # Set the prepi name and template name to the residue name
@@ -912,8 +912,8 @@ if __name__ == "__main__":
 
   # jfragments_mod below
   if not args.ligand: args.ligand = []
-  if args.jawsfrags :
-    for fragfile in args.jawsfrags : 
+  if args.jfragmol :
+    for fragfile in args.jfragmol : 
       ligfragobj = simulationobjects.PDBFile(filename = fragfile)
       if ligfragobj.residues :
         ligfragobj.header = "HEADER %s\n" %ligfragobj.residues[ligfragobj.residues.keys()[0]].name
@@ -1004,11 +1004,11 @@ if __name__ == "__main__":
 
   # Extra preparation for GCMC or JAWS-1     
   #jfragments_mod below  
-  if args.simulation is "jfragments" and not args.jawsfrags :
+  if args.simulation is "jfrag" and not args.jfragmol :
     raise simulationobjects.SetupError("At least one file with fragments has to be provided to run jaws for the fragments. Run distribute_waters.py to prepare one.")
 
-  if args.jawsfrags : args.gcmcwater = args.jawsfrags[0]    
-  if args.simulation in ["gcmc","jaws1","jfragments"] :
+  if args.jfragmol : args.gcmcwater = args.jfragmol[0]    
+  if args.simulation in ["gcmc","jaws1","jfrag"] :
   #jfragments_mod avobe
     args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,tarlist,args)    
   
