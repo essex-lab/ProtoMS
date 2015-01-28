@@ -225,6 +225,11 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
 
   # Check to see if we have a template file
   if files["tem"] is None : 
+    #jfragments_mod below
+    if settings.jawsfrags :
+      if ligprefix.strip('_lig') in ' '.join(frag.strip('.pdb') for frag in settings.jawsfrags): 
+        raise simulationobjects.SetupError("To run a fragment JAWS simulation you need to provide the template for your theta-solutes")
+    #jfragments_mod avobe
     resnam = files["obj"].residues[1].name # Set the prepi name and template name to the residue name
     if files["prepi"] is None :
       # Here we need to run Antechamber
@@ -511,7 +516,12 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
 
     # find smallest box including all oxygens in my water_file
     waterobj = simulationobjects.PDBFile(filename = water_file)
-    waterbox = waterobj.getBox(atomlist=[waterobj.solvents.itervalues().next().atoms[0].name])
+    # jfragments_mod below
+    if len(waterobj.solvents) > 0 :
+      waterbox = waterobj.getBox(atomlist=[waterobj.solvents.itervalues().next().atoms[0].name])
+    else :
+      waterbox = waterobj.getBox(atomlist=[waterobj.residues.itervalues().next().atoms[0].name])
+    # jfragments_mod below
 
     # check whether the box of the water oxygens is within the box provided as argument
     box_origen_below = np.all(box['origin']< waterbox['origin'])
@@ -803,7 +813,7 @@ if __name__ == "__main__":
 
   # Setup a parser of the command-line arguments
   parser = simulationobjects.MyArgumentParser(description="Program setup and run a ProtoMS simulations")
-  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc","jaws1","jaws2"],help="the kind of simulation to setup",default="none")
+  parser.add_argument('-s','--simulation',choices=["none","equilibration","sampling","dualtopology","singletopology","gcmc","jaws1","jaws2","jfrag"],help="the kind of simulation to setup",default="none")
   parser.add_argument('-f','--folders',nargs="+",help="folders to search for files ",default=["."])
   parser.add_argument('-p','--protein',help="the prefix of the protein")
   parser.add_argument('-l','--ligand',nargs="+",help="the prefix of the ligand(s)")
@@ -838,6 +848,9 @@ if __name__ == "__main__":
   simgroup.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on or an integer corresponding to the number of water molecules to add")
   simgroup.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box, or a list of origin(x,y,z) and length(x,y,z) coordinates")
   simgroup.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
+  # jfragments_mod below
+  parser.add_argument('--jfragmol',nargs="+",help="the file(s) with the molecules to include in your jfrag simulation with sampling theta.")
+  # jfragments_mod avobe
   simgroup.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   simgroup.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
   simgroup.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
@@ -896,6 +909,20 @@ if __name__ == "__main__":
 
   # Setup list of files to be stored away
   tarlist = []
+
+  # jfragments_mod below
+  if not args.ligand: args.ligand = []
+  if args.jawsfrags :
+    for fragfile in args.jawsfrags : 
+      ligfragobj = simulationobjects.PDBFile(filename = fragfile)
+      if ligfragobj.residues :
+        ligfragobj.header = "HEADER %s\n" %ligfragobj.residues[ligfragobj.residues.keys()[0]].name
+      else :
+        ligfragobj.header = "HEADER %s\n" %ligfragobj.solvents[ligfragobj.solvents.keys()[0]].name
+      prefix = _get_prefix(fragfile)
+      ligfragobj.write(filename="%s_lig.pdb"%prefix)
+      args.ligand = ["%s_lig.pdb"%prefix] + args.ligand
+  # jfragments_mod avobe
      
   # Prepare each given ligand
   ligand_files = {} # This will be filled with a dictionary of filenames for each ligand
@@ -976,7 +1003,13 @@ if __name__ == "__main__":
     protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,tarlist,args)
 
   # Extra preparation for GCMC or JAWS-1     
-  if args.simulation in ["gcmc","jaws1"] :
+  #jfragments_mod below  
+  if args.simulation is "jfragments" and not args.jawsfrags :
+    raise simulationobjects.SetupError("At least one file with fragments has to be provided to run jaws for the fragments. Run distribute_waters.py to prepare one.")
+
+  if args.jawsfrags : args.gcmcwater = args.jawsfrags[0]    
+  if args.simulation in ["gcmc","jaws1","jfragments"] :
+  #jfragments_mod avobe
     args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,tarlist,args)    
   
   # Extra preparation for JAWS-2

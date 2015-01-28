@@ -48,7 +48,7 @@ def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
     the filename of the solvent pdb file
   moveset : string
     string indicating the type of move set to create.
-    Can be standard, gcmc, jaws1 or jaws2
+    Can be standard, gcmc, jaws1, jaws2 or jfragments
   isperiodic : boolean
     flag indicating if a periodic simulation is prepared
   """
@@ -103,6 +103,13 @@ def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
     else :
       movenam = "sample"
     return "solvent=%d protein=%d solute=%d %s=%d gcsolute=%d"%(psolvent,pprotein,psolute,movenam,ptheta,pgcsolu)
+
+  elif moveset is "jfragments" :
+    psolute = int(round(addto/6)) # Giving half of all move to JAWS moves.
+    ptheta  = int(round(addto/6))
+    psolvent = int(round(addto*numsolv/numtot/2.0))
+    pprotein = int(round(addto*numprot/numtot/2.0))
+    return "solvent=%d protein=%d solute=%d soltheta=%d"%(psolvent,pprotein,psolute,ptheta)
   
 class ProtoMSSimulation :
     """
@@ -810,6 +817,81 @@ class Jaws1(ProteinLigandSimulation) :
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
+
+class Jfragments(ProteinLigandSimulation) :
+  """ 
+  This a command file for a JAWS-1 simulation for fragments
+  Generates input for proteins, solutes and solvent
+  writes parameters for a JAWS-1 simulation for fragments
+  dump results, pdb and restart files
+  equilibrate and production run
+  """
+  def __init__(self,protein="protein.pdb",
+                    solutes=[],
+                    solvent="water.pdb",
+                    templates=[],
+                    outfolder="",
+                    jawsmols=[],
+                    jawsbox=None,   
+                    nequil=5E6,
+                    nprod=40E6,
+                    dumpfreq=1E5) :  
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    jawsmols : string, optional
+      filenames of the molecules to do JAWS-1 one
+    jawsbox : dictionary of numpy array, optional
+      defines the box if not found in jawswater
+    nequil : int, optional
+      number of equilibration moves
+    nprod : int, optional
+      number of production moves
+    dumfreq : int, optional
+      the dump frequency 
+    outfolder  : string, optional
+      the folder for all output files
+    
+    Raises
+    ------
+    SetupError
+      no protein given
+      no box dimensions found
+      no JAWS molecules given
+    """      
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+     
+    if protein is None :
+      raise simulationobjects.SetupError("Cannot setup GCMC without protein")
+
+    if not jawsmols :
+      raise simulationobjects.SetupError("Cannot setup JAWS-1 without any JAWS molecules")
+ 
+    self.setParameter("#"," JAWS-1 specific parameters")
+    self.setParameter("nthetasolutes",len(jawsmols))
+    self.setParameter("softcore1","solute all")
+    self.setParameter("softcoreparams","coul 1 delta 1.5")
+    _setbox(self,jawsmols[0],jawsbox)
+    self.setParameter('conccorr','off')
+    self.setParameter("#"," End of JAWS specific parameters")
+  
+    self.setDump("results write results",dumpfreq)
+    self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
+    self.setDump("restart write restart",dumpfreq)
+    self.setDump("averages reset",dumpfreq)
+    
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"jfragments",self.periodic)
+    self.setChunk("equilibrate %d %s"%(nequil,moves))        
+    self.setChunk("simulate %d %s"%(nprod,moves))
+
 class Jaws2(ProteinLigandSimulation) :
   """ 
   This a command file for a JAWS-2 simulation
@@ -1053,6 +1135,13 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
   
       bnd_cmd = Jaws1(protein=protein,solutes=ligands, 
                      templates=templates,solvent=protein_water,jawswater=settings.gcmcwater,
+                     nequil=settings.nequil,jawsbox=settings.gcmcbox,
+                     nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=settings.outfolder) 
+
+  elif settings.simulation == "jfragments" :
+
+      bnd_cmd = Jfragments(protein=protein,solutes=ligands, 
+                     templates=templates,solvent=protein_water,jawsmols=settings.jawsfrags,
                      nequil=settings.nequil,jawsbox=settings.gcmcbox,
                      nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=settings.outfolder) 
 
