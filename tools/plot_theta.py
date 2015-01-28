@@ -99,7 +99,7 @@ def find_solute_theta(molecule,restart='restart',results='results',print_average
   return thetas
 
 
-def plot_dist(dict_th,plotname="theta_dist",xlab="theta") :
+def plot_dist(dict_th,plotname="theta_dist",xlab="theta",xlimit=None) :
   """
   Plot a distribution of dictonary values
   in form of lists
@@ -116,6 +116,9 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta") :
   xlab : string, optional
     what to write in the x axes label
     of the histogram
+  xlimit : list, optional
+    the limits of the x-axes values.
+    Set to [0.0,0.1] if 'theta' in xlab
 
   Return
   ------
@@ -129,8 +132,12 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta") :
     if '$' in yname : fontsizey = 20
     plt.xlabel(xname,fontsize=fontsizex)
     plt.ylabel(yname,fontsize=fontsizey)
+    xends = xlimit
+    if "theta" in xname and not xlimit : xends = [0.0,1.0]
+    if xends : plt.xlim(tuple(xends))
 
-  if xlab == "theta" : xlab = r"$\theta$"
+  if xlab == "theta" : xlab = r'$\theta$'
+      
 
   thetas_values = np.array(dict_th.values(),float)
 

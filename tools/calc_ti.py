@@ -241,6 +241,7 @@ def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
       logger.info("With an R^2 of %.3f and Spearman's rho of %.3f"%(r2.item(1,0),rho))
       pl.savefig(plotfile)
       logger.info("Open %s to visualize the fit.\n"%plotfile)
+      print fit.c[::-1]
       return fit.c[::-1]
   logger.info("No polynomial of orders between %d and %d could be successfully fitted to your PMF" %(orderfit,upperfit))
   return None
