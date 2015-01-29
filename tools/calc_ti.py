@@ -74,7 +74,7 @@ def _print_head(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8s"%std,
   print ""
 
-def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
+def _parse_folder(path,res_tem,skip,maxread,RT,numkind,useanalytical) :
   """ 
   Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
   
@@ -88,6 +88,8 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
     number of snapshots to skip
   maxread : int
     maximum number of snapshots to read
+  RT : float 
+    the thermal temperature
   numkind : string
     the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
@@ -112,12 +114,34 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
   n = 0
   lam = None
 
+  # Needed for the PME calculation
+  lamB = None
+  lamF = None
+  expsumB = 0
+  expsumF = 0
+  expsum2B = 0
+  expsum2F = 0
+  doPME = False
+
   for f in filenames:
     results_file = simulationobjects.ResultsFile()
     results_file.read(filename=f,skip=skip,readmax=maxread)
     for snapshot in results_file.snapshots:
+      gradient = None
       # what you want here is to get the current lambda and the gradient for this snapshot, so that you can do (9) 
-      if useanalytical and hasattr(snapshot,"agradient") :
+      if hasattr(snapshot,"pmetotal") :
+        lam = snapshot.lam
+        lamB = snapshot.lamb
+        lamF = snapshot.lamf
+        expB = np.exp(-(snapshot.pmetotal.back-snapshot.pmetotal.curr)/ RT)     
+        expF =   np.exp(-(snapshot.pmetotal.forw-snapshot.pmetotal.curr)/ RT)
+        expsumB = expsumB + expB
+        expsumF = expsumF + expF
+        expsum2B = expsum2B + expB*expB
+        expsum2F = expsum2F + expF*expF
+        doPME = True
+        
+      elif useanalytical and hasattr(snapshot,"agradient") :
         gradient = snapshot.agradient
         lam = snapshot.lam
       elif numkind == "both" and hasattr(snapshot,"gradient") :
@@ -147,15 +171,37 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
       if gradient != None :
         gradsum = gradsum + gradient
         gradsum2 = gradsum2 + gradient*gradient
-        n = n + 1
+      n = n + 1
     # Computes ensemble average and standard error
-    av = gradsum / n
-    std = 0.0
-    if n > 2 :
-      std = np.sqrt((gradsum2-av*gradsum)/(n-1)/n)
+    if not doPME :
+      av = gradsum / n
+      std = 0.0
+      if n > 2 :
+        std = np.sqrt((gradsum2-av*gradsum)/(n-1)/n)
+    else :
+      expavB = expsumB / n  
+      expavF = expsumF / n
+      stdB = stdF = 0
+      if n > 2 :
+        if (lam > 0.0001) : stdB =  np.sqrt((expsum2B-expavB*expsumB)/(n-1)/n)
+        if (lam < 0.9999 ):stdF =  np.sqrt((expsum2F-expavF*expsumF)/(n-1)/n)
+      dGB = - RT * np.log(expavB)
+      dGF = - RT * np.log(expavF)
+      dGBs = RT*stdB/expavB
+      dGFs = RT*stdF/expavF
+      deltalam = max(lam-lamB,lamF-lam)      
+      if (lam < 0.0001):
+        dGB = -dGF
+        dGBs = dGFs
+      if (lam > 0.9999):
+        dGF = -dGB 
+        dGFs = dGBs
+      av = (dGF - dGB) / (2*deltalam)            
+      std = np.sqrt((dGBs*dGBs+dGFs*dGFs)/(2*deltalam))
+
     return lam,av,std
 
-def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
+def _calc_gradients(path,res_tem,skip,maxread,RT,verbose,numkind,useanalytical) :
   """
   Calculate gradients for a number of folders
   
@@ -169,6 +215,8 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     number of snapshots to ignore
   maxread : int
     maximum number of snapshots to read
+  RT : float 
+    the thermal temperature
   verbose : dictionary of booleans
     tune the printing to standard output
   numkind : string
@@ -195,7 +243,7 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   stds = []
   lambdas = []
   for path in paths :
-    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical)
+    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,RT,numkind,useanalytical)
     if verbose["gradient"] : _print_ene(lam,grad,std,verbose["uncert"],verbose["lambda"])
     gradients.append(grad)
     lambdas.append(lam)
@@ -246,7 +294,7 @@ def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
   return None
     
 
-def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
+def ti(path,res_tem,skip,maxread,RT,verbose,numkind,useanalytical) :
   """
   Do thermodynamic integration
   
@@ -260,6 +308,8 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     number of snapshots to skip
   maxread : int 
     maximum number of snapshots to read
+  RT : float 
+    the thermal temperature
   verbose : dictionary of booleans
     tune the printing to standard output
   numkind : string
@@ -285,7 +335,7 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   # Calculate the gradient
   if verbose["gradient"] :
     _print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
-  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
+  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,RT,verbose,numkind,useanalytical)
 
   
   # Calculate and print the PMF 
@@ -330,6 +380,7 @@ if __name__ == '__main__' :
   parser.add_argument('-pl','--print-lam',dest='printLam',action='store_false',help="turns off printing of lambda-values",default=True)
   parser.add_argument('-gr','--plot-grads',dest='plotGrad',action='store_true',help="turns on producing plot of gradients",default=False)
   parser.add_argument('-pf','--print-fit',dest='fitPMF',action='store_true',help="turns on fitting the pmf to a polynomial",default=False)
+  parser.add_argument('-t','--temperature',type=float,help="the simulation temperature in degrees Default is 25.0",default=25.0)
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   args = parser.parse_args()
@@ -342,9 +393,12 @@ if __name__ == '__main__' :
     args.max = 99999
   if args.skip <= 0 :
     args.skip = -1
+
+  RT = 1.9872041*(args.temperature+273.15)/1000
+
   # Do thermodynamic integration
   verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam}
-  lambdas,gradients,grad_std,pmf,pmf_std= ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
+  lambdas,gradients,grad_std,pmf,pmf_std= ti(args.directory,args.results,args.skip,args.max,RT,verbose,args.numerical,args.analytical)
 
   # Do the fit
   if args.fitPMF :
