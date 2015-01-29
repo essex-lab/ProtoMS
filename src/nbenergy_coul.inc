@@ -147,7 +147,11 @@ c       calculate the distances for variable geometry (if necessary)
 c***********************************************************
 c       Now calculate the energies
 c***********************************************************
-        funccnrg = qiqj * invfuncdist
+        if (pmeblocks.gt.1) then
+          funccnrg = qiqj * invfuncdist * erfc(pme_alpha/invfuncdist)
+        else
+          funccnrg = qiqj * invfuncdist
+        endif  
         funcljnrg = ZERO
         if (DifferentLambdas) then
 c         *** Forwards/Backwards state coulombic and LJ energies *** 
