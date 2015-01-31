@@ -155,8 +155,13 @@ c***********************************************************
         funcljnrg = ZERO
         if (DifferentLambdas) then
 c         *** Forwards/Backwards state coulombic and LJ energies *** 
-          funccnrgf = qiqjf * invfuncdistf       
-          funccnrgb = qiqjb * invfuncdistb
+          if (pmeblocks.gt.1) then
+            funccnrgf = qiqjf * invfuncdistf * erfc(pme_alpha/invfuncdistf)
+            funccnrgb = qiqjb * invfuncdistb * erfc(pme_alpha/invfuncdistb)
+          else
+            funccnrgf = qiqjf * invfuncdistf
+            funccnrgb = qiqjb * invfuncdistb
+          endif
           funcljnrgf = ZERO
           funcljnrgb = ZERO
         else
