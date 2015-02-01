@@ -133,7 +133,6 @@ def _parse_folder(path,res_tem,skip,maxread,RT,numkind,useanalytical) :
         lam = snapshot.lam
         lamB = snapshot.lamb
         lamF = snapshot.lamf
-        print snapshot.pmetotal
         expB = np.exp(-(snapshot.pmetotal.back-snapshot.pmetotal.curr)/ RT)     
         expF =   np.exp(-(snapshot.pmetotal.forw-snapshot.pmetotal.curr)/ RT)
         expsumB = expsumB + expB
