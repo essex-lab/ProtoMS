@@ -70,6 +70,8 @@ def get_coords(pdbfiles,molname,atomname):
         else:
             mol_xyz.append(iatom.coords)
             molsizes.append(len(sol.atoms))
+  if not mol_xyz :
+    raise simulationobjects.SetupError("No molecule with residue name %s has been found."%molname)
   if atomname is not None :
     conformations = np.array(atm_xyz)
     return conformations, atm_found
