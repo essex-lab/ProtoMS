@@ -18,6 +18,7 @@
       integer numb
       character*64 line,tempstring
       character*600 tempname,cmd
+      character*255 fullfilename
 
       
       call split(line)
@@ -90,7 +91,8 @@ c                   everything else that was printed
               call split(line)
             endif     
 
-            fileappend(streamhandle(PDB)-40) = append 
+            fileappend(streamhandle(PDB)-40) = (append.or.appendstreams)
+c (append.or.appendstreams)
 
             if (numb.le.1) then
               call printLine(PDB,"HEADER Simulation output from ProtoMS")
@@ -136,7 +138,7 @@ c               get which solute will be printed
             endif   
 
 c FREEENERGY -------------------------------------------------
-
+c This is done by printaverages now
 
 c          else if (words(1).eq.'freeenergy') then
 c           SG: format is 'freeenergy lambdab labmbdaf'
@@ -182,8 +184,9 @@ c                    do i=1,NGCSolutes
 c               PRINT*, "GCS,theta",i,thetaparam(i)
 c                   enddo
 
-              
-              call readRestart(words(3)(1:ilgth))
+              call getFullFilename(words(3),fullfilename)
+              ilgth = lineLength(fullfilename)              
+              call readRestart(fullfilename(1:ilgth))
             else if (words(2).eq.'write') then
               if (nwords.ge.3) then
 c               redirect the stream to 'filename'
@@ -236,7 +239,6 @@ c           'averages reset|write (filename)'
 c               the new file is the third word
                 ilgth = lineLength(words(3))
                 streamhandle(RESULTS) = openFile(words(3)(1:ilgth))
-                fileappend(streamhandle(RESULTS)-40) = append
                 newfile = .TRUE.
               endif
               if (.not.newfile) then

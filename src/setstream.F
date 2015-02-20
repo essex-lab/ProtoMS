@@ -14,6 +14,7 @@ c#####################################################
       character*(*) filename
       character*20 tmpstr1,tmpstr2
       integer i,openFILE,lgth,lgth2,lineLength
+      logical getAppendFlag
       
       lgth = lineLength(stream)
       if (lgth.gt.20) lgth = 20
@@ -36,7 +37,7 @@ c         ensure that the FATAL and WARNING streams are always on
               streamhandle(i) = STDERR
             endif
           else
-            fileappend(streamhandle(i)-40) = (.not.(i.eq.RESTART))
+            fileappend(streamhandle(i)-40) = getAppendFlag(i)
           endif
           return
         endif

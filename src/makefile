@@ -223,6 +223,7 @@ OBJS = addacid.o \
        genproteinatom.o \
        gensoluteatom.o \
        getangle.o \
+       getappendflag.o	\
        getatomname.o \
        getaxisvectors.o \
        getbond.o \
@@ -235,6 +236,7 @@ OBJS = addacid.o \
        getdofinfo.o \
        getdouble.o \
        geteffectivebornradii.o \
+       getfullfilename.o	\
        getgbiborn.o \
        getgbscale.o \
        gethighscale.o \
@@ -1156,6 +1158,8 @@ gensoluteatom.o: dimensions.inc solutes.inc
 gensoluteatom.o:
 getangle.o: dimensions.inc parameters.inc printer.inc
 getangle.o:
+getappendflag.o : dimensions.inc printer.inc
+getappendflag.o :
 getatomname.o: proteins.inc dimensions.inc
 getatomname.o:
 getaxisvectors.o: dimensions.inc constants.inc printer.inc
@@ -1180,6 +1184,8 @@ geteffectivebornradii.o: proteins.inc dimensions.inc solutes.inc gb.inc
 geteffectivebornradii.o: solvents.inc parameters.inc constants.inc printer.inc
 geteffectivebornradii.o: flags.inc
 geteffectivebornradii.o:
+getfullfilename.o : parallel.inc flags.inc dimensions.inc printer.inc
+getfullfilename.o :
 getgbiborn.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc
 getgbiborn.o:
 getgbscale.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc

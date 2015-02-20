@@ -65,25 +65,7 @@ c     see if we are asking for 'stdout' or 'stderr'
         endif
       endif
       
-      if (doLambdaRE) then
-c        write(6,*)"Task = ",myid,lrefolder,filename
-        write(fullfilename,"(3A)")lrefolder(1:lineLength(lrefolder)),"/",
-     .           filename(1:lineLength(filename))
-      elseif (doMultiGCMC) then
-        write(fullfilename,"(3A)")gcmcfolder(1:lineLength(gcmcfolder)),"/",
-     .           filename(1:lineLength(filename))
-      elseif (doMultiJAWS2) then
-        write(fullfilename,"(3A)")jaws2folder(1:lineLength(jaws2folder)),"/",
-     .           filename(1:lineLength(filename))
-      else      
-        if (hasoutfolder) then
-          write(fullfilename,"(3A)")outfolder(1:lineLength(outfolder)),"/",
-     .             filename(1:lineLength(filename))
-        else
-          fullfilename = filename  
-        endif
-      endif
-
+      call getFullFilename(filename,fullfilename)
       lgth = lineLength(fullfilename)
 c     see if this file has already been opened
       do i=1,nOpenFiles

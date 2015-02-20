@@ -19,4 +19,4 @@ c     The version of the program
       
 c     The name of the executable      
       character*8 exename
-      parameter(exename="protoms2")
+      parameter(exename="protoms3")

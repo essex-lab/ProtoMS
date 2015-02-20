@@ -13,7 +13,7 @@ c
 c###############################################
 
       integer i,j,lgth,lineLength
-      logical getOption
+      logical getOption,getAppendFlag,getLogical
       integer openFile
       character*14 optn
       character*300 tempstring
@@ -30,6 +30,11 @@ c     check if we are dumping files to folder
           hasoutfolder = .false.
         endif
       endif
+
+c     check if we are appending to streams
+      write(optn,'(A)')"appendstreams"
+      appendstreams = .false.
+      if (getOption(optn)) appendstreams = getLogical(words(1),appendstreams)
 
       do i=1,nstreams
 c       write the name of the option - it will be 'stream???'
@@ -56,7 +61,7 @@ c         ensure that the fatal and warning streams are directed to something
               streamhandle(i) = STDERR
             endif
           else
-            fileappend(streamhandle(i)-40) = (.not.(i.eq.RESTART))
+            fileappend(streamhandle(i)-40) = getAppendFlag(i)
           endif
         endif
       enddo

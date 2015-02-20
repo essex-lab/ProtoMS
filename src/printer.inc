@@ -60,9 +60,12 @@ c     whether or not to do pretty printing
 
       character*300 outfolder
       logical hasoutfolder
+
+c     If the streams should be appended to
+      logical appendstreams
                   
       common /PROTOPRINT/ nopenfiles,streamhandle,printstring,outfolder,streamtag,openfiles,prettyprint,
-     .                    fileopened,fileappend,appendto,hasoutfolder
+     .                    fileopened,fileappend,appendto,hasoutfolder,appendstreams
 
       save /PROTOPRINT/
       
