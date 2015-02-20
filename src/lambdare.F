@@ -28,7 +28,7 @@ c###################################################################
       double precision delf,delb
       double precision buffer(5)
       character*255 tempstr,tempstr2
-
+   
       call closeFiles
 
       if (mylambda.eq.1) then
@@ -160,8 +160,8 @@ c     Re-setting all running averages
 
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
       write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
-      do i=1,nOpenFiles            
-        fileappend(i) = .True.
+      do i=1,nOpenFiles    
+        if (wasopened(i)) fileappend(i) = .true.
         if (i.eq.streamhandle(RESTART)-40) then
           fileappend(i) = .False.
         endif

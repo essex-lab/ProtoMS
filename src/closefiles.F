@@ -15,6 +15,7 @@ c################################################
       do i=1,nOpenFiles
 c       the file is assigned to a unit
         file = i+40
+        wasopened(i) = fileopened(i)
         if (fileopened(i)) then
 c         the file is opened - close it!
           close(file)

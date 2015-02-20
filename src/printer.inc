@@ -46,6 +46,8 @@ c     the number of open files
       integer nopenfiles            
 c     whether or not the file has been opened yet
       logical fileopened(MAXOPENFILES)
+      logical wasopened(MAXOPENFILES)
+
 c     whether or not to append to the file
       logical fileappend(MAXOPENFILES),appendto
                   
@@ -65,7 +67,7 @@ c     If the streams should be appended to
       logical appendstreams
                   
       common /PROTOPRINT/ nopenfiles,streamhandle,printstring,outfolder,streamtag,openfiles,prettyprint,
-     .                    fileopened,fileappend,appendto,hasoutfolder,appendstreams
+     .                    fileopened,wasopened,fileappend,appendto,hasoutfolder,appendstreams
 
       save /PROTOPRINT/
       
