@@ -239,6 +239,7 @@ c           'averages reset|write (filename)'
 c               the new file is the third word
                 ilgth = lineLength(words(3))
                 streamhandle(RESULTS) = openFile(words(3)(1:ilgth))
+                fileappend(streamhandle(RESULTS)-40) = (append.or.appendstreams)
                 newfile = .TRUE.
               endif
               if (.not.newfile) then
