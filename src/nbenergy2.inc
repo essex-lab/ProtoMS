@@ -378,14 +378,23 @@ c       **** reference state coulombic and LJ energies ****
 c        write(printstring,*) 'shift ',shift,' shiftf ',shiftf,' shiftb ',shiftb
 c     .    ,' DeltaCore ',DeltaCore
 c        call printLine(DEBUG,printstring)
-        funccnrg = qiqj * invfuncdist
+        if (pmeblocks.gt.1) then
+          funccnrg = qiqj * invfuncdist * erfc(pme_alpha/invfuncdist)
+        else
+          funccnrg = qiqj * invfuncdist
+        endif        
         funcljnrg = funcaij*invfuncdist12 - funcbij*invfuncdist6
 c        write(6,*)"f(r)= ",ONE/invfuncdist6**(ONE/6.0d0), "g(r)= ",ONE/invfuncdist
         if (DifferentLambdas) then
 c         *** Forwards/Backwards state coulombic and LJ energies *** 
-          funccnrgf = qiqjf * invfuncdistf
+          if (pmeblocks.gt.1) then
+            funccnrgf = qiqjf * invfuncdistf * erfc(pme_alpha/invfuncdistf)
+            funccnrgb = qiqjb * invfuncdistb * erfc(pme_alpha/invfuncdistb)
+          else
+            funccnrgf = qiqjf * invfuncdistf
+            funccnrgb = qiqjb * invfuncdistb
+          endif
           funcljnrgf = funcaijf*invfuncdist12f - funcbijf*invfuncdist6f
-          funccnrgb = qiqjb * invfuncdistb
           funcljnrgb = funcaijb*invfuncdist12b - funcbijb*invfuncdist6b
 c          write(6,*)"f(r)= ",ONE/invfuncdist6f**(ONE/6.0d0), "g(r)= ",ONE/invfuncdistf
 c          write(6,*)"f(r)= ",ONE/invfuncdist6b**(ONE/6.0d0), "g(r)= ",ONE/invfuncdistb

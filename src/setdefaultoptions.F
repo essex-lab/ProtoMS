@@ -42,6 +42,9 @@ c############################################
       boundary = AGREESOLVENT
       solventBox = .false.
       solventCap = .false.
+
+      pmeblocks = 0
+      pme_tol = 0.0001d0
                              
       return
       end

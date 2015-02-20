@@ -29,7 +29,7 @@ c###########################################################
       integer getInt,lineLength,lgth,openFILE
       integer isol,iprnt,iprot,ires
       double precision retideltau,retideltal,getDouble,printsolvent
-      double precision delta,deltaf,deltab,lb,lf,lambdaderivative
+      double precision delta,deltaf,deltab,lb,lf,lambdaderivative,nrgf,nrgb,nrg
       character*64 tempstring
       integer i,j,nstps,ilgth,istrt,iend,k
       integer ichunk,numb
@@ -87,6 +87,34 @@ c           get the move probabilities and print move from this line
 
 c           actually run the equilibration
             if (.not.check) call equilibrate(nstps)
+
+          else if (words(1).eq.'equilibrate/pme') then
+c           the format is;
+c           'equilibrate/pme nsteps nblocks (newprob) (protein=1) (solute=2) (solvent=3) (printinfo=10)'
+            if (nwords.lt.2) then
+              call printLine(WARNING,"Could not interpret equilibration line")
+              call join(1,nwords,printstring)
+              call printLine(WARNING,printstring)
+              cycle
+            endif
+
+c           parse number of blocks            
+            pmeblocks = getInt(words(3),0)
+
+c           reorder the other parameters
+            do i = 3,nwords-1
+              words(i) = words(i+1)
+            enddo
+            
+c           get the move probabilities and print move from this line
+            call getMoveInfo()
+            
+            nstps = getInt(words(2),0)
+            write(printstring,*) "Requested ",nstps," steps of equilibration with ",pmeblocks," blocks"
+            call prettyLine(INFO,printstring)
+
+c           actually run the equilibration
+            if (.not.check) call equilibratepme(nstps)
           
           else if (words(1).eq.'simulate') then
 c           the format is;
@@ -108,6 +136,34 @@ c           get the move probabilities etc.
 c           actually perform the simulation
             if (.not.check) call simulate(nstps)            
  
+          else if (words(1).eq.'simulate/pme') then            
+c           the format is;
+c           'simulate/pme nsteps nblocks (newprob) (protein=1) (solute=2) (solvent=3) (printinfo=10)'
+            if (nwords.lt.2) then
+              call printLine(WARNING,"Could not intepret simulation line")
+              call join(1,nwords,printstring)
+              call printLine(WARNING,printstring)
+              cycle
+            endif
+
+c           parse number of blocks            
+            pmeblocks = getInt(words(3),0)
+
+c           reorder the other parameters
+            do i = 3,nwords-1
+              words(i) = words(i+1)
+            enddo
+
+c           get the move probabilities etc.
+            call getMoveInfo()
+            
+            nstps = getInt(words(2),0)
+            write(printstring,*) "Requested ",nstps," steps of simulation with ",pmeblocks," blocks"
+            call prettyLine(INFO,printstring)
+            
+c           actually perform the simulation
+            if (.not.check) call simulatepme(nstps)   
+
           else if (words(1) .eq. 'printparameters') then
             call printParameters()
 
@@ -509,6 +565,10 @@ c           Deal with the adding of restrains
           else if (words(1) .eq. 'gradient') then
             write(printstring,"(A,F20.5)")"Gradient = ",lambdaderivative()
             call printLine(INFO,printstring)
+c          else if (words(1) .eq. 'ewald') then
+c           call ewaldEnergy()
+          else if (words(1).eq.'pmeenergy') then
+            call pmePerturbeEnergy(nrg,nrgb,nrgf)
           else
             call printLine(WARNING,"Cannot intepret simulation chunk!")
             call join(1,nwords,printstring)

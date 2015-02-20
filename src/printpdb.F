@@ -56,6 +56,10 @@ c           write the box dimensions to the file
             write(printstring,*) "HEADER box ",(BoxOrigin(i)," ",i=1,3),(BoxTop(i)," ",i=1,3)
             call leftJustify(printstring)
             call printLine(PDB,printstring)
+            write(printstring,267)(BoxTop(i)-BoxOrigin(i),i=1,3)
+ 267  format("CRYST1",F9.3,F9.3,F9.3,"  90.00  90.00  90.00P 1")          
+            call leftJustify(printstring)
+            call printLine(PDB,printstring)
           else if (SolventCap) then
 c           write out the solvent cap information to the file
             write(printstring,*) "HEADER cap ",(cap(i)," ",i=1,3),capradius," ",capconstant

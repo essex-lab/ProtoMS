@@ -963,6 +963,10 @@ c         see if the line also contains the pref sampling parameter
      .          call printLine(INFO,"Not performing preferential sampling")
       
 
+      if (getOption('pmetol')) pme_tol = getDouble(words(1),pme_tol)
+      pme_alpha = (1.0/cut)*sqrt(-log(2.0*pme_tol))
+      pme_alpha = 1.0/3.20163d0
+
 c##########################      
 c     finally get the random number seed - the default value is based on the current time
       call getDateAndTime(year,month,day,hour,mins,secs)

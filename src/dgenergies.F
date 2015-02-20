@@ -29,6 +29,7 @@ c###########################################################
       double precision inrgb,inrgf
       double precision nrgti,nrgtib,nrgtif
       double precision totalEnergy
+      double precision pme,pmeb,pmef
       double precision ExtraEnergy,LambdaDerivative
       integer lambindex1, lambindex2,i
 
@@ -99,6 +100,14 @@ c       start the bar / mbar calculations
           nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
           nrgb = nrgb + inrgb
           nrgf = nrgf + inrgf
+
+c         PME
+          if (pmeblocks.gt.0) then
+            call pmePerturbeEnergy(pme,pmeb,pmef)
+            nrg = nrg + pme
+            nrgb = nrgb + pmeb
+            nrgf = nrgf + pmef
+          endif
 
           MBAREnergy(min(i+2,lambindex2)) = nrgf
           MBAREnergy(min(i+1,lambindex2)) = nrg
