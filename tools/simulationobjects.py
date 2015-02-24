@@ -821,11 +821,9 @@ class SnapshotResults :
   thetasolvals : list of float
     the theta values of all theta solutes
   """
-  def __init__(self,fileobj=None) :
+  def __init__(self) :
     self.thetavals = []
     self.thetasolvals = []
-    if fileobj is not None :
-      self.parse(fileobj) 
   def parse(self,fileobj) : 
     """
     Parse a file for results
@@ -834,6 +832,11 @@ class SnapshotResults :
     ----------
     fileobj : file object
       the file to read from
+
+    Returns
+    -------
+    string :
+      the line last read
     """
     # First look for the lambda values
     line = fileobj.readline()
@@ -946,7 +949,7 @@ class SnapshotResults :
           self.thetasolvals[i] = (fileobj.readline().strip().split()[2])
         
       line = fileobj.readline()
-      if line.startswith("  -") : break
+      if line.startswith("  -") or line.startswith("RESULTS FILE") : break
     # Sum of contributions for the different internal and interaction energies
     for attr in ["internal_energies","interaction_energies"] :
       if not hasattr(self,attr) : continue
@@ -956,6 +959,8 @@ class SnapshotResults :
         for e in dict[label][:-1] :
           dict[label][-1] = dict[label][-1]+e
         dict[label][-1].type = "SUM"
+
+    return line
 
 class ResultsFile :
   """
@@ -1005,13 +1010,15 @@ class ResultsFile :
       while True :
         while line and not line.startswith("RESULTS FILE") : line = f.readline()
         if line :
-          snapid = int(line.strip().split()[2])
-          if snapid > skip :
-            self.snapshots.append(SnapshotResults(f))
-          if readmax is not None and len(self.snapshots) == readmax  : break
+          nsnap += 1
+          if nsnap > skip :
+            self.snapshots.append(SnapshotResults())
+            line = self.snapshots[-1].parse(f)
+          else :
+            line = f.readline()
+          if readmax is not None and len(self.snapshots) == readmax  :  break
         else :
           break
-        line = f.readline()
       f.close()  
     else :   # Assumes it is a list and read each one of them
       if readmax is None : readmax = 1E10
@@ -1025,7 +1032,8 @@ class ResultsFile :
         filenames = filename
       for filenam in filenames[skip:min(len(filenames),(skip+readmax+1))] :
         f = open(filenam, "r")
-        self.snapshots.append(SnapshotResults(f))
+        self.snapshots.append(SnapshotResults())
+        line = self.snapshots[-1].parse(f)
         f.close()
   def make_series(self) :
     """
