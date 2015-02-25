@@ -733,9 +733,14 @@ class EnergyResults :
     """
     cols = line.strip().split()
     self.type = cols[0] 
-    self.curr = float(cols[1])
-    self.forw = float(cols[6])
-    self.back = float(cols[10])
+    if line.find("(") > -1 :
+      self.curr = float(cols[1])
+      self.forw = float(cols[6])
+      self.back = float(cols[10])
+    else :
+      self.curr = float(cols[1])
+      self.forw = float(cols[3])
+      self.back = float(cols[5])
   def __str__(self) :
     if isinstance(self.curr,float) :
       return "%s %20.10F %20.10F %20.10F"%(self.type,self.curr,self.back,self.forw)
@@ -802,6 +807,10 @@ class SnapshotResults :
     the free energy to the next lambda
   total : EnergyResults object
     the total energy
+  pmeenergy : EnergyResults object
+    the PME energy, the long-range contribution
+  pmetotal : EnergyResults object
+    the total + PME energy
   internal_energies : dictionary of lists of EnergyResults object
     the internal energies
   interaction_energies : dictionary of lists of EnergyResults objects
@@ -870,6 +879,12 @@ class SnapshotResults :
     # Look for the total energy
     while not line.startswith("Total Energy ") : line = fileobj.readline()
     self.total = EnergyResults(line=line.replace("Total Energy","Total"))
+
+    # Look for PME energy if it exists
+    line = fileobj.readline()
+    if line.startswith("PME Energy") : 
+      self.pmeenergy = EnergyResults(line=line.replace("PME Energy","PME")) 
+      self.pmetotal = copy.deepcopy(self.pmeenergy) + self.total
     
     # Look for internal and average energies
     

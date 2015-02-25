@@ -785,7 +785,11 @@ c      GCSCavity = 0
       pDeletion = 0
       pGCSolute = 0
       printMoveEvery = 0
-                       
+      
+      AVGPMEENERGY = ZERO
+      AVGPMEENERGYF = ZERO
+      AVGPMEENERGYB = ZERO
+
       AVGTOTALENERGY = ZERO
       AVGTOTALENERGY2 = ZERO
       AVGTOTALENERGYF = ZERO

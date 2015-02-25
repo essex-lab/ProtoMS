@@ -188,11 +188,13 @@ c     average energies / free energies
       double precision AvgBackEnergy,AvgForwardsEnergy
       double precision AvgBackEnergy1,AvgForwardsEnergy1
       double precision AvgBackEnergy2,AvgForwardsEnergy2
+c     SG PME energies
+      double precision AvgPmeEnergy,AvgPmeEnergyF,AvgPmeEnergyB
       integer NSteps
                     
       common /FREEENERGIES/ AvgTotalEnergy,AvgBackEnergy,AvgForwardsEnergy,
      .            AvgTotalEnergy2,AvgBackEnergy2,AvgForwardsEnergy2,
-     .            AvgBackEnergy1,AvgForwardsEnergy1,NSteps
+     .            AvgBackEnergy1,AvgForwardsEnergy1,AvgPmeEnergy,AvgPmeEnergyF,AvgPmeEnergyB,NSteps
 
       save /FREEENERGIES/
       

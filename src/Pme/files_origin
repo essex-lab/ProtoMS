@@ -1,0 +1,9 @@
+fftpack.cpp			platforms/reference/src/SimTKReference/
+fftpack.h			platforms/reference/src/SimTKReference/
+PME.cpp				platforms/reference/src/SimTKReference/
+PME.h				platforms/reference/src/SimTKReference/
+RealVec.h			platforms/reference/src/SimTKUtilities/
+SimTKOpenMMCommon.h		platforms/reference/src/SimTKUtilities/
+SimTKOpenMMRealType.h		platforms/reference/src/SimTKUtilities/
+Vec3.h				openmmapi/include/openmm/
+windowsExport.h			openmmapi/include/openmm/internal/

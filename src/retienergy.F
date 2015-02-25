@@ -28,7 +28,7 @@ c###########################################################
 
       double precision oldlamf,oldlamb
       double precision retideltau,retideltal
-      double precision nrg,nrgb,nrgf
+      double precision nrg,nrgb,nrgf,pme,pmeb,pmef
       double precision inrgb,inrgf
       double precision totalEnergy
       double precision ExtraEnergy
@@ -74,6 +74,15 @@ c     what this will cause to the running averages.
       nrgf = nrgf + inrgf
 
       call clearMoveList
+
+c     PME
+      if (pmeblocks.gt.0) then
+        call pmePerturbeEnergy(pme,pmeb,pmef)
+        nrg = nrg + pme
+        nrgb = nrgb + pmeb
+        nrgf = nrgf + pmef
+      endif
+
 c     now write this all out to the RETI stream
       write(printstring,'(A,6(F20.8,X))') "RETINRG ",lambda,nrg,
      .        lambdab,nrgb,lambdaf,nrgf

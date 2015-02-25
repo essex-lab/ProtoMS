@@ -7,6 +7,9 @@ c     the temperature in C and K
       double precision temperatureC,temperature 
 c     the charge you want on the protein
       double precision desiredCharge
+c     PME tolerance
+      integer pmeblocks
+      double precision pme_alpha,pme_tol
 c     B factor
       double precision B     
 c     bias-jaws
@@ -78,8 +81,8 @@ c     (this slows things down, but is useful to allow debugging of Sire)
      .           OldBoxDimension,OldBoxOrigin,temperatureC,temperature,B,coordx,coordy,coordz,gridx,gridy,gridz,space,bias,
      .           BoxDimension2,BoxTop,TempAtoms,desiredCharge,coordhwx,coordhwy,coordhwz,gridhwx,gridhwy,gridhwz,
      .           cap,capradius,oldcapradius,capconstant,GCtheta,jaws1,jaws2,
-     .           OneOverScl14C,OneOverScl14LJ,thres,
-     .             SIRE_COMPATIBILITY_MODE  
+     .           OneOverScl14C,OneOverScl14LJ,thres,pme_alpha,pme_tol,pmeblocks,
+     .             SIRE_COMPATIBILITY_MODE 
       common /SIMPARAMVALS2/ DeltaCoreCoul,DeltaCoreCoulL,SoftPower,SoftPowerInv,SoftPower2,SoftPowerInv6,
      .                          DeltaCore,CoulSoftPower,LJSoftPower,GBSoftPower
       common /SIMPARAMVALS3/resttempC,resttemp,rest_beta,restscale1,restscale2,restscale3,SoftType

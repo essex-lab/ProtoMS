@@ -14,6 +14,7 @@
 
       logical getLogical,printdummies,showhidden,printstd,append,newfile,getoption
       double precision printsolvent,getDouble,lb,lf,lambda
+      double precision nrg,nrgb,nrgf
       integer lgth,j,iprnt,ilgth,lineLength,openFILE,getint,i
       integer numb
       character*64 line,tempstring
@@ -99,7 +100,11 @@ c (append.or.appendstreams)
             endif
 
             if (numb.ne.0) then
-              write(tempstring,"(A,I4)")"MODEL     ",numb
+              if (numb.le.9999) then
+                write(tempstring,"(A,I4)")"MODEL     ",numb
+              else
+                write(tempstring,"(A,I8)")"MODEL     ",numb
+              endif
               call printline(PDB, tempstring)
             endif  
                     
@@ -207,7 +212,7 @@ c               restart files will never be appended
               endif
               if (numb.le.1) call prettyLine(INFO,"Writing restart file")
 c              if (numb.ne.0) then
-c                write(tempstring,"(A,I4)")"RESTART FILE ",numb
+c                write(tempstring,"(A,I10)")"RESTART FILE ",numb
 c                call prettyline(RESTART, tempstring)
 c              endif  
               call writeRestart()
@@ -254,7 +259,7 @@ c               the new file is the third word
                 call printline(RESULTS, "  -  ")
               endif
               if (numb.ne.0) then
-                write(tempstring,"(A,I4)")"RESULTS FILE ",numb
+                write(tempstring,"(A,I10)")"RESULTS FILE ",numb
                 call prettyline(RESULTS, tempstring)
               endif  
               if (words(2)(1:9).eq.'writeinst') then
@@ -275,7 +280,10 @@ c               the new file is the third word
                 streamhandle(PDB) = STDOUT
               endif  
               call split(line)
-            endif       
+            endif  
+
+          else if (words(1).eq.'pmeenergy') then
+            call pmePerturbeEnergy(nrg,nrgb,nrgf)                   
           endif   
 
   100 return
