@@ -1,6 +1,8 @@
 
 c     MPI ID and number of tasks
-      integer myid,ntasks 
+c      integer myid,ntasks 
+      integer mylamid,mytemid,mygcid,myjawsid
+      integer nlamtasks,ntemtasks,ngctasks,njawstasks
 
 c     lambda-replica exchange
       integer nlretry,nlreswap
@@ -12,9 +14,9 @@ c     lambda-replica exchange
 
 c     temperature-replica exchange
       integer ntretry,ntrswap
-      integer trefreq,ntemperatures(MAXLAMBDAS),mytemperature
+      integer trefreq,ntemperatures,mytemperature
       character*255 trefolder
-      double precision tempval(MAXLAMBDAS,MAXTEMPS)
+      double precision tempval(MAXTEMPS)
       integer task2temperature(MAXLAMBDAS,MAXTEMPS),temperature2task(MAXLAMBDAS,MAXTEMPS)
 
 c     multi GCMC

@@ -6,12 +6,19 @@ c      July 2014 - Samuel Genheden added MPI stuff
 
       integer ierr
 
-      myid = 0
-      ntasks = 1
+      mylamid = mytemid = mygcid = myjawsid = 0
+      nlamtasks = ntemtasks = ngctasks njawstasks = 1
 
       call MPI_INIT(ierr)
-      call MPI_COMM_RANK(MPI_COMM_WORLD,myid,ierr)
-      call MPI_COMM_SIZE(MPI_COMM_WORLD,ntasks,ierr)
+      call MPI_COMM_RANK('lambdare',mylamid,ierr)
+      call MPI_COMM_RANK('temperaturere',mytemid,ierr)
+      call MPI_COMM_RANK('gcmcre',mygcid,ierr)
+      call MPI_COMM_RANK('jaws2re',myjawsid,ierr)
+
+      call MPI_COMM_SIZE('lambdare',nlamtasks,ierr)
+      call MPI_COMM_SIZE('temperaturere',ntemtasks,ierr)
+      call MPI_COMM_SIZE('gcmcre',ngctasks,ierr)
+      call MPI_COMM_SIZE('jaws2re',njawstasks,ierr)
 
 c     initialise the print system
       call initialisePrintSystem
