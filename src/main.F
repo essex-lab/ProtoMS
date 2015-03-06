@@ -10,15 +10,8 @@ c      July 2014 - Samuel Genheden added MPI stuff
       nlamtasks = ntemtasks = ngctasks njawstasks = 1
 
       call MPI_INIT(ierr)
-      call MPI_COMM_RANK('lambdare',mylamid,ierr)
-      call MPI_COMM_RANK('temperaturere',mytemid,ierr)
-      call MPI_COMM_RANK('gcmcre',mygcid,ierr)
-      call MPI_COMM_RANK('jaws2re',myjawsid,ierr)
-
-      call MPI_COMM_SIZE('lambdare',nlamtasks,ierr)
-      call MPI_COMM_SIZE('temperaturere',ntemtasks,ierr)
-      call MPI_COMM_SIZE('gcmcre',ngctasks,ierr)
-      call MPI_COMM_SIZE('jaws2re',njawstasks,ierr)
+      call MPI_COMM_RANK(MPI_COMM_WORLD,myid,ierr)
+      call MPI_COMM_SIZE(MPI_COMM_WORLD,ntasks,ierr)
 
 c     initialise the print system
       call initialisePrintSystem

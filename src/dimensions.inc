@@ -216,3 +216,9 @@ c     Maximum allowed number of lambdas
 c     Maximum allowed number of temperatures
       integer MAXTEMPS
       parameter (MAXTEMPS=50) 
+c     Maximum allowed number of adams values
+      integer MAXADAMS
+      parameter (MAXADAMS=50)
+c     Maximum allowed number of jaws2 bias
+      integer MAXJAWS2
+      parameter (MAXJAWS2=50)
