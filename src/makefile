@@ -20,7 +20,7 @@ mpi_fortrancompiler = mpif77
 # Either modify the line below, or uncomment the line that matches your
 # compiler / architecture
 
-fflags = -m64 -O3 -I. -fomit-frame-pointer -ffixed-line-length-none
+fflags = -m64 -O3 -I. -ffixed-line-length-none -funroll-loops 
 
 #Compile flags for g77
 #fflags = -O2 -malign-double -ffixed-line-length-none -Wall
@@ -877,7 +877,7 @@ bndharmonicrestraintenergy.o:
 bondedresresenergy.o: nbenergy2.inc proteins.inc enums.inc dimensions.inc
 bondedresresenergy.o: parameters.inc constants.inc nbpropro.inc printer.inc
 bondedresresenergy.o: nbenergyvar2.inc simparams.inc flags.inc quickpot.inc
-bondedresresenergy.o: nbinitial.inc
+bondedresresenergy.o: nbinitial.inc nbenergy_opt.inc
 bondedresresenergy.o:
 bondenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc parameters.inc
 bondenergy.o: constants.inc printer.inc flags.inc
@@ -1728,7 +1728,7 @@ residuesinglesolventenergy.o: solvents.inc constants.inc quickpot.inc
 residuesinglesolventenergy.o: nbprosvn.inc nbenergy_lj.inc nbinitial.inc
 residuesinglesolventenergy.o: enums.inc parameters.inc printer.inc flags.inc
 residuesinglesolventenergy.o: simparams.inc nbenergyvar2.inc nbenergy_coul.inc
-residuesinglesolventenergy.o:
+residuesinglesolventenergy.o: 
 residuesolutebornpda.o: enums.inc proteins.inc dimensions.inc solutes.inc gb.inc
 residuesolutebornpda.o: parameters.inc constants.inc simparams.inc flags.inc
 residuesolutebornpda.o:
