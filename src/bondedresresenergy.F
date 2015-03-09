@@ -97,98 +97,48 @@ c       remove all bonded pairs
 
 c       now loop over all pairs of atoms, and do calculation for nonbonded pairs
         if (QuickMove .and. DDDon) ddd = .true.
-
-        if (ddd) then
-c       use unoptimised nbenergy routine to handle implicit solvent
-           do i=istrt1,iend1
-              do j=istrt2,iend2
-                 if (bondmap(i-istrt1+1,j-istrt2+1)) then
-                    funcat1 = i
-                    funcat2 = j
-                    
-                    include 'nbinitial.inc'
-                    include 'nbpropro.inc'
-                    include 'nbenergy2.inc'
-                    
-                    if (funcmindist.lt.mindist) mindist = funcmindist
-                    
-                    cnrg = cnrg + funccnrg
-                    ljnrg = ljnrg + funcljnrg
-                    cnrgf = cnrgf + funccnrgf
-                    cnrgb = cnrgb + funccnrgb 
-                    ljnrgf = ljnrgf + funcljnrgf
-                    ljnrgb = ljnrgb + funcljnrgb
-                 endif
-              enddo
-           enddo
-        else
-           do i=istrt1,iend1
-              do j=istrt2,iend2
-                 if (bondmap(i-istrt1+1,j-istrt2+1)) then
-                    funcat1 = i
-                    funcat2 = j
-                    
-                    include 'nbinitial.inc'
-                    include 'nbpropro.inc'
-                    include 'nbenergy_opt.inc'
-                    
-                    if (funcmindist.lt.mindist) mindist = funcmindist
-                    
-                    cnrg = cnrg + funccnrg
-                    ljnrg = ljnrg + funcljnrg
-                    cnrgf = cnrgf + funccnrgf
-                    cnrgb = cnrgb + funccnrgb 
-                    ljnrgf = ljnrgf + funcljnrgf
-                    ljnrgb = ljnrgb + funcljnrgb
-                 endif
-              enddo
-           enddo
-           
-        endif
-        
+        do i=istrt1,iend1
+          do j=istrt2,iend2
+            if (bondmap(i-istrt1+1,j-istrt2+1)) then
+              funcat1 = i
+              funcat2 = j
+            
+              include 'nbinitial.inc'
+              include 'nbpropro.inc'
+              include 'nbenergy2.inc'
+            
+              if (funcmindist.lt.mindist) mindist = funcmindist
+            
+              cnrg = cnrg + funccnrg
+              ljnrg = ljnrg + funcljnrg
+              cnrgf = cnrgf + funccnrgf
+              cnrgb = cnrgb + funccnrgb 
+              ljnrgf = ljnrgf + funcljnrgf
+              ljnrgb = ljnrgb + funcljnrgb
+            endif
+          enddo
+        enddo
       endif
       
 c     loop over all of the 14-pairs between these residues
-      if (ddd) then
-        if (NResResNB14(iprot,ibndindex).gt.0) then
-          do i=1,NResResNB14(iprot,ibndindex)
-            funcat1 = ResResNB14(iprot,ibndindex,i,1)
-            funcat2 = ResResNB14(iprot,ibndindex,i,2)
+      if (NResResNB14(iprot,ibndindex).gt.0) then
+        do i=1,NResResNB14(iprot,ibndindex)
+          funcat1 = ResResNB14(iprot,ibndindex,i,1)
+          funcat2 = ResResNB14(iprot,ibndindex,i,2)
           
-            include 'nbinitial.inc'
-            include 'nbpropro.inc'
-            include 'nbenergy_opt.inc'
-              
-            if (funcmindist.lt.mindist) mindist = funcmindist
-          
-            cnrg = cnrg + OneOverScl14C*funccnrg
-            ljnrg = ljnrg + OneOverScl14LJ*funcljnrg
-            cnrgf = cnrgf + OneOverScl14C*funccnrgf
-            cnrgb = cnrgb + OneOverScl14C*funccnrgb 
-            ljnrgf = ljnrgf + OneOverScl14LJ*funcljnrgf
-            ljnrgb = ljnrgb + OneOverScl14LJ*funcljnrgb
-          enddo
-        endif
-      else
-        if (NResResNB14(iprot,ibndindex).gt.0) then
-          do i=1,NResResNB14(iprot,ibndindex)
-            funcat1 = ResResNB14(iprot,ibndindex,i,1)
-            funcat2 = ResResNB14(iprot,ibndindex,i,2)
+          include 'nbinitial.inc'
+          include 'nbpropro.inc'
+          include 'nbenergy2.inc'
             
-            include 'nbinitial.inc'
-            include 'nbpropro.inc'
-            include 'nbenergy_opt.inc'
-              
-            if (funcmindist.lt.mindist) mindist = funcmindist
-          
-            cnrg = cnrg + OneOverScl14C*funccnrg
-            ljnrg = ljnrg + OneOverScl14LJ*funcljnrg
-            cnrgf = cnrgf + OneOverScl14C*funccnrgf
-            cnrgb = cnrgb + OneOverScl14C*funccnrgb 
-            ljnrgf = ljnrgf + OneOverScl14LJ*funcljnrgf
-            ljnrgb = ljnrgb + OneOverScl14LJ*funcljnrgb
-          enddo
-        endif
+          if (funcmindist.lt.mindist) mindist = funcmindist
+        
+          cnrg = cnrg + OneOverScl14C*funccnrg
+          ljnrg = ljnrg + OneOverScl14LJ*funcljnrg
+          cnrgf = cnrgf + OneOverScl14C*funccnrgf
+          cnrgb = cnrgb + OneOverScl14C*funccnrgb 
+          ljnrgf = ljnrgf + OneOverScl14LJ*funcljnrgf
+          ljnrgb = ljnrgb + OneOverScl14LJ*funcljnrgb
+        enddo
       endif
       
       bondedResResEnergy = cnrg + ljnrg
