@@ -4,9 +4,6 @@
 #       October 2004
 #-----------------------------------------------
 
-# Do you want to compile the RETI handler? (HAVE YOU GOT MPI?)
-HAVE_MPI = 1
-
 # What is the name of the fortran compiler that you want to use?
 fortrancompiler = gfortran
 mpi_fortrancompiler = mpif77
@@ -23,7 +20,7 @@ mpi_fortrancompiler = mpif77
 # Either modify the line below, or uncomment the line that matches your
 # compiler / architecture
 
-fflags = -m64  -I. -ffixed-line-length-none -funroll-loops -O3 
+fflags = -m64 -O3 -I. -funroll-loops -ffixed-line-length-none -pg
 
 #Compile flags for g77
 #fflags = -O2 -malign-double -ffixed-line-length-none -Wall
@@ -34,7 +31,7 @@ fflags = -m64  -I. -ffixed-line-length-none -funroll-loops -O3
 #Compile flags for pgf77
 #fflags = -O2 -fast -Mextend
 #Compile flags for ifort
-#fflags = -O3 -132
+#fflags = -O3 -132 -I. -funroll-loops -pg
 
 # the link flags - either edit the below line or uncomment the line that matches
 # your system
@@ -118,10 +115,8 @@ OBJS = addacid.o \
        calcaveragesaenergy.o \
        calcaverageextraenergies.o \
        calcbond.o \
-       calccoullj.o \
        calcdihedral.o \
        calcgeneraldihedral.o \
-       calcinvrs.o \
        calcjpmf.o	\
        calculatecljpairs.o \
        calculatesolventbox.o \
@@ -211,12 +206,10 @@ OBJS = addacid.o \
        findtemplateureybradley.o \
        findureybradleyindex.o \
        findureybradleyparam.o \
-       finishrs.o \
        fixresidues.o	\
        flagmovedbits.o \
        flatbottomrestraintenergy.o \
        fliphistidine.o \
-       fullsinglepointenergy.o \
        fullsplit.o \
        gbenergy.o \
        gbsavesystem.o \
@@ -230,6 +223,7 @@ OBJS = addacid.o \
        genproteinatom.o \
        gensoluteatom.o \
        getangle.o \
+       getappendflag.o	\
        getatomname.o \
        getaxisvectors.o \
        getbond.o \
@@ -242,6 +236,7 @@ OBJS = addacid.o \
        getdofinfo.o \
        getdouble.o \
        geteffectivebornradii.o \
+       getfullfilename.o	\
        getgbiborn.o \
        getgbscale.o \
        gethighscale.o \
@@ -327,7 +322,6 @@ OBJS = addacid.o \
        minsolventgcsolutedist2.o \
        minsolventproteindist2.o \
        minsolventsolutedist2.o \
-       minr.o \
        moveacid.o \
        movegcsolute.o \
        moverotamer.o \
@@ -708,27 +702,25 @@ PRJS = $(OBJS:%.o=%.prj)
 
 FFLAGS = $(fflags)
 
-ifneq ($(HAVE_MPI),0)
-	fortrancompiler = $(mpi_fortrancompiler)
-endif
+fortrancompiler = $(mpi_fortrancompiler)
 
 %.o : %.F $(commons)
-	@echo "$(Fp)Compiling $(Fb)$<...$(Fr)"
+	@echo -e "$(Fp)Compiling $(Fb)$<...$(Fr)"
 	@$(FC_MPI) -c $(FFLAGS) $< -o $@
-	@echo "$(n)"
+	@echo -e "$(n)"
 
 # Build the program
 ../protoms3: $(OBJS)
 ifneq ($(NOPYTHON2),1)
-	@echo "$(Fg)Generating compilation info...$(Fp)"
+	@echo -e "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
 endif
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o
-	@echo "$(Fg)Linking the executable...$(Fr)"
+	@echo -e "$(Fg)Linking the executable...$(Fr)"
 	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o
 
-	@echo "$(Fg)Build complete. Go to the tutorials directory for"
-	@echo "guidance on how to use this program.$(n)"
+	@echo -e "$(Fg)Build complete. Go to the tutorials directory for"
+	@echo -e "guidance on how to use this program.$(n)"
 
 chekall: $(PRJS) ; \
   ftnchek $(CHEKFLAGS) $(PRJS)
@@ -742,8 +734,7 @@ rebuild:
 #cleans everything!
 clean:
 	@echo -e "$(Fg)Making clean...$(Fp)"
-	@-rm -f *.o
-	@-rm -f ../protoms3
+	@-rm *.o
 	@echo -e "$(Fc)Project now ready to be rebuilt or packaged...$(n)"
 
 distclean:
@@ -761,14 +752,6 @@ depend:
 	@./sfmakedepend $(SRCS)
 	@echo -e "$(Fc)Please rebuild protomc via 'make rebuild'.$(n)"
 
-# Make the documentation
-docs:
-	@echo -e "$(Fg)Generating autodocs...$(Fr)"
-	@./parsefortran.py ../../manual/trunk/
-	@echo -e "$(Fg)Generating manual.pdf...$(Fr)"
-	@cd ../../manual/trunk/ ; make
-	@echo -e "$(Fc)Manual now available as ../manual.pdf$(n)"
-        
 # DO NOT DELETE THIS LINE - used by make depend
 addacid.o: proteins.inc dimensions.inc printer.inc
 addacid.o:
@@ -891,10 +874,10 @@ bndharmonicrestraintenergy.o: simparams.inc flags.inc enums.inc dimensions.inc
 bndharmonicrestraintenergy.o: extraenergies.inc gb.inc surface.inc constants.inc
 bndharmonicrestraintenergy.o: printer.inc movelist.inc
 bndharmonicrestraintenergy.o:
-bondedresresenergy.o: nbenergy_opt.inc proteins.inc enums.inc dimensions.inc
+bondedresresenergy.o: nbenergy2.inc proteins.inc enums.inc dimensions.inc
 bondedresresenergy.o: parameters.inc constants.inc nbpropro.inc printer.inc
 bondedresresenergy.o: nbenergyvar2.inc simparams.inc flags.inc quickpot.inc
-bondedresresenergy.o: nbinitial.inc
+bondedresresenergy.o: nbinitial.inc nbenergy_opt.inc
 bondedresresenergy.o:
 bondenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc parameters.inc
 bondenergy.o: constants.inc printer.inc flags.inc
@@ -926,13 +909,11 @@ calcaveragesaenergy.o:
 calcbond.o: enums.inc simparams.inc proteins.inc dimensions.inc solutes.inc
 calcbond.o: constants.inc printer.inc
 calcbond.o:
-calccoullj.o: proteins.inc dimensions.inc constants.inc
 calcdihedral.o: proteins.inc enums.inc dimensions.inc solutes.inc constants.inc
 calcdihedral.o: printer.inc
 calcdihedral.o:
 calcgeneraldihedral.o: enums.inc dimensions.inc constants.inc printer.inc
 calcgeneraldihedral.o:
-calcinvrs.o: proteins.inc
 calcjpmf.o: dimensions.inc solutes.inc
 calcjpmf.o:
 calculatecljpairs.o: flags.inc dimensions.inc constants.inc parameters.inc
@@ -1128,7 +1109,6 @@ findureybradleyindex.o: dimensions.inc parameters.inc
 findureybradleyindex.o:
 findureybradleyparam.o: enums.inc dimensions.inc parameters.inc printer.inc
 findureybradleyparam.o:
-finishrs.o:
 fixresidues.o: proteins.inc dimensions.inc splitter.inc printer.inc
 fixresidues.o:
 flagmovedbits.o: dimensions.inc quickpot.inc solutes.inc movelist.inc
@@ -1138,8 +1118,6 @@ flatbottomrestraintenergy.o: surface.inc constants.inc printer.inc movelist.inc
 flatbottomrestraintenergy.o:
 fliphistidine.o: proteins.inc dimensions.inc printer.inc
 fliphistidine.o:
-fullsinglepointenergy.o: enums.inc dimensions.inc printer.inc
-fullsinglepointenergy.o:
 gbenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc gb.inc
 gbenergy.o: solvents.inc constants.inc printer.inc flags.inc simparams.inc
 gbenergy.o: quickpot.inc
@@ -1180,6 +1158,8 @@ gensoluteatom.o: dimensions.inc solutes.inc
 gensoluteatom.o:
 getangle.o: dimensions.inc parameters.inc printer.inc
 getangle.o:
+getappendflag.o : dimensions.inc printer.inc
+getappendflag.o :
 getatomname.o: proteins.inc dimensions.inc
 getatomname.o:
 getaxisvectors.o: dimensions.inc constants.inc printer.inc
@@ -1204,6 +1184,8 @@ geteffectivebornradii.o: proteins.inc dimensions.inc solutes.inc gb.inc
 geteffectivebornradii.o: solvents.inc parameters.inc constants.inc printer.inc
 geteffectivebornradii.o: flags.inc
 geteffectivebornradii.o:
+getfullfilename.o : parallel.inc flags.inc dimensions.inc printer.inc
+getfullfilename.o :
 getgbiborn.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc
 getgbiborn.o:
 getgbscale.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc
@@ -1399,7 +1381,6 @@ minsolventproteindist2.o:
 minsolventsolutedist2.o: flags.inc simparams.inc enums.inc dimensions.inc
 minsolventsolutedist2.o: solutes.inc solvents.inc
 minsolventsolutedist2.o:
-minr.o: 
 moveacid.o: proteins.inc enums.inc dimensions.inc constants.inc printer.inc
 moveacid.o:
 movegcsolute.o: flags.inc simparams.inc enums.inc dimensions.inc solutes.inc
@@ -1742,11 +1723,11 @@ residuesinglegcsoluteenergy.o: solvents.inc constants.inc printer.inc
 residuesinglegcsoluteenergy.o: nbenergyvar2.inc simparams.inc flags.inc
 residuesinglegcsoluteenergy.o: quickpot.inc nbprogcs.inc nbinitial.inc
 residuesinglegcsoluteenergy.o:
-residuesinglesolventenergy.o: nbenergy_opt.inc proteins.inc dimensions.inc
+residuesinglesolventenergy.o: nbenergy2.inc proteins.inc dimensions.inc
 residuesinglesolventenergy.o: solvents.inc constants.inc quickpot.inc
-residuesinglesolventenergy.o: nbprosvn.inc nbenergy_lj_opt.inc nbinitial.inc
+residuesinglesolventenergy.o: nbprosvn.inc nbenergy_lj.inc nbinitial.inc
 residuesinglesolventenergy.o: enums.inc parameters.inc printer.inc flags.inc
-residuesinglesolventenergy.o: simparams.inc nbenergyvar2.inc nbenergy_coul_opt.inc
+residuesinglesolventenergy.o: simparams.inc nbenergyvar2.inc nbenergy_coul.inc
 residuesinglesolventenergy.o:
 residuesolutebornpda.o: enums.inc proteins.inc dimensions.inc solutes.inc gb.inc
 residuesolutebornpda.o: parameters.inc constants.inc simparams.inc flags.inc
@@ -1822,7 +1803,7 @@ savesolventgb.o:
 scanforvariablegroups.o: flags.inc simparams.inc dimensions.inc constants.inc
 scanforvariablegroups.o: printer.inc
 scanforvariablegroups.o:
-sepresresenergy.o: nbenergy_opt.inc enums.inc proteins.inc dimensions.inc
+sepresresenergy.o: nbenergy2.inc enums.inc proteins.inc dimensions.inc
 sepresresenergy.o: parameters.inc constants.inc nbpropro.inc printer.inc
 sepresresenergy.o: nbenergyvar2.inc flags.inc simparams.inc quickpot.inc
 sepresresenergy.o: nbinitial.inc
