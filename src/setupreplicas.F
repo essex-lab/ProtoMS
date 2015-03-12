@@ -18,6 +18,11 @@
       doMultiGCMC = .false.
       doMultiJaws2 = .false.
 
+      ntemladders = 0
+      nlamladders = 0
+      ngcladders = 0
+      njawsladders = 0
+
       if (ntasks.lt.2) return
 
       if (getoption('temperaturere')) then
@@ -93,19 +98,21 @@ c           all these ids should belong to the same temperature ladder (same gro
             temperature2task(i) = i-1
             j = myid/ntemperatures
             if (j.lt.ntemladders) then
-              write(mytemcom,*)"temladder",j
+              write(mytemcom,*)"temladder",j+1
               if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,mytemcom,ierr)
+            endif
           enddo
           mytemperature = 1
           write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(1)
-c          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
           ntretry = 0
           ntreswap = 0
         elseif (mytemid.gt.0) 
-          mysubcom = GetSubComunicator()
-          call MPI_Recv(mytemperature,1,MPI_INT,0,11,mysubcom,mpistat,ierr)
-          write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-c          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
+          j = myid/ntemperatures
+          if (j.lt.ntemladders) then
+            write(mytemcom,*)"temladder",j+1
+            call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
+            write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+          endif
         endif
 c        do i=1,nkeys
 c          if (keys(i)(1:13).eq.'temperaturere') then
@@ -130,7 +137,7 @@ c          endif
 c         Here, I should create folders and assign temperatures          
 c        endif
       elseif (getOption('lambdare')) then      
-c       Read in frequency and number of lambdas
+       Read in frequency and number of lambdas
         lrefreq = nint(getDouble(words(1),1E5))
         nlambdas = nwords - 1
         do i=2,nwords
@@ -141,30 +148,143 @@ c       Read in frequency and number of lambdas
           call closeProgram(100,printstring)
         endif  
         doLambdaRE = .true.
+c       Storing number of lambda ladders needed and where they should be applied
+        nlamladders = 1
+        if (getoption('lambdaladder')) then
+          nlamladders = nwords - 1
+          if (words(2).eq.'temperature') then
+            do i=2,nwords
+              temwithlad(i) = getDouble(words(i),-1.0)
+              if (temwithlad(i).eq.-1.0) then
+                write(printstring,*)"Cannot generate lambda ladder for temperature ",words(i),". Incorrect value."
+                call closeProgram(100,printstring)
+              endif
+            enddo
+          elseif (words(2).eq.'adams') then
+            do i=2,nwords
+              gcwithlad(i) = getDouble(words(i),-1.0)
+              if (gcwithlad(i).eq.-1.0) then
+                write(printstring,*)"Cannot generate lambda ladder for adams ",words(i),". Incorrect value."
+                call closeProgram(100,printstring)
+              endif
+            enddo
+          elseif (words(2).eq.'jbias') then
+            do i=2,nwords
+              jawswithlad(i) = getDouble(words(i),-1.0)
+              if (jawswithlad(i).eq.-1.0) then
+                write(printstring,*)"Cannot generate lambda ladder for jbias ",words(i),". Incorrect value."
+                call closeProgram(100,printstring)
+              endif
+            enddo
+          else
+            write(printstring,*)"Cannot generate lambda ladder for ",words(2),". Incorrect value."
+            call closeProgram(100,printstring)
+          endif
+        endif
 c       Read in template folder    
         if (getOption('outfolder')) then
           outfolder = words(1)
         else 
           outfolder = "out"
         endif
-        if (myid.eq.0) then
-          do i=1,nlambdas           
-            write(cmd,"(3A,F5.3,A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(i),'/'
-            call system(cmd) 
+c       The combination fo temperature and lambda groups goes below
+c       Here I need to take care of generating the subgroups
+c       I am currently creating the subgroups one at a time in the loop
+        mylamid = -1
+        do i=1,nlamladders
+          write(group_com,*)"lamladder",i
+          if (doTemperaturesRE.eq..true.) then
+c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
+            if (mytemid.ge.0).and.(mytemperature.eq.temwithlad(i)) then
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,group_com,ierr)
+              call MPI_COMM_RANK(group_com,mylamid,ierr)
+c           Assigning the rest of the tasks for lambda values
+            elseif (ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)).lt.myid.le.(ntemladders*ntemperatures+(nlambdas-ntemladders)*i) then
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,group_com,ierr)
+              call MPI_COMM_RANK(group_com,mylamid,ierr)
+            else
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,MPI_COMM_NULL,ierr)
+            endif
+          else
+            if (((i-1)*nlambdas).lt.myid.le.(i*nlambdas)) then
+c             all these ids should belong to the same lambda ladder
+              write(group_com,*)"lamladder",i
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,group_com,ierr)
+              call MPI_COMM_RANK(group_com,mylamid,ierr)
+            else
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,MPI_COMM_NULL,ierr)
+            endif
+          endif 
+        if (mylamid.eq.0) then
+          do i=1,nlambdas  
+            if (doTemperatureRE.eq..true.) then
+              if (mytemid.eq.0) then 
+                write(cmd,"(3A,F5.3,A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),"/lam-",lamval(i),'/')
+                call system(cmd) 
+              endif
+            else 
+              if (myid.eq.0) then      
+                write(cmd,"(3A,F5.3,A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/lam-",lamval(i),'/')
+                call system(cmd) 
+              endif
+            endif
+c           Here is where I need to correlate a lambda to a group. Not done yet
             task2lambda(i) = i
             lambda2task(i) = i-1
-            if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,'lambdare',ierr)
+            j = myid/nlambda
+            if (j.lt.nlamladders) then
+              write(mylamcom,*)"temladder",j+1
+              if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,mytemcom,ierr)
+            endif
           enddo
           mylambda = 1
-          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(1)
-c          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
+          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",lamval(1)
           nlretry = 0
           nlreswap = 0
-        else
-          call MPI_Recv(mylambda,1,MPI_INT,0,11,'lambdare',mpistat,ierr)
-          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
-c          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
+        elseif (mylamid.gt.0) 
+          j = myid/nlambdas
+          if (j.lt.nlambdas) then
+            write(mylamcom,*)"temladder",j+1
+            call MPI_Recv(mytemperature,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
+            write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+          endif
         endif
+c      elseif (getOption('lambdare')) then      
+c       Read in frequency and number of lambdas
+c        lrefreq = nint(getDouble(words(1),1E5))
+c        nlambdas = nwords - 1
+c        do i=2,nwords
+c          lambdaval(i-1) = getDouble(words(i),0.0)
+c        enddo
+c        if (ntasks.lt.nlambdas) then
+c          write(printstring,*)"Number of lambdas is lower than the number of tasks!",nlamtasks,nlambdas
+c          call closeProgram(100,printstring)
+c        endif  
+c        doLambdaRE = .true.
+cc       Read in template folder    
+c        if (getOption('outfolder')) then
+c          outfolder = words(1)
+c        else 
+c          outfolder = "out"
+c        endif
+c        if (myid.eq.0) then
+c          do i=1,nlambdas           
+c            write(cmd,"(3A,F5.3,A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(i),'/'
+c            call system(cmd) 
+c            task2lambda(i) = i
+c            lambda2task(i) = i-1
+c            if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,'lambdare',ierr)
+c          enddo
+c          mylambda = 1
+c          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(1)
+cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
+c          nlretry = 0
+c          nlreswap = 0
+c        else
+c          call MPI_Recv(mylambda,1,MPI_INT,0,11,'lambdare',mpistat,ierr)
+c          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
+cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
+c        endif
       elseif (getoption('multigcmc')) then
 c       Read in all B-values
         nadams = nwords
