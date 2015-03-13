@@ -11,7 +11,7 @@
       integer mpistat(MPI_STATUS_SIZE),ierr
       logical getOption
       double precision getDouble
-      character*255 cmd,tmpstr
+      character*255 cmd,tmpstr,mylamcom
 
       doLambdaRE = .false.
       doTemperatureRE = .false.
@@ -82,8 +82,8 @@ c       I am currently creating the subgroups one at a time in the loop
         do i=1,ntemladders
           if (((i-1)*ntemperatures).lt.myid.le.(i*ntemperatures)) then
 c           all these ids should belong to the same temperature ladder (same group of temperature replicas)
-            write(group_com,*)"temladder",i
-            call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,group_com,ierr)
+            write(mytemcom,*)"temladder",i
+            call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,mytemcom,ierr)
             call MPI_COMM_RANK(group_com,mytemid,ierr)
           else
             call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,MPI_COMM_NULL,ierr)
@@ -97,14 +97,13 @@ c           all these ids should belong to the same temperature ladder (same gro
             endif
             task2temperature(i) = i
             temperature2task(i) = i-1
-            j = i/ntemperatures
-            if (j.lt.ntemladders) then
+            do j=1,ntemladders
               write(thistemcom,*)"temladder",j+1
               if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,thistemcom,ierr)
-            endif
+            enddo
           enddo
-          j = myid/ntemperatures
-          write(mytemcom,*)"temladder",j+1
+c          j = myid/ntemperatures
+c          write(mytemcom,*)"temladder",j+1
           mytemperature = 1
           write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(1)
           ntretry = 0
@@ -195,7 +194,6 @@ c       Here I need to take care of generating the subgroups
 c       I am currently creating the subgroups one at a time in the loop
         mylamid = -1
         do i=1,nlamladders
-          write(group_com,*)"lamladder",i
           if (doTemperaturesRE.eq..true.) then
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
             if (mytemid.ge.0).and.(mytemperature.eq.temwithlad(i)) then
@@ -208,8 +206,10 @@ c           Matching tasks wich should belong to both a lambda ladder and a temp
                   enddo
                 endif
               enddo
-              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,key,group_com,ierr)
+              write(mylamcom,*)"lamladder",i
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,key,mylamcom,ierr)
               call MPI_COMM_RANK(group_com,mylamid,ierr)
+              run_lambda = .true.
 c           Assigning the rest of the tasks for lambda values
             elseif (ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)).lt.myid.le.(ntemladders*ntemperatures+(nlambdas-ntemladders)*i) then
               key = myid-(ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)
@@ -223,17 +223,20 @@ c           Assigning the rest of the tasks for lambda values
                   key = myid-(ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)+j
                 endif
               enddo
-              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,key,group_com,ierr)
+              write(mylamcom,*)"lamladder",i
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,key,mylamcom,ierr)
               call MPI_COMM_RANK(group_com,mylamid,ierr)
+              run_lambda = .true.
             else
               call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,MPI_COMM_NULL,ierr)
             endif
           else
             if (((i-1)*nlambdas).lt.myid.le.(i*nlambdas)) then
 c             all these ids should belong to the same lambda ladder
-              write(group_com,*)"lamladder",i
-              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,group_com,ierr)
-              call MPI_COMM_RANK(group_com,mylamid,ierr)
+              write(mylamcom,*)"lamladder",i
+              call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,mylamcom,ierr)
+              call MPI_COMM_RANK(mylamcom,mylamid,ierr)
+              run_lambda = .true.
             else
               call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,MPI_COMM_NULL,ierr)
             endif
@@ -246,13 +249,6 @@ c             all these ids should belong to the same lambda ladder
                 write(cmd,"(3A,F5.3,A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),"/lam-",lamval(i),'/')
                 call system(cmd) 
               endif
-c           Here is where I need to correlate a lambda to a group. Not done yet
-              do j=1,ntemladders
-                if (lambdaval(i).eq.lamwithlad(j)) then
-c                 this should not be i-1 but the determined position of the previously stated lambda. And if it has been done properly, I should not even need specific lines here. It should be automatic
-                  call MPI_Send(i,1,MPI_INT,i-1,11,mylamcom,ierr)
-                endif
-              enddo
             else 
               if (myid.eq.0) then      
                 write(cmd,"(3A,F5.3,A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/lam-",lamval(i),'/')
@@ -262,24 +258,23 @@ c                 this should not be i-1 but the determined position of the prev
 c           Here is where I need to correlate a lambda to a group. Not done yet
             task2lambda(i) = i
             lambda2task(i) = i-1
-            j = i/nlambda
-            if (j.lt.nlamladders) then
+            do j=1,nlamladders
               write(thislamcom,*)"lamladder",j+1
               if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,thislamcom,ierr)
-            endif
+            enddo
           enddo
-          j = myid/nlambdas
-          write(mylamcom,*)"lamladder",j+1
           mylambda = 1
           write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",lamval(1)
           nlretry = 0
           nlreswap = 0
         elseif (mylamid.gt.0) 
-          j = myid/nlambdas
-          if (j.lt.nlambdas) then
-            write(mylamcom,*)"lamladder",j+1
+          if (run_lambda.eq..true.) then
             call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
-            write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+            if (doTemperatureRE.eq..true.) then
+              write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lamval(mylambda)
+            else
+              write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",lamval(mylambda)
+            endif
           endif
         endif
 c      elseif (getOption('lambdare')) then      
