@@ -45,7 +45,7 @@ c###################################################################
 
       call LREEnergy(lamb,lamf,nrg,nrgb,nrgf)
 
-      if (myid.eq.0) then
+      if (mylamid.eq.0) then
         allnrg(mylambda) = nrg
         allnrgb(mylambda) = nrgb
         allnrgf(mylambda) = nrgf
@@ -54,7 +54,7 @@ c###################################################################
         updated(1) = .false.
         nrecieved = 1
         do i=2,nlambdas
-          call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,'lambdare',mpistat,ierr)
+          call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mylamcom,mpistat,ierr)
           task1 = mpistat(MPI_SOURCE)
           allnrg(task2lambda(task1+1)) = buffer(1)
           allnrgb(task2lambda(task1+1)) = buffer(2)
@@ -72,10 +72,10 @@ c        enddo
         buffer(3) = nrgf
         buffer(4) = lamb
         buffer(5) = lamf
-        call MPI_Send(buffer,5,MPI_DOUBLE_PRECISION,0,11,'lambdare',ierr)
+        call MPI_Send(buffer,5,MPI_DOUBLE_PRECISION,0,11,mylamcom,ierr)
       endif
 
-      if (myid.eq.0) then
+      if (mylamid.eq.0) then
 
 c       Randomly selects odd/even pairs
         choice = ranInt(0,1)
@@ -102,12 +102,12 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
 
             nlreswap = nlreswap + 1
             if (task1.ne.0) then
-              call MPI_Send(bidx,1,MPI_INT,task1,11,'lambdare',ierr)
+              call MPI_Send(bidx,1,MPI_INT,task1,11,mylamcom,ierr)
             else
               mylambda = bidx
             endif
             if (task2.ne.0) then
-              call MPI_Send(aidx,1,MPI_INT,task2,11,'lambdare',ierr)
+              call MPI_Send(aidx,1,MPI_INT,task2,11,mylamcom,ierr)
             else
               mylambda = aidx
             endif
@@ -119,15 +119,15 @@ c            write(6,*)"Failing ",lambdaval(aidx),lambdaval(bidx),allnrg(aidx),a
         enddo
 
         do i=2,nlambdas
-          if (.not.updated(i)) call MPI_Send(task2lambda(i),1,MPI_INT,i-1,11,'lambdare',ierr)
+          if (.not.updated(i)) call MPI_Send(task2lambda(i),1,MPI_INT,i-1,11,mylamcom,ierr)
         enddo
 
       else    
-         call MPI_Recv(mylambda,1,MPI_INT,0,11,'lambdare',mpistat,ierr)
+         call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
       endif
 
-      call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, 'lambdare', ierr)
-      call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, 'lambdare', ierr)
+      call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, mylamcom, ierr)
+      call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, mylamcom, ierr)
 
       oldlam = lambda
       lambda = lambdaval(mylambda)
@@ -159,7 +159,11 @@ c     Re-setting all running averages
       nsteps = 0
 
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
-      write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
+      if (doTemperatureRE.eq..true.) then
+        write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
+      else
+        write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
+      endif
       do i=1,nOpenFiles    
         if (wasopened(i)) fileappend(i) = .true.
         if (i.eq.streamhandle(RESTART)-40) then

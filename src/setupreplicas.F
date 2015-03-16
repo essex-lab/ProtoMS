@@ -11,7 +11,7 @@
       integer mpistat(MPI_STATUS_SIZE),ierr
       logical getOption
       double precision getDouble
-      character*255 cmd,tmpstr,mylamcom
+      character*255 cmd,tmpstr
 
       doLambdaRE = .false.
       doTemperatureRE = .false.
@@ -23,6 +23,8 @@
       ngcladders = 0
       njawsladders = 0
 
+      run_lambda = .false.
+
       if (ntasks.lt.2) return
 
       if (getoption('temperaturere')) then
@@ -30,7 +32,7 @@ c       Read in frequency and number of temperatures
         trefreq = nint(getDouble(words(1),1E5))
         ntemperatures = nwords - 1
         do i=2,nwords
-          temval(i-1) = getDouble(words(i),0.0)
+          temval(i-1) = getDouble(words(i),25.0)
         enddo
         if (ntasks.lt.ntemperatures) then
           write(printstring,*)"Number of temperatures is lower than the number of tasks!",ntasks,ntemperatures
@@ -98,23 +100,21 @@ c           all these ids should belong to the same temperature ladder (same gro
             task2temperature(i) = i
             temperature2task(i) = i-1
             do j=1,ntemladders
-              write(thistemcom,*)"temladder",j+1
+              write(thistemcom,*)"temladder",j
               if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,thistemcom,ierr)
             enddo
           enddo
 c          j = myid/ntemperatures
 c          write(mytemcom,*)"temladder",j+1
           mytemperature = 1
+          temperatureC = temval(mytemperature)
           write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(1)
           ntretry = 0
           ntreswap = 0
         elseif (mytemid.gt.0) 
-          j = myid/ntemperatures
-          if (j.lt.ntemladders) then
-            write(mytemcom,*)"temladder",j+1
-            call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
-            write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-          endif
+          call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
+          write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+          temperatureC = temval(mytemperature)
         endif
 c        do i=1,nkeys
 c          if (keys(i)(1:13).eq.'temperaturere') then
@@ -139,7 +139,7 @@ c          endif
 c         Here, I should create folders and assign temperatures          
 c        endif
       elseif (getOption('lambdare')) then      
-       Read in frequency and number of lambdas
+c       Read in frequency and number of lambdas
         lrefreq = nint(getDouble(words(1),1E5))
         nlambdas = nwords - 1
         do i=2,nwords
@@ -195,6 +195,7 @@ c       I am currently creating the subgroups one at a time in the loop
         mylamid = -1
         do i=1,nlamladders
           if (doTemperaturesRE.eq..true.) then
+            temperatureC = temwithladder(i)
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
             if (mytemid.ge.0).and.(mytemperature.eq.temwithlad(i)) then
               do j=1,ntemladders
@@ -212,7 +213,7 @@ c           Matching tasks wich should belong to both a lambda ladder and a temp
               run_lambda = .true.
 c           Assigning the rest of the tasks for lambda values
             elseif (ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)).lt.myid.le.(ntemladders*ntemperatures+(nlambdas-ntemladders)*i) then
-              key = myid-(ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)
+              key = myid-(ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1))
               do j=1,ntemladders
                 do k=1,nlambdas
                   if (lambdavals(k).eq.lamwithladder(j)) then 
@@ -245,9 +246,12 @@ c             all these ids should belong to the same lambda ladder
         if (mylamid.eq.0) then
           do i=1,nlambdas  
             if (doTemperatureRE.eq..true.) then
-              if (mytemid.eq.0) then 
-                write(cmd,"(3A,F5.3,A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),"/lam-",lamval(i),'/')
-                call system(cmd) 
+              if (myid.eq.0) then 
+                do j=1,ntemperatures
+                  write(thistfolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(j)
+                  write(cmd,"(3A,F5.3,A)")"mkdir -p ",thistfolder(1:lineLength(thistfolder)),"/lam-",lamval(i),'/')
+                  call system(cmd) 
+                enddo
               endif
             else 
               if (myid.eq.0) then      
@@ -255,25 +259,31 @@ c             all these ids should belong to the same lambda ladder
                 call system(cmd) 
               endif
             endif
-c           Here is where I need to correlate a lambda to a group. Not done yet
+c           Here is where I need to correlate a lambda to a group.
             task2lambda(i) = i
             lambda2task(i) = i-1
             do j=1,nlamladders
-              write(thislamcom,*)"lamladder",j+1
+              write(thislamcom,*)"lamladder",j
               if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,thislamcom,ierr)
             enddo
           enddo
           mylambda = 1
-          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",lamval(1)
+            if (doTemperatureRE.eq..true.) then
+              write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
+              write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lamval(1)
+            else
+              write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lamval(1)
+            endif
           nlretry = 0
           nlreswap = 0
         elseif (mylamid.gt.0) 
           if (run_lambda.eq..true.) then
             call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
             if (doTemperatureRE.eq..true.) then
+              write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
               write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lamval(mylambda)
             else
-              write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",lamval(mylambda)
+              write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lamval(mylambda)
             endif
           endif
         endif

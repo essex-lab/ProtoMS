@@ -9,7 +9,7 @@ c     MPI ID and number of tasks
 c     lambda-replica exchange
       integer nlretry,nlreswap
       integer lrefreq,nlambdas,mylambda
-      character*255 reoutfolder,lrefolder
+      character*255 reoutfolder,lrefolder,mylamcom,myoutfolder
       double precision lambdaval(MAXLAMBDAS)  
       double precision deltalam
       integer task2lambda(MAXLAMBDAS),lambda2task(MAXLAMBDAS)
@@ -17,7 +17,7 @@ c     lambda-replica exchange
 c     temperature-replica exchange
       integer ntretry,ntrswap
       integer trefreq,ntemperatures,mytemperature
-      character*255 trefolder
+      character*255 trefolder,mytemcom
       double precision temval(MAXTEMPS)
       integer task2temperature(MAXLAMBDAS,MAXTEMPS),temperature2task(MAXLAMBDAS,MAXTEMPS)
 
