@@ -222,3 +222,7 @@ c     Maximum allowed number of adams values
 c     Maximum allowed number of jaws2 bias
       integer MAXJAWS2
       parameter (MAXJAWS2=50)
+
+c     Maximum number of possible dump statements
+      integer MAXDUMP
+      parameter (MAXDUMP=25)

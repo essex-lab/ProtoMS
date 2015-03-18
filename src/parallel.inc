@@ -18,7 +18,7 @@ c     temperature-replica exchange
       integer ntretry,ntrswap
       integer trefreq,ntemperatures,mytemperature
       character*255 trefolder,mytemcom
-      double precision temval(MAXTEMPS)
+      double precision temval(MAXTEMPS),temperaturel,temperatureh
       integer task2temperature(MAXLAMBDAS,MAXTEMPS),temperature2task(MAXLAMBDAS,MAXTEMPS)
 
 c     multi GCMC

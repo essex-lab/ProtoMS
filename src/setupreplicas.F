@@ -33,6 +33,7 @@ c       Read in frequency and number of temperatures
         ntemperatures = nwords - 1
         do i=2,nwords
           temval(i-1) = getDouble(words(i),25.0)
+c          pt_beta_t(1.0,i-1) = dble(1.0) / (GASR*temval(i-1))
         enddo
         if (ntasks.lt.ntemperatures) then
           write(printstring,*)"Number of temperatures is lower than the number of tasks!",ntasks,ntemperatures
@@ -108,6 +109,7 @@ c          j = myid/ntemperatures
 c          write(mytemcom,*)"temladder",j+1
           mytemperature = 1
           temperatureC = temval(mytemperature)
+          temperature = temperatureC + DEG2KEL
           write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(1)
           ntretry = 0
           ntreswap = 0
@@ -115,6 +117,7 @@ c          write(mytemcom,*)"temladder",j+1
           call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
           write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
           temperatureC = temval(mytemperature)
+          temperature = temperatureC + DEG2KEL
         endif
 c        do i=1,nkeys
 c          if (keys(i)(1:13).eq.'temperaturere') then
@@ -195,7 +198,6 @@ c       I am currently creating the subgroups one at a time in the loop
         mylamid = -1
         do i=1,nlamladders
           if (doTemperaturesRE.eq..true.) then
-            temperatureC = temwithladder(i)
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
             if (mytemid.ge.0).and.(mytemperature.eq.temwithlad(i)) then
               do j=1,ntemladders
@@ -247,11 +249,20 @@ c             all these ids should belong to the same lambda ladder
           do i=1,nlambdas  
             if (doTemperatureRE.eq..true.) then
               if (myid.eq.0) then 
-                do j=1,ntemperatures
-                  write(thistfolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(j)
-                  write(cmd,"(3A,F5.3,A)")"mkdir -p ",thistfolder(1:lineLength(thistfolder)),"/lam-",lamval(i),'/')
-                  call system(cmd) 
-                enddo
+                call findDoubleInList(lambdaval(i),lamwithladder,ntemladders,k)
+                if (k.eq.0) then
+                  do j=1,nlamladders
+                    write(thistfolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temwithladder(j)
+                    write(cmd,"(3A,F5.3,A)")"mkdir -p ",thistfolder(1:lineLength(thistfolder)),"/lam-",lamval(i),'/')
+                    call system(cmd) 
+                  enddo
+                else
+                  do j=1,ntemperatures
+                    write(thistfolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(j)
+                    write(cmd,"(3A,F5.3,A)")"mkdir -p ",thistfolder(1:lineLength(thistfolder)),"/lam-",lamval(i),'/')
+                    call system(cmd) 
+                  enddo
+                endif
               endif
             else 
               if (myid.eq.0) then      
@@ -286,6 +297,20 @@ c           Here is where I need to correlate a lambda to a group.
               write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lamval(mylambda)
             endif
           endif
+        endif
+        if (doTemperaturesRE.eq..true.) then
+          do i=1,ntemladders
+            if (mylamcom.eq.("lamladder"+i)) then
+              temperatureC = temwithladder(i)
+              temperature = temperatureC + DEG2KEL
+            endif
+          enddo
+          do i=1,nlamladders
+            if (mytemcom.eq.("temladder"+i)) then
+              mylambda = lamwithladder(i)
+            endif
+          enddo
+          pt_beta_t(mylambda,temperature) = dble(1.0) / (GASR*temval(i-1))
         endif
 c      elseif (getOption('lambdare')) then      
 c       Read in frequency and number of lambdas

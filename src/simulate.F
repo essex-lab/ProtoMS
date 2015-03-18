@@ -32,9 +32,8 @@ c#################################################################
       logical gcsoluteMove,thetaMove,solThetaMove
       logical templ,append
       character*64 tempstring
-      integer ndumps, kdumps(25),fdumps(25)
+      integer ndumps, kdumps(MAXDUMP),fdumps(MAXDUMP)
       double precision getDouble
-c     25 has been set as the maximum number of dump statements
                      
 c     return if there are no configurations
       if (nconfig.le.0) return
@@ -104,9 +103,6 @@ c       This we force re-calculation of BAR, MBAR and TI energies
 c       taking care of dumping with the right frequency
         do j=1,ndumps
           if (mod(i,fdumps(j)).eq.0) then
-c            if (i.eq.fdumps(j)) then
-c              append = .FALSE.
-c            endif
             append = .not.(i.eq.fdumps(j))
             call split(values(kdumps(j)))
             call join(2,nwords,tempstring)
@@ -117,12 +113,7 @@ c            endif
 
 c       Do lambda replica exchange
         if (doLambdaRE.and.(lrefreq.gt.0).and.(i.gt.1).and.(mod(i,lrefreq).eq.0)) then
-c          write(printstring,*)"Results up to snapshot",i
-c          call prettyLine(RESULTS,printstring)
-c          call printAverages
           call lambdaRE
-c          if (myid.eq.0) write(*,"(I6,50F5.2)")i,(lambdaval(lambda2task(j)+1),j=1,nlambdas)
-c          write(6,*)"Task = ",myid," lambda= ",mylambda," folder = ",lrefolder(1:lineLength(lrefolder))
         endif
         
       enddo
