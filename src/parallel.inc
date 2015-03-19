@@ -35,12 +35,12 @@ c     multi JAWS-2
       common /MPISTUFF/ myid,ntasks
       save /MPISTUFF/
  
-      common /LRE/ lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,
-     .               mylambda,lrefolder,reoutfolder
+      common /LRE/ mylamid,lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,
+     .               mylambda,lrefolder,reoutfolder,mylamcom,mylamladder
       save /LRE/
 
-      common /TRE/ temval,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
-     .             trefolder
+      common /TRE/ mytemid,temval,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
+     .               trefolder,mytemcom,mytemladder
       save /TRE/
 
       common /MGCMC/ nadams,myadam,adamparam,gcmcfolder

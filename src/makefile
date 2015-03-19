@@ -708,22 +708,22 @@ FFLAGS = $(fflags)
 fortrancompiler = $(mpi_fortrancompiler)
 
 %.o : %.F $(commons)
-	@echo "$(Fp)Compiling $(Fb)$<...$(Fr)"
+	@echo -e "$(Fp)Compiling $(Fb)$<...$(Fr)"
 	@$(FC_MPI) -c $(FFLAGS) $< -o $@
 	@echo "$(n)"
 
 # Build the program
 ../protoms3: $(OBJS)
 ifneq ($(NOPYTHON2),1)
-	@echo "$(Fg)Generating compilation info...$(Fp)"
+	@echo -e "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
 endif
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o
-	@echo "$(Fg)Linking the executable...$(Fr)"
+	@echo -e "$(Fg)Linking the executable...$(Fr)"
 	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o
 
-	@echo "$(Fg)Build complete. Go to the tutorials directory for"
-	@echo "guidance on how to use this program.$(n)"
+	@echo -e "$(Fg)Build complete. Go to the tutorials directory for"
+	@echo -e "guidance on how to use this program.$(n)"
 
 chekall: $(PRJS) ; \
   ftnchek $(CHEKFLAGS) $(PRJS)

@@ -47,12 +47,16 @@ c###################################################################
         temh = temval(mytemperature+1)
       endif
 
+      write(6,*) myid, "MYtemid ",mytemid
+
       if (mytemid.eq.0) then
         allnrg(mytemperature) = nrg
         updated(1) = .false.
         nrecieved = 1
         do i=2,ntemperatures
-          call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom(mytemladder),mpistat,ierr)
+          write(6,*) myid," Trying to receive",mytemid
+          call MPI_Recv(buffer,3,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom(mytemladder),mpistat,ierr)
+          write(6,*) myid, " After reception",mytemid
           task1 = mpistat(MPI_SOURCE)
           allteml(task2temperature(task1+1)) = buffer(1)
           alltemh(task2temperature(task1+1)) = buffer(2)
@@ -63,8 +67,12 @@ c###################################################################
         buffer(1) = teml
         buffer(2) = temh
         buffer(3) = nrg
-        call MPI_Send(buffer,5,MPI_DOUBLE_PRECISION,0,11,mytemcom(mytemladder),ierr)
+        write(6,*) myid, " Trying to send"
+        call MPI_Send(buffer,3,MPI_DOUBLE_PRECISION,0,11,mytemcom(mytemladder),ierr)
+        write(6,*) myid, " After sending"
       endif
+
+      write(6,*) myid," Sent & received in temperaturere"
 
       if (mytemid.eq.0) then
 
