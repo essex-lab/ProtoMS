@@ -55,7 +55,7 @@ c###################################################################
         nrecieved = 1
         do i=2,ntemperatures
           write(6,*) myid," Trying to receive",mytemid
-          call MPI_Recv(buffer,3,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom(mytemladder),mpistat,ierr)
+          call MPI_Recv(buffer,3,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom,mpistat,ierr)
           write(6,*) myid, " After reception",mytemid
           task1 = mpistat(MPI_SOURCE)
           allteml(task2temperature(task1+1)) = buffer(1)
@@ -68,7 +68,7 @@ c###################################################################
         buffer(2) = temh
         buffer(3) = nrg
         write(6,*) myid, " Trying to send"
-        call MPI_Send(buffer,3,MPI_DOUBLE_PRECISION,0,11,mytemcom(mytemladder),ierr)
+        call MPI_Send(buffer,3,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
         write(6,*) myid, " After sending"
       endif
 
@@ -99,12 +99,12 @@ c            write(6,*)-(allnrg(bidx)-allnrgh(aidx)-allnrgl(bidx)+allnrg(aidx))
 
             ntreswap = ntreswap + 1
             if (task1.ne.0) then
-              call MPI_Send(bidx,1,MPI_INT,task1,11,mytemcom(mytemladder),ierr)
+              call MPI_Send(bidx,1,MPI_INT,task1,11,mytemcom,ierr)
             else
               mytemperature = bidx
             endif
             if (task2.ne.0) then
-              call MPI_Send(aidx,1,MPI_INT,task2,11,mytemcom(mytemladder),ierr)
+              call MPI_Send(aidx,1,MPI_INT,task2,11,mytemcom,ierr)
             else
               mytemperature = aidx
             endif
@@ -116,11 +116,11 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
         enddo
 
         do i=2,ntemperatures
-          if (.not.updated(i)) call MPI_Send(task2temperature(i),1,MPI_INT,i-1,11,mytemcom(mytemladder),ierr)
+          if (.not.updated(i)) call MPI_Send(task2temperature(i),1,MPI_INT,i-1,11,mytemcom,ierr)
         enddo
 
       else    
-         call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom(mytemladder),mpistat,ierr)
+         call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
       endif
 
       call MPI_BCAST (ntretry, 1, MPI_INTEGER, 0, mytemcom, ierr)

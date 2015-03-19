@@ -86,18 +86,20 @@ c       Read in template folder
 c       Here I need to take care of generating the subgroups
 c       I am currently creating the subgroups one at a time in the loop
         mytemid = -1
+        mytemladder = -1
         do i=1,ntemladders
           if (((i-1)*ntemperatures).le.myid.and.myid.le.(i*ntemperatures)) then
 c           all these ids should belong to the same temperature ladder (same group of temperature replicas)
             mytemladder = i
-            write(6,*) myid," ---------TEMCOM---------"
-            call MPI_COMM_SPLIT(MPI_COMM_WORLD,i,0,mytemcom(i),ierr)
-            call MPI_COMM_RANK(mytemcom(i),mytemid,ierr)
-            write(6,*) myid," Mytemid ",mytemid,"-----Myid ",myid
-          else
-            call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,mytemcom(i),ierr)
           endif
         enddo
+        if (mytemladder.eq.-1) then
+          call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,mytemcom,ierr)
+        else
+          call MPI_COMM_SPLIT(MPI_COMM_WORLD,mytemladder,0,mytemcom,ierr)
+        endif
+        call MPI_COMM_RANK(mytemcom,mytemid,ierr)
+        write(6,*) myid," Mytemid ",mytemid,"-----Myid ",myid
         if (mytemid.eq.0) then
           write(6,*) myid," My temid is 0"
           do i=1,3
@@ -112,11 +114,9 @@ c           all these ids should belong to the same temperature ladder (same gro
             endif
             task2temperature(i) = i
             temperature2task(i) = i-1
-            do j=1,ntemladders
-              write(6,*) myid," ....sending"
-              if (i.gt.1) call MPI_SSend(i,1,MPI_INT,i-1,11,mytemcom(j),ierr)
-              write(6,*) myid," ....sent"
-            enddo
+            write(6,*) myid," ....sending"
+            if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,mytemcom,ierr)
+            write(6,*) myid," ....sent"
           enddo
 c          j = myid/ntemperatures
 c          write(mytemcom,*)"temladder",j+1
@@ -128,7 +128,7 @@ c          write(mytemcom,*)"temladder",j+1
           ntreswap = 0
         elseif (mytemid.gt.0) then
           write(6,*) myid," ....receiving"
-          call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom(mytemladder),mpistat,ierr)
+          call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
           write(6,*) myid," ....received"
           write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
           temperatureC = temval(mytemperature)

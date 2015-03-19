@@ -15,7 +15,7 @@ c     lambda-replica exchange
       integer task2lambda(MAXLAMBDAS),lambda2task(MAXLAMBDAS)
 
 c     temperature-replica exchange
-      integer ntretry,ntreswap,mytemcom(MAXLADDERS)
+      integer ntretry,ntreswap,mytemcom
       integer trefreq,ntemperatures,mytemperature,mytemladder
       character*255 trefolder
       double precision temval(MAXTEMPS),temperaturel,temperatureh
@@ -35,12 +35,12 @@ c     multi JAWS-2
       common /MPISTUFF/ myid,ntasks
       save /MPISTUFF/
  
-      common /LRE/ mylamid,lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,
-     .               mylambda,lrefolder,reoutfolder,mylamcom,mylamladder
+      common /LRE/ lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,
+     .               mylambda,mylamcom,mylamladder,mylamid,lrefolder,reoutfolder,myoutfolder
       save /LRE/
 
-      common /TRE/ mytemid,temval,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
-     .               trefolder,mytemcom,mytemladder
+      common /TRE/ temval,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
+     .               mytemcom,mytemladder,mytemid,trefolder
       save /TRE/
 
       common /MGCMC/ nadams,myadam,adamparam,gcmcfolder
