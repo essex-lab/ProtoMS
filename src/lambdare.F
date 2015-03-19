@@ -159,7 +159,7 @@ c     Re-setting all running averages
       nsteps = 0
 
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
-      if (doTemperatureRE.eq..true.) then
+      if (doTemperatureRE)then
         write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
       else
         write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)

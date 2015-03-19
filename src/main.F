@@ -3,11 +3,18 @@
       include 'mpif.h'
 C     (C) Christopher Woods  2002-2004
 c      July 2014 - Samuel Genheden added MPI stuff
+c      March 2015 - Modified Ana I. Cabedo Martinez
 
       integer ierr
 
-      mylamid = mytemid = mygcid = myjawsid = 0
-      nlamtasks = ntemtasks = ngctasks njawstasks = 1
+      mylamid = 0
+      mytemid = 0
+      mygcid = 0
+      myjawsid = 0
+      nlamtasks = 1
+      ntemtasks = 1
+      ngctasks = 1
+      njawstasks = 1
 
       call MPI_INIT(ierr)
       call MPI_COMM_RANK(MPI_COMM_WORLD,myid,ierr)

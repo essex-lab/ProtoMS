@@ -19,14 +19,14 @@ c     from lambdare.F (S. Genheden 2014)
 c
 c###################################################################
 
-      integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength
+      integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength,k
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
-      logical updated(ntemperatures),retiTest
+      logical updated(ntemperatures),reTest
       double precision nrg,nrgl,nrgh,teml,temh,temp,oldtem
       double precision totalEnergy,extraEnergy
-      double precision allteml(ntemperatures),alltemh(ntemperatures)
+      double precision allteml(ntemperatures),alltemh(ntemperatures),allnrg(ntemperatures)
       double precision dell,delh
-      double precision buffer(2)
+      double precision buffer(3)
       character*255 tempstr,tempstr2
 
 
@@ -46,7 +46,7 @@ c###################################################################
       endif
 
       if (mytemid.eq.0) then
-        allnrg(mylambda) = nrg
+        allnrg(mytemperature) = nrg
         updated(1) = .false.
         nrecieved = 1
         do i=2,ntemperatures
@@ -126,7 +126,7 @@ c     Re-setting all running averages
       write(trefolder,"(2A,F5.3)")trefolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
 c     Replacing the old temperature for the new one in the file name.
       k = 1
-      if ((dolambdaRE.eq..true.).or.(doMultiGCMC.eq..true.).or.(doMultiJaws2.eq..true.)) k = 2
+      if ((dolambdaRE).or.(doMultiGCMC).or.(doMultiJaws2)) k = 2
       do i=1,nOpenFiles    
         if (wasopened(i)) fileappend(i) = .true.
         if (i.eq.streamhandle(RESTART)-40) then

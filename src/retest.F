@@ -1,6 +1,7 @@
       logical function reTest(betaA,betaB,eneA,eneB)
       include 'dimensions.inc'
-      include 'reti.inc'
+      include 'metropolis.inc'
+c      include 'reti.inc'
       include 'constants.inc'
       include 'printer.inc'
 c###################################################################

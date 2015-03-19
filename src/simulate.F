@@ -115,6 +115,11 @@ c       Do lambda replica exchange
         if (doLambdaRE.and.(lrefreq.gt.0).and.(i.gt.1).and.(mod(i,lrefreq).eq.0)) then
           call lambdaRE
         endif
+
+c       Do lambda replica exchange
+        if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
+          call temperatureRE
+        endif
         
       enddo
 
@@ -129,6 +134,12 @@ c       Do lambda replica exchange
       if (doLambdaRE.and.(lrefreq.gt.0)) then       
         write(printstring,"(A,2I6,A,F8.3,A)")
      .     "Attempted/successful lambda swaps: ",nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
+        call printLine(INFO,printstring)
+      endif
+
+      if (doTemperatureRE.and.(trefreq.gt.0)) then       
+        write(printstring,"(A,2I6,A,F8.3,A)")
+     .     "Attempted/successful temperature swaps: ",ntretry,ntreswap," (",dble(ntreswap)/dble(ntretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
      

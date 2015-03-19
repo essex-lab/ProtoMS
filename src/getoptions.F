@@ -721,11 +721,13 @@ c     end of do-while loop
       
 
 c     get the temperature
-      if (getOption('temperature')) temperatureC = getDouble(words(1),temperatureC)
-      temperature = temperatureC + DEG2KEL
-      write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
+      if ((.not.doTemperatureRE).and.getOption('temperature')) then
+        temperatureC = getDouble(words(1),temperatureC)
+        temperature = temperatureC + DEG2KEL
+        write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
      .                              temperature," K)"
-      call printLine(INFO,printstring)
+        call printLine(INFO,printstring)
+      endif
       mt_beta_t = dble(1.0) / (GASR*temperature)
 
 c     get the REST2 effective temperature

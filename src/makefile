@@ -180,6 +180,7 @@ OBJS = addacid.o \
        findchainureybradley.o \
        finddihedralindex.o \
        finddihedralparam.o \
+       finddoubleinlist.o \
        findgb.o \
        findgcsolutetemplate.o \
        findgcsolutetemplateatom.o \
@@ -465,6 +466,7 @@ OBJS = addacid.o \
        residuesolventenergy.o \
        residuesolventgbenergy.o \
        residuesurface.o \
+       retest.o \
        retienergy.o \
        retitest.o	\
        reversevolumemove.o \
@@ -580,6 +582,7 @@ OBJS = addacid.o \
        syncsolutedummies.o \
        takeacid.o \
        takebase.o \
+       temperaturere.o \
        testenergies.o \
        teststring.o \
        thetamove.o \
@@ -995,7 +998,8 @@ detailedsoluteenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc
 detailedsoluteenergy.o: solvents.inc constants.inc printer.inc simparams.inc
 detailedsoluteenergy.o:
 dgenergies.o: enums.inc dimensions.inc gb.inc constants.inc printer.inc
-dgenergies.o: averages.inc parallel.inc simparams.inc metropolis.inc
+dgenergies.o: averages.inc parallel.inc simparams.inc flags.inc metropolis.inc
+dgenergies.o: energies.inc
 dgenergies.o:
 dihedralenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc
 dihedralenergy.o: parameters.inc constants.inc printer.inc simparams.inc
@@ -1158,8 +1162,8 @@ gensoluteatom.o: dimensions.inc solutes.inc
 gensoluteatom.o:
 getangle.o: dimensions.inc parameters.inc printer.inc
 getangle.o:
-getappendflag.o : dimensions.inc printer.inc
-getappendflag.o :
+getappendflag.o: dimensions.inc printer.inc
+getappendflag.o:
 getatomname.o: proteins.inc dimensions.inc
 getatomname.o:
 getaxisvectors.o: dimensions.inc constants.inc printer.inc
@@ -1184,8 +1188,8 @@ geteffectivebornradii.o: proteins.inc dimensions.inc solutes.inc gb.inc
 geteffectivebornradii.o: solvents.inc parameters.inc constants.inc printer.inc
 geteffectivebornradii.o: flags.inc
 geteffectivebornradii.o:
-getfullfilename.o : parallel.inc flags.inc dimensions.inc printer.inc
-getfullfilename.o :
+getfullfilename.o: parallel.inc flags.inc dimensions.inc printer.inc
+getfullfilename.o:
 getgbiborn.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc
 getgbiborn.o:
 getgbscale.o: dimensions.inc gb.inc constants.inc parameters.inc printer.inc
@@ -1408,7 +1412,7 @@ notbonded.o: proteins.inc enums.inc dimensions.inc solutes.inc
 notbonded.o:
 openfile.o: parallel.inc flags.inc dimensions.inc printer.inc
 openfile.o:
-openstreamfiles.o: dimensions.inc splitter.inc printer.inc
+openstreamfiles.o: flags.inc dimensions.inc splitter.inc printer.inc
 openstreamfiles.o:
 parseargs.o: parallel.inc version.inc dimensions.inc splitter.inc printer.inc
 parseargs.o:
@@ -1437,6 +1441,14 @@ positionstring.o: enums.inc
 positionstring.o:
 prettyline.o: dimensions.inc printer.inc
 prettyline.o:
+printallenergies.o: proteins.inc dimensions.inc solutes.inc constants.inc
+printallenergies.o: solvents.inc moves.inc parallel.inc enums.inc parameters.inc
+printallenergies.o: printer.inc averages.inc simparams.inc flags.inc
+printallenergies.o: metropolis.inc energies.inc pressure.inc stacks.inc
+printallenergies.o:
+printallextraenergies.o: flags.inc dimensions.inc extraenergies.inc gb.inc
+printallextraenergies.o: surface.inc constants.inc printer.inc
+printallextraenergies.o:
 printattemptaccept.o: enums.inc proteins.inc dimensions.inc solutes.inc
 printattemptaccept.o: solvents.inc printer.inc moves.inc pressure.inc
 printattemptaccept.o:
@@ -1754,6 +1766,8 @@ residuesurface.o: enums.inc proteins.inc dimensions.inc solutes.inc
 residuesurface.o: parameters.inc solvents.inc constants.inc surface.inc
 residuesurface.o: printer.inc simparams.inc flags.inc
 residuesurface.o:
+retest.o: metropolis.inc dimensions.inc constants.inc printer.inc
+retest.o:
 retienergy.o: enums.inc simparams.inc dimensions.inc gb.inc constants.inc
 retienergy.o: printer.inc
 retienergy.o:
@@ -1852,8 +1866,8 @@ setsolventmoved.o: dimensions.inc solvents.inc printer.inc movelist.inc
 setsolventmoved.o:
 setstream.o: dimensions.inc printer.inc
 setstream.o:
-setupreplicas.o: parallel.inc flags.inc dimensions.inc splitter.inc keyset.inc
-setupreplicas.o: printer.inc
+setupreplicas.o: dimensions.inc constants.inc keyset.inc printer.inc
+setupreplicas.o: simparams.inc flags.inc parallel.inc splitter.inc
 setupreplicas.o:
 setzmatrixgeometry.o: dimensions.inc printer.inc
 setzmatrixgeometry.o:
@@ -2042,6 +2056,9 @@ takeacid.o: proteins.inc dimensions.inc
 takeacid.o:
 takebase.o: proteins.inc dimensions.inc
 takebase.o:
+temperaturere.o: enums.inc dimensions.inc gb.inc constants.inc printer.inc
+temperaturere.o: averages.inc simparams.inc flags.inc parallel.inc splitter.inc
+temperaturere.o:
 testenergies.o: flags.inc enums.inc energies.inc dimensions.inc constants.inc
 testenergies.o: printer.inc
 testenergies.o:
