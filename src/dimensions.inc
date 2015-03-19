@@ -222,6 +222,9 @@ c     Maximum allowed number of adams values
 c     Maximum allowed number of jaws2 bias
       integer MAXJAWS2
       parameter (MAXJAWS2=50)
+c     Maximum allowed number of ladders lambdas/temperatures/adams/jaws2
+      integer MAXLADDERS
+      parameter (MAXLADDERS=50)
 
 c     Maximum number of possible dump statements
       integer MAXDUMP

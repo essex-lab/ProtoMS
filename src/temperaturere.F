@@ -29,6 +29,8 @@ c###################################################################
       double precision buffer(3)
       character*255 tempstr,tempstr2
 
+      write(6,*) "Start of temperaturere"
+
 
 
       call closeFiles
@@ -50,7 +52,7 @@ c###################################################################
         updated(1) = .false.
         nrecieved = 1
         do i=2,ntemperatures
-          call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom,mpistat,ierr)
+          call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom(mytemladder),mpistat,ierr)
           task1 = mpistat(MPI_SOURCE)
           allteml(task2temperature(task1+1)) = buffer(1)
           alltemh(task2temperature(task1+1)) = buffer(2)
@@ -61,7 +63,7 @@ c###################################################################
         buffer(1) = teml
         buffer(2) = temh
         buffer(3) = nrg
-        call MPI_Send(buffer,5,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
+        call MPI_Send(buffer,5,MPI_DOUBLE_PRECISION,0,11,mytemcom(mytemladder),ierr)
       endif
 
       if (mytemid.eq.0) then
@@ -89,12 +91,12 @@ c            write(6,*)-(allnrg(bidx)-allnrgh(aidx)-allnrgl(bidx)+allnrg(aidx))
 
             ntreswap = ntreswap + 1
             if (task1.ne.0) then
-              call MPI_Send(bidx,1,MPI_INT,task1,11,mytemcom,ierr)
+              call MPI_Send(bidx,1,MPI_INT,task1,11,mytemcom(mytemladder),ierr)
             else
               mytemperature = bidx
             endif
             if (task2.ne.0) then
-              call MPI_Send(aidx,1,MPI_INT,task2,11,mytemcom,ierr)
+              call MPI_Send(aidx,1,MPI_INT,task2,11,mytemcom(mytemladder),ierr)
             else
               mytemperature = aidx
             endif
@@ -106,11 +108,11 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
         enddo
 
         do i=2,ntemperatures
-          if (.not.updated(i)) call MPI_Send(task2temperature(i),1,MPI_INT,i-1,11,mytemcom,ierr)
+          if (.not.updated(i)) call MPI_Send(task2temperature(i),1,MPI_INT,i-1,11,mytemcom(mytemladder),ierr)
         enddo
 
       else    
-         call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
+         call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom(mytemladder),mpistat,ierr)
       endif
 
       call MPI_BCAST (ntretry, 1, MPI_INTEGER, 0, mytemcom, ierr)
@@ -148,5 +150,7 @@ c     Replacing the old temperature for the new one in the file name.
 
 c      call MPI_FINALIZE(ierr)
 c      call exit(0)
+
+      write(6,*) "End of temperaturere"
 
       end subroutine

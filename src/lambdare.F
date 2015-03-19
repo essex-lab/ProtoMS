@@ -54,7 +54,7 @@ c###################################################################
         updated(1) = .false.
         nrecieved = 1
         do i=2,nlambdas
-          call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mylamcom,mpistat,ierr)
+          call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mylamcom(mylamladder),mpistat,ierr)
           task1 = mpistat(MPI_SOURCE)
           allnrg(task2lambda(task1+1)) = buffer(1)
           allnrgb(task2lambda(task1+1)) = buffer(2)
@@ -72,7 +72,7 @@ c        enddo
         buffer(3) = nrgf
         buffer(4) = lamb
         buffer(5) = lamf
-        call MPI_Send(buffer,5,MPI_DOUBLE_PRECISION,0,11,mylamcom,ierr)
+        call MPI_Send(buffer,5,MPI_DOUBLE_PRECISION,0,11,mylamcom(mylamladder),ierr)
       endif
 
       if (mylamid.eq.0) then
@@ -102,12 +102,12 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
 
             nlreswap = nlreswap + 1
             if (task1.ne.0) then
-              call MPI_Send(bidx,1,MPI_INT,task1,11,mylamcom,ierr)
+              call MPI_Send(bidx,1,MPI_INT,task1,11,mylamcom(mylamladder),ierr)
             else
               mylambda = bidx
             endif
             if (task2.ne.0) then
-              call MPI_Send(aidx,1,MPI_INT,task2,11,mylamcom,ierr)
+              call MPI_Send(aidx,1,MPI_INT,task2,11,mylamcom(mylamladder),ierr)
             else
               mylambda = aidx
             endif
@@ -119,15 +119,15 @@ c            write(6,*)"Failing ",lambdaval(aidx),lambdaval(bidx),allnrg(aidx),a
         enddo
 
         do i=2,nlambdas
-          if (.not.updated(i)) call MPI_Send(task2lambda(i),1,MPI_INT,i-1,11,mylamcom,ierr)
+          if (.not.updated(i)) call MPI_Send(task2lambda(i),1,MPI_INT,i-1,11,mylamcom(mylamladder),ierr)
         enddo
 
       else    
-         call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
+         call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom(mylamladder),mpistat,ierr)
       endif
 
-      call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, mylamcom, ierr)
-      call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, mylamcom, ierr)
+      call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, mylamcom(mylamladder), ierr)
+      call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, mylamcom(mylamladder), ierr)
 
       oldlam = lambda
       lambda = lambdaval(mylambda)
