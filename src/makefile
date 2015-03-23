@@ -708,22 +708,22 @@ FFLAGS = $(fflags)
 fortrancompiler = $(mpi_fortrancompiler)
 
 %.o : %.F $(commons)
-	@echo -e "$(Fp)Compiling $(Fb)$<...$(Fr)"
+	@echo  "$(Fp)Compiling $(Fb)$<...$(Fr)"
 	@$(FC_MPI) -c $(FFLAGS) $< -o $@
 	@echo "$(n)"
 
 # Build the program
 ../protoms3: $(OBJS)
 ifneq ($(NOPYTHON2),1)
-	@echo -e "$(Fg)Generating compilation info...$(Fp)"
+	@echo  "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
 endif
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o
-	@echo -e "$(Fg)Linking the executable...$(Fr)"
+	@echo  "$(Fg)Linking the executable...$(Fr)"
 	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o
 
-	@echo -e "$(Fg)Build complete. Go to the tutorials directory for"
-	@echo -e "guidance on how to use this program.$(n)"
+	@echo  "$(Fg)Build complete. Go to the tutorials directory for"
+	@echo  "guidance on how to use this program.$(n)"
 
 chekall: $(PRJS) ; \
   ftnchek $(CHEKFLAGS) $(PRJS)
@@ -736,9 +736,9 @@ rebuild:
 
 #cleans everything!
 clean:
-	@echo -e "$(Fg)Making clean...$(Fp)"
+	@echo  "$(Fg)Making clean...$(Fp)"
 	@-rm *.o
-	@echo -e "$(Fc)Project now ready to be rebuilt or packaged...$(n)"
+	@echo  "$(Fc)Project now ready to be rebuilt or packaged...$(n)"
 
 distclean:
 	@make clean
@@ -751,9 +751,9 @@ cleancheck:
 
 # Rebuild dependencies:
 depend: 
-	@echo -e "$(Fg)Generating dependencies...$(Fr)"
+	@echo  "$(Fg)Generating dependencies...$(Fr)"
 	@./sfmakedepend $(SRCS)
-	@echo -e "$(Fc)Please rebuild protomc via 'make rebuild'.$(n)"
+	@echo  "$(Fc)Please rebuild protomc via 'make rebuild'.$(n)"
 
 # DO NOT DELETE THIS LINE - used by make depend
 addacid.o: proteins.inc dimensions.inc printer.inc

@@ -44,9 +44,13 @@ c     the current system time and date
 
       double precision delb,delf
 
+      write(6,*)"GetOptions_start ",temperatureC
+
 
 c     set initial, default values for options
       call setDefaultOptions
+
+      write(6,*)"GetOptions_aftlambda ",temperatureC
             
 c     Check to see if we should are debugging - this is the 'debug' option
       if (getOption('debug')) then
@@ -723,12 +727,15 @@ c     end of do-while loop
 c     get the temperature
       if ((.not.doTemperatureRE).and.getOption('temperature')) then
         temperatureC = getDouble(words(1),temperatureC)
-        temperature = temperatureC + DEG2KEL
-        write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
-     .                              temperature," K)"
-        call printLine(INFO,printstring)
+      elseif (doTemperatureRE) then
+        temperatureC = temval(mytemperature)
       endif
+      temperature = temperatureC + DEG2KEL
+      write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
+     .                              temperature," K)"
+      call printLine(INFO,printstring)
       mt_beta_t = dble(1.0) / (GASR*temperature)
+      write(6,*) myid,"GetOptions temperaturec__",temperatureC
 
 c     get the REST2 effective temperature
       resttempC = temperatureC

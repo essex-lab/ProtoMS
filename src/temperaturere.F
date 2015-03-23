@@ -10,6 +10,7 @@
       include 'parallel.inc'
       include 'splitter.inc'
       include 'mpif.h'
+      include 'metropolis.inc'
 c###################################################################
 c
 c     This routine peforms temperature-replica exchange
@@ -29,8 +30,6 @@ c###################################################################
       double precision buffer(3)
       character*255 tempstr,tempstr2
 
-      write(6,*) "Start of temperaturere"
-
 
 
       call closeFiles
@@ -47,16 +46,12 @@ c###################################################################
         temh = temval(mytemperature+1)
       endif
 
-      write(6,*) myid, "MYtemid ",mytemid
-
       if (mytemid.eq.0) then
         allnrg(mytemperature) = nrg
         updated(1) = .false.
         nrecieved = 1
         do i=2,ntemperatures
-          write(6,*) myid," Trying to receive",mytemid
           call MPI_Recv(buffer,3,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom,mpistat,ierr)
-          write(6,*) myid, " After reception",mytemid
           task1 = mpistat(MPI_SOURCE)
           allteml(task2temperature(task1+1)) = buffer(1)
           alltemh(task2temperature(task1+1)) = buffer(2)
@@ -67,12 +62,9 @@ c###################################################################
         buffer(1) = teml
         buffer(2) = temh
         buffer(3) = nrg
-        write(6,*) myid, " Trying to send"
         call MPI_Send(buffer,3,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
-        write(6,*) myid, " After sending"
       endif
 
-      write(6,*) myid," Sent & received in temperaturere"
 
       if (mytemid.eq.0) then
 
@@ -127,13 +119,18 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
       call MPI_BCAST (ntreswap, 1, MPI_INTEGER, 0, mytemcom, ierr)
 
       oldtem = temperature
-      temperature = temval(mytemperature)
+      temperatureC = temval(mytemperature)
+      temperature = temperatureC + DEG2KEL
+      mt_beta_t = dble(1.0) / (GASR*temperature)
 
 c     Re-setting all running averages    
       nsteps = 0
-
-      write(tempstr,"(1A,F5.3)")"t-",oldtem
-      write(trefolder,"(2A,F5.3)")trefolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+      
+      write(tempstr,"(1A,F6.3)")"t-",oldtem
+      write(trefolder,"(2A,F6.3)")trefolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+      if (oldtem.ge.100.0) write(tempstr,"(1A,F7.3)")"t-",oldtem
+      if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")trefolder(1:lineLength(outfolder)),
+     .                                    "/t-",temval(mytemperature)
 c     Replacing the old temperature for the new one in the file name.
       k = 1
       if ((dolambdaRE).or.(doMultiGCMC).or.(doMultiJaws2)) k = 2
@@ -149,7 +146,8 @@ c     Replacing the old temperature for the new one in the file name.
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
           enddo
-           write(words(nwords2-k),"(1A,F5.3)")"t-",temperature
+           write(words(nwords2-k),"(1A,F6.3)")"t-",temperatureC
+           if (temperatureC.ge.100.0) write(words(nwords2-k),"(1A,F7.3)")"t-",temperatureC
            words(nwords2) = words2(nwords2)
            nwords = nwords2
            call join2(1,nwords,"/",openfiles(i))
@@ -158,7 +156,5 @@ c     Replacing the old temperature for the new one in the file name.
 
 c      call MPI_FINALIZE(ierr)
 c      call exit(0)
-
-      write(6,*) "End of temperaturere"
 
       end subroutine

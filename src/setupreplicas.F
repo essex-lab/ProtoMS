@@ -29,8 +29,6 @@
 
       if (ntasks.lt.2) return
 
-      write(6,*) myid," Task number ",myid
-
       if (getoption('temperaturere')) then
 c       Read in frequency and number of temperatures
         trefreq = nint(getDouble(words(1),1E5))
@@ -95,45 +93,29 @@ c           all these ids should belong to the same temperature ladder (same gro
         enddo
         if (mytemladder.eq.-1) then
           call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,mytemcom,ierr)
+          call MPI_COMM_RANK(mytemcom,mytemid,ierr)
         else
           call MPI_COMM_SPLIT(MPI_COMM_WORLD,mytemladder,0,mytemcom,ierr)
+          call MPI_COMM_RANK(mytemcom,mytemid,ierr)
+          mytemperature = mytemid + 1
+          temperatureC = temval(mytemperature)
+          temperature = temperatureC + DEG2KEL
+          write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+          if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+          write(cmd,"(3A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),'/'
+          call system(cmd) 
+          if (mytemid.eq.0) then
+            ntretry = 0
+            ntreswap = 0
+          endif
         endif
-        call MPI_COMM_RANK(mytemcom,mytemid,ierr)
-        write(6,*) myid," Mytemid ",mytemid,"-----Myid ",myid
-        if (mytemid.eq.0) then
-          write(6,*) myid," My temid is 0"
-          do i=1,3
-            write(6,*) "HERE ",i
-          enddo
-          do i=1,ntemperatures  
-            if (myid.eq.0) then 
-              write(6,*) myid," temperature value ",temval(i)      
-              write(6,"(3A,F6.3,A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/t-",temval(i),'/'
-              write(cmd,"(3A,F6.3,A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/t-",temval(i),'/'
-              call system(cmd) 
-            endif
+        if (myid.eq.0) then
+          do i=1,ntemperatures   
             task2temperature(i) = i
             temperature2task(i) = i-1
-            write(6,*) myid," ....sending"
-            if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,mytemcom,ierr)
-            write(6,*) myid," ....sent"
           enddo
-c          j = myid/ntemperatures
-c          write(mytemcom,*)"temladder",j+1
-          mytemperature = 1
-          temperatureC = temval(mytemperature)
-          temperature = temperatureC + DEG2KEL
-          write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(1)
-          ntretry = 0
-          ntreswap = 0
-        elseif (mytemid.gt.0) then
-          write(6,*) myid," ....receiving"
-          call MPI_Recv(mytemperature,1,MPI_INT,0,11,mytemcom,mpistat,ierr)
-          write(6,*) myid," ....received"
-          write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-          temperatureC = temval(mytemperature)
-          temperature = temperatureC + DEG2KEL
         endif
+        mytemperature = mytemid + 1
 c        do i=1,nkeys
 c          if (keys(i)(1:13).eq.'temperaturere') then
 c            if (ntemtasks.lt.2) then
@@ -214,7 +196,7 @@ c       I am currently creating the subgroups one at a time in the loop
         do i=1,nlamladders
           if (doTemperatureRE) then
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
-            if (mytemid.ge.ZERO.and.mytemperature.eq.temwithlad(i)) then
+            if (mytemid.ge.ZERO.and.temval(mytemperature).eq.temwithlad(i)) then
               do j=1,ntemladders
                 if (mytemladder.eq.j) then
                   do k=1,nlambdas
@@ -267,13 +249,17 @@ c             all these ids should belong to the same lambda ladder
                 call findDoubleInList(lambdaval(i),lamwithlad,ntemladders,k)
                 if (k.eq.0) then
                   do j=1,nlamladders
-                    write(thistfolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temwithlad(j)
+                    write(thistfolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temwithlad(j)
+                    if (temwithlad(j).ge.100.0) write(thistfolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
+     .                                               "/t-",temwithlad(j)
                     write(cmd,"(3A,F5.3,A)")"mkdir -p ",thistfolder(1:lineLength(thistfolder)),"/lam-",lambdaval(i),'/'
                     call system(cmd) 
                   enddo
                 else
                   do j=1,ntemperatures
-                    write(thistfolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(j)
+                    write(thistfolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(j)
+                    if (temval(j).ge.100.0) write(thistfolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
+     .                                               "/t-",temval(j)
                     write(cmd,"(3A,F5.3,A)")"mkdir -p ",thistfolder(1:lineLength(thistfolder)),"/lam-",lambdaval(i),'/'
                     call system(cmd) 
                   enddo
@@ -294,7 +280,8 @@ c           Here is where I need to correlate a lambda to a group.
           enddo
           mylambda = 1
             if (doTemperatureRE) then
-              write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
+              write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
+              if (temperatureC.ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
               write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(1)
             else
               write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(1)
@@ -305,7 +292,8 @@ c           Here is where I need to correlate a lambda to a group.
           if (run_lambda) then
             call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom(mylamladder),mpistat,ierr)
             if (doTemperatureRE) then
-              write(trefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
+              write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
+              if (temperatureC.ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),"/t-",temperatureC
               write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
             else
               write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
@@ -389,12 +377,12 @@ c       Read in template folder
           myadam = 1
           write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/b_"
           call writedoublestring(tmpstr,adamparam(1),gcmcfolder)
-          write(6,*)"Task = ",myid," folder = ",gcmcfolder(1:lineLength(gcmcfolder))
+c          write(6,*)"Task = ",myid," folder = ",gcmcfolder(1:lineLength(gcmcfolder))
         else
           call MPI_Recv(myadam,1,MPI_INT,0,11,'multigcmc',mpistat,ierr)
           write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/b_"
           call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
-          write(6,*)"Task = ",myid," folder = ",gcmcfolder(1:lineLength(gcmcfolder))
+c          write(6,*)"Task = ",myid," folder = ",gcmcfolder(1:lineLength(gcmcfolder))
         endif
       elseif (getoption('multijaws2')) then
 c       Read in all jbiases
@@ -422,16 +410,17 @@ c       Read in template folder
           myjbias = 1
           write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/j_"
           call writedoublestring(tmpstr,alljbias(1),jaws2folder)
-          write(6,*)"Task = ",myid," folder = ",jaws2folder(1:lineLength(jaws2folder))
+c          write(6,*)"Task = ",myid," folder = ",jaws2folder(1:lineLength(jaws2folder))
         else
           call MPI_Recv(myjbias,1,MPI_INT,0,11,'multijaws2',mpistat,ierr)
           write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/j_"
           call writedoublestring(tmpstr,alljbias(myjbias),jaws2folder)
-          write(6,*)"Task = ",myid," folder = ",jaws2folder(1:lineLength(jaws2folder))
+c          write(6,*)"Task = ",myid," folder = ",jaws2folder(1:lineLength(jaws2folder))
         endif
       endif
 
-      write(6,*) "End of setupreplicas"
+      write(6,*) myid,"SetUpReplicas temperaturec__",temperatureC
+
 
       appendto = .False.
 

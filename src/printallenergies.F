@@ -34,6 +34,7 @@ c####################################################################
        integer lineLength,lgth,lgth2,igcs,savenrg,Molcount
        integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
 
+
        if (DifferentLambdas) then
          write(printstring,10) lambdab,lambda,lambdaf
 10       format("RESULTS for lambda ",f8.5," <-- ",f8.5," --> ",f8.5)

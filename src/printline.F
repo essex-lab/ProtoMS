@@ -1,7 +1,6 @@
       subroutine printLine(stream,line)
       include 'dimensions.inc'
       include 'printer.inc'
-      include 'parallel.inc'
 c################################################################
 c
 c     This routine prints line 'line' to stream 'stream'

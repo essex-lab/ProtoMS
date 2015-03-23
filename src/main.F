@@ -29,11 +29,17 @@ c     parse any command line arguments
 c     setup replica exchange
       call setupReplicas
 
+      write(6,*)"Main_Before_OpenStreamFiles ",temperatureC
+
 c     set the default locations of any streams
       call openStreamFiles
+
+      write(6,*)"Main_After_OpenStreamFiles ",temperatureC
       
 c     initialise the program
       call initialise
+
+      write(6,*)"Main_After_Initialize ",temperatureC
       
 c     set the system up
       call setup

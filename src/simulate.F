@@ -34,6 +34,8 @@ c#################################################################
       character*64 tempstring
       integer ndumps, kdumps(MAXDUMP),fdumps(MAXDUMP)
       double precision getDouble
+
+c      write(6,*) myid,"Simulate temperaturec__",temperatureC
                      
 c     return if there are no configurations
       if (nconfig.le.0) return

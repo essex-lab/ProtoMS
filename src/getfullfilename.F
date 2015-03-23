@@ -13,17 +13,23 @@ c
 c#################################################
       character*(*) filename
       character*(*) fullfilename
+      character*255 partfilename
       integer lineLength
 
-      if (doLambdaRE) then
-c        write(6,*)"Task = ",myid,lrefolder,filename
-        write(fullfilename,"(3A)")lrefolder(1:lineLength(lrefolder)),"/",
+
+      if (doMultiJAWS2) then
+        write(fullfilename,"(3A)")jaws2folder(1:lineLength(jaws2folder)),"/",
      .           filename(1:lineLength(filename))
       elseif (doMultiGCMC) then
         write(fullfilename,"(3A)")gcmcfolder(1:lineLength(gcmcfolder)),"/",
      .           filename(1:lineLength(filename))
-      elseif (doMultiJAWS2) then
-        write(fullfilename,"(3A)")jaws2folder(1:lineLength(jaws2folder)),"/",
+      elseif (doLambdaRE) then
+c        write(6,*)"Task = ",myid,lrefolder,filename
+        write(fullfilename,"(3A)")lrefolder(1:lineLength(lrefolder)),"/",
+     .           filename(1:lineLength(filename))
+      elseif (doTemperatureRE) then
+c        write(6,*)"Task = ",myid,lrefolder,filename
+        write(fullfilename,"(3A)")trefolder(1:lineLength(trefolder)),"/",
      .           filename(1:lineLength(filename))
       else      
         if (hasoutfolder) then

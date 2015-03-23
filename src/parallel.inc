@@ -7,7 +7,7 @@ c     MPI ID and number of tasks
       integer lamwithlad(MAXLAMBDAS),temwithlad(MAXTEMPS),gcwithlad(MAXADAMS),jawswithlad(MAXJAWS2)
 
 c     lambda-replica exchange
-      integer nlretry,nlreswap,mylamcom(MAXLADDERS)
+      integer nlretry,nlreswap,mylamcom(MAXLAMBDAS)
       integer lrefreq,nlambdas,mylambda,mylamladder
       character*255 reoutfolder,lrefolder,myoutfolder
       double precision lambdaval(MAXLAMBDAS)  

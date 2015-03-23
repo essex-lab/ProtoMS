@@ -3,6 +3,7 @@
       include 'printer.inc'
       include 'splitter.inc'
       include 'flags.inc'
+      include 'parallel.inc'
 c###############################################
 c
 c     This function opens all of the files
