@@ -118,10 +118,14 @@ c       Do lambda replica exchange
           call lambdaRE
         endif
 
+        write(6,*)myid," After lambdare!"
+
 c       Do lambda replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
           call temperatureRE
         endif
+
+        write(6,*)myid," After temperaturere!"
         
       enddo
 

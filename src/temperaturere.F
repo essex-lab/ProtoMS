@@ -31,6 +31,9 @@ c###################################################################
       character*255 tempstr,tempstr2
 
 
+c     check that temperature swaps are only attempted between tasks that are running temperature values
+      if (mytemid.lt.0) return
+
 
       call closeFiles
 

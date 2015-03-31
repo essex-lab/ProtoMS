@@ -727,10 +727,15 @@ c     end of do-while loop
 c     get the temperature
       if ((.not.doTemperatureRE).and.getOption('temperature')) then
         temperatureC = getDouble(words(1),temperatureC)
+        temperature = temperatureC + DEG2KEL
       elseif (doTemperatureRE) then
         temperatureC = temval(mytemperature)
+        write(6,*)myid," My Just Stored temperature ",temperatureC
+        temperature = temperatureC + DEG2KEL
+        if (doLambdaRE) then
+          pt_beta_t(mylambda,mytemperature) = dble(1.0) / (GASR*(temperature))
+        endif
       endif
-      temperature = temperatureC + DEG2KEL
       write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
      .                              temperature," K)"
       call printLine(INFO,printstring)

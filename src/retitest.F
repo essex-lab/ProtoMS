@@ -3,6 +3,7 @@
       include 'metropolis.inc'
       include 'constants.inc'
       include 'printer.inc'
+      include 'parallel.inc'
 c###################################################################
 c
 c     This routine performs a Metropolis Test to see if two
@@ -28,12 +29,16 @@ c###################################################################
         call prettyLine(FATAL,printstring)     
         return
       endif
+
+      write(6,*)myid," Thres ",thres," lamB ",lamB," lambA ",lambA," lamfA ",lamfA," lamA ",lamA
       
       nrgBj = nrgB
       if (abs(lamB-lambA).lt.thres) then
         nrgBi = nrgbA
+        write(6,*)myid," lamB = lambA"
       else if (abs(lamB-lamfA).lt.thres) then
         nrgBi = nrgfA
+        write(6,*)myid," lamB = lamfA"
       else
         write(printstring,"(A)")"Could not determine nrgBi. Something is seriously wrong! Exit."
         call prettyLine(FATAL,printstring)     

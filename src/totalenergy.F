@@ -47,8 +47,6 @@ c###########################################################
       double precision proteinSolventenergy,GCsoluteSolventEnergy
       double precision soluteSolventEnergy
 
-      write(6,*) "TotalEnergy temperaturec__",temperatureC
-
       totalEnergy = ZERO
       nrgb = ZERO
       nrgf = ZERO

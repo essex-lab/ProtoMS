@@ -56,6 +56,8 @@ c     use the fixresidues and fixbackbone lines from the protein pdb
         enddo
       endif
 
+      write(6,*)"IN SIMULATION"
+
 c     read in each simulation chunk via a do loop
       ichunk = 0
       do k=1,nkeys
@@ -104,6 +106,8 @@ c           get the move probabilities etc.
             nstps = getInt(words(2),0)
             write(printstring,*) "Requested ",nstps," steps of simulation"
             call prettyLine(INFO,printstring)
+
+            write(6,*)"Right before simulate..."
             
 c           actually perform the simulation
             if (.not.check) call simulate(nstps)            

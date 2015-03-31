@@ -26,6 +26,8 @@ c     initialise the print system
 c     parse any command line arguments
       call parseArgs
 
+      write(6,*)"I'm before setupreplicas"
+
 c     setup replica exchange
       call setupReplicas
 
@@ -43,9 +45,13 @@ c     initialise the program
       
 c     set the system up
       call setup
+
+      write(6,*)"Main_After_SetUp ",temperatureC
       
 c     run the simulation
       call simulation
+
+      write(6,*)"Main_After_Simulation ",temperatureC
       
 c     shut everything down / print out restart/info 
       call shutdown
