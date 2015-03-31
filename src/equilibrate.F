@@ -33,7 +33,6 @@ c     check that the initial total energy has been calculated
       total = etime(elapsed)
       
       do i=1,nconfig
-        write(6,*)"Within equil ",i
         NTotalMoves = NTotalMoves + 1
 c       obtain the move type based on probabilities entered by the user
         imov = getMoveType()

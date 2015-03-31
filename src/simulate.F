@@ -34,8 +34,6 @@ c#################################################################
       character*64 tempstring
       integer ndumps, kdumps(MAXDUMP),fdumps(MAXDUMP)
       double precision getDouble
-
-c      write(6,*) myid,"Simulate temperaturec__",temperatureC
                      
 c     return if there are no configurations
       if (nconfig.le.0) return
@@ -118,14 +116,10 @@ c       Do lambda replica exchange
           call lambdaRE
         endif
 
-        write(6,*)myid," After lambdare!"
-
 c       Do lambda replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
           call temperatureRE
         endif
-
-        write(6,*)myid," After temperaturere!"
         
       enddo
 

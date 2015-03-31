@@ -44,13 +44,9 @@ c     the current system time and date
 
       double precision delb,delf
 
-      write(6,*)"GetOptions_start ",temperatureC
-
 
 c     set initial, default values for options
       call setDefaultOptions
-
-      write(6,*)"GetOptions_aftlambda ",temperatureC
             
 c     Check to see if we should are debugging - this is the 'debug' option
       if (getOption('debug')) then
@@ -109,16 +105,12 @@ c     whether we are going to use chunks from protein pdb
       PdbParams = .false.
       if (getOption('pdbparams')) then
         PdbParams = getLogical(words(1), PdbParams)
-        write(6,*) 'PdbParams'
-        write(6,*) PdbParams
       endif  
 
 c     whether jaws2 information on each move will be printed to results
       everyjaws2 = .false.
       if (getOption('everyjaws2')) then
         everyjaws2 = getLogical(words(1), everyjaws2)
-        write(6,*) 'everyjaws2'
-        write(6,*) everyjaws2
       endif    
 
 
@@ -730,7 +722,6 @@ c     get the temperature
         temperature = temperatureC + DEG2KEL
       elseif (doTemperatureRE) then
         temperatureC = temval(mytemperature)
-        write(6,*)myid," My Just Stored temperature ",temperatureC
         temperature = temperatureC + DEG2KEL
         if (doLambdaRE) then
           pt_beta_t(mylambda,mytemperature) = dble(1.0) / (GASR*(temperature))
@@ -740,7 +731,6 @@ c     get the temperature
      .                              temperature," K)"
       call printLine(INFO,printstring)
       mt_beta_t = dble(1.0) / (GASR*temperature)
-      write(6,*) myid,"GetOptions temperaturec__",temperatureC
 
 c     get the REST2 effective temperature
       resttempC = temperatureC

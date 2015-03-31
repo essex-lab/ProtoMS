@@ -16,8 +16,6 @@ c#################################################
       character*255 partfilename
       integer lineLength
 
-      write(6,*)myid," getfullfilename Lrefolder ",lrefolder
-
 
       if (doMultiJAWS2) then
         write(fullfilename,"(3A)")jaws2folder(1:lineLength(jaws2folder)),"/",

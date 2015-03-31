@@ -30,7 +30,6 @@ c####################################################################
        integer lineLength,lgth,lgth2,igcs,savenrg,Molcount
        integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
 
-      write(6,*) myid,"PrintAverages temperaturec__",temperatureC
 
        if (DifferentLambdas) then
          write(printstring,10) lambdab,lambda,lambdaf

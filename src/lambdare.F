@@ -32,10 +32,7 @@ c###################################################################
 
 
 c     check that lambda swaps are only attempted between tasks that are running lambda values
-      if (mylamid.lt.0) then
-        write(6,*)myid," Not doing lambdare"
-        return
-      endif
+      if (mylamid.lt.0) return
    
       call closeFiles
 
@@ -53,7 +50,6 @@ c     check that lambda swaps are only attempted between tasks that are running 
 
       call LREEnergy(lamb,lamf,nrg,nrgb,nrgf)
 
-      write(6,*)myid,"~~~~~~~~After LREEnergy!! Mylamcom",mylamcom
 
       if (mylamid.eq.0) then
         allnrg(mylambda) = nrg
@@ -66,7 +62,6 @@ c     check that lambda swaps are only attempted between tasks that are running 
         do i=2,nlambdas
           call MPI_Recv(buffer,5,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mylamcom,mpistat,ierr)
           task1 = mpistat(MPI_SOURCE)
-          write(6,*)myid," Task1 ",task1
           allnrg(task2lambda(task1+1)) = buffer(1)
           allnrgb(task2lambda(task1+1)) = buffer(2)
           allnrgf(task2lambda(task1+1)) = buffer(3)
@@ -74,20 +69,14 @@ c     check that lambda swaps are only attempted between tasks that are running 
           alllamf(task2lambda(task1+1)) = buffer(5)
           updated(task1+1) = .false.
         enddo
-c        do i=1,nlambdas
-c          write(6,*)allnrg(i),allnrgb(i),allnrgf(i),alllamb(i),alllamf(i)
-c        enddo
       else
         buffer(1) = nrg
         buffer(2) = nrgb
         buffer(3) = nrgf
         buffer(4) = lamb
         buffer(5) = lamf
-        write(6,*)myid," mylamid ",mylamid
         call MPI_SSend(buffer,5,MPI_DOUBLE_PRECISION,0,11,mylamcom,ierr)
       endif
-
-      write(6,*)myid,"########_____After first send!!"
 
       if (mylamid.eq.0) then
 
@@ -98,7 +87,6 @@ c       Randomly selects odd/even pairs
           bidx = i + choice + 1
 
           nlretry = nlretry + 1
-c          write(6,*)nlretry
           if (retiTest(lambdaval(aidx),alllamf(aidx),alllamb(aidx),allnrg(aidx),allnrgf(aidx),allnrgb(aidx),
 
      .                 lambdaval(bidx),alllamf(bidx),alllamb(bidx),allnrg(bidx),allnrgf(bidx),allnrgb(bidx))) then
@@ -109,7 +97,6 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
             task1 = lambda2task(aidx)
             task2 = lambda2task(bidx)
 
-            write(6,*)myid," Back to lambdaRe"
 
             task2lambda(task1+1) = bidx
             task2lambda(task2+1) = aidx
@@ -130,7 +117,6 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
             updated(task1+1) = .true.
             updated(task2+1) = .true.
           else
-c            write(6,*)"Failing ",lambdaval(aidx),lambdaval(bidx),allnrg(aidx),allnrgf(aidx),allnrg(bidx),allnrgb(bidx)
           endif
         enddo
 
@@ -139,17 +125,11 @@ c            write(6,*)"Failing ",lambdaval(aidx),lambdaval(bidx),allnrg(aidx),a
         enddo
 
       else    
-         write(6,*)myid," Trying to recieve"
          call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
-         write(6,*)myid," Received!!"
       endif
-
-      write(6,*)myid," Before broadcast"
 
       call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, mylamcom, ierr)
       call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, mylamcom, ierr)
-
-      write(6,*)myid," After broadcast"
 
       oldlam = lambda
       lambda = lambdaval(mylambda)
@@ -204,8 +184,6 @@ c     Re-setting all running averages
            call join2(1,nwords,"/",openfiles(i))
         endif
       enddo
-
-      write(6,*)myid," I'm in lambdare - END"
 
 c      call MPI_FINALIZE(ierr)
 c      call exit(0)
