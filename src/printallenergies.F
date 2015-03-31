@@ -49,7 +49,12 @@ c####################################################################
        call printLine(RESULTS,printstring)
 
        if (doLambdaRE) then
-         write(printstring,*) "Lambda replica = ",myid+1
+         write(printstring,*) "Lambda replica = ",mylamid+1
+         call printLine(RESULTS,printstring)
+       endif
+
+       if (doTemperatureRE) then
+         write(printstring,*) "Temperature replica = ",mytemid+1
          call printLine(RESULTS,printstring)
        endif
 
