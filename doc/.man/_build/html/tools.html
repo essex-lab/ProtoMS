@@ -26,13 +26,13 @@
     <link rel="top" title="ProtoMS 3.0 documentation" href="index.html" />
     <link rel="prev" title="protoms.py" href="protomspy.html" /> 
   </head>
-  <body role="document">
+  <body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
 <a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
 </div>-->
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -47,7 +47,7 @@
       </ul>
     </div>
 
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/dolphin.png" alt="Logo"/>
@@ -87,7 +87,7 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="protomspy.html"
                         title="previous chapter">protoms.py</a></p>
-<div id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -106,30 +106,30 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="tools">
 <h1>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
-<p>In the <code class="docutils literal"><span class="pre">$PROTOMSHOME/tools</span></code> folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the <code class="docutils literal"><span class="pre">protoms.py</span></code> setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at the Python code manual in the <code class="docutils literal"><span class="pre">.doc</span></code> folder.</p>
+<p>In the <tt class="docutils literal"><span class="pre">$PROTOMSHOME/tools</span></tt> folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the <tt class="docutils literal"><span class="pre">protoms.py</span></tt> setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at the Python code manual in the <tt class="docutils literal"><span class="pre">.doc</span></tt> folder.</p>
 <div class="section" id="ambertools-py">
 <h2>ambertools.py<a class="headerlink" href="#ambertools-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">ambertools.py</span> <span class="pre">-f</span> <span class="pre">pdbfile</span> <span class="pre">[pdbfile2</span> <span class="pre">...]</span> <span class="pre">[-n</span> <span class="pre">name</span> <span class="pre">name2</span> <span class="pre">...]</span> <span class="pre">[-c</span> <span class="pre">charge</span> <span class="pre">charge2</span> <span class="pre">...]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">ambertools.py</span> <span class="pre">-f</span> <span class="pre">pdbfile</span> <span class="pre">[pdbfile2</span> <span class="pre">...]</span> <span class="pre">[-n</span> <span class="pre">name</span> <span class="pre">name2</span> <span class="pre">...]</span> <span class="pre">[-c</span> <span class="pre">charge</span> <span class="pre">charge2</span> <span class="pre">...]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-f</span> <span class="pre">pdbfile</span> <span class="pre">pdbfile2</span> <span class="pre">...</span></code> = the name of one or more structures in PDB format</dt>
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">pdbfile</span> <span class="pre">pdbfile2</span> <span class="pre">...</span></tt> = the name of one or more structures in PDB format</dt>
 <dd><p class="first last">at least one filename needs to be given</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-n</span> <span class="pre">name</span> <span class="pre">name2</span> <span class="pre">...</span></code> = the name of the molecule(s) in the PDB file(s)</dt>
+<dt><tt class="docutils literal"><span class="pre">-n</span> <span class="pre">name</span> <span class="pre">name2</span> <span class="pre">...</span></tt> = the name of the molecule(s) in the PDB file(s)</dt>
 <dd><p class="first last">optional, default = UNK</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-c</span> <span class="pre">charge</span> <span class="pre">charge2</span> <span class="pre">...</span></code> = the net charge of the molecule(s) in the PDB file(s)</dt>
+<dt><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">charge</span> <span class="pre">charge2</span> <span class="pre">...</span></tt> = the net charge of the molecule(s) in the PDB file(s)</dt>
 <dd><p class="first last">optional, default=0</p>
 </dd>
 </dl>
@@ -143,49 +143,49 @@ ambertools.py -f benzene.pdb toluene.pdb -n BNZ TOL
 </pre></div>
 </div>
 <p><strong>Description:</strong></p>
-<p>This tool encapsulate the program <code class="docutils literal"><span class="pre">antechamber</span></code> and <code class="docutils literal"><span class="pre">parmchk</span></code> from the AmberTools suite of programs.</p>
-<p>It will produce an Amber prepi-file, containing the z-matrix and atom types of the given solutes, parametrized with the general Amber force field and AM1-BCC charges. It will also produce an Amber frcmod-file with additional parameters not found in the GAFF definition. These files be named after the input <code class="docutils literal"><span class="pre">pdbfile</span></code>, replacing the extension <code class="docutils literal"><span class="pre">.pdb</span></code> with <code class="docutils literal"><span class="pre">.prepi</span></code> and <code class="docutils literal"><span class="pre">.frcmod</span></code></p>
+<p>This tool encapsulate the program <tt class="docutils literal"><span class="pre">antechamber</span></tt> and <tt class="docutils literal"><span class="pre">parmchk</span></tt> from the AmberTools suite of programs.</p>
+<p>It will produce an Amber prepi-file, containing the z-matrix and atom types of the given solutes, parametrized with the general Amber force field and AM1-BCC charges. It will also produce an Amber frcmod-file with additional parameters not found in the GAFF definition. These files be named after the input <tt class="docutils literal"><span class="pre">pdbfile</span></tt>, replacing the extension <tt class="docutils literal"><span class="pre">.pdb</span></tt> with <tt class="docutils literal"><span class="pre">.prepi</span></tt> and <tt class="docutils literal"><span class="pre">.frcmod</span></tt></p>
 <p>The AmberTools program should exist in the system path.</p>
 </div>
 <div class="section" id="build-template-py">
 <h2>build_template.py<a class="headerlink" href="#build-template-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">build_template.py</span> <span class="pre">-p</span> <span class="pre">prepifile</span> <span class="pre">[-f</span> <span class="pre">frcmodfile]</span> <span class="pre">[-z</span> <span class="pre">zmatfile]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-n</span> <span class="pre">name]</span> <span class="pre">[-t</span> <span class="pre">trans]</span> <span class="pre">[-r</span> <span class="pre">rot]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">build_template.py</span> <span class="pre">-p</span> <span class="pre">prepifile</span> <span class="pre">[-f</span> <span class="pre">frcmodfile]</span> <span class="pre">[-z</span> <span class="pre">zmatfile]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-n</span> <span class="pre">name]</span> <span class="pre">[-t</span> <span class="pre">trans]</span> <span class="pre">[-r</span> <span class="pre">rot]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-p</span> <span class="pre">prepifile</span></code> = the name of an Amber prepi file containing the z-matrix and atom types of a solute</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">prepifile</span></tt> = the name of an Amber prepi file containing the z-matrix and atom types of a solute</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-f</span> <span class="pre">frcmodfile</span></code> = the name of an Amber frcmod file</dt>
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">frcmodfile</span></tt> = the name of an Amber frcmod file</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-z</span> <span class="pre">zmatfile</span></code> = the name of a file containing the ProtoMS z-matrix of a solute</dt>
+<dt><tt class="docutils literal"><span class="pre">-z</span> <span class="pre">zmatfile</span></tt> = the name of a file containing the ProtoMS z-matrix of a solute</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of a ProtoMS template file</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of a ProtoMS template file</dt>
 <dd><p class="first last">optional, default = lig.tem</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-n</span> <span class="pre">name</span></code> = the name of the solute</dt>
+<dt><tt class="docutils literal"><span class="pre">-n</span> <span class="pre">name</span></tt> = the name of the solute</dt>
 <dd><p class="first last">optional, default = UNK</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">trans</span></code> = the maximum translational displacement</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">trans</span></tt> = the maximum translational displacement</dt>
 <dd><p class="first last">optional, default = 0.25 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">rot</span></code> = the maximum rotational displacement</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">rot</span></tt> = the maximum rotational displacement</dt>
 <dd><p class="first last">optional, default = 5 degrees</p>
 </dd>
 </dl>
@@ -200,65 +200,65 @@ build_template.py -p benzene.prepi -f benzene.frcmod -t 1.0 -r 10
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool builds a ProtoMS template file for a solute given an Amber prepi file.</p>
-<p>If the solute needs parameter not in the GAFF release, they should be supplied with the <code class="docutils literal"><span class="pre">frcmodfile</span></code>.</p>
-<p>The tool will automatically make an appropriate z-matrix for Monte Carlo sampling. This works in most situations. However, if something is not working properly with the generated z-matrix, one can be supplied in the <code class="docutils literal"><span class="pre">zmatfile</span></code></p>
+<p>If the solute needs parameter not in the GAFF release, they should be supplied with the <tt class="docutils literal"><span class="pre">frcmodfile</span></tt>.</p>
+<p>The tool will automatically make an appropriate z-matrix for Monte Carlo sampling. This works in most situations. However, if something is not working properly with the generated z-matrix, one can be supplied in the <tt class="docutils literal"><span class="pre">zmatfile</span></tt></p>
 <p>The default translational and rotational displacements are based on experience and should be appropriate in most situations.</p>
 </div>
 <div class="section" id="calc-bar-py">
 <h2>calc_bar.py<a class="headerlink" href="#calc-bar-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_bar.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span>&nbsp; <span class="pre">[-b</span> <span class="pre">nbootstraps]</span> <span class="pre">[-pw]</span> <span class="pre">[-pu]</span> <span class="pre">[-pl]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_bar.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span>&nbsp; <span class="pre">[-b</span> <span class="pre">nbootstraps]</span> <span class="pre">[-pw]</span> <span class="pre">[-pu]</span> <span class="pre">[-pl]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span></code> = name of output directory of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span></tt> = name of output directory of the simulation</dt>
 <dd><p class="first last">optional, default = current working directory (.)</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></code> = the beginning of the name of the file to analyse</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></tt> = the beginning of the name of the file to analyse</dt>
 <dd><p class="first last">optional, default = results_inst</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></code> = the number of snapshots to skip at the beginning of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></tt> = the number of snapshots to skip at the beginning of the simulation</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></code> = the maximum number of snapshots to process</dt>
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></tt> = the maximum number of snapshots to process</dt>
 <dd><p class="first last">optional, default = the total number of snapshot in the results file, excluding nskip</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></code> = the simulation temperature in degree Celsius</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></tt> = the simulation temperature in degree Celsius</dt>
 <dd><p class="first last">optional, default = 25 degrees</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-b</span> <span class="pre">nbootstraps</span></code> = the number of bootstraps samples to use in uncertainty estimation</dt>
+<dt><tt class="docutils literal"><span class="pre">-b</span> <span class="pre">nbootstraps</span></tt> = the number of bootstraps samples to use in uncertainty estimation</dt>
 <dd><p class="first last">optional, default = 100</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pw</span></code>  = flag that turns <em>off</em> the printing of individual free energies between windows</dt>
+<dt><tt class="docutils literal"><span class="pre">-pw</span></tt>  = flag that turns <em>off</em> the printing of individual free energies between windows</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pu</span></code>  = flag that turns <em>off</em> the printing of uncertainties</dt>
+<dt><tt class="docutils literal"><span class="pre">-pu</span></tt>  = flag that turns <em>off</em> the printing of uncertainties</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pl</span></code>  = flag that turns <em>off</em> the printing of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values</dt>
+<dt><tt class="docutils literal"><span class="pre">-pl</span></tt>  = flag that turns <em>off</em> the printing of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
@@ -273,9 +273,9 @@ calc_bar.py -d out_free/ -pw
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool calculates free energies using the Bennets Acceptance Ratio (BAR) method.</p>
-<p>The program expects that in the <code class="docutils literal"><span class="pre">directory</span></code> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <code class="docutils literal"><span class="pre">lam-0.000</span></code> and <code class="docutils literal"><span class="pre">lam-1.000</span></code></p>
-<p>The uncertainty of the free energies is estimated by boostrapping the energy differnces. The number of bootstrap samples is set by the <code class="docutils literal"><span class="pre">nbootstraps</span></code> argument. The procedure is rather slow, so in order to obtain a quick estimate of the free energy, lower this value.</p>
-<p>Block estimates can be constructed by combining <code class="docutils literal"><span class="pre">nskip</span></code> and <code class="docutils literal"><span class="pre">nmax</span></code>. For instance, these commands calculates block estimates with a block size of 5 m snapshots</p>
+<p>The program expects that in the <tt class="docutils literal"><span class="pre">directory</span></tt> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <tt class="docutils literal"><span class="pre">lam-0.000</span></tt> and <tt class="docutils literal"><span class="pre">lam-1.000</span></tt></p>
+<p>The uncertainty of the free energies is estimated by boostrapping the energy differnces. The number of bootstrap samples is set by the <tt class="docutils literal"><span class="pre">nbootstraps</span></tt> argument. The procedure is rather slow, so in order to obtain a quick estimate of the free energy, lower this value.</p>
+<p>Block estimates can be constructed by combining <tt class="docutils literal"><span class="pre">nskip</span></tt> and <tt class="docutils literal"><span class="pre">nmax</span></tt>. For instance, these commands calculates block estimates with a block size of 5 m snapshots</p>
 <div class="highlight-python"><div class="highlight"><pre>for X in 0 50 100 150 200 250 300 350
 do
 calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
@@ -286,43 +286,43 @@ done
 <div class="section" id="calc-clusters-py">
 <h2>calc_clusters.py<a class="headerlink" href="#calc-clusters-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_clusters.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-m</span> <span class="pre">molecule]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-t</span> <span class="pre">type]</span> <span class="pre">[-c</span> <span class="pre">cutoff]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_clusters.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-m</span> <span class="pre">molecule]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-t</span> <span class="pre">type]</span> <span class="pre">[-c</span> <span class="pre">cutoff]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></code> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
 <dd><p class="first last">at least one file needs to be specified
 can read a PDB trajectory</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the produced clusters in PDB format</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the produced clusters in PDB format</dt>
 <dd><p class="first last">optional, clusters.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-m</span> <span class="pre">molecuke</span></code> = the name of the molecule to cluster</dt>
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">molecuke</span></tt> = the name of the molecule to cluster</dt>
 <dd><p class="first last">optional, default = wat</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-a</span> <span class="pre">atom</span></code> = the name of the atom in the residue to cluster</dt>
+<dt><tt class="docutils literal"><span class="pre">-a</span> <span class="pre">atom</span></tt> = the name of the atom in the residue to cluster</dt>
 <dd><p class="first last">optional, no default
 if not specified, the entire molecule will be clustered</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">type</span></code> = the clustering algorith</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">type</span></tt> = the clustering algorith</dt>
 <dd><p class="first last">optional, default = average
 can be any of average, single, complete, weighted and centroid</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-c</span> <span class="pre">cutoff</span></code> = the cluster cut-off</dt>
+<dt><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">cutoff</span></tt> = the cluster cut-off</dt>
 <dd><p class="first last">optional, default = 2.0 A</p>
 </dd>
 </dl>
@@ -337,67 +337,67 @@ calc_clusters.py -f all.pdb -t complete
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool cluster molecules from a simulation</p>
-<p>It will extract the coordinates of all atoms with name equal to <code class="docutils literal"><span class="pre">atom</span></code> in residues with name equal to <code class="docutils literal"><span class="pre">molecule</span></code> in all input files and cluster them using the selected algorithm.  If no atom is specified, the entire molecule will be clustered. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
+<p>It will extract the coordinates of all atoms with name equal to <tt class="docutils literal"><span class="pre">atom</span></tt> in residues with name equal to <tt class="docutils literal"><span class="pre">molecule</span></tt> in all input files and cluster them using the selected algorithm.  If no atom is specified, the entire molecule will be clustered. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
 </div>
 <div class="section" id="calc-density-py">
 <h2>calc_density.py<a class="headerlink" href="#calc-density-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_density.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-r</span> <span class="pre">residue]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-p</span> <span class="pre">padding]</span> <span class="pre">[-s</span> <span class="pre">spacing]</span> <span class="pre">[-e</span> <span class="pre">extent]</span> <span class="pre">[-n</span> <span class="pre">norm]</span> <span class="pre">[-t</span> <span class="pre">sphere|gaussian]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_density.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-r</span> <span class="pre">residue]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-p</span> <span class="pre">padding]</span> <span class="pre">[-s</span> <span class="pre">spacing]</span> <span class="pre">[-e</span> <span class="pre">extent]</span> <span class="pre">[-n</span> <span class="pre">norm]</span> <span class="pre">[-t</span> <span class="pre">sphere|gaussian]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></code> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
 <dd><p class="first last">at least one file needs to be specified
 can read a PDB trajectory</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the produced density in DX-format</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the produced density in DX-format</dt>
 <dd><p class="first last">optional, default = grid.dx</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">residue</span></code> = the name of the residue to make a grid on</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">residue</span></tt> = the name of the residue to make a grid on</dt>
 <dd><p class="first last">optional, default = wat</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-a</span> <span class="pre">atom</span></code> = the name of the atom in the residue to make a grid on</dt>
+<dt><tt class="docutils literal"><span class="pre">-a</span> <span class="pre">atom</span></tt> = the name of the atom in the residue to make a grid on</dt>
 <dd><p class="first last">optional, default = o00</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">padding</span></code> = the amount to increase the minimum box in each dimension</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">padding</span></tt> = the amount to increase the minimum box in each dimension</dt>
 <dd><p class="first last">optional, default = 2.0 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">spacing</span></code> = the grid resolution</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">spacing</span></tt> = the grid resolution</dt>
 <dd><p class="first last">optional, default = 0.5 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-e</span> <span class="pre">extent</span></code> = the size of the smoothing</dt>
+<dt><tt class="docutils literal"><span class="pre">-e</span> <span class="pre">extent</span></tt> = the size of the smoothing</dt>
 <dd><p class="first last">optional, default =  1.0 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-n</span> <span class="pre">norm</span></code> = the normalisation constant</dt>
+<dt><tt class="docutils literal"><span class="pre">-n</span> <span class="pre">norm</span></tt> = the normalisation constant</dt>
 <dd><p class="first last">optional, default = the number of snapshot processed</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">sphere|gaussian</span></code> = the type of coordinate smoothing</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">sphere|gaussian</span></tt> = the type of coordinate smoothing</dt>
 <dd><p class="first last">optional, default = sphere
-<code class="docutils literal"><span class="pre">sphere</span></code> = spherical smoothing with extent radius
-<code class="docutils literal"><span class="pre">gaussian</span></code> = smoothing with Gaussian with standard deviation = extent</p>
+<tt class="docutils literal"><span class="pre">sphere</span></tt> = spherical smoothing with extent radius
+<tt class="docutils literal"><span class="pre">gaussian</span></tt> = smoothing with Gaussian with standard deviation = extent</p>
 </dd>
 </dl>
 </li>
@@ -414,7 +414,7 @@ calc_density.py -f all.pdb -n 100
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool discretises atoms on a grid, thereby representing a simulation output as a density.</p>
-<p>It will extract the coordinates of all atoms with name equal to <code class="docutils literal"><span class="pre">atom</span></code> in residues with name equal to <code class="docutils literal"><span class="pre">residue</span></code> in all input files and discretise them on a grid. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
+<p>It will extract the coordinates of all atoms with name equal to <tt class="docutils literal"><span class="pre">atom</span></tt> in residues with name equal to <tt class="docutils literal"><span class="pre">residue</span></tt> in all input files and discretise them on a grid. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
 <p>The produced density can be visualized with most programs, e.g.</p>
 <div class="highlight-python"><div class="highlight"><pre>vmd -m all.pdb grid.dx
 </pre></div>
@@ -423,78 +423,78 @@ calc_density.py -f all.pdb -n 100
 <div class="section" id="calc-dg-py">
 <h2>calc_dg.py<a class="headerlink" href="#calc-dg-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_dg.py</span> <span class="pre">[-d</span> <span class="pre">directory</span> <span class="pre">directory2</span> <span class="pre">...]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-e</span> <span class="pre">ti|bar|mbar]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span>&nbsp; <span class="pre">[-b</span> <span class="pre">nbootstraps]</span>&nbsp; <span class="pre">[-pe]</span> <span class="pre">[-pg]</span> <span class="pre">[-gr]</span> <span class="pre">[--analytical]</span> <span class="pre">[--numerical</span> <span class="pre">both|back|forw</span> <span class="pre">]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_dg.py</span> <span class="pre">[-d</span> <span class="pre">directory</span> <span class="pre">directory2</span> <span class="pre">...]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-e</span> <span class="pre">ti|bar|mbar]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span>&nbsp; <span class="pre">[-b</span> <span class="pre">nbootstraps]</span>&nbsp; <span class="pre">[-pe]</span> <span class="pre">[-pg]</span> <span class="pre">[-gr]</span> <span class="pre">[--analytical]</span> <span class="pre">[--numerical</span> <span class="pre">both|back|forw</span> <span class="pre">]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span> <span class="pre">directory2</span></code> ... = name of output directories of simulations</dt>
+<dt><tt class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span> <span class="pre">directory2</span></tt> ... = name of output directories of simulations</dt>
 <dd><p class="first last">optional, default = current working directory (.)
 one or more directories can be specified</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></code> = the beginning of the name of the file to analyse</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></tt> = the beginning of the name of the file to analyse</dt>
 <dd><p class="first last">optional, default = results_inst</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-e</span> <span class="pre">ti|bar|mbar</span></code> = the free energy estimator</dt>
+<dt><tt class="docutils literal"><span class="pre">-e</span> <span class="pre">ti|bar|mbar</span></tt> = the free energy estimator</dt>
 <dd><p class="first last">optional, default = ti bar mbar
 one or more estimators can be specified</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></code> = the number of snapshots to skip at the beginning of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></tt> = the number of snapshots to skip at the beginning of the simulation</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></code> = the maximum number of snapshots to process</dt>
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></tt> = the maximum number of snapshots to process</dt>
 <dd><p class="first last">optional, default = the total number of snapshot in the results file, excluding nskip</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></code> = the simulation temperature in degree Celsius</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></tt> = the simulation temperature in degree Celsius</dt>
 <dd><p class="first last">optional, default = 25 degrees</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-b</span> <span class="pre">nbootstraps</span></code> = the number of bootstraps samples to use in uncertainty estimation</dt>
+<dt><tt class="docutils literal"><span class="pre">-b</span> <span class="pre">nbootstraps</span></tt> = the number of bootstraps samples to use in uncertainty estimation</dt>
 <dd><p class="first last">optional, default = 100</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pe</span></code>  = flag that turns <em>off</em> the printing of free energy for each directory</dt>
+<dt><tt class="docutils literal"><span class="pre">-pe</span></tt>  = flag that turns <em>off</em> the printing of free energy for each directory</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pg</span></code>  = flag that turns <em>off</em> the printing of the gradient</dt>
+<dt><tt class="docutils literal"><span class="pre">-pg</span></tt>  = flag that turns <em>off</em> the printing of the gradient</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-gr</span></code>  = flag that turns <em>on</em> the plotting of the gradient</dt>
+<dt><tt class="docutils literal"><span class="pre">-gr</span></tt>  = flag that turns <em>on</em> the plotting of the gradient</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">--analytical</span></code> = turns <em>on</em> the use of analytical gradients
+<li><p class="first"><tt class="docutils literal"><span class="pre">--analytical</span></tt> = turns <em>on</em> the use of analytical gradients
 optional, default = off</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">--numerical</span></code> = turns <em>on</em> the use of numerical gradients and selects the kind
+<li><p class="first"><tt class="docutils literal"><span class="pre">--numerical</span></tt> = turns <em>on</em> the use of numerical gradients and selects the kind
 optional, default = both
-<code class="docutils literal"><span class="pre">both</span></code> = uses the free energy in both backward and forward direction to compute the free energy gradient
-<code class="docutils literal"><span class="pre">back</span></code> = uses the free energy in the backward direction to compute the free energy gradient
-<code class="docutils literal"><span class="pre">forw</span></code> = uses the free energy in the forward direction to compute the free energy gradient</p>
+<tt class="docutils literal"><span class="pre">both</span></tt> = uses the free energy in both backward and forward direction to compute the free energy gradient
+<tt class="docutils literal"><span class="pre">back</span></tt> = uses the free energy in the backward direction to compute the free energy gradient
+<tt class="docutils literal"><span class="pre">forw</span></tt> = uses the free energy in the forward direction to compute the free energy gradient</p>
 </li>
 </ul>
 <p><strong>Examples:</strong></p>
@@ -506,24 +506,24 @@ calc_dg.py -d out_free1/ out_free2/ out_free3/ -e ti bar
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool calculates free energies using the method of thermodynamic integration (TI), Bennet&#8217;s Acceptance Ratio (BAR) and Multi BAR (MBAR).</p>
-<p>The program expects that in the <code class="docutils literal"><span class="pre">directory</span></code>, <code class="docutils literal"><span class="pre">directory2</span></code> etc. there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <code class="docutils literal"><span class="pre">lam-0.000</span></code> and <code class="docutils literal"><span class="pre">lam-1.000</span></code></p>
-<p>If the <code class="docutils literal"><span class="pre">-gr</span></code> flag is set the gradient with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> is plotted and saved to a file called <code class="docutils literal"><span class="pre">gradient.png</span></code></p>
+<p>The program expects that in the <tt class="docutils literal"><span class="pre">directory</span></tt>, <tt class="docutils literal"><span class="pre">directory2</span></tt> etc. there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <tt class="docutils literal"><span class="pre">lam-0.000</span></tt> and <tt class="docutils literal"><span class="pre">lam-1.000</span></tt></p>
+<p>If the <tt class="docutils literal"><span class="pre">-gr</span></tt> flag is set the gradient with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> is plotted and saved to a file called <tt class="docutils literal"><span class="pre">gradient.png</span></tt></p>
 <p>The MBAR estimator only works if PyMBAR is properly installed and can be loaded as a python library.</p>
 </div>
 <div class="section" id="calc-gcsingle-py">
 <h2>calc_gcsingle.py<a class="headerlink" href="#calc-gcsingle-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_gcsingle.py</span> <span class="pre">-d</span> <span class="pre">directories</span> <span class="pre">[-f</span> <span class="pre">file]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-r</span> <span class="pre">A</span> <span class="pre">B]</span> <span class="pre">[--plot]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_gcsingle.py</span> <span class="pre">-d</span> <span class="pre">directories</span> <span class="pre">[-f</span> <span class="pre">file]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-r</span> <span class="pre">A</span> <span class="pre">B]</span> <span class="pre">[--plot]</span></tt></p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">-d</span> <span class="pre">directories</span></code> = the output directories from GCMC</li>
-<li><code class="docutils literal"><span class="pre">-f</span> <span class="pre">file</span></code> = the name of ProtoMS results file
+<li><tt class="docutils literal"><span class="pre">-d</span> <span class="pre">directories</span></tt> = the output directories from GCMC</li>
+<li><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file</span></tt> = the name of ProtoMS results file
 optional, default =results</li>
-<li><code class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></code> = the number of initial snapshots to discard
+<li><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></tt> = the number of initial snapshots to discard
 optional, default = 0</li>
-<li><code class="docutils literal"><span class="pre">-r</span> <span class="pre">A</span> <span class="pre">B</span></code> = the range of the Adams value to make the estimate on
+<li><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">A</span> <span class="pre">B</span></tt> = the range of the Adams value to make the estimate on
 optional
 if not set the program will use all data</li>
-<li><code class="docutils literal"><span class="pre">--plot</span></code> = whether to plot the estimated excess chemical potential
+<li><tt class="docutils literal"><span class="pre">--plot</span></tt> = whether to plot the estimated excess chemical potential
 optional, default = yes</li>
 </ul>
 <p><strong>Examples:</strong></p>
@@ -538,29 +538,29 @@ calc_gcsingle.py -d out_gcmc -r -8 -12
 <div class="section" id="calc-replicapath-py">
 <h2>calc_replicapath.py<a class="headerlink" href="#calc-replicapath-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_replicapath.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">-p</span> <span class="pre">replica1</span> <span class="pre">[replica2</span> <span class="pre">...]</span> <span class="pre">-k</span> <span class="pre">lambda</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_replicapath.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">-p</span> <span class="pre">replica1</span> <span class="pre">[replica2</span> <span class="pre">...]</span> <span class="pre">-k</span> <span class="pre">lambda</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></code> ... = the name(s) of ProtoMS results file(s)</dt>
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = the name(s) of ProtoMS results file(s)</dt>
 <dd><p class="first last">at least one file needs to be given</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">replica1</span> <span class="pre">replica2</span></code> ... = the replica values to plot</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">replica1</span> <span class="pre">replica2</span></tt> ... = the replica values to plot</dt>
 <dd><p class="first last">at least one replica value needs to be given</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-k</span> <span class="pre">lambda</span></code> = the kind of replicas</dt>
+<dt><tt class="docutils literal"><span class="pre">-k</span> <span class="pre">lambda</span></tt> = the kind of replicas</dt>
 <dd><p class="first last">optional, default = lambda
-<code class="docutils literal"><span class="pre">lambda</span></code> = <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange replicas</p>
+<tt class="docutils literal"><span class="pre">lambda</span></tt> = <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange replicas</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of a PNG file to write the replica paths</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of a PNG file to write the replica paths</dt>
 <dd><p class="first last">optional, default = replica_path.png</p>
 </dd>
 </dl>
@@ -573,21 +573,21 @@ calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 0.500 1.000 -o replica_
 </div>
 <p><strong>Description:</strong></p>
 <p>This tools plots the path of different replicas in a replica exchange simulation as a function of simulation time.</p>
-<p>At the moment only paths from a <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange simulation is supported. Hence, the <code class="docutils literal"><span class="pre">-k</span></code> argument is reduntant.</p>
-<p>If the kind of replicas is from <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange the <code class="docutils literal"><span class="pre">replica1</span></code> and <code class="docutils literal"><span class="pre">replica2</span></code> etc should be individual <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values to plot.</p>
+<p>At the moment only paths from a <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange simulation is supported. Hence, the <tt class="docutils literal"><span class="pre">-k</span></tt> argument is reduntant.</p>
+<p>If the kind of replicas is from <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange the <tt class="docutils literal"><span class="pre">replica1</span></tt> and <tt class="docutils literal"><span class="pre">replica2</span></tt> etc should be individual <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values to plot.</p>
 </div>
 <div class="section" id="calc-rmsd-py">
 <h2>calc_rmsd.py<a class="headerlink" href="#calc-rmsd-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_rmsd.py</span> <span class="pre">-i</span> <span class="pre">pdbfile</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">-l</span> <span class="pre">ligand</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_rmsd.py</span> <span class="pre">-i</span> <span class="pre">pdbfile</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">-l</span> <span class="pre">ligand</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span></tt></p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">-i</span> <span class="pre">pdbfile</span></code> = the reference, initial PDB file</li>
-<li><code class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></code> ... = the name(s) of ProtoMS results file(s)
+<li><tt class="docutils literal"><span class="pre">-i</span> <span class="pre">pdbfile</span></tt> = the reference, initial PDB file</li>
+<li><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = the name(s) of ProtoMS results file(s)
 at least one file needs to be given</li>
-<li><code class="docutils literal"><span class="pre">-l</span> <span class="pre">ligand</span></code> = the residue name of the ligand</li>
-<li><code class="docutils literal"><span class="pre">-a</span> <span class="pre">atom</span></code> = the atom to calculate the RMSD of
+<li><tt class="docutils literal"><span class="pre">-l</span> <span class="pre">ligand</span></tt> = the residue name of the ligand</li>
+<li><tt class="docutils literal"><span class="pre">-a</span> <span class="pre">atom</span></tt> = the atom to calculate the RMSD of
 optional, if not set the program will calculate the RMSD of the geometric center</li>
-<li><code class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></code> = the simulation temperature in K
+<li><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></tt> = the simulation temperature in K
 optional, default = 298 K</li>
 </ul>
 <p><strong>Examples:</strong></p>
@@ -597,63 +597,63 @@ calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz -a c4
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool calculate the RMSD of a ligand in a simulation.</p>
-<p>If the <code class="docutils literal"><span class="pre">atom</span></code> name is given, the tool will calculate the RMSD of that atom with respect to its position in <code class="docutils literal"><span class="pre">pdbfile</span></code>. Otherwise, the program will calculate the RMSD of the geometric centre with respect to <code class="docutils literal"><span class="pre">pdbfile</span></code>.</p>
+<p>If the <tt class="docutils literal"><span class="pre">atom</span></tt> name is given, the tool will calculate the RMSD of that atom with respect to its position in <tt class="docutils literal"><span class="pre">pdbfile</span></tt>. Otherwise, the program will calculate the RMSD of the geometric centre with respect to <tt class="docutils literal"><span class="pre">pdbfile</span></tt>.</p>
 <p>A force constant to keep the ligand constrained is estimated from the RMSD using the equipartition theorem.</p>
 </div>
 <div class="section" id="calc-series-py">
 <h2>calc_series.py<a class="headerlink" href="#calc-series-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_series.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">[-o</span> <span class="pre">outprefix]</span> <span class="pre">[-s</span> <span class="pre">series</span> <span class="pre">series2</span> <span class="pre">...]</span> <span class="pre">[-p</span> <span class="pre">sep|sub|single|single_first0|single_last0]</span> <span class="pre">[--nperm</span> <span class="pre">N]</span> <span class="pre">[--threshold</span> <span class="pre">N]</span> <span class="pre">[--average]</span> <span class="pre">[--moving</span> <span class="pre">windowsize]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_series.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">[-o</span> <span class="pre">outprefix]</span> <span class="pre">[-s</span> <span class="pre">series</span> <span class="pre">series2</span> <span class="pre">...]</span> <span class="pre">[-p</span> <span class="pre">sep|sub|single|single_first0|single_last0]</span> <span class="pre">[--nperm</span> <span class="pre">N]</span> <span class="pre">[--threshold</span> <span class="pre">N]</span> <span class="pre">[--average]</span> <span class="pre">[--moving</span> <span class="pre">windowsize]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></code> ... = the name(s) of ProtoMS result file(s)</dt>
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = the name(s) of ProtoMS result file(s)</dt>
 <dd><p class="first last">at least one name needs to be given</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outprefix</span></code> = the prefix of the created PNG-files</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outprefix</span></tt> = the prefix of the created PNG-files</dt>
 <dd><p class="first last">optional, default = results</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">serie</span> <span class="pre">series2</span></code> ... = the name of the series to plot</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">serie</span> <span class="pre">series2</span></tt> ... = the name of the series to plot</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">sep|sub|single|single_first0|single_last0</span></code> = the type of plot if plotting multiple series</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">sep|sub|single|single_first0|single_last0</span></tt> = the type of plot if plotting multiple series</dt>
 <dd><p class="first last">optional, no default
-<code class="docutils literal"><span class="pre">sep</span></code> = separate plots
-<code class="docutils literal"><span class="pre">sub</span></code> = sub plots
-<code class="docutils literal"><span class="pre">single</span></code> = all series in one plot
-<code class="docutils literal"><span class="pre">single_first0</span></code> = all series in one plot, but make the first value zero
-<code class="docutils literal"><span class="pre">single_last0</span></code> = all series in one plot, but make the last value zero</p>
+<tt class="docutils literal"><span class="pre">sep</span></tt> = separate plots
+<tt class="docutils literal"><span class="pre">sub</span></tt> = sub plots
+<tt class="docutils literal"><span class="pre">single</span></tt> = all series in one plot
+<tt class="docutils literal"><span class="pre">single_first0</span></tt> = all series in one plot, but make the first value zero
+<tt class="docutils literal"><span class="pre">single_last0</span></tt> = all series in one plot, but make the last value zero</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--nperm</span> <span class="pre">N</span></code> = the number of permutation tests to determine equilibration</dt>
+<dt><tt class="docutils literal"><span class="pre">--nperm</span> <span class="pre">N</span></tt> = the number of permutation tests to determine equilibration</dt>
 <dd><p class="first last">optional, default = 0 (use analytical test)</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--threshold</span> <span class="pre">N</span></code> = the signficance level for testing equilibration</dt>
+<dt><tt class="docutils literal"><span class="pre">--threshold</span> <span class="pre">N</span></tt> = the signficance level for testing equilibration</dt>
 <dd><p class="first last">optional, default = 0.05</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--average</span></code> = flag that turns <em>on</em> plotting running averages of the series</dt>
+<dt><tt class="docutils literal"><span class="pre">--average</span></tt> = flag that turns <em>on</em> plotting running averages of the series</dt>
 <dd><p class="first last">optional, default = off (plot raw series)</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--moving</span> <span class="pre">windowsize</span></code> = turns <em>on</em> plotting of moving averages with a specific window size</dt>
+<dt><tt class="docutils literal"><span class="pre">--moving</span> <span class="pre">windowsize</span></tt> = turns <em>on</em> plotting of moving averages with a specific window size</dt>
 <dd><p class="first last">optional, default = off (plot raw series)</p>
 </dd>
 </dl>
@@ -668,80 +668,80 @@ calc_series.py -f lam-*/results -s gradient
 </div>
 <p><strong>Description:</strong></p>
 <p>This tools plots and analyses time series.</p>
-<p>The series to plot is selected by the <code class="docutils literal"><span class="pre">-s</span></code> flag. Basically any property written to the ProtoMS results file can be plotted, e.g. energies, volume, gradients etc. If the <code class="docutils literal"><span class="pre">-s</span></code> flag is not specified, a wizard will display all available series that can be plotted. This can be useful if one is unsure what the name of the series is.</p>
-<p>The tool can plot multiple series and there is five choices how produce these plots, set by the <code class="docutils literal"><span class="pre">-p</span></code> flag. If the <code class="docutils literal"><span class="pre">sep</span></code> multiple PNG files will be created, one for each series. With all other choices, one PNG file is created. If the <code class="docutils literal"><span class="pre">-p</span></code> flag is not specified on the command line, a wizard will prompt the user for the different options.</p>
-<p>All plotted data series will also be written to disc. If <code class="docutils literal"><span class="pre">sep</span></code> is used, separate files will be written as well.</p>
+<p>The series to plot is selected by the <tt class="docutils literal"><span class="pre">-s</span></tt> flag. Basically any property written to the ProtoMS results file can be plotted, e.g. energies, volume, gradients etc. If the <tt class="docutils literal"><span class="pre">-s</span></tt> flag is not specified, a wizard will display all available series that can be plotted. This can be useful if one is unsure what the name of the series is.</p>
+<p>The tool can plot multiple series and there is five choices how produce these plots, set by the <tt class="docutils literal"><span class="pre">-p</span></tt> flag. If the <tt class="docutils literal"><span class="pre">sep</span></tt> multiple PNG files will be created, one for each series. With all other choices, one PNG file is created. If the <tt class="docutils literal"><span class="pre">-p</span></tt> flag is not specified on the command line, a wizard will prompt the user for the different options.</p>
+<p>All plotted data series will also be written to disc. If <tt class="docutils literal"><span class="pre">sep</span></tt> is used, separate files will be written as well.</p>
 <p>For each time series, the tool will estimate the equilibration time. It will do this by performing a statistical test based on the rank order of the series. If the series is equilibrated it will have a slope close to zero and the Kendall&#8217;s &amp;tau; will be zero. When the equilibration time has been determined, the tool will estimate the number of independent samples in the production part using the method of statistical inefficiency. The equilibration time will also be estimated from a method that maximizes the number uncorrelated samples as suggested on alchemistry.org.</p>
-<p>Apart from the raw series, the tool can also plot the running average if the <code class="docutils literal"><span class="pre">--average</span></code> flag is set or the moving average if the <code class="docutils literal"><span class="pre">--moving</span></code> flag is used.</p>
-<p>Typically only a single ProtoMS results file will be analysed and plotted. However, for the series <code class="docutils literal"><span class="pre">grad</span></code> and <code class="docutils literal"><span class="pre">agrad</span></code> (the gradient and analytical gradient, respectively), multiple results file can be given. In this case, the gradients for each results file is used to estimate the free energy using thermodynamic integration.</p>
+<p>Apart from the raw series, the tool can also plot the running average if the <tt class="docutils literal"><span class="pre">--average</span></tt> flag is set or the moving average if the <tt class="docutils literal"><span class="pre">--moving</span></tt> flag is used.</p>
+<p>Typically only a single ProtoMS results file will be analysed and plotted. However, for the series <tt class="docutils literal"><span class="pre">grad</span></tt> and <tt class="docutils literal"><span class="pre">agrad</span></tt> (the gradient and analytical gradient, respectively), multiple results file can be given. In this case, the gradients for each results file is used to estimate the free energy using thermodynamic integration.</p>
 </div>
 <div class="section" id="calc-ti-py">
 <h2>calc_ti.py<a class="headerlink" href="#calc-ti-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">calc_ti.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span>&nbsp; <span class="pre">[-pg]</span> <span class="pre">[-pp]</span> <span class="pre">[-pl]</span> <span class="pre">[-pu]</span> <span class="pre">[-gr]</span> <span class="pre">[--analytical]</span> <span class="pre">[--numerical</span> <span class="pre">both|back|forw</span> <span class="pre">]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">calc_ti.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span>&nbsp; <span class="pre">[-pg]</span> <span class="pre">[-pp]</span> <span class="pre">[-pl]</span> <span class="pre">[-pu]</span> <span class="pre">[-gr]</span> <span class="pre">[--analytical]</span> <span class="pre">[--numerical</span> <span class="pre">both|back|forw</span> <span class="pre">]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span></code> = name of output directory of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span></tt> = name of output directory of the simulation</dt>
 <dd><p class="first last">optional, default = current working directory (.)</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></code> = the beginning of the name of the file to analyse</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></tt> = the beginning of the name of the file to analyse</dt>
 <dd><p class="first last">optional, default = results_inst</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></code> = the number of snapshots to skip at the beginning of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></tt> = the number of snapshots to skip at the beginning of the simulation</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></code> = the maximum number of snapshots to process</dt>
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></tt> = the maximum number of snapshots to process</dt>
 <dd><p class="first last">optional, default = the total number of snapshot in the results file, excluding nskip</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pg</span></code>  = flag that turns <em>off</em> the printing of the gradient</dt>
+<dt><tt class="docutils literal"><span class="pre">-pg</span></tt>  = flag that turns <em>off</em> the printing of the gradient</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pp</span></code>  = flag that turns <em>off</em> the printing of the PMF</dt>
+<dt><tt class="docutils literal"><span class="pre">-pp</span></tt>  = flag that turns <em>off</em> the printing of the PMF</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pl</span></code>  = flag that turns <em>off</em> the printing of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values</dt>
+<dt><tt class="docutils literal"><span class="pre">-pl</span></tt>  = flag that turns <em>off</em> the printing of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pu</span></code>  = flag that turns <em>off</em> the printing of uncertainties</dt>
+<dt><tt class="docutils literal"><span class="pre">-pu</span></tt>  = flag that turns <em>off</em> the printing of uncertainties</dt>
 <dd><p class="first last">optional, default = on</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-gr</span></code>  = flag that turns <em>on</em> the plotting of the gradient</dt>
+<dt><tt class="docutils literal"><span class="pre">-gr</span></tt>  = flag that turns <em>on</em> the plotting of the gradient</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">--analytical</span></code> = turns <em>on</em> the use of analytical gradients
+<li><p class="first"><tt class="docutils literal"><span class="pre">--analytical</span></tt> = turns <em>on</em> the use of analytical gradients
 optional, default = off</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">--numerical</span></code> = turns <em>on</em> the use of numerical gradients and selects the kind
+<li><p class="first"><tt class="docutils literal"><span class="pre">--numerical</span></tt> = turns <em>on</em> the use of numerical gradients and selects the kind
 optional, default = both
-<code class="docutils literal"><span class="pre">both</span></code> = uses the free energy in both backward and forward direction to compute the free energy gradient
-<code class="docutils literal"><span class="pre">back</span></code> = uses the free energy in the backward direction to compute the free energy gradient
-<code class="docutils literal"><span class="pre">forw</span></code> = uses the free energy in the forward direction to compute the free energy gradient</p>
+<tt class="docutils literal"><span class="pre">both</span></tt> = uses the free energy in both backward and forward direction to compute the free energy gradient
+<tt class="docutils literal"><span class="pre">back</span></tt> = uses the free energy in the backward direction to compute the free energy gradient
+<tt class="docutils literal"><span class="pre">forw</span></tt> = uses the free energy in the forward direction to compute the free energy gradient</p>
 </li>
 </ul>
 <p><strong>Examples:</strong></p>
@@ -753,9 +753,9 @@ calc_ti.py -d out_free/ --analytical
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool calculates free energies using the method of thermodynamic integration (TI).</p>
-<p>The program expects that in the <code class="docutils literal"><span class="pre">directory</span></code> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <code class="docutils literal"><span class="pre">lam-0.000</span></code> and <code class="docutils literal"><span class="pre">lam-1.000</span></code></p>
-<p>If the <code class="docutils literal"><span class="pre">-gr</span></code> flag is set the gradient with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> is plotted and saved to a file called <code class="docutils literal"><span class="pre">gradient.png</span></code></p>
-<p>Block estimates can be constructed by combining <code class="docutils literal"><span class="pre">nskip</span></code> and <code class="docutils literal"><span class="pre">nmax</span></code>. For instance, these commands calculates block estimates with a block size of 5 m snapshots</p>
+<p>The program expects that in the <tt class="docutils literal"><span class="pre">directory</span></tt> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <tt class="docutils literal"><span class="pre">lam-0.000</span></tt> and <tt class="docutils literal"><span class="pre">lam-1.000</span></tt></p>
+<p>If the <tt class="docutils literal"><span class="pre">-gr</span></tt> flag is set the gradient with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> is plotted and saved to a file called <tt class="docutils literal"><span class="pre">gradient.png</span></tt></p>
+<p>Block estimates can be constructed by combining <tt class="docutils literal"><span class="pre">nskip</span></tt> and <tt class="docutils literal"><span class="pre">nmax</span></tt>. For instance, these commands calculates block estimates with a block size of 5 m snapshots</p>
 <div class="highlight-python"><div class="highlight"><pre>for X in 0 50 100 150 200 250 300 350
 do
 calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
@@ -766,14 +766,14 @@ done
 <div class="section" id="clear-gcmcbox-py">
 <h2>clear_gcmcbox.py<a class="headerlink" href="#clear-gcmcbox-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">clear_gcmcbox.py</span> <span class="pre">-b</span> <span class="pre">boxfile</span> <span class="pre">-s</span> <span class="pre">waterfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">clear_gcmcbox.py</span> <span class="pre">-b</span> <span class="pre">boxfile</span> <span class="pre">-s</span> <span class="pre">waterfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-b</span> <span class="pre">boxfile</span></code> = the name of a PDB file containing a GCMC or JAWS1 box</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-b</span> <span class="pre">boxfile</span></tt> = the name of a PDB file containing a GCMC or JAWS1 box</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">-w</span> <span class="pre">waterfile</span></code> = the name of a PDB file containing the bulk water</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-w</span> <span class="pre">waterfile</span></tt> = the name of a PDB file containing the bulk water</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the created PDB file containing cleaned bulk water</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the created PDB file containing cleaned bulk water</dt>
 <dd><p class="first last">optional, default = cleared_box.pdb</p>
 </dd>
 </dl>
@@ -787,29 +787,29 @@ clear_gcmcbox.py -b gcmc_box.pdb -w water.pdb -o water_cleared.pdb
 <p><strong>Description:</strong></p>
 <p>This tool clears a GCMC or JAWS-1 simulation box from any bulk water placed there by the solvation method.</p>
 <p>In a GCMC and JAWS-1 simulation the bulk water is prevented to enter or exit a GCMC or JAWS-1 simulation box. Therefore, bulk water that are within this box needs to be removed prior to the GCMC or JAWS-1 simulation.</p>
-<p>The <code class="docutils literal"><span class="pre">boxfile</span></code> is typically created by <code class="docutils literal"><span class="pre">make_gcmcbox.py</span></code> and the <code class="docutils literal"><span class="pre">waterfile</span></code> is typically created by <code class="docutils literal"><span class="pre">solvate.py</span></code> and can be either a droplet or a box</p>
+<p>The <tt class="docutils literal"><span class="pre">boxfile</span></tt> is typically created by <tt class="docutils literal"><span class="pre">make_gcmcbox.py</span></tt> and the <tt class="docutils literal"><span class="pre">waterfile</span></tt> is typically created by <tt class="docutils literal"><span class="pre">solvate.py</span></tt> and can be either a droplet or a box</p>
 </div>
 <div class="section" id="convertatomnames-py">
 <h2>convertatomnames.py<a class="headerlink" href="#convertatomnames-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">convertatomnames.py</span> <span class="pre">-p</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-s</span> <span class="pre">style]</span> <span class="pre">[-c</span> <span class="pre">conversionfile]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">convertatomnames.py</span> <span class="pre">-p</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-s</span> <span class="pre">style]</span> <span class="pre">[-c</span> <span class="pre">conversionfile]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-p</span> <span class="pre">pdbfile</span></code> = the name of a PDB file that should be modified</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">pdbfile</span></tt> = the name of a PDB file that should be modified</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of the modified PDB file</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of the modified PDB file</dt>
 <dd><p class="first last">optional, default = protein_pms.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">style</span></code> = the naming convention in pdbfile</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">style</span></tt> = the naming convention in pdbfile</dt>
 <dd><p class="first last">optional, default = amber</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-c</span> <span class="pre">conversionfile</span></code> = the name of file containing conversion instructions</dt>
+<dt><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">conversionfile</span></tt> = the name of file containing conversion instructions</dt>
 <dd><p class="first last">optional, default = atomnamesmap.dat</p>
 </dd>
 </dl>
@@ -824,29 +824,29 @@ convertatomnames.py -p protein.pdb -s charmm
 <p><strong>Description:</strong></p>
 <p>This tool converts residue and atom names to ProtoMS convention.</p>
 <p>This script modfies in particular names of hydrogen atoms, but also some residue names, e.g. histidines.</p>
-<p>A file containing conversion instructions for amber and charmm is available in the <code class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></code> folder.</p>
+<p>A file containing conversion instructions for amber and charmm is available in the <tt class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></tt> folder.</p>
 </div>
 <div class="section" id="convertwater-py">
 <h2>convertwater.py<a class="headerlink" href="#convertwater-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">convertwater.py</span> <span class="pre">-p</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-m</span> <span class="pre">model]</span> <span class="pre">[--ignoreh]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">convertwater.py</span> <span class="pre">-p</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-m</span> <span class="pre">model]</span> <span class="pre">[--ignoreh]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-p</span> <span class="pre">pdbfile</span></code> = the name of a PDB containing waters to be modified</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">pdbfile</span></tt> = the name of a PDB containing waters to be modified</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of the modified PDB file</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of the modified PDB file</dt>
 <dd><p class="first last">optional, default = convertedwater.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-m</span> <span class="pre">model</span></code> = the name of the target water model</dt>
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">model</span></tt> = the name of the target water model</dt>
 <dd><p class="first last">optional, default = tip4p</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--ignoreh</span></code> = flag that turns <em>on</em> the ignoring of hydrogen atoms</dt>
+<dt><tt class="docutils literal"><span class="pre">--ignoreh</span></tt> = flag that turns <em>on</em> the ignoring of hydrogen atoms</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
@@ -860,40 +860,40 @@ convertwater.py -p protein.pdb --ignoreh
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool converts water molecules to a specific model.</p>
-<p>Currently the script recognizes TIP3P and TIP4P water models. The valid values for <code class="docutils literal"><span class="pre">style</span></code> is therefore <code class="docutils literal"><span class="pre">t4p,</span> <span class="pre">tip4p,</span> <span class="pre">tp4,</span> <span class="pre">t3p,</span> <span class="pre">tip3p,</span> <span class="pre">tp3</span></code></p>
-<p>If the <code class="docutils literal"><span class="pre">--ignoreh</span></code> flag is given, the script will discard the hydrogen atoms found in <code class="docutils literal"><span class="pre">pdbfile</span></code> and add them at a random orientation.</p>
+<p>Currently the script recognizes TIP3P and TIP4P water models. The valid values for <tt class="docutils literal"><span class="pre">style</span></tt> is therefore <tt class="docutils literal"><span class="pre">t4p,</span> <span class="pre">tip4p,</span> <span class="pre">tp4,</span> <span class="pre">t3p,</span> <span class="pre">tip3p,</span> <span class="pre">tp3</span></tt></p>
+<p>If the <tt class="docutils literal"><span class="pre">--ignoreh</span></tt> flag is given, the script will discard the hydrogen atoms found in <tt class="docutils literal"><span class="pre">pdbfile</span></tt> and add them at a random orientation.</p>
 </div>
 <div class="section" id="distribute-waters-py">
 <h2>distribute_waters.py<a class="headerlink" href="#distribute-waters-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">distribute_waters.py</span> <span class="pre">-b</span> <span class="pre">box</span> <span class="pre">-m</span> <span class="pre">molecules</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[--model</span> <span class="pre">t3p|t4p</span> <span class="pre">]</span> <span class="pre">[--resname</span> <span class="pre">resname]</span> <span class="pre">[--number</span> <span class="pre">number]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">distribute_waters.py</span> <span class="pre">-b</span> <span class="pre">box</span> <span class="pre">-m</span> <span class="pre">molecules</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[--model</span> <span class="pre">t3p|t4p</span> <span class="pre">]</span> <span class="pre">[--resname</span> <span class="pre">resname]</span> <span class="pre">[--number</span> <span class="pre">number]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-b</span> <span class="pre">box</span></code> = the dimensions of the box where the (water) molecules will be distributed. Six arguments expected: origin (x,y,z) &amp; length (x,y,z)</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-b</span> <span class="pre">box</span></tt> = the dimensions of the box where the (water) molecules will be distributed. Six arguments expected: origin (x,y,z) &amp; length (x,y,z)</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">-m</span> <span class="pre">molecules</span></code> = either the file containing the molecules to distribute, or the number of water molecules to distribute in the box</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">molecules</span></tt> = either the file containing the molecules to distribute, or the number of water molecules to distribute in the box</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of the file where the distributed molecules will be saved</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of the file where the distributed molecules will be saved</dt>
 <dd><p class="first last">optional, default = ghostmolecules.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--model</span> <span class="pre">t3p|t4p</span></code> = the water model used when a number is especified in &#8216;-m molecules&#8217;</dt>
+<dt><tt class="docutils literal"><span class="pre">--model</span> <span class="pre">t3p|t4p</span></tt> = the water model used when a number is especified in &#8216;-m molecules&#8217;</dt>
 <dd><p class="first last">optional, default =  t4p
-<code class="docutils literal"><span class="pre">t4p</span></code> = tip4p water model
-<code class="docutils literal"><span class="pre">t3p</span></code> = tip3p water model</p>
+<tt class="docutils literal"><span class="pre">t4p</span></tt> = tip4p water model
+<tt class="docutils literal"><span class="pre">t3p</span></tt> = tip3p water model</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--resname</span> <span class="pre">resname</span></code> = the residue name used in the outfile when a number is especified in &#8216;-m molecules&#8217;</dt>
+<dt><tt class="docutils literal"><span class="pre">--resname</span> <span class="pre">resname</span></tt> = the residue name used in the outfile when a number is especified in &#8216;-m molecules&#8217;</dt>
 <dd><p class="first last">optional, default = WAT</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--number</span> <span class="pre">number</span></code> = the required number of molecules in the box when it differs from the number of molecules in the file specified in &#8216;-m molecules&#8217;</dt>
+<dt><tt class="docutils literal"><span class="pre">--number</span> <span class="pre">number</span></tt> = the required number of molecules in the box when it differs from the number of molecules in the file specified in &#8216;-m molecules&#8217;</dt>
 <dd><p class="first last">optional, default = None (only the molecules in the file will be distributed in the box)</p>
 </dd>
 </dl>
@@ -912,22 +912,22 @@ distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m myonewater.pdb --number 12 
 <div class="section" id="divide-pdb-py">
 <h2>divide_pdb.py<a class="headerlink" href="#divide-pdb-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">divide_pdb.py</span> <span class="pre">[-i</span> <span class="pre">input]</span> <span class="pre">[-o</span> <span class="pre">output]</span> <span class="pre">[-p</span> <span class="pre">path]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">divide_pdb.py</span> <span class="pre">[-i</span> <span class="pre">input]</span> <span class="pre">[-o</span> <span class="pre">output]</span> <span class="pre">[-p</span> <span class="pre">path]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-i</span> <span class="pre">input</span></code> = the name of your multi-pdb file</dt>
+<dt><tt class="docutils literal"><span class="pre">-i</span> <span class="pre">input</span></tt> = the name of your multi-pdb file</dt>
 <dd><p class="first last">optional, default = all.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">output</span></code> = the beginning of the name of your individual pdb files</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">output</span></tt> = the beginning of the name of your individual pdb files</dt>
 <dd><p class="first last">optional, default = snapshot_</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">path</span></code> = the directory where the input should be found and the output printed</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">path</span></tt> = the directory where the input should be found and the output printed</dt>
 <dd><p class="first last">optional, default = ./</p>
 </dd>
 </dl>
@@ -945,58 +945,58 @@ divide_pdb.py -i mypmsout.pdb -o individual -p outfolder/</dd>
 <div class="section" id="generate-input-py">
 <h2>generate_input.py<a class="headerlink" href="#generate-input-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">generate_input.py</span> <span class="pre">[-s</span> <span class="pre">equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2]</span> <span class="pre">[-p</span> <span class="pre">protein.pdb]</span> <span class="pre">[-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...]</span> <span class="pre">[-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...]</span> <span class="pre">[-pw</span> <span class="pre">protwat.pdb]</span> <span class="pre">[-lw</span> <span class="pre">ligwat.pdb]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[--outfolder</span> <span class="pre">folder]</span> <span class="pre">[--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambda2</span> <span class="pre">...]</span> <span class="pre">[--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...]</span> <span class="pre">[--jawsbias</span> <span class="pre">bias]</span> <span class="pre">[--gcmcwater</span> <span class="pre">wat.pdb]</span> <span class="pre">[--gcmcbox</span> <span class="pre">box.pdb]</span> <span class="pre">[--nequil</span> <span class="pre">N]</span> <span class="pre">[--nprod</span> <span class="pre">N]</span> <span class="pre">[--dumpfreq</span> <span class="pre">N]</span> <span class="pre">[--absolute]</span> <span class="pre">[--dovacuum]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">generate_input.py</span> <span class="pre">[-s</span> <span class="pre">equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2]</span> <span class="pre">[-p</span> <span class="pre">protein.pdb]</span> <span class="pre">[-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...]</span> <span class="pre">[-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...]</span> <span class="pre">[-pw</span> <span class="pre">protwat.pdb]</span> <span class="pre">[-lw</span> <span class="pre">ligwat.pdb]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[--outfolder</span> <span class="pre">folder]</span> <span class="pre">[--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambda2</span> <span class="pre">...]</span> <span class="pre">[--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...]</span> <span class="pre">[--jawsbias</span> <span class="pre">bias]</span> <span class="pre">[--gcmcwater</span> <span class="pre">wat.pdb]</span> <span class="pre">[--gcmcbox</span> <span class="pre">box.pdb]</span> <span class="pre">[--nequil</span> <span class="pre">N]</span> <span class="pre">[--nprod</span> <span class="pre">N]</span> <span class="pre">[--dumpfreq</span> <span class="pre">N]</span> <span class="pre">[--absolute]</span> <span class="pre">[--dovacuum]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2</span></code> = the type of simulation to perform</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2</span></tt> = the type of simulation to perform</dt>
 <dd><p class="first last">optional, default = equilibration</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">protein.pdb</span></code> = the name of the protein PDB file</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">protein.pdb</span></tt> = the name of the protein PDB file</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...</span></code> = the name(s) of PDB file(s) containing ligand(s)</dt>
+<dt><tt class="docutils literal"><span class="pre">-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...</span></tt> = the name(s) of PDB file(s) containing ligand(s)</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...</span></code> = the name(s) of ProtoMS template file(s) that needs to be loaded</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...</span></tt> = the name(s) of ProtoMS template file(s) that needs to be loaded</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pw</span> <span class="pre">protwat.pdb</span></code> = the name of a PDB file with bulk water for the protein</dt>
+<dt><tt class="docutils literal"><span class="pre">-pw</span> <span class="pre">protwat.pdb</span></tt> = the name of a PDB file with bulk water for the protein</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-lw</span> <span class="pre">ligwat.pdb</span></code> = the name of a PDB file with bulk water for the ligand(s)</dt>
+<dt><tt class="docutils literal"><span class="pre">-lw</span> <span class="pre">ligwat.pdb</span></tt> = the name of a PDB file with bulk water for the ligand(s)</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the prefix for the created ProtoMS command file</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the prefix for the created ProtoMS command file</dt>
 <dd><p class="first last">optional, default = run</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--outfolder</span> <span class="pre">folder</span></code> = the ProtoMS output folder</dt>
+<dt><tt class="docutils literal"><span class="pre">--outfolder</span> <span class="pre">folder</span></tt> = the ProtoMS output folder</dt>
 <dd><p class="first last">optional, default = &#8220;&#8221; (empty string)</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambada2</span></code> ... = specification of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> space for free energy calculations</dt>
+<dt><tt class="docutils literal"><span class="pre">--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambada2</span></tt> ... = specification of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> space for free energy calculations</dt>
 <dd><p class="first last">optional, default = 16
 if a single value is given, this number of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values is created uniformly from 0 to 1
 if a list of values are given, this is the <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values to use</p>
@@ -1004,55 +1004,55 @@ if a list of values are given, this is the <img class="math" src="_images/math/1
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...</span></code> = the Adams parameter for GCMC</dt>
+<dt><tt class="docutils literal"><span class="pre">--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...</span></tt> = the Adams parameter for GCMC</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--jawsbias</span> <span class="pre">bias</span></code> = the bias to apply in JAWS-2 simulations</dt>
+<dt><tt class="docutils literal"><span class="pre">--jawsbias</span> <span class="pre">bias</span></tt> = the bias to apply in JAWS-2 simulations</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--gcmcwater</span> <span class="pre">wat.pdb</span></code> = the name of a PDB file with reservoir waters for GCMC and JAWS-1</dt>
+<dt><tt class="docutils literal"><span class="pre">--gcmcwater</span> <span class="pre">wat.pdb</span></tt> = the name of a PDB file with reservoir waters for GCMC and JAWS-1</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--gcmcbox</span> <span class="pre">box.pdb</span></code> = the name of a PDB file with GCMC or JAWS-1 simulation box dimension</dt>
+<dt><tt class="docutils literal"><span class="pre">--gcmcbox</span> <span class="pre">box.pdb</span></tt> = the name of a PDB file with GCMC or JAWS-1 simulation box dimension</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--nequil</span> <span class="pre">N</span></code> = the number of equilibration moves</dt>
+<dt><tt class="docutils literal"><span class="pre">--nequil</span> <span class="pre">N</span></tt> = the number of equilibration moves</dt>
 <dd><p class="first last">optional, default = 5E6</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--nprod</span> <span class="pre">N</span></code> = the number of production moves</dt>
+<dt><tt class="docutils literal"><span class="pre">--nprod</span> <span class="pre">N</span></tt> = the number of production moves</dt>
 <dd><p class="first last">optional, default = 40E6</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--dumpfreq</span> <span class="pre">N</span></code> = the frequency with which output is written to disc</dt>
+<dt><tt class="docutils literal"><span class="pre">--dumpfreq</span> <span class="pre">N</span></tt> = the frequency with which output is written to disc</dt>
 <dd><p class="first last">optional, default = 1E5</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--absolute</span></code> = turns <em>on</em> the setup of absolute free energies</dt>
+<dt><tt class="docutils literal"><span class="pre">--absolute</span></tt> = turns <em>on</em> the setup of absolute free energies</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--dovacuum</span></code> = turns <em>on</em> the setup of vacuum simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">--dovacuum</span></tt> = turns <em>on</em> the setup of vacuum simulation</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
@@ -1076,12 +1076,12 @@ generate_input.py -s sampling -l lig1.pdb -t lig1.tem --dovacuum
 <div class="section" id="make-dummy-py">
 <h2>make_dummy.py<a class="headerlink" href="#make-dummy-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">make_dummy.py</span> <span class="pre">-f</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">make_dummy.py</span> <span class="pre">-f</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-f</span> <span class="pre">pdbfile</span></code> = the name of PDB file containing the solute</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">pdbfile</span></tt> = the name of PDB file containing the solute</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of the created dummy PDB file</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of the created dummy PDB file</dt>
 <dd><p class="first last">optional, default = dummy.pdb</p>
 </dd>
 </dl>
@@ -1099,18 +1099,18 @@ make_dummy.py -f benzene.pdb -o benzene_dummy.pdb
 <div class="section" id="make-gcmcbox-py">
 <h2>make_gcmcbox.py<a class="headerlink" href="#make-gcmcbox-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">make_gcmcbox.py</span> <span class="pre">-s</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-p</span> <span class="pre">padding]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">make_gcmcbox.py</span> <span class="pre">-s</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-p</span> <span class="pre">padding]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-s</span> <span class="pre">pdbfile</span></code> = the name of a PDB file containing a solute molecule</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">pdbfile</span></tt> = the name of a PDB file containing a solute molecule</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = a PDB file with the created box</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = a PDB file with the created box</dt>
 <dd><p class="first last">optional, default = gcmc_box.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">padding</span></code> = the extra space to add to the box in each dimension</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">padding</span></tt> = the extra space to add to the box in each dimension</dt>
 <dd><p class="first last">optional, default = 2.0 A</p>
 </dd>
 </dl>
@@ -1124,35 +1124,35 @@ make_gcmcbox.py -s benzene.pdb -o benzene_gcmc_box.pdb
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool makes a GCMC or JAWS-1 simulation box to fit on top of a solute.</p>
-<p>The box will be created so that it has the extreme dimensions of the solute and then <code class="docutils literal"><span class="pre">padding</span></code> will be added in each dimension</p>
+<p>The box will be created so that it has the extreme dimensions of the solute and then <tt class="docutils literal"><span class="pre">padding</span></tt> will be added in each dimension</p>
 <p>The box can be visualised with most common programs, e.g.</p>
 <div class="highlight-python"><div class="highlight"><pre>vmd -m benzene.pdb benzene_gcmc_box.pdb
 </pre></div>
 </div>
 <p>this is a good way to see that the box is of appropriate dimensions.</p>
-<p>When an appropriate box has been made, it can be used by <code class="docutils literal"><span class="pre">solvate.py</span></code> to fill it with water.</p>
+<p>When an appropriate box has been made, it can be used by <tt class="docutils literal"><span class="pre">solvate.py</span></tt> to fill it with water.</p>
 </div>
 <div class="section" id="make-single-py">
 <h2>make_single.py<a class="headerlink" href="#make-single-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">make_single.py</span> <span class="pre">-t0</span> <span class="pre">template0</span> <span class="pre">-t1</span> <span class="pre">template1</span> <span class="pre">-p0</span> <span class="pre">pdbfile0</span> <span class="pre">-p1</span> <span class="pre">pdbfile1</span> <span class="pre">[-m</span> <span class="pre">map]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">make_single.py</span> <span class="pre">-t0</span> <span class="pre">template0</span> <span class="pre">-t1</span> <span class="pre">template1</span> <span class="pre">-p0</span> <span class="pre">pdbfile0</span> <span class="pre">-p1</span> <span class="pre">pdbfile1</span> <span class="pre">[-m</span> <span class="pre">map]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-t0</span> <span class="pre">template0</span></code> = the name of a ProtoMS template file of solute at <img class="math" src="_images/math/3d52aae84bb4dafbecb3cbaa1d1f3c34d2f0b067.png" alt="\lambda=0.0"/></p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-t0</span> <span class="pre">template0</span></tt> = the name of a ProtoMS template file of solute at <img class="math" src="_images/math/3d52aae84bb4dafbecb3cbaa1d1f3c34d2f0b067.png" alt="\lambda=0.0"/></p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">-t1</span> <span class="pre">template1</span></code> = the name of a ProtoMS template file of solute at <img class="math" src="_images/math/de2b235953cdcca237d3d179abdce516e2553346.png" alt="\lambda`=1.0"/></p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-t1</span> <span class="pre">template1</span></tt> = the name of a ProtoMS template file of solute at <img class="math" src="_images/math/de2b235953cdcca237d3d179abdce516e2553346.png" alt="\lambda`=1.0"/></p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">-p0</span> <span class="pre">pdbfile0</span></code> = the name of a PDB file of the solute at <img class="math" src="_images/math/3d52aae84bb4dafbecb3cbaa1d1f3c34d2f0b067.png" alt="\lambda=0.0"/></p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-p0</span> <span class="pre">pdbfile0</span></tt> = the name of a PDB file of the solute at <img class="math" src="_images/math/3d52aae84bb4dafbecb3cbaa1d1f3c34d2f0b067.png" alt="\lambda=0.0"/></p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">-p1</span> <span class="pre">pdbfile1</span></code> = the name of a PDB file of the solute at <img class="math" src="_images/math/72b7673db8aec667d9ad50cdcbc58be27b083b2e.png" alt="\lambda=1.0"/></p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-p1</span> <span class="pre">pdbfile1</span></tt> = the name of a PDB file of the solute at <img class="math" src="_images/math/72b7673db8aec667d9ad50cdcbc58be27b083b2e.png" alt="\lambda=1.0"/></p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-m</span> <span class="pre">map</span></code> = the name of a correspondence map</dt>
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">map</span></tt> = the name of a correspondence map</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the start of the name of the created single-topology templates</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the start of the name of the created single-topology templates</dt>
 <dd><p class="first last">optional, default = single</p>
 </dd>
 </dl>
@@ -1166,19 +1166,19 @@ make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool makes ProtoMS template files for single topology free energy simulations.</p>
-<p>The program will automatically try to match atoms in <code class="docutils literal"><span class="pre">template0</span></code> with atoms in <code class="docutils literal"><span class="pre">template1</span></code>. It will do this by looking for atoms with the same atom type that are on top of each other in <code class="docutils literal"><span class="pre">pdbfile0</span></code> and <code class="docutils literal"><span class="pre">pdbfile1</span></code>. A cut-off of 0.02 A2 will be used for this. All atoms that cannot be identified in this way are written to the screen and the user has to enter the corresponding atoms. If no corresponding atom exists, i.e., the atom should be perturbed to a dummy, the user may enter blank.</p>
-<p>The user may also write the corresponding atoms to a file and provide it as <code class="docutils literal"><span class="pre">map</span></code> above. In this file there should be one atom pair on each line, separated by white-space. A dummy atom should be denoted as <code class="docutils literal"><span class="pre">DUM</span></code>. If <code class="docutils literal"><span class="pre">map</span></code> is not given, the program will write the created correspondence map to a file based on the <code class="docutils literal"><span class="pre">outfile</span></code> string.</p>
+<p>The program will automatically try to match atoms in <tt class="docutils literal"><span class="pre">template0</span></tt> with atoms in <tt class="docutils literal"><span class="pre">template1</span></tt>. It will do this by looking for atoms with the same atom type that are on top of each other in <tt class="docutils literal"><span class="pre">pdbfile0</span></tt> and <tt class="docutils literal"><span class="pre">pdbfile1</span></tt>. A cut-off of 0.02 A2 will be used for this. All atoms that cannot be identified in this way are written to the screen and the user has to enter the corresponding atoms. If no corresponding atom exists, i.e., the atom should be perturbed to a dummy, the user may enter blank.</p>
+<p>The user may also write the corresponding atoms to a file and provide it as <tt class="docutils literal"><span class="pre">map</span></tt> above. In this file there should be one atom pair on each line, separated by white-space. A dummy atom should be denoted as <tt class="docutils literal"><span class="pre">DUM</span></tt>. If <tt class="docutils literal"><span class="pre">map</span></tt> is not given, the program will write the created correspondence map to a file based on the <tt class="docutils literal"><span class="pre">outfile</span></tt> string.</p>
 <p>Currently, dummy atoms are not supported in the solute at <img class="math" src="_images/math/3d52aae84bb4dafbecb3cbaa1d1f3c34d2f0b067.png" alt="\lambda=0.0"/>. Therefore, this solute needs to be the larger one.</p>
-<p>The tool will write two ProtoMS template files, one for the electrostatic perturbation, one for the van der Waals perturbation and one for the combined perturbation. These template files will end in <code class="docutils literal"><span class="pre">_ele.tem</span></code>, <code class="docutils literal"><span class="pre">_vdw.tem</span></code>, <code class="docutils literal"><span class="pre">_comb.tem</span></code> respectively.</p>
+<p>The tool will write two ProtoMS template files, one for the electrostatic perturbation, one for the van der Waals perturbation and one for the combined perturbation. These template files will end in <tt class="docutils literal"><span class="pre">_ele.tem</span></tt>, <tt class="docutils literal"><span class="pre">_vdw.tem</span></tt>, <tt class="docutils literal"><span class="pre">_comb.tem</span></tt> respectively.</p>
 <p>A summary of the charges and van der Waals parameters in the four states will be printed to the screen. This information should be checked carefully.</p>
 </div>
 <div class="section" id="merge-templates-py">
 <h2>merge_templates.py<a class="headerlink" href="#merge-templates-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">merge_templates.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span> <span class="pre">[file3</span> <span class="pre">...]</span> <span class="pre">-o</span> <span class="pre">outfile</span></code></p>
+<p><tt class="docutils literal"><span class="pre">merge_templates.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span> <span class="pre">[file3</span> <span class="pre">...]</span> <span class="pre">-o</span> <span class="pre">outfile</span></tt></p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span> <span class="pre">file3</span></code> ... = the ProtoMS template files that should be merged</li>
-<li><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of the merged ProtoMS templatefile</li>
+<li><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span> <span class="pre">file3</span></tt> ... = the ProtoMS template files that should be merged</li>
+<li><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of the merged ProtoMS templatefile</li>
 </ul>
 <p><strong>Examples:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre>merge_templates.py -f benzene.tem dummy.tem -o bnz-dummy.tem
@@ -1186,57 +1186,57 @@ make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool combines several ProtoMS template files into a single template file.</p>
-<p>The force field parameters in <code class="docutils literal"><span class="pre">file2</span></code> will be re-numbered so that they do not conflict with <code class="docutils literal"><span class="pre">file1</span></code>. This is important when you want to load both parameters into ProtoMS at the same time.</p>
+<p>The force field parameters in <tt class="docutils literal"><span class="pre">file2</span></tt> will be re-numbered so that they do not conflict with <tt class="docutils literal"><span class="pre">file1</span></tt>. This is important when you want to load both parameters into ProtoMS at the same time.</p>
 </div>
 <div class="section" id="pms2pymbar-py">
 <h2>pms2pymbar.py<a class="headerlink" href="#pms2pymbar-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">pms2pymbar.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span> <span class="pre">[--run]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">pms2pymbar.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span> <span class="pre">[--run]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span></code> = name of output directory of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span></tt> = name of output directory of the simulation</dt>
 <dd><p class="first last">optional, default = current working directory (.)</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></code> = the beginning of the name of the file to analyse</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">results</span></tt> = the beginning of the name of the file to analyse</dt>
 <dd><p class="first last">optional, default = results</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of file with all energy values</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of file with all energy values</dt>
 <dd><p class="first last">optional, default = pymbar_energy</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></code> = the number of snapshots to skip at the beginning of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">nskip</span></tt> = the number of snapshots to skip at the beginning of the simulation</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></code> = the maximum number of snapshots to process</dt>
+<dt><tt class="docutils literal"><span class="pre">-m</span> <span class="pre">nmax</span></tt> = the maximum number of snapshots to process</dt>
 <dd><p class="first last">optional, default = the total number of snapshot in the results file, excluding nskip</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></code> = the simulation temperature in degree Celsius</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">temperature</span></tt> = the simulation temperature in degree Celsius</dt>
 <dd><p class="first last">optional, default = 25 degrees</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--run</span></code> = flag indicating if to run pymbar</dt>
+<dt><tt class="docutils literal"><span class="pre">--run</span></tt> = flag indicating if to run pymbar</dt>
 <dd><p class="first last">optional, default = No</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--nobar</span></code> = flag indicating if to estimate BAR</dt>
+<dt><tt class="docutils literal"><span class="pre">--nobar</span></tt> = flag indicating if to estimate BAR</dt>
 <dd><p class="first last">optional, default = No</p>
 </dd>
 </dl>
@@ -1251,83 +1251,83 @@ pms2pymbar.py -d out_free/ --run
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool extract free energy data from ProtoMS output files and makes them compatible with the PyMBAR software.</p>
-<p>The program expects that in the <code class="docutils literal"><span class="pre">directory</span></code> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <code class="docutils literal"><span class="pre">lam-0.000</span></code> and <code class="docutils literal"><span class="pre">lam-1.000</span></code></p>
-<p>The tool writes a file <code class="docutils literal"><span class="pre">outfile</span></code> to each folder in <code class="docutils literal"><span class="pre">directory</span></code> that is human readable. It contains some header information such as units, current <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value and total number of &amp;lambda-values. It then contains one row for each snapshot and each of these rows contains a column with the total energy at a specific <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value., one column for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value. These files can then be read by PyMBAR.</p>
-<p>Alternatively, if PyMBAR is properly installed and can be loaded as a python library, the user can add the <code class="docutils literal"><span class="pre">--run</span></code> flag and the tool will automatically feed PyMBAR with the energy values and compute the free energy using MBAR.</p>
+<p>The program expects that in the <tt class="docutils literal"><span class="pre">directory</span></tt> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <tt class="docutils literal"><span class="pre">lam-0.000</span></tt> and <tt class="docutils literal"><span class="pre">lam-1.000</span></tt></p>
+<p>The tool writes a file <tt class="docutils literal"><span class="pre">outfile</span></tt> to each folder in <tt class="docutils literal"><span class="pre">directory</span></tt> that is human readable. It contains some header information such as units, current <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value and total number of &amp;lambda-values. It then contains one row for each snapshot and each of these rows contains a column with the total energy at a specific <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value., one column for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value. These files can then be read by PyMBAR.</p>
+<p>Alternatively, if PyMBAR is properly installed and can be loaded as a python library, the user can add the <tt class="docutils literal"><span class="pre">--run</span></tt> flag and the tool will automatically feed PyMBAR with the energy values and compute the free energy using MBAR.</p>
 </div>
 <div class="section" id="scoop-py">
 <h2>scoop.py<a class="headerlink" href="#scoop-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">scoop.py</span> <span class="pre">-p</span> <span class="pre">proteinfile</span> <span class="pre">[-l</span> <span class="pre">ligandfile]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[--center</span> <span class="pre">center]</span> <span class="pre">[--innercut</span> <span class="pre">icut]</span> <span class="pre">[--outercut</span> <span class="pre">ocut]</span> <span class="pre">[--flexin</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--flexout</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--terminal</span> <span class="pre">keep|doublekeep|neutralize]</span> <span class="pre">[--excluded</span> <span class="pre">res1</span> <span class="pre">res2</span> <span class="pre">...]</span> <span class="pre">[--added</span> <span class="pre">res1</span> <span class="pre">res2</span> <span class="pre">...]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">scoop.py</span> <span class="pre">-p</span> <span class="pre">proteinfile</span> <span class="pre">[-l</span> <span class="pre">ligandfile]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[--center</span> <span class="pre">center]</span> <span class="pre">[--innercut</span> <span class="pre">icut]</span> <span class="pre">[--outercut</span> <span class="pre">ocut]</span> <span class="pre">[--flexin</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--flexout</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--terminal</span> <span class="pre">keep|doublekeep|neutralize]</span> <span class="pre">[--excluded</span> <span class="pre">res1</span> <span class="pre">res2</span> <span class="pre">...]</span> <span class="pre">[--added</span> <span class="pre">res1</span> <span class="pre">res2</span> <span class="pre">...]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-p</span> <span class="pre">proteinfile</span></code> = the name of a PDB file containing the protein</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">proteinfile</span></tt> = the name of a PDB file containing the protein</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-l</span> <span class="pre">ligandfile</span></code> = the name of a PDB file containing a ligand</dt>
+<dt><tt class="docutils literal"><span class="pre">-l</span> <span class="pre">ligandfile</span></tt> = the name of a PDB file containing a ligand</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of the truncated PDB file</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of the truncated PDB file</dt>
 <dd><p class="first last">optional, default = scoop.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--center</span> <span class="pre">center</span></code> = the centre of the scoop</dt>
+<dt><tt class="docutils literal"><span class="pre">--center</span> <span class="pre">center</span></tt> = the centre of the scoop</dt>
 <dd><p class="first last">optional, default = 0.0,0.0,0.0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--innercut</span> <span class="pre">icut</span></code> == the inner region cut-off in Angstroms</dt>
+<dt><tt class="docutils literal"><span class="pre">--innercut</span> <span class="pre">icut</span></tt> == the inner region cut-off in Angstroms</dt>
 <dd><p class="first last">optional, default = 16.0 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--outercut</span> <span class="pre">ocut</span></code> == the outer region cut-off in Angstroms</dt>
+<dt><tt class="docutils literal"><span class="pre">--outercut</span> <span class="pre">ocut</span></tt> == the outer region cut-off in Angstroms</dt>
 <dd><p class="first last">optional, default = 20.0 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--flexin</span> <span class="pre">sidechain|flexible|rigid</span></code> = determine the flexibility of the inner region</dt>
+<dt><tt class="docutils literal"><span class="pre">--flexin</span> <span class="pre">sidechain|flexible|rigid</span></tt> = determine the flexibility of the inner region</dt>
 <dd><p class="first last">optional, default = flexible
-<code class="docutils literal"><span class="pre">sidechain</span></code> = only the sidechains will be sampled in the simulation
-<code class="docutils literal"><span class="pre">flexible</span></code> = both sidechain and backbone will be sampled in the simulation
-<code class="docutils literal"><span class="pre">rigid</span></code> = no residues will be sampled</p>
+<tt class="docutils literal"><span class="pre">sidechain</span></tt> = only the sidechains will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">flexible</span></tt> = both sidechain and backbone will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">rigid</span></tt> = no residues will be sampled</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--flexout</span></code> sidechain|flexible|rigid = determine the flexibility of the outer region</dt>
+<dt><tt class="docutils literal"><span class="pre">--flexout</span></tt> sidechain|flexible|rigid = determine the flexibility of the outer region</dt>
 <dd><p class="first last">optional, default = sidechain
-<code class="docutils literal"><span class="pre">sidechain</span></code> = only the sidechains will be sampled in the simulation
-<code class="docutils literal"><span class="pre">flexible</span></code> = both sidechain and backbone will be sampled in the simulation
-<code class="docutils literal"><span class="pre">rigid</span></code> = no residues will be sampled</p>
+<tt class="docutils literal"><span class="pre">sidechain</span></tt> = only the sidechains will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">flexible</span></tt> = both sidechain and backbone will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">rigid</span></tt> = no residues will be sampled</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--terminal</span></code> keep|doublekeep|neutralize = determines the treatment of charged terminal residues</dt>
+<dt><tt class="docutils literal"><span class="pre">--terminal</span></tt> keep|doublekeep|neutralize = determines the treatment of charged terminal residues</dt>
 <dd><p class="first last">optional, default = neutralize
-<code class="docutils literal"><span class="pre">keep</span></code> = keep any charged terminal
-<code class="docutils literal"><span class="pre">doublekeep</span></code> = keep charged terminal but only if both are in the scoop
-<code class="docutils literal"><span class="pre">neutralize</span></code> = neutralize any charged terminal within the scoop</p>
+<tt class="docutils literal"><span class="pre">keep</span></tt> = keep any charged terminal
+<tt class="docutils literal"><span class="pre">doublekeep</span></tt> = keep charged terminal but only if both are in the scoop
+<tt class="docutils literal"><span class="pre">neutralize</span></tt> = neutralize any charged terminal within the scoop</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--excluded</span> <span class="pre">res1</span> <span class="pre">res2</span></code> ...</dt>
+<dt><tt class="docutils literal"><span class="pre">--excluded</span> <span class="pre">res1</span> <span class="pre">res2</span></tt> ...</dt>
 <dd><p class="first last">one or more reside numbers
 optional, default = none</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--added</span> <span class="pre">res1</span> <span class="pre">res2</span></code> ...</dt>
+<dt><tt class="docutils literal"><span class="pre">--added</span> <span class="pre">res1</span> <span class="pre">res2</span></tt> ...</dt>
 <dd><p class="first last">one or more reside numbers
 optional, default = none</p>
 </dd>
@@ -1346,69 +1346,69 @@ scoop.py -p protein.pdb  --added 57 58 59
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool truncates a protein and thereby creating a scoop.</p>
-<p>All residues outside <code class="docutils literal"><span class="pre">ocut</span></code> is removed completely. <code class="docutils literal"><span class="pre">icut</span></code> is used to separate the scoop model into two different regions, that possibly can have different sampling regimes. The sampling regimes are determined by <code class="docutils literal"><span class="pre">--flexin</span></code> and <code class="docutils literal"><span class="pre">--flexout</span></code>.</p>
-<p>If the user would like to finetune the residues in the scoop this can be done with <code class="docutils literal"><span class="pre">--excluded</span></code> to discard specific residues or <code class="docutils literal"><span class="pre">--added</span></code> to include specific residues.</p>
-<p>The scoop will be centred on the <code class="docutils literal"><span class="pre">ligandfile</span></code> is such a file is provided. Otherwise, it will be centred on the flag <code class="docutils literal"><span class="pre">--center</span></code>. The argument to this flag can be either a string with three numbers specifying the centre, as in example three above. It can also be the name of a file containing the centre, as in example four above.</p>
-<p>Crystallographic waters that are in <code class="docutils literal"><span class="pre">proteinfile</span></code> will also be truncated at <code class="docutils literal"><span class="pre">ocut</span></code></p>
-<p>The PDB file will contain specific instructions for ProtoMS to automatically enforce the values of  <code class="docutils literal"><span class="pre">--flexin</span></code> and <code class="docutils literal"><span class="pre">--flexout</span></code>.</p>
+<p>All residues outside <tt class="docutils literal"><span class="pre">ocut</span></tt> is removed completely. <tt class="docutils literal"><span class="pre">icut</span></tt> is used to separate the scoop model into two different regions, that possibly can have different sampling regimes. The sampling regimes are determined by <tt class="docutils literal"><span class="pre">--flexin</span></tt> and <tt class="docutils literal"><span class="pre">--flexout</span></tt>.</p>
+<p>If the user would like to finetune the residues in the scoop this can be done with <tt class="docutils literal"><span class="pre">--excluded</span></tt> to discard specific residues or <tt class="docutils literal"><span class="pre">--added</span></tt> to include specific residues.</p>
+<p>The scoop will be centred on the <tt class="docutils literal"><span class="pre">ligandfile</span></tt> is such a file is provided. Otherwise, it will be centred on the flag <tt class="docutils literal"><span class="pre">--center</span></tt>. The argument to this flag can be either a string with three numbers specifying the centre, as in example three above. It can also be the name of a file containing the centre, as in example four above.</p>
+<p>Crystallographic waters that are in <tt class="docutils literal"><span class="pre">proteinfile</span></tt> will also be truncated at <tt class="docutils literal"><span class="pre">ocut</span></tt></p>
+<p>The PDB file will contain specific instructions for ProtoMS to automatically enforce the values of  <tt class="docutils literal"><span class="pre">--flexin</span></tt> and <tt class="docutils literal"><span class="pre">--flexout</span></tt>.</p>
 </div>
 <div class="section" id="solvate-py">
 <h2>solvate.py<a class="headerlink" href="#solvate-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">solvate.py</span> <span class="pre">-b</span> <span class="pre">boxfile</span> <span class="pre">[-s</span> <span class="pre">solutefile]</span> <span class="pre">[-pr</span> <span class="pre">proteinfile]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-g</span> <span class="pre">box|droplet|flood]</span> <span class="pre">[-p</span> <span class="pre">padding]</span> <span class="pre">[-r</span> <span class="pre">radius]</span> <span class="pre">[-center]</span> <span class="pre">[-n</span> <span class="pre">Amber|ProtoMS]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">solvate.py</span> <span class="pre">-b</span> <span class="pre">boxfile</span> <span class="pre">[-s</span> <span class="pre">solutefile]</span> <span class="pre">[-pr</span> <span class="pre">proteinfile]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-g</span> <span class="pre">box|droplet|flood]</span> <span class="pre">[-p</span> <span class="pre">padding]</span> <span class="pre">[-r</span> <span class="pre">radius]</span> <span class="pre">[-center]</span> <span class="pre">[-n</span> <span class="pre">Amber|ProtoMS]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-b</span> <span class="pre">boxfile</span></code> = the name of a PDB file with pre-equilibrated waters</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-b</span> <span class="pre">boxfile</span></tt> = the name of a PDB file with pre-equilibrated waters</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">solutefile</span></code> = the name of a PDB file with a solute molecule</dt>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">solutefile</span></tt> = the name of a PDB file with a solute molecule</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-pr</span> <span class="pre">proteinfile</span></code> = the name of a PDB file with a protein</dt>
+<dt><tt class="docutils literal"><span class="pre">-pr</span> <span class="pre">proteinfile</span></tt> = the name of a PDB file with a protein</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></code> = the name of the created water box</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outfile</span></tt> = the name of the created water box</dt>
 <dd><p class="first last">optional, default = solvent_box.pdb</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-g</span> <span class="pre">box|droplet|flood</span></code></dt>
+<dt><tt class="docutils literal"><span class="pre">-g</span> <span class="pre">box|droplet|flood</span></tt></dt>
 <dd><p class="first last">optional, default = box
-<code class="docutils literal"><span class="pre">box</span></code> = a box of water molecules will be created
-<code class="docutils literal"><span class="pre">droplet</span></code> = a droplet of water molecules will be created
-<code class="docutils literal"><span class="pre">flood</span></code> = a box will be flooded with water molecules</p>
+<tt class="docutils literal"><span class="pre">box</span></tt> = a box of water molecules will be created
+<tt class="docutils literal"><span class="pre">droplet</span></tt> = a droplet of water molecules will be created
+<tt class="docutils literal"><span class="pre">flood</span></tt> = a box will be flooded with water molecules</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">padding</span></code> = the minimum distance between solute and the box edge</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">padding</span></tt> = the minimum distance between solute and the box edge</dt>
 <dd><p class="first last">optional, default = 10.0 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">radius</span></code> = the radius of the water droplet</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">radius</span></tt> = the radius of the water droplet</dt>
 <dd><p class="first last">optional, default = 30.0 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-c</span> <span class="pre">center</span></code> = the center of the droplet</dt>
+<dt><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">center</span></tt> = the center of the droplet</dt>
 <dd><p class="first last">optional, default = &#8220;cent&#8221;</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-n</span> <span class="pre">Amber|ProtoMS</span></code> = the name style of the created water molecules</dt>
+<dt><tt class="docutils literal"><span class="pre">-n</span> <span class="pre">Amber|ProtoMS</span></tt> = the name style of the created water molecules</dt>
 <dd><p class="first last">optional, default = ProtoMS
-<code class="docutils literal"><span class="pre">Amber</span></code> = Amber naming convention
-<code class="docutils literal"><span class="pre">ProtoMS</span></code> = ProtoMS naming convention</p>
+<tt class="docutils literal"><span class="pre">Amber</span></tt> = Amber naming convention
+<tt class="docutils literal"><span class="pre">ProtoMS</span></tt> = ProtoMS naming convention</p>
 </dd>
 </dl>
 </li>
@@ -1426,20 +1426,20 @@ solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s gcmc_box.pdb -g flood
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool solvates a ligand in either a droplet or a box of water. It can also flood a GCMC or JAWS-1 simulatios box with waters.</p>
-<p>Pre-equilibrated boxes to use can be found in the <code class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></code> folder.</p>
-<p>To solvate small molecule it is sufficient to give the <code class="docutils literal"><span class="pre">solutefile</span></code> as in the first example above. This produces a box with at least 10 A between the solute and the edge of the water box, which should be sufficient in most situation. Use <code class="docutils literal"><span class="pre">padding</span></code> to increase or decreas the box size as in the second example. The solvation box is created by replicating the pre-equilibrated box in all dimensions and then removing waters that overlap with solute atoms.</p>
-<p>To solvate a protein in a droplet, specify <code class="docutils literal"><span class="pre">proteinfile</span></code> and <code class="docutils literal"><span class="pre">droplet</span></code> as in the third example above. This produces a droplet with radius of 30 A, which was choosen to work well with the default options in <code class="docutils literal"><span class="pre">scoop.py</span></code>. Use <code class="docutils literal"><span class="pre">radius</span></code> to obtain a smaller or larger droplet as in the fourth example. The centre of the droplet can be on a ligand if <code class="docutils literal"><span class="pre">ligandfile</span></code> is specified. Otherwise, the <code class="docutils literal"><span class="pre">center``argument</span> <span class="pre">is</span> <span class="pre">used.</span> <span class="pre">This</span> <span class="pre">argument</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">either</span> <span class="pre">``cent</span></code> (the default) that places the droplet at the centre of the protein. It can also take a single number as in the fifth example above in case it is placed at this coordinate in all dimensions. It can also take a string with three numbers which is the origin of the droplet in x, y, and z dimensions, see the sixth example above. If two numbers are given as in the seventh example above, it is assumed that this is an atom range and the droplet will be placed at the centre of these atoms. The droplet is created by putting random waters from the pre-equilibrated box on a grid, displacing them slightly in a random fashion.</p>
-<p>The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulations, similar to <code class="docutils literal"><span class="pre">distribute_waters.py</span></code>. In this case the solute is typically a box created by <code class="docutils literal"><span class="pre">make_gcmcbox.py</span></code> and <code class="docutils literal"><span class="pre">flood</span></code> needs to be specified, see the last example above. This gives a box filled with the bulk number of waters.</p>
+<p>Pre-equilibrated boxes to use can be found in the <tt class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></tt> folder.</p>
+<p>To solvate small molecule it is sufficient to give the <tt class="docutils literal"><span class="pre">solutefile</span></tt> as in the first example above. This produces a box with at least 10 A between the solute and the edge of the water box, which should be sufficient in most situation. Use <tt class="docutils literal"><span class="pre">padding</span></tt> to increase or decreas the box size as in the second example. The solvation box is created by replicating the pre-equilibrated box in all dimensions and then removing waters that overlap with solute atoms.</p>
+<p>To solvate a protein in a droplet, specify <tt class="docutils literal"><span class="pre">proteinfile</span></tt> and <tt class="docutils literal"><span class="pre">droplet</span></tt> as in the third example above. This produces a droplet with radius of 30 A, which was choosen to work well with the default options in <tt class="docutils literal"><span class="pre">scoop.py</span></tt>. Use <tt class="docutils literal"><span class="pre">radius</span></tt> to obtain a smaller or larger droplet as in the fourth example. The centre of the droplet can be on a ligand if <tt class="docutils literal"><span class="pre">ligandfile</span></tt> is specified. Otherwise, the <tt class="docutils literal"><span class="pre">center``argument</span> <span class="pre">is</span> <span class="pre">used.</span> <span class="pre">This</span> <span class="pre">argument</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">either</span> <span class="pre">``cent</span></tt> (the default) that places the droplet at the centre of the protein. It can also take a single number as in the fifth example above in case it is placed at this coordinate in all dimensions. It can also take a string with three numbers which is the origin of the droplet in x, y, and z dimensions, see the sixth example above. If two numbers are given as in the seventh example above, it is assumed that this is an atom range and the droplet will be placed at the centre of these atoms. The droplet is created by putting random waters from the pre-equilibrated box on a grid, displacing them slightly in a random fashion.</p>
+<p>The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulations, similar to <tt class="docutils literal"><span class="pre">distribute_waters.py</span></tt>. In this case the solute is typically a box created by <tt class="docutils literal"><span class="pre">make_gcmcbox.py</span></tt> and <tt class="docutils literal"><span class="pre">flood</span></tt> needs to be specified, see the last example above. This gives a box filled with the bulk number of waters.</p>
 </div>
 <div class="section" id="split-jawswater-py">
 <h2>split_jawswater.py<a class="headerlink" href="#split-jawswater-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><code class="docutils literal"><span class="pre">split_jawswater.py</span> <span class="pre">-w</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outprefix]</span></code></p>
+<p><tt class="docutils literal"><span class="pre">split_jawswater.py</span> <span class="pre">-w</span> <span class="pre">pdbfile</span> <span class="pre">[-o</span> <span class="pre">outprefix]</span></tt></p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">-w</span> <span class="pre">pdbfile</span></code> = the name of PDB file with water molecules</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">-w</span> <span class="pre">pdbfile</span></tt> = the name of PDB file with water molecules</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">outprefix</span></code> = the prefix appended to all output files</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">outprefix</span></tt> = the prefix appended to all output files</dt>
 <dd><p class="first last">optional, default = &#8220;&#8221; (empty string)</p>
 </dd>
 </dl>
@@ -1452,8 +1452,8 @@ split_jawswater.py -w waters.pdb -o jaws2_
 </div>
 <p><strong>Description:</strong></p>
 <p>This tool splits a PDB file containing multiple water molecules into PDB files appropriate for JAWS-2.</p>
-<p>For each water molecule in <code class="docutils literal"><span class="pre">pdbfile</span></code> the tool will write a PDB file with individual water molecules named <code class="docutils literal"><span class="pre">outprefix+watN.pdb</span></code> where N is the serial number of the water molecule. Furthermore, the tool will write a PDB file with all the other molecules and name if <code class="docutils literal"><span class="pre">outprefix+notN.pdb</span></code> where again N is the serial number of the water molecule. In these latter PDB-files, the water residue name is changed to that of the bulk water, e.g., <code class="docutils literal"><span class="pre">t3p</span></code> or <code class="docutils literal"><span class="pre">t4p</span></code>.</p>
-<p>For instance, if <code class="docutils literal"><span class="pre">waters.pdb</span></code> in the second example above contains 3 water molecule, this tool will create the following files:</p>
+<p>For each water molecule in <tt class="docutils literal"><span class="pre">pdbfile</span></tt> the tool will write a PDB file with individual water molecules named <tt class="docutils literal"><span class="pre">outprefix+watN.pdb</span></tt> where N is the serial number of the water molecule. Furthermore, the tool will write a PDB file with all the other molecules and name if <tt class="docutils literal"><span class="pre">outprefix+notN.pdb</span></tt> where again N is the serial number of the water molecule. In these latter PDB-files, the water residue name is changed to that of the bulk water, e.g., <tt class="docutils literal"><span class="pre">t3p</span></tt> or <tt class="docutils literal"><span class="pre">t4p</span></tt>.</p>
+<p>For instance, if <tt class="docutils literal"><span class="pre">waters.pdb</span></tt> in the second example above contains 3 water molecule, this tool will create the following files:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">jaws2_wat1</span><span class="o">.</span><span class="n">pdb</span>
 <span class="n">jaws2_wat2</span><span class="o">.</span><span class="n">pdb</span>
 <span class="n">jaws2_wat3</span><span class="o">.</span><span class="n">pdb</span>
@@ -1472,7 +1472,7 @@ split_jawswater.py -w waters.pdb -o jaws2_
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1486,9 +1486,9 @@ split_jawswater.py -w waters.pdb -o jaws2_
  
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
+    <div class="footer">
         &copy; Copyright 2014, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
