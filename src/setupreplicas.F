@@ -48,7 +48,7 @@ c       Storing number of temperature ladders needed and where they should be ap
           ntemladders = nwords - 1
           if (words(1).eq.'lambda') then
             do i=2,nwords
-              lamwithlad(i) = getDouble(words(i),-1.0)
+              lamwithlad(i-1) = getDouble(words(i),-1.0)
               if (lamwithlad(i).eq.-1.0) then
                 write(printstring,*)"Cannot generate temperature ladder for lambda",words(i),". Incorrect value."
                 call closeProgram(100,printstring)
@@ -56,7 +56,7 @@ c       Storing number of temperature ladders needed and where they should be ap
             enddo
           elseif (words(1).eq.'adams') then
             do i=2,nwords
-              gcwithlad(i) = getDouble(words(i),-1.0)
+              gcwithlad(i-1) = getDouble(words(i),-1.0)
               if (gcwithlad(i).eq.-1.0) then
                 write(printstring,*)"Cannot generate temperature ladder for adams ",words(i),". Incorrect value."
                 call closeProgram(100,printstring)
@@ -64,7 +64,7 @@ c       Storing number of temperature ladders needed and where they should be ap
             enddo
           elseif (words(1).eq.'jbias') then
             do i=2,nwords
-              jawswithlad(i) = getDouble(words(i),-1.0)
+              jawswithlad(i-1) = getDouble(words(i),-1.0)
               if (jawswithlad(i).eq.-1.0) then
                 write(printstring,*)"Cannot generate temperature ladder for jbias ",words(i),". Incorrect value."
                 call closeProgram(100,printstring)
@@ -160,7 +160,7 @@ c       Storing number of lambda ladders needed and where they should be applied
             enddo
           elseif (words(1).eq.'adams') then
             do i=2,nwords
-              gcwithlad(i) = getDouble(words(i),-1.0)
+              gcwithlad(i-1) = getDouble(words(i),-1.0)
               if (gcwithlad(i).eq.-1.0) then
                 write(printstring,*)"Cannot generate lambda ladder for adams ",words(i),". Incorrect value."
                 call closeProgram(100,printstring)
@@ -168,7 +168,7 @@ c       Storing number of lambda ladders needed and where they should be applied
             enddo
           elseif (words(1).eq.'jbias') then
             do i=2,nwords
-              jawswithlad(i) = getDouble(words(i),-1.0)
+              jawswithlad(i-1) = getDouble(words(i),-1.0)
               if (jawswithlad(i).eq.-1.0) then
                 write(printstring,*)"Cannot generate lambda ladder for jbias ",words(i),". Incorrect value."
                 call closeProgram(100,printstring)
@@ -182,9 +182,9 @@ c       Storing number of lambda ladders needed and where they should be applied
         if (ntasks.lt.nlambdas) then
           write(printstring,*)"Number of tasks is lower than the number of lambdas!",ntasks,nlambdas
           call closeProgram(100,printstring)
-        elseif (doTemperatureRE.and.(ntasks.lt.(nlambdas+ntemperatures-nlamladders*ntemladders))) then 
+        elseif (doTemperatureRE.and.(ntasks.lt.(nlambdas*nlamladders+ntemperatures*ntemladders-nlamladders*ntemladders))) then 
           write(printstring,*)"Number of tasks is lower than the number required for the lambdare-temperaturere run!"
-     .                        ,ntasks,(nlambdas+ntemperatures-nlamladders*ntemladders)
+     .                        ,ntasks,(nlambdas*nlamladders+ntemperatures*ntemladders-nlamladders*ntemladders)
           call closeProgram(100,printstring)
         endif  
         doLambdaRE = .true.
@@ -239,7 +239,8 @@ c             all these ids should belong to the same lambda ladder
         if (mylamladder.eq.-1) then
           call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,key,mylamcom,ierr)
           if (doTemperatureRE.and.mytemid.ne.-1) then
-            write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
+            call findDoubleInList(lamwithlad(mytemladder),lambdaval,nlambdas,mylambda)
+            write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lamwithlad(mytemladder)
             write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
             call system(cmd) 
           endif
