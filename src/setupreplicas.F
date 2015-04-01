@@ -146,11 +146,6 @@ c       Read in frequency and number of lambdas
         do i=2,nwords
           lambdaval(i-1) = getDouble(words(i),0.0)
         enddo
-        if (ntasks.lt.nlambdas) then
-          write(printstring,*)"Number of tasks is lower than the number of lambdas!",ntasks,nlambdas
-          call closeProgram(100,printstring)
-        endif  
-        doLambdaRE = .true.
 c       Storing number of lambda ladders needed and where they should be applied
         nlamladders = 1
         if (getoption('lambdaladder')) then
@@ -184,6 +179,15 @@ c       Storing number of lambda ladders needed and where they should be applied
             call closeProgram(100,printstring)
           endif
         endif
+        if (ntasks.lt.nlambdas) then
+          write(printstring,*)"Number of tasks is lower than the number of lambdas!",ntasks,nlambdas
+          call closeProgram(100,printstring)
+        elseif (doTemperatureRE.and.(ntasks.lt.(nlambdas+ntemperatures-nlamladders*ntemladders))) then 
+          write(printstring,*)"Number of tasks is not equal to the number required for the lambdare-temperaturere run!"
+     .                        ,ntasks,(nlambdas+ntemperatures-nlamladders*ntemladders)
+          call closeProgram(100,printstring)
+        endif  
+        doLambdaRE = .true.
 c       Read in template folder    
         if (getOption('outfolder')) then
           outfolder = words(1)
