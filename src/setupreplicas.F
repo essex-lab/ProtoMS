@@ -183,7 +183,7 @@ c       Storing number of lambda ladders needed and where they should be applied
           write(printstring,*)"Number of tasks is lower than the number of lambdas!",ntasks,nlambdas
           call closeProgram(100,printstring)
         elseif (doTemperatureRE.and.(ntasks.lt.(nlambdas+ntemperatures-nlamladders*ntemladders))) then 
-          write(printstring,*)"Number of tasks is not equal to the number required for the lambdare-temperaturere run!"
+          write(printstring,*)"Number of tasks is lower than the number required for the lambdare-temperaturere run!"
      .                        ,ntasks,(nlambdas+ntemperatures-nlamladders*ntemladders)
           call closeProgram(100,printstring)
         endif  
@@ -335,8 +335,8 @@ c       Read in all B-values
         do i=1,nwords
           adamparam(i) = getDouble(words(i),0.0)
         enddo     
-        if (ntasks.lt.nadams) then
-          call closeProgram(100,"Number of Adam parameters is lower than the number of tasks!")
+        if (ntasks.ne.nadams) then
+          call closeProgram(100,"Number of Adam parameters is not equal to the number of tasks!")
         endif             
         doMultiGCMC = .true.
 c       Read in template folder    
@@ -367,8 +367,8 @@ c       Read in all jbiases
         do i=1,nwords
           alljbias(i) = getDouble(words(i),0.0)
         enddo     
-        if (ntasks.lt.njaws2) then
-          call closeProgram(100,"Number of bias parameters is lower than the number of tasks!")
+        if (ntasks.ne.njaws2) then
+          call closeProgram(100,"Number of bias parameters is not equal to the number of tasks!")
         endif             
         doMultiJaws2 = .true.
 c       Read in template folder    
@@ -394,6 +394,13 @@ c       Read in template folder
         endif
       endif
 
+      if (doLambdaRE.and.doTemperatureRE.and.(mytemid.eq.-1).and.(mylamid.eq.-1)) then
+        call closeProgram(100,"Number of tasks is higher than the required number for lambdare + temperaturere!")
+      elseif (doLambdaRE.and..not.doTemperatureRE.and.(mylamid.eq.-1)) then
+        call closeProgram(100,"Number of tasks is higher than the required number for lambdare!")
+      elseif (.not.doLambdaRE.and.doTemperatureRE.and.(mytemid.eq.-1)) then
+        call closeProgram(100,"Number of tasks is higher than the required number for temperaturere!")
+      endif
 
       appendto = .False.
 
