@@ -355,7 +355,9 @@ def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
       raise simulationobjects.SetupError(msg)
 
     # Converting to ProtoMS atom names
-    protobj = tools.pdb2pms(protobj,"amber",conversionfile)
+    protobj2 = tools.pdb2pms(protobj,"amber",conversionfile)
+    abortedconv = protobj2 == protobj  # Indicates abortion of conversion
+    protobj = protobj2
 
     # Converting water molecules to specified model
     protobj = tools.convertwater(protobj,settings.watmodel)
@@ -380,9 +382,13 @@ def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
     protein_scoop_file = _get_prefix(protein_orig_file)+"_scoop.pdb"
     logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))    
     if nresdiff < settings.scooplimit:
-      protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
-      logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file))
-      protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file)
+      if not abortedconv : 
+        protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
+        logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file))
+        protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file)
+      else : 
+        logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d)."%nresdiff)
+        protein_pms_file = protein_orig_file
       tarlist.append(protein_scoop_file)
       protein_scoop_file = None
     else :
