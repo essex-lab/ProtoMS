@@ -198,9 +198,9 @@ c       The combination fo temperature and lambda groups goes below
 c       Here I need to take care of generating the subgroups
 c       I am currently creating the subgroups one at a time in the loop
         mylamid = -1
+        mylamladder = -1
+        key = -1
         do i=1,nlamladders
-          mylamladder = -1
-          key = -1
           if (doTemperatureRE) then
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
             if ((mytemid.ge.ZERO).and.(temval(mytemperature).eq.temwithlad(i))) then
@@ -216,7 +216,7 @@ c           Matching tasks wich should belong to both a lambda ladder and a temp
               mylamladder = i
 c           Assigning the rest of the tasks for lambda values
             elseif ((ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)).le.myid.and.myid.lt.(ntemladders*ntemperatures+(nlambdas-ntemladders)*i)) then
-              key = myid-(ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1))
+              key = myid-(ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)) + 1
               do j=1,ntemladders
                 do k=1,nlambdas
                   if (lambdaval(k).eq.lamwithlad(j)) then 

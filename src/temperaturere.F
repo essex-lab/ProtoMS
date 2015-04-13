@@ -34,6 +34,8 @@ c###################################################################
 c     check that temperature swaps are only attempted between tasks that are running temperature values
       if (mytemid.lt.0) return
 
+      write(6,*)"\n",myid," !!!mytrefolder before tswap ",trefolder
+      write(6,*)"\n",myid," !!!mylrefolder before tswap ",lrefolder
 
       call closeFiles
 
@@ -65,7 +67,7 @@ c     check that temperature swaps are only attempted between tasks that are run
         buffer(1) = teml
         buffer(2) = temh
         buffer(3) = nrg
-        call MPI_Send(buffer,3,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
+        call MPI_SSend(buffer,3,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
       endif
 
 
@@ -94,12 +96,12 @@ c            write(6,*)-(allnrg(bidx)-allnrgh(aidx)-allnrgl(bidx)+allnrg(aidx))
 
             ntreswap = ntreswap + 1
             if (task1.ne.0) then
-              call MPI_Send(bidx,1,MPI_INT,task1,11,mytemcom,ierr)
+              call MPI_SSend(bidx,1,MPI_INT,task1,11,mytemcom,ierr)
             else
               mytemperature = bidx
             endif
             if (task2.ne.0) then
-              call MPI_Send(aidx,1,MPI_INT,task2,11,mytemcom,ierr)
+              call MPI_SSend(aidx,1,MPI_INT,task2,11,mytemcom,ierr)
             else
               mytemperature = aidx
             endif
@@ -111,7 +113,7 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
         enddo
 
         do i=2,ntemperatures
-          if (.not.updated(i)) call MPI_Send(task2temperature(i),1,MPI_INT,i-1,11,mytemcom,ierr)
+          if (.not.updated(i)) call MPI_SSend(task2temperature(i),1,MPI_INT,i-1,11,mytemcom,ierr)
         enddo
 
       else    
@@ -121,7 +123,7 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
       call MPI_BCAST (ntretry, 1, MPI_INTEGER, 0, mytemcom, ierr)
       call MPI_BCAST (ntreswap, 1, MPI_INTEGER, 0, mytemcom, ierr)
 
-      oldtem = temperature
+      oldtem = temperatureC
       temperatureC = temval(mytemperature)
       temperature = temperatureC + DEG2KEL
       mt_beta_t = dble(1.0) / (GASR*temperature)
@@ -130,10 +132,14 @@ c     Re-setting all running averages
       nsteps = 0
       
       write(tempstr,"(1A,F6.3)")"t-",oldtem
-      write(trefolder,"(2A,F6.3)")trefolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+      write(6,*)myid," tempstr ",tempstr
+      write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
       if (oldtem.ge.100.0) write(tempstr,"(1A,F7.3)")"t-",oldtem
-      if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")trefolder(1:lineLength(outfolder)),
+      if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
      .                                    "/t-",temval(mytemperature)
+      if (doLambdaRE) write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
+      write(6,*)myid," myLAMBDA ",mylambda," mylambdaval ",lambdaval(mylambda)
+
 c     Replacing the old temperature for the new one in the file name.
       k = 1
       if ((dolambdaRE).or.(doMultiGCMC).or.(doMultiJaws2)) k = 2
@@ -145,17 +151,24 @@ c     Replacing the old temperature for the new one in the file name.
         fileopened(i) = .False.
         call split2(openfiles(i),"/")
         tempstr2 = words2(nwords2-k)
+        write(6,*)myid," tempstr2 ",tempstr2
         if (tempstr2(1:lineLength(tempstr2)).eq.tempstr(1:lineLength(tempstr))) then
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
           enddo
            write(words(nwords2-k),"(1A,F6.3)")"t-",temperatureC
            if (temperatureC.ge.100.0) write(words(nwords2-k),"(1A,F7.3)")"t-",temperatureC
-           words(nwords2) = words2(nwords2)
+           do j=1,k
+             words(nwords2-(j-1)) = words2(nwords2-(j-1))
+           enddo
            nwords = nwords2
            call join2(1,nwords,"/",openfiles(i))
+           write(6,*)myid," openfiles(i) ",openfiles(i)
         endif
       enddo
+
+      write(6,*)"\n",myid," !!!mytrefolder after tswap ",trefolder
+      write(6,*)"\n",myid," !!!mylrefolder after tswap ",lrefolder
 
 c      call MPI_FINALIZE(ierr)
 c      call exit(0)
