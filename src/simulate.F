@@ -113,42 +113,18 @@ c       taking care of dumping with the right frequency
 
 c       Do lambda replica exchange
         if (doLambdaRE.and.(lrefreq.gt.0).and.(i.gt.1).and.(mod(i,lrefreq).eq.0)) then
-
-          write(6,*)myid," doing LambdaRE. Move ",i," mytemladder ",mytemladder," mylamladder ",
-     .          mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
-          call MPI_Barrier(MPI_COMM_WORLD,ierr)
           call lambdaRE
-          write(6,*)myid," === before Barrier -- > LR === "
-          call MPI_Barrier(MPI_COMM_WORLD,ierr)
-          write(6,*)myid," ___ after Barrier -- > LR ___ "
-          write(6,*)myid," X done LambdaRE. Move ",i
-
-          write(6,*)myid," SIMULATE -- mylamid ",mylamid," mylamladder ",mylamladder," mytemladder ",mytemladder
-
           if (doTemperatureRE) then
             call assigntemperaturere(mytemid,.true.,.false.)
           endif
-          write(6,*)myid," done with assigntemperaturere !!!"
-          call MPI_Barrier(MPI_COMM_WORLD,ierr)
-
-          write(6,*)myid," DONE LRE. mytemladder ",mytemladder," mylamladder ",mylamladder," mytemcom ",mytemcom," mylamcom ",mylamcom
-
         endif
 
 c       Do temperature replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
-          call MPI_Barrier(MPI_COMM_WORLD,ierr)
-          write(6,*)myid," doing TemperatureRE. Move ",i," mytemladder ",mytemladder
           call temperatureRE
-          write(6,*)myid," ()()() Right after temperaturereswap "
-          call MPI_Barrier(MPI_COMM_WORLD,ierr)
-          write(6,*)myid," ()()() Right before assignlambdare "
           if (doLambdaRE) then
             call assignlambdare(mylamid,.true.,.false.)
           endif
-          write(6,*)myid," done with assignLAMBDAre !!!"
-          call MPI_Barrier(MPI_COMM_WORLD,ierr)
-          write(6,*)myid," DONE TRE. mytemladder ",mytemladder," mylamladder ",mylamladder," mytemcom ",mytemcom," mylamcom ",mylamcom
         endif
         
       enddo
@@ -161,15 +137,17 @@ c       Do temperature replica exchange
         if (streamhandle(ACCPT).ge.0) call printAttemptAccept
       endif
 
-      if (doLambdaRE.and.(lrefreq.gt.0)) then       
-        write(printstring,"(A,2I6,A,F8.3,A)")
-     .     "Attempted/successful lambda swaps: ",nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
+      if (doLambdaRE.and.(lrefreq.gt.0).and.mylamladder.ne.-1) then       
+        write(printstring,"(A,I6,A,2I6,A,F8.3,A)")
+     .     "Attempted/successful lambda swaps for lambdaladder ",mylamladder," : ",
+     .     nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
 
-      if (doTemperatureRE.and.(trefreq.gt.0)) then       
-        write(printstring,"(A,2I6,A,F8.3,A)")
-     .     "Attempted/successful temperature swaps: ",ntretry,ntreswap," (",dble(ntreswap)/dble(ntretry)*100,"%)" 
+      if (doTemperatureRE.and.(trefreq.gt.0).and.mytemladder.ne.-1) then       
+        write(printstring,"(A,I6,A,2I6,A,F8.3,A)")
+     .     "Attempted/successful temperature swaps for temperatureladder ",mytemladder," : ",
+     .     ntretry,ntreswap," (",dble(ntreswap)/dble(ntretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
      

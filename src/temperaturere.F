@@ -22,7 +22,7 @@ c###################################################################
 
       integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength,k
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
-      integer lamsbuffer(2),lamrbuffer(2),tsbuffer(nlambdas),lmbuffer(nlambdas)
+      integer lamsbuffer(4),lamrbuffer(4),tsbuffer(nlambdas),lmbuffer(nlambdas)
       logical updated(ntemperatures),reTest
       double precision nrg,nrgl,nrgh,teml,temh,temp,oldtem
       double precision totalEnergy,extraEnergy
@@ -31,16 +31,12 @@ c###################################################################
       double precision buffer(3)
       character*255 tempstr,tempstr2
 
-      write(6,*)myid," Tre initial. mytemladdder ",mytemladder," mylamladder ",
-     .          mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
+c     check that temperature swaps are only attempted between tasks that are running temperature values
+      if (mytemid.lt.0) return
 
       do i = 1,ntemperatures
         updated(i) = .false.
       enddo
-
-
-c     check that temperature swaps are only attempted between tasks that are running temperature values
-      if (mytemid.lt.0) return
 
       call closeFiles
 
@@ -137,19 +133,15 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
       temperature = temperatureC + DEG2KEL
       mt_beta_t = dble(1.0) / (GASR*temperature)
 
-      write(6,*)myid," oldtem ",oldtem," temval(mytemperature) ",temval(mytemperature)
-
 
       if (updated(mytemid+1).and.doLambdaRE) then
-        write(6,*)myid," Tre before info swap. mylamladder ",mylamladder," mylamid ",mylamid
-        write(6,*)myid," I'm UPDATING!! Mylamid ",mylamid," mytemladder ",mytemladder
-        write(6,*)myid," updated ",updated
         lamsbuffer(1) = mylamladder
         lamsbuffer(2) = mylamid
+        lamsbuffer(3) = ntretry
+        lamsbuffer(4) = ntreswap
         do i=1,ntemperatures
           if (oldtem.eq.temval(i)) then 
-            write(6,*)myid," mytemid ",mytemid," I'm UPDATING WITH tem ",temperature2task(i)," with temperature of ",temval(i)
-            call MPI_Sendrecv(lamsbuffer,2,MPI_INT,temperature2task(i),11,lamrbuffer,2,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
+            call MPI_Sendrecv(lamsbuffer,4,MPI_INT,temperature2task(i),11,lamrbuffer,4,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
             call MPI_Sendrecv(task2lambda,nlambdas,MPI_INT,temperature2task(i),11,tsbuffer,nlambdas,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
             call MPI_Sendrecv(lambda2task,nlambdas,MPI_INT,temperature2task(i),11,lmbuffer,nlambdas,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
           endif
@@ -158,21 +150,20 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
         lambda2task = lmbuffer
         mylamladder = lamrbuffer(1)
         mylamid = lamrbuffer(2)
-        write(6,*)myid," I'm UPDATED!! Mylamid ",mylamid," mytemladder ",mytemladder
-        write(6,*)myid," Tre after info swap. mylamladder ",mylamladder," mylamid ",mylamid
+        ntretry = lamrbuffer(3)
+        ntreswap = lamrbuffer(4)
       endif
 
 c     Re-setting all running averages    
       nsteps = 0
       
       write(tempstr,"(1A,F6.3)")"t-",oldtem
-c      write(6,*)myid," tempstr ",tempstr
       write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
       if (oldtem.ge.100.0) write(tempstr,"(1A,F7.3)")"t-",oldtem
       if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
      .                                    "/t-",temval(mytemperature)
       if (doLambdaRE) write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
-c      write(6,*)myid," myLAMBDA ",mylambda," mylambdaval ",lambdaval(mylambda)
+
 
 c     Replacing the old temperature for the new one in the file name.
       k = 1
@@ -199,8 +190,6 @@ c     Replacing the old temperature for the new one in the file name.
         endif
       enddo
 
-      write(6,*)myid," ----In TemperatureRE-----"," mytemladdder ",mytemladder," mylamladder ",
-     .          mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
 
 
       end subroutine

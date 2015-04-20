@@ -89,7 +89,7 @@ c           all these ids should belong to the same temperature ladder (same gro
             mytemladder = i
           endif
         enddo
-        write(6,*)myid," Just assigned mytemladder ",mytemladder
+
 
         call assigntemperaturere(0,.false.,.true.)
 
@@ -186,12 +186,10 @@ c       I am currently creating the subgroups one at a time in the loop
         mylamid = -1
         mylamladder = -1
         key = -1
-        write(6,*)myid," nlamladders ",nlamladders
         do i=1,nlamladders
           if (doTemperatureRE) then
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
             if ((mytemid.ge.ZERO).and.(temval(mytemperature).eq.temwithlad(i))) then
-              write(6,*)myid," in tem & lam. temval(mytemperature) ",temval(mytemperature)," pos ",i," temwithlad ",temwithlad
               do j=1,ntemladders
                 if (mytemladder.eq.j) then
                   do k=1,nlambdas
@@ -358,8 +356,6 @@ c       Read in template folder
         endif
       endif
 
-      write(6,*)myid," ----In SETUPREPLICAS-----"
-      write(6,*)myid, " mytemladder ",mytemladder," mylamladder ",mylamladder," mytemcom ",mytemcom," mylamcom ",mylamcom
 
       if (doLambdaRE.and.doTemperatureRE.and.(mytemid.eq.-1).and.(mylamid.eq.-1)) then
         call closeProgram(100,"Number of tasks is higher than the required number for lambdare + temperaturere!")
