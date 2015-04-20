@@ -11,7 +11,7 @@
 
       integer i,j,lineLength,key,k,ind
       integer mpistat(MPI_STATUS_SIZE),ierr
-      logical getOption
+      logical getOption,closepms
       double precision getDouble
       character*255 cmd,tmpstr,thistfolder
 
@@ -19,6 +19,7 @@
       doTemperatureRE = .false.
       doMultiGCMC = .false.
       doMultiJaws2 = .false.
+      closepms = .false.
 
       ntemladders = 0
       nlamladders = 0
@@ -358,12 +359,16 @@ c       Read in template folder
 
 
       if (doLambdaRE.and.doTemperatureRE.and.(mytemid.eq.-1).and.(mylamid.eq.-1)) then
-        call closeProgram(100,"Number of tasks is higher than the required number for lambdare + temperaturere!")
+        closepms = .true.
       elseif (doLambdaRE.and..not.doTemperatureRE.and.(mylamid.eq.-1)) then
-        call closeProgram(100,"Number of tasks is higher than the required number for lambdare!")
+        closepms = .true.
       elseif (.not.doLambdaRE.and.doTemperatureRE.and.(mytemid.eq.-1)) then
-        call closeProgram(100,"Number of tasks is higher than the required number for temperaturere!")
+        closepms = .true.
       endif
+
+      call MPI_BCAST(closepms,1,MPI_LOGICAL,ntasks-1,MPI_COMM_WORLD,ierr)
+
+      if (closepms) call closeProgram(100,"Number of tasks higher than required!")
 
       appendto = .False.
 
