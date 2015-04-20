@@ -129,6 +129,9 @@ c       Do lambda replica exchange
             call assigntemperaturere(mytemid,.true.,.false.)
           endif
           write(6,*)myid," done with assigntemperaturere !!!"
+          call MPI_Barrier(MPI_COMM_WORLD,ierr)
+
+          write(6,*)myid," DONE LRE. mytemladder ",mytemladder," mylamladder ",mylamladder," mytemcom ",mytemcom," mylamcom ",mylamcom
 
         endif
 
@@ -144,6 +147,8 @@ c       Do temperature replica exchange
             call assignlambdare(mylamid,.true.,.false.)
           endif
           write(6,*)myid," done with assignLAMBDAre !!!"
+          call MPI_Barrier(MPI_COMM_WORLD,ierr)
+          write(6,*)myid," DONE TRE. mytemladder ",mytemladder," mylamladder ",mylamladder," mytemcom ",mytemcom," mylamcom ",mylamcom
         endif
         
       enddo

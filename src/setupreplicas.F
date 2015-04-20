@@ -359,7 +359,7 @@ c       Read in template folder
       endif
 
       write(6,*)myid," ----In SETUPREPLICAS-----"
-      write(6,*)myid, " mytemid ",mytemid," mylamid ",mylamid," mytemcom ",mytemcom," mylamcom ",mylamcom
+      write(6,*)myid, " mytemladder ",mytemladder," mylamladder ",mylamladder," mytemcom ",mytemcom," mylamcom ",mylamcom
 
       if (doLambdaRE.and.doTemperatureRE.and.(mytemid.eq.-1).and.(mylamid.eq.-1)) then
         call closeProgram(100,"Number of tasks is higher than the required number for lambdare + temperaturere!")
