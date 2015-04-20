@@ -21,6 +21,7 @@ c###################################################################
 
       integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
+      integer temsbuffer(2),temrbuffer(2),tsbuffer(ntemperatures),tmbuffer(ntemperatures)
       logical updated(nlambdas),retiTest
       double precision nrg,nrgb,nrgf,lamb,lamf,temp,inrgf,inrgb,oldlam
       double precision totalEnergy,extraEnergy
@@ -33,6 +34,14 @@ c###################################################################
 
 c     check that lambda swaps are only attempted between tasks that are running lambda values
       if (mylamid.lt.0) return
+
+      write(6,*)myid," PROCEEDING with lambdaRE. mytemladdder ",mytemladder," mylamladder ",
+     .          mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
+
+c     The loop below should not be needed
+      do i = 1,nlambdas
+        updated(i) = .false.
+      enddo
    
       call closeFiles
 
@@ -97,6 +106,8 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
             task1 = lambda2task(aidx)
             task2 = lambda2task(bidx)
 
+            write(6,*)myid," task1 is ",task1," task2 is ",task2
+
 
             task2lambda(task1+1) = bidx
             task2lambda(task2+1) = aidx
@@ -116,7 +127,6 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
             endif
             updated(task1+1) = .true.
             updated(task2+1) = .true.
-          else
           endif
         enddo
 
@@ -128,8 +138,21 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
          call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
       endif
 
+c     The broadcast of nlretry needs to be dealt with in here, since it is ignoring the fact that I have different groups per communicator
+
       call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, mylamcom, ierr)
       call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, mylamcom, ierr)
+      call MPI_BCAST (updated,nlambdas,MPI_LOGICAL,0,mylamcom,ierr)
+      call MPI_BCAST (lambda2task,nlambdas,MPI_INTEGER,0,mylamcom,ierr)
+      call MPI_BCAST (task2lambda,nlambdas,MPI_INTEGER,0,mylamcom,ierr)
+
+      write(6,*)myid," updated ---- ",updated
+
+
+      write(6,*)myid," LAMBDARE << Before info swap. My lamid is ",mylamid," mylamladder is ",mylamladder
+
+      write(6,*)myid," I'm Before swapping info "
+
 
       oldlam = lambda
       lambda = lambdaval(mylambda)
@@ -141,6 +164,33 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
         if (lambdab.gt.1.0) lambdab = 1.0
         if (lambdab.lt.0.0) lambdab = 0.0
       endif
+
+      write(6,*)myid," oldlam ",oldlam," lambdaval(mylambda) ",lambdaval(mylambda)
+
+      if (updated(mylamid+1).and.doTemperatureRE) then
+        write(6,*)myid," I'm UPDATING!!  mytemladder ",mytemladder
+        write(6,*)myid," updated ",updated
+        temsbuffer(1) = mytemladder
+        temsbuffer(2) = mytemid
+        do i=1,nlambdas
+          if (oldlam.eq.lambdaval(i)) then
+            write(6,*)myid," mylamid ",mylamid," I'm UPDATING WITH ",lambda2task(i)," with a lambda of ",lambdaval(i)
+            call MPI_Sendrecv(temsbuffer,2,MPI_INT,lambda2task(i),11,temrbuffer,2,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
+c           Not sure if I can sendrecv on the same variable. I pribably can't
+            call MPI_Sendrecv(task2temperature,ntemperatures,MPI_INT,lambda2task(i),11,tsbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(temperature2task,ntemperatures,MPI_INT,lambda2task(i),11,tmbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
+          endif
+        enddo
+        task2temperature = tsbuffer
+        temperature2task = tmbuffer
+        mytemladder = temrbuffer(1)
+        mytemid = temrbuffer(2)
+        write(6,*)myid," I'm UPDATED!! Mylamid ",mylamid," mytemladder ",mytemladder
+      endif
+
+      write(6,*)myid," LAMBDARE >> After info swap. My lamid is ",mylamid," mylamladder is ",mylamladder
+
+      write(6,*)myid," I'm AFTER swapping info "
 
       call recalculateParameters
       call recalculateGeometries    
@@ -163,6 +213,7 @@ c     Re-setting all running averages
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
       if (doTemperatureRE)then
         write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
+        write(6,*)myid," LR -- mytemladdder ",mytemladder," mylamladder ",mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
       else
         write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
       endif
@@ -184,6 +235,9 @@ c     Re-setting all running averages
            call join2(1,nwords,"/",openfiles(i))
         endif
       enddo
+
+c      write(6,*)myid," ----In LambdaRE-----"
+c      write(6,*)myid, " mytemid ",mytemid," mylamid ",mylamid," mytemladder ",mytemladder," mylamladder ",mylamladder
 
 c      call MPI_FINALIZE(ierr)
 c      call exit(0)

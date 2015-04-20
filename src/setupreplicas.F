@@ -11,7 +11,7 @@
 
       integer i,j,lineLength,key,k,ind
       integer mpistat(MPI_STATUS_SIZE),ierr
-      logical getOption,run_lambda
+      logical getOption
       double precision getDouble
       character*255 cmd,tmpstr,thistfolder
 
@@ -24,8 +24,6 @@
       nlamladders = 0
       ngcladders = 0
       njawsladders = 0
-
-      run_lambda = .false.
 
       if (ntasks.lt.2) return
 
@@ -91,31 +89,18 @@ c           all these ids should belong to the same temperature ladder (same gro
             mytemladder = i
           endif
         enddo
-        if (mytemladder.eq.-1) then
-          call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,0,mytemcom,ierr)
-c          call MPI_COMM_RANK(mytemcom,mytemid,ierr)
-        else
-          call MPI_COMM_SPLIT(MPI_COMM_WORLD,mytemladder,0,mytemcom,ierr)
-          call MPI_COMM_RANK(mytemcom,mytemid,ierr)
-          mytemperature = mytemid + 1
-          temperatureC = temval(mytemperature)
-          temperature = temperatureC + DEG2KEL
-          write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-          if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-          write(cmd,"(3A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),'/'
-          call system(cmd) 
-          if (mytemid.eq.0) then
-            ntretry = 0
-            ntreswap = 0
-          endif
-        endif
-        if (mytemid.eq.0) then
-          do i=1,ntemperatures   
-            task2temperature(i) = i
-            temperature2task(i) = i-1
-          enddo
-        endif
-        mytemperature = mytemid + 1
+        write(6,*)myid," Just assigned mytemladder ",mytemladder
+
+        call assigntemperaturere(0,.false.,.true.)
+
+
+        do i=1,ntemperatures   
+          task2temperature(i) = i
+          temperature2task(i) = i-1
+          ntretry = 0
+          ntreswap = 0
+        enddo
+
 c        do i=1,nkeys
 c          if (keys(i)(1:13).eq.'temperaturere') then
 c            if (ntemtasks.lt.2) then
@@ -194,16 +179,19 @@ c       Read in template folder
         else 
           outfolder = "out"
         endif
+
 c       The combination fo temperature and lambda groups goes below
 c       Here I need to take care of generating the subgroups
 c       I am currently creating the subgroups one at a time in the loop
         mylamid = -1
         mylamladder = -1
         key = -1
+        write(6,*)myid," nlamladders ",nlamladders
         do i=1,nlamladders
           if (doTemperatureRE) then
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
             if ((mytemid.ge.ZERO).and.(temval(mytemperature).eq.temwithlad(i))) then
+              write(6,*)myid," in tem & lam. temval(mytemperature) ",temval(mytemperature)," pos ",i," temwithlad ",temwithlad
               do j=1,ntemladders
                 if (mytemladder.eq.j) then
                   do k=1,nlambdas
@@ -236,47 +224,22 @@ c             all these ids should belong to the same lambda ladder
             endif
           endif
         enddo
-        if (mylamladder.eq.-1) then
-          call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,key,mylamcom,ierr)
-          if (doTemperatureRE.and.mytemid.ne.-1) then
-            call findDoubleInList(lamwithlad(mytemladder),lambdaval,nlambdas,mylambda)
-            write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lamwithlad(mytemladder)
-            write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
-            call system(cmd) 
-          endif
-        else
-          call MPI_COMM_SPLIT(MPI_COMM_WORLD,mylamladder,key,mylamcom,ierr)
-          call MPI_COMM_RANK(mylamcom,mylamid,ierr)
-          run_lambda = .true.
-          mylambda = mylamid + 1
-          if (doTemperatureRE) then
-            if (mytemid.lt.0) then
-              call findDoubleInList(temwithlad(mylamladder),temval,ntemperatures,mytemperature)
-              write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-              if (temwithlad(j).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
-     .                                               "/t-",temval(mytemperature)
-              write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
-              write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
-              call system(cmd) 
-            else
-              write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
-              write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
-              call system(cmd) 
-            endif
-          else
-            write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
-            write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
-            call system(cmd) 
-          endif
-        endif
-        if (mylamid.eq.0) then
-          do i=1,nlambdas  
-c           Here is where I need to correlate a lambda to a group.
-            task2lambda(i) = i
-            lambda2task(i) = i-1
-          enddo
-          nlretry = 0
-          nlreswap = 0
+
+        call assignlambdare(key,.false.,.true.)
+
+
+        do i=1,nlambdas  
+c         Here is where I need to correlate a lambda to a group.
+          task2lambda(i) = i
+          lambda2task(i) = i-1
+        enddo
+        nlretry = 0
+        nlreswap = 0
+
+        if (doTemperatureRE.and.(mytemid.lt.0)) then
+          call findDoubleInList(temwithlad(mylamladder),temval,ntemperatures,mytemperature)
+          temperatureC = temval(mytemperature)
+          temperature = temperatureC + DEG2KEL
         endif
 c        if (doTemperatureRE) then
 c          do i=1,nlamladders
@@ -394,6 +357,9 @@ c       Read in template folder
           call writedoublestring(tmpstr,alljbias(myjbias),jaws2folder)
         endif
       endif
+
+      write(6,*)myid," ----In SETUPREPLICAS-----"
+      write(6,*)myid, " mytemid ",mytemid," mylamid ",mylamid," mytemcom ",mytemcom," mylamcom ",mylamcom
 
       if (doLambdaRE.and.doTemperatureRE.and.(mytemid.eq.-1).and.(mylamid.eq.-1)) then
         call closeProgram(100,"Number of tasks is higher than the required number for lambdare + temperaturere!")

@@ -91,6 +91,7 @@ OBJS = addacid.o \
        assignborn.o \
        assigngcsolutetemplate.o \
        assigngcsolutetemplates.o \
+       assignlambdare.o \
        assignresidueoverrides.o \
        assignresiduetemplate.o \
        assignrotamerlibrary.o \
@@ -100,6 +101,7 @@ OBJS = addacid.o \
        assignsolventtemplates.o \
        assignsurface.o \
        assignsystem.o \
+       assigntemperaturere.o \
        atomname.o \
        biaspotential.o \
        bondedresresenergy.o \
@@ -844,6 +846,8 @@ assigngcsolutetemplate.o: templates.inc
 assigngcsolutetemplate.o:
 assigngcsolutetemplates.o: dimensions.inc solvents.inc
 assigngcsolutetemplates.o:
+assignlambdare.o: parallel.inc
+assignlambdare.o:
 assignresidueoverrides.o: proteins.inc dimensions.inc printer.inc templates.inc
 assignresidueoverrides.o:
 assignresiduetemplate.o: enums.inc proteins.inc dimensions.inc constants.inc
@@ -868,6 +872,8 @@ assignsurface.o:
 assignsystem.o: enums.inc proteins.inc dimensions.inc solutes.inc constants.inc
 assignsystem.o: solvents.inc printer.inc simparams.inc flags.inc pressure.inc
 assignsystem.o:
+assigntemperaturere.o: parallel.inc
+assigntemperaturere.o:
 atomname.o: proteins.inc dimensions.inc
 atomname.o:
 biaspotential.o: simparams.inc dimensions.inc constants.inc solvents.inc
@@ -1063,6 +1069,8 @@ finddihedralindex.o:
 finddihedralparam.o: enums.inc proteins.inc dimensions.inc parameters.inc
 finddihedralparam.o: printer.inc
 finddihedralparam.o:
+finddoubleinlist.o: parallel.inc dimensions.inc
+finddoubleinlist.o:
 findgb.o: dimensions.inc gb.inc constants.inc
 findgb.o:
 findgcsolutetemplate.o: dimensions.inc templates.inc
@@ -1412,7 +1420,8 @@ notbonded.o: proteins.inc enums.inc dimensions.inc solutes.inc
 notbonded.o:
 openfile.o: parallel.inc flags.inc dimensions.inc printer.inc
 openfile.o:
-openstreamfiles.o: flags.inc dimensions.inc splitter.inc printer.inc
+openstreamfiles.o: parallel.inc flags.inc dimensions.inc splitter.inc
+openstreamfiles.o: printer.inc
 openstreamfiles.o:
 parseargs.o: parallel.inc version.inc dimensions.inc splitter.inc printer.inc
 parseargs.o:
@@ -1468,7 +1477,7 @@ printboxtext.o: dimensions.inc splitter.inc
 printboxtext.o:
 printenergies.o: energies.inc dimensions.inc printer.inc
 printenergies.o:
-printline.o: parallel.inc dimensions.inc printer.inc
+printline.o: dimensions.inc printer.inc
 printline.o:
 printparameters.o: proteins.inc dimensions.inc solutes.inc parameters.inc
 printparameters.o: solvents.inc printer.inc simparams.inc templates.inc
@@ -1864,7 +1873,7 @@ setsolutemoved.o: dimensions.inc solutes.inc printer.inc movelist.inc
 setsolutemoved.o:
 setsolventmoved.o: dimensions.inc solvents.inc printer.inc movelist.inc
 setsolventmoved.o:
-setstream.o: dimensions.inc printer.inc
+setstream.o: parallel.inc dimensions.inc printer.inc
 setstream.o:
 setupreplicas.o: dimensions.inc constants.inc keyset.inc printer.inc
 setupreplicas.o: simparams.inc flags.inc parallel.inc splitter.inc
@@ -2057,7 +2066,8 @@ takeacid.o:
 takebase.o: proteins.inc dimensions.inc
 takebase.o:
 temperaturere.o: enums.inc dimensions.inc gb.inc constants.inc printer.inc
-temperaturere.o: averages.inc simparams.inc flags.inc parallel.inc splitter.inc
+temperaturere.o: averages.inc simparams.inc flags.inc parallel.inc
+temperaturere.o: metropolis.inc splitter.inc
 temperaturere.o:
 testenergies.o: flags.inc enums.inc energies.inc dimensions.inc constants.inc
 testenergies.o: printer.inc

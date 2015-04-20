@@ -22,7 +22,7 @@ c
 c#################################################################
 
       integer nconfig
-      integer i,imov,j,k    
+      integer i,imov,j,k,ierr
       integer NAcceptedMoves,NTotalMoves,linelength
       integer getMoveType,numb
       logical residueMove,titrationMove,solventMove,soluteMove
@@ -113,12 +113,37 @@ c       taking care of dumping with the right frequency
 
 c       Do lambda replica exchange
         if (doLambdaRE.and.(lrefreq.gt.0).and.(i.gt.1).and.(mod(i,lrefreq).eq.0)) then
+
+          write(6,*)myid," doing LambdaRE. Move ",i," mytemladder ",mytemladder," mylamladder ",
+     .          mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
+          call MPI_Barrier(MPI_COMM_WORLD,ierr)
           call lambdaRE
+          write(6,*)myid," === before Barrier -- > LR === "
+          call MPI_Barrier(MPI_COMM_WORLD,ierr)
+          write(6,*)myid," ___ after Barrier -- > LR ___ "
+          write(6,*)myid," X done LambdaRE. Move ",i
+
+          write(6,*)myid," SIMULATE -- mylamid ",mylamid," mylamladder ",mylamladder," mytemladder ",mytemladder
+
+          if (doTemperatureRE) then
+            call assigntemperaturere(mytemid,.true.,.false.)
+          endif
+          write(6,*)myid," done with assigntemperaturere !!!"
+
         endif
 
-c       Do lambda replica exchange
+c       Do temperature replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
+          call MPI_Barrier(MPI_COMM_WORLD,ierr)
+          write(6,*)myid," doing TemperatureRE. Move ",i," mytemladder ",mytemladder
           call temperatureRE
+          write(6,*)myid," ()()() Right after temperaturereswap "
+          call MPI_Barrier(MPI_COMM_WORLD,ierr)
+          write(6,*)myid," ()()() Right before assignlambdare "
+          if (doLambdaRE) then
+            call assignlambdare(mylamid,.true.,.false.)
+          endif
+          write(6,*)myid," done with assignLAMBDAre !!!"
         endif
         
       enddo

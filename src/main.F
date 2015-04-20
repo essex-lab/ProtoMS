@@ -11,10 +11,10 @@ c      March 2015 - Modified Ana I. Cabedo Martinez
       mytemid = 0
       mygcid = 0
       myjawsid = 0
-      nlamtasks = 1
-      ntemtasks = 1
-      ngctasks = 1
-      njawstasks = 1
+c      nlamtasks = 1
+c      ntemtasks = 1
+c      ngctasks = 1
+c      njawstasks = 1
 
       call MPI_INIT(ierr)
       call MPI_COMM_RANK(MPI_COMM_WORLD,myid,ierr)
@@ -29,17 +29,27 @@ c     parse any command line arguments
 c     setup replica exchange
       call setupReplicas
 
+cccc  R mylamid mylamladder
+
 c     set the default locations of any streams
       call openStreamFiles
+
+cccc  R mylamid mylamladder
       
 c     initialise the program
       call initialise
+
+cccc  R mylamid mylamladder
       
 c     set the system up
       call setup
+
+cccc  R mylamid mylamladder
       
 c     run the simulation
       call simulation
+
+      write(6,*)myid," MAIN -- mylamid ",mylamid," mylamladder ",mylamladder
       
 c     shut everything down / print out restart/info 
       call shutdown

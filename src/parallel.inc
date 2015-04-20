@@ -2,7 +2,7 @@
 c     MPI ID and number of tasks
       integer myid,ntasks 
       integer mylamid,mytemid,mygcid,myjawsid
-      integer nlamtasks,ntemtasks,ngctasks,njawstasks
+c      integer nlamtasks,ntemtasks,ngctasks,njawstasks
       integer nlamladders,ntemladders,ngcladders,njawsladders
       double precision lamwithlad(MAXLAMBDAS),temwithlad(MAXTEMPS),gcwithlad(MAXADAMS),jawswithlad(MAXJAWS2)
 
@@ -18,7 +18,7 @@ c     temperature-replica exchange
       integer ntretry,ntreswap,mytemcom
       integer trefreq,ntemperatures,mytemperature,mytemladder
       character*255 trefolder
-      double precision temval(MAXTEMPS),temperaturel,temperatureh
+      double precision temval(MAXTEMPS)
       integer task2temperature(MAXTEMPS),temperature2task(MAXTEMPS)
       double precision pt_beta_t(MAXLAMBDAS,MAXTEMPS)   
 
@@ -35,16 +35,16 @@ c     multi JAWS-2
       common /MPISTUFF/ myid,ntasks
       save /MPISTUFF/
  
-      common /LRE/ lambdaval,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,
-     .               mylambda,mylamcom,mylamladder,mylamid,lrefolder,reoutfolder,myoutfolder
+      common /LRE/ lambdaval,lamwithlad,deltalam,task2lambda,lambda2task,nlretry,nlreswap,lrefreq,nlambdas,
+     .               mylambda,mylamcom,mylamladder,mylamid,nlamladders,lrefolder,reoutfolder,myoutfolder
       save /LRE/
 
-      common /TRE/ temval,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
-     .               mytemcom,mytemladder,mytemid,trefolder
+      common /TRE/ pt_beta_t,temval,temwithlad,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
+     .               mytemcom,mytemladder,mytemid,ntemladders,trefolder
       save /TRE/
 
-      common /MGCMC/ nadams,myadam,adamparam,gcmcfolder
+      common /MGCMC/ gcwithlad,nadams,myadam,mygcid,ngcladders,adamparam,gcmcfolder
       save /MGCMC/
 
-      common /MJAWS/ njaws2,myjbias,alljbias,jaws2folder
+      common /MJAWS/ jawswithlad,njaws2,myjbias,myjawsid,njawsladders,alljbias,jaws2folder
       save /MJAWS/

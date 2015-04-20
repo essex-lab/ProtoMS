@@ -22,6 +22,7 @@ c###################################################################
 
       integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength,k
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
+      integer lamsbuffer(2),lamrbuffer(2),tsbuffer(nlambdas),lmbuffer(nlambdas)
       logical updated(ntemperatures),reTest
       double precision nrg,nrgl,nrgh,teml,temh,temp,oldtem
       double precision totalEnergy,extraEnergy
@@ -30,12 +31,16 @@ c###################################################################
       double precision buffer(3)
       character*255 tempstr,tempstr2
 
+      write(6,*)myid," Tre initial. mytemladdder ",mytemladder," mylamladder ",
+     .          mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
+
+      do i = 1,ntemperatures
+        updated(i) = .false.
+      enddo
+
 
 c     check that temperature swaps are only attempted between tasks that are running temperature values
       if (mytemid.lt.0) return
-
-      write(6,*)"\n",myid," !!!mytrefolder before tswap ",trefolder
-      write(6,*)"\n",myid," !!!mylrefolder before tswap ",lrefolder
 
       call closeFiles
 
@@ -52,6 +57,8 @@ c     check that temperature swaps are only attempted between tasks that are run
       endif
 
       if (mytemid.eq.0) then
+        allteml(mytemperature) = teml
+        alltemh(mytemperature) = temh
         allnrg(mytemperature) = nrg
         updated(1) = .false.
         nrecieved = 1
@@ -83,9 +90,6 @@ c       Randomly selects odd/even pairs
 c          write(6,*)nlretry
           if (reTest(pt_beta_t(mylambda,aidx),pt_beta_t(mylambda,bidx),allnrg(aidx),allnrg(bidx))) then
 
-c            write(6,*)"Swapping ",temval(aidx),temval(bidx),allnrgl(bidx)-allnrg(aidx),allnrgh(aidx)-allnrg(bidx)
-c            write(6,*)allnrg(aidx),allnrgh(aidx),allnrg(bidx),allnrgl(bidx)
-c            write(6,*)-(allnrg(bidx)-allnrgh(aidx)-allnrgl(bidx)+allnrg(aidx))
             task1 = temperature2task(aidx)
             task2 = temperature2task(bidx)
 
@@ -95,7 +99,8 @@ c            write(6,*)-(allnrg(bidx)-allnrgh(aidx)-allnrgl(bidx)+allnrg(aidx))
             temperature2task(bidx) = task1
 
             ntreswap = ntreswap + 1
-            if (task1.ne.0) then
+c           The main task already knows bidx and aidx, so no need to send that information in that case
+            if (task1.ne.0) then 
               call MPI_SSend(bidx,1,MPI_INT,task1,11,mytemcom,ierr)
             else
               mytemperature = bidx
@@ -122,23 +127,52 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
 
       call MPI_BCAST (ntretry, 1, MPI_INTEGER, 0, mytemcom, ierr)
       call MPI_BCAST (ntreswap, 1, MPI_INTEGER, 0, mytemcom, ierr)
+      
+      call MPI_BCAST (updated,ntemperatures,MPI_LOGICAL,0,mytemcom,ierr)
+      call MPI_BCAST (temperature2task,ntemperatures,MPI_INTEGER,0,mytemcom,ierr)
+      call MPI_BCAST (task2temperature,ntemperatures,MPI_INTEGER,0,mytemcom,ierr)
 
       oldtem = temperatureC
       temperatureC = temval(mytemperature)
       temperature = temperatureC + DEG2KEL
       mt_beta_t = dble(1.0) / (GASR*temperature)
 
+      write(6,*)myid," oldtem ",oldtem," temval(mytemperature) ",temval(mytemperature)
+
+
+      if (updated(mytemid+1).and.doLambdaRE) then
+        write(6,*)myid," Tre before info swap. mylamladder ",mylamladder," mylamid ",mylamid
+        write(6,*)myid," I'm UPDATING!! Mylamid ",mylamid," mytemladder ",mytemladder
+        write(6,*)myid," updated ",updated
+        lamsbuffer(1) = mylamladder
+        lamsbuffer(2) = mylamid
+        do i=1,ntemperatures
+          if (oldtem.eq.temval(i)) then 
+            write(6,*)myid," mytemid ",mytemid," I'm UPDATING WITH tem ",temperature2task(i)," with temperature of ",temval(i)
+            call MPI_Sendrecv(lamsbuffer,2,MPI_INT,temperature2task(i),11,lamrbuffer,2,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
+            call MPI_Sendrecv(task2lambda,nlambdas,MPI_INT,temperature2task(i),11,tsbuffer,nlambdas,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
+            call MPI_Sendrecv(lambda2task,nlambdas,MPI_INT,temperature2task(i),11,lmbuffer,nlambdas,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
+          endif
+        enddo
+        task2lambda = tsbuffer
+        lambda2task = lmbuffer
+        mylamladder = lamrbuffer(1)
+        mylamid = lamrbuffer(2)
+        write(6,*)myid," I'm UPDATED!! Mylamid ",mylamid," mytemladder ",mytemladder
+        write(6,*)myid," Tre after info swap. mylamladder ",mylamladder," mylamid ",mylamid
+      endif
+
 c     Re-setting all running averages    
       nsteps = 0
       
       write(tempstr,"(1A,F6.3)")"t-",oldtem
-      write(6,*)myid," tempstr ",tempstr
+c      write(6,*)myid," tempstr ",tempstr
       write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
       if (oldtem.ge.100.0) write(tempstr,"(1A,F7.3)")"t-",oldtem
       if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
      .                                    "/t-",temval(mytemperature)
       if (doLambdaRE) write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
-      write(6,*)myid," myLAMBDA ",mylambda," mylambdaval ",lambdaval(mylambda)
+c      write(6,*)myid," myLAMBDA ",mylambda," mylambdaval ",lambdaval(mylambda)
 
 c     Replacing the old temperature for the new one in the file name.
       k = 1
@@ -151,7 +185,6 @@ c     Replacing the old temperature for the new one in the file name.
         fileopened(i) = .False.
         call split2(openfiles(i),"/")
         tempstr2 = words2(nwords2-k)
-        write(6,*)myid," tempstr2 ",tempstr2
         if (tempstr2(1:lineLength(tempstr2)).eq.tempstr(1:lineLength(tempstr))) then
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
@@ -163,14 +196,11 @@ c     Replacing the old temperature for the new one in the file name.
            enddo
            nwords = nwords2
            call join2(1,nwords,"/",openfiles(i))
-           write(6,*)myid," openfiles(i) ",openfiles(i)
         endif
       enddo
 
-      write(6,*)"\n",myid," !!!mytrefolder after tswap ",trefolder
-      write(6,*)"\n",myid," !!!mylrefolder after tswap ",lrefolder
+      write(6,*)myid," ----In TemperatureRE-----"," mytemladdder ",mytemladder," mylamladder ",
+     .          mylamladder," mytemperature ",mytemperature," mylambda ",mylambda
 
-c      call MPI_FINALIZE(ierr)
-c      call exit(0)
 
       end subroutine
