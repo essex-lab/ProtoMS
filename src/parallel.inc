@@ -20,7 +20,6 @@ c     temperature-replica exchange
       character*255 trefolder
       double precision temval(MAXTEMPS)
       integer task2temperature(MAXTEMPS),temperature2task(MAXTEMPS)
-      double precision pt_beta_t(MAXLAMBDAS,MAXTEMPS)   
 
 c     multi GCMC
       integer nadams,myadam
@@ -39,7 +38,7 @@ c     multi JAWS-2
      .               mylambda,mylamcom,mylamladder,mylamid,nlamladders,lrefolder,reoutfolder,myoutfolder
       save /LRE/
 
-      common /TRE/ pt_beta_t,temval,temwithlad,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
+      common /TRE/ temval,temwithlad,task2temperature,temperature2task,ntretry,ntreswap,trefreq,ntemperatures,mytemperature,
      .               mytemcom,mytemladder,mytemid,ntemladders,trefolder
       save /TRE/
 

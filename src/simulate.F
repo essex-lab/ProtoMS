@@ -138,14 +138,14 @@ c       Do temperature replica exchange
       endif
 
       if (doLambdaRE.and.(lrefreq.gt.0).and.mylamladder.ne.-1) then       
-        write(printstring,"(A,I6,A,2I6,A,F8.3,A)")
+        write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
      .     "Attempted/successful lambda swaps for lambdaladder ",mylamladder," : ",
      .     nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
 
       if (doTemperatureRE.and.(trefreq.gt.0).and.mytemladder.ne.-1) then       
-        write(printstring,"(A,I6,A,2I6,A,F8.3,A)")
+        write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
      .     "Attempted/successful temperature swaps for temperatureladder ",mytemladder," : ",
      .     ntretry,ntreswap," (",dble(ntreswap)/dble(ntretry)*100,"%)" 
         call printLine(INFO,printstring)

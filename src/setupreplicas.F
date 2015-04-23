@@ -34,7 +34,7 @@ c       Read in frequency and number of temperatures
         ntemperatures = nwords - 1
         do i=2,nwords
           temval(i-1) = getDouble(words(i),25.0)
-c          pt_beta_t(1.0,i-1) = dble(1.0) / (GASR*temval(i-1))
+c          pt_beta_t(1,i-1) = dble(1.0) / (GASR*temval(i-1))
         enddo
         if (ntasks.lt.ntemperatures) then
           write(printstring,*)"Number of tasks is lower than the number of temperatures!",ntasks,ntemperatures

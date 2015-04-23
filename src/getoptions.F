@@ -723,14 +723,12 @@ c     get the temperature
       elseif (doTemperatureRE) then
         temperatureC = temval(mytemperature)
         temperature = temperatureC + DEG2KEL
-        if (doLambdaRE) then
-          pt_beta_t(mylambda,mytemperature) = dble(1.0) / (GASR*(temperature))
-        endif
       endif
       write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
      .                              temperature," K)"
       call printLine(INFO,printstring)
       mt_beta_t = dble(1.0) / (GASR*temperature)
+      write(6,*)myid," my mt_beta_t ",mt_beta_t
 
 c     get the REST2 effective temperature
       resttempC = temperatureC

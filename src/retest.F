@@ -15,13 +15,21 @@ c###################################################################
       double precision betaA,betaB,eneA,eneB
       double precision expval,ranval,grnd,test
 
+      write(6,*)" betaB ",betaB," betaA ",betaA
+      write(6,*)" eneA ",eneA," eneB ",eneB
+
       test = (betaB-betaA)*(eneA-eneB)
+
+      write(6,*)" test value ",test      
+
       reTest = .false.
       ranval = grnd()
       expval = dexp(-test)
       if (expval.ge.ranval) then
         reTest = .true.
       endif
+
+      write(6,*)" reTest ",retest
       
       return
 

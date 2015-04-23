@@ -25,6 +25,8 @@ c     parse any command line arguments
 c     setup replica exchange
       call setupReplicas
 
+      write(6,*)myid," MAIN SUR mt_beta_t",mt_beta_t
+
 c     set the default locations of any streams
       call openStreamFiles
 
@@ -33,6 +35,8 @@ c     initialise the program
       
 c     set the system up
       call setup
+
+      write(6,*)myid," MAIN GO mt_beta_t",mt_beta_t
       
 c     run the simulation
       call simulation

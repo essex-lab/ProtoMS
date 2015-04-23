@@ -24,11 +24,11 @@ c###################################################################
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
       integer lamsbuffer(4),lamrbuffer(4),tsbuffer(nlambdas),lmbuffer(nlambdas)
       logical updated(ntemperatures),reTest
-      double precision nrg,nrgl,nrgh,teml,temh,temp,oldtem
+      double precision nrg,nrgb,nrgf,inrgf,inrgb,teml,temh,temp,oldtem
       double precision totalEnergy,extraEnergy
-      double precision allteml(ntemperatures),alltemh(ntemperatures),allnrg(ntemperatures)
+      double precision allteml(ntemperatures),alltemh(ntemperatures),allnrg(ntemperatures),allbeta(ntemperatures)
       double precision dell,delh
-      double precision buffer(3)
+      double precision buffer(4)
       character*255 tempstr,tempstr2
 
 c     check that temperature swaps are only attempted between tasks that are running temperature values
@@ -37,6 +37,8 @@ c     check that temperature swaps are only attempted between tasks that are run
       do i = 1,ntemperatures
         updated(i) = .false.
       enddo
+
+      write(6,*)myid," TRE mylambda ",mylambda," mytemperature ",mytemperature," mt_beta_t ",mt_beta_t
 
       call closeFiles
 
@@ -52,29 +54,40 @@ c     check that temperature swaps are only attempted between tasks that are run
         temh = temval(mytemperature+1)
       endif
 
+      nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
+
       if (mytemid.eq.0) then
         allteml(mytemperature) = teml
         alltemh(mytemperature) = temh
         allnrg(mytemperature) = nrg
+        write(6,*)myid," nrg ",nrg
+        allbeta(mytemperature) = mt_beta_t
         updated(1) = .false.
         nrecieved = 1
         do i=2,ntemperatures
-          call MPI_Recv(buffer,3,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom,mpistat,ierr)
+          call MPI_Recv(buffer,4,MPI_DOUBLE_PRECISION,MPI_ANY_SOURCE,11,mytemcom,mpistat,ierr)
           task1 = mpistat(MPI_SOURCE)
           allteml(task2temperature(task1+1)) = buffer(1)
           alltemh(task2temperature(task1+1)) = buffer(2)
           allnrg(task2temperature(task1+1)) = buffer(3)
+          allbeta(task2temperature(task1+1)) = buffer(4)
           updated(task1+1) = .false.
         enddo
       else
         buffer(1) = teml
         buffer(2) = temh
         buffer(3) = nrg
-        call MPI_SSend(buffer,3,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
+        write(6,*)myid," nrg ",nrg
+        buffer(4) = mt_beta_t
+        call MPI_SSend(buffer,4,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
       endif
+
+      write(6,*)myid," ---- mytemperature ",mytemperature
 
 
       if (mytemid.eq.0) then
+
+        write(6,*)myid," allbeta ",allbeta
 
 c       Randomly selects odd/even pairs
         choice = ranInt(0,1)
@@ -82,9 +95,12 @@ c       Randomly selects odd/even pairs
           aidx = i + choice
           bidx = i + choice + 1
 
-          nlretry = nlretry + 1
-c          write(6,*)nlretry
-          if (reTest(pt_beta_t(mylambda,aidx),pt_beta_t(mylambda,bidx),allnrg(aidx),allnrg(bidx))) then
+          write(6,*)myid," mylambda ",mylambda," aidx ",aidx," allnrg(aidx) ",allnrg(aidx)
+          write(6,*)myid," mylambda ",mylambda," bidx ",bidx," allnrg(bidx) ",allnrg(bidx)
+
+          ntretry = ntretry + 1
+c          write(6,*)myid," pt_beta_t ",pt_beta_t
+          if (reTest(allbeta(aidx),allbeta(bidx),allnrg(aidx),allnrg(bidx))) then
 
             task1 = temperature2task(aidx)
             task2 = temperature2task(bidx)
@@ -132,6 +148,8 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
       temperatureC = temval(mytemperature)
       temperature = temperatureC + DEG2KEL
       mt_beta_t = dble(1.0) / (GASR*temperature)
+
+      write(6,*)myid," nteretry ",ntretry," ntreswap ",ntreswap
 
 
       if (updated(mytemid+1).and.doLambdaRE) then

@@ -50,6 +50,9 @@ def replica_path(filenames,evalthis,replicakind="lambda") :
   if replicakind == "lambda" :
     replica_attr = "lambdareplica"
     label_attr   = "lam"
+  elif replicakind == "temperature" :
+    replica_attr = "temperaturereplica"
+    label_attr = "temperature"
   else :
     raise simulationobjects.SetupError("Have not implemented replica path analysis for %s"%replicakind)
 
@@ -86,12 +89,12 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyze and plot a replica paths")
   parser.add_argument('-f','--files',nargs="+",help="the name of the files to analyse")
   parser.add_argument('-p','--plot',type=float,nargs="+",help="the replica values to plot")
-  parser.add_argument('-k','--kind',choices=["lambda"],help="the kind of replica to analyze",default="lambda")
+  parser.add_argument('-k','--kind',choices=["lambda","temperature"],help="the kind of replica to analyze",default="lambda")
   parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path.png")
   args = parser.parse_args()
 
   # Extract paths and labels from the input files
-  paths,labels = replica_path(args.files,args.plot)
+  paths,labels = replica_path(args.files,args.plot,args.kind)
 
   # Plot them and save as a png-file
   x = np.arange(1,paths.shape[1]+1)
