@@ -37,6 +37,8 @@ c#################################################################
                      
 c     return if there are no configurations
       if (nconfig.le.0) return
+
+      write(6,*)myid," SIM mytemid ",mytemid," mylamid ",mylamid
                                
 c     check that the initial total energy has been calculated
       call checkGotTotal
@@ -121,6 +123,7 @@ c       Do lambda replica exchange
 
 c       Do temperature replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
+          write(6,*)myid," bfr TRE at move ",i
           call temperatureRE
           if (doLambdaRE) then
             call assignlambdare(mylamid,.true.,.false.)

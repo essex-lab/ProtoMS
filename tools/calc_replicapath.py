@@ -50,6 +50,9 @@ def replica_path(filenames,replicakind="lambda") :
   elif replicakind == "temperature" :
     replica_attr = "temperaturereplica"
     label_attr = "temperature"
+  elif replicakind == "global" :
+    replica_attr = "globalreplica"
+    label_attr = None
   else :
     raise simulationobjects.SetupError("Have not implemented replica path analysis for %s"%replicakind)
 
@@ -57,12 +60,13 @@ def replica_path(filenames,replicakind="lambda") :
   # also produce a list of labels, e.g. lambda or temperature
   rawpaths = []
   labels   = []
-  for filename in filenames :
+  for ind,filename in enumerate(filenames) :
     results_file = simulationobjects.ResultsFile()
     results_file.read(filename=filename)
     if hasattr(results_file.snapshots[0],replica_attr) :
       path = np.zeros(len(results_file.snapshots),int)-1
-      label = getattr(results_file.snapshots[0],label_attr)
+      label = ind+1
+      if label_attr : label = getattr(results_file.snapshots[0],label_attr)
       for i,snap in enumerate(results_file.snapshots) :
         path[i] = getattr(snap,replica_attr)
       rawpaths.append(path)
@@ -96,7 +100,7 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyze and plot a replica paths")
   parser.add_argument('-f','--files',nargs="+",help="the name of the files to analyse")
   parser.add_argument('-p','--plot',type=float,nargs="+",help="the replica values to plot")
-  parser.add_argument('-k','--kind',choices=["lambda","temperature"],help="the kind of replica to analyze",default="lambda")
+  parser.add_argument('-k','--kind',choices=["lambda","temperature","global"],help="the kind of replica to analyze",default="lambda")
   parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path.png")
   args = parser.parse_args()
 

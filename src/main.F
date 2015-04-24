@@ -37,6 +37,7 @@ c     set the system up
       call setup
 
       write(6,*)myid," MAIN GO mt_beta_t",mt_beta_t
+      write(6,*)myid," MAIN mylamid ",mylamid," mytemid ",mytemid
       
 c     run the simulation
       call simulation

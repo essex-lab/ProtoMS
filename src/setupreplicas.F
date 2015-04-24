@@ -370,6 +370,8 @@ c       Read in template folder
 
       if (closepms) call closeProgram(100,"Number of tasks higher than required!")
 
+      write(6,*)myid," mytemid ",mytemid," mylamid ",mylamid," mylamladder ",mylamladder," mytemladder ",mytemladder
+
       appendto = .False.
 
       end
