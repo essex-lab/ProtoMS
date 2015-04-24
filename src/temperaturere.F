@@ -54,7 +54,13 @@ c     check that temperature swaps are only attempted between tasks that are run
         temh = temval(mytemperature+1)
       endif
 
+      call setAllMoved
+
       nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
+
+      write(6,*)myid," my total energy ",totalEnergy(DONTCARE,nrgb,nrgf)
+
+      write(6,*)myid," my extra energy ",extraEnergy(NEW,inrgb,inrgf)
 
       if (mytemid.eq.0) then
         allteml(mytemperature) = teml

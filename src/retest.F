@@ -24,6 +24,7 @@ c###################################################################
 
       reTest = .false.
       ranval = grnd()
+      write(6,*)" ranval ",ranval
       expval = dexp(-test)
       if (expval.ge.ranval) then
         reTest = .true.
