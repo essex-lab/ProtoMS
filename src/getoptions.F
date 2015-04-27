@@ -728,7 +728,6 @@ c     get the temperature
      .                              temperature," K)"
       call printLine(INFO,printstring)
       mt_beta_t = dble(1.0) / (GASR*temperature)
-      write(6,*)myid," my mt_beta_t ",mt_beta_t
 
 c     get the REST2 effective temperature
       resttempC = temperatureC

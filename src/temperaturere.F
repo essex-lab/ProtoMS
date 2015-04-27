@@ -38,8 +38,6 @@ c     check that temperature swaps are only attempted between tasks that are run
         updated(i) = .false.
       enddo
 
-      write(6,*)myid," TRE mylambda ",mylambda," mytemperature ",mytemperature," mt_beta_t ",mt_beta_t
-
       call closeFiles
 
       if (mytemperature.eq.1) then
@@ -58,15 +56,10 @@ c     check that temperature swaps are only attempted between tasks that are run
 
       nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
 
-      write(6,*)myid," my total energy ",totalEnergy(DONTCARE,nrgb,nrgf)
-
-      write(6,*)myid," my extra energy ",extraEnergy(NEW,inrgb,inrgf)
-
       if (mytemid.eq.0) then
         allteml(mytemperature) = teml
         alltemh(mytemperature) = temh
         allnrg(mytemperature) = nrg
-        write(6,*)myid," nrg ",nrg
         allbeta(mytemperature) = mt_beta_t
         updated(1) = .false.
         nrecieved = 1
@@ -83,26 +76,17 @@ c     check that temperature swaps are only attempted between tasks that are run
         buffer(1) = teml
         buffer(2) = temh
         buffer(3) = nrg
-        write(6,*)myid," nrg ",nrg
         buffer(4) = mt_beta_t
         call MPI_SSend(buffer,4,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
       endif
 
-      write(6,*)myid," ---- mytemperature ",mytemperature
-
 
       if (mytemid.eq.0) then
-
-        write(6,*)myid," allbeta ",allbeta
-
 c       Randomly selects odd/even pairs
         choice = ranInt(0,1)
         do i=1,ntemperatures-(choice+1),2
           aidx = i + choice
           bidx = i + choice + 1
-
-          write(6,*)myid," mylambda ",mylambda," aidx ",aidx," allnrg(aidx) ",allnrg(aidx)
-          write(6,*)myid," mylambda ",mylambda," bidx ",bidx," allnrg(bidx) ",allnrg(bidx)
 
           ntretry = ntretry + 1
 c          write(6,*)myid," pt_beta_t ",pt_beta_t
@@ -154,8 +138,6 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
       temperatureC = temval(mytemperature)
       temperature = temperatureC + DEG2KEL
       mt_beta_t = dble(1.0) / (GASR*temperature)
-
-      write(6,*)myid," nteretry ",ntretry," ntreswap ",ntreswap
 
 
       if (updated(mytemid+1).and.doLambdaRE) then
