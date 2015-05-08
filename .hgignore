@@ -5,4 +5,5 @@ src/*.o
 tools/*.pyc
 src/makefile.*
 src/idme.inc
+build/
 
