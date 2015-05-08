@@ -905,7 +905,7 @@ class SnapshotResults :
         elif cols[1] == "protein-protein" :
           key = "protein"+cols[4]+"-protein"+cols[7]
         elif cols[1] == "solute-protein" :
-          key = "protein"+cols[4]+"-"+cols[8]
+          key = "protein"+cols[4]+"-"+cols[8]+cols[7]
         elif cols[1] == "protein-solvent" :
           key = "protein"+cols[4]+"-solvent"
         elif cols[1] == "solute-solute" :
@@ -959,6 +959,18 @@ class SnapshotResults :
         for e in dict[label][:-1] :
           dict[label][-1] = dict[label][-1]+e
         dict[label][-1].type = "SUM"
+
+    if not hasattr(self,"gradient") and hasattr(self,"backfe") :
+        dGB = self.backfe
+        dGF = self.forwfe
+        # Calculate and return the gradient
+        deltalam = max(self.lam-self.lamb,self.lamf-self.lam)
+        # This is needed for the end-points
+        if (self.lam < 0.0001):
+          dGB = -dGF
+        if (self.lam > 0.9999):
+          dGF = -dGB
+        self.gradient = (dGF - dGB) / (2*deltalam)  
 
     return line
 
