@@ -15,7 +15,7 @@ c     The name of the program
       
 c     The version of the program      
       character*11 progversion
-      parameter(progversion="2.4RC1")
+      parameter(progversion="3.0")
       
 c     The name of the executable      
       character*8 exename

@@ -21,10 +21,7 @@ c###############################################################
       call printBoxText(HEADER,"")
       call printBoxText(HEADER,"Prototype Molecular Simulation")
       call printBoxText(HEADER,"")
-      write(printstring,*) "This is a program to perform simulations on molecular systems. ",
-     .              "This is not a professional program, nor does it come with any support ",
-     .              "or guarantee of correctness. If you desire a professional, supported ",
-     .              "program, then please consider purchasing MCPRO."
+      write(printstring,*) "This is a program to perform simulations on molecular systems."
       call printBoxText(HEADER,printstring) 
       call printBoxText(HEADER,"")
       
@@ -36,8 +33,8 @@ c###############################################################
       call printBoxText(HEADER,"")
       
       write(printstring,*) "This program is distributed in the hope that it will be useful, ",
-     .              "but WITHOUT ANY WARRANTY; without even the implied warranty of ",
-     .              "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General ",
+     .              "but without any warranty; without even the implied warranty of ",
+     .              "merchantability or fitness for a particular purpose.  See the GNU General ",
      .              "Public License for more details."
       call printBoxText(HEADER,printstring)
       call printBoxText(HEADER,"")
@@ -64,6 +61,7 @@ c     include dynamically generated compilation information
       call printBoxText(HEADER,printstring)
       call printBoxText(HEADER,"")
 
+      call printBoxText(HEADER,"(C) Samuel Genheden, Gregory A. Ross, Richard Bradshaw, Chris Cave-Ayland, Ana I. Cabedo Martinez 2014-2015")
       call printBoxText(HEADER,"(C) Christopher Woods, Julien Michel, Samuel Genheden 2002-2014")
       call printBoxText(HEADER,"(C) JAWS and GCMC protocols by Michael Bodnarchuk, 2012")
       call printBoxText(HEADER,"(C) OpenMP/MPI RETI code by Samuel Genheden, 2012-2014")
