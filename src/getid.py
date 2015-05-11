@@ -36,35 +36,9 @@ except:
     sys.exit(0)
 
 #now write down the date that this code was compiled, and who has compiled it
-#user = os.getlogin()
 user = pwd.getpwuid(os.getuid())[0]
 today = datetime.datetime.today()
 host = socket.gethostname()
 
 writeLine("Compiled on %s by %s at %s." % (host,user,today))
 
-try:
-    lines = os.popen("svn info ../","r").readlines()
-except:
-   writeLine("Subversion information not available on the computer "\
-             "that compiled this version of ProtoMC.")
-else:
-    svninfo = {}
-    for line in lines:
-        words = line.split()
-        if (len(words) < 2): continue
-        
-        if (words[0].find("URL") != -1):
-            svninfo["url"] = words[1]
-        elif (words[0].find("Revision") != -1):
-            svninfo["rev"] = words[1]
-    
-    try:
-        writeLine("Subversion version %s. If you have access to the " \
-                  "subversion respository you can extract the source code "\
-                  "for this binary by typing" % svninfo["rev"])
-        writeLine("'svn co -r %s %s'." % (svninfo["url"],svninfo["rev"]))
-    except:
-        writeLine("Subversion information not available on the computer "\
-                  "that compiled this version of ProtoMS.")
-    
