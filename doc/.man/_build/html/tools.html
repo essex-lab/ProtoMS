@@ -286,7 +286,7 @@ done
 <div class="section" id="calc-clusters-py">
 <h2>calc_clusters.py<a class="headerlink" href="#calc-clusters-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><tt class="docutils literal"><span class="pre">calc_clusters.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-m</span> <span class="pre">molecule]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-t</span> <span class="pre">type]</span> <span class="pre">[-c</span> <span class="pre">cutoff]</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">calc_clusters.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-m</span> <span class="pre">molecule]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-t</span> <span class="pre">type]</span> <span class="pre">[-c</span> <span class="pre">cutoff]</span> <span class="pre">[--skip</span> <span class="pre">N]</span> <span class="pre">[--max</span> <span class="pre">N]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
@@ -327,6 +327,18 @@ can be any of average, single, complete, weighted and centroid</p>
 </dd>
 </dl>
 </li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">--skip</span> <span class="pre">N</span></tt> = skip N snapshots at the beginning of the simulation</dt>
+<dd><p class="first last">optional, default = 0</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">--max</span> <span class="pre">N</span></tt> = read and process a maximum of N snapshots</dt>
+<dd><p class="first last">optional, default = 99999</p>
+</dd>
+</dl>
+</li>
 </ul>
 <p><strong>Examples:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre>calc_clusters.py -f all.pdb
@@ -342,7 +354,7 @@ calc_clusters.py -f all.pdb -t complete
 <div class="section" id="calc-density-py">
 <h2>calc_density.py<a class="headerlink" href="#calc-density-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><tt class="docutils literal"><span class="pre">calc_density.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-r</span> <span class="pre">residue]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-p</span> <span class="pre">padding]</span> <span class="pre">[-s</span> <span class="pre">spacing]</span> <span class="pre">[-e</span> <span class="pre">extent]</span> <span class="pre">[-n</span> <span class="pre">norm]</span> <span class="pre">[-t</span> <span class="pre">sphere|gaussian]</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">calc_density.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span>&nbsp; <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-r</span> <span class="pre">residue]</span> <span class="pre">[-a</span> <span class="pre">atom]</span> <span class="pre">[-p</span> <span class="pre">padding]</span> <span class="pre">[-s</span> <span class="pre">spacing]</span> <span class="pre">[-e</span> <span class="pre">extent]</span> <span class="pre">[-n</span> <span class="pre">norm]</span> <span class="pre">[-t</span> <span class="pre">sphere|gaussian]</span> <span class="pre">[--skip</span> <span class="pre">N]</span> <span class="pre">[--max</span> <span class="pre">N]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = name(s) of PDB-file(s) containing simulation snapshots</dt>
@@ -398,6 +410,18 @@ can read a PDB trajectory</p>
 <dd><p class="first last">optional, default = sphere
 <tt class="docutils literal"><span class="pre">sphere</span></tt> = spherical smoothing with extent radius
 <tt class="docutils literal"><span class="pre">gaussian</span></tt> = smoothing with Gaussian with standard deviation = extent</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">--skip</span> <span class="pre">N</span></tt> = skip N snapshots at the beginning of the simulation</dt>
+<dd><p class="first last">optional, default = 0</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">--max</span> <span class="pre">N</span></tt> = read and process a maximum of N snapshots</dt>
+<dd><p class="first last">optional, default = 99999</p>
 </dd>
 </dl>
 </li>

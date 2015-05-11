@@ -14,7 +14,7 @@
 
 
 \title{ProtoMS Documentation}
-\date{March 31, 2015}
+\date{May 11, 2015}
 \release{3.0}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
@@ -1792,6 +1792,13 @@ chunk soluteenergy N
 
 Calculate the energy of solute N. This calculates the energy of solute N and outputs the components of this energy in great detail. This is useful for debugging a forcefield or for collecting average energy components that are more finely divided than those normally collected.
 
+\index{fakesime}
+\begin{Verbatim}[commandchars=\\\{\}]
+chunk fakesim
+\end{Verbatim}
+
+Performs one step of simulation, without doing anything other than adding the energies to the averages. This can be useful for debugging purposes.
+
 \index{retienergy}
 \begin{Verbatim}[commandchars=\\\{\}]
 chunk retienergy 0.2
@@ -3225,7 +3232,7 @@ done
 \label{tools:calc-clusters-py}
 \textbf{Syntax:}
 
-\code{calc\_clusters.py -f file1 {[}file2 ...{]}  {[}-o outfile{]} {[}-m molecule{]} {[}-a atom{]} {[}-t type{]} {[}-c cutoff{]}}
+\code{calc\_clusters.py -f file1 {[}file2 ...{]}  {[}-o outfile{]} {[}-m molecule{]} {[}-a atom{]} {[}-t type{]} {[}-c cutoff{]} {[}-{-}skip N{]} {[}-{-}max N{]}}
 \begin{itemize}
 \item {} \begin{description}
 \item[{\code{-f file1 file2} ... = name(s) of PDB-file(s) containing simulation snapshots}] \leavevmode
@@ -3266,6 +3273,18 @@ optional, default = 2.0 A
 
 \end{description}
 
+\item {} \begin{description}
+\item[{\code{-{-}skip N} = skip N snapshots at the beginning of the simulation}] \leavevmode
+optional, default = 0
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-{-}max N} = read and process a maximum of N snapshots}] \leavevmode
+optional, default = 99999
+
+\end{description}
+
 \end{itemize}
 
 \textbf{Examples:}
@@ -3288,7 +3307,7 @@ It will extract the coordinates of all atoms with name equal to \code{atom} in r
 \label{tools:calc-density-py}
 \textbf{Syntax:}
 
-\code{calc\_density.py -f file1 {[}file2 ...{]}  {[}-o outfile{]} {[}-r residue{]} {[}-a atom{]} {[}-p padding{]} {[}-s spacing{]} {[}-e extent{]} {[}-n norm{]} {[}-t sphere\textbar{}gaussian{]}}
+\code{calc\_density.py -f file1 {[}file2 ...{]}  {[}-o outfile{]} {[}-r residue{]} {[}-a atom{]} {[}-p padding{]} {[}-s spacing{]} {[}-e extent{]} {[}-n norm{]} {[}-t sphere\textbar{}gaussian{]} {[}-{-}skip N{]} {[}-{-}max N{]}}
 \begin{itemize}
 \item {} \begin{description}
 \item[{\code{-f file1 file2} ... = name(s) of PDB-file(s) containing simulation snapshots}] \leavevmode
@@ -3344,6 +3363,18 @@ optional, default = the number of snapshot processed
 optional, default = sphere
 \code{sphere} = spherical smoothing with extent radius
 \code{gaussian} = smoothing with Gaussian with standard deviation = extent
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-{-}skip N} = skip N snapshots at the beginning of the simulation}] \leavevmode
+optional, default = 0
+
+\end{description}
+
+\item {} \begin{description}
+\item[{\code{-{-}max N} = read and process a maximum of N snapshots}] \leavevmode
+optional, default = 99999
 
 \end{description}
 
