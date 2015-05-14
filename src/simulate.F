@@ -121,6 +121,7 @@ c       Do lambda replica exchange
 
 c       Do temperature replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
+          write(6,*)myid, " calling TRE. Move ",i
           call temperatureRE
           if (doLambdaRE) then
             call assignlambdare(mylamid,.true.,.false.)

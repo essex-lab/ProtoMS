@@ -17,6 +17,9 @@ c###################################################################
 
       test = (betaB-betaA)*(eneA-eneB)   
 
+      write(6,*)" eneA ",eneA," eneB ",eneB
+
+
       reTest = .false.
       ranval = grnd()
       expval = dexp(-test)
