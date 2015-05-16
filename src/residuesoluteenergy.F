@@ -138,6 +138,16 @@ c     performing protein-residue - solute molecule cutting...
         endif
       endif
       
+      if (doREST) then
+        cnrg = cnrg * restscaling(6)
+        ljnrg = ljnrg * restscaling(6)
+        nrg = cnrg + ljnrg
+        cnrgf = cnrgf * restscaling(6)
+        ljnrgf = ljnrgf * restscaling(6)
+        cnrgb = cnrgb * restscaling(6)
+        ljnrgb = ljnrgb * restscaling(6)
+      endif
+      
       residueSoluteEnergy = nrg
 
       return

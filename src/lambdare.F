@@ -185,9 +185,7 @@ c     if a process with temid 0 is involved in the swap, since the reason to swa
         call ZeroPDACont
         call gbsavesystem
       endif     
-      nrg = totalEnergy(OLD,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
-      nrgb = nrgb + inrgb
-      nrgf = nrgf + inrgf      
+      nrg = totalEnergy(OLD,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)      
       call clearMoveList
       call updateExtraEnergies
 

@@ -80,7 +80,7 @@ c           however, in the feather region
           ljnrgb = ZERO
         endif
       endif
-
+      
       proteinSoluteEnergy = nrg
       
       return

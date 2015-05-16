@@ -715,13 +715,54 @@ c     A softcore is applied if either atom is part of a softcore residue
       endif
 c     end of do-while loop
       
+c     Get REST2 settings
+      if (doTemperatureRE.and.getOption('solutetempering')) then
+        doREST = .true.
+c       Store this temporary here, will change it below to this replica's temp        
+        resttempC = getDouble(words(1),temperatureC)
+c       Set default values
+        restlevel(1) = 3
+        restlevel(2) = 1
+        restlevel(3) = 3
+        restlevel(4) = 1
+        restlevel(5) = 2
+        restlevel(6) = 2
+        restlevel(7) = 2
+c       Now try to find them in the input
+        do j=1,nwords,2
+          if (words(j)(1:6).eq."bndang") then
+            restlevel(1) = nint(getDouble(words(j+1),3))
+          else if (words(j)(1:3).eq."dih") then
+            restlevel(2) = nint(getDouble(words(j+1),1))
+          else if (words(j)(1:2).eq."lj") then
+            restlevel(3) = nint(getDouble(words(j+1),3))
+          else if (words(j)(1:4).eq."coul") then
+            restlevel(4) = nint(getDouble(words(j+1),1))
+          else if (words(j)(1:4).eq."solu") then
+            restlevel(5) = nint(getDouble(words(j+1),2))
+          else if (words(j)(1:4).eq."prot") then
+            restlevel(6) = nint(getDouble(words(j+1),2))
+          else if (words(j)(1:4).eq."solv") then
+            restlevel(7) = nint(getDouble(words(j+1),2))
+          endif      
+        enddo
+      else 
+        doREST = .false.
+      endif
 
 c     get the temperature
       if ((.not.doTemperatureRE).and.getOption('temperature')) then
         temperatureC = getDouble(words(1),temperatureC)
         temperature = temperatureC + DEG2KEL
       elseif (doTemperatureRE) then
-        temperatureC = temval(mytemperature)
+        if (.not.doREST) then
+          temperatureC = temval(mytemperature)
+        else
+          temperatureC = resttempC
+          resttempC = temval(mytemperature)
+          resttemp = resttempC + DEG2KEL
+          rest_beta = dble(1.0) / (GASR*resttemp)
+        endif
         temperature = temperatureC + DEG2KEL
       endif
       write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
@@ -729,14 +770,23 @@ c     get the temperature
       call printLine(INFO,printstring)
       mt_beta_t = dble(1.0) / (GASR*temperature)
 
-c     get the REST2 effective temperature
-      resttempC = temperatureC
-      if (getOption('resttemp')) resttempC = getDouble(words(1),temperatureC)
-      resttemp = resttempC + DEG2KEL
-      rest_beta = dble(1.0) / (GASR*resttemp)
-      restscale1 = rest_beta / mt_beta_t
-      restscale2 = (mt_beta_t+rest_beta)/(2.0d0*mt_beta_t)
-      restscale3 = 1.0d0 
+c     Now we can complete the setup of REST temperatures
+      if (doRest) then
+        write(printstring,*) "Effective REST temperature  = ",resttempC," C, (",
+     .                              resttemp," K)"
+        call printLine(INFO,printstring)
+        restfac1 = rest_beta / mt_beta_t
+        restfac2 = (mt_beta_t+rest_beta)/(2.0d0*mt_beta_t)
+        do i=1,7
+          if (restlevel(i).eq.1) then
+            restscaling(i) = restfac1
+          else if (restlevel(i).eq.2) then
+            restscaling(i) = restfac2
+          else if (restlevel(i).eq.3) then
+            restscaling(i) = 1.0d0
+          endif
+        enddo
+      endif
 
 c     get the B factor for GCMC simulations
       if ((.not.doMultiGCMC).and.getOption('potential')) then

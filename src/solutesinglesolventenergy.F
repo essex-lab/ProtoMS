@@ -190,6 +190,16 @@ c           however, outside into feather region
         endif
       endif
       
+      if (doREST) then
+        cnrg = cnrg * restscaling(7)
+        ljnrg = ljnrg * restscaling(7)
+        nrg = cnrg + ljnrg
+        cnrgf = cnrgf * restscaling(7)
+        ljnrgf = ljnrgf * restscaling(7)
+        cnrgb = cnrgb * restscaling(7)
+        ljnrgb = ljnrgb * restscaling(7)
+      endif
+      
       soluteSingleSolventEnergy = nrg
       
       return

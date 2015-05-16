@@ -153,7 +153,15 @@ c        scale to the theta jaws parameter
             ljnrgb = ljnrgb * thetaparam(igcs)
 
 
-
+      if (doREST) then
+        cnrg = cnrg * restscaling(5)
+        ljnrg = ljnrg * restscaling(5)
+        nrg = cnrg + ljnrg
+        cnrgf = cnrgf * restscaling(5)
+        ljnrgf = ljnrgf * restscaling(5)
+        cnrgb = cnrgb * restscaling(5)
+        ljnrgb = ljnrgb * restscaling(5)
+      endif
      
       soluteSingleGCSoluteEnergy = nrg
       

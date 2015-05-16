@@ -25,7 +25,7 @@ c###################################################################
       integer lamsbuffer(4),lamrbuffer(4),tsbuffer(nlambdas),lmbuffer(nlambdas)
       logical updated(ntemperatures),reTest
       double precision nrg,nrgb,nrgf,inrgf,inrgb,teml,temh,temp,oldtem
-      double precision totalEnergy,extraEnergy
+      double precision totalEnergy,extraEnergy,testbeta,resttestEnergy
       double precision allteml(ntemperatures),alltemh(ntemperatures),allnrg(ntemperatures),allbeta(ntemperatures)
       double precision dell,delh
       double precision buffer(4)
@@ -53,14 +53,19 @@ c     check that temperature swaps are only attempted between tasks that are run
       endif
 
       call setAllMoved
-
-      nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
-
+      if (.not.doREST) then
+        nrg = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)
+        testbeta = mt_beta_t
+      else
+        nrg = restTestEnergy()
+        testbeta = rest_beta      
+      endif
+      
       if (mytemid.eq.0) then
         allteml(mytemperature) = teml
         alltemh(mytemperature) = temh
         allnrg(mytemperature) = nrg
-        allbeta(mytemperature) = mt_beta_t
+        allbeta(mytemperature) = testbeta
         updated(1) = .false.
         nrecieved = 1
         do i=2,ntemperatures
@@ -76,7 +81,7 @@ c     check that temperature swaps are only attempted between tasks that are run
         buffer(1) = teml
         buffer(2) = temh
         buffer(3) = nrg
-        buffer(4) = mt_beta_t
+        buffer(4) = testbeta
         call MPI_SSend(buffer,4,MPI_DOUBLE_PRECISION,0,11,mytemcom,ierr)
       endif
 
@@ -135,10 +140,32 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
       call MPI_BCAST (task2temperature,ntemperatures,MPI_INTEGER,0,mytemcom,ierr)
 
       oldtem = temperatureC
-      temperatureC = temval(mytemperature)
-      temperature = temperatureC + DEG2KEL
-      mt_beta_t = dble(1.0) / (GASR*temperature)
-
+      
+      if (.not.doREST) then
+        temperatureC = temval(mytemperature)
+        temperature = temperatureC + DEG2KEL
+        mt_beta_t = dble(1.0) / (GASR*temperature) 
+      else
+        resttempC = temval(mytemperature)
+        resttemp = resttempC + DEG2KEL
+        rest_beta = dble(1.0) / (GASR*resttemp)
+        restfac1 = rest_beta / mt_beta_t
+        restfac2 = (mt_beta_t+rest_beta)/(2.0d0*mt_beta_t)
+        do i=1,7
+          if (restlevel(i).eq.1) then
+            restscaling(i) = restfac1
+          else if (restlevel(i).eq.2) then
+            restscaling(i) = restfac2
+          else if (restlevel(i).eq.3) then
+            restscaling(i) = 1.0d0
+          endif
+        enddo
+        call setAllMoved
+        call initialiseExtraEnergies(.true.)      
+        nrg = totalEnergy(OLD,nrgb,nrgf) + extraEnergy(NEW,inrgb,inrgf)    
+        call clearMoveList
+        call updateExtraEnergies
+      endif
 
       if (updated(mytemid+1).and.doLambdaRE) then
         lamsbuffer(1) = mylamladder

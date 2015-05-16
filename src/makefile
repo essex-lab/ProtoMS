@@ -468,6 +468,7 @@ OBJS = addacid.o \
        residuesolventenergy.o \
        residuesolventgbenergy.o \
        residuesurface.o \
+       resttestenergy.o	\
        retest.o \
        retienergy.o \
        retitest.o	\

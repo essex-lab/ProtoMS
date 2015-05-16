@@ -73,7 +73,7 @@ def replica_path(filenames,replicakind="lambda") :
       labels.append(label)
 
   # Now find the path for each lambda/temperature value
-  rawpaths = np.asarray(rawpaths)
+  rawpaths = np.array(rawpaths,dtype=int)
   labeled_paths = [[] for l in labels]
   # Loop over each possible lambda/temperature value, i.e. label id
   for i in range(rawpaths.shape[0]) :
