@@ -235,11 +235,13 @@ c         Here is where I need to correlate a lambda to a group.
         nlretry = 0
         nlreswap = 0
 
-        if (doTemperatureRE.and.(mytemid.lt.0)) then
-          call findDoubleInList(temwithlad(mylamladder),temval,ntemperatures,mytemperature)
-          temperatureC = temval(mytemperature)
-          temperature = temperatureC + DEG2KEL
-        endif
+c        SG is this code necessary?, temperatureC is set in getoptions.F
+c        if (doTemperatureRE.and.(mytemid.lt.0)) then
+c          call findDoubleInList(temwithlad(mylamladder),temval,ntemperatures,mytemperature)
+c          temperatureC = temval(mytemperature)
+c          temperature = temperatureC + DEG2KEL
+c        endif
+
 c        if (doTemperatureRE) then
 c          do i=1,nlamladders
 c            if (mytemladder.eq.i) then

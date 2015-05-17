@@ -138,14 +138,14 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
       call MPI_BCAST (updated,ntemperatures,MPI_LOGICAL,0,mytemcom,ierr)
       call MPI_BCAST (temperature2task,ntemperatures,MPI_INTEGER,0,mytemcom,ierr)
       call MPI_BCAST (task2temperature,ntemperatures,MPI_INTEGER,0,mytemcom,ierr)
-
-      oldtem = temperatureC
       
       if (.not.doREST) then
+        oldtem = temperatureC
         temperatureC = temval(mytemperature)
         temperature = temperatureC + DEG2KEL
         mt_beta_t = dble(1.0) / (GASR*temperature) 
-      else
+      else 
+        oldtem = resttempC
         resttempC = temval(mytemperature)
         resttemp = resttempC + DEG2KEL
         rest_beta = dble(1.0) / (GASR*resttemp)
@@ -156,7 +156,7 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
             restscaling(i) = restfac1
           else if (restlevel(i).eq.2) then
             restscaling(i) = restfac2
-          else if (restlevel(i).eq.3) then
+          else
             restscaling(i) = 1.0d0
           endif
         enddo
@@ -213,8 +213,8 @@ c     Replacing the old temperature for the new one in the file name.
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
           enddo
-           write(words(nwords2-k),"(1A,F6.3)")"t-",temperatureC
-           if (temperatureC.ge.100.0) write(words(nwords2-k),"(1A,F7.3)")"t-",temperatureC
+           write(words(nwords2-k),"(1A,F6.3)")"t-",temval(mytemperature)
+           if (temval(mytemperature).ge.100.0) write(words(nwords2-k),"(1A,F7.3)")"t-",temval(mytemperature)
            do j=1,k
              words(nwords2-(j-1)) = words2(nwords2-(j-1))
            enddo
@@ -222,7 +222,5 @@ c     Replacing the old temperature for the new one in the file name.
            call join2(1,nwords,"/",openfiles(i))
         endif
       enddo
-
-
 
       end subroutine

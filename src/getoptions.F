@@ -720,16 +720,8 @@ c     Get REST2 settings
         doREST = .true.
 c       Store this temporary here, will change it below to this replica's temp        
         resttempC = getDouble(words(1),temperatureC)
-c       Set default values
-        restlevel(1) = 3
-        restlevel(2) = 1
-        restlevel(3) = 3
-        restlevel(4) = 1
-        restlevel(5) = 2
-        restlevel(6) = 2
-        restlevel(7) = 2
 c       Now try to find them in the input
-        do j=1,nwords,2
+        do j=2,nwords,2
           if (words(j)(1:6).eq."bndang") then
             restlevel(1) = nint(getDouble(words(j+1),3))
           else if (words(j)(1:3).eq."dih") then
@@ -746,8 +738,14 @@ c       Now try to find them in the input
             restlevel(7) = nint(getDouble(words(j+1),2))
           endif      
         enddo
-      else 
-        doREST = .false.
+        write(printstring,*)"REST levels solute intra/bond-angle = ",restlevel(1),
+     .                      " intra/dihedral = ",restlevel(2),
+     .                      " intra/lj = ",restlevel(3),
+     .                      " intra/coul = ",restlevel(4),
+     .                      " solute-solute = ",restlevel(5),
+     .                      " solute-protein = ",restlevel(6),
+     .                      " solute-solvent = ",restlevel(7)  
+        call printLine(INFO,printstring)                        
       endif
 
 c     get the temperature
@@ -782,7 +780,7 @@ c     Now we can complete the setup of REST temperatures
             restscaling(i) = restfac1
           else if (restlevel(i).eq.2) then
             restscaling(i) = restfac2
-          else if (restlevel(i).eq.3) then
+          else
             restscaling(i) = 1.0d0
           endif
         enddo

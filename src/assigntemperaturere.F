@@ -32,8 +32,6 @@ c          call MPI_COMM_RANK(mytemcom,mytemid,ierr)
         call MPI_COMM_RANK(mytemcom,mytemid,ierr)
         if (mkdirs) then
           mytemperature = mytemid + 1
-          temperatureC = temval(mytemperature)
-          temperature = temperatureC + DEG2KEL
           write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
           if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
           if (mytemladder.eq.1) then

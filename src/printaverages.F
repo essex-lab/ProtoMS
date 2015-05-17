@@ -65,6 +65,11 @@ c       call printLine(RESULTS,printstring)
 
        write(printstring,*) "Temperature = ",temperatureC," C"
        call printLine(RESULTS,printstring)
+       
+       if (doREST) then
+         write(printstring,*) "Effective temperature = ",resttempC," C"
+         call printLine(RESULTS,printstring)
+       endif
 
        write(printstring,*) "Solvents,Proteins,GC-solutes  =" ,NSolvents ,NProteins ,NGCSolutes
        call printLine(RESULTS,printstring)

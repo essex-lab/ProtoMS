@@ -46,7 +46,7 @@ c     Set scaling for test energy
           restscaling(i) = 1.0d0
         else if (restlevel(i).eq.2) then
           restscaling(i) = 0.5d0
-        else if (restlevel(i).eq.3) then
+        else
           restscaling(i) = 0.0d0
         endif
       enddo
@@ -203,10 +203,6 @@ c             If the soft-core is on, the coulombic is scaled further here
           enddo
         endif
       endif
-      
-c####################################
-
-
 
 c     now do the same for the solvent
       if (NSolvents.gt.0) then
@@ -258,7 +254,7 @@ c             If the soft-core is on, the coulombic is scaled further here
           restscaling(i) = restfac1
         else if (restlevel(i).eq.2) then
           restscaling(i) = restfac2
-        else if (restlevel(i).eq.3) then
+        else
           restscaling(i) = 1.0d0
         endif
       enddo
