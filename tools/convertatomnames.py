@@ -84,6 +84,39 @@ def read_convfile(file=None, inmode=None,outmode=None):
             conv[key][old] = new
     return conv
 
+def _checkpdb(pdb_in,conversion) :
+    """
+    Checks if all atom names are already in the PDB file
+
+    Parameters
+    ----------        
+    pdb_in : PDBFile 
+      	the pdb file
+    conversion :
+    	a dictionary with conversion
+
+    Returns
+    -------
+    bool 
+      True if all atom names are already in the PDB file
+      False if not
+    """
+
+    for resnum in pdb_in.residues:
+        residue = pdb_in.residues[resnum]
+
+        if residue.name.upper() == "HID": # Valid only when the pdb input file is from AMBER.
+            resname = "HIS"
+            pdb_out.residues[resnum].name = resname
+        else:
+            resname = residue.name.upper()
+
+        for atomnum in range(len(residue.atoms)):
+            atomname = residue.atoms[atomnum].name.upper()
+            # Check if the atom name is either in the backbone or a sidechain residue
+            if not (atomname in conversion["backbone"].values() or atomname in conversion[resname].values()) :
+              return False    
+    return True
 
 def pdb2pms(pdb_in,forcefield,conversion_file):
     """ 
@@ -113,6 +146,9 @@ def pdb2pms(pdb_in,forcefield,conversion_file):
 
     pdb_out = pdb_in.copy()
     conversion = read_convfile(conversion_file,inmode=forcefield,outmode="protoms")
+    if _checkpdb(pdb_in,conversion) :
+      logger.info("It seems that %s already contains the correct ProtoMS names. Aborting the conversion."%pdb_in.name)
+      return pdb_in  
     for resnum in pdb_in.residues:
         residue = pdb_in.residues[resnum]
         if residue.name.upper() == "HID":									# Valid only when the pdb input file is from AMBER.

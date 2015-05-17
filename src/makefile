@@ -719,6 +719,7 @@ fortrancompiler = $(mpi_fortrancompiler)
 ifneq ($(NOPYTHON2),1)
 	@echo  "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
+	@./getsep.py sep.inc
 endif
 	@$(FC) -c $(FFLAGS) readparfile.F -o readparfile.o
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o

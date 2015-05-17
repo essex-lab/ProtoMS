@@ -646,6 +646,12 @@ By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, t
 
 The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section :ref:`misccmd`.
 
+By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option ::
+
+  appendstreams on
+
+This option will turn on append mode for all streams, except the **RESTART** stream that never will be appended.
+
 .. _parameters:
 
 ======================
@@ -1456,7 +1462,7 @@ An example of a dump line would be::
 
 This line, given as input for ProtoMS, will append results information to the `results` file every 100000 moves, thoughout the `simulate` part of your simulation.
 
-It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time. Consistently these imput lines::
+It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently these imput lines::
 
   dump 100 results write results
   dump 100 pdb all file=all.pdb
@@ -1493,6 +1499,16 @@ Calculate the energy of the current system and output it to the SPENERGY stream.
   chunk soluteenergy N
   
 Calculate the energy of solute N. This calculates the energy of solute N and outputs the components of this energy in great detail. This is useful for debugging a forcefield or for collecting average energy components that are more finely divided than those normally collected. 
+
+
+.. index::
+  single: fakesime
+
+::
+
+  chunk fakesim
+
+Performs one step of simulation, without doing anything other than adding the energies to the averages. This can be useful for debugging purposes.
 
 .. index::
   single: retienergy

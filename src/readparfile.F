@@ -4,6 +4,7 @@
       include 'printer.inc'
       include 'splitter.inc'
       include 'proteins.inc'
+      include 'sep.inc'
 c############################################################
 c
 c     This routine reads in the new style free format
@@ -33,7 +34,7 @@ c     JM
       hashome = nwords.gt.0
 
       if (hashome.eqv..True.) then
-        call split2(filename,"/")
+        call split2(filename,PATHSEP)
         do i=1,nwords2
           if (words2(i)(1:lineLength(words2(i))).eq."$PROTOMSHOME") then
             words(i) = pmshome
@@ -42,9 +43,9 @@ c     JM
           endif
         enddo
         nwords = nwords2
-        call join2(1,nwords,"/",tempstr)
-        if (filename(1:1).eq."/")  then
-          write(filename,"(2A)")"/",tempstr(1:lineLength(tempstr))
+        call join2(1,nwords,PATHSEP,tempstr)
+        if (filename(1:1).eq.PATHSEP)  then
+          write(filename,"(2A)")PATHSEP,tempstr(1:lineLength(tempstr))
         else
           filename = tempstr
         endif

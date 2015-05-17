@@ -195,20 +195,27 @@ if __name__ == "__main__":
   parser.add_argument('-a','--atom',help="the name of the atom to extract. If left blank, the entire molecule will be clustered, default=None",default=None)
   parser.add_argument('-t','--type',choices=["average","single","complete","weighted", "centroid"],help="the type of hierarchical clustering method, default='average'", default="average")
   parser.add_argument('-c','--cutoff',type=float,help="the distance cutoff that defines whether conformations belong to a cluster, default=2.0",default=2.0)
-
+  parser.add_argument('--skip',type=int,help="the number of blocks to skip to calculate the clusters. default is 0. Skip must be greater or equal to 0",default=0)
+  parser.add_argument('--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
   args = parser.parse_args()
 
   if not args.files :
     print "No input files! Nothing to do, so exit."
     quit()
 
+  # Fix negative values of skip and max
+  if args.max < 0 :
+    args.max = 99999
+  if args.skip <= 0 :
+    args.skip = -1
+
   # Read in PDB files
   if len(args.files) == 1 :
     pdbfiles = simulationobjects.PDBSet()
-    pdbfiles.read(args.files[0])
+    pdbfiles.read(args.files[0],skip=args.skip,readmax=args.max)
   else :
     pdbfiles = simulationobjects.PDBSet()
-    for filename in args.files :
+    for filename in args.files[args.skip:args.max+1] :
       pdb = simulationobjects.PDBFile(filename=filename)
       pdbfiles.pdbs.append(pdb)
 

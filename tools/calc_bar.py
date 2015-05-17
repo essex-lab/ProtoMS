@@ -102,7 +102,7 @@ def _parse_folder(path,res_tem,skip,maxread) :
   """
 
   # List all results files and sort them
-  filenames = glob.glob(path+"/%s*"%res_tem)
+  filenames = glob.glob(os.path.join(path,"%s*"%res_tem))
 
   if len(filenames) == 1 : # This indicates that we deal with ProtoMS3.0 results files
 
@@ -264,7 +264,7 @@ def _calc_windows(path,res_tem,skip,maxread,RT,verbose,nboots) :
   """
 
   # List all lambda folders and sort them
-  paths = glob.glob(path+"/lam-*")
+  paths = glob.glob(os.path.join(path,"lam-*"))
   paths.sort()
 
   # Process all lambda folders  

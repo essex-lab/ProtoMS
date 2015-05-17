@@ -20,6 +20,7 @@ DualTopology
 Can be executed from the command line as a stand-alone program
 """
 
+import os
 import logging
 
 import numpy as np
@@ -333,10 +334,10 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     """
     
     ProtoMSSimulation.__init__(self)
-    self.setForceField("$PROTOMSHOME/parameter/amber99.ff")
-    self.setForceField("$PROTOMSHOME/parameter/solvents.ff")
-    self.setForceField("$PROTOMSHOME/parameter/amber99-residues.ff")
-    self.setForceField("$PROTOMSHOME/parameter/gaff14.ff")
+    self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber99.ff"))
+    self.setForceField(os.path.join("$PROTOMSHOME","parameter","solvents.ff"))
+    self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber99-residues.ff"))
+    self.setForceField(os.path.join("$PROTOMSHOME","parameter","gaff14.ff"))
     if templates is not None and templates :
       for tem in templates :
         self.setForceField(tem)
@@ -712,7 +713,7 @@ class GCMC(ProteinLigandSimulation) :
  
     self.setParameter("#"," GCMC specific parameters")
     self.setParameter("gcmc","0")
-    self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
+    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
     self.setParameter("grand1",gcmcwater)
     #self.setParameter("outfolder",outfolder)
     if isinstance(adamval,float) or isinstance(adamval,int):
@@ -796,7 +797,7 @@ class Jaws1(ProteinLigandSimulation) :
     self.setParameter("jaws1","0")
     self.setParameter("softcore1","solute all")
     self.setParameter("softcoreparams","coul 1 delta 1.5")
-    self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
+    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
     self.setParameter("grand1",jawswater)
     _setbox(self,jawswater,jawsbox)
     self.setParameter("#"," End of JAWS specific parameters")
@@ -877,7 +878,7 @@ class Jaws2(ProteinLigandSimulation) :
       self.setParameter("jbias","%.3f"%jbias[0])
     else :
       self.setParameter("multijaws2"," ".join("%.3f"%j for j in jbias))
-    self.setForceField("$PROTOMSHOME/data/gcmc_wat.tem")
+    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
     self.setSolvent(2,jawssolvent)
     self.setParameter("grand1",jawswater)
     watobj = simulationobjects.PDBFile(filename=jawswater)

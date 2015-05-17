@@ -514,19 +514,18 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     else :  
       frcbonds, frcangles, frcdihedrals = _readfrcmod ( frcmodfile )
 
-    PROTOMSHOME = os.getenv('PROTOMSHOME')
+    angle_params = sim.ParameterSet (sim.standard_filename("gaff14.ff","parameter"), 'angle' )
+    dihedral_params = sim.ParameterSet ( sim.standard_filename("gaff14.ff","parameter"), 'dihedral' )
 
-    angle_params = sim.ParameterSet ( "%s/parameter/gaff14.ff" % PROTOMSHOME, 'angle' )
-    dihedral_params = sim.ParameterSet ( "%s/parameter/gaff14.ff" % PROTOMSHOME, 'dihedral' )
-
-    with open ( "%s/parameter/gaff.types" % PROTOMSHOME ) as f:
+    with open ( sim.standard_filename("gaff.types","parameter") ) as f:
         at_params = [ line.split() for line in f ]
 
     kBT = 0.0019872041 * 300 #Boltzmann constant at 300 kelvin in kcal/mol
     move_scale = 0.5
 
     dummynames = ["DM3", "DM2", "DM1"]
-    aromatic_types = "ca cp cq ce cf cc cd nb ne nf pb pe pf px py sx sy".split()
+    aromatic_types = ( "ca cp cq ce cf cc cd nb ne nf pb pe pf px py sx sy"
+                       "CA CB CC CK CM CN CQ CR CV CW C* NA NB NC" ).split()
     template = sim.TemplateFile()
     template.templates.append(sim.MolTemplate())
     template.templates[0].atomclass = sim.TemplateSoluteAtom

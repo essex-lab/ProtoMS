@@ -145,7 +145,7 @@ calc_clusters.py
 
 **Syntax:**
 
-``calc_clusters.py -f file1 [file2 ...]  [-o outfile] [-m molecule] [-a atom] [-t type] [-c cutoff]``
+``calc_clusters.py -f file1 [file2 ...]  [-o outfile] [-m molecule] [-a atom] [-t type] [-c cutoff] [--skip N] [--max N]``
 
 * ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
     at least one file needs to be specified
@@ -162,6 +162,10 @@ calc_clusters.py
     can be any of average, single, complete, weighted and centroid
 * ``-c cutoff`` = the cluster cut-off
     optional, default = 2.0 A
+* ``--skip N`` = skip N snapshots at the beginning of the simulation
+    optional, default = 0
+* ``--max N`` = read and process a maximum of N snapshots
+    optional, default = 99999
 
 **Examples:**
 
@@ -184,7 +188,7 @@ calc_density.py
 
 **Syntax:**
 
-``calc_density.py -f file1 [file2 ...]  [-o outfile] [-r residue] [-a atom] [-p padding] [-s spacing] [-e extent] [-n norm] [-t sphere|gaussian]``
+``calc_density.py -f file1 [file2 ...]  [-o outfile] [-r residue] [-a atom] [-p padding] [-s spacing] [-e extent] [-n norm] [-t sphere|gaussian] [--skip N] [--max N]``
 
 * ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
     at least one file needs to be specified
@@ -207,6 +211,10 @@ calc_density.py
     optional, default = sphere
     ``sphere`` = spherical smoothing with extent radius
     ``gaussian`` = smoothing with Gaussian with standard deviation = extent 
+* ``--skip N`` = skip N snapshots at the beginning of the simulation
+    optional, default = 0
+* ``--max N`` = read and process a maximum of N snapshots
+    optional, default = 99999
 
 **Examples:**
 
