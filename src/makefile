@@ -410,7 +410,6 @@ OBJS = addacid.o \
        readint.o \
        readlogical.o \
        readoverride.o \
-       readparfile.o \
        readpdbline.o \
        readresidueoverride.o \
        readresiduetemplate.o \
@@ -714,10 +713,12 @@ fortrancompiler = $(mpi_fortrancompiler)
 ifneq ($(NOPYTHON2),1)
 	@echo "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
+	@./getsep.py sep.inc
 endif
+	@$(FC) -c $(FFLAGS) readparfile.F -o readparfile.o
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o
 	@echo "$(Fg)Linking the executable...$(Fr)"
-	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o
+	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o readparfile.o
 
 	@echo "$(Fg)Build complete. Go to the tutorials directory for"
 	@echo "guidance on how to use this program.$(n)"
