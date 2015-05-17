@@ -50,6 +50,9 @@ def replica_path(filenames,replicakind="lambda") :
   elif replicakind == "temperature" :
     replica_attr = "temperaturereplica"
     label_attr = "temperature"
+  elif replicakind == "rest" :
+    replica_attr = "temperaturereplica"
+    label_attr = "efftemperature"
   elif replicakind == "global" :
     replica_attr = "globalreplica"
     label_attr = None
@@ -100,7 +103,7 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyze and plot a replica paths")
   parser.add_argument('-f','--files',nargs="+",help="the name of the files to analyse")
   parser.add_argument('-p','--plot',type=float,nargs="+",help="the replica values to plot")
-  parser.add_argument('-k','--kind',choices=["lambda","temperature","global"],help="the kind of replica to analyze",default="lambda")
+  parser.add_argument('-k','--kind',choices=["lambda","temperature","rest","global"],help="the kind of replica to analyze",default="lambda")
   parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path.png")
   args = parser.parse_args()
 
@@ -113,7 +116,9 @@ if __name__ == '__main__' :
     if label in args.plot :
       print label
       plt.plot(x,path,color=simulationobjects.color(i))
-  plt.ylim([-0.1,1.1])
+  psorted = sorted(args.plot)
+  prange = max(psorted) - min(psorted)
+  plt.ylim([min(psorted)-0.1*prange,max(psorted)+0.1*prange])
   plt.yticks(labels)
   plt.ylabel(args.kind.capitalize())
   plt.xlabel("Snapshot")
