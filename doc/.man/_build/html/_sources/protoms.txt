@@ -1500,6 +1500,16 @@ Calculate the energy of the current system and output it to the SPENERGY stream.
   
 Calculate the energy of solute N. This calculates the energy of solute N and outputs the components of this energy in great detail. This is useful for debugging a forcefield or for collecting average energy components that are more finely divided than those normally collected. 
 
+
+.. index::
+  single: fakesime
+
+::
+
+  chunk fakesim
+
+Performs one step of simulation, without doing anything other than adding the energies to the averages. This can be useful for debugging purposes.
+
 .. index::
   single: retienergy
 

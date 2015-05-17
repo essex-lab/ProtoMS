@@ -41,7 +41,7 @@
 \contentsline {section}{\numberline {7.3}calc\_bar.py}{58}{section.7.3}
 \contentsline {section}{\numberline {7.4}calc\_clusters.py}{59}{section.7.4}
 \contentsline {section}{\numberline {7.5}calc\_density.py}{60}{section.7.5}
-\contentsline {section}{\numberline {7.6}calc\_dg.py}{60}{section.7.6}
+\contentsline {section}{\numberline {7.6}calc\_dg.py}{61}{section.7.6}
 \contentsline {section}{\numberline {7.7}calc\_gcsingle.py}{61}{section.7.7}
 \contentsline {section}{\numberline {7.8}calc\_replicapath.py}{62}{section.7.8}
 \contentsline {section}{\numberline {7.9}calc\_rmsd.py}{62}{section.7.9}
