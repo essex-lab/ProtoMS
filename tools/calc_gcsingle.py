@@ -54,13 +54,13 @@ if __name__ == '__main__' :
         sys.exit()
     for folder in folders:
         results = ResultsFile()
-        resultsfiles = glob.glob(folder+ "/"+args.file+"*")
+        resultsfiles = glob.glob(os.path.join(folder,args.file+"*"))
         if len(resultsfiles) > 1: # It is assumed the results are from ProtoMS 2.
             results.read([folder,args.file])
         elif len(resultsfiles)==1: # It is assumed the results are from ProtoMS 3.
-            results.read(folder+ "/"+args.file)
+            results.read(os.path.join(folder,args.file))
         else:
-           print "\nError. No results file matching %s. Exiting program\n" % folder+"/"+args.file 
+           print "\nError. No results file matching %s. Exiting program\n" % folder+os.path.sep+args.file 
            sys.exit()
         solventson = np.array([snap.solventson for snap in results.snapshots])# Counting how many molecules have been inserted.
         mean_on = np.mean(solventson[args.skip:solventson.size])

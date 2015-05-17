@@ -84,7 +84,7 @@ def extract_energies(path,res_tem,skip,maxread) :
   """
 
   # List all lambda folders and sort them
-  paths = glob.glob(path+"/lam-*")
+  paths = glob.glob(os.path.join(path,"lam-*"))
   paths.sort()
 
   total_energies = []
