@@ -1,6 +1,8 @@
       program main
       include 'protoms.inc'
+#ifdef WITH_MPI_
       include 'mpif.h'
+#endif
 C     (C) Christopher Woods  2002-2004
 c      July 2014 - Samuel Genheden added MPI stuff
 
@@ -9,9 +11,11 @@ c      July 2014 - Samuel Genheden added MPI stuff
       myid = 0
       ntasks = 1
 
+#ifdef WITH_MPI_
       call MPI_INIT(ierr)
       call MPI_COMM_RANK(MPI_COMM_WORLD,myid,ierr)
       call MPI_COMM_SIZE(MPI_COMM_WORLD,ntasks,ierr)
+#endif
 
 c     initialise the print system
       call initialisePrintSystem
@@ -37,6 +41,8 @@ c     run the simulation
 c     shut everything down / print out restart/info 
       call shutdown
 
+#ifdef WITH_MPI_
       call MPI_FINALIZE(ierr)
+#endif
 
       end

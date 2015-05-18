@@ -37,19 +37,28 @@ if(STATIC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 endif()
 
-# Find Fortran MPI libraries - raise error if not found
-find_package(MPI REQUIRED)
-add_definitions(${MPI_Fortran_COMPILE_FLAGS})
-include_directories(${MPI_Fortran_INCLUDE_PATH})
-link_directories(${MPI_Fortran_LIBRARIES})
+# Find Fortran MPI libraries
+find_package(MPI)
+if(MPI_Fortran_FOUND)
+    message("Using MPI")
+    add_definitions(${MPI_Fortran_COMPILE_FLAGS})
+    include_directories(${MPI_Fortran_INCLUDE_PATH})
+    link_directories(${MPI_Fortran_LIBRARIES})
+    add_definitions(-DWITH_MPI_)
+else()
+    message("No MPI available")
+endif()
 
 
-# Find python and create dynamic include file
+# Find python and create dynamic include files
 find_package(PythonInterp REQUIRED)
 message("Generating compilation info...")
 execute_process(COMMAND python
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/getid.py
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/idme.inc)
+execute_process(COMMAND python
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/getsep.py
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/sep.inc)
 
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
@@ -77,9 +86,16 @@ message("${CMAKE_Fortran_FLAGS}")
 file(GLOB SOURCE_FILES src/*.F)
 include_directories(src)
 
-# Create target from source files and link to MPI library
+if(NOT MPI_Fortran_FOUND)
+    list(REMOVE_ITEM SOURCE_FILES "src/setupreplicas.F")
+    list(REMOVE_ITEM SOURCE_FILES "src/lambare.F")
+endif()
+
+# Create target from source files and link to MPI library if found
 add_executable (${prog_name} ${SOURCE_FILES})
-target_link_libraries(${prog_name} ${MPI_Fortran_LIBRARIES})
+if(MPI_Fortran_FOUND)
+    target_link_libraries(${prog_name} ${MPI_Fortran_LIBRARIES})
+endif()
 
 # Get documentation and tools
 file(GLOB TOOL_FILES tools/*)
@@ -94,3 +110,10 @@ install(PROGRAMS ${TOOL_FILES}
         DESTINATION ${install_dir}/bin)
 install(FILES ${DOC_FILES}
         DESTINATION ${install_dir}/doc)
+
+# Add testing
+add_test(RunsAtAll protoms3)
+
+enable_testing()
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
+                  DEPENDS protoms3)
