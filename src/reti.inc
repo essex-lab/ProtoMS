@@ -1,11 +1,4 @@
 
-c     Maximum allowed number of lambdas
-      integer MAXLAMBDAS
-      parameter (MAXLAMBDAS=50)
-c     Maximum allowed number of temperatures
-      integer MAXTEMPS
-      parameter (MAXTEMPS=50)   
-
 c     Number of simulation iterations
       integer niter
 c     Number of RETI blocks

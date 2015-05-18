@@ -1,7 +1,9 @@
       subroutine closeProgram(stat,str)
       implicit none
       include 'printer.inc'
+#ifdef WITH_MPI_
       include 'mpif.h'
+#endif
 c#######################################################
 c
 c     This closes the program because of an error
@@ -23,7 +25,9 @@ c     try to print out results and restart information
       call shutdown()
       call flush(FATAL)
 
+#ifdef WITH_MPI_
       call MPI_FINALIZE(ierr)
+#endif
       call exit(stat)
       
       end

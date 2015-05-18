@@ -10,7 +10,9 @@
       include 'splitter.inc'
       include 'parallel.inc'
       include 'averages.inc'
+#ifdef WITH_MPI_
       include 'mpif.h'
+#endif
 c################################################################
 c
 c       This routine actually runs a simulation with some
@@ -115,6 +117,7 @@ c            endif
           endif
         enddo
 
+#ifdef WITH_MPI_
 c       Do lambda replica exchange
         if (doLambdaRE.and.(lrefreq.gt.0).and.(i.gt.1).and.(mod(i,lrefreq).eq.0)) then
 c          write(printstring,*)"Results up to snapshot",i
@@ -124,6 +127,7 @@ c          call printAverages
 c          if (myid.eq.0) write(*,"(I6,50F5.2)")i,(lambdaval(lambda2task(j)+1),j=1,nlambdas)
 c          write(6,*)"Task = ",myid," lambda= ",mylambda," folder = ",lrefolder(1:lineLength(lrefolder))
         endif
+#endif
         
       enddo
 

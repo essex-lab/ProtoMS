@@ -6,4 +6,4 @@ tools/*.pyc
 src/makefile.*
 src/idme.inc
 src/sep.inc
-
+build/

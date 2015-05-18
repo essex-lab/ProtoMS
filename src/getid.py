@@ -38,7 +38,22 @@ except:
 #now write down the date that this code was compiled, and who has compiled it
 user = pwd.getpwuid(os.getuid())[0]
 today = datetime.datetime.today()
+today = today.replace(microsecond=0)
 host = socket.gethostname()
 
 writeLine("Compiled on %s by %s at %s." % (host,user,today))
 
+try:
+    identify = os.popen("hg identify","r").readline()
+    identify = identify.strip("\n ")
+    path = os.popen("hg paths default","r").readline()
+    path = path.strip("\n ")
+except:
+    writeLine("Mercurial information not available.")
+else:
+    if(identify.startswith("abort") or path=="not found!"):
+        writeLine("Mercurial information not available.")
+    else:
+        writeLine("Revision: %s" % identify)
+        writeLine("From: %s" % path[path.find("@")+1:])
+    
