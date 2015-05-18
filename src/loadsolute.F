@@ -28,7 +28,7 @@ c##################################################
       character*4 iresnam
       character*4 atnam
       double precision ix,iy,iz
-      logical ok
+      logical ok,foundter
       integer FILE
       parameter(FILE = 40)
       
@@ -55,12 +55,29 @@ c     save this loaded solute
       linenum = 0
       izid = 0
       itmpl = 0
+      foundter = .false.
       
 c     read the file in a do-while loop
 100   continue
         linenum = linenum + 1
         read (FILE,10,err=9700,end=9800) line
 10      format(a300)        
+
+c       If last line was a TER record, then we need to start a new residue here
+        if (foundter) then
+          isol = NSolutes + 1
+          if (isol.gt.MAXSOLUTES) then
+            write(printstring,*) "Exceeded maximum number of solutes (",MAXSOLUTES,")"
+            call printLine(WARNING,printstring)
+            call printLine(WARNING,"Increase MAXSOLUTES and recompile")
+            return
+          endif
+          call initialiseSolute(isol)                    
+          NSolutes = isol
+          izid = 0
+          SoluteName(isol) = savenam(1:lineLength(savenam))
+          foundter = .false.
+        endif
 
 c       lowercase the line and split it into words
         call lowercase(line)
@@ -106,17 +123,7 @@ c          call printLine(WARNING,printstring)
 c         the solute has now ended
 c          goto 9800 
 c         SG: when TER record is found, start a new solute molecule
-          isol = NSolutes + 1
-          if (isol.gt.MAXSOLUTES) then
-            write(printstring,*) "Exceeded maximum number of solutes (",MAXSOLUTES,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXSOLUTES and recompile")
-            return
-          endif
-          call initialiseSolute(isol)                    
-          NSolutes = isol
-          izid = 0
-          SoluteName(isol) = savenam(1:lineLength(savenam))
+          foundter = .true.
         else
           if (itmpl.eq.0) then
             call printLine(WARNING,"Cannot load a solute atom without a valid solute template!")

@@ -395,7 +395,7 @@ class  PDBSet :
           self.pdbs.append(PDBFile()) 
           self.pdbs[-1].solvents[soli] = sol
           self.pdbs[-1].header = pdbfile.header
-    def read(self,filename,resname=None) :
+    def read(self,filename,resname=None,skip=0,readmax=None) :
         """
         Read a set of pdb structures from a file
         
@@ -405,16 +405,23 @@ class  PDBSet :
           the name of the file to read
         resname : string, optional
           the name of the residue to read, only read this
+        skip : int, optional
+          number of snapshot at the beginning to skip
+        readmax : int, optional
+          maximum number of snapshots to read
         """
         self.pdbs = []
+        nread = 0
         with open(filename,"r") as f :
             while True :
                 pdb = PDBFile()
-                pdb.read_from(f,resname=resname)
+                pdb.read_from(f,resname=resname)                
                 if not (pdb.residues or pdb.solvents) :
                     break
                 else :
-                    self.pdbs.append(pdb)
+                    nread += 1
+                    if nread > skip : self.pdbs.append(pdb)
+                    if readmax is not None and len(self.pdbs) == readmax  :  break
     def write(self,filenames,solvents=True) :
         """
         Write the set to disc

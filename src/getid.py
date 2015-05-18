@@ -36,7 +36,6 @@ except:
     sys.exit(0)
 
 #now write down the date that this code was compiled, and who has compiled it
-#user = os.getlogin()
 user = pwd.getpwuid(os.getuid())[0]
 today = datetime.datetime.today()
 today = today.replace(microsecond=0)
