@@ -7,6 +7,7 @@
       include 'keyset.inc'
       include 'flags.inc'
       include 'parallel.inc'
+      include 'sep.inc'
       include 'mpif.h'
 
       integer i,j,lineLength,key,k,ind
@@ -312,17 +313,17 @@ c       Read in template folder
         endif
         if (myid.eq.0) then
           do i=1,nadams      
-            write(tmpstr,"(3A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/b_"
+            write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
             call writedoublestring(tmpstr,adamparam(i),cmd)
             call system(cmd) 
             if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,'multigcmc',ierr)
           enddo
           myadam = 1
-          write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/b_"
+          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
           call writedoublestring(tmpstr,adamparam(1),gcmcfolder)
         else
           call MPI_Recv(myadam,1,MPI_INT,0,11,'multigcmc',mpistat,ierr)
-          write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/b_"
+          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
           call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
         endif
       endif
@@ -344,17 +345,17 @@ c       Read in template folder
         endif
         if (myid.eq.0) then
           do i=1,njaws2      
-            write(tmpstr,"(3A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/j_"
+            write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"j_"
             call writedoublestring(tmpstr,alljbias(i),cmd)
             call system(cmd) 
             if (i.gt.1) call MPI_Send(i,1,MPI_INT,i-1,11,'multijaws2',ierr)
           enddo
           myjbias = 1
-          write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/j_"
+          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"j_"
           call writedoublestring(tmpstr,alljbias(1),jaws2folder)
         else
           call MPI_Recv(myjbias,1,MPI_INT,0,11,'multijaws2',mpistat,ierr)
-          write(tmpstr,"(2A)")outfolder(1:lineLength(outfolder)),"/j_"
+          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"j_"
           call writedoublestring(tmpstr,alljbias(myjbias),jaws2folder)
         endif
       endif

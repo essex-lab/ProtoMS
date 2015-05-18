@@ -3,6 +3,7 @@
       include 'parallel.inc'
       include 'flags.inc'
       include 'printer.inc'
+      include 'sep.inc'
       include 'mpif.h'
 
 c##########################################################################
@@ -28,8 +29,8 @@ c##########################################################################
         call MPI_COMM_SPLIT(MPI_COMM_WORLD,MPI_UNDEFINED,key,mylamcom,ierr)
         if (doTemperatureRE.and.mytemid.ne.-1.and.mkdirs) then
           call findDoubleInList(lamwithlad(mytemladder),lambdaval,nlambdas,mylambda)
-          write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lamwithlad(mytemladder)
-          write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
+          write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lamwithlad(mytemladder)
+          write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),PATHSEP
           call system(cmd)
         endif
       else
@@ -40,20 +41,20 @@ c##########################################################################
           if (doTemperatureRE) then
             if (mytemid.lt.0) then
               call findDoubleInList(temwithlad(mylamladder),temval,ntemperatures,mytemperature)
-              write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-              if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
-     .                                             "/t-",temval(mytemperature)
-              write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
-              write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
+              write(trefolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
+              if (temval(mytemperature).ge.100.0) write(trefolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
+     .                                             PATHSEP,"t-",temval(mytemperature)
+              write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
+              write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),PATHSEP
               call system(cmd) 
             else
-              write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
-              write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
+              write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
+              write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),PATHSEP
               call system(cmd)
             endif
           else
-            write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
-            write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),'/'
+            write(lrefolder,"(3A,F5.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"lam-",lambdaval(mylambda)
+            write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),PATHSEP
             call system(cmd)
           endif 
         endif

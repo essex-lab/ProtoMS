@@ -9,7 +9,8 @@
       include 'printer.inc'
       include 'parallel.inc'
       include 'splitter.inc'
-      include 'mpif.h'
+      include 'sep.inc'
+      include 'mpif.h' 
       include 'metropolis.inc'
 c###################################################################
 c
@@ -191,11 +192,11 @@ c     Re-setting all running averages
       nsteps = 0
       
       write(tempstr,"(1A,F6.3)")"t-",oldtem
-      write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+      write(trefolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
       if (oldtem.ge.100.0) write(tempstr,"(1A,F7.3)")"t-",oldtem
-      if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),
-     .                                    "/t-",temval(mytemperature)
-      if (doLambdaRE) write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
+      if (temval(mytemperature).ge.100.0) write(trefolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
+     .                                    PATHSEP,"t-",temval(mytemperature)
+      if (doLambdaRE) write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
 
 
 c     Replacing the old temperature for the new one in the file name.
@@ -207,7 +208,7 @@ c     Replacing the old temperature for the new one in the file name.
           fileappend(i) = .False.
         endif
         fileopened(i) = .False.
-        call split2(openfiles(i),"/")
+        call split2(openfiles(i),PATHSEP)
         tempstr2 = words2(nwords2-k)
         if (tempstr2(1:lineLength(tempstr2)).eq.tempstr(1:lineLength(tempstr))) then
           do j=1,nwords2-(k+1)
@@ -219,7 +220,7 @@ c     Replacing the old temperature for the new one in the file name.
              words(nwords2-(j-1)) = words2(nwords2-(j-1))
            enddo
            nwords = nwords2
-           call join2(1,nwords,"/",openfiles(i))
+           call join2(1,nwords,PATHSEP,openfiles(i))
         endif
       enddo
 

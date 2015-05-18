@@ -9,6 +9,7 @@
       include 'printer.inc'
       include 'parallel.inc'
       include 'splitter.inc'
+      include 'sep.inc'
       include 'mpif.h'
 c###################################################################
 c
@@ -194,9 +195,9 @@ c     Re-setting all running averages
 
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
       if (doTemperatureRE)then
-        write(lrefolder,"(2A,F5.3)")trefolder(1:lineLength(trefolder)),"/lam-",lambdaval(mylambda)
+        write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
       else
-        write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
+        write(lrefolder,"(3A,F5.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"lam-",lambdaval(mylambda)
       endif
       do i=1,nOpenFiles    
         if (wasopened(i)) fileappend(i) = .true.
@@ -204,7 +205,7 @@ c     Re-setting all running averages
           fileappend(i) = .False.
         endif
         fileopened(i) = .False.
-        call split2(openfiles(i),"/")
+        call split2(openfiles(i),PATHSEP)
         tempstr2 = words2(nwords2-1)
         if (tempstr2(1:lineLength(tempstr2)).eq.tempstr(1:lineLength(tempstr))) then
           do j=1,nwords2-2
@@ -213,7 +214,7 @@ c     Re-setting all running averages
            write(words(nwords2-1),"(1A,F5.3)")"lam-",lambda
            words(nwords2) = words2(nwords2)
            nwords = nwords2
-           call join2(1,nwords,"/",openfiles(i))
+           call join2(1,nwords,PATHSEP,openfiles(i))
         endif
       enddo
 

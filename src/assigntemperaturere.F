@@ -5,6 +5,7 @@
       include 'parallel.inc'
       include 'flags.inc'
       include 'printer.inc'
+      include 'sep.inc'
       include 'mpif.h'
 
 c##########################################################################
@@ -32,10 +33,10 @@ c          call MPI_COMM_RANK(mytemcom,mytemid,ierr)
         call MPI_COMM_RANK(mytemcom,mytemid,ierr)
         if (mkdirs) then
           mytemperature = mytemid + 1
-          write(trefolder,"(2A,F6.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
-          if (temval(mytemperature).ge.100.0) write(trefolder,"(2A,F7.3)")outfolder(1:lineLength(outfolder)),"/t-",temval(mytemperature)
+          write(trefolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
+          if (temval(mytemperature).ge.100.0) write(trefolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
           if (mytemladder.eq.1) then
-            write(cmd,"(3A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),'/'
+            write(cmd,"(3A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),PATHSEP
             call system(cmd) 
           endif
         endif
