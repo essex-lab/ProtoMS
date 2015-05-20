@@ -18,7 +18,7 @@ c############################################################
       if (solCoordDepth.le.0) then
         call printLine(WARNING,"We have popped off the end of the solute coordinate stack!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
       
       isol = stackSolCoord(solCoordDepth)
@@ -26,14 +26,14 @@ c############################################################
       if (isol.le.0 .or. isol.gt.NSolutes) then
         call printLine(WARNING,"The solute stack contains an invalid solute!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
       
       nats = NSolAtoms(isol)
       if (nats.le.0) then
         call printLine(WARNING,"The solute stack contains an invalid number of atoms!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
       
       do j=1,3

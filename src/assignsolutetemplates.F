@@ -43,7 +43,7 @@ c########################################################
         call printLine(WARNING,printstring)
         call printLine(WARNING,
      .       "Ensure that there is a solute template with this name in one of your parameter files")
-        call prettyLine(WARNING,"ProtoMC is continuing, but the simulation is now very broken!")
+        call prettyLine(WARNING,"ProtoMS is continuing, but the simulation is now very broken!")
         return
       endif
 
@@ -158,7 +158,7 @@ c     thus we will check it here...
      .                       SoluteName(isol)(1:lgth)
         call printLine(WARNING,printstring)
         call printLine(WARNING,"Check the pdb and template input for this solute")
-        call prettyLine(WARNING,"ProtoMC will continue but the simulation is now broken!")
+        call prettyLine(WARNING,"ProtoMS will continue but the simulation is now broken!")
         return
       endif
       

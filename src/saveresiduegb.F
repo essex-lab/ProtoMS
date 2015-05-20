@@ -17,7 +17,7 @@ c##############################################
       countGBResidue = countGBResidue + 1
       if (countGBResidue .gt. MAXRESIDUES) then
         call printLine(WARNING,"Increase MAXRESIDUES  and recompile")
-        call closeProgram(-1,"ProtoMC exiting !")
+        call closeProgram(-1,"ProtoMS exiting !")
       endif
       resstart = BBZid(iprot,ires,1)
       resend = BBZid(iprot,ires,4)

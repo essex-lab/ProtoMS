@@ -111,8 +111,6 @@ OBJS = addacid.o \
        buildsolventbox.o \
        calcangle.o \
        calcaverageenergy.o \
-       calcaveragegbenergy.o \
-       calcaveragesaenergy.o \
        calcaverageextraenergies.o \
        calcbond.o \
        calcdihedral.o \
@@ -145,7 +143,6 @@ OBJS = addacid.o \
        closeprogram.o \
        convertres.o \
        copysolvent.o \
-       covalentradius.o \
        createconnectivitymap.o \
        createresresconnectivitymap.o \
        cross.o \
@@ -162,7 +159,6 @@ OBJS = addacid.o \
        dualtopologysasa.o \
        dump.o	\
        duplicatesolute.o \
-       elementname.o \
        epslon.o \
        equilibrate.o \
        extraenergy.o \
@@ -293,13 +289,11 @@ OBJS = addacid.o \
        interpretposition.o \
        interresidueresidueenergy.o \
        intraresidueproteinenergy.o \
-       isbackbone.o \
        join.o \
        join2.o \
        lambdaderivative.o	\
        lambdare.o	\
        lreenergy.o	\
-       lambdamove.o \
        leftjustify.o \
        linelength.o \
        loadgc.o \
@@ -331,14 +325,12 @@ OBJS = addacid.o \
        movevolume.o \
        multiplemovesenergy.o \
        namestring.o \
-       notbonded.o \
        openfile.o \
        openstreamfiles.o \
        parseargs.o \
        parsefile.o \
        perturbforcefield.o \
        popallresidueenergy.o \
-       popdeletesolventcoords.o \
        popgcsolutecoords.o \
        poppdacont.o \
        popresiduecoords.o \
@@ -350,8 +342,6 @@ OBJS = addacid.o \
        printallextraenergies.F	\
        printattemptaccept.o \
        printaverages.o \
-       printaveragegbenergy.o \
-       printaveragesaenergy.o \
        printaverageextraenergies.o \
        printboxbar.o \
        printboxtext.o \
@@ -408,7 +398,6 @@ OBJS = addacid.o \
        readinfo.o \
        readinfoline.o \
        readint.o \
-       readlogical.o \
        readoverride.o \
        readpdbline.o \
        readresidueoverride.o \
@@ -490,7 +479,6 @@ OBJS = addacid.o \
        setequilibriumgeometry.o \
        setforwardsstructure.o \
        setgcsolutemoved.o \
-       setinitialtitrationstate.o \
        setkey.o \
        setlength.o \
        setproteingeometry.o \
@@ -561,7 +549,6 @@ OBJS = addacid.o \
        specifiedbond.o \
        split.o \
        split2.o \
-       splitchar.o \
        splitDDDSAsimulate.o \
        splitGBSAsimulate.o \
        stddev.o \
@@ -580,7 +567,6 @@ OBJS = addacid.o \
        takeacid.o \
        takebase.o \
        testenergies.o \
-       teststring.o \
        thetamove.o \
        titrationmove.o \
        totalenergy.o \
@@ -903,10 +889,6 @@ calcaverageenergy.o:
 calcaverageextraenergies.o: flags.inc dimensions.inc extraenergies.inc gb.inc
 calcaverageextraenergies.o: surface.inc constants.inc printer.inc
 calcaverageextraenergies.o:
-calcaveragegbenergy.o: dimensions.inc gb.inc constants.inc
-calcaveragegbenergy.o:
-calcaveragesaenergy.o: dimensions.inc constants.inc surface.inc
-calcaveragesaenergy.o:
 calcbond.o: enums.inc simparams.inc proteins.inc dimensions.inc solutes.inc
 calcbond.o: constants.inc printer.inc
 calcbond.o:
@@ -1304,8 +1286,6 @@ interresidueresidueenergy.o: flags.inc quickpot.inc nbinitial.inc
 interresidueresidueenergy.o:
 intraresidueproteinenergy.o: proteins.inc dimensions.inc constants.inc
 intraresidueproteinenergy.o:
-isbackbone.o: proteins.inc dimensions.inc
-isbackbone.o:
 join.o: dimensions.inc splitter.inc
 join.o:
 join2.o: dimensions.inc splitter.inc
@@ -1314,8 +1294,6 @@ lambdaderivative.o: enums.inc proteins.inc dimensions.inc solutes.inc
 lambdaderivative.o: constants.inc solvents.inc printer.inc flags.inc
 lambdaderivative.o: simparams.inc energies.inc quickpot.inc movelist.inc
 lambdaderivative.o:
-lambdamove.o: dimensions.inc printer.inc
-lambdamove.o:
 lambdare.o: enums.inc dimensions.inc gb.inc constants.inc printer.inc
 lambdare.o: averages.inc simparams.inc flags.inc parallel.inc splitter.inc
 lambdare.o:
@@ -1405,8 +1383,6 @@ multiplemovesenergy.o: simparams.inc energies.inc movelist.inc
 multiplemovesenergy.o:
 namestring.o: proteins.inc dimensions.inc
 namestring.o:
-notbonded.o: proteins.inc enums.inc dimensions.inc solutes.inc
-notbonded.o:
 openfile.o: parallel.inc flags.inc dimensions.inc printer.inc
 openfile.o:
 openstreamfiles.o: dimensions.inc splitter.inc printer.inc
@@ -1420,8 +1396,6 @@ perturbforcefield.o:
 popallresidueenergy.o: enums.inc proteins.inc energies.inc dimensions.inc
 popallresidueenergy.o: solutes.inc printer.inc stacks.inc
 popallresidueenergy.o:
-popdeletesolventcoords.o: enums.inc dimensions.inc printer.inc stacks.inc
-popdeletesolventcoords.o:
 popgcsolutecoords.o: enums.inc dimensions.inc solvents.inc printer.inc
 popgcsolutecoords.o: stacks.inc
 popgcsolutecoords.o:
@@ -1449,10 +1423,6 @@ printaverages.o: solvents.inc moves.inc parallel.inc enums.inc parameters.inc
 printaverages.o: printer.inc averages.inc simparams.inc flags.inc metropolis.inc
 printaverages.o: energies.inc pressure.inc stacks.inc
 printaverages.o:
-printaveragesaenergy.o: dimensions.inc constants.inc surface.inc printer.inc
-printaveragesaenergy.o:
-printaveragegbenergy.o: dimensions.inc gb.inc constants.inc printer.inc
-printaveragegbenergy.o:
 printboxtext.o: dimensions.inc splitter.inc
 printboxtext.o:
 printenergies.o: energies.inc dimensions.inc printer.inc
@@ -1585,8 +1555,6 @@ readinfoline.o: dimensions.inc splitter.inc
 readinfoline.o:
 readint.o: dimensions.inc printer.inc
 readint.o:
-readlogical.o: dimensions.inc printer.inc
-readlogical.o:
 readoverride.o: enums.inc dimensions.inc splitter.inc printer.inc
 readoverride.o:
 readparfile.o: proteins.inc dimensions.inc splitter.inc printer.inc
@@ -1834,9 +1802,6 @@ setforwardsstructure.o: simparams.inc dimensions.inc solutes.inc
 setforwardsstructure.o:
 setgcsolutemoved.o: dimensions.inc solvents.inc printer.inc movelist.inc
 setgcsolutemoved.o:
-setinitialtitrationstate.o: enums.inc proteins.inc flags.inc simparams.inc
-setinitialtitrationstate.o: dimensions.inc printer.inc
-setinitialtitrationstate.o:
 setkey.o: keyset.inc printer.inc
 setkey.o:
 setlength.o: dimensions.inc constants.inc
@@ -2004,8 +1969,6 @@ splitGBSAsimulate.o: enums.inc dimensions.inc printer.inc flags.inc
 splitGBSAsimulate.o: simparams.inc energies.inc extraenergies.inc gb.inc
 splitGBSAsimulate.o: surface.inc quickpot.inc pressure.inc
 splitGBSAsimulate.o:
-splitchar.o: splitter.inc
-splitchar.o:
 storeborndata.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc
 storeborndata.o: solvents.inc printer.inc flags.inc energies.inc quickpot.inc
 storeborndata.o:

@@ -26,7 +26,7 @@ c#################################################################
      .                   MAXSOLCOORDDEPTH,")"
         call printLine(WARNING,printstring)
         call printLine(WARNING,"Increase MAXSOLCOORDDEPTH and recompile")
-        call closeProgram(-1,"ProtoMC exiting as the stack is too small")
+        call closeProgram(-1,"ProtoMS exiting as the stack is too small")
       endif
       
 c     now save the coordinates
