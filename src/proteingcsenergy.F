@@ -46,7 +46,7 @@ c#####################################################################
         ljnrgb = ljnrgb + iljnrgb
         if (imindist.lt.mindist) mindist = imindist
       enddo
-
+      
       proteinGCSoluteEnergy = nrg
 
       return
