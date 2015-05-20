@@ -5,7 +5,7 @@
       include 'printer.inc'
 c############################################
 c
-c     This routine parses the ProtoMC 
+c     This routine parses the ProtoMS 
 c     command file and reads each key
 c     and its associated option
 c

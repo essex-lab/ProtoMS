@@ -8,7 +8,7 @@
 c############################################################
 c
 c     This routine reads in the new style free format
-c     unified ProtoMC parameter files. These files contain
+c     unified ProtoMS parameter files. These files contain
 c     the complete description of the forcefield, e.g.
 c     parameters and templates!
 c

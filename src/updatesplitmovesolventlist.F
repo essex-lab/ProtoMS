@@ -27,7 +27,7 @@ c          call printLine(DEBUG,printstring)
      .        MAXSPLITSVNMOVED,")"
             call printLine(WARNING,printstring)
             call printLine(WARNING,"Increase MAXSPLITSOLMOVED and recompile")
-            call closeProgram(-1,"ProtoMC exiting as the list is too small")
+            call closeProgram(-1,"ProtoMS exiting as the list is too small")
           endif
 c         Save Solute
           SplitSvnMovedList(nSvnSplitMoved) = isvn

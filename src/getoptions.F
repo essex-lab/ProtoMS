@@ -519,7 +519,7 @@ c     end of do-while
 
 c     check that at least something will be loaded!
       if (NProteins.eq.0 .and. NSolutes.eq.0 .and. NSolvents.eq.0) then
-        call closeProgram(-1,"Nothing has been loaded - ProtoMC cannot continue!")
+        call closeProgram(-1,"Nothing has been loaded - ProtoMS cannot continue!")
       endif
 
 c     Assign the Surface Area terms to each CLJ type that was loaded

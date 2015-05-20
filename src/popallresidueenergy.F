@@ -22,11 +22,11 @@ c##########################################################
      .      " not aligned! ",newStackDepth,oldStackDepth
         call printLine(WARNING,printstring)
         call printLine(WARNING,"This is a severe programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting because of a severe programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting because of a severe programming bug!")
       else if (newStackDepth.le.0) then
         write(printstring,*) "We have popped off the end of the residue energy stacks!"
         call printLine(WARNING,"This is a severe programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting because of a severe programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting because of a severe programming bug!")
       endif
       
 c     first extract the new and old energies...

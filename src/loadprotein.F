@@ -197,7 +197,7 @@ c         if iatm < 0 then this is a BB atom
           if (iatm.lt.0) then
             iatm = -iatm
             if (iatm.gt.4) then
-              write(printstring,*) "Serious problem with ProtoMC BB atom assignment from line ",
+              write(printstring,*) "Serious problem with ProtoMS BB atom assignment from line ",
      .                             "! This is a bug!"
               call printLine(WARNING,printstring)
               goto 100

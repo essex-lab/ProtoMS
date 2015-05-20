@@ -17,7 +17,7 @@ c###############################################################
       if (gcsCoordDepth.le.0) then
         call printLine(WARNING,"We have popped off the end of the gc-solute coordinate stack!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
 
       igcs = stackGCSCoord(gcsCoordDepth)
@@ -25,14 +25,14 @@ c###############################################################
       if (igcs.le.0 .or. igcs.gt.NGCSolutes) then
         call printLine(WARNING,"The gc-solute stack contains an invalid solute molecule!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
       
       nats = NGCSAtoms(igcs)
       if (nats.le.0) then
         call printLine(WARNING,"The solute stack contains an invalid number of atoms!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
       
       do j=1,3

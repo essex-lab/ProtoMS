@@ -28,7 +28,7 @@ c###############################################################
 
       integer updatenrg,movnum,movtyp,igcs,ranInt,savenrg
       double precision GCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb,ranval,ranRange
-      double precision ieold,ienew,thetaold,nrg,potential,biasPotential
+      double precision ieold,ienew,thetaold,nrg,potential
       character*4 statstring
       logical metropolis
       
@@ -49,7 +49,7 @@ c     Get the old energy of the theta molecule
       ieold = GCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
 
 c     Get the bias
-      potential = biasPotential(igcs,potential)
+      call biasPotential(igcs,potential)
 
 c     Add the bias onto the old energy of the gcsolute
       ieold = ieold + potential
@@ -72,7 +72,7 @@ c     Get the new energy
       ienew = GCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
 
 c     Get the bias
-      potential = biasPotential(igcs,potential)
+      call biasPotential(igcs,potential)
 
 c     Add the bias onto the new energy of the gcsolute
       ienew = ienew + potential

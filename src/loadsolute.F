@@ -194,11 +194,11 @@ c     make sure that the solute has a name
         lgth = lineLength(filename)
         write(printstring,*) "You haven't named the solute in file ",filename(1:lgth)
         call printLine(WARNING,printstring)
-        call printLine(WARNING,"You need to name the solute so that ProtoMC can find its template.")
+        call printLine(WARNING,"You need to name the solute so that ProtoMS can find its template.")
         call printLine(WARNING,"You name a solute by adding the line;")
         call printLine(WARNING,"header solutename")
         call printLine(WARNING,"to the pdb file (where 'solutename' is the name of the solute).")
-        call printLine(WARNING,"ProtoMC will now continue, naming the solute after the filename")
+        call printLine(WARNING,"ProtoMS will now continue, naming the solute after the filename")
         SoluteName(isol) = filename(1:lgth)
       endif
       
