@@ -18,7 +18,7 @@ c###############################################################
       if (svnCoordDepth.le.0) then
         call printLine(WARNING,"We have popped off the end of the solvent coordinate stack!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
 
       isvn = stackSvnCoord(svnCoordDepth)
@@ -26,14 +26,14 @@ c###############################################################
       if (isvn.le.0 .or. isvn.gt.NSolvents) then
         call printLine(WARNING,"The solvent stack contains an invalid solvent molecule!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
       
       nats = NSvnAtoms(isvn)
       if (nats.le.0) then
         call printLine(WARNING,"The solvent stack contains an invalid number of atoms!")
         call printLine(WARNING,"This is a serious programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting as it has detected a serious programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting as it has detected a serious programming bug!")
       endif
       
       do j=1,3

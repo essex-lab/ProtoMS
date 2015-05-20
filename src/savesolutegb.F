@@ -18,7 +18,7 @@ c##############################################
       countGBSolute = countGBSolute + 1
       if (countGBSolute .gt. MAXSOLUTES) then
         call printLine(WARNING,"Increase MAXSOLUTES  and recompile")
-        call closeProgram(-1,"ProtoMC exiting !")
+        call closeProgram(-1,"ProtoMS exiting !")
       endif
       
 c     now save the coordinates

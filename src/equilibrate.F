@@ -16,7 +16,7 @@ c###########################################################
       integer i,imov     
       integer NAcceptedMoves,NTotalMoves
       integer getMoveType
-      logical residueMove,titrationMove,lambdaMove,solventMove,soluteMove
+      logical residueMove,titrationMove,solventMove,soluteMove
       logical thetaMove, sampleMove,gcsoluteMove,deletionMove,insertionMove
       logical volumeMove,rotamerMove,solThetaMove
       logical templ

@@ -45,7 +45,7 @@ c
           if (SolADel(jsol) .gt. ZERO .and. SolADel(isol).gt.ZERO) call translateSolute(jsol,ranvec)
         else
           call getVectorOnSphere(ranvec)
-          ranval = ranRange(-SolADel(isol),SolADel(isol))
+          ranval = ranRange(-SolADel(jsol),SolADel(jsol))
           do i=1,3
             ranvec(i) = ranval * ranvec(i)
           enddo

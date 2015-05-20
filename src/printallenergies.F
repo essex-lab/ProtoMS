@@ -508,7 +508,7 @@ c           lj
        endif
        
 c      print out the averages of the extra energy terms
-       call printAverageExtraEnergies
+       call printAllExtraEnergies
  
 c     print out free energy stuff
       call dGEnergies

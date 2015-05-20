@@ -26,7 +26,7 @@ c########################################################
      .                   MAXSVNCOORDDEPTH,")"
         call printLine(WARNING,printstring)
         call printLine(WARNING,"Increase MAXSVNCOORDDEPTH and recompile")
-        call closeProgram(-1,"ProtoMC is exiting as the solvent stack is too small")
+        call closeProgram(-1,"ProtoMS is exiting as the solvent stack is too small")
       endif
       
 c     now save the coordinates, as well as the centre

@@ -47,7 +47,7 @@ c       (though Length(xAxis) = 1.0)
           write(printstring,*) "Problem calculating beta in getAxisVectors() beta = 0.0!"
           call printLine(WARNING,printstring)
           call printLine(WARNING,"This is either the result of a programming bug or numerical instability")
-          call closeProgram(-1,"ProtoMC is exiting as it may have detected a numerical instability")
+          call closeProgram(-1,"ProtoMS is exiting as it may have detected a numerical instability")
         endif
         do i=1,3
           yAxis(i) = (yAxis(i) - (alpha*xAxis(i))) / beta
