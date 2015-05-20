@@ -350,7 +350,7 @@ OBJS = addacid.o \
        printallextraenergies.F	\
        printattemptaccept.o \
        printaverages.o \
-       printaveragesgbenergy.o \
+       printaveragegbenergy.o \
        printaveragesaenergy.o \
        printaverageextraenergies.o \
        printboxbar.o \
@@ -370,7 +370,7 @@ OBJS = addacid.o \
        processhardwallline.o \
        processrestraintline.o \
        processsolventline.o \
-       proteingcsenergy.o \
+       proteingcsoluteenergy.o \
        proteinintraenergy.o \
        proteinproteinenergy.o \
        proteinresresbondlist.o \
@@ -446,7 +446,7 @@ OBJS = addacid.o \
        removeexcesscapsolvent.o \
        residuedetailedintraenergy.o \
        residueenergy.o \
-       residuegcsolutenergy.o \
+       residuegcsoluteenergy.o \
        residueintraenergy.o \
        residueintragbenergy.o \
        residueintranbenergy.o \
@@ -503,7 +503,7 @@ OBJS = addacid.o \
        setupreplicas.o \
        setzmatrixgeometry.o \
        sgrnd.o \
-       shigh.o \
+       savehigh.o \
        shutdown.o \
        sigma.o \
        simulate.o \
@@ -512,7 +512,7 @@ OBJS = addacid.o \
        savesolutegb.o \
        savesolventgb.o \
        saveresiduegb.o \
-       slow.o \
+       savelow.o \
        solthetamove.o	\
        solutebornintrapda.o \
        solutedetailedintraenergy.o \
@@ -617,7 +617,7 @@ OBJS = addacid.o \
        writenumberstring.o \
        writedoublestring.o	\
        writerestart.o \
-       writezmatrix.o \
+       writemcpro.o \
        zeroallpdacont.o \
        zeropdacont.o 
 
@@ -1451,8 +1451,8 @@ printaverages.o: energies.inc pressure.inc stacks.inc
 printaverages.o:
 printaveragesaenergy.o: dimensions.inc constants.inc surface.inc printer.inc
 printaveragesaenergy.o:
-printaveragesgbenergy.o: dimensions.inc gb.inc constants.inc printer.inc
-printaveragesgbenergy.o:
+printaveragegbenergy.o: dimensions.inc gb.inc constants.inc printer.inc
+printaveragegbenergy.o:
 printboxtext.o: dimensions.inc splitter.inc
 printboxtext.o:
 printenergies.o: energies.inc dimensions.inc printer.inc
@@ -1492,9 +1492,9 @@ processrestraintline.o: splitter.inc
 processrestraintline.o:
 processsolventline.o: dimensions.inc splitter.inc constants.inc printer.inc
 processsolventline.o:
-proteingcsenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
-proteingcsenergy.o: solvents.inc
-proteingcsenergy.o:
+proteingcsoluteenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
+proteingcssoluteenergy.o: solvents.inc
+proteingcssoluteenergy.o:
 proteinintraenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
 proteinintraenergy.o:
 proteinproteinenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
@@ -1689,8 +1689,8 @@ residuedetailedintraenergy.o:
 residueenergy.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
 residueenergy.o: constants.inc printer.inc simparams.inc energies.inc
 residueenergy.o:
-residuegcsolutenergy.o: proteins.inc dimensions.inc constants.inc solvents.inc
-residuegcsolutenergy.o:
+residuegcsoluteenergy.o: proteins.inc dimensions.inc constants.inc solvents.inc
+residuegcsoluteenergy.o:
 residueintraenergy.o: proteins.inc enums.inc dimensions.inc constants.inc
 residueintraenergy.o:
 residueintragbenergy.o: enums.inc proteins.inc dimensions.inc gb.inc
@@ -1858,10 +1858,10 @@ setupreplicas.o: printer.inc
 setupreplicas.o:
 setzmatrixgeometry.o: dimensions.inc printer.inc
 setzmatrixgeometry.o:
-shigh.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc parameters.inc
-shigh.o: solvents.inc constants.inc printer.inc moves.inc simparams.inc
-shigh.o: flags.inc energies.inc metropolis.inc quickpot.inc stacks.inc
-shigh.o:
+savehigh.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc parameters.inc
+savehigh.o: solvents.inc constants.inc printer.inc moves.inc simparams.inc
+savehigh.o: flags.inc energies.inc metropolis.inc quickpot.inc stacks.inc
+savehigh.o:
 shutdown.o: version.inc printer.inc
 shutdown.o:
 sigma.o: dimensions.inc constants.inc parameters.inc
@@ -1876,10 +1876,10 @@ simulation.o: averages.inc simparams.inc flags.inc splitter.inc
 simulation.o:
 singlepointenergy.o: enums.inc dimensions.inc printer.inc
 singlepointenergy.o:
-slow.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc parameters.inc
-slow.o: solvents.inc constants.inc printer.inc moves.inc simparams.inc flags.inc
-slow.o: energies.inc metropolis.inc quickpot.inc stacks.inc
-slow.o:
+savelow.o: proteins.inc enums.inc dimensions.inc solutes.inc gb.inc parameters.inc
+savelow.o: solvents.inc constants.inc printer.inc moves.inc simparams.inc flags.inc
+savelow.o: energies.inc metropolis.inc quickpot.inc stacks.inc
+savelow.o:
 solthetamove.o: enums.inc dimensions.inc solutes.inc gb.inc constants.inc
 solthetamove.o: solvents.inc printer.inc moves.inc simparams.inc flags.inc
 solthetamove.o: energies.inc metropolis.inc quickpot.inc stacks.inc
@@ -2137,8 +2137,8 @@ volumemove.o:
 writerestart.o: enums.inc proteins.inc dimensions.inc solutes.inc solvents.inc
 writerestart.o: printer.inc simparams.inc flags.inc stacks.inc
 writerestart.o:
-writezmatrix.o: enums.inc proteins.inc dimensions.inc parameters.inc printer.inc
-writezmatrix.o:
+writemcpro.o: enums.inc proteins.inc dimensions.inc parameters.inc printer.inc
+writemcpro.o:
 zeroallpdacont.o: proteins.inc dimensions.inc solutes.inc gb.inc solvents.inc
 zeroallpdacont.o: parameters.inc constants.inc
 zeroallpdacont.o:
