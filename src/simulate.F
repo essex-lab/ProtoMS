@@ -49,8 +49,14 @@ c       4 in the line below stands for the lenght of 'dump'
           ndumps = ndumps + 1
           call split(values(k))
           call lowercase(words(1))
-          fdumps(ndumps) = nint(getDouble(words(1),0))
-          kdumps(ndumps) = k
+          fdumps(ndumps) = nint(getDouble(words(1),-1))
+          if (fdumps(ndumps).gt.0) then
+            kdumps(ndumps) = k
+          else
+            ndumps = ndumps -1
+            write(printstring,*) "Ignoring dump: unable to parse frequency or frequency less than 1: ", words(1)
+            call printLine(WARNING,printstring)            
+          endif  
         endif
       enddo
 

@@ -401,7 +401,7 @@ c     get the names of all of the parameter files and read them in
 c     (as the parameter files may change some of the default options)
 c     Keep reading parameter files while we have them
       do i=1,nkeys
-c       7 in the line below stands for the lenght of 'dump'
+c       7 in the line below stands for the lenght of 'parfile'
         if (keys(i)(1:7).eq.'parfile') then
           call split(values(i))
 c         copy words(1) to filename as readParFile will overwrite 'words' when
