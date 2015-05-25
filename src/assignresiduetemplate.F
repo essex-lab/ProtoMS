@@ -87,8 +87,9 @@ c     the last atom is at zstrt + nats
       if (zend.gt.MAXATOMS) then
         write(printstring,*) "Exceeded maximum number of protein atoms (",
      .                       MAXATOMS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXATOMS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXATOMS and recompile"
+        call closeProgram(-1,printstring)
         return
       endif      
 

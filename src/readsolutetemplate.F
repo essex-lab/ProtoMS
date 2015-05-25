@@ -44,8 +44,9 @@ c       clear the current version of the solute template
         if (itmpl.gt.MAXMOLTEMPLATES) then
           write(printstring,*) "Exceeded maximum number of molecule templates (",
      .                         MAXMOLTEMPLATES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXMOLTEMPLATES and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXMOLTEMPLATES and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NMolTemplates = itmpl

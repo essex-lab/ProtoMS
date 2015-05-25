@@ -46,8 +46,9 @@ c     now add the angle...
       NDihedrals(iprot) = NDihedrals(iprot) + 1
       if (NDihedrals(iprot).gt.MAXDIHEDRALS) then
         write(printstring,*) "Exceeded maximum number of protein dihedrals! (",MAXDIHEDRALS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXDIHEDRALS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXDIHEDRALS and recompile"
+        call closeProgram(-1,printstring)
         NDihedrals(iprot) = NDihedrals(iprot) - 1
         return
       endif
@@ -77,8 +78,9 @@ c     now add the Dihedral to the residue
       NResDihedrals(iprot,ires1) = NResDihedrals(iprot,ires1) + 1
       if (NResDihedrals(iprot,ires1).gt.MAXDIHEDRALSPERRESIDUE) then
         write(printstring,*) "Too many dihedrals in residue ",ResNam(iprot,ires1),"-",ResNum(iprot,ires1)
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXDIHEDRALSPERRESIDUE and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXDIHEDRALSPERRESIDUE and recompile"
+        call closeProgram(-1,printstring)
         NResDihedrals(iprot,ires1) = NResDihedrals(iprot,ires1) - 1
         return
       endif
@@ -87,8 +89,9 @@ c     now add the Dihedral to the residue
         NResDihedrals(iprot,ires2) = NResDihedrals(iprot,ires2) + 1
         if (NResDihedrals(iprot,ires2).gt.MAXDIHEDRALSPERRESIDUE) then
           write(printstring,*) "Too many dihedrals in residue ",ResNam(iprot,ires2),"-",ResNum(iprot,ires2)
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXDIHEDRALSPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXDIHEDRALSPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)
           NResDihedrals(iprot,ires2) = NResDihedrals(iprot,ires2) - 1
           return
         endif
@@ -98,8 +101,9 @@ c     now add the Dihedral to the residue
         NResDihedrals(iprot,ires3) = NResDihedrals(iprot,ires3) + 1
         if (NResDihedrals(iprot,ires3).gt.MAXDIHEDRALSPERRESIDUE) then
           write(printstring,*) "Too many dihedrals in residue ",ResNam(iprot,ires3),"-",ResNum(iprot,ires3)
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXDIHEDRALSPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXDIHEDRALSPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)
           NResDihedrals(iprot,ires3) = NResDihedrals(iprot,ires3) - 1
           return
         endif
@@ -109,8 +113,9 @@ c     now add the Dihedral to the residue
         NResDihedrals(iprot,ires4) = NResDihedrals(iprot,ires4) + 1
         if (NResDihedrals(iprot,ires4).gt.MAXDIHEDRALSPERRESIDUE) then
           write(printstring,*) "Too many dihedrals in residue ",ResNam(iprot,ires4),"-",ResNum(iprot,ires4)
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXDIHEDRALSPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXDIHEDRALSPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)
           NResDihedrals(iprot,ires4) = NResDihedrals(iprot,ires4) - 1
           return
         endif

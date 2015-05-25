@@ -86,8 +86,9 @@ c       format is "atom name bndatm angatm dihatm", ipar0 and ipar1 implicitly =
         nat = NTemplateAtms(itmpl) + 1
         if (nat .gt. MAXTEMPLATEATMS) then
           write(printstring,*) "Exceeded maximum number of template atoms (",MAXTEMPLATEATMS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXTEMPLATEATMS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXTEMPLATEATMS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NTemplateAtms(itmpl) = nat      

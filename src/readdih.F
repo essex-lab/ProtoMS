@@ -118,9 +118,9 @@ c         read in ik4 and convert from degrees to radians
             goto 100
           else if (ipar.gt.MAXDIHTERMS) then
             write(printstring,*) "Parameter ",ipar," is too large (",MAXDIHTERMS,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,line)
-            call printLine(WARNING,"Increase MAXDIHTERMS and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXDIHTERMS and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
           
@@ -171,9 +171,10 @@ c             from here on in we have a comment! - break out of the loop
           else if (npar.gt.MAXDIHTERMSPERDIHEDRAL) then
             write(printstring,*) "Exceeded maximum number of terms per dihedral (",
      .                           MAXDIHTERMSPERDIHEDRAL,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,line)
-            call printLine(WARNING,"Increase MAXDIHTERMSPERDIHEDRAL and recompile")
+            call printLine(FATAL,printstring)
+            call printLine(FATAL,line)
+            write(printstring,*)"Increase MAXDIHTERMSPERDIHEDRAL and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
                
@@ -186,9 +187,10 @@ c         read in the dihedral parameter
           else if (ipar.gt.MAXDIHPARAM) then
             write(printstring,*) "Exceeded maximum number of dihedral parameters (",
      .                           MAXDIHPARAM,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,line)
-            call printLine(WARNING,"Increase MAXDIHPARAM and recompile")
+            call printLine(FATAL,printstring)
+            call printLine(FATAL,line)
+            write(printstring,*)"Increase MAXDIHPARAM and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           else if (GotDihParam(ipar)) then
             write(printstring,*) "Overwriting dihedral parameter ",ipar
@@ -286,8 +288,9 @@ c           load the new dihedral term into the array
             if (id.gt.MAXDIHPARAM) then
               write(printstring,*) "Exceeded maximum number of dihedral parameters (",
      .                             MAXDIHPARAM,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXDIHPARAM and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXDIHPARAM and recompile"
+              call closeProgram(-1,printstring)
               goto 100
             endif
               

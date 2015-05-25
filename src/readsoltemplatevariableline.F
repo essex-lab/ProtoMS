@@ -31,8 +31,9 @@ c     increment the number of variable geometries
       if (ivar.gt.MAXMOLTEMPLVAR) then
         write(printstring,*) "Exceeded maximum number of template solute variations (",
      .                        MAXMOLTEMPLVAR,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXMOLTEMPLVAR and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXMOLTEMPVAR and recompile"
+        call closeProgram(-1,printstring)
         NMolTemplVar(itmpl) = NMolTemplVar(itmpl) - 1
       endif
       

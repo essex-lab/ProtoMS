@@ -144,8 +144,9 @@ c           this is the first atom of a new solvent...
             isvn = NSolvents + 1
             if (isvn.gt.MAXSOLVENTS) then
               write(printstring,*) "Exceeded maximum number of solvent molecules, ",MAXSOLVENTS
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXSOLVENTS and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXSOLVENTS and recompile"
+              call closeProgram(-1,printstring)
               goto 100
             endif
             
@@ -161,8 +162,9 @@ c           this is the first atom of a new solvent...
           if (iatm.gt.MAXSOLVENTATOMS) then
             write(printstring,*) "Exceeded maximum number of atoms per solvent molecule (",
      .                           MAXSOLVENTATOMS,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXSOLVENTATOMS and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXSOLVENTATOMS and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
           

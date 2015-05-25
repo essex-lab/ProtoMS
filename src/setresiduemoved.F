@@ -25,8 +25,9 @@ c     do not need to do this if everything is already moved
       in = nResMoved + 1
       if (in.gt.MAXRESMOVED) then
         write(printstring,*) "Exceeded maximum number of moved residues (",MAXRESMOVED,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXRESMOVED and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXRESMOVED and recompile"
+        call closeProgram(-1,printstring)
         return
       endif
       

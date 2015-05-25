@@ -53,9 +53,9 @@ c       increment the number of chain templates
         if (itmpl.gt.MAXCHAINTEMPLATES) then
           write(printstring,*) "Exceeded maximum number of backbone chain templates (",
      .                          MAXCHAINTEMPLATES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXCHAINTEMPLATES and recompile")
-          call printLine(WARNING,line)
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXCHAINTEMPLATES and recompile"
+          call closeProgram(-1,printstring)
           changemode = .true.
           return
         endif

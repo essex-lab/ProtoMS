@@ -40,8 +40,9 @@ c       we need to add this residue override template
         itmpl = NResOverrides(ipos) + 1
         if (itmpl.gt.MAXTEMPLATES) then
           write(printstring,*) "Exceeded maximum number of override templates (",MAXTEMPLATES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXTEMPLATES and recompile!")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXTEMPLATES and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NResOverrides(ipos) = itmpl
@@ -52,8 +53,9 @@ c       now create an override template in the override template array
         NOverrides = NOverrides + 1
         if (NOverrides.gt.MAXOVERRIDES) then
           write(printstring,*) "Exceeded maximum number of override templates (",MAXOVERRIDES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXOVERRIDES and recompile!")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXOVERRIDES and recompile"
+          call closeProgram(-1,printstring)
           NOverrides = MAXOVERRIDES
           NResOverrides(ipos) = itmpl-1
           return
@@ -104,8 +106,9 @@ c         read in an override atom line, format 'atom name ipar0 ipar1' or 'atom
           if (iatm.gt.MAXOVERRIDEPARAMS) then
             write(printstring,*) "Exceeded maximum number of override parameters per template (",
      .                            MAXOVERRIDEPARAMS,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXOVERRIDEPARAMS and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXOVERRIDEPARAMS and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
           

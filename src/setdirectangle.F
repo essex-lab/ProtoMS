@@ -71,8 +71,9 @@ c     now add this variable angle
       if (NVarAngleParam.gt.MAXVARIABLEPARAM) then
         write(printstring,*) "Exceeded number of variable angle parameters (",
      .               MAXVARIABLEPARAM,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXVARIABLEPARAM and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXVARIABLEPARAM and recompile"
+        call closeProgram(-1,printstring)
         NVarAngleParam = NVarAngleParam - 1
         return
       endif

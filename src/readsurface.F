@@ -64,9 +64,10 @@ c         read the AMBER atom type - not that this *is* case-sensitive
             goto 100
           else if (ipar.gt.MAXSATYPES) then
             write(printstring,*) "Parameter ",ipar," is too large (",MAXSATYPES,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,line)
-            call printLine(WARNING,"Increase MAXSATYPES and then recompile.")
+            call printLine(FATAL,printstring)
+            call printLine(FATAL,line)
+            write(printstring,*)"Increase MAXSATYPES and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
 c         print a warning if we are overwriting atom types

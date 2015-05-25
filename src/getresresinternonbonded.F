@@ -57,8 +57,9 @@ c           function bondedResResEnergy will create the inverse of this array)
             if (n.gt.MAXRESRESNB) then
               write(printstring,*) "Exceeded maximum number of bonded-residue bonded pairs. (",
      .                             MAXRESRESNB,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXRESRESNB and recompile.")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXRESRESNB and recompile"
+              call closeProgram(-1,printstring)
             else
               ResResNB(iprot,ibndindex,n,1) = i
               ResResNB(iprot,ibndindex,n,2) = j
@@ -72,8 +73,9 @@ c           these atoms are 1-4 bonded!
             if (n.gt.MAXRESRESNB14) then
               write(printstring,*) "Exceeded maximum number of bonded residue 14-pairs. (",
      .                             MAXRESRESNB14,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXRESRESNB14 and recompile.")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXRESRESNB14 and recompile"
+              call closeProgram(-1,printstring)
             else
               ResResNB14(iprot,ibndindex,n,1) = i
               ResResNB14(iprot,ibndindex,n,2) = j

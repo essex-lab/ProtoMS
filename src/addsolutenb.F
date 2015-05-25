@@ -21,8 +21,9 @@ c#############################################################
       if (NSolNB(isol).gt.MAXSOLUTENBPAIRS) then
         write(printstring,*) "Exceeded maximum number of solute nb pairs (",
      .                        MAXSOLUTENBPAIRS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLUTENBPAIRS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLUTENBPAIRS and recompile"
+        call closeProgram(-1,printstring)
         NSolNB(isol) = MAXSOLUTENBPAIRS
         return
       endif

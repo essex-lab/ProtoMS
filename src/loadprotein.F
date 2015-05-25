@@ -36,8 +36,9 @@ c##################################################
       
       if (iprot.gt.MAXPROTEINS) then
         write(printstring,*) "Exceeded maximum number of proteins (",MAXPROTEINS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXPROTEINS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXPROTEINS and recompile"
+        call closeProgram(-1,printstring)
         return
       endif
       
@@ -138,7 +139,9 @@ c             we have not yet loaded up this residue
               if (ires.gt.MAXRESIDUES) then
                 write(printstring,*) "Exceeded maximum number of residues per protein (",
      .                    MAXRESIDUES,") on line ",linenum
-                call printLine(WARNING,printstring)
+                call printLine(FATAL,printstring)
+                write(printstring,*)"Increase MAXRESIDUES and recompile"
+                call closeProgram(-1,printstring)
                 goto 100            
               endif
               
@@ -213,8 +216,9 @@ c           this is a side chain atom
             if (iatm.gt.MAXSCATOMS) then
               write(printstring,*) "Exceeded maximum number of sidechain atoms (",
      .                                    MAXSCATOMS,") on line ",linenum
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXSCATOMS and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXSCATOMS and recompile"
+              call closeProgram(-1,printstring)
               goto 100
             endif
             SCNam(iprot,ires,iatm) = atnam

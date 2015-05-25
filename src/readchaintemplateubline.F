@@ -39,8 +39,9 @@ c     read in the atoms involved
         if (iuby.gt.MAXCHAINUREYBRADLEYS) then
           write(printstring,*) "Exceeded maximum number of chain template Urey-Bradley terms (",
      .                         MAXCHAINUREYBRADLEYS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXCHAINUREYBRADLEYS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXCHAINUREYBRADLEYS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NChainUreyBradleys(itmpl) = iuby

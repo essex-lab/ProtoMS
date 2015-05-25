@@ -53,8 +53,9 @@ c     see if the angle already exists
         if (iang.gt.MAXMOLTEMPLATEANGLES) then
           write(printstring,*) "Exceeded maximum number of molecule template angles (",
      .                          MAXMOLTEMPLATEANGLES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXMOLTEMPLATEANGLES and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXMOLTEMPLATEANGLES and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NMolTemplateAngles(itmpl) = iang

@@ -94,8 +94,9 @@ c           save the range of atoms in each residue
             if (nres.gt.MAXSOLUTERESIDUES) then
               write(printstring,*) "Exceeded maximum number of residues per solute (",
      .                           MAXSOLUTERESIDUES,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXSOLUTERESIDUES and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXSOLUTERESIDUES and recompile"
+              call closeProgram(-1,printstring)
               nres = MAXSOLUTERESIDUES
             endif
             

@@ -34,8 +34,9 @@ c       clear the current version of the template
         if (NSvnTemplates.gt.MAXSVNTEMPLATES) then
           write(printstring,*) "Exceeded maximum number of solvent templates (",
      .                MAXSVNTEMPLATES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXSVNTEMPLATES and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXSVNTEMPLATES and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NSvnTemplates = itmpl

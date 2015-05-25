@@ -27,8 +27,9 @@ c      character*2 amber
       nangs = NSolAngles(isol)
       if (nangs.gt.MAXSOLUTEANGLES) then
         write(printstring,*) "Exceeded maximum number of solute angles! (",MAXSOLUTEANGLES,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLUTEANGLES and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLUTEANGLES and recompile"
+        call closeProgram(-1,printstring)
         NSolAngles(isol) = NSolAngles(isol) - 1
         return
       endif

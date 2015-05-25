@@ -31,8 +31,9 @@ c###################################################################
       if (ndihs.gt.MAXSOLUTEDIHEDRALS) then
         write(printstring,*) "Exceeded maximum number of solute dihedrals! (",
      .                        MAXSOLUTEDIHEDRALS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLUTEDIHEDRALS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLUTEDIHEDRALS and recompile"
+        call closeProgram(-1,printstring)
         NSolDihedrals(isol) = NSolDihedrals(isol) - 1
         return
       endif

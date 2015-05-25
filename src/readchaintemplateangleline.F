@@ -41,8 +41,9 @@ c     read in the atoms involved
         if (iang.gt.MAXCHAINANGLES) then
           write(printstring,*) "Exceeded maximum number of chain template angles (",
      .                          MAXCHAINANGLES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXCHAINANGLES and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXCHAINANGLES and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NChainAngles(itmpl) = iang

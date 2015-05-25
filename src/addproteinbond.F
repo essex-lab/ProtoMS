@@ -41,8 +41,9 @@ c     now add the bond...
       nbnds = NBonds(iprot)
       if (nbnds.gt.MAXBONDS) then
         write(printstring,*) "Exceeded maximum number of protein bonds! (",MAXBONDS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXBONDS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXBONDS and recompile"
+        call closeProgram(-1,printstring)
         NBonds(iprot) = NBonds(iprot) - 1
         return
       endif
@@ -70,8 +71,9 @@ c     now add the bond to the residue
       NResBonds(iprot,ires1) = NResBonds(iprot,ires1) + 1
       if (NResBonds(iprot,ires1).gt.MAXBONDSPERRESIDUE) then
         write(printstring,*) "Exceeded maximum number of bonds in residue ",ires1
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXBONDSPERRESIDUE and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXBONDSPERRESIDUE and recompile"
+        call closeProgram(-1,printstring)
         NResBonds(iprot,ires1) = NResBonds(iprot,ires1) - 1
         return
       endif
@@ -81,8 +83,9 @@ c     now add the bond to the residue
         ResidueBond(iprot,ires2,NResBonds(iprot,ires2)) = NBonds(iprot)
         if (NResBonds(iprot,ires2).gt.MAXBONDSPERRESIDUE) then
           write(printstring,*) "Exceeded maximum number of bonds in residue ",ires2
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXBONDSPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXBONDSPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)         
           NResBonds(iprot,ires1) = NResBonds(iprot,ires1) - 1
           return
         endif
