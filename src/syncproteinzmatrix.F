@@ -31,8 +31,9 @@ c       copy the backbone coordinates from the zmatrix array to the residue-cent
               ilgth = lineLength(ProteinName(iprot))
               write(printstring,*) "Serious problem with bbatom ",BBNam(iprot,i,j)," in ",
      .                  ProteinName(iprot)(1:ilgth)," ",ResNam(iprot,i),"-",ResNum(iprot,i)
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"This is a bug, and your simulation is now broken!")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"This is a bug, and your simulation is now broken!"
+              call closeProgram(-1,printstring)
             else
               BBCoord(iprot,i,j,k) = ZCoords(iprot,BBZid(iprot,i,j),k)                  
             endif
@@ -47,8 +48,9 @@ c         update the residue centric coordinates from the zmatrix coordinates
               ilgth = lineLength(ProteinName(iprot))
               write(printstring,*) "Serious problem with atom ",SCNam(iprot,i,j)," in ",
      .                  ProteinName(iprot)(1:ilgth)," ",ResNam(iprot,i),"-",ResNum(iprot,i)
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"This is a bug, and your simulation is now broken!")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"This is a bug, and your simulation is now broken!"
+              call closeProgram(-1,printstring)
             else
               SCCoord(iprot,i,j,k) = ZCoords(iprot,SCZid(iprot,i,j),k)                  
             endif
