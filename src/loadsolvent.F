@@ -181,8 +181,8 @@ c     end of do-while loop
 9600  continue
 c     get here if we could not open the file
       lgth = lineLength(filename)
-      write(printstring,*) "WARNING - unable to load solvent file ",filename(1:lgth)
-      call printLine(WARNING,printstring)
+      write(printstring,*) "FATAL - unable to load solvent PDB file ",filename(1:lgth)
+      call closeProgram(-1,printstring)
       return
 
 9700  continue

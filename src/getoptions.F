@@ -105,8 +105,6 @@ c     whether we are going to use chunks from protein pdb
       PdbParams = .false.
       if (getOption('pdbparams')) then
         PdbParams = getLogical(words(1), PdbParams)
-        write(6,*) 'PdbParams'
-        write(6,*) PdbParams
       endif  
 
 c     whether jaws2 information on each move will be printed to results
@@ -651,7 +649,8 @@ c                 we will rotate these solutes together
               write(printstring,*) "Problem specifying dual topology solutes, ",
      .           "lowgroup = ",lowgroup," and highgroup = ",highgroup
               call printLine(WARNING,printstring)
-              i = i-1
+c             The following line will cause an infinite loop
+c              i = i-1
               goto 200
             endif
             goto 200

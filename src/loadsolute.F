@@ -212,8 +212,8 @@ c     now that the solute has been read, close the file
 9600  continue
 c     get here if we could not open the file
       lgth = lineLength(filename)
-      write(printstring,*) "WARNING - unable to load solute file ",filename(1:lgth)
-      call printLine(WARNING,printstring)
+      write(printstring,*) "FATAL - unable to load solute PDB file ",filename(1:lgth)
+      call closeProgram(-1,printstring)
       return
 
 9700  continue

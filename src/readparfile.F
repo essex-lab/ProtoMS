@@ -201,8 +201,8 @@ c     get here if there was a problem while reading the file
       
 c     get here if there was a problem while opening the file
 9600  continue
-      write(printstring,*) "There was a problem opening the parameter file ",filename(1:ilgth)
-      call printLine(WARNING,printstring)
+      write(printstring,*) "FATAL - There was a problem opening the parameter file ",filename(1:ilgth)
+      call closeProgram(-1,printstring)
       
       return
       

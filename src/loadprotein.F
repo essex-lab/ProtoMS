@@ -234,7 +234,9 @@ c           make sure that we know how many side chain atoms there are
       goto 100
  
 9600  continue
-      call printLine(WARNING,"Problem opening protein file!")
+      lgth = lineLength(pfile)
+      write(printstring,*) "FATAL - unable to load protein PDB file ",pfile(1:lgth)
+      call closeProgram(-1,printstring)
       return
 9700  continue
       write(printstring,*) "Error while reading protein file line ",linenum,
