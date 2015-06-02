@@ -1102,8 +1102,9 @@ class ResultsFile :
       for elabel in self.series.feenergies :
         self.series.feenergies[elabel] = np.zeros(nsnap)
     if hasattr(self.snapshots[0],"thetavals") :
-      for elabel in self.series.thetavals :
-        self.series.thetavals[elabel] = np.zeros(nsnap)
+      self.series.thetavals = [np.zeros(nsnap) for i in self.snapshots[0].thetavals]
+      #for elabel in self.series.thetavals :
+      #  self.series.thetavals[elabel] = np.zeros(nsnap)
 
     # Then loop over all snapshots and fill the NumpyArrays with data
     for i,snapshot in enumerate(self.snapshots) :
@@ -1128,9 +1129,11 @@ class ResultsFile :
           if elabel not in self.series.feenergies : continue
           self.series.feenergies[elabel][i] = snapshot.feenergies[elabel]
       if hasattr(snapshot,"thetavals") :
-        for elabel in snapshot.thetavals :
-          if elabel not in self.series.thetavals : continue
-          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
+#        for elabel in snapshot.thetavals :
+#          if elabel not in self.series.thetavals : continue
+        for j in range(len(self.series.thetavals)) :
+#          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
+          self.series.thetavals[j][i] = snapshot.thetavals[j]
 
     return self.series
 
