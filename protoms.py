@@ -542,7 +542,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       boxinfo = tuple(box['origin']) + tuple(box['origin'] + box['len'])
       ghostobj.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" %boxinfo
       for sol in ghostobj.solvents :
-        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
+        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WA1"
     elif settings.gcmcwater.isdigit() :
       ghostobj = tools.distribute_particles(box,settings.gcmcwater)
       ghostobj.write(filename=ghost_name)
