@@ -892,13 +892,60 @@ As an example::
 corresponds to a simulation which will run at four different :math:`\lambda` windows in parallel, and will attempt swaps between the conformations of different :math:`\lambda` windows each 20 moves.
 
 .. index::
-  single: lambdare
+  single: dlambda
 
 ::
 
   dlambda float
 
 where ``float`` is a number between 0.0 and 1.0 (often of the order of 0.001). This command sets the gradient for a free energy calculation. It is required for thermodynamic integration (TI) to be applied on the simulation results.
+
+.. index::
+  single: temperaturere
+
+::
+
+  temperaturere integer float float float
+
+is the right command to set a replica exchange calculation between the different temperatures given as floats, where ``float`` is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+
+As an example::
+
+  temperaturere 20 25.0 30.0 35.0
+
+corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.
+
+.. index::
+  single: temperatureladder
+
+::
+
+  temperatureladder lambda float float
+
+is one of the commands required to proceed with a simulation including both temperature and :math:`\lambda` replica exchange, where ``float`` is each of the :math:`\lambda` values where a temperature ladder is desired. All :math:`\lambda` values must be among those included after the ``lambdare`` keyword. In principle, the number of temperature ladders can be as high as the number of :math:`\lambda` windows.
+
+As an example::
+
+  temperatureladder lambda 0.00 1.00 
+
+corresponds to a simulation which runs the :math:`\lambda` windowns 0.00 and 1.00 at all temperatures included after the ``temperaturere`` keyword, as far as the corresponding ``lambdaladder`` command line is set accordingly.
+
+.. index::
+  single: lambdaladder
+
+::
+
+  lambdaladder temperature float float
+
+is one of the commands required to proceed with a simulation including both temperature and :math:`\lambda` replica exchange, where ``float`` is each of the temperature values where a :math:`\lambda` ladder is to be placed. All temperature values must be among those included after the ``temperaturere`` keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of :math:`\lambda` ladders and temperature ladders, as well as :math:`\lambda` and temperature values per ladder, takind into account the cores shared by each :math:`\lambda` ladder with each temperature ladder.
+
+As an example::
+
+  lambdaladder temperature 25.0 35.0
+
+corresponds to a simulation which runs all :math:`\lambda` windowns at temperatures 25.0 and 35.0, as far as the corresponding ``temperatureladder`` command line is set accordingly.
+
+All the above ``lambdare``, ``temperaturere``, ``lambdaladder`` and ``temperatureladder`` command examples applied together correspond to a simulation where :math:`\lambda` windows 0.000 0.333 0.667 1.000 are simulated at 25.0 and 35.0 Celsius, while at temperature 30.0, only :math:`\lambda` windows 0.000 and 1.000 will be simulated.
 
 .. index::
   single: printfe
