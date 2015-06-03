@@ -153,7 +153,6 @@ c        scale to the theta jaws parameter
             ljnrgb = ljnrgb * thetaparam(igcs)
 
 
-
      
       soluteSingleGCSoluteEnergy = nrg
       
