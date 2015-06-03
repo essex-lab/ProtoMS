@@ -855,6 +855,29 @@ This command will enable Generalised Born energy calculations. Thus to run a ful
 0.005 appear to be a good tradeoff. Increasing it will make the simulation faster but less accurate. proteins activates the rescaling of the Born radii to compensate for systematic errors of the Pairwise Descreening Approximation in large biomolecules. It should be used only when simulating proteins and then its effectiveness has not been yet
 convincingly demonstrated. 
 
+----------------------------------------
+Temperature replica-exchange parameters
+----------------------------------------
+
+ProtoMS can perform temperature replica-exchange simulations.
+
+.. index::
+  single: temperaturere
+
+::
+
+  temperaturere integer float float float
+
+is the command to set a replica exchange simulation between the different temperatures given as floats, where ``float`` is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+
+As an example::
+
+  temperaturere 20 25.0 30.0 35.0
+
+corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.
+
+The temperature replica-exchange command can be used in conjuction with the ``lambdare`` command, see below, to add temperature ladders to different values of :math:`\lambda`.
+
 -----------------------------------
 Free energy calculation parameters
 -----------------------------------
@@ -874,7 +897,7 @@ where ``float`` is a number between 0.0 and 1.0. Specify the value of :math:`\la
 
 would set :math:`\lambda` for the reference state to 0.5, :math:`\lambda` for the forwards perturbed state to 0.6, and :math:`\lambda` for the backwards perturbed state to 0.4. By default all values of :math:`\lambda` are 0.0. 
 
-To be able to run several lambdas in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the chances of convergence.
+To run several at several values of :math:`\lambda`  in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the probability of convergence.
 
 .. index::
   single: lambdare
@@ -883,7 +906,7 @@ To be able to run several lambdas in parallel and hence perform your full pertur
 
   lambdare integer float float float
 
-is the right command to set a replica exchange calculation between the different :math:`\lambda` given as floats, where ``float`` is a number between 0.0 and 1.0. In principle, any desired number of :math:`\lambda` values can be used, and the simulation will require to be runned in as many cores as :math:`\lambda` values are provided. The integer value stands for the frequency at which the exchange between the different :math:`\lambda` values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+is the command to set a replica exchange calculation between the different :math:`\lambda` given as floats, where ``float`` is a number between 0.0 and 1.0. In principle, any desired number of :math:`\lambda` values can be used, and the simulation will require to be runned in as many cores as :math:`\lambda` values are provided. The integer value stands for the frequency at which the exchange between the different :math:`\lambda` values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
 
 As an example::
 
@@ -891,29 +914,7 @@ As an example::
 
 corresponds to a simulation which will run at four different :math:`\lambda` windows in parallel, and will attempt swaps between the conformations of different :math:`\lambda` windows each 20 moves.
 
-.. index::
-  single: dlambda
-
-::
-
-  dlambda float
-
-where ``float`` is a number between 0.0 and 1.0 (often of the order of 0.001). This command sets the gradient for a free energy calculation. It is required for thermodynamic integration (TI) to be applied on the simulation results.
-
-.. index::
-  single: temperaturere
-
-::
-
-  temperaturere integer float float float
-
-is the right command to set a replica exchange calculation between the different temperatures given as floats, where ``float`` is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
-
-As an example::
-
-  temperaturere 20 25.0 30.0 35.0
-
-corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.
+**With temperature replica-exchange**
 
 .. index::
   single: temperatureladder
@@ -945,7 +946,26 @@ As an example::
 
 corresponds to a simulation which runs all :math:`\lambda` windowns at temperatures 25.0 and 35.0, as far as the corresponding ``temperatureladder`` command line is set accordingly.
 
-All the above ``lambdare``, ``temperaturere``, ``lambdaladder`` and ``temperatureladder`` command examples applied together correspond to a simulation where :math:`\lambda` windows 0.000 0.333 0.667 1.000 are simulated at 25.0 and 35.0 Celsius, while at temperature 30.0, only :math:`\lambda` windows 0.000 and 1.000 will be simulated.
+All replica-exchange commands together::
+
+  lambdare 20 0.000 0.333 0.667 1.000
+  temperaturere 20 25.0 30.0 35.0
+  temperatureladder lambda 0.00 1.00 
+  lambdaladder temperature 25.0 35.0
+
+correspond to a simulation where :math:`\lambda` windows 0.000 0.333 0.667 1.000 are simulated at 25.0 and 35.0 Celsius, while at temperature 30.0, only :math:`\lambda` windows 0.000 and 1.000 will be simulated.
+
+
+**Other free energy commands**
+
+.. index::
+  single: dlambda
+
+::
+
+  dlambda float
+
+where ``float`` is a number between 0.0 and 1.0 (often of the order of 0.001). This command sets the gradient for a free energy calculation. It is required for thermodynamic integration (TI) to be applied on the simulation results.
 
 .. index::
   single: printfe
@@ -989,6 +1009,15 @@ This causes the solutes non bonded energy to be softened with a parameter *n* se
   softcoreparams coul 1 delta 0.5 deltacoul 12.0 amber
 
 This causes the solutes non bonded energy to be softened with a parameter *n* set to 1, :math:`\delta` set to 0.5 and :math:`\delta_c`  set to 12.0. (see eq :eq:`uljsoftmod3` ). The amber keyword selects the third soft-core implementation, eq :eq:`uljsoftmod3`. The values listed here are the default values in the Amber package.
+
+.. index::
+  single: solutetempering
+
+::
+
+  solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
+
+Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see `Temperature replica-exchange parameters`_). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the ``temperaturere`` command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; ``bndang`` controls the internal bond-angle energy terms, ``dih`` the internal dihedral energy term, ``lj`` the internal van der Waals energy, ``coul`` the internal Coulomb energy, ``solu`` the interaction with other solutes, ``prot`` the interaction with the protein and ``solv`` the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with :math:`\beta_i/\beta_0`, where :math:`\beta_i` is the effective inverse temperature of the replica (set with the ``temperaturre`` command) and :math:`\beta_0` is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with :math:`(\beta_i+\beta_0)/2\beta_0` and if the argument 3 the energy is unscaled.
 
 -------------------------
 GCMC and JAWS parameters
