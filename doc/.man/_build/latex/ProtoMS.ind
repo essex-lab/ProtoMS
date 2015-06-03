@@ -126,13 +126,13 @@
   \item simulate, \hyperpage{31}
   \item Single Topology, \hyperpage{14}
   \item singlepoint, \hyperpage{36}
-  \item softcore, \hyperpage{27}
-  \item softcoreparams, \hyperpage{27}
+  \item softcore, \hyperpage{28}
+  \item softcoreparams, \hyperpage{28}
   \item Solute Moves, \hyperpage{16}
   \item solute, command, \hyperpage{30}
   \item solutenergy, \hyperpage{36}
   \item Solutes, \hyperpage{8}
-  \item solutetempering, \hyperpage{28}
+  \item solutetempering, \hyperpage{26}
   \item solvent chunk, \hyperpage{37}
   \item Solvent Moves, \hyperpage{17}
   \item Solvents, \hyperpage{8}
@@ -143,7 +143,7 @@
   \indexspace
   \bigletter T
   \item temperature, \hyperpage{23}
-  \item temperatureladder, \hyperpage{26}
+  \item temperatureladder, \hyperpage{27}
   \item temperaturere, \hyperpage{25}
   \item testenergy, \hyperpage{23}
   \item Theta Moves, \hyperpage{18}

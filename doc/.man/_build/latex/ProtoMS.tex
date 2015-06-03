@@ -1144,6 +1144,13 @@ corresponds to a simulation which will run at three different temperature window
 
 The temperature replica-exchange command can be used in conjuction with the \code{lambdare} command, see below, to add temperature ladders to different values of \(\lambda\).
 
+\index{solutetempering}
+\begin{Verbatim}[commandchars=\\\{\}]
+solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
+\end{Verbatim}
+
+Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see {\hyperref[protoms:temperature-replica-exchange-parameters]{Temperature replica-exchange parameters}}). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the \code{temperaturere} command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; \code{bndang} controls the internal bond-angle energy terms, \code{dih} the internal dihedral energy term, \code{lj} the internal van der Waals energy, \code{coul} the internal Coulomb energy, \code{solu} the interaction with other solutes, \code{prot} the interaction with the protein and \code{solv} the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with \(\beta_i/\beta_0\), where \(\beta_i\) is the effective inverse temperature of the replica (set with the \code{temperaturre} command) and \(\beta_0\) is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with \((\beta_i+\beta_0)/2\beta_0\) and if the argument 3 the energy is unscaled.
+
 
 \subsection{Free energy calculation parameters}
 \label{protoms:free-energy-calculation-parameters}
@@ -1271,13 +1278,6 @@ softcoreparams coul 1 delta 0.5 deltacoul 12.0 amber
 \end{Verbatim}
 
 This causes the solutes non bonded energy to be softened with a parameter \emph{n} set to 1, \(\delta\) set to 0.5 and \(\delta_c\)  set to 12.0. (see eq \eqref{protoms-uljsoftmod3} ). The amber keyword selects the third soft-core implementation, eq \eqref{protoms-uljsoftmod3}. The values listed here are the default values in the Amber package.
-
-\index{solutetempering}
-\begin{Verbatim}[commandchars=\\\{\}]
-solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
-\end{Verbatim}
-
-Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see {\hyperref[protoms:temperature-replica-exchange-parameters]{Temperature replica-exchange parameters}}). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the \code{temperaturere} command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; \code{bndang} controls the internal bond-angle energy terms, \code{dih} the internal dihedral energy term, \code{lj} the internal van der Waals energy, \code{coul} the internal Coulomb energy, \code{solu} the interaction with other solutes, \code{prot} the interaction with the protein and \code{solv} the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with \(\beta_i/\beta_0\), where \(\beta_i\) is the effective inverse temperature of the replica (set with the \code{temperaturre} command) and \(\beta_0\) is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with \((\beta_i+\beta_0)/2\beta_0\) and if the argument 3 the energy is unscaled.
 
 
 \subsection{GCMC and JAWS parameters}
