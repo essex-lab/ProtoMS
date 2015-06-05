@@ -14,11 +14,16 @@ Version 3.0
 
 --------------------------------
 
-To compile ProtoMS go into the 'src' directory, 
-edit the Makefile to suit your needs and the type 'make'
+To compile ProtoMS create a new directory 'build' and from this directory type 'cmake ..'.
+This will perform checks and prepare to compile.  Then type 'make'.
 
-You will need a fortran compiler and the OpenMPI libraries. 
-We recommend to use either GNU or Intel compilers.
+Requirements:
+* Fortan compiler   : GNU or Intel recommended
+* Python            : Required to compile and run ProtoMS
+* CMake             : Required to compile ProtoMS
+
+Optional:
+* MPI               : Recommended OpenMPI or MPICH - some functions will be unavailable without MPI
 
 We recommend to set the environmental variable $PROTOMSHOME to the installation directory of ProtoMS.
 
@@ -29,18 +34,20 @@ Use these examples to test that ProtoMS is working correctly.
 
 Contents of directory:
 
-* data 		: This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
+* CMakeLists.txt    : This file configures ProtoMS prior to compiling.
 
-* doc 		: This directory contains documentation
+* data 		    : This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
 
-* README 	: This file
+* doc 		    : This directory contains documentation
 
-* parameter 	: This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
+* README 	    : This file
 
-* protoms.py	: A tool to setup common ProtoMS calculations
+* parameter 	    : This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
 
-* src 		: This directory contains all of the source code for the main program
+* protoms.py	    : A tool to setup common ProtoMS calculations
 
-* tools 		: This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+* src 		    : This directory contains all of the source code for the main program
 
-* tutorial 	: This directory contains a number of examples that demonstrate applications of ProtoMS.
+* tools 	    : This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+
+* tutorial 	    : This directory contains a number of examples that demonstrate applications of ProtoMS.
