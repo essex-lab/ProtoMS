@@ -91,7 +91,6 @@ OBJS = addacid.o \
        assignborn.o \
        assigngcsolutetemplate.o \
        assigngcsolutetemplates.o \
-       assignlambdare.o \
        assignresidueoverrides.o \
        assignresiduetemplate.o \
        assignrotamerlibrary.o \
@@ -101,7 +100,6 @@ OBJS = addacid.o \
        assignsolventtemplates.o \
        assignsurface.o \
        assignsystem.o \
-       assigntemperaturere.o \
        atomname.o \
        biaspotential.o \
        bondedresresenergy.o \
@@ -235,7 +233,6 @@ OBJS = addacid.o \
        getdofinfo.o \
        getdouble.o \
        geteffectivebornradii.o \
-       getfullfilename.o	\
        getgbiborn.o \
        getgbscale.o \
        gethighscale.o \
@@ -295,7 +292,6 @@ OBJS = addacid.o \
        join.o \
        join2.o \
        lambdaderivative.o	\
-       lambdare.o	\
        lreenergy.o	\
        leftjustify.o \
        linelength.o \
@@ -493,7 +489,6 @@ OBJS = addacid.o \
        setsolventmoved.o \
        setstream.o \
        setup.o \
-       setupreplicas.o \
        setzmatrixgeometry.o \
        sgrnd.o \
        savehigh.o \
@@ -571,7 +566,6 @@ OBJS = addacid.o \
        syncsolutedummies.o \
        takeacid.o \
        takebase.o \
-       temperaturere.o \
        testenergies.o \
        thetamove.o \
        titrationmove.o \
@@ -696,24 +690,30 @@ FFLAGS = $(fflags)
 fortrancompiler = $(mpi_fortrancompiler)
 
 %.o : %.F $(commons)
-	@echo  "$(Fp)Compiling $(Fb)$<...$(Fr)"
+	@echo -e  "$(Fp)Compiling $(Fb)$<...$(Fr)"
 	@$(FC_MPI) -c $(FFLAGS) $< -o $@
-	@echo "$(n)"
+	@echo -e "$(n)"
 
 # Build the program
 ../protoms3: $(OBJS)
 ifneq ($(NOPYTHON2),1)
-	@echo  "$(Fg)Generating compilation info...$(Fp)"
+	@echo -e "$(Fg)Generating compilation info...$(Fp)"
 	@./getid.py idme.inc
 	@./getsep.py sep.inc
 endif
+	@$(FC) -c $(FFLAGS) assignlambdare.F -o assignlambdare.o
+	@$(FC) -c $(FFLAGS) assigntemperaturere.F -o assigntemperaturere.o
+	@$(FC) -c $(FFLAGS) getfullfilename.F -o getfullfilename.o
+	@$(FC) -c $(FFLAGS) lambdare.F -o lambdare.o
+	@$(FC) -c $(FFLAGS) setupreplicas.F -o setupreplicas.o
+	@$(FC) -c $(FFLAGS) temperaturere.F -o temperaturere.o
 	@$(FC) -c $(FFLAGS) readparfile.F -o readparfile.o
 	@$(FC) -c $(FFLAGS) printheader.F -o printheader.o
-	@echo "$(Fg)Linking the executable...$(Fr)"
-	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) printheader.o readparfile.o
+	@echo -e "$(Fg)Linking the executable...$(Fr)"
+	@$(FC) $(LFLAGS) $(FFLAGS) -o ../protoms3 $(OBJS) assignlambdare.o assigntemperaturere.o getfullfilename.o lambdare.o printheader.o readparfile.o setupreplicas.o temperaturere.o
 
-	@echo  "$(Fg)Build complete. Go to the tutorials directory for"
-	@echo  "guidance on how to use this program.$(n)"
+	@echo -e "$(Fg)Build complete. Go to the tutorials directory for"
+	@echo -e "guidance on how to use this program.$(n)"
 
 chekall: $(PRJS) ; \
   ftnchek $(CHEKFLAGS) $(PRJS)
@@ -726,9 +726,9 @@ rebuild:
 
 #cleans everything!
 clean:
-	@echo  "$(Fg)Making clean...$(Fp)"
+	@echo -e "$(Fg)Making clean...$(Fp)"
 	@-rm *.o
-	@echo  "$(Fc)Project now ready to be rebuilt or packaged...$(n)"
+	@echo -e "$(Fc)Project now ready to be rebuilt or packaged...$(n)"
 
 distclean:
 	@make clean
@@ -741,9 +741,9 @@ cleancheck:
 
 # Rebuild dependencies:
 depend: 
-	@echo  "$(Fg)Generating dependencies...$(Fr)"
+	@echo -e "$(Fg)Generating dependencies...$(Fr)"
 	@./sfmakedepend $(SRCS)
-	@echo  "$(Fc)Please rebuild protomc via 'make rebuild'.$(n)"
+	@echo -e "$(Fc)Please rebuild protomc via 'make rebuild'.$(n)"
 
 # DO NOT DELETE THIS LINE - used by make depend
 addacid.o: proteins.inc dimensions.inc printer.inc
