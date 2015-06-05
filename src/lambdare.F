@@ -163,9 +163,12 @@ c     if a process with temid 0 is involved in the swap, since the reason to swa
         temsbuffer(4) = nlreswap
         do i=1,nlambdas
           if (oldlam.eq.lambdaval(i)) then
-            call MPI_Sendrecv(temsbuffer,4,MPI_INT,lambda2task(i),11,temrbuffer,4,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
-            call MPI_Sendrecv(task2temperature,ntemperatures,MPI_INT,lambda2task(i),11,tsbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
-            call MPI_Sendrecv(temperature2task,ntemperatures,MPI_INT,lambda2task(i),11,tmbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(temsbuffer,4,MPI_INT,lambda2task(i),11,temrbuffer,4,
+     .           MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(task2temperature,ntemperatures,MPI_INT,lambda2task(i),11,
+     .           tsbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(temperature2task,ntemperatures,MPI_INT,lambda2task(i),11,
+     .           tmbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
           endif
         enddo
         task2temperature = tsbuffer
