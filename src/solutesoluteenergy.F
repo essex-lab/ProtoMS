@@ -259,6 +259,16 @@ c       If softcore, the coulombic if scaled further
           cnrgb = cnrgb * (sclb)**CoulSoftPower
         endif 
       endif    
+      
+      if (doREST) then
+        cnrg = cnrg * restscaling(5)
+        ljnrg = ljnrg * restscaling(5)
+        cnrgf = cnrgf * restscaling(5)
+        ljnrgf = ljnrgf * restscaling(5)
+        cnrgb = cnrgb * restscaling(5)
+        ljnrgb = ljnrgb * restscaling(5)
+      endif
+      
 c     soluteSoluteEnergy = nrg
       soluteSoluteEnergy = cnrg + ljnrg
 

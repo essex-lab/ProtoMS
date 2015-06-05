@@ -30,6 +30,7 @@ c####################################################################
        integer lineLength,lgth,lgth2,igcs,savenrg,Molcount
        integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
 
+
        if (DifferentLambdas) then
          write(printstring,10) lambdab,lambda,lambdaf
 10       format("RESULTS for lambda ",f8.5," <-- ",f8.5," --> ",f8.5)
@@ -47,12 +48,28 @@ c       call printLine(RESULTS,printstring)
        call printLine(RESULTS,printstring)
 
        if (doLambdaRE) then
-         write(printstring,*) "Lambda replica = ",myid+1
+         write(printstring,*) "Lambda replica = ",mylamid+1
          call printLine(RESULTS,printstring)
        endif
 
+       if (doTemperatureRE) then
+         write(printstring,*) "Temperature replica = ",mytemid+1
+         call printLine(RESULTS,printstring)
+       endif
+
+       if (doTemperatureRE.and.doLambdaRE) then
+         write(printstring,*) "Global replica = ",myid+1
+         call printLine(RESULTS,printstring)
+       endif
+
+
        write(printstring,*) "Temperature = ",temperatureC," C"
        call printLine(RESULTS,printstring)
+       
+       if (doREST) then
+         write(printstring,*) "Effective temperature = ",resttempC," C"
+         call printLine(RESULTS,printstring)
+       endif
 
        write(printstring,*) "Solvents,Proteins,GC-solutes  =" ,NSolvents ,NProteins ,NGCSolutes
        call printLine(RESULTS,printstring)

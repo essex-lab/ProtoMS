@@ -72,6 +72,11 @@ c     calculate the bond / angle / dihedral energies
           bndnrgb = bndnrgb + ibndb
         enddo
       endif
+      if (doRest) then
+        bndnrg = bndnrg*restscaling(1)
+        bndnrgf = bndnrgf*restscaling(1)
+        bndnrgb = bndnrgb*restscaling(1)
+      endif
       
       inangs = NSolAngles(isol)
       if (inangs.gt.0) then
@@ -80,6 +85,11 @@ c     calculate the bond / angle / dihedral energies
           angnrgf = angnrgf + iangf
           angnrgb = angnrgb + iangb
         enddo
+      endif
+      if (doRest) then
+        angnrg = angnrg*restscaling(1)
+        angnrgf = angnrgf*restscaling(1)
+        angnrgb = angnrgb*restscaling(1)
       endif
       
       indihs = NSolDihedrals(isol)
@@ -90,6 +100,11 @@ c     calculate the bond / angle / dihedral energies
           dihnrgb = dihnrgb + idihb
         enddo
       endif
+      if (doRest) then
+        dihnrg = dihnrg*restscaling(2)
+        dihnrgf = dihnrgf*restscaling(2)
+        dihnrgb = dihnrgb*restscaling(2)
+      endif
 
       inubys = NSolUreyBradleys(isol)
       if (inubys.gt.0) then
@@ -98,6 +113,11 @@ c     calculate the bond / angle / dihedral energies
           ubynrgf = ubynrgf + iubyf
           ubynrgb = ubynrgb + iubyb
         enddo
+      endif
+      if (doRest) then
+        ubynrg = ubynrg*restscaling(1)
+        ubynrgf = ubynrgf*restscaling(1)
+        ubynrgb = ubynrgb*restscaling(1)
       endif
 
 c     now run over all of the non-bonded pairs in the solute molecule
@@ -142,6 +162,14 @@ c         actually perform the calculation
             nbljnrgb = nbljnrgb + funcljnrgb
           endif          
         enddo
+      endif
+      if (doREST) then
+        nbcnrg = nbcnrg * restscaling(4)
+        nbcnrgf = nbcnrgf * restscaling(4)
+        nbcnrgb = nbcnrgb * restscaling(4)
+        nbljnrg = nbljnrg * restscaling(3)
+        nbljnrgf = nbljnrgf * restscaling(3)
+        nbljnrgb = nbljnrgb * restscaling(3)
       endif
             
       soluteIntraEnergy = bndnrg + angnrg + dihnrg + ubynrg + nbcnrg + nbljnrg

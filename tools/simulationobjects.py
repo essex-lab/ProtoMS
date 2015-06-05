@@ -787,8 +787,14 @@ class SnapshotResults :
     the number of steps the averages are calculate over
   lambdareplica : int
     the index of the lambda replica
+  temperaturereplica : int
+    the index of the temperature replica
+  global replica : int
+    the index of the global replica
   temperature : float
     the temperature of the simulation
+  efftemperature : float
+    the effective temperature in case of REST
   ngcsolutes : int
     the number of GC solutes
   nthetasolutes : int
@@ -862,7 +868,10 @@ class SnapshotResults :
     while line[0] != "#" :
       if line.startswith(" Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
       if line.startswith(" Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
+      if line.startswith(" Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
+      if line.startswith(" Global replica") : self.globalreplica = int(line.split("=")[1].strip())
       if line.startswith(" Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
+      if line.startswith(" Effective temperature") : self.efftemperature = float(line.split("=")[1].strip().split()[0])
       if line.startswith(" Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
       if line.startswith(" Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
       if line.startswith(" Simulation B value") : self.bvalue = float(line.split("=")[1].strip())

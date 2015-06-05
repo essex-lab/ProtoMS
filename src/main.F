@@ -3,11 +3,14 @@
       include 'mpif.h'
 C     (C) Christopher Woods  2002-2004
 c      July 2014 - Samuel Genheden added MPI stuff
+c      March 2015 - Modified MPI Ana I. Cabedo Martinez
 
       integer ierr
 
-      myid = 0
-      ntasks = 1
+      mylamid = 0
+      mytemid = 0
+      mygcid = 0
+      myjawsid = 0
 
       call MPI_INIT(ierr)
       call MPI_COMM_RANK(MPI_COMM_WORLD,myid,ierr)
@@ -24,7 +27,7 @@ c     setup replica exchange
 
 c     set the default locations of any streams
       call openStreamFiles
-      
+
 c     initialise the program
       call initialise
       
