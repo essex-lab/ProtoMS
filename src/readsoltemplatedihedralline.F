@@ -62,8 +62,9 @@ c     see if the dihedral already exists
         if (idih.gt.MAXMOLTEMPLATEDIHEDRALS) then
           write(printstring,*) "Exceeded maximum number of molecule template dihedrals (",
      .                         MAXMOLTEMPLATEDIHEDRALS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXMOLTEMPLATEDIHEDRALS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXMOLTEMPLATEDIHEDRALS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NMolTemplateDihedrals(itmpl) = idih

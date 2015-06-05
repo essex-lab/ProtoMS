@@ -105,16 +105,12 @@ c     whether we are going to use chunks from protein pdb
       PdbParams = .false.
       if (getOption('pdbparams')) then
         PdbParams = getLogical(words(1), PdbParams)
-        write(6,*) 'PdbParams'
-        write(6,*) PdbParams
       endif  
 
 c     whether jaws2 information on each move will be printed to results
       everyjaws2 = .false.
       if (getOption('everyjaws2')) then
         everyjaws2 = getLogical(words(1), everyjaws2)
-        write(6,*) 'everyjaws2'
-        write(6,*) everyjaws2
       endif    
 
 
@@ -401,7 +397,7 @@ c     get the names of all of the parameter files and read them in
 c     (as the parameter files may change some of the default options)
 c     Keep reading parameter files while we have them
       do i=1,nkeys
-c       7 in the line below stands for the lenght of 'dump'
+c       7 in the line below stands for the lenght of 'parfile'
         if (keys(i)(1:7).eq.'parfile') then
           call split(values(i))
 c         copy words(1) to filename as readParFile will overwrite 'words' when
@@ -651,7 +647,8 @@ c                 we will rotate these solutes together
               write(printstring,*) "Problem specifying dual topology solutes, ",
      .           "lowgroup = ",lowgroup," and highgroup = ",highgroup
               call printLine(WARNING,printstring)
-              i = i-1
+c             The following line will cause an infinite loop
+c              i = i-1
               goto 200
             endif
             goto 200
@@ -719,23 +716,76 @@ c     A softcore is applied if either atom is part of a softcore residue
       endif
 c     end of do-while loop
       
+c     Get REST2 settings
+      if (doTemperatureRE.and.getOption('solutetempering')) then
+        doREST = .true.
+c       Store this temporary here, will change it below to this replica's temp        
+        resttempC = getDouble(words(1),temperatureC)
+c       Now try to find them in the input
+        do j=2,nwords,2
+          if (words(j)(1:6).eq."bndang") then
+            restlevel(1) = nint(getDouble(words(j+1),3))
+          else if (words(j)(1:3).eq."dih") then
+            restlevel(2) = nint(getDouble(words(j+1),1))
+          else if (words(j)(1:2).eq."lj") then
+            restlevel(3) = nint(getDouble(words(j+1),3))
+          else if (words(j)(1:4).eq."coul") then
+            restlevel(4) = nint(getDouble(words(j+1),1))
+          else if (words(j)(1:4).eq."solu") then
+            restlevel(5) = nint(getDouble(words(j+1),2))
+          else if (words(j)(1:4).eq."prot") then
+            restlevel(6) = nint(getDouble(words(j+1),2))
+          else if (words(j)(1:4).eq."solv") then
+            restlevel(7) = nint(getDouble(words(j+1),2))
+          endif      
+        enddo
+        write(printstring,*)"REST levels solute intra/bond-angle = ",restlevel(1),
+     .                      " intra/dihedral = ",restlevel(2),
+     .                      " intra/lj = ",restlevel(3),
+     .                      " intra/coul = ",restlevel(4),
+     .                      " solute-solute = ",restlevel(5),
+     .                      " solute-protein = ",restlevel(6),
+     .                      " solute-solvent = ",restlevel(7)  
+        call printLine(INFO,printstring)                        
+      endif
 
 c     get the temperature
-      if (getOption('temperature')) temperatureC = getDouble(words(1),temperatureC)
-      temperature = temperatureC + DEG2KEL
+      if ((.not.doTemperatureRE).and.getOption('temperature')) then
+        temperatureC = getDouble(words(1),temperatureC)
+        temperature = temperatureC + DEG2KEL
+      elseif (doTemperatureRE) then
+        if (.not.doREST) then
+          temperatureC = temval(mytemperature)
+        else
+          temperatureC = resttempC
+          resttempC = temval(mytemperature)
+          resttemp = resttempC + DEG2KEL
+          rest_beta = dble(1.0) / (GASR*resttemp)
+        endif
+        temperature = temperatureC + DEG2KEL
+      endif
       write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
      .                              temperature," K)"
       call printLine(INFO,printstring)
       mt_beta_t = dble(1.0) / (GASR*temperature)
 
-c     get the REST2 effective temperature
-      resttempC = temperatureC
-      if (getOption('resttemp')) resttempC = getDouble(words(1),temperatureC)
-      resttemp = resttempC + DEG2KEL
-      rest_beta = dble(1.0) / (GASR*resttemp)
-      restscale1 = rest_beta / mt_beta_t
-      restscale2 = (mt_beta_t+rest_beta)/(2.0d0*mt_beta_t)
-      restscale3 = 1.0d0 
+c     Now we can complete the setup of REST temperatures
+      if (doRest) then
+        write(printstring,*) "Effective REST temperature  = ",resttempC," C, (",
+     .                              resttemp," K)"
+        call printLine(INFO,printstring)
+        restfac1 = rest_beta / mt_beta_t
+        restfac2 = (mt_beta_t+rest_beta)/(2.0d0*mt_beta_t)
+        do i=1,7
+          if (restlevel(i).eq.1) then
+            restscaling(i) = restfac1
+          else if (restlevel(i).eq.2) then
+            restscaling(i) = restfac2
+          else
+            restscaling(i) = 1.0d0
+          endif
+        enddo
+      endif
 
 c     get the B factor for GCMC simulations
       if ((.not.doMultiGCMC).and.getOption('potential')) then

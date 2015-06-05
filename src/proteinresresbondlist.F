@@ -143,8 +143,9 @@ c     bonded residues (index is sorted in numerical order)
             if (NResResBonds(iprot).gt.MAXRESRESBONDS) then
               write(printstring,*) "Exceeded maximum number of connected residues! (",
      .                        MAXRESRESBONDS,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXRESRESBONDS and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXRESRESBONDS and recompile"
+              call closeProgram(-1,printstring)
               NResResBonds(iprot) = NResResBonds(iprot) - 1
               return
             endif

@@ -15,8 +15,9 @@ c##############################################################
       NBasicRes(iprot) = NBasicRes(iprot) + 1
       if (NBasicRes(iprot).gt.MAXBASICRES) then
         write(printstring,*) "Exceeded maximum number of basic residues, ",MAXBASICRES
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXBASICRES and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXBASICRES and recompile"
+        call closeProgram(-1,printstring)
         NBasicRes(iprot) = NBasicRes(iprot) - 1
         return
       endif

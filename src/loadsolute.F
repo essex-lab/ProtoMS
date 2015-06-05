@@ -35,8 +35,9 @@ c##################################################
       isol = NSolutes + 1
       if (isol.gt.MAXSOLUTES) then
         write(printstring,*) "Exceeded maximum number of solutes (",MAXSOLUTES,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLUTES and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLUTES and recompile"
+        call closeProgram(-1,printstring)
         return
       endif
       
@@ -68,8 +69,9 @@ c       If last line was a TER record, then we need to start a new residue here
           isol = NSolutes + 1
           if (isol.gt.MAXSOLUTES) then
             write(printstring,*) "Exceeded maximum number of solutes (",MAXSOLUTES,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXSOLUTES and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXSOLUTES and recompile"
+            call closeProgram(-1,printstring)
             return
           endif
           call initialiseSolute(isol)                    
@@ -109,9 +111,9 @@ c         try to find the solute template for this molecule
           
           if (itmpl.le.0) then
             write(printstring,*) "Cannot find a template for solute ",SoluteName(isol)(1:lgth)
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Cannot load a solute unless it has a valid template!")
-            call prettyLine(WARNING,"This simulation is now broken!")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Cannot load a solute PDB file unless it has a valid template."
+            call closeProgram(-1,printstring)
             return
           endif        
         else if (words(1)(1:3).eq.'ter') then
@@ -210,8 +212,8 @@ c     now that the solute has been read, close the file
 9600  continue
 c     get here if we could not open the file
       lgth = lineLength(filename)
-      write(printstring,*) "WARNING - unable to load solute file ",filename(1:lgth)
-      call printLine(WARNING,printstring)
+      write(printstring,*) "FATAL - unable to load solute PDB file ",filename(1:lgth)
+      call closeProgram(-1,printstring)
       return
 
 9700  continue

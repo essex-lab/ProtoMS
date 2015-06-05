@@ -38,8 +38,9 @@ c     them in the molecule
         if (NSolVariable(isol).gt.MAXSOLVARIABLES) then
           write(printstring,*) "Exceeded maximum number of variable geometries per ",
      .           "solute ",MAXSOLVARIABLES
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXSOLVARIABLES and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXSOLUTEVARIABLES and recompile"
+          call closeProgram(-1,printstring)
           NSolVariable(isol) = NSolVariable(isol) - 1
           return
         endif

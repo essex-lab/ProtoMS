@@ -26,7 +26,7 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
-def replica_path(filenames,evalthis,replicakind="lambda") :
+def replica_path(filenames,replicakind="lambda") :
   """
   Extract replica path from a set of results files
 
@@ -34,9 +34,6 @@ def replica_path(filenames,evalthis,replicakind="lambda") :
   ----------
   filenames : list of strings
     the files to read
-  evalthis : list
-    labels to evaluate the paths on, all files are read
-    but paths are only made for the replicas with these labels
   replicakind : string
     the type of replica, at the moment only lambda is allowed
 
@@ -50,30 +47,50 @@ def replica_path(filenames,evalthis,replicakind="lambda") :
   if replicakind == "lambda" :
     replica_attr = "lambdareplica"
     label_attr   = "lam"
+  elif replicakind == "temperature" :
+    replica_attr = "temperaturereplica"
+    label_attr = "temperature"
+  elif replicakind == "rest" :
+    replica_attr = "temperaturereplica"
+    label_attr = "efftemperature"
+  elif replicakind == "global" :
+    replica_attr = "globalreplica"
+    label_attr = None
   else :
     raise simulationobjects.SetupError("Have not implemented replica path analysis for %s"%replicakind)
 
-  paths = []
+  # Build of list of replica ids in each output file
+  # also produce a list of labels, e.g. lambda or temperature
+  rawpaths = []
   labels   = []
-  for filename in filenames :
+  for ind,filename in enumerate(filenames) :
     results_file = simulationobjects.ResultsFile()
     results_file.read(filename=filename)
     if hasattr(results_file.snapshots[0],replica_attr) :
       path = np.zeros(len(results_file.snapshots),int)-1
-      label = getattr(results_file.snapshots[0],label_attr)
-      if label in evalthis :
-        for i,snap in enumerate(results_file.snapshots) :
-          path[i] = getattr(snap,replica_attr)
-      paths.append(path)
+      label = ind+1
+      if label_attr : label = getattr(results_file.snapshots[0],label_attr)
+      for i,snap in enumerate(results_file.snapshots) :
+        path[i] = getattr(snap,replica_attr)
+      rawpaths.append(path)
       labels.append(label)
 
-  paths = np.array(paths)
-  labeled_paths = np.zeros(paths.shape)
-  for i in range(paths.shape[0]) :
-    for j in range(paths.shape[1]) :
-      if paths[i,j] < 0 : continue
-      labeled_paths[i,j] = labels[paths[i,j]-1]
-  return labeled_paths,labels
+  # Now find the path for each lambda/temperature value
+  rawpaths = np.array(rawpaths,dtype=int)
+  labeled_paths = [[] for l in labels]
+  # Loop over each possible lambda/temperature value, i.e. label id
+  for i in range(rawpaths.shape[0]) :
+    # We will try to fill up an array that is as long as the simulation
+    while len(labeled_paths[i]) < rawpaths.shape[1] :
+      k = len(labeled_paths[i]) # This is the current point in time we will be looking for replica with id = i 
+      # Look in the list of each output file as built above
+      for j,path in enumerate(rawpaths) :       
+        # If the replica id at the current time, k is equal to the label id we are on (i),
+        # add the label of file j to the list and break
+        if path[k] == i + 1 : 
+          labeled_paths[i].append(labels[j])
+          break
+  return np.asarray(labeled_paths),labels
 
 #
 # If this is run from the command-line
@@ -86,12 +103,12 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyze and plot a replica paths")
   parser.add_argument('-f','--files',nargs="+",help="the name of the files to analyse")
   parser.add_argument('-p','--plot',type=float,nargs="+",help="the replica values to plot")
-  parser.add_argument('-k','--kind',choices=["lambda"],help="the kind of replica to analyze",default="lambda")
+  parser.add_argument('-k','--kind',choices=["lambda","temperature","rest","global"],help="the kind of replica to analyze",default="lambda")
   parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path.png")
   args = parser.parse_args()
 
   # Extract paths and labels from the input files
-  paths,labels = replica_path(args.files,args.plot)
+  paths,labels = replica_path(args.files,args.kind)
 
   # Plot them and save as a png-file
   x = np.arange(1,paths.shape[1]+1)
@@ -99,7 +116,9 @@ if __name__ == '__main__' :
     if label in args.plot :
       print label
       plt.plot(x,path,color=simulationobjects.color(i))
-  plt.ylim([-0.1,1.1])
+  psorted = sorted(args.plot)
+  prange = max(psorted) - min(psorted)
+  plt.ylim([min(psorted)-0.1*prange,max(psorted)+0.1*prange])
   plt.yticks(labels)
   plt.ylabel(args.kind.capitalize())
   plt.xlabel("Snapshot")

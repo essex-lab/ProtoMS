@@ -37,6 +37,7 @@ c#################################################################
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb,icnrgf,icnrgb,iljnrgf,iljnrgb
       double precision scl,sclb,sclf
 
+
       soluteEnergy = ZERO
       mindist = ZERO
       cnrg = ZERO

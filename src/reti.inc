@@ -26,9 +26,7 @@ c     Temperatures
 c     Temperatures in the simulation
       double precision pttempcurr(MAXLAMBDAS,MAXTEMPS)
 c     Beta factor
-      double precision mt_beta_t
-c     Pre-computed Beta factor 
-      double precision pt_beta_t(MAXLAMBDAS,MAXTEMPS)      
+      double precision mt_beta_t 
 c     Restart filenames
       character*255 rstfiles(MAXLAMBDAS,MAXTEMPS)
 c     RETI energy filenames
@@ -54,7 +52,7 @@ c     Successful PT swaps
       
       common /RETIVAR/ lambdaval,lambdacurr,retitemp,mt_beta_t,niter,nretiblock,nlambda,nretitry,nretiswap,slave,outdir,
      .                   rstfiles,retifiles
-      common /RETIVAR2/ pttemperature,pttempcurr,pt_beta_t,nptblock,ntemp,nminslaves,npttry,nptswap,pttrajstream,
+      common /RETIVAR2/ pttemperature,pttempcurr,nptblock,ntemp,nminslaves,npttry,nptswap,pttrajstream,
      .                    enediststream,energyfiles,pttrajfiles,enedistfiles
 
       save /RETIVAR/

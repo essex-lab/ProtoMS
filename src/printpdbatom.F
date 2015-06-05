@@ -22,7 +22,6 @@ c####################################################
 
       if (ipar.eq.0) then
 c       skip the atom if we are not printing dummies        
-        write(6,*)"Hello!"
         if (.not.showdummies) return
         ipar1 = 0
         ipar2 = 0

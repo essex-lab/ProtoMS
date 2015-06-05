@@ -52,8 +52,9 @@ c     see if the bond already exists
         if (ibnd.gt.MAXMOLTEMPLATEBONDS) then
           write(printstring,*) "Exceeded maximum number of molecule template bonds (",
      .                         MAXMOLTEMPLATEBONDS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXMOLTEMPLATEBONDS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXMOLTEMPLATEBONDS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NMolTemplateBonds(itmpl) = ibnd

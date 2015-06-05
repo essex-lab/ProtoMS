@@ -15,8 +15,9 @@ c##############################################################
       NAcidicRes(iprot) = NAcidicRes(iprot) + 1
       if (NAcidicRes(iprot).gt.MAXACIDICRES) then
         write(printstring,*) "Exceeded maximum number of acidic residues, ",MAXACIDICRES
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXACIDICRES and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXACIDICRES and recompile"
+        call closeProgram(-1,printstring)
         NAcidicRes(iprot) = NAcidicRes(iprot) - 1
         return
       endif

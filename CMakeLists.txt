@@ -19,7 +19,7 @@ if(NOT CMAKE_Fortran_FLAGS_RELEASE)
     set(CMAKE_Fortran_FLAGS_RELEASE "-O3")
 endif()
 if(NOT CMAKE_Fortran_FLAGS_DEBUG)
-    set(CMAKE_Fortran_FLAGS_RELEASE "-Og -g")
+    set(CMAKE_Fortran_FLAGS_DEBUG "-Og -g")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "Release")
@@ -29,7 +29,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_Fortran_FLAGS ${CMAKE_Fortran_FLAGS_DEBUG} ${CMAKE_Fortran_FLAGS})
 endif()
 
-message("COMPILER: ${CMAKE_Fortran_COMPILER_ID}")
+message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID}")
 
 # Compile options
 option(STATIC "Compile statically linked executable" OFF)
@@ -40,19 +40,19 @@ endif()
 # Find Fortran MPI libraries
 find_package(MPI)
 if(MPI_Fortran_FOUND)
-    message("Using MPI")
+    message("-- Using MPI")
     add_definitions(${MPI_Fortran_COMPILE_FLAGS})
     include_directories(${MPI_Fortran_INCLUDE_PATH})
     link_directories(${MPI_Fortran_LIBRARIES})
     add_definitions(-DWITH_MPI_)
 else()
-    message("No MPI available")
+    message("-- No MPI available")
 endif()
 
 
 # Find python and create dynamic include files
 find_package(PythonInterp REQUIRED)
-message("Generating compilation info...")
+message("-- Generating compilation info...")
 execute_process(COMMAND python
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/getid.py
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/idme.inc)
@@ -62,23 +62,22 @@ execute_process(COMMAND python
 
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
-    message("Using GNU compiler flags")
+    message("-- Using GNU compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m64 -fomit-frame-pointer -ffixed-line-length-none")
 
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
-    message("Using Intel compiler flags")
+    message("-- Using Intel compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
 
 else()
-    message("Your compiler is not supported and has not been tested, please consider using
+    message("-- Your compiler is not supported and has not been tested, please consider using
              GNU gfortran or the Intel Fortran compiler.")
-    message("However, you may wish to attempt compilation by manually providing the correct
+    message("-- However, you may wish to attempt compilation by manually providing the correct
              flag to enable a line length of 132 in the CMake variable CMAKE_Fortran_FLAGS.")
 endif()
 
-message("Using flags:")
-message("${CMAKE_Fortran_FLAGS}")
+message("    ${CMAKE_Fortran_FLAGS}")
 
 # Collect all .F files in src directory and sort out .inc includes
 # Could (probably should) replace this GLOB with an actual list of files
@@ -87,8 +86,17 @@ file(GLOB SOURCE_FILES src/*.F)
 include_directories(src)
 
 if(NOT MPI_Fortran_FOUND)
-    list(REMOVE_ITEM SOURCE_FILES "src/setupreplicas.F")
-    list(REMOVE_ITEM SOURCE_FILES "src/lambare.F")
+    message("-- Excluding files requiring MPI")
+    message("-- Replica exchange will not be available")
+    set(FILES_REQUIRING_MPI
+        "setupreplicas.F"
+        "lambdare.F"
+        "assignlambdare.F"
+        "assigntemperaturere.F"
+        "temperaturere.F")
+    foreach(MPI_FILE IN ITEMS ${FILES_REQUIRING_MPI})
+        list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/${MPI_FILE}")
+    endforeach(MPI_FILE)
 endif()
 
 # Create target from source files and link to MPI library if found

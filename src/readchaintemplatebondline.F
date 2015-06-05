@@ -41,8 +41,9 @@ c     read in the data
         if (ibnd.gt.MAXCHAINBONDS) then
           write(printstring,*) "Exceeded maximum number of chain template bonds (",
      .                          MAXCHAINBONDS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXCHAINBONDS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXCHAINBONDS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NChainBonds(itmpl) = ibnd

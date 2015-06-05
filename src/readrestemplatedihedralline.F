@@ -41,8 +41,9 @@ c     read in the atoms involved
         if (idih.gt.MAXTEMPLATEDIHEDRALS) then
           write(printstring,*) "Exceeded maximum number of residue template dihedrals (",
      .                         MAXTEMPLATEDIHEDRALS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXTEMPLATEDIHEDRALS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXTEMPLATEDIHEDRALS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif 
         NTemplateDihedrals(itmpl) = idih

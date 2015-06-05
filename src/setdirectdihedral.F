@@ -69,8 +69,9 @@ c     now add this variable dihedral angle
       if (NVarDihedralParam.gt.MAXVARIABLEPARAM) then
         write(printstring,*) "Exceeded number of variable dihedral angle parameters (",
      .                      MAXVARIABLEPARAM,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXVARIABLEPARAM and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXVARIABLEPARAM and recompile"
+        call closeProgram(-1,printstring)
         NVarDihedralParam = NVarDihedralParam - 1
         return
       endif

@@ -795,8 +795,6 @@ class Jaws1(ProteinLigandSimulation) :
  
     self.setParameter("#"," JAWS-1 specific parameters")
     self.setParameter("jaws1","0")
-    self.setParameter("softcore1","solute all")
-    self.setParameter("softcoreparams","coul 1 delta 1.5")
     self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
     self.setParameter("grand1",jawswater)
     _setbox(self,jawswater,jawsbox)

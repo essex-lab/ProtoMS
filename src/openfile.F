@@ -64,7 +64,7 @@ c     see if we are asking for 'stdout' or 'stderr'
           return
         endif
       endif
-      
+
       call getFullFilename(filename,fullfilename)
       lgth = lineLength(fullfilename)
 c     see if this file has already been opened
@@ -75,6 +75,7 @@ c         the file has already been opened - return the file number
           return
         endif
       enddo
+
 
 c     this file has not been opened, so try to open it!
       FILE = nOpenFiles + 1

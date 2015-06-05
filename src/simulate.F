@@ -24,7 +24,7 @@ c
 c#################################################################
 
       integer nconfig
-      integer i,imov,j,k    
+      integer i,imov,j,k,ierr
       integer NAcceptedMoves,NTotalMoves,linelength
       integer getMoveType,numb
       logical residueMove,titrationMove,solventMove,soluteMove
@@ -34,9 +34,8 @@ c#################################################################
       logical gcsoluteMove,thetaMove,solThetaMove
       logical templ,append
       character*64 tempstring
-      integer ndumps, kdumps(25),fdumps(25)
+      integer ndumps, kdumps(MAXDUMP),fdumps(MAXDUMP)
       double precision getDouble
-c     25 has been set as the maximum number of dump statements
                      
 c     return if there are no configurations
       if (nconfig.le.0) return
@@ -51,8 +50,14 @@ c       4 in the line below stands for the lenght of 'dump'
           ndumps = ndumps + 1
           call split(values(k))
           call lowercase(words(1))
-          fdumps(ndumps) = nint(getDouble(words(1),0))
-          kdumps(ndumps) = k
+          fdumps(ndumps) = nint(getDouble(words(1),-1))
+          if (fdumps(ndumps).gt.0) then
+            kdumps(ndumps) = k
+          else
+            ndumps = ndumps -1
+            write(printstring,*) "Ignoring dump: unable to parse frequency or frequency less than 1: ", words(1)
+            call printLine(WARNING,printstring)            
+          endif  
         endif
       enddo
 
@@ -106,9 +111,6 @@ c       This we force re-calculation of BAR, MBAR and TI energies
 c       taking care of dumping with the right frequency
         do j=1,ndumps
           if (mod(i,fdumps(j)).eq.0) then
-c            if (i.eq.fdumps(j)) then
-c              append = .FALSE.
-c            endif
             append = .not.(i.eq.fdumps(j))
             call split(values(kdumps(j)))
             call join(2,nwords,tempstring)
@@ -120,12 +122,19 @@ c            endif
 #ifdef WITH_MPI_
 c       Do lambda replica exchange
         if (doLambdaRE.and.(lrefreq.gt.0).and.(i.gt.1).and.(mod(i,lrefreq).eq.0)) then
-c          write(printstring,*)"Results up to snapshot",i
-c          call prettyLine(RESULTS,printstring)
-c          call printAverages
           call lambdaRE
-c          if (myid.eq.0) write(*,"(I6,50F5.2)")i,(lambdaval(lambda2task(j)+1),j=1,nlambdas)
-c          write(6,*)"Task = ",myid," lambda= ",mylambda," folder = ",lrefolder(1:lineLength(lrefolder))
+          if (doTemperatureRE) then
+            call assigntemperaturere(mytemid,.true.,.false.)
+          endif
+        endif
+
+c       Do temperature replica exchange
+        if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
+c          write(6,*)myid, " calling TRE. Move ",i
+          call temperatureRE
+          if (doLambdaRE) then
+            call assignlambdare(mylamid,.true.,.false.)
+          endif
         endif
 #endif
         
@@ -139,9 +148,17 @@ c          write(6,*)"Task = ",myid," lambda= ",mylambda," folder = ",lrefolder(
         if (streamhandle(ACCPT).ge.0) call printAttemptAccept
       endif
 
-      if (doLambdaRE.and.(lrefreq.gt.0)) then       
-        write(printstring,"(A,2I6,A,F8.3,A)")
-     .     "Attempted/successful lambda swaps: ",nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
+      if (doLambdaRE.and.(lrefreq.gt.0).and.mylamladder.ne.-1) then       
+        write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
+     .     "Attempted/successful lambda swaps for lambdaladder ",mylamladder," : ",
+     .     nlretry,nlreswap," (",dble(nlreswap)/dble(nlretry)*100,"%)" 
+        call printLine(INFO,printstring)
+      endif
+
+      if (doTemperatureRE.and.(trefreq.gt.0).and.mytemladder.ne.-1) then       
+        write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
+     .     "Attempted/successful temperature swaps for temperatureladder ",mytemladder," : ",
+     .     ntretry,ntreswap," (",dble(ntreswap)/dble(ntretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
      

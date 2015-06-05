@@ -214,7 +214,7 @@ def parse_series(series,results) :
     """
     Parse a compound series, i.e. internal or interaction energies
     """
-    cols = series.lower().strip().split("/")
+    cols = series.strip().split("/")
     s2a = {"intra":"internal_energies","inter":"interaction_energies"}
     attr = s2a[cols[0]]
     elabel = cols[1]

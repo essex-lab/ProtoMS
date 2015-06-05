@@ -72,8 +72,9 @@ c         read in the parameters
             goto 100
           else if (ipar.gt.MAXBNDPARAM) then
             write(printstring,*) "Parameter ",ipar," is too large (",MAXBNDPARAM,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXBNDPARAM and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXBNDPARAM and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
           
@@ -133,8 +134,9 @@ c           create a new bond parameter
             if (ibnd.gt.MAXBNDPARAM) then
               write(printstring,*) "Exceeded maximum number of bond parameters! (",
      .                              MAXBNDPARAM,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXBNDPARAM and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXBNDPARAM and recompile"
+              call closeProgram(-1,printstring)
               goto 100
             endif
             

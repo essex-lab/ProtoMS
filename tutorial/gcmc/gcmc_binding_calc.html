@@ -100,7 +100,7 @@ The Adams parameter affects the probability to accept and insert or deletion mov
 </ul>  
 If only one value is entered, for instance 
 
-<pre>python2.7 ~/ProtoMS3/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 </pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 </pre>
 
 the command file <code>run_bnd.cmd</code> will have the line
 
@@ -130,7 +130,7 @@ To choose <em>which</em> Adams values to simulate at, start by simulating with v
 <h5>Running independent repeats</h5>
 Multiple independant repeats are essential for well resolved free energy estimates. Every GCMC simulation counts as an individual repeat, and one can always run additional simulations at different Adams values. If you're sure of the Adams value(s) from the start and want, say, 3 repeats, typing
 
-<pre>python2.7 ~/ProtoMS3/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -19 -20 -21 -r 3</pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -19 -20 -21 -r 3</pre>
 
 will create 3 command files called <code>run1_bnd.cmd</code>, <code>run2_bnd.cmd</code>, and <code>run3_bnd.cmd</code>, which, when executed, create the output folders <code>out1</code>, <code>out2</code>, and <code>out3</code>. Analysing the results from multiple directories is trivial; all you need to do is enter the directories that contain the ProtoMS <code>results</code> files. For instance, one can type
 

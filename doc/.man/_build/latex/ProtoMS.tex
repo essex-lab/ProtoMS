@@ -14,8 +14,8 @@
 
 
 \title{ProtoMS Documentation}
-\date{May 11, 2015}
-\release{3.0}
+\date{June 03, 2015}
+\release{3.1}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
 \renewcommand{\releasename}{Release}
@@ -1123,6 +1123,35 @@ This command will enable Generalised Born energy calculations. Thus to run a ful
 convincingly demonstrated.
 
 
+\subsection{Temperature replica-exchange parameters}
+\label{protoms:temperature-replica-exchange-parameters}
+ProtoMS can perform temperature replica-exchange simulations.
+
+\index{temperaturere}
+\begin{Verbatim}[commandchars=\\\{\}]
+temperaturere integer float float float
+\end{Verbatim}
+
+is the command to set a replica exchange simulation between the different temperatures given as floats, where \code{float} is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see {\hyperref[protoms:frequent-output-generation]{Frequent output generation}}). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+
+As an example:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+temperaturere 20 25.0 30.0 35.0
+\end{Verbatim}
+
+corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.
+
+The temperature replica-exchange command can be used in conjuction with the \code{lambdare} command, see below, to add temperature ladders to different values of \(\lambda\).
+
+\index{solutetempering}
+\begin{Verbatim}[commandchars=\\\{\}]
+solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
+\end{Verbatim}
+
+Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see {\hyperref[protoms:temperature-replica-exchange-parameters]{Temperature replica-exchange parameters}}). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the \code{temperaturere} command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; \code{bndang} controls the internal bond-angle energy terms, \code{dih} the internal dihedral energy term, \code{lj} the internal van der Waals energy, \code{coul} the internal Coulomb energy, \code{solu} the interaction with other solutes, \code{prot} the interaction with the protein and \code{solv} the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with \(\beta_i/\beta_0\), where \(\beta_i\) is the effective inverse temperature of the replica (set with the \code{temperaturre} command) and \(\beta_0\) is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with \((\beta_i+\beta_0)/2\beta_0\) and if the argument 3 the energy is unscaled.
+
+
 \subsection{Free energy calculation parameters}
 \label{protoms:free-energy-calculation-parameters}
 To be able to run a single simulation for a given lambda value, you will need to use the following parameters:
@@ -1140,14 +1169,14 @@ lambda 0.5 0.6 0.4
 
 would set \(\lambda\) for the reference state to 0.5, \(\lambda\) for the forwards perturbed state to 0.6, and \(\lambda\) for the backwards perturbed state to 0.4. By default all values of \(\lambda\) are 0.0.
 
-To be able to run several lambdas in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the chances of convergence.
+To run several at several values of \(\lambda\)  in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the probability of convergence.
 
 \index{lambdare}
 \begin{Verbatim}[commandchars=\\\{\}]
 lambdare integer float float float
 \end{Verbatim}
 
-is the right command to set a replica exchange calculation between the different \(\lambda\) given as floats, where \code{float} is a number between 0.0 and 1.0. In principle, any desired number of \(\lambda\) values can be used, and the simulation will require to be runned in as many cores as \(\lambda\) values are provided. The integer value stands for the frequency at which the exchange between the different \(\lambda\) values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see {\hyperref[protoms:frequent-output-generation]{Frequent output generation}}). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+is the command to set a replica exchange calculation between the different \(\lambda\) given as floats, where \code{float} is a number between 0.0 and 1.0. In principle, any desired number of \(\lambda\) values can be used, and the simulation will require to be runned in as many cores as \(\lambda\) values are provided. The integer value stands for the frequency at which the exchange between the different \(\lambda\) values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see {\hyperref[protoms:frequent-output-generation]{Frequent output generation}}). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
 
 As an example:
 
@@ -1157,7 +1186,52 @@ lambdare 20 0.000 0.333 0.667 1.000
 
 corresponds to a simulation which will run at four different \(\lambda\) windows in parallel, and will attempt swaps between the conformations of different \(\lambda\) windows each 20 moves.
 
-\index{lambdare}
+\textbf{With temperature replica-exchange}
+
+\index{temperatureladder}
+\begin{Verbatim}[commandchars=\\\{\}]
+temperatureladder lambda float float
+\end{Verbatim}
+
+is one of the commands required to proceed with a simulation including both temperature and \(\lambda\) replica exchange, where \code{float} is each of the \(\lambda\) values where a temperature ladder is desired. All \(\lambda\) values must be among those included after the \code{lambdare} keyword. In principle, the number of temperature ladders can be as high as the number of \(\lambda\) windows.
+
+As an example:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+temperatureladder lambda 0.00 1.00
+\end{Verbatim}
+
+corresponds to a simulation which runs the \(\lambda\) windowns 0.00 and 1.00 at all temperatures included after the \code{temperaturere} keyword, as far as the corresponding \code{lambdaladder} command line is set accordingly.
+
+\index{lambdaladder}
+\begin{Verbatim}[commandchars=\\\{\}]
+lambdaladder temperature float float
+\end{Verbatim}
+
+is one of the commands required to proceed with a simulation including both temperature and \(\lambda\) replica exchange, where \code{float} is each of the temperature values where a \(\lambda\) ladder is to be placed. All temperature values must be among those included after the \code{temperaturere} keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of \(\lambda\) ladders and temperature ladders, as well as \(\lambda\) and temperature values per ladder, takind into account the cores shared by each \(\lambda\) ladder with each temperature ladder.
+
+As an example:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+lambdaladder temperature 25.0 35.0
+\end{Verbatim}
+
+corresponds to a simulation which runs all \(\lambda\) windowns at temperatures 25.0 and 35.0, as far as the corresponding \code{temperatureladder} command line is set accordingly.
+
+All replica-exchange commands together:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+lambdare 20 0.000 0.333 0.667 1.000
+temperaturere 20 25.0 30.0 35.0
+temperatureladder lambda 0.00 1.00
+lambdaladder temperature 25.0 35.0
+\end{Verbatim}
+
+correspond to a simulation where \(\lambda\) windows 0.000 0.333 0.667 1.000 are simulated at 25.0 and 35.0 Celsius, while at temperature 30.0, only \(\lambda\) windows 0.000 and 1.000 will be simulated.
+
+\textbf{Other free energy commands}
+
+\index{dlambda}
 \begin{Verbatim}[commandchars=\\\{\}]
 dlambda float
 \end{Verbatim}
@@ -1651,7 +1725,7 @@ Output a PDB that have a more standard format than normal, such that it can be v
 \index{restraints}
 
 \subsection{Restraints}
-\label{protoms:restraints}\label{protoms:index-71}
+\label{protoms:index-75}\label{protoms:restraints}
 ProtoMS supports a number of restraining potentials which can be used to modify the potential energy function and bias the simulation towards particular configurations. To use a restraint in ProtoMS you must first assign an id number to a particular atom or set of atoms, using the following command
 
 \begin{Verbatim}[commandchars=\\\{\}]

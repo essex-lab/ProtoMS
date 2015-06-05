@@ -42,6 +42,16 @@ c############################################
       boundary = AGREESOLVENT
       solventBox = .false.
       solventCap = .false.
-                             
+
+c     Set default REST values
+      restlevel(1) = 3
+      restlevel(2) = 1
+      restlevel(3) = 3
+      restlevel(4) = 1
+      restlevel(5) = 2
+      restlevel(6) = 2
+      restlevel(7) = 2
+      doREST = .false.
+             
       return
       end

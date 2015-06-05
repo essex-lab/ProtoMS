@@ -67,8 +67,9 @@ c         read in the parameters
             goto 100
           else if (ipar.gt.MAXANGPARAM) then
             write(printstring,*) "Parameter ",ipar," is too large (",MAXANGPARAM,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXANGPARAM and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXANGPARAM and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
           
@@ -130,8 +131,9 @@ c           load the new angle parameter
             if (iang.gt.MAXANGPARAM) then
               write(printstring,*) "Exceeded maximum number of angle parameters (",
      .                             MAXANGPARAM,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXANGPARAM and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXANGPARAM and recompile"
+              call closeProgram(-1,printstring)
               goto 100
             endif
             

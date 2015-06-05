@@ -787,8 +787,14 @@ class SnapshotResults :
     the number of steps the averages are calculate over
   lambdareplica : int
     the index of the lambda replica
+  temperaturereplica : int
+    the index of the temperature replica
+  global replica : int
+    the index of the global replica
   temperature : float
     the temperature of the simulation
+  efftemperature : float
+    the effective temperature in case of REST
   ngcsolutes : int
     the number of GC solutes
   nthetasolutes : int
@@ -862,7 +868,10 @@ class SnapshotResults :
     while line[0] != "#" :
       if line.startswith(" Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
       if line.startswith(" Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
+      if line.startswith(" Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
+      if line.startswith(" Global replica") : self.globalreplica = int(line.split("=")[1].strip())
       if line.startswith(" Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
+      if line.startswith(" Effective temperature") : self.efftemperature = float(line.split("=")[1].strip().split()[0])
       if line.startswith(" Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
       if line.startswith(" Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
       if line.startswith(" Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
@@ -1102,8 +1111,9 @@ class ResultsFile :
       for elabel in self.series.feenergies :
         self.series.feenergies[elabel] = np.zeros(nsnap)
     if hasattr(self.snapshots[0],"thetavals") :
-      for elabel in self.series.thetavals :
-        self.series.thetavals[elabel] = np.zeros(nsnap)
+      self.series.thetavals = [np.zeros(nsnap) for i in self.snapshots[0].thetavals]
+      #for elabel in self.series.thetavals :
+      #  self.series.thetavals[elabel] = np.zeros(nsnap)
 
     # Then loop over all snapshots and fill the NumpyArrays with data
     for i,snapshot in enumerate(self.snapshots) :
@@ -1128,9 +1138,11 @@ class ResultsFile :
           if elabel not in self.series.feenergies : continue
           self.series.feenergies[elabel][i] = snapshot.feenergies[elabel]
       if hasattr(snapshot,"thetavals") :
-        for elabel in snapshot.thetavals :
-          if elabel not in self.series.thetavals : continue
-          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
+#        for elabel in snapshot.thetavals :
+#          if elabel not in self.series.thetavals : continue
+        for j in range(len(self.series.thetavals)) :
+#          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
+          self.series.thetavals[j][i] = snapshot.thetavals[j]
 
     return self.series
 

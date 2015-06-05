@@ -75,9 +75,9 @@ c         read the AMBER atom type - not that this *is* case-sensitive
             goto 100
           else if (ipar.gt.MAXCLJ) then
             write(printstring,*) "Parameter ",ipar," is too large (",MAXCLJ,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,line)
-            call printLine(WARNING,"Increase MAXCLJ and then recompile.")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXCLJ and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
 

@@ -118,14 +118,14 @@ c          JM Dual Topology, update energies of second solute if necessary
         SoluteTheta(isol) = thetaold
       endif
 
-!      if (printMoveEvery.eq.0) return
-!      if (mod(movnum,printMoveEvery).eq.0) then
+      if (printMoveEvery.eq.0) return
+      if (mod(movnum,printMoveEvery).eq.0) then
         write(printstring,12) movnum,isol,SoluteName(isol)(1:10),ienew,
      &                        npmf,ncorr,ieold,opmf,ocorr,statstring,thetaNew,thetaold,ranval
 12      format(i10,i2," ",a," ",6(g15.3,x),1x,a4,3f10.3)!" FTHETAMOVE "
         call printLine(MOVE,printstring)
-cc       if (streamhandle(ENERGY).ge.0) call printEnergies(movnum)
-!      endif
+        if (streamhandle(ENERGY).ge.0) call printEnergies(movnum)
+      endif
       
       return
       end

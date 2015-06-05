@@ -40,10 +40,11 @@ c########################################################
       if (tmol.le.0) then
         write(printstring,10) isol,SoluteName(isol)(1:lgth)
 10      format("Solute ",i3," (",a,") does not appear to have a valid template!")
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,
+        call printLine(FATAL,printstring)
+        call printLine(FATAL,
      .       "Ensure that there is a solute template with this name in one of your parameter files")
-        call prettyLine(WARNING,"ProtoMS is continuing, but the simulation is now very broken!")
+        write(printstring,*)"ProtoMS is stopping, because the simulation is now very broken!"
+        call closeProgram(-1,printstring)
         return
       endif
 
@@ -94,8 +95,9 @@ c           save the range of atoms in each residue
             if (nres.gt.MAXSOLUTERESIDUES) then
               write(printstring,*) "Exceeded maximum number of residues per solute (",
      .                           MAXSOLUTERESIDUES,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXSOLUTERESIDUES and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXSOLUTERESIDUES and recompile"
+              call closeProgram(-1,printstring)
               nres = MAXSOLUTERESIDUES
             endif
             
@@ -113,11 +115,12 @@ c         has been loaded at this index - check this...
           if (iatm .ne. SolAtomNam(isol,i)) then
             write(printstring,*) "Atom ",iatm," in residue ",ires," was not found in the PDB. ",
      .                         "Will attempt to build this atom (please check the coordinates)"
-            call printLine(WARNING,printstring)
+            call printLine(FATAL,printstring)
 
-            call printLine(WARNING,"Uh-oh! This version of the code does not yet support the building")
-            call printLine(WARNING,"of missing solute atoms! This feature is planned though...")
-            call printLine(WARNING,"Until then, this simulation is now very broken!")
+            call printLine(FATAL,"Uh-oh! This version of the code does not yet support the building")
+            call printLine(FATAL,"of missing solute atoms! This feature is planned though...")
+            write(printstring,*)"Until then, this simulation is now very broken!"
+            call closeProgram(-1,printstring)
             
             SolAtomNam(isol,i) = iatm
             SolAtomNum(isol,i) = 9999
@@ -156,9 +159,10 @@ c     thus we will check it here...
       if (.not.ok) then
         write(printstring,*) "There have been errors setting up the zmatrix for solute ",
      .                       SoluteName(isol)(1:lgth)
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Check the pdb and template input for this solute")
-        call prettyLine(WARNING,"ProtoMS will continue but the simulation is now broken!")
+        call printLine(FATAL,printstring)
+        call printLine(FATAL,"Check the pdb and template input for this solute")
+        write(printstring,*)"ProtoMS is stopping because the simulation is now broken!"
+        call closeProgram(-1,printstring)
         return
       endif
       

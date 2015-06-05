@@ -23,8 +23,9 @@ c     do not need to do this if everything is already moved
       in = nSvnMoved + 1
       if (in.gt.MAXSVNMOVED) then
         write(printstring,*) "Exceeded maximum number of moved solvents (",MAXSVNMOVED,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSVNMOVED and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSVNMOVED and recompile"
+        call closeProgram(-1,printstring)
         return
       endif
       

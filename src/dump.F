@@ -20,6 +20,8 @@
       character*600 tempname,cmd
       character*255 fullfilename
 
+c      write(6,*) myid,"Dump temperaturec__",temperatureC
+
       
       call split(line)
 
@@ -183,7 +185,6 @@ c           'restart read|write filename'
 c                    do i=1,NGCSolutes
 c               PRINT*, "GCS,theta",i,thetaparam(i)
 c                   enddo
-
               call getFullFilename(words(3),fullfilename)
               ilgth = lineLength(fullfilename)              
               call readRestart(fullfilename(1:ilgth))
@@ -193,6 +194,7 @@ c               redirect the stream to 'filename'
                 if (numb.gt.1) then
                   do i=1,nOpenFiles
                     if (i.eq.(streamhandle(RESTART)-40)) then
+c                      write(6,*) openfiles
                       tempname=openfiles(i)(1:lineLength(openfiles(i)))//".prev"
                       write(cmd,"(4A)")"mv ",openfiles(i)(1:lineLength(openfiles(i)))," ",tempname(1:lineLength(tempname))
                       call system(cmd)

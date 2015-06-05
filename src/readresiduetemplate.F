@@ -45,8 +45,9 @@ c       clear the current version of the template
         if (NTemplates.gt.MAXTEMPLATES) then
           write(printstring,*) "Exceeded maximum number of residue templates (",
      .                          MAXTEMPLATES,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXTEMPLATES and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXTEMPLATES and recompile"
+          call closeProgram(-1,printstring)
           NTemplates = MAXTEMPLATES
           return
         endif

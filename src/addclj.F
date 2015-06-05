@@ -26,8 +26,9 @@ c     and is dealt with elsewhere...
       if (ipar.gt.MAXCLJ) then
         write(printstring,10) ipar,MAXCLJ
 10      format("Requesting a CLJ type(",i4,") above MAXCLJ(",i4,")")
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXCLJ and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXCLJ and recompile"
+        call closeProgram(-1,printstring)
         return
       endif
 
@@ -55,8 +56,9 @@ c       if too many have been added then quit.
         if (NCLJTypes.gt.MAXCLJTYPES) then
           write(printstring,11) MAXCLJTYPES
 11        format("Exceeded maximum number of CLJ types per simulation(",i4,")")
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXCLJTYPES and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXCLJTYPES and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
 
@@ -79,7 +81,7 @@ c       otherwise find the index of the previously loaded parameter
         
 c       we should never get here
         write(printstring,*) "Serious bug in addCLJ - looking for ",ipar
-        call printLine(WARNING,printstring)
+        call closeProgram(-1,printstring)
         addCLJ = 0        
 
       endif
