@@ -11,46 +11,43 @@ set(ProtoMS_VERSION_MINOR 0)
 # Check build type
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING
-        "Choose build type: None, Debug, Release"
+        "Choose build type: Debug, Release"
         FORCE)
 endif()
 
-if(NOT CMAKE_Fortran_FLAGS_RELEASE)
-    set(CMAKE_Fortran_FLAGS_RELEASE "-O3")
+if(NOT CMAKE_Fortran_FLAGS_Release)
+    set(CMAKE_Fortran_FLAGS_Release "-O3")
 endif()
-if(NOT CMAKE_Fortran_FLAGS_DEBUG)
-    set(CMAKE_Fortran_FLAGS_DEBUG "-Og -g")
+if(NOT CMAKE_Fortran_FLAGS_Debug)
+    set(CMAKE_Fortran_FLAGS_Debug "-Og -g")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "Release")
-    set(CMAKE_Fortran_FLAGS ${CMAKE_Fortran_FLAGS_RELEASE} ${CMAKE_Fortran_FLAGS})
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_Release}")
 endif()
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(CMAKE_Fortran_FLAGS ${CMAKE_Fortran_FLAGS_DEBUG} ${CMAKE_Fortran_FLAGS})
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_Debug}")
 endif()
 
 message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID}")
 
-# Compile options
-option(STATIC "Compile statically linked executable" OFF)
-if(STATIC)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-endif()
-
 # Find Fortran MPI libraries
+option(AVOID_MPI "Don't use MPI even if available" OFF)
 find_package(MPI)
-if(MPI_Fortran_FOUND)
+if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
     message("-- Using MPI")
     add_definitions(${MPI_Fortran_COMPILE_FLAGS})
     include_directories(${MPI_Fortran_INCLUDE_PATH})
     link_directories(${MPI_Fortran_LIBRARIES})
+
+    # Define WITH_MPI_ for C preprocessor - conditional compilation
     add_definitions(-DWITH_MPI_)
 else()
-    message("-- No MPI available")
+    message("-- Not using MPI")
 endif()
 
 
-# Find python and create dynamic include files
+# Find Python and create dynamic include files
 find_package(PythonInterp REQUIRED)
 message("-- Generating compilation info...")
 execute_process(COMMAND python
@@ -70,6 +67,7 @@ elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
     message("-- Using Intel compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
 
+# Compiler not recognised
 else()
     message("-- Your compiler is not supported and has not been tested, please consider using
              GNU gfortran or the Intel Fortran compiler.")
@@ -80,12 +78,13 @@ endif()
 message("    ${CMAKE_Fortran_FLAGS}")
 
 # Collect all .F files in src directory and sort out .inc includes
-# Could (probably should) replace this GLOB with an actual list of files
+# Could replace this GLOB with an actual list of files
 # Dependencies are resolved automatically
 file(GLOB SOURCE_FILES src/*.F)
 include_directories(src)
 
-if(NOT MPI_Fortran_FOUND)
+# Exclude files that require MPI if it's not available
+if(NOT MPI_Fortran_FOUND OR AVOID_MPI)
     message("-- Excluding files requiring MPI")
     message("-- Replica exchange will not be available")
     set(FILES_REQUIRING_MPI
@@ -100,27 +99,29 @@ if(NOT MPI_Fortran_FOUND)
 endif()
 
 # Create target from source files and link to MPI library if found
-add_executable (${prog_name} ${SOURCE_FILES})
+add_executable(${prog_name} ${SOURCE_FILES})
 if(MPI_Fortran_FOUND)
     target_link_libraries(${prog_name} ${MPI_Fortran_LIBRARIES})
 endif()
 
-# Get documentation and tools
-file(GLOB TOOL_FILES tools/*)
-file(GLOB_RECURSE DOC_FILES doc/*)
-
 # Setup install directory
+# Optional 'make install' step
 install(TARGETS protoms3
-        RUNTIME DESTINATION ${install_dir}/bin)
+        RUNTIME DESTINATION ${install_dir})
 install(PROGRAMS "protoms.py"
-        DESTINATION ${install_dir}/bin)
-install(PROGRAMS ${TOOL_FILES}
-        DESTINATION ${install_dir}/bin)
-install(FILES ${DOC_FILES}
-        DESTINATION ${install_dir}/doc)
+        DESTINATION ${install_dir})
+install(DIRECTORY data
+        DESTINATION ${install_dir})
+install(DIRECTORY doc
+        DESTINATION ${install_dir})
+install(DIRECTORY parameter
+        DESTINATION ${install_dir})
+install(DIRECTORY tools
+        DESTINATION ${install_dir})
 
 # Add testing
-add_test(RunsAtAll protoms3)
+# Needs actual unit/integration tests here
+add_test(TestPrintVersion protoms3 -v)
 
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
