@@ -100,7 +100,7 @@ endif()
 
 # Create target from source files and link to MPI library if found
 add_executable(${prog_name} ${SOURCE_FILES})
-if(MPI_Fortran_FOUND)
+if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
     target_link_libraries(${prog_name} ${MPI_Fortran_LIBRARIES})
 endif()
 
