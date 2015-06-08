@@ -136,7 +136,8 @@ if __name__ == '__main__' :
     all_dgs = []
     for directory in args.directories : 
       lambdas,energies,paths = pms2pymbar.extract_energies(directory,args.results,args.skip,args.max)    
-      (Deltaf_ij, dDeltaf_ij) = pms2pymbar.mbar(lambdas,energies,RT)
+      resp = pms2pymbar.mbar(lambdas,energies,RT)
+      (Deltaf_ij, dDeltaf_ij) = (resp[0],resp[1])
       if args.printEach or len(args.directories) == 1:
         print "MBAR (%s): %.3f +- %.3f"%(directory,Deltaf_ij[0,-1]*RT,dDeltaf_ij[0,-1]*RT)
       all_dgs.append(Deltaf_ij[0,-1]*RT)
