@@ -203,7 +203,8 @@ c           Matching tasks wich should belong to both a lambda ladder and a temp
               enddo
               mylamladder = i
 c           Assigning the rest of the tasks for lambda values
-            elseif ((ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)).le.myid.and.myid.lt.(ntemladders*ntemperatures+(nlambdas-ntemladders)*i)) then
+            elseif ((ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)).le.myid.and.
+     .             myid.lt.(ntemladders*ntemperatures+(nlambdas-ntemladders)*i)) then
               key = myid-(ntemladders*ntemperatures+(nlambdas-ntemladders)*(i-1)) + 1
               do j=1,ntemladders
                 do k=1,nlambdas

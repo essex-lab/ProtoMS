@@ -175,9 +175,12 @@ c            write(6,*)"Failing ",temval(aidx),temval(bidx),allnrg(aidx),allnrgh
         lamsbuffer(4) = ntreswap
         do i=1,ntemperatures
           if (oldtem.eq.temval(i)) then 
-            call MPI_Sendrecv(lamsbuffer,4,MPI_INT,temperature2task(i),11,lamrbuffer,4,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
-            call MPI_Sendrecv(task2lambda,nlambdas,MPI_INT,temperature2task(i),11,tsbuffer,nlambdas,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
-            call MPI_Sendrecv(lambda2task,nlambdas,MPI_INT,temperature2task(i),11,lmbuffer,nlambdas,MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
+            call MPI_Sendrecv(lamsbuffer,4,MPI_INT,temperature2task(i),11,lamrbuffer,4,
+     .           MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
+            call MPI_Sendrecv(task2lambda,nlambdas,MPI_INT,temperature2task(i),11,tsbuffer,nlambdas,
+     .           MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
+            call MPI_Sendrecv(lambda2task,nlambdas,MPI_INT,temperature2task(i),11,lmbuffer,nlambdas,
+     .           MPI_INT,temperature2task(i),11,mytemcom,mpistat,ierr)
           endif
         enddo
         task2lambda = tsbuffer
