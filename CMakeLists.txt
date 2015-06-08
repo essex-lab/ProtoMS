@@ -2,9 +2,9 @@
 cmake_minimum_required(VERSION 2.8.10.2)
 
 # Project name and language - enables Fortran dependency checking
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Setting install dir to the scr dir")
 project(ProtoMS Fortran)
 set(prog_name "protoms3")
-set(install_dir "protoms3")
 set(ProtoMS_VERSION_MAJOR 3)
 set(ProtoMS_VERSION_MINOR 0)
 
@@ -107,17 +107,7 @@ endif()
 # Setup install directory
 # Optional 'make install' step
 install(TARGETS protoms3
-        RUNTIME DESTINATION ${install_dir})
-install(PROGRAMS "protoms.py"
-        DESTINATION ${install_dir})
-install(DIRECTORY data
-        DESTINATION ${install_dir})
-install(DIRECTORY doc
-        DESTINATION ${install_dir})
-install(DIRECTORY parameter
-        DESTINATION ${install_dir})
-install(DIRECTORY tools
-        DESTINATION ${install_dir})
+        RUNTIME DESTINATION "./")
 
 # Add testing
 # Needs actual unit/integration tests here

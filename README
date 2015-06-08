@@ -15,7 +15,7 @@ Version 3.1
 --------------------------------
 
 To compile ProtoMS create a new directory 'build' and from this directory type 'cmake ..'.
-This will perform checks and prepare to compile.  Then type 'make'.
+This will perform checks and prepare to compile.  Then type 'make install'.
 
 Requirements:
 * Fortan compiler                     : GNU (https://gcc.gnu.org/) or Intel recommended

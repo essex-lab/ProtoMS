@@ -60,6 +60,7 @@ Building ProtoMS is done with *cmake* (http://www.cmake.org/), thus you need thi
   mkdir build
   cd build
   cmake ..
+  make install
 
 and *cmake* will perform the necessary checks before it continues with the installation of ProtoMS. The executable will be placed in the top level of the folder hierarchy.
 
@@ -71,7 +72,7 @@ Requirements
 
 The *MC program* has the following requirements:
 
-* Fortan compiler (https://gcc.gnu.org/), GNU or Intel recommended
+* Fortan compiler, GNU (https://gcc.gnu.org/) or Intel recommended
 * Python (https://www.python.org/), required to compile and run ProtoMS
 * CMake (http://www.cmake.org/), required to compile ProtoMS
 

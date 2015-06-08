@@ -60,6 +60,7 @@ Building ProtoMS is done with *cmake* (http://www.cmake.org/), thus you need thi
   mkdir build
   cd build
   cmake ..
+  make install
 
 and *cmake* will perform the necessary checks before it continues with the installation of ProtoMS. The executable will be placed in the top level of the folder hierarchy.
 
