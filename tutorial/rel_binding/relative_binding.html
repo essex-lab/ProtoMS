@@ -56,9 +56,9 @@ grep "lambda swaps" out_free/lam-0.000/info
 </pre>
 and this will give you the overall acceptance ratio of the &lambda; swaps. It should be around 50% for this perturbation, indicating that the overall effectiveness is acceptable. Next, we will look at individual replicas and see how they exchange &lambda;-value throughout the simulation. This can be done with
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0.2 0.8 1.0 -o replica_path_free.png
+python2.7 $PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0.2 0.4 0.6 0.8 1.0 -o replica_path_free.png
 </pre>
-<p>to plot the path of the first few &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="33%" alt="" /><br> as is clear, these replicas were not able to traverse the full &lambda;-space within the simulation time. Also the replicas starting with &lambda;=1.0 or 0.0 did not exchange very much at all. Hence, the replica exchange was not fully efficient.</p>
+<p>to plot the path of the first few &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="40%" alt="" /><br> as is clear, these replicas were not able to traverse the full &lambda;-space within the simulation time. Also the replicas starting with &lambda;=1.0 or 0.0 did not exchange very much at all. Hence, the replica exchange was not fully efficient.</p>
 <p>Now, we will estimate the free energy. We will do this both with thermodynamic integration, Bennett's acceptance ratio (BAR) and multistate BAR (MBAR). To do this you can type</p>
 <pre>
 python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_free/ -s 10
