@@ -1183,6 +1183,8 @@ This command will enable Generalised Born energy calculations. Thus to run a ful
 0.005 appear to be a good tradeoff. Increasing it will make the simulation faster but less accurate. proteins activates the rescaling of the Born radii to compensate for systematic errors of the Pairwise Descreening Approximation in large biomolecules. It should be used only when simulating proteins and then its effectiveness has not been yet
 convincingly demonstrated.
 
+\emph{WARNING: These commands are considered to be deprecated.} This means that they are not developed any more and have not been tested extensively with newer features. Dump commands are supported with the \emph{simulate} command and one can do simple MC sampling with GB. However, it is not sure that free energy or the replica-exchange commands work satisfactorily.
+
 
 \subsection{Temperature replica-exchange parameters}
 \label{protoms:temperature-replica-exchange-parameters}
@@ -1652,6 +1654,8 @@ chunk splitgbsasimulate 100 10 solute=1 protein=9
 \end{Verbatim}
 
 The above command should only be used if you are doing an implicit solvent simulation (e.g, you turned on the surface and born keywords). This will cause to run 10 moves with a crude GBSA potential and then perform an acceptance test based on the difference of energies between the crude GBSA potential and the GBSA potential you set with the cutoff, born and surface keywords. This will be repeated 100 times. Here the move probabilities were set to 1 and 9 for solute and protein, but could be other figures. After this keyword has been used it is advised to use the following keyword.
+
+\emph{WARNING: this command is deprecated.} For instance, it does not support the dump commands
 
 \index{resetgb}
 \begin{Verbatim}[commandchars=\\\{\}]

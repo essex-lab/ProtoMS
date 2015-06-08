@@ -20,6 +20,8 @@
       include 'extraenergies.inc'
       include 'labels.inc'
       include 'rotamer.inc'
+      include 'shrakeinit.inc'
+      include 'quickpot.inc'
 c      include 'cavity.inc'
       
       integer i,j

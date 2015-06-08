@@ -627,6 +627,7 @@ streams, these two cannot be turned off. These two streams will be directed to S
 <p>This command will enable Generalised Born energy calculations. Thus to run a full GBSA simulation you should use both the surface and born keywords. cut controls the cutoff distance for the computation of the Born radii. If you work with a medium sized protein scoop of circa 100-150 residues, 20 should be fine but you may want a larger value for simulations of large proteins. threshold controls the number of pairwise terms that are not updated when the effective Born radii must be calculated by the Pairwise descreening approximation. The default value
 0.005 appear to be a good tradeoff. Increasing it will make the simulation faster but less accurate. proteins activates the rescaling of the Born radii to compensate for systematic errors of the Pairwise Descreening Approximation in large biomolecules. It should be used only when simulating proteins and then its effectiveness has not been yet
 convincingly demonstrated.</p>
+<p><em>WARNING: These commands are considered to be deprecated.</em> This means that they are not developed any more and have not been tested extensively with newer features. Dump commands are supported with the <cite>simulate</cite> command and one can do simple MC sampling with GB. However, it is not sure that free energy or the replica-exchange commands work satisfactorily.</p>
 </div>
 <div class="section" id="temperature-replica-exchange-parameters">
 <h3>Temperature replica-exchange parameters<a class="headerlink" href="#temperature-replica-exchange-parameters" title="Permalink to this headline">¶</a></h3>
@@ -922,6 +923,7 @@ lambdaladder temperature 25.0 35.0
 </pre></div>
 </div>
 <p>The above command should only be used if you are doing an implicit solvent simulation (e.g, you turned on the surface and born keywords). This will cause to run 10 moves with a crude GBSA potential and then perform an acceptance test based on the difference of energies between the crude GBSA potential and the GBSA potential you set with the cutoff, born and surface keywords. This will be repeated 100 times. Here the move probabilities were set to 1 and 9 for solute and protein, but could be other figures. After this keyword has been used it is advised to use the following keyword.</p>
+<p><em>WARNING: this command is deprecated.</em> For instance, it does not support the dump commands</p>
 <div class="highlight-python" id="index-71"><div class="highlight"><pre>chunk resetgb
 </pre></div>
 </div>
