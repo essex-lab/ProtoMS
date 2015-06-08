@@ -221,7 +221,7 @@ this will create a droplet with 30 A radius centred on the fragment molecule. Th
 <p>
 with this command, the files <code>jaws2_watX.pdb</code> and <code>jaws2_notX.pdb</code> will be generated (where X is a number that goes from 1 to the number of jaws2 waters). They should contain all required information on the jaws2-waters. </p>
 <li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the any of the jaws2-box. Do this by typing:
-<pre>python2.7 ~/ProtoMS3.0/tools/clear_gcmcbox.py -b jaws2_wat1.pdb -s water.pdb -o water.pdb</pre>
+<pre>python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b jaws2_wat1.pdb -s water.pdb -o water.pdb</pre>
 <p>This command should be run again for each of the pdb files of the individual water molecules.</p>
 <p>Now we have all the files need to run the simulation. As you noticed, there is some difference in the files produced with this step-by-step procedure and those created with <code>protoms.py</code>.
 <h5>Making ProtoMS input files</h5>

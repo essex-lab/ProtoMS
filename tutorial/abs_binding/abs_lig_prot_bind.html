@@ -127,6 +127,20 @@ by typing for instance
 <pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -p protein.pdb -l benzene.pdb --absolute -r 5</pre>
 you will create 5 input files for the bound leg and 5 input files for the free leg. Therefore, you also need to execute ProtoMS 10 times with the different input files. The output will be in 10 different folders, e.g. <code>out1_bnd</code> and <code>out2_bnd</code>.
 <p>
+<h5>Running with temperature replica-exchange</h5>
+To improve sampling, one could add temperature ladders to the simulation and perform replica-exchange swaps between neighboring values of temperatures. To add eight additional temperatures to &lambda;-values 0 and 1.0, add the following lines to the command file(s).
+
+<pre>temperaturere 1E5 25.0 27.0 30.0 34.0 39.0 45.0 52.0 60.0 69.0
+temperatureladder lambda 0.00 1.00 
+</pre>
+
+However, it should be noted that the selection of temperatures is a non-trivial task and it is likely to be system dependent. The above lines should therefore be regarded as a suggestion. 
+
+ProtoMS then needs to be executed with additional nodes, for instance
+
+<pre>mpirun -np 32 $PROTOMSHOME/protoms3 run_bnd.cmd</pre>
+
+<p>
 </p>
 <h5><a name="restraint">Optimizing the harmonic restraint</a></h5>
 The harmonic restraint added by <code>protoms.py</code> is by default 1 kcal/mol/A<sup>2</sup>. It can sometimes be necessary to optimize it so that the free energy is not affected by the magnitude of the restraint. This can be done by running a short unrestrained simulation and estimate the force constant from the root mean square deviation by applying the equipartition theorem. 
