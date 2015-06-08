@@ -62,7 +62,7 @@ c     include dynamically generated compilation information
       call printBoxText(HEADER,"")
 
       call printBoxText(HEADER,"(C) Samuel Genheden, Gregory A. Ross, Richard Bradshaw,
-     . Chris Cave-Ayland, Ana I. Cabedo Martinez 2014-2015")
+     . Chris Cave-Ayland, Ana I. Cabedo Martinez, James Graham 2014-2015")
       call printBoxText(HEADER,"(C) Christopher Woods, Julien Michel, Samuel Genheden 2002-2014")
       call printBoxText(HEADER,"(C) JAWS and GCMC protocols by Michael Bodnarchuk, 2012")
       call printBoxText(HEADER,"(C) OpenMP/MPI RETI code by Samuel Genheden, 2012-2014")

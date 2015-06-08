@@ -47,7 +47,8 @@
           if (myid.eq.0) then
             print *,"Huge thanks to everyone who has helped produce this code!"
             print *,"Thanks especially to the coding superstars;"
-            print *,"Julien Michel, Michael Bodnarchuck, Samuel Genheden, Ana Isabel Cabedo Martinez, Gregory Ross"
+            print *,"Julien Michel, Michael Bodnarchuck, Samuel Genheden, Ana Isabel Cabedo Martinez, Gregory Ross, 
+     . Chris Cave-Ayland, Richard Bradshaw, James Graham"
           endif
 #ifdef WITH_MPI_
           call MPI_FINALIZE(ierr)

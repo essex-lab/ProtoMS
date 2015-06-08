@@ -14,9 +14,9 @@
 
 
 \title{ProtoMS Documentation}
-\date{June 03, 2015}
+\date{June 08, 2015}
 \release{3.1}
-\author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez}
+\author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and James Graham}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
 \renewcommand{\releasename}{Release}
 \makeindex
@@ -169,6 +169,9 @@ The following options are standard to many commands
 The ProtoMS package supplies the following files and directories;
 \begin{itemize}
 \item {} 
+\textbf{CMakeLists.txt} This file configures ProtoMS prior to compiling.
+
+\item {} 
 \textbf{data} This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
 
 \item {} 
@@ -179,6 +182,9 @@ The ProtoMS package supplies the following files and directories;
 
 \item {} 
 \textbf{parameter} This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
+
+\item {} 
+\textbf{protoms.py} A tool to setup common ProtoMS calculations
 
 \item {} 
 \textbf{src} This directory contains all of the source code for the main program
@@ -219,18 +225,72 @@ The \code{Date} and \code{Time} Fortran 90 intrinsic subroutine is used to get t
 
 \end{itemize}
 
-The tools are written in python and should be compatible with the standard implementation version 2.7. It is known that is does not work with 2.6 and it has not been tested with version 3.0 or more.
+The tools are written in python (\href{https://www.python.org/}{https://www.python.org/}) and should be compatible with the standard implementation version 2.7. It is known that is does not work with 2.6 and it has not been tested with version 3.0 or more.
 
 
 \section{Building ProtoMS}
 \label{compilation:building-protoms}
-ProtoMS has been written using the GNU Fortran compilers, on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.
+ProtoMS has been written using the GNU Fortran compilers (\href{https://gcc.gnu.org/}{https://gcc.gnu.org/}), on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.
 
-You also need the OpenMPI package as ProtoMS contains instructions that operates on multiple processes. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77
+You also need an MPI package to perform simulations that require multiple processes, e.g. replica exchange. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77. ProtoMS has been compiled with both OpenMPI (\href{http://www.open-mpi.org/}{http://www.open-mpi.org/}) and MPICH (\href{https://www.mpich.org/}{https://www.mpich.org/}). However, note that this is \emph{not} a requirement any more. ProtoMS will compile without OpenMPI, but you want be able to run for instance replica exchange.
 
-Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of \code{make} that supports the GNU Makefile format. Simply go into the \code{src} directory and edit the \code{Makefile} that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the \code{Makefile} you can then run \code{make}. After about a minute, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called \code{protoms3} on UNIX/Linux. This executable should be run from the command line, or via a script.
+Building ProtoMS is done with \emph{cmake} (\href{http://www.cmake.org/}{http://www.cmake.org/}), thus you need this package installed on your machine. To build ProtoMS type the following in a terminal:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+mkdir build
+cd build
+cmake ..
+\end{Verbatim}
+
+and \emph{cmake} will perform the necessary checks before it continues with the installation of ProtoMS. The executable will be placed in the top level of the folder hierarchy.
 
 We recommend to set the environmental variable \code{\$PROTOMSHOME} to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.
+
+
+\section{Requirements}
+\label{compilation:requirements}
+The \emph{MC program} has the following requirements:
+\begin{itemize}
+\item {} 
+Fortan compiler, GNU (\href{https://gcc.gnu.org/}{https://gcc.gnu.org/}) or Intel recommended
+
+\item {} 
+Python (\href{https://www.python.org/}{https://www.python.org/}), required to compile and run ProtoMS
+
+\item {} 
+CMake (\href{http://www.cmake.org/}{http://www.cmake.org/}), required to compile ProtoMS
+
+\end{itemize}
+
+Optional:
+\begin{itemize}
+\item {} 
+MPI, recommended OpenMPI (\href{http://www.open-mpi.org/}{http://www.open-mpi.org/})  or MPICH (\href{https://www.mpich.org/}{https://www.mpich.org/}) - some functions will be unavailable without MPI
+
+\end{itemize}
+
+The \emph{ProtoMS tools} have the following requirements:
+\begin{itemize}
+\item {} 
+Python, version 2.7
+
+\item {} 
+NumPy (\href{http://www.numpy.org/}{http://www.numpy.org/})
+
+\item {} 
+SciPy (\href{http://www.scipy.org/}{http://www.scipy.org/})
+
+\item {} 
+Matplotlib (\href{http://www.matplotlib.org/}{http://www.matplotlib.org/})
+
+\end{itemize}
+
+Optional:
+\begin{itemize}
+\item {} 
+AmberTools (\href{http://www.ambermd.org/}{http://www.ambermd.org/})  : Required to paramterise small molecules
+
+\end{itemize}
 
 
 \chapter{Design of ProtoMS}
