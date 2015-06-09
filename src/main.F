@@ -29,6 +29,8 @@ c     parse any command line arguments
 c     setup replica exchange
 #ifdef WITH_MPI_
       call setupReplicas
+#else
+      call setupReplicas_nompi
 #endif
 
 c     set the default locations of any streams
