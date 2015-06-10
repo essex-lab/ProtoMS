@@ -90,5 +90,6 @@ The *ProtoMS tools* have the following requirements:
 
 Optional:
 
-* AmberTools (http://www.ambermd.org/)  : Required to paramterise small molecules
+* AmberTools (http://www.ambermd.org/)          : Required to paramterise small molecules
+* pymbar (https://github.com/choderalab/pymbar) : Required to perform MBAR calculations
 
