@@ -20,7 +20,7 @@ mpi_fortrancompiler = mpif77
 # Either modify the line below, or uncomment the line that matches your
 # compiler / architecture
 
-fflags = -m64 -O3 -I. -fomit-frame-pointer -ffixed-line-length-none
+fflags = -O3 -I. -fomit-frame-pointer -ffixed-line-length-none
 
 #Compile flags for g77
 #fflags = -O2 -malign-double -ffixed-line-length-none -Wall

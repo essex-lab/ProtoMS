@@ -60,7 +60,7 @@ execute_process(COMMAND python
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m64 -fomit-frame-pointer -ffixed-line-length-none")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fomit-frame-pointer -ffixed-line-length-none")
 
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
