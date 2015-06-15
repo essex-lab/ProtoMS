@@ -111,12 +111,12 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
 
             nlreswap = nlreswap + 1
             if (task1.ne.0) then
-              call MPI_SSend(bidx,1,MPI_INT,task1,11,mylamcom,ierr)
+              call MPI_SSend(bidx,1,MPI_INTEGER,task1,11,mylamcom,ierr)
             else
               mylambda = bidx
             endif
             if (task2.ne.0) then
-              call MPI_SSend(aidx,1,MPI_INT,task2,11,mylamcom,ierr)
+              call MPI_SSend(aidx,1,MPI_INTEGER,task2,11,mylamcom,ierr)
             else
               mylambda = aidx
             endif
@@ -126,11 +126,11 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
         enddo
 
         do i=2,nlambdas
-          if (.not.updated(i)) call MPI_SSend(task2lambda(i),1,MPI_INT,i-1,11,mylamcom,ierr)
+          if (.not.updated(i)) call MPI_SSend(task2lambda(i),1,MPI_INTEGER,i-1,11,mylamcom,ierr)
         enddo
 
       else    
-         call MPI_Recv(mylambda,1,MPI_INT,0,11,mylamcom,mpistat,ierr)
+         call MPI_Recv(mylambda,1,MPI_INTEGER,0,11,mylamcom,mpistat,ierr)
       endif
 
 c     The broadcast of nlretry needs to be dealt with in here, since it is ignoring the fact that I have different groups per communicator
@@ -163,12 +163,12 @@ c     if a process with temid 0 is involved in the swap, since the reason to swa
         temsbuffer(4) = nlreswap
         do i=1,nlambdas
           if (oldlam.eq.lambdaval(i)) then
-            call MPI_Sendrecv(temsbuffer,4,MPI_INT,lambda2task(i),11,temrbuffer,4,
-     .           MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
-            call MPI_Sendrecv(task2temperature,ntemperatures,MPI_INT,lambda2task(i),11,
-     .           tsbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
-            call MPI_Sendrecv(temperature2task,ntemperatures,MPI_INT,lambda2task(i),11,
-     .           tmbuffer,ntemperatures,MPI_INT,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(temsbuffer,4,MPI_INTEGER,lambda2task(i),11,temrbuffer,4,
+     .           MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(task2temperature,ntemperatures,MPI_INTEGER,lambda2task(i),11,
+     .           tsbuffer,ntemperatures,MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(temperature2task,ntemperatures,MPI_INTEGER,lambda2task(i),11,
+     .           tmbuffer,ntemperatures,MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
           endif
         enddo
         task2temperature = tsbuffer
