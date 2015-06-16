@@ -1,12 +1,12 @@
 # CMake file for ProtoMS
-cmake_minimum_required(VERSION 2.8.10.2)
+cmake_minimum_required(VERSION 2.8.7)
 
 # Project name and language - enables Fortran dependency checking
-set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Setting install dir to the scr dir")
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Setting install dir to the src dir")
 project(ProtoMS Fortran)
 set(prog_name "protoms3")
 set(ProtoMS_VERSION_MAJOR 3)
-set(ProtoMS_VERSION_MINOR 0)
+set(ProtoMS_VERSION_MINOR 1)
 
 # Check build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -48,7 +48,7 @@ endif()
 
 
 # Find Python and create dynamic include files
-find_package(PythonInterp REQUIRED)
+find_package(PythonInterp REQUIRED VERSION 2.7)
 message("-- Generating compilation info...")
 execute_process(COMMAND python
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/getid.py
