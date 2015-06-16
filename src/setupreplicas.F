@@ -296,9 +296,11 @@ c          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-
 cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
 c        endif
       endif
+      write(6,*) getoption('multigcmc')
       if (getoption('multigcmc')) then
 c       Read in all B-values
         nadams = nwords
+        write(6,*) "B value read"
         do i=1,nwords
           adamparam(i) = getDouble(words(i),0.0)
         enddo     
@@ -317,13 +319,13 @@ c       Read in template folder
             write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
             call writedoublestring(tmpstr,adamparam(i),cmd)
             call system(cmd) 
-            if (i.gt.1) call MPI_Send(i,1,MPI_INTEGER,i-1,11,'multigcmc',ierr)
+            if (i.gt.1) call MPI_Send(i,1,MPI_INTEGER,i-1,11,MPI_COMM_WORLD,ierr)
           enddo
           myadam = 1
           write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
           call writedoublestring(tmpstr,adamparam(1),gcmcfolder)
         else
-          call MPI_Recv(myadam,1,MPI_INTEGER,0,11,'multigcmc',mpistat,ierr)
+          call MPI_Recv(myadam,1,MPI_INTEGER,0,11,MPI_COMM_WORLD,mpistat,ierr)
           write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
           call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
         endif
@@ -349,13 +351,13 @@ c       Read in template folder
             write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"j_"
             call writedoublestring(tmpstr,alljbias(i),cmd)
             call system(cmd) 
-            if (i.gt.1) call MPI_Send(i,1,MPI_INTEGER,i-1,11,'multijaws2',ierr)
+            if (i.gt.1) call MPI_Send(i,1,MPI_INTEGER,i-1,11,MPI_COMM_WORLD,ierr)
           enddo
           myjbias = 1
           write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"j_"
           call writedoublestring(tmpstr,alljbias(1),jaws2folder)
         else
-          call MPI_Recv(myjbias,1,MPI_INTEGER,0,11,'multijaws2',mpistat,ierr)
+          call MPI_Recv(myjbias,1,MPI_INTEGER,0,11,MPI_COMM_WORLD,mpistat,ierr)
           write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"j_"
           call writedoublestring(tmpstr,alljbias(myjbias),jaws2folder)
         endif
