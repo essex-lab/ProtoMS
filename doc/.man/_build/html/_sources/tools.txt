@@ -902,7 +902,7 @@ plot_theta.py
 
 ::
 
-  plot_theta.py -m WA1 -s 50
+  plot_theta.py -m WA1 --skip 50
   plot_theta.py -m WA1 -p theta_wa1
 
 
