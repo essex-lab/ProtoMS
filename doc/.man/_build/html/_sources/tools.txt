@@ -880,6 +880,40 @@ This tool combines several ProtoMS template files into a single template file.
 The force field parameters in ``file2`` will be re-numbered so that they do not conflict with ``file1``. This is important when you want to load both parameters into ProtoMS at the same time.
 
 -----------------------
+plot_theta.py
+-----------------------
+
+**Syntax:**
+``plot_theta.py [-h] [-r results] [-s restart] [-m molecule] [-p plotname] [--skip]``
+
+* ``-r results`` = the name of the results file
+    optional, deafult = 'results'
+* ``-s restart`` = the replica values to plot
+    optional, default = 'restart'
+* ``-m molecule`` = the residue name of the JAWS molecule
+    optional, default = 'WAT'
+* ``-p plotname`` = the start of the filename for the plots generated
+    optional, default = 'theta_dist'
+* ``--skip`` = the number of results snapshots to skip
+    optional, default = 0
+
+
+**Examples:**
+
+::
+
+  plot_theta.py -m WA1 -s 50
+  plot_theta.py -m WA1 -p theta_wa1
+
+
+**Description:**
+
+This tool plots the theta distribution resulting from a JAWS stage one simulation.
+
+Two different histograms will be generated. One in which all different copies of the same molecule are added up, and a different one where each copy is displayed individually.
+
+
+-----------------------
 pms2pymbar.py
 -----------------------
 
