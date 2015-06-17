@@ -514,10 +514,12 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     return boxpdb
 
   def arrange_wats(box,water_file,out_name) :
-
     # find smallest box including all oxygens in my water_file
     waterobj = simulationobjects.PDBFile(filename = water_file)
-    waterbox = waterobj.getBox(atomlist=[waterobj.solvents.itervalues().next().atoms[0].name])
+    if len(waterobj.residues) !=0 :
+      waterbox = waterobj.getBox(atomlist=[waterobj.residues.itervalues().next().atoms[0].name])
+    else:
+      waterbox = waterobj.getBox(atomlist=[waterobj.solvents.itervalues().next().atoms[0].name])
 
     # check whether the box of the water oxygens is within the box provided as argument
     box_origen_below = np.all(box['origin']< waterbox['origin'])
@@ -548,7 +550,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       ghostobj.write(filename=ghost_name)
     else :
       ghostobj, ghost_name = arrange_wats(box,settings.gcmcwater,ghost_name)
-    return ghostobj, ghost_name
+    return ghostobj, ghost_name    
 
 
   # Check consistency of command-line arguments
