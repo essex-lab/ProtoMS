@@ -53,7 +53,7 @@ vmd snapshot_200.pdb
 and try to see if there was any water in the binding site (the residue name of your jaws waters is "WAT"). Remember that, which ever jaws waters you may find, are the "on" &mdash; fully interacting &mdash; waters (with &#952; > 0.95, where &#952; corresponds to the scaling of their interactions).
 But looking at each snapshot individually is hard to get a whole picture of where your waters were distributed throughout the simulation. To get a more visual picture of this we produce and visualize a water density file. To generate such a file run:
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_density.py -f all.pdb
+python2.7 $PROTOMSHOME/tools/calc_density.py -f all.pdb -r wa1
 </pre>
 and the file grid.dx will be produced. Such a file can be visualized in vmd. Try looking at it with:
 <pre>
@@ -66,7 +66,7 @@ You should be looking at something similar to this (after fiddling a bit with th
 <p>
 A different visualization option are the clusters. These can be generated going to your out folder and using the following command</p>
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_clusters.py -f all.pdb -m WAT
+python2.7 $PROTOMSHOME/tools/calc_clusters.py -f all.pdb -m WA1
 </pre>
 and then visualized with
 <pre>

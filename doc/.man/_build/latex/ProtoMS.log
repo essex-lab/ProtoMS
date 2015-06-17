@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.11.13)  10 JUN 2015 11:53
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.11.13)  17 JUN 2015 10:20
 entering extended mode
  %&-line parsing enabled.
 **ProtoMS.tex
@@ -1063,168 +1063,168 @@ Underfull \hbox (badness 10000) in paragraph at lines 3696--3697
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3745--3746
+Underfull \hbox (badness 10000) in paragraph at lines 3749--3750
 []\T1/pcr/m/n/10 calc_rmsd.py -i pdbfile -f file1 [file2 ...] -l ligand [-a ato
 m] [-t
  []
 
 [64]
-Underfull \hbox (badness 10000) in paragraph at lines 3787--3788
+Underfull \hbox (badness 10000) in paragraph at lines 3791--3792
 []\T1/pcr/m/n/10 calc_series.py -f file1 [file2 ...] [-o outprefix] [-s series 
 series2 ...]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3787--3788
+Underfull \hbox (badness 10000) in paragraph at lines 3791--3792
 \T1/pcr/m/n/10 [-p sep|sub|single|single_first0|single_last0] [--nperm N] [--th
 reshold N]
  []
 
 
-Overfull \hbox (7.99269pt too wide) in paragraph at lines 3808--3815
+Overfull \hbox (7.99269pt too wide) in paragraph at lines 3812--3819
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3837--3839
+Underfull \hbox (badness 10000) in paragraph at lines 3841--3843
 []\T1/ptm/m/n/10 optional,
  []
 
 [65]
-Underfull \hbox (badness 10000) in paragraph at lines 3874--3875
+Underfull \hbox (badness 10000) in paragraph at lines 3878--3879
 []\T1/pcr/m/n/10 calc_ti.py [-d directory] [-r results] [-s nskip] [-m nmax] [-
 pg] [-pp] [-pl]
  []
 
 [66] [67]
-Underfull \hbox (badness 10000) in paragraph at lines 4102--4103
+Underfull \hbox (badness 10000) in paragraph at lines 4106--4107
 []\T1/pcr/m/n/10 distribute_waters.py -b box -m molecules [-o outfile] [--model
  t3p|t4p ]
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 4111--4113
+[68]
+Underfull \hbox (badness 10000) in paragraph at lines 4115--4117
 []\T1/ptm/m/n/10 optional, de-fault =
  []
 
-[68]
-Overfull \hbox (21.09084pt too wide) in paragraph at lines 4125--4127
+
+Overfull \hbox (21.09084pt too wide) in paragraph at lines 4129--4131
 []
  []
 
 
-Overfull \hbox (201.46878pt too wide) in paragraph at lines 4131--4133
+Overfull \hbox (201.46878pt too wide) in paragraph at lines 4135--4137
 []
  []
 
 
-Overfull \hbox (70.245pt too wide) in paragraph at lines 4196--4197
+Overfull \hbox (70.245pt too wide) in paragraph at lines 4200--4201
 []\T1/pcr/m/n/10 generate_input.py [-s equilibration|sampling|dualtopology|sing
 letopology|gcmc|jaws1|jaws2]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4196--4197
+Underfull \hbox (badness 10000) in paragraph at lines 4200--4201
 \T1/pcr/m/n/10 [-p protein.pdb] [-l lig1.pdb lig2.pdb ...] [-t template1 templa
 te2
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4196--4197
+Underfull \hbox (badness 10000) in paragraph at lines 4200--4201
 \T1/pcr/m/n/10 ...] [-pw protwat.pdb] [-lw ligwat.pdb] [-o outfile] [--outfolde
 r folder]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4196--4197
+Underfull \hbox (badness 10000) in paragraph at lines 4200--4201
 \T1/pcr/m/n/10 [--lambdas nlambdas | lambda1 lambda2 ...] [--adams B1 B2 ...] [
 --jawsbias
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4196--4197
+Underfull \hbox (badness 10000) in paragraph at lines 4200--4201
 \T1/pcr/m/n/10 bias] [--gcmcwater wat.pdb] [--gcmcbox box.pdb] [--nequil N] [--
 nprod N]
  []
 
-
-Overfull \hbox (132.06357pt too wide) in paragraph at lines 4199--4201
-[]
- []
-
 [69]
-Underfull \hbox (badness 10000) in paragraph at lines 4217--4219
+Overfull \hbox (132.06357pt too wide) in paragraph at lines 4203--4205
 []
  []
 
 
-Overfull \hbox (19.64603pt too wide) in paragraph at lines 4247--4251
+Underfull \hbox (badness 10000) in paragraph at lines 4221--4223
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4267--4269
+Overfull \hbox (19.64603pt too wide) in paragraph at lines 4251--4255
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4273--4275
+Underfull \hbox (badness 10000) in paragraph at lines 4271--4273
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4277--4279
 []
  []
 
 [70]
-Underfull \hbox (badness 10000) in paragraph at lines 4415--4416
+Underfull \hbox (badness 10000) in paragraph at lines 4419--4420
 []\T1/pcr/m/n/10 make_single.py -t0 template0 -t1 template1 -p0 pdbfile0 -p1 pd
 bfile1 [-m map]
  []
 
-[71]
-Underfull \hbox (badness 10000) in paragraph at lines 4497--4498
+[71] [72]
+Underfull \hbox (badness 10000) in paragraph at lines 4501--4502
 []\T1/pcr/m/n/10 pms2pymbar.py [-d directory] [-r results] [-o outfile] [-s nsk
 ip] [-m nmax]
  []
 
-[72]
-Underfull \hbox (badness 10000) in paragraph at lines 4573--4574
+
+Underfull \hbox (badness 10000) in paragraph at lines 4577--4578
 []\T1/pcr/m/n/10 scoop.py -p proteinfile [-l ligandfile] [-o outfile] [--center
  center]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4573--4574
+Underfull \hbox (badness 10000) in paragraph at lines 4577--4578
 \T1/pcr/m/n/10 [--innercut icut] [--outercut ocut] [--flexin sidechain|flexible
 |rigid]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4573--4574
+Underfull \hbox (badness 10000) in paragraph at lines 4577--4578
 \T1/pcr/m/n/10 [--flexout sidechain|flexible|rigid] [--terminal keep|doublekeep
 |neutralize]
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 4609--4614
+[73]
+Underfull \hbox (badness 10000) in paragraph at lines 4613--4618
 []\T1/ptm/m/n/10 optional,
  []
 
-[73]
-Underfull \hbox (badness 10000) in paragraph at lines 4618--4623
+
+Underfull \hbox (badness 10000) in paragraph at lines 4622--4627
 []\T1/ptm/m/n/10 optional, de-fault =
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4627--4632
+Underfull \hbox (badness 10000) in paragraph at lines 4631--4636
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4682--4683
+Underfull \hbox (badness 10000) in paragraph at lines 4686--4687
 []\T1/pcr/m/n/10 solvate.py -b boxfile [-s solutefile] [-pr proteinfile] [-o ou
 tfile] [-g
  []
 
 [74]
-Underfull \hbox (badness 10000) in paragraph at lines 4733--4737
+Underfull \hbox (badness 10000) in paragraph at lines 4737--4741
 []\T1/ptm/m/n/10 optional, de-fault = Pro-toMS
  []
 
@@ -1256,7 +1256,7 @@ b></usr/share/texmf/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf/fonts
 /type1/urw/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmbi8a.pfb
 ></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on ProtoMS.pdf (82 pages, 680184 bytes).
+Output written on ProtoMS.pdf (82 pages, 680261 bytes).
 PDF statistics:
  1036 PDF objects out of 1200 (max. 8388607)
  237 named destinations out of 1000 (max. 131072)

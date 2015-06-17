@@ -562,7 +562,7 @@ calc_gcsingle.py -d out_gcmc -r -8 -12
 <div class="section" id="calc-replicapath-py">
 <h2>calc_replicapath.py<a class="headerlink" href="#calc-replicapath-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><tt class="docutils literal"><span class="pre">calc_replicapath.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">-p</span> <span class="pre">replica1</span> <span class="pre">[replica2</span> <span class="pre">...]</span> <span class="pre">-k</span> <span class="pre">lambda</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">calc_replicapath.py</span> <span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">[file2</span> <span class="pre">...]</span> <span class="pre">-p</span> <span class="pre">replica1</span> <span class="pre">[replica2</span> <span class="pre">...]</span> <span class="pre">-k</span> <span class="pre">lambda|temperature|rest|global</span> <span class="pre">[-o</span> <span class="pre">outfile]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">file1</span> <span class="pre">file2</span></tt> ... = the name(s) of ProtoMS results file(s)</dt>
@@ -577,9 +577,12 @@ calc_gcsingle.py -d out_gcmc -r -8 -12
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><tt class="docutils literal"><span class="pre">-k</span> <span class="pre">lambda</span></tt> = the kind of replicas</dt>
+<dt><tt class="docutils literal"><span class="pre">-k</span> <span class="pre">lambda|temperature|rest|global</span></tt> = the kind of replicas</dt>
 <dd><p class="first last">optional, default = lambda
-<tt class="docutils literal"><span class="pre">lambda</span></tt> = <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange replicas</p>
+<tt class="docutils literal"><span class="pre">lambda</span></tt> = <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange replicas
+<tt class="docutils literal"><span class="pre">temperature</span></tt> = temperature replica exchange replicas
+<tt class="docutils literal"><span class="pre">rest</span></tt> = solute tempering replica exchange replicas
+<tt class="docutils literal"><span class="pre">global</span></tt> = global replica exchange replicas, if combining <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> and temperature replica exchange</p>
 </dd>
 </dl>
 </li>
@@ -593,12 +596,13 @@ calc_gcsingle.py -d out_gcmc -r -8 -12
 <p><strong>Examples:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre>calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 1.000
 calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 0.500 1.000 -o replica_paths.png
+calc_replicapath.py -f out_free/t-*/lam-0.000/results -p 25.0 35.0 45.0 -k temperature
 </pre></div>
 </div>
 <p><strong>Description:</strong></p>
 <p>This tools plots the path of different replicas in a replica exchange simulation as a function of simulation time.</p>
-<p>At the moment only paths from a <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange simulation is supported. Hence, the <tt class="docutils literal"><span class="pre">-k</span></tt> argument is reduntant.</p>
 <p>If the kind of replicas is from <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange the <tt class="docutils literal"><span class="pre">replica1</span></tt> and <tt class="docutils literal"><span class="pre">replica2</span></tt> etc should be individual <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values to plot.</p>
+<p>If the kind of replicas is from REST or temperature replica exchange the <tt class="docutils literal"><span class="pre">replica1</span></tt> and <tt class="docutils literal"><span class="pre">replica2</span></tt> etc should be individual temperatures to plot.</p>
 </div>
 <div class="section" id="calc-rmsd-py">
 <h2>calc_rmsd.py<a class="headerlink" href="#calc-rmsd-py" title="Permalink to this headline">¶</a></h2>
@@ -1215,7 +1219,7 @@ make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -
 <div class="section" id="pms2pymbar-py">
 <h2>pms2pymbar.py<a class="headerlink" href="#pms2pymbar-py" title="Permalink to this headline">¶</a></h2>
 <p><strong>Syntax:</strong></p>
-<p><tt class="docutils literal"><span class="pre">pms2pymbar.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span> <span class="pre">[--run]</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">pms2pymbar.py</span> <span class="pre">[-d</span> <span class="pre">directory]</span> <span class="pre">[-r</span> <span class="pre">results]</span> <span class="pre">[-o</span> <span class="pre">outfile]</span> <span class="pre">[-s</span> <span class="pre">nskip]</span> <span class="pre">[-m</span> <span class="pre">nmax]</span> <span class="pre">[-t</span> <span class="pre">temperature]</span> <span class="pre">[--run]</span> <span class="pre">[--nobar]</span></tt></p>
 <ul>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">-d</span> <span class="pre">directory</span></tt> = name of output directory of the simulation</dt>
