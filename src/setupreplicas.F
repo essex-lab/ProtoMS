@@ -296,11 +296,9 @@ c          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-
 cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
 c        endif
       endif
-      write(6,*) getoption('multigcmc')
       if (getoption('multigcmc')) then
 c       Read in all B-values
         nadams = nwords
-        write(6,*) "B value read"
         do i=1,nwords
           adamparam(i) = getDouble(words(i),0.0)
         enddo     
