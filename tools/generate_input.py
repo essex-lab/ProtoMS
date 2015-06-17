@@ -880,7 +880,7 @@ class Jaws2(ProteinLigandSimulation) :
     self.setSolvent(2,jawssolvent)
     self.setParameter("grand1",jawswater)
     watobj = simulationobjects.PDBFile(filename=jawswater)
-    ocoord = watobj.solvents[1].atoms[0].coords
+    ocoord = watobj.residues[1].atoms[0].coords
     for i,param in enumerate(["x","y","z"]) :
       self.setParameter("origin"+param,ocoord[i]-1.5)
     for i,param in enumerate(["x","y","z"]) :
