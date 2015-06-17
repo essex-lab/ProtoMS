@@ -14,7 +14,7 @@
 
 
 \title{ProtoMS Documentation}
-\date{June 10, 2015}
+\date{June 17, 2015}
 \release{3.1}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and James Graham}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
@@ -3693,7 +3693,7 @@ This tool analyse and plot free energies from GCMC simulations
 \label{tools:calc-replicapath-py}
 \textbf{Syntax:}
 
-\code{calc\_replicapath.py -f file1 {[}file2 ...{]} -p replica1 {[}replica2 ...{]} -k lambda {[}-o outfile{]}}
+\code{calc\_replicapath.py -f file1 {[}file2 ...{]} -p replica1 {[}replica2 ...{]} -k lambda\textbar{}temperature\textbar{}rest\textbar{}global {[}-o outfile{]}}
 \begin{itemize}
 \item {} \begin{description}
 \item[{\code{-f file1 file2} ... = the name(s) of ProtoMS results file(s)}] \leavevmode
@@ -3708,9 +3708,12 @@ at least one replica value needs to be given
 \end{description}
 
 \item {} \begin{description}
-\item[{\code{-k lambda} = the kind of replicas}] \leavevmode
+\item[{\code{-k lambda\textbar{}temperature\textbar{}rest\textbar{}global} = the kind of replicas}] \leavevmode
 optional, default = lambda
 \code{lambda} = \(\lambda\) replica exchange replicas
+\code{temperature} = temperature replica exchange replicas
+\code{rest} = solute tempering replica exchange replicas
+\code{global} = global replica exchange replicas, if combining \(\lambda\) and temperature replica exchange
 
 \end{description}
 
@@ -3727,15 +3730,16 @@ optional, default = replica\_path.png
 \begin{Verbatim}[commandchars=\\\{\}]
 calc\PYGZus{}replicapath.py \PYGZhy{}f out\PYGZus{}free/lam\PYGZhy{}0.*/results \PYGZhy{}p 0.000 1.000
 calc\PYGZus{}replicapath.py \PYGZhy{}f out\PYGZus{}free/lam\PYGZhy{}0.*/results \PYGZhy{}p 0.000 0.500 1.000 \PYGZhy{}o replica\PYGZus{}paths.png
+calc\PYGZus{}replicapath.py \PYGZhy{}f out\PYGZus{}free/t\PYGZhy{}*/lam\PYGZhy{}0.000/results \PYGZhy{}p 25.0 35.0 45.0 \PYGZhy{}k temperature
 \end{Verbatim}
 
 \textbf{Description:}
 
 This tools plots the path of different replicas in a replica exchange simulation as a function of simulation time.
 
-At the moment only paths from a \(\lambda\) replica exchange simulation is supported. Hence, the \code{-k} argument is reduntant.
-
 If the kind of replicas is from \(\lambda\) replica exchange the \code{replica1} and \code{replica2} etc should be individual \(\lambda\)-values to plot.
+
+If the kind of replicas is from REST or temperature replica exchange the \code{replica1} and \code{replica2} etc should be individual temperatures to plot.
 
 
 \section{calc\_rmsd.py}
@@ -4494,7 +4498,7 @@ The force field parameters in \code{file2} will be re-numbered so that they do n
 \label{tools:pms2pymbar-py}
 \textbf{Syntax:}
 
-\code{pms2pymbar.py {[}-d directory{]} {[}-r results{]} {[}-o outfile{]} {[}-s nskip{]} {[}-m nmax{]} {[}-t temperature{]} {[}-{-}run{]}}
+\code{pms2pymbar.py {[}-d directory{]} {[}-r results{]} {[}-o outfile{]} {[}-s nskip{]} {[}-m nmax{]} {[}-t temperature{]} {[}-{-}run{]} {[}-{-}nobar{]}}
 \begin{itemize}
 \item {} \begin{description}
 \item[{\code{-d directory} = name of output directory of the simulation}] \leavevmode
