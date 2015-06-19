@@ -179,7 +179,11 @@ python2.7  $PROTOMSHOME/tools/build_template.py -n prz -p prz.prepi -f prz.frcmo
 </pre>
 which creates <code>prz.tem</code>.
 <p>
-These files need to be reference by the ProtoMS command file, created using
+Before proceeding, the protein atom names have to be adapted to the ProtoMS convention. This is done with the command
+<pre>
+python2.7 $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -c $PROTOMSHOME/data/atomnamesmap.dat
+</pre>
+The files above need to be reference by the ProtoMS command file, created using
 
 <pre>
 python2.7 $PROTOMSHOME/tools/generate_input.py -p protein_pms.pdb -l prz.pdb -t prz.tem -pw water_clr.pdb -s sampling -o run_bnd.cmd --outfolder out_bnd --nprod 80000000 --nequil 5000000 
