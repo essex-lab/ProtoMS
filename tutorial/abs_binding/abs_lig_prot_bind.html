@@ -289,8 +289,8 @@ Now we have all the files need to run the simulation. As you noticed, this step-
 <h5>Making ProtoMS input files</h5>
 To make the input files for ProtoMS type
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s dualtopology -p protein_scoop.pdb -l benzene.pdb benzene_dummy.pdb -t bnz-dummy.tem -pw water.pdb -lw benzene_box.pdb --absolute -o run</pre>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s dualtopology -p protein_scoop.pdb -l benzene.pdb benzene_dummy.pdb -t benzene.tem $PROTOMSHOME/data/dummy.tem -pw water.pdb -lw benzene_box.pdb --absolute -o run</pre>
 <p> 
-creating <code>run_bnd.cmd</code> and <code>run_free.cmd</code>.
+creating <code>run_bnd.cmd</code> and <code>run_free.cmd</code>. Notice that we had to specify the template file for the dummy atom, as it wasn't automatically created. 
 </BODY>
 </HTML>

@@ -642,7 +642,7 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
 solute %s
 info translate %f rotate %f\n""" % ( resname, translate, rotate )
 
-    logger.info("The first line of %s.pdb must be 'HEADER %s'. This line has now been added" %  ( os.path.splitext(temfile)[0], resname))
+    logger.info("Before running a simulation, ensure that the first line of %s.pdb reads 'HEADER %s'." %  ( os.path.splitext(temfile)[0], resname))
 
     # Print out the atoms
     for i, line in enumerate ( zmat, 3000 ):
