@@ -132,9 +132,10 @@ To improve sampling, one could add temperature ladders to the simulation and per
 
 <pre>temperaturere 1E5 25.0 27.0 30.0 34.0 39.0 45.0 52.0 60.0 69.0
 temperatureladder lambda 0.00 1.00 
+lambdaladder temperature 25.0 
 </pre>
 
-However, it should be noted that the selection of temperatures is a non-trivial task and it is likely to be system dependent. The above lines should therefore be regarded as a suggestion. 
+The last line indicates that the lambda replica exchange will occur at 25 degrees Celsius. It should be noted that the selection of temperatures is a non-trivial task and it is likely to be system dependent. The above lines should therefore be regarded as a suggestion. 
 
 ProtoMS then needs to be executed with additional nodes, for instance
 
