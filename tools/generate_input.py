@@ -527,7 +527,7 @@ class DualTopology(ProteinLigandSimulation) :
     self.setParameter("softcore2","solute 2")
     self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6 soft66")
     self.setParameter("dlambda","0.001")
-    self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
+    self.setParameter("lambdare","%d %s"%(dumpfreq," ".join("%.3f"%l for l in lambdaval)))
 
     self.setDump("results write results",dumpfreq)
     self.setDump("results writeinst results_inst",dumpfreq)
@@ -608,7 +608,7 @@ class SingleTopology(ProteinLigandSimulation) :
 
     self.setParameter("printfe","mbar")
     self.setParameter("dlambda","0.001")
-    self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
+    self.setParameter("lambdare","%d %s"%(dumpfreq," ".join("%.3f"%l for l in lambdaval)))
 
     self.setDump("results write results",dumpfreq)
     self.setDump("results writeinst results_inst",dumpfreq)

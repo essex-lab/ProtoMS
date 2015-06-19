@@ -147,7 +147,8 @@ you will create 5 input files for the bound leg and 5 input files for the free l
 <h5>Running with temperature replica-exchange</h5>
 To improve sampling, one could add temperature ladders to the simulation and perform replica-exchange swaps between neighboring values of temperatures. To add eight additional temperatures to &lambda;-values 0 and 1.0, add the following lines to the command file(s).
 
-<pre>temperaturere 1E5 25.0 27.0 30.0 34.0 39.0 45.0 52.0 60.0 69.0
+<pre>lambdaladder temperature 25.0
+temperaturere 1E5 25.0 27.0 30.0 34.0 39.0 45.0 52.0 60.0 69.0
 temperatureladder lambda 0.00 1.00 
 </pre>
 
@@ -187,9 +188,9 @@ For the dual-topology simulations the following files are created:	</p>
 	<li><code>run_free.cmd</code> = the ProtoMS command file for the free-leg simulation</li>
 	<p>
 For the single-topology simulations the following files are created:	</p>	
-	<li><code>li3tli1_ele.tem</code> = the template file for electrostatic perturbation, used only in this simulation</li>
-	<li><code>li3tli1_vdw.tem</code> = the template file for van der Waals perturbation, used only in this simulation</li>
-	<li><code>li3tli1_comb.tem</code> = the template file for one-step (combined) perturbation, used only in this simulation</li>
+	<li><code>li3-li1_ele.tem</code> = the template file for electrostatic perturbation, used only in this simulation</li>
+	<li><code>li3-li1_vdw.tem</code> = the template file for van der Waals perturbation, used only in this simulation</li>
+	<li><code>li3-li1_comb.tem</code> = the template file for one-step (combined) perturbation, used only in this simulation</li>
 	<li><code>single_cmap.dat</code> = the atom correspondence map</li>
 	<li><code>run_comb_bnd.cmd</code>, <code>run_ele_bnd.cmd</code> and <code>run_vdw_bnd.cmd</code> = the ProtoMS command files for the bound-leg simulation</li>
 	<li><code>run_comb_free.cmd</code>, <code>run_ele_free.cmd</code> and <code>run_vdw_free.cmd</code> = the ProtoMS command file for the free-leg simulation</li>
