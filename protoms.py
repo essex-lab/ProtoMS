@@ -849,6 +849,7 @@ if __name__ == "__main__":
   simgroup.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   simgroup.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
   simgroup.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
+  simgroup.add_argument('--ranseed',help="the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None",default=None)
   simgroup.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   simgroup.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   simgroup.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
@@ -1003,6 +1004,7 @@ if __name__ == "__main__":
       args.lambdas = [4]
     
   # Create ProtoMS command files
+  ranseed=args.ranseed
   if args.simulation == "singletopology" :
    postfix = ["_ele","_vdw","_comb"]
   elif args.simulation == "jaws2" :
@@ -1026,16 +1028,16 @@ if __name__ == "__main__":
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
     if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat : 
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_vdw" in repeat :
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_comb" in repeat :
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems3,water_file,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems3,water_file,ligand_water,ranseed,args)
     elif args.simulation == "jaws2" :
       idx = int(repeat.split("-")[-1][1:])
       args.gcmcwater = "jaws2_wat%d.pdb"%idx
       jaws2wat = "jaws2_not%d.pdb"%idx
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,ranseed,args)
 
     if free_cmd is not None : 
       free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")
