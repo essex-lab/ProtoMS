@@ -63,7 +63,14 @@ if __name__ == "__main__":
   logger = simulationobjects.setup_logger("merge_templates_py.log")
 
   if args.files is None : 
-    print "Nothing to do! Exiting."
+    raise simulationobjects.SetupError("Nothing to do! No template files provided. Exiting.")
+  if args.out is None :
+    raise simulationobjects.SetupError("A name for the merged template file needs to be provided!")
   
   tem = merge_templates(args.files)
   tem.write(args.out)
+
+
+
+
+
