@@ -136,6 +136,12 @@ c          write(6,*)myid, " calling TRE. Move ",i
             call assignlambdare(mylamid,.true.,.false.)
           endif
         endif
+
+c		Do GCMC replica exchange
+        if (doMultiGCMC.and.(gcrefreq.gt.0).and.(i.gt.1).and.(mod(i,gcrefreq).eq.0)) then
+c          write(6,*)myid, " calling TRE. Move ",i
+          call gcmcRE
+        endif
 #endif
         
       enddo
