@@ -6,7 +6,7 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Setting install
 project(ProtoMS Fortran)
 set(prog_name "protoms3")
 set(ProtoMS_VERSION_MAJOR 3)
-set(ProtoMS_VERSION_MINOR 1)
+set(ProtoMS_VERSION_MINOR 2)
 
 # Check build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -29,7 +29,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_Debug}")
 endif()
 
-message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID}")
+message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}")
 
 # Find Fortran MPI libraries
 option(AVOID_MPI "Don't use MPI even if available" OFF)
@@ -60,12 +60,17 @@ execute_process(COMMAND python
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fomit-frame-pointer -ffixed-line-length-none")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fomit-frame-pointer -ffixed-line-length-132 -ffixed-form -fimplicit-none")
 
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
     message("-- Using Intel compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
+
+# Set flags for IBM compiler
+elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
+    message("-- Using IBM compiler flags")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed=132")
 
 # Compiler not recognised
 else()

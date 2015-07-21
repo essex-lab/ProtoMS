@@ -122,9 +122,9 @@ c       print out the zmatrix
 
 c       print out the CLJ parameters
         do j=1,NZAtoms(i)
-          write(printstring,101), AtomName(i,j), ResNum(i,Zid2ResID(i,j,1)),
-     .                            Charge(ZPar(i,j)), Sigma(ZPar(i,j)),
-     .                            Epslon(ZPar(i,j))
+          write(printstring,101) AtomName(i,j), ResNum(i,Zid2ResID(i,j,1)),
+     .                           Charge(ZPar(i,j)), Sigma(ZPar(i,j)),
+     .                           Epslon(ZPar(i,j))
           call printLine(PPARAMS, printstring)
           
 101       format("Atom ",a4," ( ",i5," ) Charge= ",f12.7," Sigma= ",f12.7," Epsilon= ",f12.7)
@@ -214,14 +214,14 @@ c       print out the bond parameters
             ir = BndParam(ipar,2)
           endif
 
-          write(printstring,103), AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
-     .                            AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
-     .                            ik, ir
+          write(printstring,103) AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
+     .                           AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
+     .                           ik, ir
           call printLine(PPARAMS, printstring)
 
           if (.not. BondDummy(i,j)) then
-            write(printstring,1103), AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
-     .                               AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1))
+            write(printstring,1103) AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
+     .                              AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1))
             call printLine(PPARAMS, printstring)
           endif
 
@@ -264,10 +264,10 @@ c       print out the angle parameters
             ir = AngParam(ipar,2)
           endif
 
-          write(printstring,104), AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
-     .                            AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
-     .                            AtomName(i,iat3), ResNum(i,Zid2ResID(i,iat3,1)),
-     .                            ik, rad2Deg(ir)
+          write(printstring,104) AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
+     .                           AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
+     .                           AtomName(i,iat3), ResNum(i,Zid2ResID(i,iat3,1)),
+     .                           ik, rad2Deg(ir)
  
           call printLine(PPARAMS, printstring)
   
@@ -312,9 +312,9 @@ c       print out the Urey-Bradley parameters
             ir = UByParam(ipar,2)
           endif
 
-          write(printstring,106), AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
-     .                            AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
-     .                            ik, ir
+          write(printstring,106) AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
+     .                           AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
+     .                           ik, ir
           call printLine(PPARAMS, printstring)
 106       format("UreyBradley ",a4," ( ",i5," ) - ",a4," ( ",i5," ) R=",
      .                            f12.7," K= ",f12.7)
@@ -328,10 +328,10 @@ c       print out the dihedral parameters
           iat4 = Dihedral(i,j,4)
           ipar = Dihedral(i,j,5)
 
-          write(printstring,107), AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
-     .                            AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
-     .                            AtomName(i,iat3), ResNum(i,Zid2ResID(i,iat3,1)),
-     .                            AtomName(i,iat4), ResNum(i,Zid2ResID(i,iat4,1))
+          write(printstring,107) AtomName(i,iat1), ResNum(i,Zid2ResID(i,iat1,1)),
+     .                           AtomName(i,iat2), ResNum(i,Zid2ResID(i,iat2,1)),
+     .                           AtomName(i,iat3), ResNum(i,Zid2ResID(i,iat3,1)),
+     .                           AtomName(i,iat4), ResNum(i,Zid2ResID(i,iat4,1))
           call printLine(PPARAMS, printstring)
 
           call printDihedralParameter(ipar)
@@ -411,9 +411,9 @@ c       print out any variable geometry
 
 c       print out the CLJ parameters
         do j=1,NSolAtoms(i)
-          write(printstring,20), SolAtomName(i,j), SolResidueName(i,j),
-     .                            Charge(ZSolPar(i,j)), Sigma(ZSolPar(i,j)),
-     .                                                  Epslon(ZSolPar(i,j))
+          write(printstring,20) SolAtomName(i,j), SolResidueName(i,j),
+     .                          Charge(ZSolPar(i,j)), Sigma(ZSolPar(i,j)),
+     .                          Epslon(ZSolPar(i,j))
           call printLine(PPARAMS, printstring)
 
 20        format("Atom ",a4," ( ",a4," ) Charge= ",f12.7," Sigma= ",f12.7," Epsilon= ",f12.7)
@@ -450,16 +450,16 @@ c       print out the bond parameters
             ir = BndParam(ipar,2)
           endif
 
-          write(printstring,21), SolAtomName(i,iat1), SolResidueName(i,iat1),
-     .                           SolAtomName(i,iat2), SolResidueName(i,iat2),
-     .                           ik, ir                         
+          write(printstring,21) SolAtomName(i,iat1), SolResidueName(i,iat1),
+     .                          SolAtomName(i,iat2), SolResidueName(i,iat2),
+     .                          ik, ir                         
           call printLine(PPARAMS, printstring)
 
           if (ipar.lt.0) then
-            write(printstring,2021), SolAtomName(i,iat1), SolResidueName(i,iat1),
-     .                               SolAtomName(i,iat2), SolResidueName(i,iat2),
-     .                               VariableBndParam(-ipar,1,1), VariableBndParam(-ipar,1,2),
-     .                               VariableBndParam(-ipar,3,1), VariableBndParam(-ipar,3,2)
+            write(printstring,2021) SolAtomName(i,iat1), SolResidueName(i,iat1),
+     .                              SolAtomName(i,iat2), SolResidueName(i,iat2),
+     .                              VariableBndParam(-ipar,1,1), VariableBndParam(-ipar,1,2),
+     .                              VariableBndParam(-ipar,3,1), VariableBndParam(-ipar,3,2)
             call printLine(PPARAMS,printstring)
 2021        format("BondPert ",a4," ( ",a4," ) - ",a4," ( ",a4," ) KB= ",f12.7," RB= ",f12.8,
      .              " KF= ",f12.7," RF= ",f12.7)
@@ -531,18 +531,18 @@ c       print out the angle parameters
             ir = AngParam(ipar,2)
           endif
 
-          write(printstring,22)  SolAtomName(i,iat1), SolResidueName(i,iat1),
-     .                           SolAtomName(i,iat2), SolResidueName(i,iat2),
-     .                           SolAtomName(i,iat3), SolResidueName(i,iat3),
-     .                           ik, rad2Deg(ir)
+          write(printstring,22) SolAtomName(i,iat1), SolResidueName(i,iat1),
+     .                          SolAtomName(i,iat2), SolResidueName(i,iat2),
+     .                          SolAtomName(i,iat3), SolResidueName(i,iat3),
+     .                          ik, rad2Deg(ir)
           call printLine(PPARAMS, printstring)
 
           if (ipar.lt.0) then
-            write(printstring,2022)  SolAtomName(i,iat1), SolResidueName(i,iat1),
-     .                               SolAtomName(i,iat2), SolResidueName(i,iat2),
-     .                               SolAtomName(i,iat3), SolResidueName(i,iat3),
-     .                               VariableAngParam(-ipar,1,1), rad2Deg(VariableAngParam(-ipar,1,2)),
-     .                               VariableAngParam(-ipar,3,1), rad2Deg(VariableAngParam(-ipar,3,2))
+            write(printstring,2022) SolAtomName(i,iat1), SolResidueName(i,iat1),
+     .                              SolAtomName(i,iat2), SolResidueName(i,iat2),
+     .                              SolAtomName(i,iat3), SolResidueName(i,iat3),
+     .                              VariableAngParam(-ipar,1,1), rad2Deg(VariableAngParam(-ipar,1,2)),
+     .                              VariableAngParam(-ipar,3,1), rad2Deg(VariableAngParam(-ipar,3,2))
             call printLine(PPARAMS,printstring)
 2022        format("AnglePert ",a4," ( ",a4," ) - ",a4," ( ",a4," ) - ",a4," ( ",a4," ) KB= ",
      .              f12.7," RB= ",f12.8," KF= ",f12.7," RF= ",f12.7)
@@ -586,16 +586,16 @@ c       print out the Urey-Bradley parameters
             ir = UByParam(ipar,2)
           endif
 
-          write(printstring,23), SolAtomName(i,iat1), SolResidueName(i,iat1),
-     .                           SolAtomName(i,iat2), SolResidueName(i,iat2),
-     .                           ik, ir
+          write(printstring,23) SolAtomName(i,iat1), SolResidueName(i,iat1),
+     .                          SolAtomName(i,iat2), SolResidueName(i,iat2),
+     .                          ik, ir
           call printLine(PPARAMS, printstring)
 
           if (ipar.lt.0) then
-            write(printstring,2023), SolAtomName(i,iat1), SolResidueName(i,iat1),
-     .                               SolAtomName(i,iat2), SolResidueName(i,iat2),
-     .                               VariableUByParam(-ipar,1,1), VariableUByParam(-ipar,1,2),
-     .                               VariableUByParam(-ipar,3,1), VariableUByParam(-ipar,3,2)
+            write(printstring,2023) SolAtomName(i,iat1), SolResidueName(i,iat1),
+     .                              SolAtomName(i,iat2), SolResidueName(i,iat2),
+     .                              VariableUByParam(-ipar,1,1), VariableUByParam(-ipar,1,2),
+     .                              VariableUByParam(-ipar,3,1), VariableUByParam(-ipar,3,2)
             call printLine(PPARAMS,printstring)
 2023        format("UreyBradleyPert ",a4," ( ",a4," ) - ",a4," ( ",a4," ) KB= ",f12.7," RB= ",f12.8,
      .              " KF= ",f12.7," RF= ",f12.7)
@@ -613,10 +613,10 @@ c       print out the dihedral parameters
           iat4 = SolDihedral(i,j,4)
           ipar = SolDihedral(i,j,5)
 
-          write(printstring,24), SolAtomName(i,iat1), SolResidueName(i,iat1),
-     .                           SolAtomName(i,iat2), SolResidueName(i,iat2),
-     .                           SolAtomName(i,iat3), SolResidueName(i,iat3),
-     .                           SolAtomName(i,iat4), SolResidueName(i,iat4)
+          write(printstring,24) SolAtomName(i,iat1), SolResidueName(i,iat1),
+     .                          SolAtomName(i,iat2), SolResidueName(i,iat2),
+     .                          SolAtomName(i,iat3), SolResidueName(i,iat3),
+     .                          SolAtomName(i,iat4), SolResidueName(i,iat4)
           call printLine(PPARAMS, printstring)
 
           call printDihedralParameter(ipar)
@@ -660,10 +660,10 @@ c       print out the CLJ parameters
 
           if (ZSvnPar(i,j) .lt. 0) then
             zp = -ZSvnPar(i,j)
-            write(printstring,1020), SvnAtomName(i,j), SvnName(i),
-     .                               VariableChg(zp,1), VariableChg(zp,3),
-     .                               VariableSig(zp,1), VariableSig(zp,3),
-     .                               VariableEps(zp,1), VariableEps(zp,3)
+            write(printstring,1020) SvnAtomName(i,j), SvnName(i),
+     .                              VariableChg(zp,1), VariableChg(zp,3),
+     .                              VariableSig(zp,1), VariableSig(zp,3),
+     .                              VariableEps(zp,1), VariableEps(zp,3)
 
             call printLine(PPARAMS, printstring)    
 
