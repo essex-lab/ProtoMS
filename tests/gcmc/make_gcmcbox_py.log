@@ -1,0 +1,5 @@
+DEBUG : Running make_gcmcbox with arguments: 
+DEBUG : 	pdb      = wat.pdb
+DEBUG : 	filename = gcmc_box.pdb
+DEBUG : 	padding  = 2
+DEBUG : This will make a simulation box for GCMC/JAWS-1
