@@ -109,11 +109,14 @@ def _merge_templates(templates,tarlist) :
   """
   for tem in templates : tarlist.append(tem) # All of the original templates can safely be stored away
   temfile = tools.merge_templates(templates)
-  allnames = "-".join(t.name.lower() for t in temfile.templates)
-  templates = [allnames+".tem"]
-  temfile.write(allnames+".tem")
-  logger.info("Created a re-numbered template files for all ligands: %s"%templates[0])
-  return templates
+  if isinstance(temfile,simulationobjects.TemplateFile):
+    allnames = "-".join(t.name.lower() for t in temfile.templates)
+    templates = [allnames+".tem"]
+    temfile.write(allnames+".tem")
+    logger.info("Created a re-numbered template files for all ligands: %s"%templates[0])
+    return templates
+  else:
+    return [temfile]
 
 def _load_ligand_pdb(ligprefix,folders) :
   """
@@ -219,7 +222,7 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
         files["tem"] = tempfile
       else :
         tem = simulationobjects.TemplateFile(filename=tempfile)
-        if tem.templates[0].name.lower() == ligname.lower():
+        if ligname.lower() in [t.name.lower() for t in tem.templates]:
           files["tem"] = tempfile
           break
 
