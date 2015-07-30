@@ -250,7 +250,6 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
       logger.info("Created zmatrix (%s) for ligand. Please check the output carefully"%files["zmat"])
       tarlist.append(files["zmat"])
     logger.info("Created ProtoMS template-file (%s) for ligand. Please check the output carefully"%files["tem"])
-    tarlist.append(files["tem"])
                           
   # Check to see if we have solvated the ligand
   if files["wat"] is None :
