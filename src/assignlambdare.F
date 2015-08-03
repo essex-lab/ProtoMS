@@ -42,8 +42,13 @@ c##########################################################################
             if (mytemid.lt.0) then
               call findDoubleInList(temwithlad(mylamladder),temval,ntemperatures,mytemperature)
               write(trefolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
-              if (temval(mytemperature).ge.100.0) write(trefolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
+              if (temval(mytemperature).ge.1000.0) then
+                write(trefolder,"(3A,F8.3)")outfolder(1:lineLength(outfolder)),
      .                                             PATHSEP,"t-",temval(mytemperature)
+              else if (temval(mytemperature).ge.100.0) then
+                write(trefolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
+     .                                             PATHSEP,"t-",temval(mytemperature)
+              endif
               write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
               write(cmd,"(3A)")"mkdir -p ",lrefolder(1:lineLength(lrefolder)),PATHSEP
               call system(cmd) 

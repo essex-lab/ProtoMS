@@ -34,8 +34,13 @@ c          call MPI_COMM_RANK(mytemcom,mytemid,ierr)
         if (mkdirs) then
           mytemperature = mytemid + 1
           write(trefolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
-          if (temval(mytemperature).ge.100.0) write(trefolder,"(3A,F7.3)")
+          if (temval(mytemperature).ge.1000.0) then
+            write(trefolder,"(3A,F8.3)")
      .       outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
+          else if (temval(mytemperature).ge.100.0) then
+            write(trefolder,"(3A,F7.3)")
+     .       outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
+          endif
           if (mytemladder.eq.1) then
             write(cmd,"(3A)")"mkdir -p ",trefolder(1:lineLength(trefolder)),PATHSEP
             call system(cmd) 
