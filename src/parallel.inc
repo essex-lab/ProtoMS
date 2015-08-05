@@ -44,7 +44,7 @@ c     multi JAWS-2
       save /TRE/
 
       common /MGCMC/ gcwithlad,adamparam,nadams,myadam,mygcid,ngcladders,mygccom,ngcretry,ngcreswap,
-     .                 task2adams,adams2task,gcrefreq,gcmcfolder
+     .                 task2adams, adams2task, gcrefreq, gcmcfolder
       save /MGCMC/
 
       common /MJAWS/ jawswithlad,njaws2,myjbias,myjawsid,njawsladders,alljbias,jaws2folder

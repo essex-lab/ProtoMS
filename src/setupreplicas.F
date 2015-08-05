@@ -182,7 +182,7 @@ c       Read in template folder
           outfolder = "out"
         endif
 
-c       The combination fo temperature and lambda groups goes below
+c       The combination for temperature and lambda groups goes below
 c       Here I need to take care of generating the subgroups
 c       I am currently creating the subgroups one at a time in the loop
         mylamid = -1
@@ -297,10 +297,12 @@ cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefold
 c        endif
       endif
       if (getoption('multigcmc')) then
+        write(6,*)"### GR setupreplicas.F: multigcmc has been read from cmd file."
+        gcrefreq = nint(getDouble(words(1),1E5))
 c       Read in all B-values
-        nadams = nwords
-        do i=1,nwords
-          adamparam(i) = getDouble(words(i),0.0)
+        nadams = nwords - 1
+        do i=2,nwords
+          adamparam(i-1) = getDouble(words(i),0.0)
         enddo     
         if (ntasks.ne.nadams) then
           call closeProgram(100,"Number of Adam parameters is not equal to the number of tasks!")
@@ -313,7 +315,7 @@ c       Read in template folder
           outfolder = "out_gcmc"
         endif
         if (myid.eq.0) then
-          do i=1,nadams      
+          do i=1,nadams
             write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
             call writedoublestring(tmpstr,adamparam(i),cmd)
             call system(cmd) 
@@ -327,7 +329,15 @@ c       Read in template folder
           write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
           call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
         endif
+        do i=1,nadams  
+c         Here is where I need to correlate a lambda to a group.
+          task2adams(i) = i
+          adams2task(i) = i-1
+        enddo
+        ngcretry = 0
+        ngcreswap = 0
       endif
+
       if (getoption('multijaws2')) then
 c       Read in all jbiases
         njaws2 = nwords

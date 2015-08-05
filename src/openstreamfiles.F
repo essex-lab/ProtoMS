@@ -19,8 +19,9 @@ c###############################################
       character*14 optn
       character*300 tempstring
       
-c     check if we are dumping files to folder
+c     check if we are dumping files to folderF
       if (.not.(doLambdaRE.or.doMultiGCMC.or.doMultiJAws2.or.doTemperatureRe)) then
+        write(6,*)"### GR openstreamfiles.F: Shouldn't be here with multigcmc."
         if(getOption('outfolder')) then
           outfolder = words(1)
           write(tempstring,"(2A)")"mkdir -p ",outfolder(1:lineLength(outfolder))

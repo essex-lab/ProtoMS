@@ -34,7 +34,7 @@ c		GR: Also, I need to assign allongc(nadams), which is the vector of all on GC 
 c		GR: Not sure why I need this, maybe something to do with the folders?
       oldB = B
 c     check that temperature swaps are only attempted between tasks that are running temperature values
-      if (mygcid.lt.0) return
+      if (myid.lt.0) return
 
       do i = 1,nadams
         updated(i) = .false.
@@ -76,7 +76,8 @@ c      endif
 c		GR: This part defines how the information is communicated. myid=0 is the by convention the command process, so does not SEND information; instead, it RECIEVES information.
 c		GR: I require the equivalent of mytemcom
 c		GR: Check that GCSCavity is properly read by this file.
-      if (mygcid.eq.0) then
+      write(6,*)"### gcmcre.F : My myid and myid ",myid,myid
+      if (myid.eq.0) then
 c        alladaml(myadam) = adaml
 c        alladamh(myadam) = adamh
         alladam(myadam) = adamparam(myadam)
@@ -97,7 +98,7 @@ c        alladamh(myadam) = adamh
       endif
 
 c		GR: I've started modifying the below.
-      if (mygcid.eq.0) then
+      if (myid.eq.0) then
 c       Randomly selects odd/even pairs from 1 to the max number of Adams values and attempts to swap those pairs.
         choice = ranInt(0,1)
         do i=1,nadams-(choice+1),2
@@ -152,6 +153,7 @@ c            write(6,*)"Failing ",adamparam(aidx),adamparam(bidx),allnrg(aidx),a
 
 c		GR: Set the new adams value as B, which is used in Metropolis2.F
       B = adamparam(myadam)
+      write(6,*)"old B, new B = ",oldB, B
 
 c		GR: Do I need the below? What does it do? If it pertains to energies then it may not be needed.      
 c      if (.not.doREST) then
@@ -183,7 +185,7 @@ c        call updateExtraEnergies
 c      endif
 
 c		GR: May only be needed for combining GCMC with Lambde replica exchange. I'll come to this later.
-c      if (updated(mygcid+1).and.doLambdaRE) then
+c      if (updated(myid+1).and.doLambdaRE) then
 c        lamsbuffer(1) = mylamladder
 c        lamsbuffer(2) = mylamid
 c        lamsbuffer(3) = ntretry
@@ -210,13 +212,70 @@ c      endif
 c     Re-setting all running averages    
       nsteps = 0
 
-c		GR: What does this part do??       
+c		GR: This first line assigns adamstr as a string with 6 characters: 2 before the decimal place, the decimal place, and 3 decimals.
+    
+c     Defining gcmcfolder as the the folder that correponds to the NEW b value, using adamstr as a dummy variable.
+c      write(adamstr,"(4A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
+c      call writedoublestring(adamstr,adamparam(myadam),gcmcfolder)
+
+c     Defining adamstr as the the folder that correponds to the OLD b value, using adamstr2 as a dummy variable.
+c      write(adamstr2,"(4A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
+c      call writedoublestring(adamstr,oldB,adamstr2)
+
+c     Here, files that are open by current processor must have their output directory changed to the directory corresponding to the new B value.
+c        do i=1,nOpenFiles    
+c        if (wasopened(i)) fileappend(i) = .true.
+c        if (i.eq.streamhandle(RESTART)-40) then
+c          fileappend(i) = .False.
+c        endif
+c        fileopened(i) = .False.
+c        call split2(openfiles(i),PATHSEP)
+c        tempstr2 = words2(nwords2-1)
+c        if (tempstr2(1:lineLength(tempstr2)).eq.tempstr(1:lineLength(tempstr))) then
+c          do j=1,nwords2-2
+c            words(j) = words2(j)
+c          enddo
+c           write(words(nwords2-1),"(1A,F5.3)")"lam-",lambda
+c           words(nwords2) = words2(nwords2)
+c           nwords = nwords2
+c           call join2(1,nwords,PATHSEP,openfiles(i))
+c        endif
+c      enddo
+c     Here, files that are open by current processor must have their output directory changed to the directory corresponding to the new B value.
+c      write(tempstr,"(1A,F5.3)")"lam-",oldlam
+c      if (doTemperatureRE)then
+c        write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
+c      else
+c        write(lrefolder,"(3A,F5.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"lam-",lambdaval(mylambda)
+c      endif
+c      do i=1,nOpenFiles    
+c        if (wasopened(i)) fileappend(i) = .true.
+c        if (i.eq.streamhandle(RESTART)-40) then
+c          fileappend(i) = .False.
+c        endif
+c        fileopened(i) = .False.
+c        call split2(openfiles(i),PATHSEP)
+c        tempstr2 = words2(nwords2-1)
+c        if (tempstr2(1:lineLength(tempstr2)).eq.tempstr(1:lineLength(tempstr))) then
+c          do j=1,nwords2-2
+c            words(j) = words2(j)
+c          enddo
+c           write(words(nwords2-1),"(1A,F5.3)")"lam-",lambda
+c           words(nwords2) = words2(nwords2)
+c           nwords = nwords2
+c           call join2(1,nwords,PATHSEP,openfiles(i))
+c        endif
+c      enddo
+
+
+
+c     ###### GR: From this point, the old code is used.
       write(adamstr,"(1A,F6.3)")"b_",oldB
       write(gcmcfolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_",adamparam(myadam)
       if (oldB.ge.100.0) write(adamstr,"(1A,F7.3)")"b_",oldB
       if (adamparam(myadam).ge.100.0) write(gcmcfolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
      .                                    PATHSEP,"b_",adamparam(myadam)
-c      if (doLambdaRE) write(lrefolder,"(3A,F5.3)")gcmcfolder(1:lineLength(gcmcfolder)),PATHSEP,"lam-",lambdaval(mylambda)
+      if (doLambdaRE) write(lrefolder,"(3A,F5.3)")gcmcfolder(1:lineLength(gcmcfolder)),PATHSEP,"lam-",lambdaval(mylambda)
 
 
 c     Replacing the old temperature for the new one in the file name.
@@ -230,7 +289,9 @@ c		GR: Must account for the fact that there must be nested folders if replica ex
         endif
         fileopened(i) = .False.
         call split2(openfiles(i),PATHSEP)
+c			GR: By default, the temperature is the first folder, so the -k bit always picks that out. 
         adamstr2 = words2(nwords2-k)
+c			GR: This next bit sees which of the currently opened folders corresponds to the old adams value.
         if (adamstr2(1:lineLength(adamstr2)).eq.adamstr(1:lineLength(adamstr))) then
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
