@@ -76,7 +76,6 @@ c      endif
 c		GR: This part defines how the information is communicated. myid=0 is the by convention the command process, so does not SEND information; instead, it RECIEVES information.
 c		GR: I require the equivalent of mytemcom
 c		GR: Check that GCSCavity is properly read by this file.
-      write(6,*)"### gcmcre.F : My myid and myid ",myid,myid
       if (myid.eq.0) then
 c        alladaml(myadam) = adaml
 c        alladamh(myadam) = adamh
@@ -153,7 +152,7 @@ c            write(6,*)"Failing ",adamparam(aidx),adamparam(bidx),allnrg(aidx),a
 
 c		GR: Set the new adams value as B, which is used in Metropolis2.F
       B = adamparam(myadam)
-      write(6,*)"old B, new B = ",oldB, B
+      write(6,*)"### GR: old B, new B = ",oldB, B
 
 c		GR: Do I need the below? What does it do? If it pertains to energies then it may not be needed.      
 c      if (.not.doREST) then
@@ -270,15 +269,25 @@ c      enddo
 
 
 c     ###### GR: From this point, the old code is used.
-      write(adamstr,"(1A,F6.3)")"b_",oldB
-      write(gcmcfolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_",adamparam(myadam)
-      if (oldB.ge.100.0) write(adamstr,"(1A,F7.3)")"b_",oldB
-      if (adamparam(myadam).ge.100.0) write(gcmcfolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
-     .                                    PATHSEP,"b_",adamparam(myadam)
+c      write(adamstr,"(1A,F6.3)")"b_",oldB
+c      write(gcmcfolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_",adamparam(myadam)
+c      if (oldB.ge.100.0) write(adamstr,"(1A,F7.3)")"b_",oldB
+c      if (adamparam(myadam).ge.100.0) write(gcmcfolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
+c     .                                    PATHSEP,"b_",adamparam(myadam)
+
+c     Defining gcmcfolder as the the folder that correponds to the NEW b value, using adamstr as a dummy variable.
+      write(adamstr,"(4A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
+      call writedoublestring(adamstr,adamparam(myadam),gcmcfolder)
+      write(6,*)"### GR gcmcre.F: gcmcfolder=",gcmcfolder
+
+c     Defining adamstr as the the folder that correponds to the OLD b value.
+      call writedoublestring("b_",oldB,adamstr)
+      write(6,*)"### GR gcmcre.F: adamstr=",adamstr
+
+
       if (doLambdaRE) write(lrefolder,"(3A,F5.3)")gcmcfolder(1:lineLength(gcmcfolder)),PATHSEP,"lam-",lambdaval(mylambda)
 
 
-c     Replacing the old temperature for the new one in the file name.
 c		GR: Must account for the fact that there must be nested folders if replica exchange is attempted along another dimention.
       k = 1
       if ((dolambdaRE).or.(doREST).or.(doMultiJaws2).or.(doTemperatureRE)) k = 2
@@ -291,18 +300,23 @@ c		GR: Must account for the fact that there must be nested folders if replica ex
         call split2(openfiles(i),PATHSEP)
 c			GR: By default, the temperature is the first folder, so the -k bit always picks that out. 
         adamstr2 = words2(nwords2-k)
+        write(6,*)"### GR gcmcre.F: adamsrt2=",adamstr2
 c			GR: This next bit sees which of the currently opened folders corresponds to the old adams value.
         if (adamstr2(1:lineLength(adamstr2)).eq.adamstr(1:lineLength(adamstr))) then
+          write(6,*)"### GR adamstr2 is the same as adamstr"     
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
           enddo
-           write(words(nwords2-k),"(1A,F6.3)")"b_",adamparam(myadam)
-           if (adamparam(myadam).ge.100.0) write(words(nwords2-k),"(1A,F7.3)")"b_",adamparam(myadam)
-           do j=1,k
-             words(nwords2-(j-1)) = words2(nwords2-(j-1))
-           enddo
-           nwords = nwords2
-           call join2(1,nwords,PATHSEP,openfiles(i))
+          write(6,*)"### GR gcmcre.F: words(nwords2-k)=",words(nwords2-k)
+c           write(words(nwords2-k),"(1A,F6.3)")"b_",adamparam(myadam)
+c           if (adamparam(myadam).ge.100.0) write(words(nwords2-k),"(1A,F7.3)")"b_",adamparam(myadam)
+          call writedoublestring("b_",adamparam(myadam),words(nwords2-k))
+          write(6,*)"### GR gcmcre.F: NEW words(nwords2-k)=",words(nwords2-k)
+          do j=1,k
+            words(nwords2-(j-1)) = words2(nwords2-(j-1))
+          enddo
+          nwords = nwords2
+          call join2(1,nwords,PATHSEP,openfiles(i))
         endif
       enddo
 

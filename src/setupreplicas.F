@@ -297,7 +297,6 @@ cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefold
 c        endif
       endif
       if (getoption('multigcmc')) then
-        write(6,*)"### GR setupreplicas.F: multigcmc has been read from cmd file."
         gcrefreq = nint(getDouble(words(1),1E5))
 c       Read in all B-values
         nadams = nwords - 1
