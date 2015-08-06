@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python
 
 """
 Tests for checking whether MPI is installed correctly.
@@ -13,35 +13,26 @@ import unittest
 import sys
 import nose
 import nose.tools as nt
-#import subprocess
-#import Execute
+import subprocess
 
-mpi_path = "/usr/local/bin"
-
-return_check_res = os.popen("mpicxx -v").read()
-return_openmpi_info = os.popen(mpi_path+"/ompi_info").read()
 
 class TestMPIInstallation(unittest.TestCase):
 
+# Check that MPI is installed correctly.
 
-     def test_mpi_install(self):
 
-         if not return_check_res or not return_openmpi_info:
-             print("OpenMPI support is not installed.")
-         else:              
-             # Checking whether mpicc and mpirun are present if openMPI is installed.
+    def test_mpi_install(self):
 
-             try:
-                 self.assertTrue(os.path.exists(mpi_path+"/mpicc"))
-             except IOError as e:
-                 print e
-    	         print("mpicc is not present. Check if openMPI is installed correctly.")
+        try:
+            if os.popen("mpirun --version").read() == '' or os.popen("mpiexec --version").read() == '':
+                raise ValueError
+                print "No MPI implementation is present."
+            else:
+                print os.popen("mpiexec --version").read()
 
-             try:
-                 self.assertTrue(os.path.exists(mpi_path+"/mpirun"))
- 	     except:
-                 print e
-                 print("mpirun is not present. Check whether OpenMPI is installed correctly.")
+        except ValueError as e:
+            print e, "No MPI implementation is present."
+            
         
 
 if  __name__ == '__main__':
