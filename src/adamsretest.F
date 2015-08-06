@@ -15,7 +15,7 @@ c###################################################################
       double precision ngcsolsA,ngcsolsB,adamsA,adamsB,beta
       double precision expval,ranval,grnd,test
 
-      test = (ngcsolsA-ngcsolsB)*(adamsA-adamsB)*mt_beta_T   
+      test = (ngcsolsA-ngcsolsB)*(adamsB-adamsA)*mt_beta_T   
 
       adamsretest = .false.
       ranval = grnd()
