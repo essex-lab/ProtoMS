@@ -547,24 +547,26 @@ def solvate(box, ligand=None, protein=None, geometry="box",
 
   # Write water coordinates
   atmidx = 1
+  residx = 1
   for i,w in enumerate(added_water["xyz"]) :
     resid = i+1
+    residx= i+1
     if resid >= 10000 : resid = resid - 9999
     if atmidx >= 100000 : atmidx = atmidx - 99999
-    new_watbox.solvents[resid] = simulationobjects.Residue(name=resname[len(w)-1],index=resid)
+    new_watbox.solvents[residx] = simulationobjects.Residue(name=resname[len(w)-1],index=resid)
     newatom1 = simulationobjects.Atom(index=atmidx,name=names[0],resindex=resid,resname=resname[len(w)-1],coords=w[0])
     atmidx += 1
-    new_watbox.solvents[resid].addAtom(atom=newatom1)
+    new_watbox.solvents[residx].addAtom(atom=newatom1)
     newatom2 = simulationobjects.Atom(index=atmidx,name=names[1],resindex=resid,resname=resname[len(w)-1],coords=w[1])
     atmidx += 1
-    new_watbox.solvents[resid].addAtom(atom=newatom2)
+    new_watbox.solvents[residx].addAtom(atom=newatom2)
     newatom3 = simulationobjects.Atom(index=atmidx,name=names[2],resindex=resid,resname=resname[len(w)-1],coords=w[2])
     atmidx += 1
-    new_watbox.solvents[resid].addAtom(atom=newatom3)
+    new_watbox.solvents[residx].addAtom(atom=newatom3)
     if len(w) > 3 :
       newatom4 = simulationobjects.Atom(index=atmidx,name=names[3],resindex=resid,resname=resname[len(w)-1],coords=w[3])
       atmidx += 1
-      new_watbox.solvents[resid].addAtom(atom=newatom4)
+      new_watbox.solvents[residx].addAtom(atom=newatom4)
  
   return new_watbox
 
