@@ -105,7 +105,7 @@ def rotmat_z(gamma):
   numpy array
       the rotation matrix for the desired angle.
   """
-  return( np.mat([[np.cos(gamma), -np.sin(gamma),0.0],[np.sin(gamma), np.cos(gamma),0.0],[0.0, 0.0, 0.1]]) )
+  return( np.mat([[np.cos(gamma), -np.sin(gamma),0.0],[np.sin(gamma), np.cos(gamma),0.0],[0.0, 0.0, 1.0]]) )
 
 
 def rotatewat(watcoords,alpha,beta,gamma):
@@ -129,7 +129,7 @@ def rotatewat(watcoords,alpha,beta,gamma):
       the rotated set of water coordinates.
   """
   newmat = np.mat(watcoords-watcoords[0]).transpose()						# Centering the oxgen at the origin.
-  rotated = rotmat_x(alpha)*rotmat_y(beta)*rotmat_x(gamma)*newmat			# Rotating about the orgin
+  rotated = rotmat_x(alpha)*rotmat_y(beta)*rotmat_z(gamma)*newmat			# Rotating about the orgin
   return( rotated.transpose() + watcoords[0] )							# Translating back to the location of the original oxygen.
 
 
@@ -154,7 +154,7 @@ def rotatesolute(solutecoords,alpha,beta,gamma):
       the rotated set of molecule coordinates.
   """
   newmat = np.mat(solutecoords-np.mean(solutecoords,axis=0)).transpose()				# Centering the oxgen at the origin.
-  rotated = rotmat_x(alpha)*rotmat_y(beta)*rotmat_x(gamma)*newmat						# Rotating about the orgin
+  rotated = rotmat_x(alpha)*rotmat_y(beta)*rotmat_z(gamma)*newmat						# Rotating about the orgin
   return( rotated.transpose() + np.mean(solutecoords,axis=0))							# Translating back to the location of the original oxygen.
 
 
