@@ -35,6 +35,8 @@ c       Read in frequency and number of temperatures
         ntemperatures = nwords - 1
         do i=2,nwords
           temval(i-1) = getDouble(words(i),25.0)
+          if ((temval(i-1).lt.0).or.(temval(i-1).gt.9999).and.(myid.eq.0)) 
+     &   call closeProgram(-1,"ProtoMS exiting as a temperature set with temperaturere is less than 0 or larger than 9999 ")
 c          pt_beta_t(1,i-1) = dble(1.0) / (GASR*temval(i-1))
         enddo
         if (ntasks.lt.ntemperatures) then
