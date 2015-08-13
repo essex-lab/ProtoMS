@@ -32,8 +32,6 @@
 \RequirePackage{parskip}
 % For parsed-literal blocks.
 \RequirePackage{alltt}
-% Display "real" single quotes in literal blocks.
-\RequirePackage{upquote}
 
 % Redefine these colors to your liking in the preamble.
 \definecolor{TitleColor}{rgb}{0.126,0.263,0.361}
@@ -522,9 +520,3 @@
     \gdef\@chappos{}
   }
 \fi
-
-% Define literal-block environment
-\RequirePackage{float}
-\floatstyle{plaintop}
-\newfloat{literal-block}{htbp}{loc}[chapter]
-\floatname{literal-block}{List}
