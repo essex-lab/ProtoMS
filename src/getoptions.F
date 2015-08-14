@@ -67,6 +67,14 @@ c     check to see whether we will test the energy routines
         if (testenergy) call printLine(INFO,"Testing energy routines!")
       endif
 
+
+#ifndef WITH_MPI_
+c     If compiled without MPI replica exchange is not available
+      if (getOption('lambdare') .or. getOption('temperaturere')) then
+        call closeProgram(-1,"Replica exchange is not available as ProtoMS was compiled without MPI.")
+      endif
+#endif
+
 c     get the current value of lambda
       if (getOption('lambda')) then
 c       the format is 'lambda lambdaf lambdab'

@@ -27,7 +27,7 @@ Optional:
 
 We recommend to set the environmental variable $PROTOMSHOME to the installation directory of ProtoMS.
 
-The ProtoMS tools has the following requirements:
+The ProtoMS tools have the following requirements:
 * Python, version 2.7
 * NumPy (http://www.numpy.org/)
 * SciPy (http://www.scipy.org/)
