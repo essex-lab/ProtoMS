@@ -54,7 +54,5 @@ c      character*2 amber
 
       SolAngle(isol,nangs,4) = iparam
 
-c      write(printstring,*) 'ANG BTW ',zat1,'-',amber(ZSolPar(isol,zat1)),'-',' ',zat2,'-',amber(ZSolPar(isol,zat2)),' ',zat3,'-',amber(ZSolPar(isol,zat1)),' iparam ',iparam,' ipar0 ',ipar0,' ipar1 ',ipar1,' flex ? ',flex
-c      call printLine(DEBUG,printstring)
       return
       end

@@ -133,7 +133,8 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
          call MPI_Recv(mylambda,1,MPI_INTEGER,0,11,mylamcom,mpistat,ierr)
       endif
 
-c     The broadcast of nlretry needs to be dealt with in here, since it is ignoring the fact that I have different groups per communicator
+c     The broadcast of nlretry needs to be dealt with in here,
+c     since it is ignoring the fact that I have different groups per communicator
 
       call MPI_BCAST (nlretry, 1, MPI_INTEGER, 0, mylamcom, ierr)
       call MPI_BCAST (nlreswap, 1, MPI_INTEGER, 0, mylamcom, ierr)
@@ -154,8 +155,9 @@ c     The broadcast of nlretry needs to be dealt with in here, since it is ignor
       endif
 
 
-c     The communication in this code is not optimized. Task2temperature, temperature2task, nlretry & nlreswap probably only need to be swaped
-c     if a process with temid 0 is involved in the swap, since the reason to swap these is problems associated with the next temperatureswap
+c     The communication in this code is not optimized. Task2temperature, temperature2task,
+c     nlretry & nlreswap probably only need to be swaped if a process with temid 0 is involved
+c     in the swap, since the reason to swap these is problems associated with the next temperatureswap
       if (updated(mylamid+1).and.doTemperatureRE) then
         temsbuffer(1) = mytemladder
         temsbuffer(2) = mytemid

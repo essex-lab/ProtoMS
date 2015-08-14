@@ -92,7 +92,7 @@ c           actually run the equilibration
 c           the format is;
 c           'simulate nsteps (newprob) (protein=1) (solute=2) (solvent=3) (printinfo=10)'
             if (nwords.lt.2) then
-              call printLine(WARNING,"Could not intepret simulation line")
+              call printLine(WARNING,"Could not interpret simulation line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -114,7 +114,7 @@ c           actually perform the simulation
           else if (words(1) .eq. 'splitdddsasimulate') then
 c           JM format is splitsimulate nstps split (probs)
             if (nwords.lt.3) then
-              call printLine(WARNING,"Could not intepret simulation line")
+              call printLine(WARNING,"Could not interpret simulation line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -132,7 +132,7 @@ c           actually perform the simulation
           else if (words(1) .eq. 'splitgbsasimulate') then
 c           JM format is splitsimulate nstps split (probs)
             if (nwords.lt.3) then
-              call printLine(WARNING,"Could not intepret simulation line")
+              call printLine(WARNING,"Could not interpret simulation line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -220,7 +220,7 @@ c            restscale3 = oldscale3
 c           the format is 'retienergy retidelta'
 c           JM mod format can also be retienergy retideltau retideltal
             if (nwords.lt.2) then
-              call printLine(WARNING,"Could not intepret retienergy line")
+              call printLine(WARNING,"Could not interpret retienergy line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -510,7 +510,7 @@ c           Deal with the adding of restrains
             write(printstring,"(A,F20.5)")"Gradient = ",lambdaderivative()
             call printLine(INFO,printstring)
           else
-            call printLine(WARNING,"Cannot intepret simulation chunk!")
+            call printLine(WARNING,"Cannot interpret simulation chunk!")
             call join(1,nwords,printstring)
             call printLine(WARNING,printstring)
           endif

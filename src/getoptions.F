@@ -972,7 +972,8 @@ c            of the cap, plus an additional radius of kT into the harmonic poten
      .           maxVolChange," A^3"
              call prettyLine(INFO,printstring)
 
-           write(printstring,*)"Adjusting the volume when using a cap is not recommended. This may seriously harm your simulation!"
+           write(printstring,*) "Adjusting the volume when using a cap is not recommended.",
+     .           "This may seriously harm your simulation!"
              call printLINE(WARNING,printstring)
             else
               call printLine(WARNING,"Must have periodic boundaries for an NPT simulation!")

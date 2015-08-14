@@ -110,8 +110,6 @@ c     Calculate actual SASA values from linear combination
       sanrg =  sanrg1 * lowscale + sanrg2 * highscale
       sanrgf = sanrgf1 * lowscalef + sanrgf2 * highscalef
       sanrgb = sanrgb1 * lowscaleb + sanrgb2 * highscaleb
-c      write(printstring,*) ' SASA lin ',lowscale,' ',highscale,' ',sanrg,' ',sanrgf,' ',sanrgb,' surf ',surface,' F ',surfacef,' B ',surfaceb
-c      call printLine(DEBUG,printstring)   
 c
 c     Regenerate Old values for complete system
 c
