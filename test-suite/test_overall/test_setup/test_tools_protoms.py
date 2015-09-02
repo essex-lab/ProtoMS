@@ -13,6 +13,7 @@ import unittest
 import sys
 import nose
 import nose.tools as nt
+from protoms import *
 
 #---------------------------------------------
 # Setup tests
@@ -25,6 +26,13 @@ proto_path = os.environ["HOME"] + "/protoms"
 class TestToolsSetUp(unittest.TestCase):
 
 # Test if ProtoMS tools and reference files exist are in the expected place.
+    def setUp(self):
+        super(TestToolsSetUp, self).setUp()
+        print("Setting up ProtoMS tools test.")
+    
+    def tearDown(self):
+        super(TestToolsSetUp, self).setUp()
+        print("Cleaning up ProtoMS tools test.")
 
     def setup_test_tools(self):
 

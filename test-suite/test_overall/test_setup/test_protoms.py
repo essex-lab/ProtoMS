@@ -13,18 +13,28 @@ import unittest
 import sys
 import nose
 import nose.tools as nt
-
+import subprocess
+import re
 #---------------------------------------------
 # Setup tests
 #---------------------------------------------
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
-proto_path = os.environ["HOME"] + "/protoms"
+proto_path = os.popen("pwd").read()
+proto_path = re.sub('\\n$', '', proto_path)
+
 
 class TestSetUp(unittest.TestCase):
 
 # Test if PROTOMSHOME is set properly. PROTOMSHOME must be set after protoms install at HOME directory.
+    def setUp(self):
+        super(TestSetUp, self).setUp()
+        print("Setting up PROTOMSHOME check test case.") 
+
+    def tearDown(self):
+        super(TestSetUp, self).tearDown()
+        print("Cleaning up PROTOMSHOME check test case.")
 
     def test_protoms_path(self):
         

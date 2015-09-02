@@ -14,7 +14,11 @@ solvation free energy across 4 cores
 ### Test version ###
 Test created with ProtoMS 3.1.2 release
 (changeset 328:6daeecd68181 - 01-Jul-15 )
-Compiled with Intel ifort 13.1.0, openmpi 1.6.4
+Compiled with GCC gfortran 4.4.7, openmpi 1.6.4
+
+### Input files ###
+ethane.pdb
+methanol.pdb
 
 ### Command line ###
 python2.7 $PROTOMSHOME/protoms.py -s dualtopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup 

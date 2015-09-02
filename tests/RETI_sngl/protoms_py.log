@@ -1,4 +1,4 @@
-DEBUG : Running protoms.py at 15/07/2015 - 18:18:47
+DEBUG : Running protoms.py at 10/08/2015 - 16:31:53
 DEBUG : Command line arguments = -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap single_cmap.dat
 DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=True, cmdfile='run', dovacuum=False, dumpfreq=1.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[0.0, 0.33, 0.67, 1.0], ligand=['ethane.pdb', 'methanol.pdb'], nequil=0.0, nprod=10.0, outercut=20.0, outfolder='', protein=None, ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='singletopology', singlemap='single_cmap.dat', template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
 INFO : 
