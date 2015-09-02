@@ -13,6 +13,7 @@ import unittest
 import sys
 import nose
 import nose.tools as nt
+import re
 from protoms import *
 
 #---------------------------------------------
@@ -21,7 +22,9 @@ from protoms import *
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
-proto_path = os.environ["HOME"] + "/protoms"
+proto_path = os.popen("pwd").read() 
+proto_path = re.sub('\\n$', '', proto_path)
+
 
 class TestToolsSetUp(unittest.TestCase):
 
