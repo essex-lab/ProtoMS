@@ -30,7 +30,7 @@ c###############################################################
         thetamul = thetamul*theta
       enddo
       if (doREST) then
-        calcJMPF = calcJPMF * restscaling(7)
+        calcJPMF = calcJPMF * restscaling(7)
       endif
       return
      
