@@ -1,6 +1,7 @@
       double precision function calcJPMF(isol,theta)
       include 'dimensions.inc'
       include 'solutes.inc'
+      include 'flags.inc'
 
 c###############################################################
 c
@@ -27,6 +28,9 @@ c###############################################################
         calcJPMF = calcJPMF + thetamul*SolJPmfCoeff(isol,i)
         thetamul = thetamul*theta
       enddo
+      if (doREST) then
+        calcJMPF = calcJPMF * restscaling(7)
+      endif
       return
      
       end
