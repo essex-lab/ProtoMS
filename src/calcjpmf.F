@@ -2,6 +2,7 @@
       include 'dimensions.inc'
       include 'solutes.inc'
       include 'flags.inc'
+      include 'simparams.inc'
 
 c###############################################################
 c
