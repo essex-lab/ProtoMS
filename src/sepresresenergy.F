@@ -67,6 +67,7 @@ c     are we softening the residue-residue interactions?
       endif
 
 c     now run over all pairs...
+!$OMP PARALLEL DO DEFAULT(PRIVATE) REDUCTION(+:nrg, cnrg, ljnrg, cnrgf, cnrgb, ljnrgf, ljnrgb)
       do i=zstrt1,zend1
         funcat1 = i
         do j=zstrt2,zend2

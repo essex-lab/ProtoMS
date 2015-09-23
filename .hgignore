@@ -7,3 +7,5 @@ src/makefile.*
 src/idme.inc
 src/sep.inc
 build/
+*.pyc
+*.orig
