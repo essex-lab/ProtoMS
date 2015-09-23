@@ -22,6 +22,9 @@ mpi_fortrancompiler = mpif77
 
 fflags = -O3 -I. -fomit-frame-pointer -ffixed-line-length-none
 
+# MPI - comment this line out if you wish to compile ProtoMS without MPI
+fflags += -DWITH_MPI_=true
+
 #Compile flags for g77
 #fflags = -O2 -malign-double -ffixed-line-length-none -Wall
 #Compile flags for g77 with gprof profiling and debugging
