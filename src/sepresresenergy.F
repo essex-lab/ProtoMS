@@ -67,7 +67,9 @@ c     are we softening the residue-residue interactions?
       endif
 
 c     now run over all pairs...
-!$OMP PARALLEL DO DEFAULT(PRIVATE) REDUCTION(+:nrg, cnrg, ljnrg, cnrgf, cnrgb, ljnrgf, ljnrgb)
+!$OMP PARALLEL DO DEFAULT(FIRSTPRIVATE)
+!$OMP&REDUCTION(+:nrg, cnrg, ljnrg, cnrgf, cnrgb, ljnrgf, ljnrgb)
+!$OMP&REDUCTION(min: mindist)
       do i=zstrt1,zend1
         funcat1 = i
         do j=zstrt2,zend2
@@ -88,6 +90,11 @@ c         output to funcnbnrg,funccnrg,funcljnrg,funcmindist
           if (funcmindist.lt.mindist) mindist = funcmindist
         enddo
       enddo
+!$OMP END PARALLEL DO
+
+10    format('Energies= ',8f8.3)
+      write(printstring,10) nrg,cnrg,ljnrg,cnrgf,cnrgb,ljnrgf,ljnrgb,mindist
+      call printLine(RESULTS,printstring)
 
       sepResResEnergy = nrg
       

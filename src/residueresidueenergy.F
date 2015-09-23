@@ -6,6 +6,8 @@
       include 'constants.inc'
       include 'proteins.inc'
       include 'flags.inc'
+
+      include 'printer.inc'
 c####################################################################
 c
 c     This function calculates the intramolecular protein
