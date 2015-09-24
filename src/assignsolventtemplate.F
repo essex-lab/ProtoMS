@@ -43,6 +43,9 @@ c     as there are in the solvent
       endif
       
 c     assign the clj parameters
+!$OMP PARALLEL DO DEFAULT(NONE)
+!$OMP&PRIVATE(iat,ipar1,ipar2,printstring)
+!$OMP&SHARED(itmpl,isvn,SvnName,SvnAtomName,SvnTemplateAtmCLJ,ZSvnPar)
       do i=1,nats
         iat = findSolventTemplateAtom(SvnAtomName(isvn,i),itmpl)
         if (iat.eq.0) then
@@ -55,6 +58,7 @@ c       add the clj types for this solvent atom and assign the parameter
         ipar2 = addCLJ(SvnTemplateAtmCLJ(itmpl,iat,2))
         ZSvnPar(isvn,i) = getCLJ(ipar1,ipar2)
       enddo
+!$OMP END PARALLEL DO
 
 c     Assign the optimization flag
       SvnOptimization(isvn) = SvnTemplateOptimization(itmpl)
