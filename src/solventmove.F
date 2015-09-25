@@ -27,7 +27,7 @@ c##################################################################
       double precision solventEnergy,extraEnergy
       double precision ranRange,ienew
       double precision nrgf,nrgb,nrg
-      logical metropolis
+      logical metropolis,hasSolventMoved
       character*4 statstring
       integer ranInt,i
 
@@ -52,8 +52,6 @@ c         if we fail the test, then randomly pick another solvent molecule
         endif
       endif
 
-c     add this solvent to the move list
-      call setSolventMoved(isvn)      
             
 c     see whether we are updating the energies
       if (updatenrg.eq.UPDATEENERGY) then
@@ -63,9 +61,19 @@ c     see whether we are updating the energies
       endif
       
 c     get the old energy of the solvent
-      ieold = solventEnergy(savenrg,isvn,nrgb,nrgf)  + 
-     .          extraEnergy(savenrg,nrgb,nrgf)
+      if (hasSolventMoved(isvn)) then
+          call printLine(FATAL,"lookup")
+          ieold = oldIndSvnTotNrg(isvn)
+      else
+c         call printLine(FATAL,"not lookup")
+          ieold = solventEnergy(savenrg,isvn,nrgb,nrgf)  + 
+     .            extraEnergy(savenrg,nrgb,nrgf)
+          oldIndSvnTotNrg(isvn) = ieold
+      endif
                
+c     add this solvent to the move list
+      call setSolventMoved(isvn)      
+
 c     copy the coordinates to storage
       call pushBackSolventCoords(isvn)
 
@@ -81,6 +89,7 @@ c     change to NEW energy if necessary
 c     get the new energy
       ienew = ienew + solventEnergy(savenrg,isvn,nrgb,nrgf)  + 
      .          extraEnergy(savenrg,nrgb,nrgf)
+
                 
 
 c     if we are doing preferential sampling, then we must
@@ -97,7 +106,8 @@ c      call printLine(DEBUG,printstring)
       if (metropolis(ieold,ienew,movtyp)) then
         solventMove = .true.
         statstring = "PASS"      
-        nrg = ienew      
+        nrg = ienew
+        oldIndSvnTotNrg(isvn) = ienew
         NSvnAcp(isvn) = NSvnAcp(isvn) + 1
 c       update the energies
         if (updatenrg.eq.UPDATEENERGY) then

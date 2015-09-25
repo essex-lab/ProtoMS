@@ -300,6 +300,7 @@ c       individual solvent - other energies
       double precision oldIndSvnProLJB(MAXPROTEINS),newIndSvnProLJB(MAXPROTEINS)
       double precision oldIndSvnSolLJB(MAXSOLUTES),newIndSvnSolLJB(MAXSOLUTES)
       double precision oldIndSvnLJB,newIndSvnLJB
+      double precision oldIndSvnTotNrg(MAXSOLVENTS)
 c     old and new residue energies
       double precision oldResNrgF,oldResNrgB
       double precision newResNrgF,newResNrgB

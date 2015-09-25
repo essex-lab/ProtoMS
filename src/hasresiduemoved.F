@@ -3,7 +3,7 @@
       include 'movelist.inc'
 c########################################################
 c
-c     This returns true is residue ires in protein
+c     This returns true if residue ires in protein
 c     iprot has been moved
 c
 c     (C) Christopher Woods, October 2004

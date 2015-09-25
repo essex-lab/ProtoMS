@@ -151,30 +151,6 @@ c       Coulomb between the rest of the particles, i.e., between hydrogens and e
         else
           istart = 2
         endif
-!$OMP PARALLEL DO DEFAULT(NONE) SCHEDULE(GUIDED)
-!$OMP&PRIVATE(j,funcat1,funcat2,funcnbnrg,funccnrg,funcljnrg,funccnrgb,funcljnrgf,funcljnrgb)
-!$OMP&PRIVATE(invfuncdist12b,invfuncdist12f,invfuncdist6b,invfuncdist6f,softdistb,softdistf)
-!$OMP&PRIVATE(invfuncdistb,funcdistb6,invfuncdistf,funcdistf6,funcdistb2,funcdistf2)
-!$OMP&PRIVATE(funcdzb,funcdzf,funcdyb,funcdyf,funcdxb,funcdxf,invfuncdist12,invfuncdist6)
-!$OMP&PRIVATE(sigat2,sigat1,softpowerinv,invfuncdist,funcdist6,funcdist2)
-!$OMP&PRIVATE(funcsig3b,funcsqrtepsb,funcsig3f,funcsqrtepsf)
-!$OMP&PRIVATE(funcieps2f,funcieps2b,funcisig2f,funcisig2b,funcichg2b,funcichg2f)
-!$OMP&PRIVATE(funcieps1f,funcieps1b,funcisig1f,funcisig1b,funcichg1f,funcichg1b)
-!$OMP&PRIVATE(funcsig3,funcsqrteps)
-!$OMP&PRIVATE(funcieps2,funcisig2,funcichg2,funcieps1,funcisig1)
-!$OMP&PRIVATE(funcichg1,funcsigsclb,funcsigsclf,funcdogeom,funcisvn2,funcisvn1)
-!$OMP&PRIVATE(funcisol2,funcisol1,funcdz,funcdy,funcdx,pertchg,shiftb,shiftf)
-!$OMP&PRIVATE(shift,softdist,funcbijb,funcbijf,funcbij,funcaijf,funcaijb,funcaij)
-!$OMP&PRIVATE(qiqjb,qiqjf,qiqj,ipar2,ipar1,funccnrgf,funcnbnrgb,funcnbnrgf,funcmindist)
-
-!$OMP&SHARED(funciprot1,funciprot2,istart,nats2,ddd,softcore,scl,sclf,sclb,DeltaCore)
-!$OMP&SHARED(DeltaCoreCoul,SoftType,boundary,boundx,boundy,boundz,boxdimension)
-!$OMP&SHARED(AIJ,BIJ,CLJPair,ChgIJ,lambda,lambdaf,lambdab,DifferentLambdas)
-!$OMP&SHARED(SIRE_COMPATIBILITY_MODE,lorentzberthelot,VariableEps,VariableSig,VariableChg)
-!$OMP&SHARED(ZSvnPar,ZSvnCoords)
-
-!$OMP&REDUCTION(+:nrg,cnrg,cnrgf,cnrgb)
-!$OMP&REDUCTION(min: mindist)
         do i=istart,nats1
           funcat1 = i
           do j=istart,nats2
@@ -193,34 +169,9 @@ c       Coulomb between the rest of the particles, i.e., between hydrogens and e
      .          mindist = funcmindist
           enddo
         enddo      
-!$OMP END PARALLEL DO
  
       else
 
-!$OMP PARALLEL DO DEFAULT(NONE) SCHEDULE(GUIDED)
-!$OMP&PRIVATE(j,funcat1,funcat2,funcnbnrg,funccnrg,funcljnrg,funccnrgb,funcljnrgf,funcljnrgb)
-!$OMP&PRIVATE(invfuncdist12b,invfuncdist12f,invfuncdist6b,invfuncdist6f,softdistb,softdistf)
-!$OMP&PRIVATE(invfuncdistb,funcdistb6,invfuncdistf,funcdistf6,funcdistb2,funcdistf2)
-!$OMP&PRIVATE(funcdzb,funcdzf,funcdyb,funcdyf,funcdxb,funcdxf,invfuncdist12,invfuncdist6)
-!$OMP&PRIVATE(sigat2,sigat1,softpowerinv,invfuncdist,funcdist6,funcdist2)
-!$OMP&PRIVATE(funcsig3b,funcsqrtepsb,funcsig3f,funcsqrtepsf)
-!$OMP&PRIVATE(funcieps2f,funcieps2b,funcisig2f,funcisig2b,funcichg2b,funcichg2f)
-!$OMP&PRIVATE(funcieps1f,funcieps1b,funcisig1f,funcisig1b,funcichg1f,funcichg1b)
-!$OMP&PRIVATE(funcsig3,funcsqrteps)
-!$OMP&PRIVATE(funcieps2,funcisig2,funcichg2,funcieps1,funcisig1)
-!$OMP&PRIVATE(funcichg1,funcsigsclb,funcsigsclf,funcdogeom,funcisvn2,funcisvn1)
-!$OMP&PRIVATE(funcisol2,funcisol1,funcdz,funcdy,funcdx,pertchg,shiftb,shiftf)
-!$OMP&PRIVATE(shift,softdist,funcbijb,funcbijf,funcbij,funcaijf,funcaijb,funcaij)
-!$OMP&PRIVATE(qiqjb,qiqjf,qiqj,ipar2,ipar1,funccnrgf,funcnbnrgb,funcnbnrgf,funcmindist)
-
-!$OMP&SHARED(funciprot1,funciprot2,nats2,ddd,softcore,scl,sclf,sclb,DeltaCore)
-!$OMP&SHARED(DeltaCoreCoul,SoftType,boundary,boundx,boundy,boundz,boxdimension)
-!$OMP&SHARED(AIJ,BIJ,CLJPair,ChgIJ,lambda,lambdaf,lambdab,DifferentLambdas)
-!$OMP&SHARED(SIRE_COMPATIBILITY_MODE,lorentzberthelot,VariableEps,VariableSig,VariableChg)
-!$OMP&SHARED(ZSvnPar,ZSvnCoords)
-
-!$OMP&REDUCTION(+:nrg,cnrg,ljnrg,cnrgf,cnrgb,ljnrgf,ljnrgb)
-!$OMP&REDUCTION(min: mindist)
         do i=1,nats1
           funcat1 = i
           do j=1,nats2
@@ -244,7 +195,6 @@ c           actually calculate the energy
      .          mindist = funcmindist
           enddo
         enddo
-!$OMP END PARALLEL DO
       endif
 
       if (cuttype.eq.RESIDUEMOLECULE .or. cuttype.eq.MOLECULEMOLECULE) then

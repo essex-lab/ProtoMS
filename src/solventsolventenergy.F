@@ -39,6 +39,14 @@ c##############################################################
       
       if (DoneSvnNrg(isvn)) return
       
+!$OMP PARALLEL DO DEFAULT(NONE)
+
+!$OMP&PRIVATE(inrg,icnrg,iljnrg,icnrgf,icnrgb,iljnrgf,iljnrgb,imindist)
+
+!$OMP&SHARED(isvn)
+
+!$OMP&REDUCTION(+:nrg,cnrg,ljnrg,cnrgf,cnrgb,ljnrgf,ljnrgb)
+!$OMP&REDUCTION(min:mindist)
       do i=1,NSolvents
         if (i.ne.isvn) then
           inrg =  solventSolventSingleEnergy(isvn,i,
