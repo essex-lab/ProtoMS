@@ -6,6 +6,7 @@
       include 'enums.inc'
       include 'constants.inc'
       include 'proteins.inc'
+      include 'printer.inc'
 c########################################################################
 c
 c     This function will return the total intramolecular energy
@@ -125,10 +126,16 @@ c     now get the intraresidue non-bonded term
 
 c     now run over all residues, and calculate the res-res energy
       inres = NResidues(iprot)
+!$OMP PARALLEL DO DEFAULT(NONE) ORDERED
+!$OMP&SHARED(ires,iprot,inres)
+!$OMP&PRIVATE(icnrg,iljnrg,icnrgf,icnrgb,iljnrgf,iljnrgb,imindist)
+!$OMP&REDUCTION(+:nbnrg,nbcnrg,nbljnrg,nbcnrgf,nbcnrgb,nbljnrgf,nbljnrgb)
       do i=1,inres
          if (i.ne.ires) then
+!$OMP ORDERED
            nbnrg = nbnrg + residueResidueEnergy(iprot,ires,i,
      .                     icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist)
+!$OMP END ORDERED
            nbcnrg = nbcnrg + icnrg
            nbljnrg = nbljnrg + iljnrg
            nbcnrgf = nbcnrgf + icnrgf
@@ -137,6 +144,11 @@ c     now run over all residues, and calculate the res-res energy
            nbljnrgb = nbljnrgb + iljnrgb
          endif
       enddo
+!$OMP END PARALLEL DO
+
+10    format('Energies= ',3f8.3)
+      write(printstring,10) nbnrg,nbcnrg,nbljnrg
+      call printLine(RESULTS,printstring)
 
       residueIntraEnergy = bndnrg + angnrg + dihnrg + ubynrg + nbnrg
       
