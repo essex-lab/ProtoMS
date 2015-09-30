@@ -1,4 +1,12 @@
 # CMake file for ProtoMS
+
+# ---------------------------------------------- #
+# Command line options:
+# 
+# MPI=YES                       ! defaults to NO
+#
+# ---------------------------------------------- #
+
 cmake_minimum_required(VERSION 2.8.7)
 
 # Project name and language - enables Fortran dependency checking
@@ -6,7 +14,7 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Setting install
 project(ProtoMS Fortran)
 set(prog_name "protoms3")
 set(ProtoMS_VERSION_MAJOR 3)
-set(ProtoMS_VERSION_MINOR 1)
+set(ProtoMS_VERSION_MINOR 2)
 
 # Check build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -29,7 +37,24 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_Debug}")
 endif()
 
-message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID}")
+message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}")
+
+# Find MPI libraries
+
+option(MPI "Use MPI for tools requiring parallel runs" NO)
+option(FIND_MPI "Attempt to automatically find MPI information" YES)
+option(MPI_USE_MPIEXEC "Use CMake's FindMPI to find mpiexec" NO)
+option(OPENMP "Use OPENMP for parallel runs" NO)
+
+if(MPI)
+   add_definitions(_DUSE_MPI)
+   if(FIND_MPI)
+      find_package(MPI REQUIRED)
+      include_directories(${MPI_INCLUDE_PATH})
+      set(COMPILER_WRAPPER mpif77)
+   endif()
+   message(STATUS "MPI enabled")
+endif()
 
 # Find Fortran MPI libraries
 option(AVOID_MPI "Don't use MPI even if available" OFF)
@@ -60,12 +85,17 @@ execute_process(COMMAND python
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fomit-frame-pointer -ffixed-line-length-none")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none")
 
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
     message("-- Using Intel compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
+
+# Set flags for IBM compiler
+elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
+    message("-- Using IBM compiler flags")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed=132")
 
 # Compiler not recognised
 else()
@@ -112,6 +142,17 @@ install(TARGETS protoms3
 # Add testing
 # Needs actual unit/integration tests here
 add_test(TestPrintVersion protoms3 -v)
+
+###################################
+# Python Unit tests
+###################################
+include_directories(tests)
+set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B})
+
+add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
+add_test(test_install_dependencies ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
+
+
 
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
