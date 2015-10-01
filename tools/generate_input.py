@@ -881,6 +881,7 @@ class Jfragments(ProteinLigandSimulation) :
     self.setParameter("softcoreparams","coul 1 delta 1.5")
     _setbox(self,jawsmols[0],jawsbox)
     self.setParameter('conccorr','off')
+    self.setParameter('thres','0.0')
     self.setParameter("#"," End of JAWS specific parameters")
   
     self.setDump("results write results",dumpfreq)

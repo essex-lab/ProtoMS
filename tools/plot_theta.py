@@ -62,7 +62,7 @@ def solname_to_id(molecule,restart='restart') :
     return [gcsol_list,sol_list], "both"
 
 
-def find_solute_theta(molecule,restart='restart',results='results',print_average=False) :
+def find_solute_theta(molecule,restart='restart',results='results',skip=0,print_average=False) :
   """
   Given a solute / gcsolute residue name, find
   and store its corresponding values of theta through
@@ -77,6 +77,8 @@ def find_solute_theta(molecule,restart='restart',results='results',print_average
     the name of the restart file
   results : string, optional
     the name of the results file
+  skip : int, optional
+    the number of snapshots to skip
 
   Returns
   -------
@@ -87,7 +89,7 @@ def find_solute_theta(molecule,restart='restart',results='results',print_average
 
   id_list,mol_type = solname_to_id(molecule,restart=restart)
   results_obj = simulationobjects.ResultsFile()
-  results_obj.read(filename=results)
+  results_obj.read(filename=results,skip=skip)
   thetas = dict([[i,[]] for i in id_list])
   for snap in results_obj.snapshots :
     if mol_type is "solute" :
@@ -98,8 +100,41 @@ def find_solute_theta(molecule,restart='restart',results='results',print_average
       if ind+1 in thetas.keys() : thetas[ind+1].append(res_theta)
   return thetas
 
+def thres_and_mean(dict_th, threshold=0.95) :
+  """
+  Calculate the mean and the proportion of
+  values above a threshold from a dictionary of values
 
-def plot_dist(dict_th,plotname="theta_dist",xlab="theta",xlimit=None) :
+  Parameters
+  ----------
+  dict_th : dict
+    a dictionary with several keys
+    which 'values' are lists of floats
+    to calculate mean and proportion
+    above threshold
+  threshold: optional, float
+    the threshold above which the
+    proportion of values will be calculated
+
+  Return
+  ------
+  float
+    mean theta
+  float
+    fraction of thetas above threshold
+    
+  """
+
+  thetas_values = np.array(dict_th.values(),float)
+
+  mean = np.mean(thetas_values)
+
+  above_thres = float(thetas_values[np.where(thetas_values > threshold)].size) / float(thetas_values.size)
+
+  return  mean, above_thres
+
+
+def plot_dist(dict_th,plotname="theta_dist",xlab="theta",xlimit=None,bigaxes=False) :
   """
   Plot a distribution of dictonary values
   in form of lists
@@ -119,6 +154,9 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta",xlimit=None) :
   xlimit : list, optional
     the limits of the x-axes values.
     Set to [0.0,0.1] if 'theta' in xlab
+  bigaxes : boolean, optional
+    whether to set the label and axes
+    of the plots to a bigger font
 
   Return
   ------
@@ -126,10 +164,16 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta",xlimit=None) :
     the plots will be saved in png files
   """
 
-  def set_axes(xname,yname) :
+  def set_axes(xname,yname,ax) :
     fontsizex = fontsizey = 15
-    if '$' in xname : fontsizex = 20
-    if '$' in yname : fontsizey = 20
+    fontweight = None
+    if bigaxes :
+      fontsizex = fontsizey = 24
+      xticksize = yticksize = 17
+      plt.setp(ax.get_xticklabels(), fontsize=xticksize)
+      plt.setp(ax.get_yticklabels(), fontsize=yticksize)
+    if '$' in xname : fontsizex = fontsizex*1.5
+    if '$' in yname : fontsizey = fontsizey*1.5
     plt.xlabel(xname,fontsize=fontsizex)
     plt.ylabel(yname,fontsize=fontsizey)
     xends = xlimit
@@ -141,19 +185,22 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta",xlimit=None) :
 
   thetas_values = np.array(dict_th.values(),float)
 
-  n, bins, patches = plt.hist(np.reshape(thetas_values,newshape=-1),bins=100,facecolor=simulationobjects.color(0),histtype='stepfilled')
-  set_axes(xlab,"Frecuency")
+  ax = plt.figure().add_subplot(1,1,1)
+  set_axes(xlab,"frecuency",ax)
+  n, bins, patches = ax.hist(np.reshape(thetas_values,newshape=-1),bins=100,facecolor=simulationobjects.color(0),histtype='stepfilled')
   plt.savefig(plotname+"_all.png")
   plt.clf()
 
-  n, bins, patches = plt.hist(np.transpose(thetas_values),bins=100,histtype="step")
-  set_axes(xlab,"Frecuency")
+  ax = plt.figure().add_subplot(1,1,1)
+  set_axes(xlab,"frecuency",ax)
+  n, bins, patches = ax.hist(np.transpose(thetas_values),bins=100,histtype="step")
   plt.savefig(plotname+"_each.png")
   plt.clf()
 
+  ax = plt.figure().add_subplot(1,1,1)
+  set_axes("snapshot",xlab,ax)
   for i in dict_th :
-    plt.plot(dict_th[i])
-  set_axes("Snapshot",xlab)
+    ax.plot(dict_th[i])
   plt.savefig(plotname+"_snapshot.png")
   
     
@@ -228,13 +275,31 @@ if __name__ == '__main__' :
   parser.add_argument('-tr','--thetarange',nargs=2,help="the range of thetas which correponding molecules will be extracted, specified by a lower and an upper limit. By default, no molecules will be extracted.")
   parser.add_argument('-pdb','--pdbfile',help="the pdb file result of protoms. Only required if when molecules are extracted for a range of thetas. Default = 'all.pdb'",default='all.pdb')
   parser.add_argument('-op','--outpdb',help="the name of the file where the molecules for a given range of thetas are to be extracted. Default = 'out_thetas'",default='out_thetas')
+  parser.add_argument('-th','--threshold',help="the proportion of thetas above this threshold will be calculated, as well as the total mean theta. By default this function is not active",default=None)
+  parser.add_argument('--skip',help="the number of results snapshots to skip, Default = 0",default="0")
+  parser.add_argument('--bigaxes',action="store_true",help="whether to set the axes in the plots to big fontzise. Default=False",default=False)
   args = parser.parse_args()
+
+  try :
+    skip_steps = int (args.skip)
+  except :
+    simulationobjects.SetupError("Snapshots to skip needs to be an integer. The argument %s could not be interpreted."%args.skip)
 
   logger = simulationobjects.setup_logger("plot_theta.log")
 
-  thetas_dic = find_solute_theta(args.molecule,args.restart,args.results,args.average)
+  thetas_dic = find_solute_theta(args.molecule,args.restart,args.results,skip_steps,args.average)
 
-  plot_dist(thetas_dic,plotname=args.plotname)
+  plot_dist(thetas_dic,plotname=args.plotname,bigaxes=args.bigaxes)
+
+  if args.threshold :
+    try :
+      threshold = float(args.threshold)
+    except :
+      simulationobjects.SetupError("Threshold value %s could not be interpreted as float."%args.threshold)
+
+    mean_theta, above_threshold = thres_and_mean(thetas_dic,threshold)
+    print "Mean theta: %.3f"%mean_theta
+    print "Proportion of values above threhold %.3f: %.2f%%"%(threshold,above_threshold*100)
 
   if args.thetarange :
     extract_theta_pdb(thetas_dic,args.thetarange,args.pdbfile,args.outpdb,args.molecule)

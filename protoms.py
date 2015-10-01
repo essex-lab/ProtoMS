@@ -180,6 +180,8 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
   SetupError
     if a default water box could not be found
   """
+    
+  data_temp = [os.getenv("PROTOMSHOME")+"/data/"+tempfile for tempfile in os.listdir(os.getenv("PROTOMSHOME")+"/data/") if tempfile.endswith(".tem")]
 
   ligprefix = _get_prefix(files["pdb"])
 
@@ -223,13 +225,16 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
           files["tem"] = tempfile
           break
 
+  # Try to associate ligand with one of the data templates
+  if files["tem"] is None :
+    for tempfile in data_temp :
+      tem = simulationobjects.TemplateFile(filename=tempfile)
+      if tem.templates[0].name.lower() == ligname.lower():
+        files["tem"] = tempfile
+        break
+      
   # Check to see if we have a template file
   if files["tem"] is None : 
-    #jfragments_mod below
-    if settings.jfragmol :
-      if ligprefix.strip('_lig') in ' '.join(frag.strip('.pdb') for frag in settings.jfragmol): 
-        raise simulationobjects.SetupError("To run a fragment JAWS simulation you need to provide the template for your theta-solutes")
-    #jfragments_mod avobe
     resnam = files["obj"].residues[1].name # Set the prepi name and template name to the residue name
     if files["prepi"] is None :
       # Here we need to run Antechamber
@@ -850,6 +855,7 @@ if __name__ == "__main__":
   simgroup.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
   # jfragments_mod below
   parser.add_argument('--jfragmol',nargs="+",help="the file(s) with the molecules to include in your jfrag simulation with sampling theta.")
+  parser.add_argument('--jfragnum',nargs="+",help="the number of copies of the jfragmol should be included in the simulation.")
   # jfragments_mod avobe
   simgroup.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   simgroup.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
@@ -909,20 +915,6 @@ if __name__ == "__main__":
 
   # Setup list of files to be stored away
   tarlist = []
-
-  # jfragments_mod below
-  if not args.ligand: args.ligand = []
-  if args.jfragmol :
-    for fragfile in args.jfragmol : 
-      ligfragobj = simulationobjects.PDBFile(filename = fragfile)
-      if ligfragobj.residues :
-        ligfragobj.header = "HEADER %s\n" %ligfragobj.residues[ligfragobj.residues.keys()[0]].name
-      else :
-        ligfragobj.header = "HEADER %s\n" %ligfragobj.solvents[ligfragobj.solvents.keys()[0]].name
-      prefix = _get_prefix(fragfile)
-      ligfragobj.write(filename="%s_lig.pdb"%prefix)
-      args.ligand = ["%s_lig.pdb"%prefix] + args.ligand
-  # jfragments_mod avobe
      
   # Prepare each given ligand
   ligand_files = {} # This will be filled with a dictionary of filenames for each ligand
@@ -931,9 +923,11 @@ if __name__ == "__main__":
   ligtems = None # This will be a list of ligand template files
   ligobjs = None # This will hold a merged pdb object of all ligand pdb objects
   ligand_water = None # This will hold the filename of the free-leg waterbox
-  if args.ligand is not None :
+  if args.ligand is not None or args.jfragmol is not None:
+    # Adding args.ligand and args.jfragmol if each of them exists
+    input_ligands = [lig for liglist in [args.ligand,args.jfragmol] if liglist for lig in liglist]
     # Read in each ligand pdb file and create a pdb object
-    for l in args.ligand :
+    for l in input_ligands :
       prefix = _get_prefix(l)
       ligands.append(prefix)
       ligand_files[prefix] = {}
@@ -970,15 +964,14 @@ if __name__ == "__main__":
       ligobjs = ligand_files[ligands[0]]["obj"]
  
     # Now do the preparations
-    for i,l in enumerate(args.ligand) :
+    for i,l in enumerate(ligands) :
       if l[0] == "*" : continue # Skip ligands created in the script, i.e. the dummy
       if args.charge is not None and i < len(args.charge): 
         charge = args.charge[i]
       else :
         charge = 0
       if i > 1 : ligobj12 = None
-      prefix = _get_prefix(l)
-      _prep_ligand(ligand_files[prefix],i==0,charge,ligobj12,args.folders,tarlist,args) 
+      _prep_ligand(ligand_files[l],i==0,charge,ligobj12,args.folders,tarlist,args) 
 
     ligpdbs = [ligand_files[l]["pdb"] for l in ligands]
     ligtems = [ligand_files[l]["tem"] for l in ligands]
@@ -1002,8 +995,7 @@ if __name__ == "__main__":
   if args.protein is not None or args.scoop is not None:
     protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,tarlist,args)
 
-  # Extra preparation for GCMC or JAWS-1     
-  #jfragments_mod below  
+  # Extra preparation for GCMC or JAWS-1      
   if args.simulation is "jfrag" and not args.jfragmol :
     raise simulationobjects.SetupError("At least one file with fragments has to be provided to run jaws for the fragments. Run distribute_waters.py to prepare one.")
 

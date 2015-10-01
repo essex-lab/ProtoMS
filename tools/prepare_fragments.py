@@ -67,6 +67,7 @@ if __name__ == '__main__' :
   parser.add_argument('-o','--outtemplate',help="The name of the file where the jaws-fragment template will be writen to. Default = fragment.tem",default='fragment.tem')
   parser.add_argument('-f','--hydfolder',help="The root directory that contains all the output files of the hydration free energy simulation. Default = out",default="out")
   parser.add_argument('-r','--results',help="The name of the results file in the hydration free energy calculation. Default = results.",default='results')
+  parser.add_argument('-jp','--jpmf',nargs="+",help="The coeficients of the hydration pentalty. Alternative to 'hydfolder'. Default=None",default=None)
   parser.add_argument('-jt','--jtheta',help="The maximum amplitud of the solute-theta moves. Default = 0.15",default=0.15)
   parser.add_argument('-jc','--jcorr',help="The concentration correction to be aplied in the jaws simulation. Default = 1.0",default= 1.0)
   parser.add_argument('--skip',help="The number of snapshots to skip in the calculation of the hydration free energy. Default = 0",default=0)
@@ -87,9 +88,18 @@ if __name__ == '__main__' :
   anal_grad = True
   fit = True
 
-  lambdas,gradients,grad_std,pmf,pmf_std = calc_ti.ti(args.hydfolder,args.results,args.skip,args.max,verbose,num_grad_kind,anal_grad)
+  if not args.jpmf :
 
-  fit_coef = calc_ti.fit_pmf(lambdas,pmf,int(args.minorder),int(args.maxorder),args.fitname)
+    lambdas,gradients,grad_std,pmf,pmf_std = calc_ti.ti(args.hydfolder,args.results,args.skip,args.max,verbose,num_grad_kind,anal_grad)
+
+    fit_coef = calc_ti.fit_pmf(lambdas,pmf,int(args.minorder),int(args.maxorder),args.fitname)
+
+  else :
+    
+    try :
+      fit_coef = [float(y) for y in args.jpmf]
+    except :
+      simulationobjects.SetupError("Coeficients provided within flag 'jpmf' could not be converted to float")
 
   newtemplate = modify_template_jfrag(args.template,jtheta=[float(args.jtheta)],jcorr=[float(args.jcorr)],jpmf=[fit_coef])
   newtemplate.write(filename=args.outtemplate)

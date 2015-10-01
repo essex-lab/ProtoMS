@@ -26,7 +26,8 @@ c###############################################################
       do i=2,SolJPmfOrd(isol)
         calcJPMF = calcJPMF + lambdamul*SolJPmfCoeff(isol,i)
         lambdamul = lambdamul*lambda
-      enddo
+      enddo 
+
       return
      
       end
