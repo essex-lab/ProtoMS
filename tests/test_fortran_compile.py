@@ -23,7 +23,6 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
-proto_build = proto_env + "/build"
 
 class TestFortran(unittest.TestCase):
 

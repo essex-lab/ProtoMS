@@ -27,11 +27,11 @@ class TestParamSetUp(unittest.TestCase):
 
 # Test if ProtoMS reference files and templates exist are in the expected place.
     def setUp(self):
-        super(TestToolsSetUp, self).setUp()
+        super(TestParamSetUp, self).setUp()
         print("Setting up ProtoMS parameters test.")
     
     def tearDown(self):
-        super(TestToolsSetUp, self).setUp()
+        super(TestParamSetUp, self).setUp()
         print("Cleaning up ProtoMS parameters test.")
 
     def test_params(self):
