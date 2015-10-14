@@ -38,6 +38,11 @@ c#########################################################################
 c     return if the residue has been done before
       if (DoneResNrg(iprot,ires)) return
 
+c!$OMP PARALLEL DO DEFAULT(NONE)
+c!$OMP&SHARED(iprot,ires)
+c!$OMP&PRIVATE(icnrg,iljnrg,icnrgf,icnrgb,iljnrgf,iljnrgb,imindist)
+c!$OMP&REDUCTION(+:nrg,cnrg,ljnrg,cnrgf,cnrgb,ljnrgf,ljnrgb)
+c!$OMP&REDUCTION(min:mindist)
       do i=1,NSolvents
         nrg = nrg + residueSingleSolventEnergy(iprot,ires,i,
      .         icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist)
@@ -49,6 +54,7 @@ c     return if the residue has been done before
         ljnrgb = ljnrgb + iljnrgb
         if (imindist.lt.mindist) mindist = imindist
       enddo
+c!$OMP END PARALLEL DO
       
       residueSolventEnergy = nrg
       return

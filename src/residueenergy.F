@@ -62,7 +62,7 @@ c##################################################################
         oldResNBC = ZERO
         oldResNBLJ = ZERO
         oldResSvnDist = ZERO
-	oldResGCSDist = ZERO
+        oldResGCSDist = ZERO
         oldResNrg = ZERO 
         oldResNrgF = ZERO
         oldResNrgB = ZERO
