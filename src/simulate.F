@@ -167,6 +167,14 @@ c          write(6,*)myid, "#### simulate.F: doing replica exchange GCMC. Move "
      .     ntretry,ntreswap," (",dble(ntreswap)/dble(ntretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
+
+      if (doMultiGCMC.and.(gcrefreq.gt.0)) then   
+        write(6,*)"### GR simulate.F: Printing acceptance"    
+        write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
+     .     "Attempted/successful GCMC swaps for ID ",myid," : ",
+     .     ngcretry,ngcreswap," (",dble(ngcreswap)/dble(ngcretry)*100,"%)" 
+        call printLine(INFO,printstring)
+      endif
      
       if (SolventBox) then
         write(printstring,*) "Final volume = ",volume," A^3"
