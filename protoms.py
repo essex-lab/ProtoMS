@@ -21,6 +21,9 @@ import numpy as np
 import tools
 from tools import simulationobjects
 
+# Logger is used globally
+logger = simulationobjects.setup_logger("protoms_py.log")
+
 def _is_float(num) :
   """
   Check whether a string is convertible to a float
@@ -872,8 +875,7 @@ if __name__ == "__main__":
                                         '--'  """
   print ""
 
-  # Setup the logger
-  logger = simulationobjects.setup_logger("protoms_py.log")
+  # Setup the logger - logger is global
   logger.debug("Running protoms.py at %s"%time.strftime("%d/%m/%Y - %H:%M:%S"))
   logger.debug("Command line arguments = %s"%" ".join(sys.argv[1:]))
   logger.debug("Settings = %s"%args)

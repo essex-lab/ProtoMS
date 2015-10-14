@@ -25,6 +25,7 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+test_dir = proto_env + "/tests/test_setup/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
 ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '1.5']
 
@@ -39,21 +40,21 @@ class TestProtSetup(unittest.TestCase):
     def test_prep(self):
         
         
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb -f " + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup.
                 
             for out_files in output_files_setup:
-	        try:
-                    self.assertTrue(os.path.exists(out_files))
+                try:
+                    self.assertTrue(os.path.exists(test_dir + out_files))
                 except IOError as e:
-  		    print e
+                    print e
 		    print("ProtoMS setup output file ",output_files_setup, "is missing.", "There could be problems with zmat generation or forcefield issues.")
 
             #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
 
-            water_file = open("water.pdb", "r")
- 	    header_line = water_file.readline()
+            water_file = open(test_dir+"water.pdb", "r")
+            header_line = water_file.readline()
             header_line = header_line.replace('\n', '')
             header_list = re.split(" +",header_line)
 

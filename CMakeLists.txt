@@ -27,7 +27,7 @@ if(NOT CMAKE_Fortran_FLAGS_Release)
     set(CMAKE_Fortran_FLAGS_Release "-O3")
 endif()
 if(NOT CMAKE_Fortran_FLAGS_Debug)
-    set(CMAKE_Fortran_FLAGS_Debug "-Og -g")
+    set(CMAKE_Fortran_FLAGS_Debug "-g")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "Release")
@@ -47,7 +47,7 @@ option(MPI_USE_MPIEXEC "Use CMake's FindMPI to find mpiexec" NO)
 option(OPENMP "Use OPENMP for parallel runs" NO)
 
 if(MPI)
-   add_definitions(_DUSE_MPI)
+   add_definitions(-DUSE_MPI)
    if(FIND_MPI)
       find_package(MPI REQUIRED)
       include_directories(${MPI_INCLUDE_PATH})
@@ -146,11 +146,17 @@ add_test(TestPrintVersion protoms3 -v)
 ###################################
 # Python Unit tests
 ###################################
-include_directories(tests)
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B})
 
-add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
 add_test(test_install_dependencies ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
+add_test(test_ligand_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_ligand_setup.py)
+add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
+add_test(test_parameters_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parameters_ff.py)
+add_test(test_path ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.py)
+add_test(test_setup_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup_protoms.py)
+add_test(test_tools_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
+
+add_test(test_prot_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup/test_prot_setup.py)
 
 
 

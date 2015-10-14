@@ -25,6 +25,9 @@ from tools import simulationobjects
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 
+class MockArgs:
+    template = None
+
 class TestLigSetup(unittest.TestCase):
     
     def setUp(self):
@@ -48,11 +51,12 @@ class TestLigSetup(unittest.TestCase):
 
             self.ligfiles[self.prefix] = {}
 
-	    self.ligfiles[self.prefix]["pdb"],self.ligfiles[self.prefix]["obj"] = _load_ligand_pdb(self.prefix, os.path.join(proto_env,"tests/setup"))
+            self.ligfiles[self.prefix]["pdb"],self.ligfiles[self.prefix]["obj"] = _load_ligand_pdb(self.prefix, [os.path.join(proto_env,"tests/setup")])
 
             self.ligobj = self.ligfiles[self.ligands[0]]["obj"] # Unmerged pdb object for single ligand
 
-            _prep_ligand(self.ligfiles[self.prefix],0,0,self.ligobj,[" "],self.tarlist,None)
+            args = MockArgs()
+            _prep_ligand(self.ligfiles[self.prefix],0,0,self.ligobj,[" "],self.tarlist,args)
 
             print self.tarlist
 
