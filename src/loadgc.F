@@ -77,8 +77,9 @@ c           this is the first atom of a new GCsolute.
             igcs = NGCsolutes + 1
             if (igcs.gt.MAXSOLVENTS) then
               write(printstring,*) "Exceeded maximum number of GC-solute molecules, ",MAXSOLVENTS
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXSOLVENTS and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXSOLVENTS and recompile"
+              call closeProgram(-1,printstring)
               goto 100
             endif
             
@@ -94,8 +95,9 @@ c           this is the first atom of a new GCsolute.
           if (iatm.gt.MAXSOLUTEATOMS) then
             write(printstring,*) "Exceeded maximum number of atoms per gc-solute molecule (",
      .                           MAXSOLUTEATOMS,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXSOLUTEATOMS and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXSOLUTEATOMS and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
           
@@ -113,8 +115,8 @@ c     end of do-while loop
 9600  continue
 c     get here if we could not open the file
       lgth = lineLength(filename)
-      write(printstring,*) "WARNING - unable to load GCsolute file ",filename(1:lgth)
-      call printLine(WARNING,printstring)
+      write(printstring,*) "FATAL - unable to load GC solute PDB file ",filename(1:lgth)
+      call closeProgram(-1,printstring)
       return
 
 9700  continue

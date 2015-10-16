@@ -1,26 +1,41 @@
 ########################
-##   ProtoMS 3.0      ##
+##   ProtoMS 3.1      ##
 ########################
 
 --------------------------------
  Prototype Molecular Simulation
 
-Version 3.0
+Version 3.1
 
-(C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez 2002-2014
+(C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez, James Graham 2002-2015
       
   Released under the GNU GPL
         (see LICENSE)
 
 --------------------------------
 
-To compile ProtoMS go into the 'src' directory, 
-edit the Makefile to suit your needs and the type 'make'
+To compile ProtoMS create a new directory 'build' and from this directory type 'cmake ..'.
+This will perform checks and prepare to compile.  Then type 'make install'.
 
-You will need a fortran compiler and the OpenMPI libraries. 
-We recommend to use either GNU or Intel compilers.
+Requirements:
+* Fortan compiler                     : GNU (https://gcc.gnu.org/) or Intel recommended
+* Python (https://www.python.org/)    : Required to compile and run ProtoMS
+* CMake (http://www.cmake.org/)       : Required to compile ProtoMS
+
+Optional:
+* MPI                                 : Recommended OpenMPI (http://www.open-mpi.org/) or MPICH (https://www.mpich.org/) - some functions will be unavailable without MPI
 
 We recommend to set the environmental variable $PROTOMSHOME to the installation directory of ProtoMS.
+
+The ProtoMS tools have the following requirements:
+* Python, version 2.7
+* NumPy (http://www.numpy.org/)
+* SciPy (http://www.scipy.org/)
+* Matplotlib (http://www.matplotlib.org/)
+
+Optional:
+* AmberTools (http://www.ambermd.org/)          : Required to paramterise small molecules
+* pymbar (https://github.com/choderalab/pymbar) : Required to perform MBAR calculations
 
 To learn how to use ProtoMS read the manual that can be found in the doc folder
 
@@ -29,18 +44,20 @@ Use these examples to test that ProtoMS is working correctly.
 
 Contents of directory:
 
-* data 		: This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
+* CMakeLists.txt    : This file configures ProtoMS prior to compiling.
 
-* doc 		: This directory contains documentation
+* data 		    : This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files
 
-* README 	: This file
+* doc 		    : This directory contains documentation
 
-* parameter 	: This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
+* README 	    : This file
 
-* protoms.py	: A tool to setup common ProtoMS calculations
+* parameter 	    : This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
 
-* src 		: This directory contains all of the source code for the main program
+* protoms.py	    : A tool to setup common ProtoMS calculations
 
-* tools 		: This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+* src 		    : This directory contains all of the source code for the main program
 
-* tutorial 	: This directory contains a number of examples that demonstrate applications of ProtoMS.
+* tools 	    : This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+
+* tutorial 	    : This directory contains a number of examples that demonstrate applications of ProtoMS.

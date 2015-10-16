@@ -1,6 +1,7 @@
       subroutine setStream(stream,filename)
       include 'dimensions.inc'
       include 'printer.inc'
+      include 'parallel.inc'
 c#####################################################
 c
 c     This routine sets the stream 'stream' to 

@@ -72,8 +72,9 @@ c     now assign these parameters to the variable bond array
       if (NVarBondParam.gt.MAXVARIABLEPARAM) then
         write(printstring,*) "Exceeded number of variable bond parameters (",
      .                         MAXVARIABLEPARAM,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXVARIABLEPARAM and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXVARIABLEPARAM and recompile"
+        call closeProgram(-1,printstring)
         NVarBondParam = NVarBondParam - 1
         return
       endif

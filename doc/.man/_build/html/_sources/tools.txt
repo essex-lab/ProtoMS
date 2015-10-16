@@ -145,7 +145,7 @@ calc_clusters.py
 
 **Syntax:**
 
-``calc_clusters.py -f file1 [file2 ...]  [-o outfile] [-m molecule] [-a atom] [-t type] [-c cutoff]``
+``calc_clusters.py -f file1 [file2 ...]  [-o outfile] [-m molecule] [-a atom] [-t type] [-c cutoff] [--skip N] [--max N]``
 
 * ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
     at least one file needs to be specified
@@ -162,6 +162,10 @@ calc_clusters.py
     can be any of average, single, complete, weighted and centroid
 * ``-c cutoff`` = the cluster cut-off
     optional, default = 2.0 A
+* ``--skip N`` = skip N snapshots at the beginning of the simulation
+    optional, default = 0
+* ``--max N`` = read and process a maximum of N snapshots
+    optional, default = 99999
 
 **Examples:**
 
@@ -184,7 +188,7 @@ calc_density.py
 
 **Syntax:**
 
-``calc_density.py -f file1 [file2 ...]  [-o outfile] [-r residue] [-a atom] [-p padding] [-s spacing] [-e extent] [-n norm] [-t sphere|gaussian]``
+``calc_density.py -f file1 [file2 ...]  [-o outfile] [-r residue] [-a atom] [-p padding] [-s spacing] [-e extent] [-n norm] [-t sphere|gaussian] [--skip N] [--max N]``
 
 * ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
     at least one file needs to be specified
@@ -207,6 +211,10 @@ calc_density.py
     optional, default = sphere
     ``sphere`` = spherical smoothing with extent radius
     ``gaussian`` = smoothing with Gaussian with standard deviation = extent 
+* ``--skip N`` = skip N snapshots at the beginning of the simulation
+    optional, default = 0
+* ``--max N`` = read and process a maximum of N snapshots
+    optional, default = 99999
 
 **Examples:**
 
@@ -329,16 +337,19 @@ calc_replicapath.py
 
 **Syntax:**
  
-``calc_replicapath.py -f file1 [file2 ...] -p replica1 [replica2 ...] -k lambda [-o outfile]``
+``calc_replicapath.py -f file1 [file2 ...] -p replica1 [replica2 ...] -k lambda|temperature|rest|global [-o outfile]``
 
 
 * ``-f file1 file2`` ... = the name(s) of ProtoMS results file(s)
     at least one file needs to be given
 * ``-p replica1 replica2`` ... = the replica values to plot
     at least one replica value needs to be given
-* ``-k lambda`` = the kind of replicas
+* ``-k lambda|temperature|rest|global`` = the kind of replicas
     optional, default = lambda
     ``lambda`` = :math:`\lambda` replica exchange replicas
+    ``temperature`` = temperature replica exchange replicas
+    ``rest`` = solute tempering replica exchange replicas
+    ``global`` = global replica exchange replicas, if combining :math:`\lambda` and temperature replica exchange
 * ``-o outfile`` = the name of a PNG file to write the replica paths 
     optional, default = replica_path.png
 
@@ -349,6 +360,7 @@ calc_replicapath.py
 
   calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 1.000
   calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 0.500 1.000 -o replica_paths.png
+  calc_replicapath.py -f out_free/t-*/lam-0.000/results -p 25.0 35.0 45.0 -k temperature
 
 
 
@@ -357,10 +369,9 @@ calc_replicapath.py
 
 This tools plots the path of different replicas in a replica exchange simulation as a function of simulation time.
 
-At the moment only paths from a :math:`\lambda` replica exchange simulation is supported. Hence, the ``-k`` argument is reduntant.
-
 If the kind of replicas is from :math:`\lambda` replica exchange the ``replica1`` and ``replica2`` etc should be individual :math:`\lambda`-values to plot. 
 
+If the kind of replicas is from REST or temperature replica exchange the ``replica1`` and ``replica2`` etc should be individual temperatures to plot. 
 
 -----------------------
 calc_rmsd.py
@@ -869,12 +880,46 @@ This tool combines several ProtoMS template files into a single template file.
 The force field parameters in ``file2`` will be re-numbered so that they do not conflict with ``file1``. This is important when you want to load both parameters into ProtoMS at the same time.
 
 -----------------------
+plot_theta.py
+-----------------------
+
+**Syntax:**
+``plot_theta.py [-h] [-r results] [-s restart] [-m molecule] [-p plotname] [--skip]``
+
+* ``-r results`` = the name of the results file
+    optional, deafult = 'results'
+* ``-s restart`` = the replica values to plot
+    optional, default = 'restart'
+* ``-m molecule`` = the residue name of the JAWS molecule
+    optional, default = 'WAT'
+* ``-p plotname`` = the start of the filename for the plots generated
+    optional, default = 'theta_dist'
+* ``--skip`` = the number of results snapshots to skip
+    optional, default = 0
+
+
+**Examples:**
+
+::
+
+  plot_theta.py -m WA1 --skip 50
+  plot_theta.py -m WA1 -p theta_wa1
+
+
+**Description:**
+
+This tool plots the theta distribution resulting from a JAWS stage one simulation.
+
+Two different histograms will be generated. One in which all different copies of the same molecule are added up, and a different one where each copy is displayed individually.
+
+
+-----------------------
 pms2pymbar.py
 -----------------------
 
 **Syntax:**
 
-``pms2pymbar.py [-d directory] [-r results] [-o outfile] [-s nskip] [-m nmax] [-t temperature] [--run]``
+``pms2pymbar.py [-d directory] [-r results] [-o outfile] [-s nskip] [-m nmax] [-t temperature] [--run] [--nobar]``
 
 * ``-d directory`` = name of output directory of the simulation
     optional, default = current working directory (.)

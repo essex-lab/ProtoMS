@@ -651,7 +651,9 @@ c             Skip atom if no overlap
 c             Eliminate buried elements
               do 50 l=1,nsurfpoints
 c               skip element if already buried (by another atom then)
-                if (iskip(l)) goto 50
+                if (iskip(l)) then
+                  goto 50
+                endif
                 dkj2 = ( ipoint(3*l-2)-xj )**2 + ( ipoint(3*l-1)-yj )**2 +
      &            ( ipoint(3*l) - zj)**2
                 if (dkj2 .lt. rj2) then 
@@ -715,7 +717,7 @@ c       Sum remaining elements
         isurff = 0.0d0
         isurfb = 0.0d0
         do 200 k=1,nsurfpoints
-          if (.not. iskip(k) ) isurf = isurf + darea
+          if (.not. iskip(k) )  isurf = isurf + darea
           if (.not. iskipf(k) ) isurff = isurff + dareaf
           if (.not. iskipb(k) ) isurfb = isurfb + dareab
  200    continue

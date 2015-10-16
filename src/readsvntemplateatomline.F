@@ -57,8 +57,9 @@ c       increment the number of atoms
         if (iatm.gt.MAXSVNTEMPLATEATMS) then
           write(printstring,*) "Exceeded maximum number of solvent template atoms (",
      .                  MAXSVNTEMPLATEATMS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXSVNTEMPLATEATMS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXSVNTEMPLATEATMS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NSvnTemplateAtms(itmpl) = iatm

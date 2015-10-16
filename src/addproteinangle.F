@@ -45,8 +45,9 @@ c     now add the angle...
       NAngles(iprot) = NAngles(iprot) + 1
       if (NAngles(iprot).gt.MAXANGLES) then
         write(printstring,*) "Exceeded maximum number of protein angles! (",MAXANGLES,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXANGLES and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXANGLES and recompile"
+        call closeProgram(-1,printstring)
         NAngles(iprot) = NAngles(iprot) - 1
         return
       endif
@@ -74,8 +75,9 @@ c     now add the Angle to the residue
       NResAngles(iprot,ires1) = NResAngles(iprot,ires1) + 1
       if (NResAngles(iprot,ires1).gt.MAXANGLESPERRESIDUE) then
         write(printstring,*) "Too many angles in residue ",ires1
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXANGLESPERRESIDUE and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXANGLESPERRESIDUE and recompile"
+        call closeProgram(-1,printstring)
         NResAngles(iprot,ires1) = NResAngles(iprot,ires1) - 1
         return
       endif
@@ -84,8 +86,9 @@ c     now add the Angle to the residue
         NResAngles(iprot,ires2) = NResAngles(iprot,ires2) + 1
         if (NResAngles(iprot,ires2).gt.MAXANGLESPERRESIDUE) then
           write(printstring,*) "Too many angles in residue ",ires2
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXANGLESPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXANGLESPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)
           NResAngles(iprot,ires2) = NResAngles(iprot,ires2) - 1
           return
         endif
@@ -95,8 +98,9 @@ c     now add the Angle to the residue
         NResAngles(iprot,ires3) = NResAngles(iprot,ires3) + 1
         if (NResAngles(iprot,ires3).gt.MAXANGLESPERRESIDUE) then
           write(printstring,*) "Too many angles in residue ",ires3
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXANGLESPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXANGLESPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)
           NResAngles(iprot,ires3) = NResAngles(iprot,ires3) - 1
           return
         endif

@@ -395,7 +395,7 @@ class  PDBSet :
           self.pdbs.append(PDBFile()) 
           self.pdbs[-1].solvents[soli] = sol
           self.pdbs[-1].header = pdbfile.header
-    def read(self,filename,resname=None) :
+    def read(self,filename,resname=None,skip=0,readmax=None) :
         """
         Read a set of pdb structures from a file
         
@@ -405,16 +405,23 @@ class  PDBSet :
           the name of the file to read
         resname : string, optional
           the name of the residue to read, only read this
+        skip : int, optional
+          number of snapshot at the beginning to skip
+        readmax : int, optional
+          maximum number of snapshots to read
         """
         self.pdbs = []
+        nread = 0
         with open(filename,"r") as f :
             while True :
                 pdb = PDBFile()
-                pdb.read_from(f,resname=resname)
+                pdb.read_from(f,resname=resname)                
                 if not (pdb.residues or pdb.solvents) :
                     break
                 else :
-                    self.pdbs.append(pdb)
+                    nread += 1
+                    if nread > skip : self.pdbs.append(pdb)
+                    if readmax is not None and len(self.pdbs) == readmax  :  break
     def write(self,filenames,solvents=True) :
         """
         Write the set to disc
@@ -780,8 +787,14 @@ class SnapshotResults :
     the number of steps the averages are calculate over
   lambdareplica : int
     the index of the lambda replica
+  temperaturereplica : int
+    the index of the temperature replica
+  global replica : int
+    the index of the global replica
   temperature : float
     the temperature of the simulation
+  efftemperature : float
+    the effective temperature in case of REST
   ngcsolutes : int
     the number of GC solutes
   nthetasolutes : int
@@ -855,7 +868,10 @@ class SnapshotResults :
     while line[0] != "#" :
       if line.startswith(" Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
       if line.startswith(" Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
+      if line.startswith(" Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
+      if line.startswith(" Global replica") : self.globalreplica = int(line.split("=")[1].strip())
       if line.startswith(" Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
+      if line.startswith(" Effective temperature") : self.efftemperature = float(line.split("=")[1].strip().split()[0])
       if line.startswith(" Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
       if line.startswith(" Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
       if line.startswith(" Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
@@ -905,7 +921,7 @@ class SnapshotResults :
         elif cols[1] == "protein-protein" :
           key = "protein"+cols[4]+"-protein"+cols[7]
         elif cols[1] == "solute-protein" :
-          key = "protein"+cols[4]+"-"+cols[8]
+          key = "protein"+cols[4]+"-"+cols[8]+cols[7]
         elif cols[1] == "protein-solvent" :
           key = "protein"+cols[4]+"-solvent"
         elif cols[1] == "solute-solute" :
@@ -959,6 +975,18 @@ class SnapshotResults :
         for e in dict[label][:-1] :
           dict[label][-1] = dict[label][-1]+e
         dict[label][-1].type = "SUM"
+
+    if not hasattr(self,"gradient") and hasattr(self,"backfe") :
+        dGB = self.backfe
+        dGF = self.forwfe
+        # Calculate and return the gradient
+        deltalam = max(self.lam-self.lamb,self.lamf-self.lam)
+        # This is needed for the end-points
+        if (self.lam < 0.0001):
+          dGB = -dGF
+        if (self.lam > 0.9999):
+          dGF = -dGB
+        self.gradient = (dGF - dGB) / (2*deltalam)  
 
     return line
 
@@ -1083,8 +1111,9 @@ class ResultsFile :
       for elabel in self.series.feenergies :
         self.series.feenergies[elabel] = np.zeros(nsnap)
     if hasattr(self.snapshots[0],"thetavals") :
-      for elabel in self.series.thetavals :
-        self.series.thetavals[elabel] = np.zeros(nsnap)
+      self.series.thetavals = [np.zeros(nsnap) for i in self.snapshots[0].thetavals]
+      #for elabel in self.series.thetavals :
+      #  self.series.thetavals[elabel] = np.zeros(nsnap)
 
     # Then loop over all snapshots and fill the NumpyArrays with data
     for i,snapshot in enumerate(self.snapshots) :
@@ -1109,9 +1138,11 @@ class ResultsFile :
           if elabel not in self.series.feenergies : continue
           self.series.feenergies[elabel][i] = snapshot.feenergies[elabel]
       if hasattr(snapshot,"thetavals") :
-        for elabel in snapshot.thetavals :
-          if elabel not in self.series.thetavals : continue
-          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
+#        for elabel in snapshot.thetavals :
+#          if elabel not in self.series.thetavals : continue
+        for j in range(len(self.series.thetavals)) :
+#          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
+          self.series.thetavals[j][i] = snapshot.thetavals[j]
 
     return self.series
 

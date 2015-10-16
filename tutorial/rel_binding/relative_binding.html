@@ -56,9 +56,9 @@ grep "lambda swaps" out_free/lam-0.000/info
 </pre>
 and this will give you the overall acceptance ratio of the &lambda; swaps. It should be around 50% for this perturbation, indicating that the overall effectiveness is acceptable. Next, we will look at individual replicas and see how they exchange &lambda;-value throughout the simulation. This can be done with
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0.2 0.8 1.0 -o replica_path_free.png
+python2.7 $PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0.2 0.4 0.6 0.8 1.0 -o replica_path_free.png
 </pre>
-<p>to plot the path of the first few &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="33%" alt="" /><br> as is clear, these replicas were not able to traverse the full &lambda;-space within the simulation time. Also the replicas starting with &lambda;=1.0 or 0.0 did not exchange very much at all. Hence, the replica exchange was not fully efficient.</p>
+<p>to plot the path of the first few &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="40%" alt="" /><br> as is clear, these replicas were not able to traverse the full &lambda;-space within the simulation time. Also the replicas starting with &lambda;=1.0 or 0.0 did not exchange very much at all. Hence, the replica exchange was not fully efficient.</p>
 <p>Now, we will estimate the free energy. We will do this both with thermodynamic integration, Bennett's acceptance ratio (BAR) and multistate BAR (MBAR). To do this you can type</p>
 <pre>
 python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_free/ -s 10
@@ -144,6 +144,21 @@ by typing for instance
 <pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -l lig1.pdb lig3.pdb -p protein.pdb -r 5</pre>
 you will create 5 input files for the bound leg and 5 input files for the free leg. Therefore, you also need to execute ProtoMS 10 times with the different input files. The output will be in 10 different folders, e.g. <code>out1_bnd</code> and <code>out2_bnd</code>.
 <p>
+<h5>Running with temperature replica-exchange</h5>
+To improve sampling, one could add temperature ladders to the simulation and perform replica-exchange swaps between neighboring values of temperatures. To add eight additional temperatures to &lambda;-values 0 and 1.0, add the following lines to the command file(s).
+
+<pre>lambdaladder temperature 25.0
+temperaturere 1E5 25.0 27.0 30.0 34.0 39.0 45.0 52.0 60.0 69.0
+temperatureladder lambda 0.00 1.00 
+</pre>
+
+However, it should be noted that the selection of temperatures is a non-trivial task and it is likely to be system dependent. The above lines should therefore be regarded as a suggestion.
+
+ProtoMS then needs to be executed with additional nodes, for instance
+
+<pre>mpirun -np 32 $PROTOMSHOME/protoms3 run_bnd.cmd</pre>
+
+<p>
 <hr align="center"/>
 <p> 
 <h3><a name="files">Files created by the setup script</a></h3>
@@ -173,9 +188,9 @@ For the dual-topology simulations the following files are created:	</p>
 	<li><code>run_free.cmd</code> = the ProtoMS command file for the free-leg simulation</li>
 	<p>
 For the single-topology simulations the following files are created:	</p>	
-	<li><code>li3tli1_ele.tem</code> = the template file for electrostatic perturbation, used only in this simulation</li>
-	<li><code>li3tli1_vdw.tem</code> = the template file for van der Waals perturbation, used only in this simulation</li>
-	<li><code>li3tli1_comb.tem</code> = the template file for one-step (combined) perturbation, used only in this simulation</li>
+	<li><code>li3-li1_ele.tem</code> = the template file for electrostatic perturbation, used only in this simulation</li>
+	<li><code>li3-li1_vdw.tem</code> = the template file for van der Waals perturbation, used only in this simulation</li>
+	<li><code>li3-li1_comb.tem</code> = the template file for one-step (combined) perturbation, used only in this simulation</li>
 	<li><code>single_cmap.dat</code> = the atom correspondence map</li>
 	<li><code>run_comb_bnd.cmd</code>, <code>run_ele_bnd.cmd</code> and <code>run_vdw_bnd.cmd</code> = the ProtoMS command files for the bound-leg simulation</li>
 	<li><code>run_comb_free.cmd</code>, <code>run_ele_free.cmd</code> and <code>run_vdw_free.cmd</code> = the ProtoMS command file for the free-leg simulation</li>

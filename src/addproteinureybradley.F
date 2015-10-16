@@ -40,8 +40,9 @@ c     now add the uby...
       if (nubys.gt.MAXUREYBRADLEYS) then
         write(printstring,*) "Exceeded maximum number of protein Urey-Bradley terms! (",
      .                        MAXUREYBRADLEYS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXUREYBRADLEYS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXUREYBRADLEYS and recompile"
+        call closeProgram(-1,printstring)
         NUreyBradleys(iprot) = NUreyBradleys(iprot) - 1
         return
       endif
@@ -63,8 +64,9 @@ c     now add the bond to the residue
       NResUreyBradleys(iprot,ires1) = NResUreyBradleys(iprot,ires1) + 1
       if (NResUreyBradleys(iprot,ires1).gt.MAXUREYBRADLEYSPERRESIDUE) then
         write(printstring,*) "Exceeded maximum number of Urey-Bradley terms in residue ",ires1
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXUREYBRADLEYSPERRESIDUE and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXUREYBRADLEYSPERRESIDUE and recompile"
+        call closeProgram(-1,printstring)
         NResUreyBradleys(iprot,ires1) = NResUreyBradleys(iprot,ires1) - 1
         return
       endif
@@ -73,8 +75,9 @@ c     now add the bond to the residue
         NResUreyBradleys(iprot,ires2) = NResUreyBradleys(iprot,ires2) + 1
         if (NResUreyBradleys(iprot,ires2).gt.MAXUREYBRADLEYSPERRESIDUE) then
           write(printstring,*) "Exceeded maximum number of Urey-Bradley terms in residue ",ires2
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXUREYBRADLEYSPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXUREYBRADLEYSPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)
           NResUreyBradleys(iprot,ires2) = NResUreyBradleys(iprot,ires2) - 1
           return
         endif
@@ -84,8 +87,9 @@ c     now add the bond to the residue
         NResUreyBradleys(iprot,ires3) = NResUreyBradleys(iprot,ires3) + 1
         if (NResUreyBradleys(iprot,ires3).gt.MAXUREYBRADLEYSPERRESIDUE) then
           write(printstring,*) "Exceeded maximum number of Urey-Bradley terms in residue ",ires3
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXUREYBRADLEYSPERRESIDUE and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXUREYBRADLEYSPERRESIDUE and recompile"
+          call closeProgram(-1,printstring)
           NResUreyBradleys(iprot,ires3) = NResUreyBradleys(iprot,ires3) - 1
           return
         endif

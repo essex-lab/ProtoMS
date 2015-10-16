@@ -372,5 +372,9 @@ c     residue-GCsolute energy
         newResNBLJB = nbljnrgb
       endif    
 
+10    format('Energies= ',3f8.3)
+      write(printstring,10) residueEnergy,cnrg,ljnrg
+      call printLine(RESULTS,printstring)
+
       return
       end

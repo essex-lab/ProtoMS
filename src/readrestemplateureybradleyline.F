@@ -40,8 +40,9 @@ c     read in the atoms involved
         if (iuby.gt.MAXTEMPLATEUREYBRADLEYS) then
           write(printstring,*) "Exceeded maximum number of residue template Urey-Bradley terms (",
      .                         MAXTEMPLATEUREYBRADLEYS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXTEMPLATEUREYBRADLEYS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXTEMPLATEUREYBRADLEYS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NTemplateUreyBradleys(itmpl) = iuby

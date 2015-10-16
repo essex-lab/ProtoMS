@@ -27,8 +27,9 @@ c     now add the uby
       if (nubys.gt.MAXSOLUTEUREYBRADLEYS) then
         write(printstring,*) "Exceeded maximum number of solute Urey-Bradley terms! (",
      .                        MAXSOLUTEUREYBRADLEYS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLUTEUREYBRADLEYS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLUTEUREYBRADLEYS and recompile"
+        call closeProgram(-1,printstring)
         NSolUreyBradleys(isol) = NSolUreyBradleys(isol) - 1
         return
       endif

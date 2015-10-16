@@ -60,7 +60,7 @@ def solname_to_id(molecule,restart='restart') :
     return [gcsol_list,sol_list], "both"
 
 
-def find_solute_theta(molecule,restart='restart',results='results') :
+def find_solute_theta(molecule,restart='restart',results='results',skip=0) :
   """
   Given a solute / gcsolute residue name, find
   and store its corresponding values of theta through
@@ -75,6 +75,8 @@ def find_solute_theta(molecule,restart='restart',results='results') :
     the name of the restart file
   results : string, optional
     the name of the results file
+  skip : int, optional
+    the number of snapshots to skip
 
   Returns
   -------
@@ -85,7 +87,7 @@ def find_solute_theta(molecule,restart='restart',results='results') :
 
   id_list,mol_type = solname_to_id(molecule,restart=restart)
   results_obj = simulationobjects.ResultsFile()
-  results_obj.read(filename=results)
+  results_obj.read(filename=results,skip=skip)
   thetas = dict([[i,[]] for i in id_list])
   for snap in results_obj.snapshots :
     if mol_type is "solute" :
@@ -152,8 +154,14 @@ if __name__ == '__main__' :
   parser.add_argument('-s','--restart',help="the replica values to plot. Default='restart'",default='restart')
   parser.add_argument('-m','--molecule',help="the residue name of the JAWS molecule. Default='WAT'",default="WAT")
   parser.add_argument('-p','--plotname',help="the start of the filename for the plots generated. Default='theta_dist'",default="theta_dist")
+  parser.add_argument('--skip',help="the number of results snapshots to skip, Default = 0",default="0")
   args = parser.parse_args()
 
-  thetas_dic = find_solute_theta(args.molecule,args.restart,args.results)
+  try :
+    skip_steps = int (args.skip)
+  except :
+    simulationobjects.SetupError("Snapshots to skip needs to be an integer. The argument %s could not be interpreted."%args.skip)
+
+  thetas_dic = find_solute_theta(args.molecule,args.restart,args.results,skip_steps)
 
   plot_dist(thetas_dic,plotname=args.plotname)

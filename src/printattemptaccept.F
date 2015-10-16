@@ -19,6 +19,8 @@ c#############################################################
       integer i,j,itry,iacp,igcs,isol
       integer lgth,lineLength
       double precision iprcnt
+
+
       if (NVolTry.gt.0) then
         write(printstring,*) "Attempted ",NVolTry," volume moves. Accepted ",NVolAcp," (",
      .                      100.0*dble(NVolAcp)/dble(NVolTry),"%)"
@@ -164,7 +166,8 @@ c           PRINT*, "%" ,iprcnt
             iprcnt = 100.0 * dble(NSolTheAcp(isol))/dble(NSolTheTry(isol))
             itry = itry + NSolTheTry(isol)
             iacp = iacp + NSolTheAcp(isol)
-            write(printstring,52)'Theta ', isol,SoluteName(isol)(1:lineLength(SoluteName(isol))),NSolTheAcp(isol),NSolTheTry(isol),iprcnt  
+            write(printstring,52)'Theta ', isol,SoluteName(isol)(1:lineLength(SoluteName(isol))),NSolTheAcp(isol),
+     .                           NSolTheTry(isol),iprcnt  
             call printLine(ACCPT,printstring)
           endif
         enddo
@@ -174,7 +177,7 @@ c           PRINT*, "%" ,iprcnt
           call printLine(ACCPT,printstring)
         endif
       endif
-52          format(a,i5,' ',a,' ',i8,'/',i8,'(',f8.3,'%)')   
+52          format(a,i5,' ',a,' ',i8,'/',i8,'(',f8.3,'%)')    
 
       return
       end

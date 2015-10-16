@@ -14,9 +14,9 @@ c###################################################################
 
       if (newStackDepth.ne.oldStackDepth) then
         write(printstring,*) "The residue energy stacks are not aligned! ",newStackDepth,oldStackDepth
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"This is a severe programming bug!")
-        call closeProgram(-1,"ProtoMC is exiting because of a severe programming bug!")
+        call printLine(FATAL,printstring)
+        call printLine(FATAL,"This is a severe programming bug!")
+        call closeProgram(-1,"ProtoMS is exiting because of a severe programming bug!")
       endif
 
       newStackDepth = 0

@@ -646,6 +646,12 @@ By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, t
 
 The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section :ref:`misccmd`.
 
+By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option ::
+
+  appendstreams on
+
+This option will turn on append mode for all streams, except the **RESTART** stream that never will be appended.
+
 .. _parameters:
 
 ======================
@@ -849,6 +855,40 @@ This command will enable Generalised Born energy calculations. Thus to run a ful
 0.005 appear to be a good tradeoff. Increasing it will make the simulation faster but less accurate. proteins activates the rescaling of the Born radii to compensate for systematic errors of the Pairwise Descreening Approximation in large biomolecules. It should be used only when simulating proteins and then its effectiveness has not been yet
 convincingly demonstrated. 
 
+*WARNING: These commands are considered to be deprecated.* This means that they are not developed any more and have not been tested extensively with newer features. Dump commands are supported with the `simulate` command and one can do simple MC sampling with GB. However, it is not sure that free energy or the replica-exchange commands work satisfactorily.
+
+----------------------------------------
+Temperature replica-exchange parameters
+----------------------------------------
+
+ProtoMS can perform temperature replica-exchange simulations.
+
+.. index::
+  single: temperaturere
+
+::
+
+  temperaturere integer float float float
+
+is the command to set a replica exchange simulation between the different temperatures given as floats, where ``float`` is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+
+As an example::
+
+  temperaturere 20 25.0 30.0 35.0
+
+corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.
+
+The temperature replica-exchange command can be used in conjuction with the ``lambdare`` command, see below, to add temperature ladders to different values of :math:`\lambda`.
+
+.. index::
+  single: solutetempering
+
+::
+
+  solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
+
+Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see `Temperature replica-exchange parameters`_). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the ``temperaturere`` command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; ``bndang`` controls the internal bond-angle energy terms, ``dih`` the internal dihedral energy term, ``lj`` the internal van der Waals energy, ``coul`` the internal Coulomb energy, ``solu`` the interaction with other solutes, ``prot`` the interaction with the protein and ``solv`` the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with :math:`\beta_i/\beta_0`, where :math:`\beta_i` is the effective inverse temperature of the replica (set with the ``temperaturre`` command) and :math:`\beta_0` is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with :math:`(\beta_i+\beta_0)/2\beta_0` and if the argument 3 the energy is unscaled.
+
 -----------------------------------
 Free energy calculation parameters
 -----------------------------------
@@ -868,7 +908,7 @@ where ``float`` is a number between 0.0 and 1.0. Specify the value of :math:`\la
 
 would set :math:`\lambda` for the reference state to 0.5, :math:`\lambda` for the forwards perturbed state to 0.6, and :math:`\lambda` for the backwards perturbed state to 0.4. By default all values of :math:`\lambda` are 0.0. 
 
-To be able to run several lambdas in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the chances of convergence.
+To run several at several values of :math:`\lambda`  in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the probability of convergence.
 
 .. index::
   single: lambdare
@@ -877,7 +917,7 @@ To be able to run several lambdas in parallel and hence perform your full pertur
 
   lambdare integer float float float
 
-is the right command to set a replica exchange calculation between the different :math:`\lambda` given as floats, where ``float`` is a number between 0.0 and 1.0. In principle, any desired number of :math:`\lambda` values can be used, and the simulation will require to be runned in as many cores as :math:`\lambda` values are provided. The integer value stands for the frequency at which the exchange between the different :math:`\lambda` values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+is the command to set a replica exchange calculation between the different :math:`\lambda` given as floats, where ``float`` is a number between 0.0 and 1.0. In principle, any desired number of :math:`\lambda` values can be used, and the simulation will require to be runned in as many cores as :math:`\lambda` values are provided. The integer value stands for the frequency at which the exchange between the different :math:`\lambda` values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see `Frequent output generation`_). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
 
 As an example::
 
@@ -885,8 +925,52 @@ As an example::
 
 corresponds to a simulation which will run at four different :math:`\lambda` windows in parallel, and will attempt swaps between the conformations of different :math:`\lambda` windows each 20 moves.
 
+**With temperature replica-exchange**
+
 .. index::
-  single: lambdare
+  single: temperatureladder
+
+::
+
+  temperatureladder lambda float float
+
+is one of the commands required to proceed with a simulation including both temperature and :math:`\lambda` replica exchange, where ``float`` is each of the :math:`\lambda` values where a temperature ladder is desired. All :math:`\lambda` values must be among those included after the ``lambdare`` keyword. In principle, the number of temperature ladders can be as high as the number of :math:`\lambda` windows.
+
+As an example::
+
+  temperatureladder lambda 0.00 1.00 
+
+corresponds to a simulation which runs the :math:`\lambda` windowns 0.00 and 1.00 at all temperatures included after the ``temperaturere`` keyword, as far as the corresponding ``lambdaladder`` command line is set accordingly.
+
+.. index::
+  single: lambdaladder
+
+::
+
+  lambdaladder temperature float float
+
+is one of the commands required to proceed with a simulation including both temperature and :math:`\lambda` replica exchange, where ``float`` is each of the temperature values where a :math:`\lambda` ladder is to be placed. All temperature values must be among those included after the ``temperaturere`` keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of :math:`\lambda` ladders and temperature ladders, as well as :math:`\lambda` and temperature values per ladder, takind into account the cores shared by each :math:`\lambda` ladder with each temperature ladder.
+
+As an example::
+
+  lambdaladder temperature 25.0 35.0
+
+corresponds to a simulation which runs all :math:`\lambda` windowns at temperatures 25.0 and 35.0, as far as the corresponding ``temperatureladder`` command line is set accordingly.
+
+All replica-exchange commands together::
+
+  lambdare 20 0.000 0.333 0.667 1.000
+  temperaturere 20 25.0 30.0 35.0
+  temperatureladder lambda 0.00 1.00 
+  lambdaladder temperature 25.0 35.0
+
+correspond to a simulation where :math:`\lambda` windows 0.000 0.333 0.667 1.000 are simulated at 25.0 and 35.0 Celsius, while at temperature 30.0, only :math:`\lambda` windows 0.000 and 1.000 will be simulated.
+
+
+**Other free energy commands**
+
+.. index::
+  single: dlambda
 
 ::
 
@@ -1241,6 +1325,8 @@ A couple of *simulate-like* commands are specifically related to GBSA simulation
   
 The above command should only be used if you are doing an implicit solvent simulation (e.g, you turned on the surface and born keywords). This will cause to run 10 moves with a crude GBSA potential and then perform an acceptance test based on the difference of energies between the crude GBSA potential and the GBSA potential you set with the cutoff, born and surface keywords. This will be repeated 100 times. Here the move probabilities were set to 1 and 9 for solute and protein, but could be other figures. After this keyword has been used it is advised to use the following keyword. 
 
+*WARNING: this command is deprecated.* For instance, it does not support the dump commands
+
 .. index::
   single: resetgb
 
@@ -1261,17 +1347,22 @@ As well as controlling the sampling, you can also control the collection and out
 
 ::
   
-  chunk averages reset
+  chunk results reset
   
 Reset all averages to zero and start collection of results from scratch. ::
  
-   chunk averages write
+   chunk results write
    
-Write out the energy and free energy averages to the RESULTS stream. It is probably a good idea to do this a some point before the end of the simulation! ::
+Write out the energy and free energy averages to the RESULTS stream. It is probably a good idea to do this a some point before the end of the simulation. ::
 
-  chunk averages write myfile.txt
+  chunk results write myfile.txt
   
-Does the same as above, but redirects the RESULTS stream to myfile.txt before the results are written. 
+Does the same as above, but redirects the RESULTS stream to myfile.txt before the results are written.  ::
+
+  chunk results writeinst myfile.txt
+
+Does the same av `write` but instead write instantaneous energies (the energies of the current snapshot) rather than average energies. This can be useful for some analyses. 
+
 
 .. index::
   single: restart command
@@ -1456,7 +1547,7 @@ An example of a dump line would be::
 
 This line, given as input for ProtoMS, will append results information to the `results` file every 100000 moves, thoughout the `simulate` part of your simulation.
 
-It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time. Consistently these imput lines::
+It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently these imput lines::
 
   dump 100 results write results
   dump 100 pdb all file=all.pdb
@@ -1493,6 +1584,16 @@ Calculate the energy of the current system and output it to the SPENERGY stream.
   chunk soluteenergy N
   
 Calculate the energy of solute N. This calculates the energy of solute N and outputs the components of this energy in great detail. This is useful for debugging a forcefield or for collecting average energy components that are more finely divided than those normally collected. 
+
+
+.. index::
+  single: fakesime
+
+::
+
+  chunk fakesim
+
+Performs one step of simulation, without doing anything other than adding the energies to the averages. This can be useful for debugging purposes.
 
 .. index::
   single: retienergy

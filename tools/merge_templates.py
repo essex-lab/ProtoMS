@@ -32,6 +32,9 @@ def merge_templates(templates) :
   -------
   TemplateFile
     the merged template file
+  or
+  string
+    the filename of the single unique template
   """
   
   logger.debug("Running merge_templates with arguments: ")
@@ -43,7 +46,10 @@ def merge_templates(templates) :
   for t in templates :
     if not t in templates2  :
       templates2.append(t)
-      
+
+  if len(templates2) == 1 : 
+    return templates2[0]
+     
   temfile = simulationobjects.TemplateFile(templates2[0])
   for t in templates2[1:] :
     temfile2 = simulationobjects.TemplateFile(t)
@@ -63,7 +69,15 @@ if __name__ == "__main__":
   logger = simulationobjects.setup_logger("merge_templates_py.log")
 
   if args.files is None : 
-    print "Nothing to do! Exiting."
+    raise simulationobjects.SetupError("Nothing to do! No template files provided. Exiting.")
+  if args.out is None :
+    raise simulationobjects.SetupError("A name for the merged template file needs to be provided!")
   
   tem = merge_templates(args.files)
-  tem.write(args.out)
+  if isinstance(tem,simulationobjects.TemplateFile):
+    tem.write(args.out)
+
+
+
+
+

@@ -65,8 +65,9 @@ c     now see if this atom has been used before
         if (nat.gt.MAXCHAINATOMS) then
           write(printstring,*) WARNING,"Exceeded maximum number of chain template atoms (",
      .                           MAXCHAINATOMS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXCHAINATOMS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXCHAINATOMS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NChainAtoms(itmpl) = nat

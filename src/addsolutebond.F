@@ -29,8 +29,9 @@ c     now add the bond
       nbnds = NSolBonds(isol)
       if (nbnds.gt.MAXSOLUTEBONDS) then
         write(printstring,*) "Exceeded maximum number of solute bonds! (",MAXSOLUTEBONDS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLUTEBONDS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLUTEBONDS and recompile"
+        call closeProgram(-1,printstring)
         NSolBonds(isol) = NSolBonds(isol) - 1
         return
       endif

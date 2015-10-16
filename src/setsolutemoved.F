@@ -23,8 +23,9 @@ c     do not need to do this if everything is already moved
       in = nSolMoved + 1
       if (in.gt.MAXSOLMOVED) then
         write(printstring,*) "Exceeded maximum number of moved solutes (",MAXSOLMOVED,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLMOVED and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLMOVED and recompile"
+        call closeProgram(-1,printstring)        
         return
       endif
       

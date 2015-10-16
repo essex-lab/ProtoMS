@@ -70,7 +70,7 @@ c           try to fix sigma scaling problem for disappearing atoms
             else if (funcsigsclf) then
               funcsig3 = funcsig3 * (thet)
             else if (funcsigsclb) then
-              funcsig3 = funcsig3 * (thet)
+              funcsig3 = funcsig3 * (1-thet)
             endif
           else
 c           use combining rules used in OPLS
@@ -183,7 +183,7 @@ c       Separation shifted scaling soft core of Zacharias and McCammon
 c       (reference here)
         if (softcore) then 
 c         Soften the distance for the coulombic term
-          invfuncdist = ONE / dsqrt( funcdist2 + (thet) )
+          invfuncdist = ONE / dsqrt( funcdist2 + (1-thet) )
 c         Check if we have alread worked out sigmaij6...
           if (ipar1 .lt. 0 .or. ipar2 .lt.0) then
 c           Calculate the shift parameter
@@ -193,7 +193,7 @@ c           Taken as the sigma value for this pair pair interaction
            else
              shift = funcisig1*funcisig2*DeltaCore
            endif
-            softdist = (thet)*shift
+            softdist = (1-thet)*shift
           else
 c           ...Otherwise we have to get it by lookup
             sigat1 = sigma(ipar1)
@@ -203,7 +203,7 @@ c           ...Otherwise we have to get it by lookup
             else
               shift = ( sigat1*sigat2 )*DeltaCore
             endif
-            softdist = (thet)*shift
+            softdist = (1-thet)*shift
           endif
           invfuncdist6 = ONE / (funcdist2 + softdist)**3
           invfuncdist12 = invfuncdist6**2
@@ -239,8 +239,8 @@ c       calculate the distances for variable geometry (if necessary)
                 shiftf = funcisig1f*funcisig2f*DeltaCore
                 shiftb = funcisig1b*funcisig2b*DeltaCore
               endif
-              softdistf = (thet)*shiftf
-              softdistb = (thet)*shiftb
+              softdistf = (1-thet)*shiftf
+              softdistb = (1-thet)*shiftb
             else
 c             ...Otherwise we have to get it by lookup
               if (lorentzberthelot) then
@@ -250,8 +250,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = ( sigat1*sigat2 )*DeltaCore
                 shiftb = shiftf
               endif
-              softdistf = (thet)*shiftf
-              softdistb = (thet)*shiftb
+              softdistf = (1-thet)*shiftf
+              softdistb = (1-thet)*shiftb
             endif
             invfuncdist6f = ONE / (funcdistf2+ softdistf)**3
             invfuncdist12f = invfuncdist6f**2        
@@ -268,8 +268,8 @@ c             ...Otherwise we have to get it by lookup
           endif
         else
           if (softcore) then
-            invfuncdistf = ONE / dsqrt(funcdist2 + (thet) )
-            invfuncdistb = ONE / dsqrt(funcdist2 + (thet) )
+            invfuncdistf = ONE / dsqrt(funcdist2 + (1-thet) )
+            invfuncdistb = ONE / dsqrt(funcdist2 + (1-thet) )
             if (ipar1 .lt. 0 .or. ipar2 .lt.0) then
               if (lorentzberthelot) then 
                 shiftf = HALF*(funcisig1f+funcisig2f)*DeltaCore
@@ -278,8 +278,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = funcisig1f*funcisig2f*DeltaCore
                 shiftb = funcisig1b*funcisig2b*DeltaCore
               endif
-              softdistf = (thet)*shiftf
-              softdistb = (thet)*shiftb
+              softdistf = (1-thet)*shiftf
+              softdistb = (1-thet)*shiftb
             else
 c             ...Otherwise we have to get it by lookup
               if (lorentzberthelot) then
@@ -289,8 +289,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = ( sigat1*sigat2 )*DeltaCore
                 shiftb = shiftf
               endif
-              softdistf = (thet)*shiftf
-              softdistb = (thet)*shiftb
+              softdistf = (1-thet)*shiftf
+              softdistb = (1-thet)*shiftb
             endif
             invfuncdist6f = ONE / (funcdist2 + softdistf)**3
             invfuncdist12f = invfuncdist6f**2        

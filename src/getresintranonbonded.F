@@ -40,8 +40,9 @@ c           these atom are not bonded
             if (n.gt.MAXRESNB) then
               write(printstring,*) "Exceeded maximum number of intra-residue nonbonded pairsxf (",
      .                             MAXRESNB,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXRESNB and recompile.")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXRESNB and recompile"
+              call closeProgram(-1,printstring)
             else
               ResNB(iprot,ires,n,1) = i
               ResNB(iprot,ires,n,2) = j
@@ -53,8 +54,9 @@ c           these atoms are 1-4 bonded
             if (n.gt.MAXRESNB14) then
               write(printstring,*) "Exceeded maximum number of intra-residue 1-4 pairs (",
      .                             MAXRESNB14,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXRESNB14 and recompile.")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXRESNB14 and recompile"
+              call closeProgram(-1,printstring)
             else
               ResNB14(iprot,ires,n,1) = i
               ResNB14(iprot,ires,n,2) = j

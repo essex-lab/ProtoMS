@@ -33,8 +33,9 @@ c#################################################
           if (ncljpairs.gt.MAXCLJPAIRS) then
             write(printstring,11) MAXCLJPAIRS
 11          format("Exceeded maximum number of CLJ atom pairs(",i4,")")
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXCLJPAIRS and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXCLJPAIRS and recompile"
+            call closeProgram(-1,printstring)
             return
           endif
           

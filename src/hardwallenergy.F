@@ -19,7 +19,7 @@ c        potential if it goes outside of the defined radius
 c
 c     J. Taylor July 2005
 c
-c     Based on the ProtoMC version created by C. Woods and editted by C. Barillari on 05-05-2004  
+c     Based on the ProtoMS version created by C. Woods and editted by C. Barillari on 05-05-2004  
 c
 c###############################################################################
 

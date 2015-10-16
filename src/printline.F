@@ -1,7 +1,6 @@
       subroutine printLine(stream,line)
       include 'dimensions.inc'
       include 'printer.inc'
-      include 'parallel.inc'
 c################################################################
 c
 c     This routine prints line 'line' to stream 'stream'
@@ -30,11 +29,16 @@ c     don't output the line if this stream is not connected to a file
 c       if the file has not been opened, then try to open it!        
         if (.not.fileopened(opfile)) then
           if (fileappend(opfile)) then
+c           if cannot open with append, try without at 300
             open(unit=FILE,form="formatted",status="old",position='APPEND',err=300,file=openfiles(opfile))
           else
-300         continue
-            open(unit=FILE,form="formatted",status="unknown",err=100,file=openfiles(opfile))
+            open(unit=FILE,form="formatted",status="replace",position='REWIND',err=100,file=openfiles(opfile))
           endif
+          fileopened(opfile) = .true.
+          goto 200
+
+300       continue
+          open(unit=FILE,form="formatted",status="replace",position='REWIND',err=100,file=openfiles(opfile))
           fileopened(opfile) = .true.
           goto 200
 c-------------- This block is only executed if the file refuses to open! --------------------

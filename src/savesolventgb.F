@@ -18,7 +18,7 @@ c##############################################
       countGBSolvent = countGBSolvent + 1
       if (countGBSolvent .gt. MAXSOLVENTS) then
         call printLine(WARNING,"Increase MAXSOLVENTS  and recompile")
-        call closeProgram(-1,"ProtoMC exiting !")
+        call closeProgram(-1,"ProtoMS exiting !")
       endif
       
 c     now save the coordinates

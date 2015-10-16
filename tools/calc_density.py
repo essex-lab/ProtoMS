@@ -270,26 +270,34 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Program to discretize atoms on a 3D grid",)
   parser.add_argument('-f','--files',nargs="+",help="the input PDB-files")
   parser.add_argument('-o','--out',help="the name of the output grid-file in DX-format, default='grid.dx'",default="grid.dx")
-  parser.add_argument('-r','--residue',help="the name of the residue to extract, default='wat'",default="wat")
+  parser.add_argument('-r','--residue',help="the name of the residue to extract, default='wa1'",default="wa1")
   parser.add_argument('-a','--atom',help="the name of the atom to extract, default='o00'",default="o00")
   parser.add_argument('-p','--padding',type=float,help="the amount to increase the minimum box in each direction, default=2 A",default=2.0)
   parser.add_argument('-s','--spacing',type=float,help="the grid resolution, default=0.5 A",default=0.5)
   parser.add_argument('-e','--extent',type=float,help="the size of the smoothing, i.e. the extent of an atom, default=1A",default=1.0)
   parser.add_argument('-n','--norm',type=float,help="number used to normalize the grid, if not specified the number of input files is used")
   parser.add_argument('-t','--type',choices=["sphere","gaussian"],help="the type  of coordinate smoothing, should be either 'sphere', 'gaussian'",default="sphere")
+  parser.add_argument('--skip',type=int,help="the number of blocks to skip to calculate the density. default is 0. Skip must be greater or equal to 0",default=0)
+  parser.add_argument('--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
   args = parser.parse_args()
 
   if not args.files :
     print "No input files! Nothing to do, so exit."
     quit()
 
+  # Fix negative values of skip and max
+  if args.max < 0 :
+    args.max = 99999
+  if args.skip <= 0 :
+    args.skip = -1
+
   # Read in PDB files
   if len(args.files) == 1 :
     pdbfiles = simulationobjects.PDBSet()
-    pdbfiles.read(args.files[0])
+    pdbfiles.read(args.files[0],skip=args.skip,readmax=args.max)
   else :
     pdbfiles = simulationobjects.PDBSet()
-    for filename in args.files :
+    for filename in args.files[args.skip:args.max+1] :
       pdb = simulationobjects.PDBFile(filename=filename)
       pdbfiles.pdbs.append(pdb)
       

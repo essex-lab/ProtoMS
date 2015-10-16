@@ -1,0 +1,35 @@
+
+This text describes how to compile the documentation for ProtoMS.
+
+The document is compiled using Sphinx (www.sphinx-doc.org/). 
+
+The files that consitutes the manual are
+    * compilation.rst - describes the installation
+    * index.rst - the main document, contains all other rst-files
+    * introduction.rst - intro chapter
+    * protomspy.rst - describes the protoms.py program
+    * protoms.rst - describes most of the MC engine
+    * tools.rst - describes the python tools
+
+These files are formatted using reStructured text (http://sphinx-doc.org/rest.html).
+
+-------------
+Pre-requisits
+-------------
+
+Sphinx:
+Either install it using pip or downloaded it yourself:
+
+git clone https://github.com/sphinx-doc/sphinx.git
+cd sphinx/
+python2.7 setup.py install --user
+
+-----------
+Compilation
+-----------
+make html
+make latexpdf
+
+
+   
+

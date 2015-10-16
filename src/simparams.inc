@@ -66,8 +66,18 @@ c     different soft-core parameters
       parameter (SOFT66=2)
       parameter (SOFTAMB=3)
 
-c     SG REST2 parameters
-      double precision resttempC,resttemp,rest_beta,restscale1,restscale2,restscale3
+c     solute-tempering
+      double precision resttempC,resttemp,rest_beta
+      double precision restfac1,restfac2
+c     restscaling(1) : intra-solute bond-angle
+c     restscaling(2) : intra-solute dihedral
+c     restscaling(3) : intra-solute lj
+c     restscaling(4) : intra-solute coul
+c     restscaling(5) : solute-solute
+c     restscaling(6) : solute-protein
+c     restscaling(7) : solute-water
+      double precision restscaling(7)
+      integer restlevel(7)
       
 c     whether or not to calculate energies in the same way as Sire
 c     (this slows things down, but is useful to allow debugging of Sire)
@@ -81,9 +91,10 @@ c     (this slows things down, but is useful to allow debugging of Sire)
      .           OneOverScl14C,OneOverScl14LJ,thres,
      .             SIRE_COMPATIBILITY_MODE  
       common /SIMPARAMVALS2/ DeltaCoreCoul,DeltaCoreCoulL,SoftPower,SoftPowerInv,SoftPower2,SoftPowerInv6,
-     .                          DeltaCore,CoulSoftPower,LJSoftPower,GBSoftPower
-      common /SIMPARAMVALS3/resttempC,resttemp,rest_beta,restscale1,restscale2,restscale3,SoftType
+     .                          DeltaCore,CoulSoftPower,LJSoftPower,GBSoftPower,SoftType
       
       save /SIMPARAMVALS/
       save /SIMPARAMVALS2/
-      save /SIMPARAMVALS3/
+      
+      common /REST/ restscaling,restfac1,restfac2,resttempC,resttemp,rest_beta,restlevel
+      save /REST/

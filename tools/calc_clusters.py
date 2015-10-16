@@ -151,7 +151,7 @@ def _GetMolTemplate(FileName, MolName):
 	"""
         Extracts the pdb of the molecule of interest. This is then used as a template for printing out coordinates of that molecule.
         FileLines: a pdb file which is the output from a molecular simulation, and which may contain the coordinates of many other molecules.
-        molname: the residue name of the molecule one wishes to extract theta values for, eg "wat".
+        molname: the residue name of the molecule one wishes to extract theta values for, eg "wa1".
 	"""
 	FileLines = open(FileName,"r").readlines()
 	molpdb = []
@@ -191,24 +191,31 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Program to cluster molecules")
   parser.add_argument('-f','--files',nargs="+",help="the input PDB-files")
   parser.add_argument('-o','--out',help="the name of the output pdb that contains the cluster representatives, default='clusters.pdb'",default="clusters.pdb")
-  parser.add_argument('-m','--molecule',help="the name of the molecule to extract, default='wat'",default="wat")
+  parser.add_argument('-m','--molecule',help="the name of the molecule to extract, default='wa1'",default="wa1")
   parser.add_argument('-a','--atom',help="the name of the atom to extract. If left blank, the entire molecule will be clustered, default=None",default=None)
   parser.add_argument('-t','--type',choices=["average","single","complete","weighted", "centroid"],help="the type of hierarchical clustering method, default='average'", default="average")
   parser.add_argument('-c','--cutoff',type=float,help="the distance cutoff that defines whether conformations belong to a cluster, default=2.0",default=2.0)
-
+  parser.add_argument('--skip',type=int,help="the number of blocks to skip to calculate the clusters. default is 0. Skip must be greater or equal to 0",default=0)
+  parser.add_argument('--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
   args = parser.parse_args()
 
   if not args.files :
     print "No input files! Nothing to do, so exit."
     quit()
 
+  # Fix negative values of skip and max
+  if args.max < 0 :
+    args.max = 99999
+  if args.skip <= 0 :
+    args.skip = -1
+
   # Read in PDB files
   if len(args.files) == 1 :
     pdbfiles = simulationobjects.PDBSet()
-    pdbfiles.read(args.files[0])
+    pdbfiles.read(args.files[0],skip=args.skip,readmax=args.max)
   else :
     pdbfiles = simulationobjects.PDBSet()
-    for filename in args.files :
+    for filename in args.files[args.skip:args.max+1] :
       pdb = simulationobjects.PDBFile(filename=filename)
       pdbfiles.pdbs.append(pdb)
 

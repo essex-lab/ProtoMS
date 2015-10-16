@@ -13,8 +13,9 @@ c     dictionary
       
       if (nkeys.gt.MAXKEYS) then
         write(printstring,*) "Exceeded maximum number of keys (",MAXKEYS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXKEYS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXKEYS and recompile"
+        call closeProgram(-1,printstring)
       endif
       
       keys(nkeys) = key

@@ -151,7 +151,17 @@ c       Now scale these energies according to theta...
             cnrgf = cnrgf * thetaparam(igcs)
             cnrgb = cnrgb * thetaparam(igcs)
             ljnrgf = ljnrgf * thetaparam(igcs)
-            ljnrgb = ljnrgb * thetaparam(igcs)           
+            ljnrgb = ljnrgb * thetaparam(igcs)  
+                     
+      if (doREST) then
+        cnrg = cnrg * restscaling(7)
+        ljnrg = ljnrg * restscaling(7)
+        nrg = cnrg + ljnrg
+        cnrgf = cnrgf * restscaling(7)
+        ljnrgf = ljnrgf * restscaling(7)
+        cnrgb = cnrgb * restscaling(7)
+        ljnrgb = ljnrgb * restscaling(7)
+      endif
       
       GCsoluteSingleSolventEnergy = nrg
 c      PRINT*, "mindist-nrg" ,mindist,GCsoluteSingleSolventEnergy

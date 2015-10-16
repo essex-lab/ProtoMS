@@ -87,8 +87,9 @@ c     the last atom is at zstrt + nats
       if (zend.gt.MAXATOMS) then
         write(printstring,*) "Exceeded maximum number of protein atoms (",
      .                       MAXATOMS,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXATOMS and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXATOMS and recompile"
+        call closeProgram(-1,printstring)
         return
       endif      
 
@@ -101,17 +102,19 @@ c     are critical and *must* be supplied in the pdb file!
         if (ChainBBAtom(ichn,i).eq.'   ') then
           lgth = lineLength(ChainName(ichn))
           write(printstring,30) ChainName(ichn)(1:lgth),i
-          call printLine(WARNING,printstring)
+          call printLine(FATAL,printstring)
 30        format("Chain template ",a," is missing required bbatom ",i1,". Check your parameter file.")
-          call prettyLine(WARNING,"Your simulation is now broken as this atom is very important!")
+          write(printstring,*)"Your simulation is now broken as this atom is very important!"
+          call closeProgram(-1,printstring)
           return
         else if (BBNam(iprot,ires,i).eq.'   ') then
           lgth = lineLength(ProteinName(iprot))
           write(printstring,31) ResNam(iprot,ires),ResNum(iprot,ires),
      .                          ProteinName(iprot)(1:lgth),ChainBBAtom(ichn,i)
 31        format("Residue ",a,"-",i4," of protein ",a," is missing the required bbatom ",a)
-          call printLine(WARNING,printstring)
-          call prettyLine(WARNING,"Your simulation is now broken as this atom is very important!")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Your simulation is now broken as this atom is very important!"
+          call closeProgram(-1,printstring)
           return
         else if (BBNam(iprot,ires,i).ne.ChainBBAtom(ichn,i)) then
           lgth = lineLength(ProteinName(iprot))
@@ -119,8 +122,9 @@ c     are critical and *must* be supplied in the pdb file!
      .                          i,BBNam(iprot,ires,i),ChainBBAtom(ichn,i)
 32        format("Residue ",a,"-",i4," of protein ",a," has the wrong bbatom at position ",i1,
      .             ". It has ",a," when it should have ",a)
-          call printLine(WARNING,printstring)
-          call prettyLine(WARNING,"Your simulation is now broken as this atom is very important!")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Your simulation is now broken as this atom is very important!"
+          call closeProgram(-1,printstring)
           return
         else
 c         copy the coordinates into the ZCoords array        
@@ -282,8 +286,9 @@ c       otherwise we can't build the sidechains correctly! (except for BBAtom(4)
 c       it is the last atom of the residue, yet its coordinates are readily available)
         if (iatm.le.0 .or. ibnd.le.0 .or. iang.le.0 .or. idih.le.0) then
           if (needbuild) then
-            call printLine(WARNING,"Cannot build atom as one of the required atoms has not been loaded.")
-            call printLine(WARNING,"Your simulation is broken as you have a missing atom!")
+            call printLine(FATAL,"Cannot build atom as one of the required atoms has not been loaded.")
+            write(printstring,*)"Your simulation is broken as you have a missing atom!"
+            call closeProgram(-1,printstring)
           endif
         else if (iatm.eq.ibnd .or. iatm.eq.iang .or. iatm.eq.idih .or. ibnd.eq.iang
      .           .or. ibnd.eq.idih .or. iang.eq.idih) then
@@ -295,8 +300,9 @@ c       it is the last atom of the residue, yet its coordinates are readily avai
           call printLine(WARNING,"This is a serious problem that will break any simulation!")
           call printLine(WARNING,"Check that your residue and chain templates are correct.")
           if (needbuild) then
-            call printLine(WARNING,"Cannot build atom due to this template problem.")
-            call printLine(WARNING,"Your simulation is broken as you have a missing atom!")
+            call printLine(FATAL,"Cannot build atom due to this template problem.")
+            write(printstring,*)"Your simulation is broken as you have a missing atom!"
+            call closeProgram(-1,printstring)
           endif
         else if ( (ibnd.ne.zend .and. iatm.lt.ibnd) .or.
      .            (iang.ne.zend .and. iatm.lt.iang) .or.
@@ -309,16 +315,18 @@ c       it is the last atom of the residue, yet its coordinates are readily avai
           call printLine(WARNING,"This is a serious problem that will break any simulation.")
           call printLine(WARNING,"Check that your residue and chain templates are correct.")
           if (needbuild) then
-            call printLine(WARNING,"Cannot build atom due to this template problem.")
-            call printLine(WARNING,"Your simulation is broken as you have a missing atom!")
+            call printLine(FATAL,"Cannot build atom due to this template problem.")
+            write(printstring,*)"Your simulation is broken as you have a missing atom!"
+            call closeProgram(-1,printstring)
           endif
         else if (needbuild) then
 c         see if we have loaded default zmatrix values for this atom - bndval will not equal
 c         zero if we have
           if (bndval.eq.ZERO) then
-            call printLine(WARNING,"Cannot build this atom as there is no zmatrix information available.")
-            call printLine(WARNING,"See the manual to see how to add this information.")
-            call printLine(WARNING,"Your simulation is broken as you have a missing atom!")
+            call printLine(FATAL,"Cannot build this atom as there is no zmatrix information available.")
+            call printLine(FATAL,"See the manual to see how to add this information.")
+            write(printstring,*)"Your simulation is broken as you have a missing atom!"
+            call closeProgram(-1,printstring)
           else
 c           we should be able to build the atom...          
             call genProteinAtom(iprot,idih,iang,ibnd,iatm,dihval,angval,bndval)
@@ -368,7 +376,7 @@ c         add the interresidue bond as a dummy bond
           
           write(printstring,50) iprot,ProteinName(iprot)(1:lgth),inam1,inam2,idist
           call printLine(WARNING,printstring)
-50        format("Backbone atoms of protein ",i3,"(",a,") are too far apart. The distamce between atoms ",
+50        format("Backbone atoms of protein ",i3,"(",a,") are too far apart. The distance between atoms ",
      .           a," and ",a," is ",f8.3," A. Will now assume that this is a scoop, so will add a ",
      .           "dummy bond between these bonds. Do not move the backbone of these residues!")
         else

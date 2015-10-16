@@ -138,6 +138,15 @@ c          print*, "LJ", ljnrg
           ljnrgb = ljnrgb*thetaparam(igcs1)*thetaparam(igcs2)
       
 
+      if (doREST) then
+        cnrg = cnrg * restscaling(5)
+        ljnrg = ljnrg * restscaling(5)
+        nrg = cnrg+ljnrg
+        cnrgf = cnrgf * restscaling(5)
+        ljnrgf = ljnrgf * restscaling(5)
+        cnrgb = cnrgb * restscaling(5)
+        ljnrgb = ljnrgb * restscaling(5)
+      endif
 
 c      PRINT*, "THETA-GCS", thetaparam(igcs1),thetaparam(igcs2)
       GCsoluteGCsoluteSingleEnergy = nrg

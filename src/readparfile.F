@@ -4,10 +4,11 @@
       include 'printer.inc'
       include 'splitter.inc'
       include 'proteins.inc'
+      include 'sep.inc'
 c############################################################
 c
 c     This routine reads in the new style free format
-c     unified ProtoMC parameter files. These files contain
+c     unified ProtoMS parameter files. These files contain
 c     the complete description of the forcefield, e.g.
 c     parameters and templates!
 c
@@ -33,7 +34,7 @@ c     JM
       hashome = nwords.gt.0
 
       if (hashome.eqv..True.) then
-        call split2(filename,"/")
+        call split2(filename,PATHSEP)
         do i=1,nwords2
           if (words2(i)(1:lineLength(words2(i))).eq."$PROTOMSHOME") then
             words(i) = pmshome
@@ -42,9 +43,9 @@ c     JM
           endif
         enddo
         nwords = nwords2
-        call join2(1,nwords,"/",tempstr)
-        if (filename(1:1).eq."/")  then
-          write(filename,"(2A)")"/",tempstr(1:lineLength(tempstr))
+        call join2(1,nwords,PATHSEP,tempstr)
+        if (filename(1:1).eq.PATHSEP)  then
+          write(filename,"(2A)")PATHSEP,tempstr(1:lineLength(tempstr))
         else
           filename = tempstr
         endif
@@ -200,8 +201,8 @@ c     get here if there was a problem while reading the file
       
 c     get here if there was a problem while opening the file
 9600  continue
-      write(printstring,*) "There was a problem opening the parameter file ",filename(1:ilgth)
-      call printLine(WARNING,printstring)
+      write(printstring,*) "FATAL - There was a problem opening the parameter file ",filename(1:ilgth)
+      call closeProgram(-1,printstring)
       
       return
       

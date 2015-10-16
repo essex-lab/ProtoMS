@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Compilation and Installation &mdash; ProtoMS 3.0 documentation</title>
+    <title>Compilation and Installation &mdash; ProtoMS 3.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '3.0',
+        VERSION:     '3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,17 +23,17 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="ProtoMS 3.0 documentation" href="index.html" />
+    <link rel="top" title="ProtoMS 3.1 documentation" href="index.html" />
     <link rel="next" title="Design of ProtoMS" href="protoms.html" />
     <link rel="prev" title="Introduction" href="introduction.html" /> 
   </head>
-  <body role="document">
+  <body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
 <a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
 </div>-->
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -51,7 +51,7 @@
       </ul>
     </div>
 
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/dolphin.png" alt="Logo"/>
@@ -61,6 +61,7 @@
 <li><a class="reference internal" href="#">Compilation and Installation</a><ul>
 <li><a class="reference internal" href="#programming-language">Programming Language</a></li>
 <li><a class="reference internal" href="#building-protoms">Building ProtoMS</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
 </ul>
 </li>
 </ul>
@@ -71,7 +72,7 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="protoms.html"
                         title="next chapter">Design of ProtoMS</a></p>
-<div id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -90,16 +91,18 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="compilation-and-installation">
 <h1>Compilation and Installation<a class="headerlink" href="#compilation-and-installation" title="Permalink to this headline">¶</a></h1>
 <p>The ProtoMS package supplies the following files and directories;</p>
 <ul class="simple">
+<li><strong>CMakeLists.txt</strong> This file configures ProtoMS prior to compiling.</li>
 <li><strong>data</strong> This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files</li>
 <li><strong>doc</strong> This directory contains documentation</li>
 <li><strong>README</strong> File that contains brief installation instructions for ProtoMS, and any last minute addendums or errata that arrived too late to make it into the manual!</li>
 <li><strong>parameter</strong> This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.</li>
+<li><strong>protoms.py</strong> A tool to setup common ProtoMS calculations</li>
 <li><strong>src</strong> This directory contains all of the source code for the main program</li>
 <li><strong>tools</strong> This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.</li>
 <li><strong>tutorial</strong> This directory contains a number of examples that demonstrate applications of ProtoMS.</li>
@@ -110,20 +113,52 @@
 <ul class="simple">
 <li>The maximum line length is up to 132 characters, rather than 72.</li>
 <li>Variable, subroutine and function names are greater than 6 characters.</li>
-<li><code class="docutils literal"><span class="pre">do/enddo</span></code> loops are used rather than <code class="docutils literal"><span class="pre">do/continue</span></code>.</li>
-<li>Fortran <code class="docutils literal"><span class="pre">include</span></code> is used to include the contents of other files.</li>
-<li>The <code class="docutils literal"><span class="pre">flush</span></code>, <code class="docutils literal"><span class="pre">getarg</span></code> and <code class="docutils literal"><span class="pre">getenv</span></code> non-standard intrinsic functions are used.</li>
-<li>ProtoMS performs string manipulation using the <code class="docutils literal"><span class="pre">len</span></code> function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.</li>
-<li>The <code class="docutils literal"><span class="pre">Date</span></code> and <code class="docutils literal"><span class="pre">Time</span></code> Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in <code class="docutils literal"><span class="pre">getoptions.F</span></code>, though you will need to provide a random number seed manually.</li>
+<li><tt class="docutils literal"><span class="pre">do/enddo</span></tt> loops are used rather than <tt class="docutils literal"><span class="pre">do/continue</span></tt>.</li>
+<li>Fortran <tt class="docutils literal"><span class="pre">include</span></tt> is used to include the contents of other files.</li>
+<li>The <tt class="docutils literal"><span class="pre">flush</span></tt>, <tt class="docutils literal"><span class="pre">getarg</span></tt> and <tt class="docutils literal"><span class="pre">getenv</span></tt> non-standard intrinsic functions are used.</li>
+<li>ProtoMS performs string manipulation using the <tt class="docutils literal"><span class="pre">len</span></tt> function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.</li>
+<li>The <tt class="docutils literal"><span class="pre">Date</span></tt> and <tt class="docutils literal"><span class="pre">Time</span></tt> Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in <tt class="docutils literal"><span class="pre">getoptions.F</span></tt>, though you will need to provide a random number seed manually.</li>
 </ul>
-<p>The tools are written in python and should be compatible with the standard implementation version 2.7. It is known that is does not work with 2.6 and it has not been tested with version 3.0 or more.</p>
+<p>The tools are written in python (<a class="reference external" href="https://www.python.org/">https://www.python.org/</a>) and should be compatible with the standard implementation version 2.7. It is known that is does not work with 2.6 and it has not been tested with version 3.0 or more.</p>
 </div>
 <div class="section" id="building-protoms">
 <h2>Building ProtoMS<a class="headerlink" href="#building-protoms" title="Permalink to this headline">¶</a></h2>
-<p>ProtoMS has been written using the GNU Fortran compilers, on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.</p>
-<p>You also need the OpenMPI package as ProtoMS contains instructions that operates on multiple processes. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77</p>
-<p>Building ProtoMS should be straightforward if you have a Fortran compiler that supports the extensions described in section 2.1, and a version of <code class="docutils literal"><span class="pre">make</span></code> that supports the GNU Makefile format. Simply go into the <code class="docutils literal"><span class="pre">src</span></code> directory and edit the <code class="docutils literal"><span class="pre">Makefile</span></code> that you find there. This file contains a lot of comments to help you edit the file, and all you should need to do is edit the compilation flags to best optimise ProtoMS to your system. Once you have edited the <code class="docutils literal"><span class="pre">Makefile</span></code> you can then run <code class="docutils literal"><span class="pre">make</span></code>. After about a minute, the compilation should hopefully finish, and the ProtoMS executable placed in the top directory. The executable will be called <code class="docutils literal"><span class="pre">protoms3</span></code> on UNIX/Linux. This executable should be run from the command line, or via a script.</p>
-<p>We recommend to set the environmental variable <code class="docutils literal"><span class="pre">$PROTOMSHOME</span></code> to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.</p>
+<p>ProtoMS has been written using the GNU Fortran compilers (<a class="reference external" href="https://gcc.gnu.org/">https://gcc.gnu.org/</a>), on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.</p>
+<p>You also need an MPI package to perform simulations that require multiple processes, e.g. replica exchange. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77. ProtoMS has been compiled with both OpenMPI (<a class="reference external" href="http://www.open-mpi.org/">http://www.open-mpi.org/</a>) and MPICH (<a class="reference external" href="https://www.mpich.org/">https://www.mpich.org/</a>). However, note that this is <em>not</em> a requirement any more. ProtoMS will compile without OpenMPI, but you want be able to run for instance replica exchange.</p>
+<p>Building ProtoMS is done with <em>cmake</em> (<a class="reference external" href="http://www.cmake.org/">http://www.cmake.org/</a>), thus you need this package installed on your machine. To build ProtoMS type the following in a terminal:</p>
+<div class="highlight-python"><div class="highlight"><pre>mkdir build
+cd build
+cmake ..
+make install
+</pre></div>
+</div>
+<p>and <em>cmake</em> will perform the necessary checks before it continues with the installation of ProtoMS. The executable will be placed in the top level of the folder hierarchy.</p>
+<p>We recommend to set the environmental variable <tt class="docutils literal"><span class="pre">$PROTOMSHOME</span></tt> to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.</p>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>The <em>MC program</em> has the following requirements:</p>
+<ul class="simple">
+<li>Fortan compiler, GNU (<a class="reference external" href="https://gcc.gnu.org/">https://gcc.gnu.org/</a>) or Intel recommended</li>
+<li>Python (<a class="reference external" href="https://www.python.org/">https://www.python.org/</a>), required to compile and run ProtoMS</li>
+<li>CMake (<a class="reference external" href="http://www.cmake.org/">http://www.cmake.org/</a>), required to compile ProtoMS</li>
+</ul>
+<p>Optional:</p>
+<ul class="simple">
+<li>MPI, recommended OpenMPI (<a class="reference external" href="http://www.open-mpi.org/">http://www.open-mpi.org/</a>)  or MPICH (<a class="reference external" href="https://www.mpich.org/">https://www.mpich.org/</a>) - some functions will be unavailable without MPI</li>
+</ul>
+<p>The <em>ProtoMS tools</em> have the following requirements:</p>
+<ul class="simple">
+<li>Python, version 2.7</li>
+<li>NumPy (<a class="reference external" href="http://www.numpy.org/">http://www.numpy.org/</a>)</li>
+<li>SciPy (<a class="reference external" href="http://www.scipy.org/">http://www.scipy.org/</a>)</li>
+<li>Matplotlib (<a class="reference external" href="http://www.matplotlib.org/">http://www.matplotlib.org/</a>)</li>
+</ul>
+<p>Optional:</p>
+<ul class="simple">
+<li>AmberTools (<a class="reference external" href="http://www.ambermd.org/">http://www.ambermd.org/</a>)          : Required to paramterise small molecules</li>
+<li>pymbar (<a class="reference external" href="https://github.com/choderalab/pymbar">https://github.com/choderalab/pymbar</a>) : Required to perform MBAR calculations</li>
+</ul>
 </div>
 </div>
 
@@ -133,7 +168,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -150,9 +185,9 @@
  
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
-        &copy; Copyright 2014, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    <div class="footer">
+        &copy; Copyright 2015, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, J. Graham.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

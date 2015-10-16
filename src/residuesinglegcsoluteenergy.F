@@ -143,6 +143,17 @@ c      Now scale the energies according to the value of theta...
             cnrgb = cnrgb * thetaparam(igcs)
             ljnrgb = ljnrgb * thetaparam(igcs)      
 c      PRINT*, "cnrg" ,cnrg
+
+      if (doREST) then
+        cnrg = cnrg * restscaling(6)
+        ljnrg = ljnrg * restscaling(6)
+        nrg = cnrg + ljnrg
+        cnrgf = cnrgf * restscaling(6)
+        ljnrgf = ljnrgf * restscaling(6)
+        cnrgb = cnrgb * restscaling(6)
+        ljnrgb = ljnrgb * restscaling(6)
+      endif
+
       residueSingleGCsoluteEnergy = nrg
 c      PRINT*,"residue-gc nrg" ,residueSingleGCsoluteEnergy
       return

@@ -48,10 +48,6 @@ c###################################################################
 
       ranval = grnd()
       expval = dexp(-mt_beta_T*delta)
-c      write(printstring,'(3F4.2,3F12.3,3F4.2,3F12.3,2F10.3)')lamA,lamfA,lambA,nrgA,nrgfA,nrgbA,lamB,lamfB,lambB,nrgB,nrgfB,nrgbB,expval,ranval
-c      call prettyline(INFO,printstring)
-
-c      write(6,*)"E",ranval,expval,delta,mt_beta_T     
       if (expval.ge.ranval) then
         retiTest = .true.
       endif

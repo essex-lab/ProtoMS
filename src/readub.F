@@ -66,8 +66,9 @@ c         read in the parameters
             goto 100
           else if (ipar.gt.MAXUBYPARAM) then
             write(printstring,*) "Parameter ",ipar," is too large (",MAXUBYPARAM,")"
-            call printLine(WARNING,printstring)
-            call printLine(WARNING,"Increase MAXUBYPARAM and recompile")
+            call printLine(FATAL,printstring)
+            write(printstring,*)"Increase MAXUBYPARAM and recompile"
+            call closeProgram(-1,printstring)
             goto 100
           endif
           
@@ -129,8 +130,9 @@ c           load the new Urey-Bradley parameter
             if (NUByParam.gt.MAXUBYPARAM) then
               write(printstring,*) "Exceeded maximum number of Urey-Bradley parameters (",
      .                             MAXUBYPARAM,")"
-              call printLine(WARNING,printstring)
-              call printLine(WARNING,"Increase MAXUBYPARAM and recompile")
+              call printLine(FATAL,printstring)
+              write(printstring,*)"Increase MAXUBYPARAM and recompile"
+              call closeProgram(-1,printstring)
               goto 100
             endif
             

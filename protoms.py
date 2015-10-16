@@ -109,11 +109,14 @@ def _merge_templates(templates,tarlist) :
   """
   for tem in templates : tarlist.append(tem) # All of the original templates can safely be stored away
   temfile = tools.merge_templates(templates)
-  allnames = "-".join(t.name.lower() for t in temfile.templates)
-  templates = [allnames+".tem"]
-  temfile.write(allnames+".tem")
-  logger.info("Created a re-numbered template files for all ligands: %s"%templates[0])
-  return templates
+  if isinstance(temfile,simulationobjects.TemplateFile):
+    allnames = "-".join(t.name.lower() for t in temfile.templates)
+    templates = [allnames+".tem"]
+    temfile.write(allnames+".tem")
+    logger.info("Created a re-numbered template files for all ligands: %s"%templates[0])
+    return templates
+  else:
+    return [temfile]
 
 def _load_ligand_pdb(ligprefix,folders) :
   """
@@ -219,7 +222,7 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
         files["tem"] = tempfile
       else :
         tem = simulationobjects.TemplateFile(filename=tempfile)
-        if tem.templates[0].name.lower() == ligname.lower():
+        if ligname.lower() in [t.name.lower() for t in tem.templates]:
           files["tem"] = tempfile
           break
 
@@ -250,7 +253,6 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
       logger.info("Created zmatrix (%s) for ligand. Please check the output carefully"%files["zmat"])
       tarlist.append(files["zmat"])
     logger.info("Created ProtoMS template-file (%s) for ligand. Please check the output carefully"%files["tem"])
-    tarlist.append(files["tem"])
                           
   # Check to see if we have solvated the ligand
   if files["wat"] is None :
@@ -355,7 +357,9 @@ def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
       raise simulationobjects.SetupError(msg)
 
     # Converting to ProtoMS atom names
-    protobj = tools.pdb2pms(protobj,"amber",conversionfile)
+    protobj2 = tools.pdb2pms(protobj,"amber",conversionfile)
+    abortedconv = protobj2 == protobj  # Indicates abortion of conversion
+    protobj = protobj2
 
     # Converting water molecules to specified model
     protobj = tools.convertwater(protobj,settings.watmodel)
@@ -380,9 +384,13 @@ def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
     protein_scoop_file = _get_prefix(protein_orig_file)+"_scoop.pdb"
     logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))    
     if nresdiff < settings.scooplimit:
-      protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
-      logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file))
-      protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file)
+      if not abortedconv : 
+        protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
+        logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file))
+        protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file, solvents = False)
+      else : 
+        logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d)."%nresdiff)
+        protein_pms_file = protein_orig_file
       tarlist.append(protein_scoop_file)
       protein_scoop_file = None
     else :
@@ -508,10 +516,12 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     return boxpdb
 
   def arrange_wats(box,water_file,out_name) :
-
     # find smallest box including all oxygens in my water_file
     waterobj = simulationobjects.PDBFile(filename = water_file)
-    waterbox = waterobj.getBox(atomlist=[waterobj.solvents.itervalues().next().atoms[0].name])
+    if len(waterobj.residues) !=0 :
+      waterbox = waterobj.getBox(atomlist=[waterobj.residues.itervalues().next().atoms[0].name])
+    else:
+      waterbox = waterobj.getBox(atomlist=[waterobj.solvents.itervalues().next().atoms[0].name])
 
     # check whether the box of the water oxygens is within the box provided as argument
     box_origen_below = np.all(box['origin']< waterbox['origin'])
@@ -536,13 +546,13 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       boxinfo = tuple(box['origin']) + tuple(box['origin'] + box['len'])
       ghostobj.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" %boxinfo
       for sol in ghostobj.solvents :
-        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WAT"
+        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WA1"
     elif settings.gcmcwater.isdigit() :
       ghostobj = tools.distribute_particles(box,settings.gcmcwater)
       ghostobj.write(filename=ghost_name)
     else :
       ghostobj, ghost_name = arrange_wats(box,settings.gcmcwater,ghost_name)
-    return ghostobj, ghost_name
+    return ghostobj, ghost_name    
 
 
   # Check consistency of command-line arguments
@@ -841,6 +851,7 @@ if __name__ == "__main__":
   simgroup.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   simgroup.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
   simgroup.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
+  simgroup.add_argument('--ranseed',help="the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None",default=None)
   simgroup.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   simgroup.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   simgroup.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
@@ -995,6 +1006,7 @@ if __name__ == "__main__":
       args.lambdas = [4]
     
   # Create ProtoMS command files
+  ranseed=args.ranseed
   if args.simulation == "singletopology" :
    postfix = ["_ele","_vdw","_comb"]
   elif args.simulation == "jaws2" :
@@ -1018,16 +1030,16 @@ if __name__ == "__main__":
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
     if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat : 
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_vdw" in repeat :
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_comb" in repeat :
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems3,water_file,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems3,water_file,ligand_water,ranseed,args)
     elif args.simulation == "jaws2" :
       idx = int(repeat.split("-")[-1][1:])
       args.gcmcwater = "jaws2_wat%d.pdb"%idx
       jaws2wat = "jaws2_not%d.pdb"%idx
-      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,args)
+      free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,ranseed,args)
 
     if free_cmd is not None : 
       free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")

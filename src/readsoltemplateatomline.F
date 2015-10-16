@@ -68,8 +68,9 @@ c     see if the atom already exists
         if (iatm.gt.MAXMOLTEMPLATEATMS) then
           write(printstring,*) "Exceeded maximum number of solute template atoms (",
      .                         MAXMOLTEMPLATEATMS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXMOLTEMPLATEATMS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXMOLTEMPLATEATMS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif
         NMolTemplateAtms(itmpl) = iatm

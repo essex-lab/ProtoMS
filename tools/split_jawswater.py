@@ -50,13 +50,13 @@ def split_waters(waters) :
   single_waters.from_residues(waters)
 
   other_waters = simulationobjects.PDBSet()
-  for soli,sol in waters.solvents.iteritems() :
+  for soli,sol in waters.residues.iteritems() :
     others = copy.deepcopy(waters)
-    del others.solvents[soli]
+    del others.residues[soli]
     other_waters.pdbs.append(others)
     others.header = ""
-    # New to change the residue name of the solvent molecules, this is a hack for now
-    for soli2,sol2 in others.solvents.iteritems() :
+    # New to change the residue name of the molecules, this is a hack for now
+    for soli2,sol2 in others.residues.iteritems() :
       if len(sol2.atoms) == 3 :
         resnam = "t3p"
       elif len(sol2.atoms) == 4 :
@@ -68,13 +68,12 @@ def split_waters(waters) :
 def set_jaws2_box(water_files,length=3) :
   """
   Sets the header of the pdbs containing one single
-  solvent molecule to define a box around the first atom
+  molecule to define a box around the first atom
 
   Parameters:
   ----------
   water_files : PDBSet
     a pdb set containing the pdb files with one molecule
-    of solvent
   length : int, optional
     the dimensions of the box around the molecule
 
@@ -85,7 +84,7 @@ def set_jaws2_box(water_files,length=3) :
   """
   for count,watobj in enumerate(water_files.pdbs) :
     boxcoords= np.zeros(3)
-    for i,coord in enumerate(watobj.solvents[watobj.solvents.keys()[0]].atoms[0].coords) :
+    for i,coord in enumerate(watobj.residues[watobj.residues.keys()[0]].atoms[0].coords) :
       boxcoords[i] = coord-1.5
       boxcoords = np.append(boxcoords,coord+1.5)
     watobj.header = watobj.header + "REMARK box"

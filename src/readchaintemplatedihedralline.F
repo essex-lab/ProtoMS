@@ -41,8 +41,9 @@ c     read in the atoms involved
         if (idih.gt.MAXCHAINDIHEDRALS) then
           write(printstring,*) "Exceeded maximum number of chain template dihedrals (",
      .                         MAXCHAINDIHEDRALS,")"
-          call printLine(WARNING,printstring)
-          call printLine(WARNING,"Increase MAXCHAINDIHEDRALS and recompile")
+          call printLine(FATAL,printstring)
+          write(printstring,*)"Increase MAXCHAINDIHEDRALS and recompile"
+          call closeProgram(-1,printstring)
           return
         endif 
         NChainDihedrals(itmpl) = idih

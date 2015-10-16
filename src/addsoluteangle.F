@@ -27,8 +27,9 @@ c      character*2 amber
       nangs = NSolAngles(isol)
       if (nangs.gt.MAXSOLUTEANGLES) then
         write(printstring,*) "Exceeded maximum number of solute angles! (",MAXSOLUTEANGLES,")"
-        call printLine(WARNING,printstring)
-        call printLine(WARNING,"Increase MAXSOLUTEANGLES and recompile")
+        call printLine(FATAL,printstring)
+        write(printstring,*)"Increase MAXSOLUTEANGLES and recompile"
+        call closeProgram(-1,printstring)
         NSolAngles(isol) = NSolAngles(isol) - 1
         return
       endif
@@ -53,7 +54,5 @@ c      character*2 amber
 
       SolAngle(isol,nangs,4) = iparam
 
-c      write(printstring,*) 'ANG BTW ',zat1,'-',amber(ZSolPar(isol,zat1)),'-',' ',zat2,'-',amber(ZSolPar(isol,zat2)),' ',zat3,'-',amber(ZSolPar(isol,zat1)),' iparam ',iparam,' ipar0 ',ipar0,' ipar1 ',ipar1,' flex ? ',flex
-c      call printLine(DEBUG,printstring)
       return
       end

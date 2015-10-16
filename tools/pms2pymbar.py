@@ -84,7 +84,7 @@ def extract_energies(path,res_tem,skip,maxread) :
   """
 
   # List all lambda folders and sort them
-  paths = glob.glob(path+"/lam-*")
+  paths = glob.glob(os.path.join(path,"lam-*"))
   paths.sort()
 
   total_energies = []
@@ -146,6 +146,10 @@ def mbar(lambdas,energies,RT) :
   """
   import pymbar
 
+  # This is potentially stupid, but it supresses warnings from the optimizer
+  import warnings
+  warnings.simplefilter("ignore",RuntimeWarning)
+
   nstates = len(energies)
   N_k = np.zeros(nstates) 
   for i,e in enumerate(energies) : N_k[i] = e.shape[0]
@@ -177,7 +181,7 @@ def bar(energies,RT) :
   """
   
   import pymbar
-  
+
   nstates = len(energies)
   
   N_k = np.zeros(nstates) 
@@ -231,7 +235,8 @@ if __name__ == '__main__' :
       quit()
     
     RT = 1.9872041*(args.temperature+273.15)/1000.00
-    (Deltaf_ij, dDeltaf_ij) = mbar(lambdas,energies,RT)
+    resp = mbar(lambdas,energies,RT)
+    (Deltaf_ij, dDeltaf_ij) = (resp[0],resp[1])
     print "MBAR estimate: %-6.2f +- %-6.2f"%(Deltaf_ij[0,-1]*RT,dDeltaf_ij[0,-1]*RT)
     
     if not args.nobar : 

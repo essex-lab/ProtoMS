@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from __future__ import print_function
 import sys,os,pwd
 import datetime,socket
 
@@ -25,46 +26,35 @@ def writeLine(line):
 try:
     filename = sys.argv[1]
 except:
-    print "USAGE: getid.py outputfile"
+    print ( "USAGE: getid.py outputfile" )
     sys.exit(0)
 
 #open the include file
 try:
     idfile = open(filename,"w")
 except:
-    print "Cannot open id file %s for writing" % idfile
+    print ( "Cannot open id file %s for writing" % idfile )
     sys.exit(0)
 
 #now write down the date that this code was compiled, and who has compiled it
-#user = os.getlogin()
 user = pwd.getpwuid(os.getuid())[0]
 today = datetime.datetime.today()
+today = today.replace(microsecond=0)
 host = socket.gethostname()
 
 writeLine("Compiled on %s by %s at %s." % (host,user,today))
 
 try:
-    lines = os.popen("svn info ../","r").readlines()
+    identify = os.popen("hg identify","r").readline()
+    identify = identify.strip("\n ")
+    path = os.popen("hg paths default","r").readline()
+    path = path.strip("\n ")
 except:
-   writeLine("Subversion information not available on the computer "\
-             "that compiled this version of ProtoMC.")
+    writeLine("Mercurial information not available.")
 else:
-    svninfo = {}
-    for line in lines:
-        words = line.split()
-        if (len(words) < 2): continue
-        
-        if (words[0].find("URL") != -1):
-            svninfo["url"] = words[1]
-        elif (words[0].find("Revision") != -1):
-            svninfo["rev"] = words[1]
-    
-    try:
-        writeLine("Subversion version %s. If you have access to the " \
-                  "subversion respository you can extract the source code "\
-                  "for this binary by typing" % svninfo["rev"])
-        writeLine("'svn co -r %s %s'." % (svninfo["url"],svninfo["rev"]))
-    except:
-        writeLine("Subversion information not available on the computer "\
-                  "that compiled this version of ProtoMS.")
+    if(identify.startswith("abort") or path=="not found!"):
+        writeLine("Mercurial information not available.")
+    else:
+        writeLine("Revision: %s" % identify)
+        writeLine("From: %s" % path[path.find("@")+1:])
     

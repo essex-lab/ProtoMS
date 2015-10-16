@@ -19,8 +19,9 @@ c#########################################################
 
       NSolutes = NSolutes + 1
       if (NSolutes.gt.MAXSOLUTES) then
-        call printLine(WARNING,"Exceeded maximum number of solutes - cannot duplicate!")
-        call printLine(WARNING,"Increase MAXSOLUTES and recompile")
+        call printLine(FATAL,"Exceeded maximum number of solutes - cannot duplicate!")
+        write(printstring,*)"Increase MAXSOLUTES and recompile"
+        call closeProgram(-1,printstring)
         return
       endif
       

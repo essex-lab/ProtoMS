@@ -67,7 +67,9 @@ c         we have already processed this combination
 c     we need to create a new variable parameter
       NVariableCLJ = NVariableCLJ + 1
       if (NVariableCLJ.gt.MAXVARIABLEPARAM) then
-        call printLine(WARNING,"Too many variable clj parameters! Increase MAXVARIABLEPARAM and recompile!")
+        call printLine(FATAL,"Too many variable clj parameters! ")
+        write(printstring,*)"Increase MAXVARIABLEPARAM and recompile"
+        call closeProgram(-1,printstring)
         NVariableCLJ = NVariableCLJ - 1
         return
       endif
