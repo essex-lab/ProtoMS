@@ -1,0 +1,43 @@
+###########################################################
+#                                                         #
+#            Test for equilibration function              #
+#                                                         #
+###########################################################
+
+### Purpose ###
+This test is designed to check equilibration MC moves
+prior to sampling MC moves (These are the same but results
+are not printed out). The DCB ligand and protein from the
+setup test are again used here.
+
+### Test version ###
+Test created with ProtoMS 3.1.2 release
+(changeset 328:6daeecd68181 - 01-Jul-15 )
+Compiled with GCC gfortran 4.4.7, openmpi 1.6.4 + gcc
+
+### Input files ###
+dcb.pdb
+protein.pdb
+water.pdb
+protein_scoop.pdb
+dcb_box.pdb
+dcb.tem
+dcb.frcmod
+dcb.prepi
+dcb.zmat
+
+### Command line ###
+python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000
+
+$PROTOMSHOME/protoms3 run_bnd.cmd
+
+### Outputs ###
+#Files to test/diff:
+#Note that provided the 'setup' test case has been passed, only the
+#following files will need to be tested. The others are already
+#checked in the 'setup' test.
+run_bnd.cmd
+out_bnd/equil_bnd.pdb
+out_bnd/info
+out_bnd/warning
+#Note that dates/times in reference file out_bnd/info will differ!
