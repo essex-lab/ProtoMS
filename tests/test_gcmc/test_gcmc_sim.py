@@ -72,7 +72,7 @@ class TestGCMC(unittest.TestCase):
                             self.assertTrue(os.path.exists("out/"+ out_files))
                         except IOError as e:
                             print e
-                            print "GCMC simulation file: ",out_sim_files, "is missing."  
+                            print "GCMC simulation file: ",out_files, "is missing."  
                         
                 else:
                     print "GCMC simulation is not successful."

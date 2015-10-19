@@ -1,0 +1,49 @@
+DEBUG : Running protoms.py at 19/10/2015 - 19:38:14
+DEBUG : Command line arguments = -s jaws1 -p protein.pdb -l fragment.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -w water.pdb
+DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['fragment.pdb'], nequil=0.0, nprod=100.0, outercut=20.0, outfolder='', protein='protein.pdb', ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='jaws1', singlemap=None, template=None, testrun=False, water='water.pdb', waterbox=None, watmodel='tip4p')
+INFO : 
+INFO : Setting up ligand: fragment.pdb...
+INFO : 
+INFO : Setting up protein: protein.pdb...
+DEBUG : Running make_gcmcbox with arguments: 
+DEBUG : 	pdb      = fragment.pdb
+DEBUG : 	filename = jaws1_box.pdb
+DEBUG : 	padding  = 2
+DEBUG : This will make a simulation box for GCMC/JAWS-1
+INFO : 
+INFO : Created jaws1_box.pdb to visualize GCMC/JAWS-1 simulation box. Please check the output carefully
+DEBUG : Running solvate with arguments: 
+DEBUG : 	box        = /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/data/wbox_tip4p.pdb
+DEBUG : 	ligand     = jaws1_box.pdb
+DEBUG : 	protein    = None
+DEBUG : 	geometry   = flood
+DEBUG : 	padding    = 10.000000
+DEBUG : 	radius     = 30.000000
+DEBUG : 	center     = cent
+DEBUG : 	namescheme = ProtoMS
+DEBUG : This will solvate either a protein or a ligand using a pre-equilibrated box
+INFO : 
+INFO : Created jaws1_wat.pdb; it contains the GCMC or JAWS-1 simulation waters. Please check the output carefully
+INFO : 
+DEBUG : Running clear_gcmcbox with arguments: 
+DEBUG : 	gcmcbox = 
+DEBUG : 	waters = water.pdb
+DEBUG : This will remove solvent molecules within the GCMC/JAWS box
+DEBUG : Removing water 2417 from water.pdb
+DEBUG : Removing water 2447 from water.pdb
+DEBUG : Removing water 2449 from water.pdb
+DEBUG : Removing water 2861 from water.pdb
+DEBUG : Removing water 3265 from water.pdb
+DEBUG : Removing water 3267 from water.pdb
+DEBUG : Removing water 3633 from water.pdb
+DEBUG : Removing water 3649 from water.pdb
+INFO : Removed 8 water molecules from water.pdb that were inside the GCMC/JAWS box 
+INFO : Created water cap-file: water_clr.pdb
+DEBUG : Running generate_input with arguments: 
+DEBUG : 	protein       = protein_scoop.pdb
+DEBUG : 	ligands       = fragment.pdb
+DEBUG : 	templates     = fragment.tem
+DEBUG : 	protein_water = water_clr.pdb
+DEBUG : 	ligand_water  = fragment_box.pdb
+DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater='jaws1_wat.pdb', innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['fragment.pdb'], nequil=0.0, nprod=100.0, outercut=20.0, outfolder='out', protein='protein.pdb', ranseed='100000', repeats=[''], scoop=None, scooplimit=10, simulation='jaws1', singlemap=None, template=None, testrun=False, water='water.pdb', waterbox='/Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : This will make an input file for ProtoMS

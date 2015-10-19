@@ -160,6 +160,7 @@ add_test(test_prot_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/
 add_test(test_equil_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil/test_equil_prot.py)
 add_test(test_sampling_prot ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling/test_sampling_prot.py)
 add_test(test_gcmc_sim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc/test_gcmc_sim.py)
+add_test(test_jaws1_sim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1/test_jaws1_sim.py)
 
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}

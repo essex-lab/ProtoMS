@@ -82,7 +82,7 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                         self.assertTrue(os.path.exists("out_bnd/"+ out_files))
                     except IOError as e:
                         print e
-                        print "Sampling simulation file: ",out_sim_files, "is missing."  
+                        print "Sampling simulation file: ",out_files, "is missing."  
                         
             else:
                # logger.error
