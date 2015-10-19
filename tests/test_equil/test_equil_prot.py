@@ -37,7 +37,7 @@ class TestEquilibrationSetup(unittest.TestCase):
     def tearDown(self):
         super(TestEquilibrationSetup, self).tearDown()
 
-    def test_prep(self):
+    def test_equil(self):
         
         
         if((call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000", shell=True)) == 0):
@@ -49,7 +49,7 @@ class TestEquilibrationSetup(unittest.TestCase):
                     self.assertTrue(os.path.exists(out_files))
                 except IOError as e:
   		    print e
-		    print "ProtoMS setup output file ",output_files_setup, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS command files generation."
+		    print "ProtoMS setup output file ",out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS command files generation."
 
             #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
 

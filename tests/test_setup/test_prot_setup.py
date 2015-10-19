@@ -49,7 +49,7 @@ class TestProtSetup(unittest.TestCase):
                     self.assertTrue(os.path.exists(test_dir + out_files))
                 except IOError as e:
                     print e
-		    print("ProtoMS setup output file ",output_files_setup, "is missing.", "There could be problems with zmat generation or forcefield issues.")
+		    print("ProtoMS setup output file ",out_files, "is missing.", "There could be problems with zmat generation or forcefield issues.")
 
             #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
 

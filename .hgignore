@@ -11,4 +11,5 @@ build/
 ProtoMS_code_coverage_report
 ProtoMS_coverage_current
 htmlcov/
+tests/*.pyc
 
