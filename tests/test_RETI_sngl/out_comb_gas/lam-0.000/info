@@ -1,0 +1,110 @@
+protoms3 started at 16:08:02 on the 20/10/2015
+ Non-bonded cutoff =    10.000000000000000       angstroms.
+ Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
+Using protein-residue/solute-molecule/solvent-molecule cut-off
+##########################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/amber99.ff
+##########################################################################################################
+##############################################################
+Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
+##############################################################
+ Using a 1-4 coulomb scaling factor of   0.83333299999999999
+ Using a 1-4 LJ scaling factor of   0.50000000000000000
+Loaded    0 templates,    0 override templates,  825 clj parameters
+and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+###########################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/solvents.ff
+###########################################################################################################
+Found solvent template with TIP3p optimization
+Found solvent template with TIP4p optimization
+Found solvent template with TIP3p optimization
+Loaded   15 templates,    0 override templates,   21 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+###################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/amber99-residues.ff
+###################################################################################################################
+Loaded  102 templates,    0 override templates,    0 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+#########################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/gaff14.ff
+#########################################################################################################
+##############################################################
+Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
+##############################################################
+ Using a 1-4 coulomb scaling factor of   0.83333299999999999
+ Using a 1-4 LJ scaling factor of   0.50000000000000000
+Loaded    0 templates,    0 override templates,    1 clj parameters
+and 1582/8142/4050/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+########################################
+ Reading parameter file ethtmeo_comb.tem
+########################################
+ Variable bond for atom c01 -eth  starting from    1.5260000000000000       going to    1.4099999999999999
+ Variable angle for atom h04 -eth  starting from    108.47900000000000       going to    108.48500000000000
+ Variable bond for atom h06 -eth  starting from    1.0900000000000001       going to   0.95999999999999996
+ Variable angle for atom h06 -eth  starting from    109.97600000000000       going to    108.41900000000000
+ Variable bond for atom h07 -eth  starting from    1.0900000000000001       going to   0.20000000000000001
+ Variable bond for atom h08 -eth  starting from    1.0900000000000001       going to   0.20000000000000001
+ Variable angle for atom h02 -eth  starting from    110.37300000000000       going to    110.36600000000000
+ Variable angle for atom h03 -eth  starting from    113.74200000000000       going to    113.74200000000000
+Loaded    1 templates,    0 override templates,   16 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+ Opening solute file ethane.pdb
+ Loading solute 'eth'
+ Using concentration correction
+ Simulation consists of            0  protein chains,            1  solute molecules and            0  solvent molecules
+ Fitting molecule templates to eth
+##################################################
+ Charge on solute eth =    2.0000000000000087E-003
+##################################################
+ Assigning non-bonded atoms for solute            1
+ Building geometry duplicates for eth
+ Finished fitting template...
+########################################
+Using no boundary conditions (gas-phase)
+########################################
+ Simulation temperature =    25.000000000000000       C, (   298.14999999999998       K)
+ Got initial random number seed       100000
+############################################
+ Sanitised random number seed =       209999
+############################################
+Starting simulation at 16:08:02 on the 20/10/2015
+######################################################################
+Running simulation in lambda window    0.000 <--    0.000 -->    0.001
+######################################################################
+There are   15 CLJ parameter types used in this simulation.
+ Pre-calculating all the charge and LJ pairs...
+ Running chunk            1
+ New displacements for solute            1  translation=   0.0000000000000000       rotation=   0.0000000000000000
+ Running chunk            2
+Move probabilies: Protein =        0 Solute =     1000 Solvent =        0 Insertion =        0
+                  Titrate =        0 Theta  =        0 Volume  =        0 Deletion  =        0
+                  Rotamer =        0 Sample =        0 GCsolute =        0 SolTheta =        0
+###############################################
+ Requested            0  steps of equilibration
+###############################################
+ Running chunk            3
+Move probabilies: Protein =        0 Solute =     1000 Solvent =        0 Insertion =        0
+                  Titrate =        0 Theta  =        0 Volume  =        0 Deletion  =        0
+                  Rotamer =        0 Sample =        0 GCsolute =        0 SolTheta =        0
+############################################
+ Requested           10  steps of simulation
+############################################
+ Calculating the initial total energy from scratch...
+Total Energy =     1.835913 (    1.837337 |     1.835913)
+##########################
+Printing PDB of the system
+##########################
+ Redirecting PDB to all.pdb
+####################
+Writing restart file
+####################
+Resetting free energy average to zero.
+ Data collection complete. Attempted/accepted moves           10           9
+Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
+ Simulation shutting down...
+protoms3 completed at 16:08:03 on the 20/10/2015
