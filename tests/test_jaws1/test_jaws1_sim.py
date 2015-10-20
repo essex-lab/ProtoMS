@@ -25,7 +25,7 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
-output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "jaws1_wat.pdb", "jaws1_box.pdb", "water_clr.pdb", "run_bnd.cmd"]
+output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.box", "jaws1_wat.pdb", "jaws1_box.pdb", "water_clr.pdb", "run_bnd.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
 
 class TestJAWS1(unittest.TestCase):

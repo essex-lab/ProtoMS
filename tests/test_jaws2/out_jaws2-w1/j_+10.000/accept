@@ -1,0 +1,71 @@
+#######################################################
+ Attempt/accept/% moves for protein            1  scoop
+#######################################################
+Residue    1 VAL         0/       1(   0.000%)
+Residue    3 THR         0/       1(   0.000%)
+Residue   19 TYR         1/       1( 100.000%)
+Residue   39 ARG         0/       1(   0.000%)
+Residue   41 GLU         1/       1( 100.000%)
+Residue   49 LEU         1/       1( 100.000%)
+Residue   63 ASP         0/       1(   0.000%)
+Residue   71 GLY         0/       1(   0.000%)
+Residue   78 ASP         1/       1( 100.000%)
+Residue   81 ASN         0/       1(   0.000%)
+Residue   84 GLY         1/       1( 100.000%)
+Residue  104 GLN         0/       1(   0.000%)
+Residue  137 ALA         0/       1(   0.000%)
+Residue  143 VAL         0/       1(   0.000%)
+Residue  154 GLY         0/       1(   0.000%)
+Residue  160 HIE         0/       1(   0.000%)
+Residue  167 ILE         0/       1(   0.000%)
+Residue  172 GLN         1/       1( 100.000%)
+Total        6/      18(  33.333%)
+####################################################
+ Attempt/accept/% moves for solute            1  xdk
+####################################################
+#######################################
+ Attempt/accept/% moves for the solvent
+#######################################
+Solvent    92 T4P         0/       1(   0.000%)
+Solvent   101 T4P         1/       1( 100.000%)
+Solvent   589 T4P         1/       1( 100.000%)
+Solvent   607 T4P         0/       1(   0.000%)
+Solvent   725 T4P         0/       1(   0.000%)
+Solvent   771 T4P         1/       1( 100.000%)
+Solvent   883 T4P         1/       1( 100.000%)
+Solvent   891 T4P         1/       1( 100.000%)
+Solvent   948 T4P         1/       1( 100.000%)
+Solvent  1021 T4P         0/       1(   0.000%)
+Solvent  1255 T4P         1/       1( 100.000%)
+Solvent  1290 T4P         0/       1(   0.000%)
+Solvent  1314 T4P         1/       1( 100.000%)
+Solvent  1456 T4P         1/       1( 100.000%)
+Solvent  1533 T4P         1/       1( 100.000%)
+Solvent  1539 T4P         1/       1( 100.000%)
+Solvent  1574 T4P         1/       1( 100.000%)
+Solvent  1591 T4P         1/       1( 100.000%)
+Solvent  1609 T4P         0/       1(   0.000%)
+Solvent  1698 T4P         1/       1( 100.000%)
+Solvent  1758 T4P         1/       1( 100.000%)
+Solvent  1824 T4P         1/       1( 100.000%)
+Solvent  1906 T4P         0/       1(   0.000%)
+Solvent  1914 T4P         1/       1( 100.000%)
+Solvent  1999 T4P         0/       1(   0.000%)
+Solvent  2030 T4P         1/       1( 100.000%)
+Solvent  2073 T4P         1/       1( 100.000%)
+Solvent  2123 T4P         1/       1( 100.000%)
+Solvent  2131 T4P         1/       2(  50.000%)
+Solvent  2208 T4P         0/       1(   0.000%)
+Solvent  2405 T4P         1/       1( 100.000%)
+Solvent  2428 T4P         0/       1(   0.000%)
+Solvent  2578 T4P         1/       1( 100.000%)
+Solvent  2625 T4P         0/       1(   0.000%)
+Solvent  2664 T4P         0/       1(   0.000%)
+Solvent  2744 T4P         1/       1( 100.000%)
+Total       24/      37(  64.865%)
+######################################
+ Attempt/accept/% moves for insertions
+######################################
+#####################################
+ Attempt/accept/% moves for deletions
+#####################################
