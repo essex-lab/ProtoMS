@@ -14,8 +14,13 @@ Version 3.1
 
 --------------------------------
 
-To compile ProtoMS create a new directory 'build' and from this directory type 'cmake ..'.
+To compile ProtoMS create a new directory 'build' and from this directory type 'cmake ..'. 
+
+To compile ProtoMS with MPI type 'cmake -MPI=YES ..' from the 'build' directory.
+
 This will perform checks and prepare to compile.  Then type 'make install'.
+
+If you get 'permission denied' error when writing to folders, you may need to use 'sudo make install'.
 
 Requirements:
 * Fortan compiler                     : GNU (https://gcc.gnu.org/) or Intel recommended
