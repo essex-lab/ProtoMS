@@ -25,6 +25,7 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+test_dir = proto_env + "/tests/test_equil/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb", "run_bnd.cmd"]
 ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '1.5']
 out_sim_files = ["info", "equil_bnd.pdb", "warning"]
@@ -40,20 +41,20 @@ class TestEquilibrationSetup(unittest.TestCase):
     def test_equil(self):
         
         
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000 -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for equilibration MC moves.
                 
             for out_files in output_files_setup:
 	        try:
-                    self.assertTrue(os.path.exists(out_files))
+                    self.assertTrue(os.path.exists(test_dir + out_files))
                 except IOError as e:
   		    print e
-		    print "ProtoMS setup output file ",out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS command files generation."
+		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS command files generation."
 
             #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
 
-            water_file = open("water.pdb", "r")
+            water_file = open(test_dir + "water.pdb", "r")
  	    header_line = water_file.readline()
             header_line = header_line.replace('\n', '')
             header_list = re.split(" +",header_line)
@@ -74,12 +75,12 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
 
 	    print "Setup and command files generation is successful."
 
-            if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
+            if((call("$PROTOMSHOME/protoms3 run_bnd.cmd" + test_dir, shell=True)) == 0):
 
             #Checking whether the simulation output files have been created successfully for equilibration MC moves
                 for out_files in out_sim_files:
                     try:
-                        self.assertTrue(os.path.exists("out_bnd/"+ out_files))
+                        self.assertTrue(os.path.exists(test_dir + "out_bnd/"+ out_files))
                     except IOError as e:
                         print e
                         print "Equilibration simulation file: ",out_files, "is missing."  

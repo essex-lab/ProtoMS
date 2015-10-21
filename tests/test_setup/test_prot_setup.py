@@ -40,7 +40,7 @@ class TestProtSetup(unittest.TestCase):
     def test_prep(self):
         
         
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb -f " + test_dir, shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup.
                 

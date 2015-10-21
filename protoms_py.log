@@ -1,4 +1,0 @@
-DEBUG : Running protoms.py at 19/10/2015 - 15:24:20
-DEBUG : Command line arguments = -s none -l dcb.pdb -p protein.pdb -f /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/tests/test_setup/
-DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['/Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/tests/test_setup/'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=5000000.0, nprod=40000000.0, outercut=20.0, outfolder='', protein='protein.pdb', ranseed=None, repeats='', scoop=None, scooplimit=10, simulation='none', singlemap=None, template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
-ERROR : Ligand file dcb.pdb could not be found
