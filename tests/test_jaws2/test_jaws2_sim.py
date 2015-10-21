@@ -25,6 +25,7 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 
 proto_env = os.environ["PROTOMSHOME"]
+test_dir = proto_env + "/tests/test_jaws2/"
 output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb", "jaws2_wat1.pdb", "jaws2_wat2.pdb", "jaws2_wat3.pdb", "jaws2_not1.pdb", "jaws2_not2.pdb", "jaws2_not3.pdb", "run_jaws2-w1_bnd.cmd", "run_jaws2-w2_bnd.cmd", "run_jaws2-w3_bnd.cmd"]
 out_sim_files = ["accept", "all.pdb", "info", "restart", "restart.prev", "results", "warning"]
 
@@ -39,16 +40,16 @@ class TestJAWS2(unittest.TestCase):
     def test_jaws2(self):
         
         
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws2 -l fragment.pdb -p protein.pdb --gcmcwater jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws2 -l fragment.pdb -p protein.pdb --gcmcwater " + test_dir + "jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for JAWS Stage 2 protoms.py setup.
                 
             for out_files in output_files_setup:
 	        try:
-                    self.assertTrue(os.path.exists(out_files))
+                    os.path.exists(test_dir + out_files)
                 except IOError as e:
   		    print e
-		    print "ProtoMS setup output file ",out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
+		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
 
 
 	    print "Setup and command files generation is successful."
@@ -62,7 +63,7 @@ class TestJAWS2(unittest.TestCase):
                             for d in dirs:
                                 for out_files in out_sim_files:
                                     try:
-                                        self.assertTrue(os.path.exists(os.path.join("out_jaws2-w1",d,out_files)))
+                                        os.path.exists(os.path.join("out_jaws2-w1",d,out_files))
                                     except IOError as e:
                                         print e
                                         print "Simulation file ",os.path.join("out_jaws2-w1",d,out_files), " is missing. Please check!"

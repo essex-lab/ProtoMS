@@ -44,19 +44,19 @@ class TestDependInstallation(unittest.TestCase):
      def test_ambertools_dependencies(self):
       
          try:
-             self.assertTrue(os.getenv("AMBERHOME"))
+             os.getenv("AMBERHOME")
          except KeyError as e:
              print e
     	     print("AMBERHOME is not set.")
 
          try:
-             self.assertTrue(os.path.exists(amber_path + "/antechamber"))
+             os.path.exists(amber_path + "/antechamber")
 	 except IOError as e:
   	     print e
   	     print("antechamber AmberTools module doesn't exist.")
     
 	 try:
-             self.assertTrue(os.path.exists(amber_path + "/parmchk"))
+            os.path.exists(amber_path + "/parmchk")
 	 except IOError as e:
   	     print e
   	     print("parmchk AmberTools module doesn't exist.")

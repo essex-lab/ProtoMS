@@ -39,8 +39,8 @@ class TestSetUp(unittest.TestCase):
     def test_protoms_path(self):
         
         try:
-            self.assertTrue(os.path.exists(proto_path))
-            self.assertTrue(os.getenv("PROTOMSHOME"))
+            os.path.exists(proto_path)
+            os.getenv("PROTOMSHOME")
         
         except KeyError, e:
             print e

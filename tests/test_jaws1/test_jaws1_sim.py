@@ -25,6 +25,7 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+test_dir = proto_env + "/tests/test_jaws1/"
 output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.box", "jaws1_wat.pdb", "jaws1_box.pdb", "water_clr.pdb", "run_bnd.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
 
@@ -39,16 +40,16 @@ class TestJAWS1(unittest.TestCase):
     def test_jaws(self):
         
         
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -w water.pdb", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -w water.pdb -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for JAWS Stage 1 simulations.
                 
             for out_files in output_files_setup:
 	        try:
-                    self.assertTrue(os.path.exists(out_files))
+                    os.path.exists(test_dir + out_files)
                 except IOError as e:
   		    print e
-		    print "ProtoMS setup output file ",out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
+		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
 
 
 	    print "Setup and command files generation is successful."
@@ -58,7 +59,7 @@ class TestJAWS1(unittest.TestCase):
             #Checking whether the simulation output files have been created successfully for JAWS Stage 1.
                 for out_files in out_sim_files:
                     try:
-                        self.assertTrue(os.path.exists("out/"+ out_files))
+                        os.path.exists("out/"+ out_files)
                     except IOError as e:
                         print e
                         print "JAWS Stage 1 simulation file: ",out_files, "is missing."  

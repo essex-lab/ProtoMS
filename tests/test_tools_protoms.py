@@ -1,7 +1,7 @@
 #!/usr/bin/python2.7
 
 """
-Tests for ProtoMS python module (protoms.py): Setup tests
+Tests for ProtoMS Tools (protoms.py): Setup tests
 """
 
 #---------------------------------------------
@@ -16,7 +16,7 @@ import nose.tools as nt
 import re
 
 #---------------------------------------------
-# Setup tests
+# ProtoMS tools tests
 #---------------------------------------------
 
 # Storing PROTOMSHOME environment variable to a python variable.
@@ -39,7 +39,7 @@ class TestToolsSetUp(unittest.TestCase):
     def test_tools(self):
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/ambertools.py"))        
+            os.path.exists(proto_env + "/tools/ambertools.py")       
 
         except IOError as e:
             print e
@@ -47,7 +47,7 @@ class TestToolsSetUp(unittest.TestCase):
 
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/build_template.py"))
+            os.path.exists(proto_env + "/tools/build_template.py")
 
         except IOError as e:
             print e
@@ -55,15 +55,15 @@ class TestToolsSetUp(unittest.TestCase):
 
 	
  	try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/calc_bar.py"))
+            os.path.exists(proto_env + "/tools/calc_bar.py")
 
 	except IOError as e:
-		print e
-	    	print("Free energy calculation tool doesn't exist.")
+	    print e
+	    print("Free energy calculation tool doesn't exist.")
              
  
         try:
-	    self.assertTrue(os.path.exists(proto_env + "/tools/calc_clusters.py"))
+	    os.path.exists(proto_env + "/tools/calc_clusters.py")
 
         except IOError as e:
             print e
@@ -71,14 +71,14 @@ class TestToolsSetUp(unittest.TestCase):
     
 
 	try:
-	    self.assertTrue(os.path.exists(proto_env + "/tools/calc_density.py"))
+	    os.path.exists(proto_env + "/tools/calc_density.py")
 
         except IOError as e:
             print e
             print("Density calculation tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/calc_dg.py"))
+            os.path.exists(proto_env + "/tools/calc_dg.py")
 
         except IOError as e:
             print e
@@ -86,21 +86,21 @@ class TestToolsSetUp(unittest.TestCase):
 
 
 	try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/calc_gcsingle.py"))
+            os.path.exists(proto_env + "/tools/calc_gcsingle.py")
 
         except IOError as e:
             print e
             print("Free energy calculation and analysis tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env+ "/tools/calc_replicapath.py"))
+            os.path.exists(proto_env+ "/tools/calc_replicapath.py")
 
         except IOError as e:
             print e
             print("Replica plotting tool doesn't exist.")	
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/calc_rmsd.py"))
+            os.path.exists(proto_env + "/tools/calc_rmsd.py")
 
         except IOError as e:
             print e
@@ -108,14 +108,14 @@ class TestToolsSetUp(unittest.TestCase):
 
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/calc_series.py"))
+            os.path.exists(proto_env + "/tools/calc_series.py")
 
         except IOError as e:
             print e
             print("Time series plotting and analysing tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/calc_ti.py"))
+            os.path.exists(proto_env + "/tools/calc_ti.py")
 
         except IOError as e:
             print e
@@ -123,7 +123,7 @@ class TestToolsSetUp(unittest.TestCase):
 
         
         try:
-            self.assertTrue(os.path.exists(proto_env +	"/tools/clear_gcmcbox.py"))
+            os.path.exists(proto_env +	"/tools/clear_gcmcbox.py")
 
         except IOError as e:
             print e
@@ -131,14 +131,14 @@ class TestToolsSetUp(unittest.TestCase):
 
         
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/convertatomnames.py"))
+            os.path.exists(proto_env + "/tools/convertatomnames.py")
 
         except IOError as e:
             print e
             print("Naming conversion tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/convertwater.py"))
+            os.path.exists(proto_env + "/tools/convertwater.py")
 
         except IOError as e:
             print e
@@ -146,14 +146,14 @@ class TestToolsSetUp(unittest.TestCase):
 
  
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/distribute_waters.py"))
+            os.path.exists(proto_env + "/tools/distribute_waters.py")
 
         except IOError as e:	
             print e
             print("Water molecules placing tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/divide_pdb.py"))
+            os.path.exists(proto_env + "/tools/divide_pdb.py")
 
         except IOError as e:
             print e
@@ -161,7 +161,7 @@ class TestToolsSetUp(unittest.TestCase):
 
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/generate_input.py"))
+            os.path.exists(proto_env + "/tools/generate_input.py")
 
         except IOError as e:
             print e
@@ -169,7 +169,7 @@ class TestToolsSetUp(unittest.TestCase):
 
         
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/make_dummy.py"))
+            os.path.exists(proto_env + "/tools/make_dummy.py")
 
         except IOError as e:
             print e
@@ -177,7 +177,7 @@ class TestToolsSetUp(unittest.TestCase):
 
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/make_gcmcbox.py"))
+            os.path.exists(proto_env + "/tools/make_gcmcbox.py")
 
         except IOError as e:
             print e
@@ -185,7 +185,7 @@ class TestToolsSetUp(unittest.TestCase):
 
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/make_single.py"))
+            os.path.exists(proto_env + "/tools/make_single.py")
 
         except IOError as e:
             print e
@@ -193,40 +193,40 @@ class TestToolsSetUp(unittest.TestCase):
 
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/merge_templates.py"))
+            os.path.exists(proto_env + "/tools/merge_templates.py")
 
         except IOError as e:
             print e
             print("ProtoMS template combining tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/plot_theta.py"))
+            os.path.exists(proto_env + "/tools/plot_theta.py")
 
         except IOError as e:
             print e
             print("Theta distribution plotting tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/pms2pymbar.py"))
+            os.path.exists(proto_env + "/tools/pms2pymbar.py")
         except IOError as e:
             print e
             print("Free energy extraction tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/scoop.py"))
+            os.path.exists(proto_env + "/tools/scoop.py")
         except IOError as e:
             print e
             print("Protein truncating tool doesn't exist.")
 
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/solvate.py"))
+            os.path.exists(proto_env + "/tools/solvate.py")
         except IOError as e:
             print e
             print("Ligand solvating tool doesn't exist.")
 
         try:
-            self.assertTrue(os.path.exists(proto_env + "/tools/split_jawswater.py"))
+            os.path.exists(proto_env + "/tools/split_jawswater.py")
         except IOError as e:
             print e
             print("PDB file splitting tool doesn't exist.")   

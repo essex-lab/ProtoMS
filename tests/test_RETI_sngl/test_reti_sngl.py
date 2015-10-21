@@ -25,6 +25,7 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 
 proto_env = os.environ["PROTOMSHOME"]
+test_dir = proto_env + "/tests/test_RETI_sngl/"
 output_files_setup = ["ethane_box.pdb", "ethtmeo_ele.tem", "ethtmeo_vdw.tem", "ethtmeo_comb.tem", "run_comb_free.cmd", "run_comb_gas.cmd", "run_ele_free.cmd", "run_ele_gas.cmd", "run_vdw_free.cmd", "run_vdw_gas.cmd" ]
 out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "info", "restart", "results_inst"]
 
@@ -39,16 +40,16 @@ class TestRETIsngl(unittest.TestCase):
     def test_RETI_sngl(self):
         
         
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap single_cmap.dat", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap "+ test_dir + "single_cmap.dat -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for RETI single topology protoms.py setup.
                 
             for out_files in output_files_setup:
                 try:
-                    self.assertTrue(os.path.exists(out_files))
+                    os.path.exists(test_dir + out_files)
                 except IOError as e:
   		    print e
-		    print "ProtoMS setup output file ",out_files, "is missing.", "There could be problems with ligand's zmat generation, forcefield issues, template generation issues for Van der Waals, electrostatic or combined perturbation and ProtoMS input command file generation for simulation."
+		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with ligand's zmat generation, forcefield issues, template generation issues for Van der Waals, electrostatic or combined perturbation and ProtoMS input command file generation for simulation."
 
 
 	    print "Setup and command files generation is successful."
@@ -62,7 +63,7 @@ class TestRETIsngl(unittest.TestCase):
                             for d in dirs:
                                 for out_files in out_sim_files:
                                     try:
-                                        self.assertTrue(os.path.exists(os.path.join("out_comb_free",d,out_files)))
+                                        os.path.exists(os.path.join("out_comb_free",d,out_files))
                                     except IOError as e:
                                         print e
                                         print "Simulation file ",os.path.join("out_comb_free",d,out_files), " is missing. Please check!"
@@ -79,7 +80,7 @@ class TestRETIsngl(unittest.TestCase):
                             for d in dirs:
                                 for out_files in out_sim_files:
                                     try:
-                                        self.assertTrue(os.path.exists(os.path.join("out_comb_gas",d,out_files)))
+                                        os.path.exists(os.path.join("out_comb_gas",d,out_files))
                                     except IOError as e:
                                         print e
                                         print "Simulation file ",os.path.join("out_comb_gas",d,out_files), " is missing. Please check!"

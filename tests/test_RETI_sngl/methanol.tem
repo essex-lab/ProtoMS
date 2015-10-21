@@ -1,0 +1,27 @@
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1) 
+par 3000    c3    06    0.11670    3.39967    0.10940
+par 3001    oh    08    -0.59880    3.06647    0.21040
+par 3002    ho    01    0.39600    0.00000    0.00000
+par 3003    h1    01    0.02870    2.47135    0.01570
+par 3004    h1    01    0.02870    2.47135    0.01570
+par 3005    h1    01    0.02870    2.47135    0.01570
+mode template
+solute MEO
+info translate 0.250 rotate 5.000
+atom  C01 MEO 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
+atom  O05 MEO 3001 3001  C01 MEO  DM3 DUM  DM2 DUM
+atom  H06 MEO 3002 3002  O05 MEO  C01 MEO  DM3 DUM
+atom  H04 MEO 3003 3003  C01 MEO  O05 MEO  H06 MEO
+atom  H03 MEO 3004 3004  C01 MEO  O05 MEO  H04 MEO
+atom  H02 MEO 3005 3005  C01 MEO  O05 MEO  H04 MEO
+bond  O05 MEO  C01 MEO
+bond  H06 MEO  O05 MEO
+bond  H04 MEO  C01 MEO
+bond  H03 MEO  C01 MEO
+bond  H02 MEO  C01 MEO
+angle  H06 MEO  O05 MEO  C01 MEO flex 0.189
+angle  H04 MEO  C01 MEO  O05 MEO flex 0.181
+angle  H03 MEO  C01 MEO  O05 MEO flex 0.181
+angle  H02 MEO  C01 MEO  O05 MEO flex 0.181
+dihedral  H04 MEO  C01 MEO  O05 MEO  H06 MEO flex 2.667

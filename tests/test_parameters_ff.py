@@ -39,7 +39,7 @@ class TestParamSetUp(unittest.TestCase):
         for tem_files in ff_tem_files:
 
             try:
-                self.assertTrue(os.path.exists(proto_env + "/parameter/" + tem_files))
+                os.path.exists(proto_env + "/parameter/" + tem_files)
     
             except IOError as e:
                 print e

@@ -25,6 +25,7 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+test_dir = proto_env + "/tests/test_sampling/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb", "run_bnd.cmd"]
 ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '1.5']
 out_sim_files = ["info", "all.pdb", "warning", "results", "restart.prev", "restart", "accept"]
@@ -40,16 +41,16 @@ class TestSampling(unittest.TestCase):
     def test_sampling(self):
         
         
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s sampling -l dcb.pdb -p protein.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s sampling -l dcb.pdb -p protein.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for Sampling MC moves.
                 
             for out_files in output_files_setup:
 	        try:
-                    self.assertTrue(os.path.exists(out_files))
+                    os.path.exists(test_dir + out_files)
                 except IOError as e:
   		    print e
-		    print "ProtoMS setup output file ",out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
+		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
 
             #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
 
@@ -79,7 +80,7 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
             #Checking whether the simulation output files have been created successfully for Sampling MC moves
                 for out_files in out_sim_files:
                     try:
-                        self.assertTrue(os.path.exists("out_bnd/"+ out_files))
+                        os.path.exists("out_bnd/"+ out_files)
                     except IOError as e:
                         print e
                         print "Sampling simulation file: ",out_files, "is missing."  

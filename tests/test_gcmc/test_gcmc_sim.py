@@ -25,6 +25,7 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+test_dir = proto_env + "/tests/test_gcmc/"
 out_gcmc_tools = ["gcmc_box.pdb"]
 output_files_setup = ["gcmc_wat.pdb","run_bnd.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
@@ -39,27 +40,27 @@ class TestGCMC(unittest.TestCase):
 
     def test_gcmc(self):
         
-        if((call("python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s wat.pdb", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s" + test_dir + "wat.pdb", shell=True)) == 0):
             
             #Checking whether GCMC tool created the box successfully.
             
             for out_files in out_gcmc_tools:
                 try:
-                    self.assertTrue(os.path.exists(out_files))
+                    os.path.exists(out_files)
                 except IOError as e:
                     print e
-                    print "GCMC box file ",out_files, "is missing." 
+                    print "GCMC box file ",test_dir + out_files, "is missing." 
         
-            if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.dcb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb", shell=True)) == 0):
+            if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.dcb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb -f" + test_dir, shell=True)) == 0):
 
                 #Checking whether the required output files have been setup for GCMC simulation.
                 
                 for out_files in output_files_setup:
 	            try:
-                        self.assertTrue(os.path.exists(out_files))
+                        os.path.exists(test_dir + out_files)
                     except IOError as e:
   		        print e
-		        print "ProtoMS setup output file ",out_files, "is missing.", "There could be problems with ProtoMS input command file generation for simulation."
+		        print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with ProtoMS input command file generation for simulation."
 
 
   	        print "Setup and command file generation is successful."
@@ -69,7 +70,7 @@ class TestGCMC(unittest.TestCase):
                 #Checking whether the simulation output files have been created successfully for Sampling MC moves
                     for out_files in out_sim_files:
                         try:
-                            self.assertTrue(os.path.exists("out/"+ out_files))
+                            os.path.exists("out/"+ out_files)
                         except IOError as e:
                             print e
                             print "GCMC simulation file: ",out_files, "is missing."  

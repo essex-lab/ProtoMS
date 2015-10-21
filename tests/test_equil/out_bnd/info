@@ -1,11 +1,11 @@
-protoms3 started at 17:56:06 on the 10/ 8/2015
+protoms3 started at 14:18:18 on the 21/10/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-#############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99.ff
-#############################################################################
+#########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/amber99.ff
+#########################################################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -14,24 +14,24 @@ Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 Loaded    0 templates,    0 override templates,  825 clj parameters
 and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-##############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/solvents.ff
-##############################################################################
+##########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/solvents.ff
+##########################################################################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
 Loaded   15 templates,    0 override templates,   21 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-######################################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99-residues.ff
-######################################################################################
+##################################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/amber99-residues.ff
+##################################################################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/gaff14.ff
-############################################################################
+########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/gaff14.ff
+########################################################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -53,12 +53,12 @@ Successfully loaded protein scoop, that contains  116 residues
  Loading solute 'dcb'
  Using concentration correction
  Opening solvent file water.pdb
- Have now loaded         3105  solvent molecules (        3105  from this file)
+ Have now loaded         3104  solvent molecules (        3104  from this file)
 Spherical cap boundaries have been turned on in agreement with the solvent file
- Simulation consists of            1  protein chains,            1  solute molecules and         3105  solvent molecules
+ Simulation consists of            1  protein chains,            1  solute molecules and         3104  solvent molecules
  Fitting molecule templates to dcb
 ##################################################
- Charge on solute dcb =   1.99999999999994627E-003
+ Charge on solute dcb =    1.9999999999999463E-003
 ##################################################
  Assigning non-bonded atoms for solute            1
  Finished fitting template...
@@ -85,7 +85,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 17:56:07 on the 10/ 8/2015
+Starting simulation at 14:18:18 on the 21/10/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -108,12 +108,12 @@ Move probabilies: Protein =      157 Solute =        1 Solvent =      841 Insert
 ###############################################
  Calculating the initial total energy from scratch...
 Total Energy = ************ (************ | ************)
- Equilibration complete. Attempted/accepted moves          100          58
- These moves took   0.12298107      s to run.
+ Equilibration complete. Attempted/accepted moves          100          47
+ These moves took    8.89340043E-02  s to run.
  Running chunk            2
 ##########################
 Printing PDB of the system
 ##########################
  Redirecting PDB to equil_bnd.pdb
  Simulation shutting down...
-protoms3 completed at 17:56:08 on the 10/ 8/2015
+protoms3 completed at 14:18:19 on the 21/10/2015

@@ -47,7 +47,7 @@ class TestEquilibrationSetup(unittest.TestCase):
                 
             for out_files in output_files_setup:
 	        try:
-                    self.assertTrue(os.path.exists(test_dir + out_files))
+                    os.path.exists(test_dir + out_files)
                 except IOError as e:
   		    print e
 		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS command files generation."
@@ -75,15 +75,15 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
 
 	    print "Setup and command files generation is successful."
 
-            if((call("$PROTOMSHOME/protoms3 run_bnd.cmd" + test_dir, shell=True)) == 0):
+            if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
 
             #Checking whether the simulation output files have been created successfully for equilibration MC moves
                 for out_files in out_sim_files:
                     try:
-                        self.assertTrue(os.path.exists(test_dir + "out_bnd/"+ out_files))
+                        os.path.exists("out_bnd/"+ out_files)
                     except IOError as e:
                         print e
-                        print "Equilibration simulation file: ",out_files, "is missing."  
+                        print "Equilibration simulation file: ", "out_bnd/"+ out_files, "is missing."  
                         
             else:
                 #logger.error(
