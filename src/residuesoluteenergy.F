@@ -1,6 +1,7 @@
       double precision function residueSoluteEnergy(iprot,ires,isol,
      .           cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist,
      .           scl,sclf,sclb)
+      use timing
       include 'dimensions.inc'
       include 'proteins.inc'
       include 'simparams.inc'
@@ -29,6 +30,9 @@ c#######################################################################
       include 'nbenergyvar2.inc'
       double precision charge,sigma,epslon      
       double precision scl,sclf,sclb
+
+      call timer_start(ERESSOL)
+
       residueSoluteEnergy = ZERO
       cnrg = ZERO
       ljnrg = ZERO
@@ -149,6 +153,8 @@ c     performing protein-residue - solute molecule cutting...
       endif
       
       residueSoluteEnergy = nrg
+
+      call timer_end(ERESSOL)
 
       return
       end

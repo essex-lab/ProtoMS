@@ -1,4 +1,5 @@
       subroutine shutdown
+      use timing
       include 'printer.inc'
       include 'version.inc'
 c###########################################################
@@ -21,6 +22,9 @@ c     print the time that everything finished
       write(printstring,10) exename,hour,mins,secs,day,month,year
 10    format(a," completed at ",i2,":",i2.2,":",i2.2," on the ",i2,"/",i2,"/",i4)      
       call printLine(INFO,printstring)
+
+      call timer_end(EMAIN)
+      call print_timing
             
       return
       end

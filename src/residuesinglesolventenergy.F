@@ -1,5 +1,6 @@
       double precision function residueSingleSolventEnergy(iprot,ires,isvn,
      .             cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist)
+      use timing
       include 'dimensions.inc'
       include 'proteins.inc'
       include 'constants.inc'
@@ -31,6 +32,8 @@ c####################################################################
       double precision getSolventRadius
 c     temporary cheat
       double precision scl,sclf,sclb
+
+      call timer_start(ERESSVN)
 
       scl = 1.0d0
       sclf = 1.0d0
@@ -177,6 +180,8 @@ c           must scale the interactions..
       endif      
       
       residueSingleSolventEnergy = nrg
+
+      call timer_start(ERESSVN)
   
       return
       end

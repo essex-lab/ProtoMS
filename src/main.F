@@ -1,4 +1,5 @@
       program main
+      use timing
       include 'protoms.inc'
 #ifdef WITH_MPI_
       include 'mpif.h'
@@ -8,6 +9,8 @@ c      July 2014 - Samuel Genheden added MPI stuff
 c      March 2015 - Modified MPI Ana I. Cabedo Martinez
 
       integer ierr
+
+      call timer_start(EMAIN)
 
       mylamid = 0
       mytemid = 0
@@ -51,5 +54,6 @@ c     shut everything down / print out restart/info
 #ifdef WITH_MPI_
       call MPI_FINALIZE(ierr)
 #endif
+
 
       end

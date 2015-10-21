@@ -1,6 +1,7 @@
       
       double precision function bondedResResEnergy(iprot,sres1,sres2,cnrg,ljnrg, 
      .                                    cnrgb,ljnrgb,cnrgf,ljnrgf,mindist)
+      use timing
       include 'dimensions.inc'
       include 'printer.inc'
       include 'simparams.inc'
@@ -32,6 +33,9 @@ c########################################################
 c     JM : The scl values are 1 because there cannot be any soft core
 c     between two protein side chains with the current implementation
       double precision scl,sclf,sclb
+
+      call timer_start(ERESRESBOND)
+
       scl = 1.0d0
       sclf = 1.0d0
       sclb = 1.0d0
@@ -142,5 +146,6 @@ c     loop over all of the 14-pairs between these residues
       endif
       
       bondedResResEnergy = cnrg + ljnrg
+      call timer_end(ERESRESBOND)
       return
       end

@@ -31,6 +31,7 @@
 
       double precision function solventSolventSingleEnergy(isvn1,isvn2,
      .           cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist)
+      use timing
       include 'dimensions.inc'
       include 'solvents.inc'
       include 'enums.inc'
@@ -62,6 +63,9 @@ c####################################################################
 c     Set to one because there is no possible softcore
 c     between two solvents at the current moment
       double precision scl,sclf,sclb
+
+      call timer_start(ESVNSVN)
+
       scl = 1.0d0
       sclf = 1.0d0
       sclb = 1.0d0
@@ -224,6 +228,8 @@ c          print *,featherfac * (cut2-mindist)
       endif
      
       solventSolventSingleEnergy = nrg
+
+      call timer_end(ESVNSVN)
       
       return
       end

@@ -1,5 +1,6 @@
       double precision function sepResResEnergy(iprot,ires1,ires2,cnrg,ljnrg,
      .                                           cnrgb,ljnrgb,cnrgf,ljnrgf,mindist)
+      use timing
       include 'dimensions.inc'
       include 'constants.inc'
       include 'proteins.inc'
@@ -27,6 +28,8 @@ c########################################################
       integer i,j
       include 'nbenergyvar2.inc'
       double precision charge,sigma,epslon      
+
+      call timer_start(ERESRESNONBOND)
 
       sepResResEnergy = ZERO
       nrg = ZERO
@@ -90,6 +93,8 @@ c         output to funcnbnrg,funccnrg,funcljnrg,funcmindist
 
       sepResResEnergy = nrg
       
+      call timer_end(ERESRESNONBOND)
+
       return
       
       end
