@@ -52,27 +52,6 @@ class TestSampling(unittest.TestCase):
   		    print e
 		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
 
-            #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
-
-            water_file = open("water.pdb", "r")
- 	    header_line = water_file.readline()
-            header_line = header_line.replace('\n', '')
-            header_list = re.split(" +",header_line)
-
-            #Comparing with reference header
-            
-            if header_list[0] == ref_header_list[0] and header_list[1] == ref_header_list[1] and \
-(header_list[2] == ref_header_list[2]) or ('{:0.2f}'.format(float(header_list[2])) == '{:0.2f}'.format(float(ref_header_list[2]))) and \
-(header_list[3] == ref_header_list[3]) or ('{:0.2f}'.format(float(header_list[3])) == '{:0.2f}'.format(float(ref_header_list[3]))) and \
-(header_list[4] == ref_header_list[4]) or ('{:0.2f}'.format(float(header_list[4])) == '{:0.2f}'.format(float(ref_header_list[4]))) and \
-header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
-              
-                print "ProtoMS ligand and protein setup is successful."
-
-            else:
-                print "Discrepancy in HEADER parameters in water cap-file. Please check!" 
-
-
 	    print "Setup and command files generation is successful."
 
             if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):

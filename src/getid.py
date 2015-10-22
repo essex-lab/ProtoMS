@@ -25,14 +25,14 @@ def writeLine(line):
 try:
     filename = sys.argv[1]
 except:
-    print "USAGE: getid.py outputfile"
+    print ( "USAGE: getid.py outputfile" )
     sys.exit(0)
 
 #open the include file
 try:
     idfile = open(filename,"w")
 except:
-    print "Cannot open id file %s for writing" % idfile
+    print ( "Cannot open id file %s for writing" % idfile )
     sys.exit(0)
 
 #now write down the date that this code was compiled, and who has compiled it
