@@ -1,12 +1,5 @@
 # CMake file for ProtoMS
 
-# ---------------------------------------------- #
-# Command line options:
-# 
-# MPI=YES                       ! defaults to NO
-#
-# ---------------------------------------------- #
-
 cmake_minimum_required(VERSION 2.8.7)
 
 # Project name and language - enables Fortran dependency checking
@@ -38,23 +31,6 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
 endif()
 
 message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}")
-
-# Find MPI libraries
-
-option(MPI "Use MPI for tools requiring parallel runs" NO)
-option(FIND_MPI "Attempt to automatically find MPI information" YES)
-option(MPI_USE_MPIEXEC "Use CMake's FindMPI to find mpiexec" NO)
-option(OPENMP "Use OPENMP for parallel runs" NO)
-
-if(MPI)
-   add_definitions(-DUSE_MPI)
-   if(FIND_MPI)
-      find_package(MPI REQUIRED)
-      include_directories(${MPI_INCLUDE_PATH})
-      set(COMPILER_WRAPPER mpif77)
-   endif()
-   message(STATUS "MPI enabled")
-endif()
 
 # Find Fortran MPI libraries
 option(AVOID_MPI "Don't use MPI even if available" OFF)
@@ -153,7 +129,6 @@ add_test(test_ligand_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test
 add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
 add_test(test_parameters_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parameters_ff.py)
 add_test(test_path ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.py)
-add_test(test_setup_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup_protoms.py)
 add_test(test_tools_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
 
 add_test(test_prot_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup/test_prot_setup.py)
