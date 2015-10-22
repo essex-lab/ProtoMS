@@ -1,5 +1,6 @@
       double precision function residueSolventEnergy(savecut,iprot,ires,
      .             cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist)
+      use timing
       include 'dimensions.inc'
       include 'solvents.inc'
       include 'constants.inc'
@@ -19,6 +20,8 @@ c#########################################################################
       integer i
       double precision mindist,imindist
       double precision residueSingleSolventEnergy
+
+      call timer_start(ERESSVN)
 
       residueSolventEnergy = ZERO
       cnrg = ZERO
@@ -51,5 +54,8 @@ c     return if the residue has been done before
       enddo
       
       residueSolventEnergy = nrg
+
+      call timer_end(ERESSVN)
+
       return
       end

@@ -1,15 +1,17 @@
       program main
       use timing
-      include 'protoms.inc'
 #ifdef WITH_MPI_
-      include 'mpif.h'
+c     include 'mpif.h'
+      use mpi
 #endif
+      include 'protoms.inc'
 C     (C) Christopher Woods  2002-2004
 c      July 2014 - Samuel Genheden added MPI stuff
 c      March 2015 - Modified MPI Ana I. Cabedo Martinez
 
       integer ierr
 
+      call timer_setup
       call timer_start(EMAIN)
 
       mylamid = 0

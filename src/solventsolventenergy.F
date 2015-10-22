@@ -1,5 +1,6 @@
       double precision function solventSolventEnergy(savecut,isvn,
      .             cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist)
+      use timing
       include 'dimensions.inc'
       include 'solvents.inc'
       include 'constants.inc'
@@ -22,6 +23,8 @@ c##############################################################
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb,icnrgf,icnrgb,iljnrgf,iljnrgb
       double precision solventSolventSingleEnergy
       integer i,nats
+
+      call timer_start(ESVNSVN)
       
       solventSolventEnergy = ZERO
       cnrg = ZERO
@@ -55,5 +58,8 @@ c##############################################################
       enddo
 
       solventSolventEnergy = nrg
+
+      call timer_end(ESVNSVN)
+
       return
       end
