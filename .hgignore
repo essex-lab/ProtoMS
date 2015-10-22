@@ -13,3 +13,6 @@ ProtoMS_coverage_current
 htmlcov/
 tests/*.pyc
 html/
+.figleaf
+tests/test_setup/.DS_Store
+.DS_Store
