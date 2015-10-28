@@ -1,0 +1,11 @@
+md production run
+&cntrl
+imin=0, ntx=5,
+ntt=5, temp0=300, gamma_ln=5.0,
+ntp=0, taup=2.0,
+ntb=0, ntc=2, ntf=1,
+cut=1000,
+nstlim=0, 
+ntx=1,
+ntwx=1, ntwe=1, ntpr=1
+/

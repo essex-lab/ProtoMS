@@ -514,8 +514,8 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     else :  
       frcbonds, frcangles, frcdihedrals = _readfrcmod ( frcmodfile )
 
-    angle_params = sim.ParameterSet (sim.standard_filename("gaff14.ff","parameter"), 'angle' )
-    dihedral_params = sim.ParameterSet ( sim.standard_filename("gaff14.ff","parameter"), 'dihedral' )
+    angle_params = sim.ParameterSet ('angle', sim.standard_filename("gaff14.ff","parameter") )
+    dihedral_params = sim.ParameterSet ( 'dihedral', sim.standard_filename("gaff14.ff","parameter") )
 
     with open ( sim.standard_filename("gaff.types","parameter") ) as f:
         at_params = [ line.split() for line in f ]
