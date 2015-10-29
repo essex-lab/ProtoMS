@@ -1,3 +1,5 @@
+"""Library of classes for dealing with Amber parameter files."""
+
 import os, sys
 
 class AmbParameterAtm:

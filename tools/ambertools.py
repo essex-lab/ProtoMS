@@ -19,6 +19,7 @@ import os
 import subprocess
 import tempfile
 import logging
+import distutils.spawn
 
 import simulationobjects
 
@@ -48,7 +49,7 @@ def _run_program ( name, command ):
     ret_code = subprocess.call ( command, shell = True , stdout=tmpfile, stderr=tmpfile)
     # Catch some error codes
     if ret_code == 127:
-        msg = "Unable to find %s executable, please make sure this is present in your PATH."%name
+        msg = "Unable to find executable, please make sure this is present in your PATH or $AMBERHOME/bin."
         logger.error(msg) 
         raise simulationobjects.SetupError ( msg )
     if ret_code == 1:
@@ -61,6 +62,46 @@ def _run_program ( name, command ):
 
     os.remove(tmpname)
 
+def _get_executable_path ( name ):
+    """Robust routine that looks for Amber Tools executables first in $AMBERHOME/bin 
+    and then in the path generally.
+    
+    Parameters
+    ----------        
+    name : string
+    	the name of the program to find
+
+    Returns
+    -------
+    string
+        the full path of the desired executable
+
+    Raises
+    ------
+    SetupError
+        if the executable could not be found
+    """
+    try:
+        os.environ['AMBERHOME']
+    except KeyError:
+        raise simulationobjects.SetupError ( 'The environmental variable $AMBERHOME is not set. This is required to use components of AMBER Tools.' )
+
+    try:
+        exe_path = os.environ['AMBERHOME'] + '/bin/' + name
+        if not os.path.isfile ( exe_path ):
+            raise KeyError
+        return exe_path
+    except KeyError:
+        logger.debug("Unable to find executable in $AMBERHOME/path. Looking in PATH.")
+
+    exe_path = distutils.spawn.find_executable ( name )
+    if exe_path == None:
+        msg = "Unable to find %s executable, please make sure this is present in your PATH or $AMBERHOME/bin."% name
+        logger.error(msg) 
+        raise simulationobjects.SetupError ( msg )
+
+    return exe_path
+    
 def run_antechamber ( lig, charge, resnam = None):
     """ 
     Wrapper for antechamber with default parameters and AM1-BCC charges
@@ -97,10 +138,12 @@ def run_antechamber ( lig, charge, resnam = None):
     else :
       resnamstr = "-rn "+resnam
 
+    ante_exe = _get_executable_path ( 'antechamber' )
+        
     # Remove the extension from the filename
     out_name = os.path.splitext ( name )[0]
-    cmd = 'antechamber -i %s -fi pdb -o %s.prepi -fo prepi -c bcc -nc %d %s -pf y' % ( name, out_name,  charge, resnamstr )
-    _run_program ( "antechamber", cmd)
+    cmd = '%s -i %s -fi pdb -o %s.prepi -fo prepi -c bcc -nc %d %s -pf y' % ( ante_exe, name, out_name,  charge, resnamstr )
+    _run_program ( 'antechamber', cmd )
     subprocess.call ( "rm sqm.in sqm.out sqm.pdb", shell = True )
     return "%s.prepi"%out_name
 
@@ -129,10 +172,12 @@ def run_parmchk ( lig ):
     else :
       name = lig.name
 
+    parm_exe = _get_executable_path ( 'parmchk' )
+      
     # Remove the extension from the filename
     out_name = os.path.splitext ( name )[0]
-    cmd = 'parmchk -i %s.prepi -f prepi -o %s.frcmod' % ( out_name, out_name )
-    _run_program ( "parmchk", cmd)
+    cmd = '%s -i %s.prepi -f prepi -o %s.frcmod' % ( parm_exe, out_name, out_name )
+    _run_program ( 'parmchk', cmd )
     return "%s.frcmod"%out_name
 
 if __name__ == "__main__":
