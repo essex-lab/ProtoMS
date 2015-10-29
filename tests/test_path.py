@@ -22,7 +22,8 @@ import re
 
 class TestSetUp(unittest.TestCase):
 
-# Test if PROTOMSHOME is set properly. PROTOMSHOME must be set after protoms install at HOME directory.
+    """Test if PROTOMSHOME is set properly. PROTOMSHOME must be set after protoms install at HOME directory."""
+    
     def setUp(self):
         super(TestSetUp, self).setUp()
         print("Setting up PROTOMSHOME check test.")

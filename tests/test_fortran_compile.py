@@ -23,7 +23,8 @@ from subprocess import call
 
 class TestFortran(unittest.TestCase):
 
-# Test if ProtoMS Fortran code is compiled correctly.
+    """Test if ProtoMS Fortran code is compiled correctly."""
+    
     def setUp(self):
         super(TestFortran, self).setUp()
         print("Setting up Fortran code compilation test.")

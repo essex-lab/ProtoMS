@@ -19,12 +19,13 @@ import re
 # ProtoMS parameters test
 #---------------------------------------------
 
-# Storing PROTOMSHOME environment variable to a python variable.
+
 ff_tem_files = ["amber99-residues-mod.ff", "amber99-residues.ff", "amber99.ff", "amber99SB.ff", "gaff.ff", "gaff.types", "gaff14.ff", "gaff14.types", "gborn.parameters", "gbornrevised.parameters","gold-residues.ff", "opls96-residues.ff", "opls96.ff", "rotamlib", "solvents.ff", "surface.parameters"]
 
 class TestParamSetUp(unittest.TestCase):
 
-# Test if ProtoMS reference files and templates exist are in the expected place.
+    """Test if ProtoMS reference files and templates exist are in the expected place."""
+    
     def setUp(self):
         super(TestParamSetUp, self).setUp()
         print("Setting up ProtoMS parameters test.")

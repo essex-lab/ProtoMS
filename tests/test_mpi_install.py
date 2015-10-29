@@ -25,7 +25,7 @@ import subprocess
 
 class TestMPIInstallation(unittest.TestCase):
 
-# Check that MPI is installed correctly.
+    """Check that MPI is installed correctly."""
 
 
     def test_mpi_install(self):
