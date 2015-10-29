@@ -31,6 +31,8 @@ ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '
 
 class TestProtSetup(unittest.TestCase):
     
+    """ Test for ProtoMS setup function."""
+    
     def setUp(self):
         super(TestProtSetup, self).setUp()
 
@@ -45,12 +47,9 @@ class TestProtSetup(unittest.TestCase):
             #Checking whether the required output files have been setup.
                 
             for out_files in output_files_setup:
-                try:
-                    os.path.exists(test_dir + out_files)
-                except IOError as e:
-                    print e
-		    print("ProtoMS setup output file ",out_files, "is missing.", "There could be problems with zmat generation or forcefield issues.")
-
+                
+                self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file (%s) is missing. There could be problems with zmat generation or forcefield issues." % out_files)
+            
             #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
 
             water_file = open(test_dir+"water.pdb", "r")
@@ -69,7 +68,11 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                 print "ProtoMS ligand and protein setup is successful."
 
             else:
-                print "Discrepancy in HEADER parameters in water cap-file. Please check!" 
+                print "Discrepancy in HEADER parameters in water cap-file. Please check!"
+                raise ValueError
+
+#Entry point to nosetests or unittests.
 
 if __name__ == '__main__':
     unittest.main()
+    nose.runmodule()
