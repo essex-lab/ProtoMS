@@ -14,55 +14,34 @@ import sys
 import nose
 import nose.tools as nt
 
-amber_env = os.environ["AMBERHOME"]
-amber_path = amber_env + "/AmberTools/bin"
 
 class TestDependInstallation(unittest.TestCase):
 
 #Check that Python dependencies are installed correctly.
 
      def test_python_dependencies(self):
-         
-         try:
-             import numpy
-	 except ImportError as e:
-             print e
 
-         
-         try:
-             import scipy
-         except ImportError as e:
-             print e
+         import numpy
+	
+         import scipy
+  
+         import matplotlib
 
-         try:
-             import matplotlib
-         except ImportError as e:
-             print e
 
 # Checking for AmberTools installation dependencies
 
      def test_ambertools_dependencies(self):
       
-         try:
-             os.getenv("AMBERHOME")
-         except KeyError as e:
-             print e
-    	     print("AMBERHOME is not set.")
+         self.assertTrue(os.getenv("AMBERHOME"))
 
-         try:
-             os.path.exists(amber_path + "/antechamber")
-	 except IOError as e:
-  	     print e
-  	     print("antechamber AmberTools module doesn't exist.")
-    
-	 try:
-            os.path.exists(amber_path + "/parmchk")
-	 except IOError as e:
-  	     print e
-  	     print("parmchk AmberTools module doesn't exist.")
+         self.assertTrue(os.path.exists(os.environ["AMBERHOME"]+ "/AmberTools/bin/antechamber"))
 
+         self.assertTrue(os.path.exists(os.environ["AMBERHOME"]+ "/AmberTools/bin/parmchk"))
+
+
+#Entry point for nosetests or unittests
 
 if  __name__ == '__main__':
     unittest.main()
-    
+    nose.runmodule()
           
