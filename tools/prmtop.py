@@ -1,9 +1,5 @@
 """Module containing classes and functions for the parsing of AMBER prmtop files"""
 
-import itertools
-import operator
-from handy import chunks
-
 format_strings = { 'a' : '%{0}s',
                    'E' : '%{0}e',
                    'I' : '%{0}d' }
@@ -13,6 +9,11 @@ data_type = { 'a' : str,
 
 class MissingParamError ( Exception ):
     pass
+
+def chunks ( seq, size, fillval = None ):
+    "Returns an iterator that goes through seq in chunks of size"
+    args = [ iter ( seq ) ] * size
+    return izip_longest ( *args, fillvalue = fillval )
 
 class section ():
     def __init__ ( self, body ):
