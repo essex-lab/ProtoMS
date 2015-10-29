@@ -20,7 +20,6 @@ import re
 #---------------------------------------------
 
 # Storing PROTOMSHOME environment variable to a python variable.
-proto_env = os.environ["PROTOMSHOME"]
 ff_tem_files = ["amber99-residues-mod.ff", "amber99-residues.ff", "amber99.ff", "amber99SB.ff", "gaff.ff", "gaff.types", "gaff14.ff", "gaff14.types", "gborn.parameters", "gbornrevised.parameters","gold-residues.ff", "opls96-residues.ff", "opls96.ff", "rotamlib", "solvents.ff", "surface.parameters"]
 
 class TestParamSetUp(unittest.TestCase):
@@ -38,14 +37,11 @@ class TestParamSetUp(unittest.TestCase):
         
         for tem_files in ff_tem_files:
 
-            try:
-                os.path.exists(proto_env + "/parameter/" + tem_files)
+            self.assertTrue(os.path.exists(os.environ["PROTOMSHOME"] + "/parameter/" + tem_files), "Reference files/ force field parameter file (%s) is not present in the expected place." % tem_files)
     
-            except IOError as e:
-                print e
-	        print("Reference files/ force field parameter file ", tem_files, "is not present in the expected place.")
-
+#Entry point for nosetests or unittests
 
 if __name__ == '__main__':
     unittest.main()
+    nose.runmodule()
 
