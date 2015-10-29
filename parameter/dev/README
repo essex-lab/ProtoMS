@@ -1,35 +1,74 @@
-This folder contains tools and libraries to facilitate the automatic conversion of paramater files distributed with AMBER to a ProtoMS compatible format. A guide on the use of these is provided here. This should be comprehensible to users with some experience of ProtoMS and AMBER and a working knowledge of Python 2.7. An installation of each of these (AMBER Tools is sufficient) is needed and scripts shoud be executed in a shell with the PROTOMSHOME and AMBERHOME environment variables set appropriately.
+This folder contains tools and libraries to facilitate the automatic conversion 
+of parameter files distributed with AMBER to a ProtoMS compatible format. A 
+guide on the use of these is provided here. This should be comprehensible to 
+users with some experience of ProtoMS and AMBER and a working knowledge of 
+Python 2.7. An installation of each of these (AMBER Tools is sufficient) is 
+needed and scripts should be executed in a shell with the PROTOMSHOME and 
+AMBERHOME environment variables set appropriately.
 
 Producing the parameter files -
 
-Generating new ProtoMS parameter files is very straightforward and requires only a short script. Starting from an existing example is the easiest way to begin and will be assumed in this guide. For each of the AMBER protein parameter sets shipped with ProtoMS, a corresponding script can be found in the parameter/dev directory, following the naming convention generate_*_parameters.py.
+Generating new ProtoMS parameter files is very straightforward and requires 
+only a short script. Starting from an existing example is the easiest way to 
+begin and will be assumed in this guide. For each of the AMBER protein 
+parameter sets shipped with ProtoMS, a corresponding script can be found in the 
+parameter/dev directory, following the naming convention 
+generate_*_parameters.py.
 
-You will need to copy and rename one of the existing scripts for the force field you wish to add. By default the script will require you to have both PROTOMSHOME and AMBERHOME environment variables set appropriately. However if you wish to manually point to the relevant AMBER paramater files this can implemented instead. The AMBER manual provides a list of the parameter files loaded by leap for each force field, or equally the relevant .leaprc file may be consulted. As ProtoMS only supports simulation with proteins, only those parameter files relevant for nucleic acids need to be loaded. Amber parameter sets must be parsed in the following order - .dat, .frcmod then .in. The call to the fix_diffs routine accounts for some inherent differences between the residue templates used by ProtoMS and AMBER and must be called before writing outputs.
+You will need to copy and rename one of the existing scripts for the force 
+field you wish to add. By default the script will require you to have both 
+PROTOMSHOME and AMBERHOME environment variables set appropriately. However if 
+you wish to manually point to the relevant AMBER parameter files this can 
+implemented instead. The AMBER manual provides a list of the parameter files 
+loaded by leap for each force field, or equally the relevant .leaprc file may 
+be consulted. As ProtoMS only supports simulation with proteins, only those 
+parameter files relevant for amino acids need to be loaded. Amber parameter 
+sets must be parsed in the following order - .dat, .frcmod then .in. The call 
+to the fix_diffs routine accounts for some inherent differences between the 
+residue templates used by ProtoMS and AMBER and must be called before writing 
+outputs.
 
-It is recommended to follow the naming conventions in the examples for new parameter files you will produce. Once you've executed the script you should have two new parameter files ready to be used with ProtoMS.
+It is recommended to follow the naming conventions in the examples for new 
+parameter files you will produce. Once you've executed the script you should 
+have two new parameter files ready to be used with ProtoMS.
 
 
 
 Validation of the parameter files -
 
-The parameter files produced as above should be validated before use with ProtoMS. To facilitate this, a test system is provided in the parameter/dev/test directory. You will need to:
+The parameter files produced as above should be validated before use with 
+ProtoMS. To facilitate this, a test system is provided in the 
+parameter/dev/test directory. You will need to:
 
-1) Modify test.cmd to make use of the new parameter files you have produced. You should then be able to run ProtoMS as follows:
+1) Modify test.cmd to make use of the new parameter files you have produced. 
+You should then be able to run ProtoMS as follows:
 $PROTOMSHOME/protoms3 test.cmd
 
-This should create the folder 'out_bnd' containing the simulation output. Check the warning and/or fatal files to make sure everything ran ok. The file results should contain the various components of the system energy.
+This should create the folder 'out_bnd' containing the simulation output. Check 
+the warning and/or fatal files to make sure everything ran ok. The file results 
+should contain the various components of the system energy.
 
-2) Generate an AMBER topology file with the force field of interest. A leap.in file is provided that you can modify to do this by specifying the appropriate leaprc file. Run leap with:
+2) Generate an AMBER topology file with the force field of interest. A leap.in 
+file is provided that you can modify to do this by specifying the appropriate 
+leaprc file. Run leap with:
 $AMBERHOME/bin/tleap -f leap.in
 
 This should create a prmtop and prmcrd file.
 
-3) Due to differences in how ProtoMS and AMBER evaluate certain forcefield terms it is necessary to modify the prmtop from 2) to so that the system energy will be consistent with ProtoMS. A script is provided in the parameter/dev directory to do this, if run in the same directory as the prmtop file:
+3) Due to differences in how ProtoMS and AMBER evaluate certain forcefield 
+terms it is necessary to modify the prmtop from 2) to so that the system energy 
+will be consistent with ProtoMS. A script is provided in the parameter/dev 
+directory to do this, if run in the same directory as the prmtop file:
 python2.7 $PROTOMSHOME/parameter/dev/modify_prmtop.py -i prmtop -o prmtop_mod
 
-This will produce the output file prmtop_mod which can be used in AMBER for direct comparison with ProtoMS.
+This will produce the output file prmtop_mod which can be used in AMBER for 
+direct comparison with ProtoMS.
 
-4) Calculate the system energy using the newly produced files and the provided mdin as follows:
+4) Calculate the system energy using the newly produced files and the provided 
+mdin as follows:
 $AMBERHOME/bin/sander -O -i mdin -p prmtop_mod -c prmcrd
 
-5) Compare the energies in out_bnd/results and mdout. AMBER separates the electrostatic and Lennard-Jones energies into two components which must be summed to compare with the ProtoMS energies. All of the energy terms should agree to at least 2 decimal places.
+5) Compare the energies in out_bnd/results and mdout. AMBER separates the 
+electrostatic and Lennard-Jones energies into two components which must be 
+summed to compare with the ProtoMS energies. All of the energy terms should 
+agree to at least 2 decimal places.
