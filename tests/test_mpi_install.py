@@ -30,17 +30,11 @@ class TestMPIInstallation(unittest.TestCase):
 
     def test_mpi_install(self):
 
-        try:
-            if os.popen("mpirun --version").read() == '' or os.popen("mpiexec --version").read() == '':
-                raise ValueError
-                print "No MPI implementation is present."
-            else:
-                print os.popen("mpiexec --version").read()
-
-        except ValueError as e:
-            print e, "No MPI implementation is present."
-            
-        
+        if os.popen("mpirun --version").read() == '' or os.popen("mpiexec --version").read() == '':
+            print "No MPI implementation is present."
+            raise ValueError
+        else:
+            print os.popen("mpiexec --version").read()
 
 # Entry point for nosetests or unittests
 
