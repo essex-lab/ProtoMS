@@ -21,9 +21,6 @@ from subprocess import call
 # ProtoMS simulation test
 #---------------------------------------------
 
-# Storing PROTOMSHOME environment variable to a python variable.
-proto_env = os.environ["PROTOMSHOME"]
-
 class TestFortran(unittest.TestCase):
 
 # Test if ProtoMS Fortran code is compiled correctly.
@@ -38,7 +35,7 @@ class TestFortran(unittest.TestCase):
     def test_build_folder(self):
     
         try:
-            os.mkdir(proto_env + "/build")
+            os.mkdir(os.environ["PROTOMSHOME"] + "/build")
         except OSError as e:
             print e       
             if ((call("cd $PROTOMSHOME/build && sudo make install", shell = True)) == 0):
@@ -46,17 +43,14 @@ class TestFortran(unittest.TestCase):
 
     def test_fortran(self):
         
-        try:
-            os.path.exists(proto_env + "/protoms3")
-    
-        except IOError as e:
-            print e
-	    print("protoms3 executable doesn't exist. Fortran code is not compiled properly.")
+
+        self.assertTrue(os.path.exists(os.environ["PROTOMSHOME"] + "/protoms3"), "protoms3 executable doesn't exist. Fortran code is not compiled properly.")
 
 
- 
+#Entry point for nosetests or unittests
 	    
 
 if __name__ == '__main__':
     unittest.main()
+    nose.runmodule()
 

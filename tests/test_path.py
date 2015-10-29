@@ -33,7 +33,7 @@ class TestSetUp(unittest.TestCase):
 
     def test_protoms_path(self):
         
-        self.assertIsNotNone(os.getenv("PROTOMSHOME"))
+        self.assertIsNotNone(os.getenv("PROTOMSHOME"), "PROTOMSHOME is not set.")
         
 
 if  __name__ == '__main__':

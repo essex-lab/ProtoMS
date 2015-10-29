@@ -32,11 +32,11 @@ class TestDependInstallation(unittest.TestCase):
 
      def test_ambertools_dependencies(self):
       
-         self.assertTrue(os.getenv("AMBERHOME"))
+         self.assertTrue(os.getenv("AMBERHOME"), "AMBERHOME is not set.")
 
-         self.assertTrue(os.path.exists(os.environ["AMBERHOME"]+ "/AmberTools/bin/antechamber"))
+         self.assertTrue(os.path.exists(os.environ["AMBERHOME"]+ "/AmberTools/bin/antechamber"), "Antechamber AMBERTOOLS module doesn't exist.")
 
-         self.assertTrue(os.path.exists(os.environ["AMBERHOME"]+ "/AmberTools/bin/parmchk"))
+         self.assertTrue(os.path.exists(os.environ["AMBERHOME"]+ "/AmberTools/bin/parmchk"), "Parmchk AMBERTOOLS module doesn't exist.")
 
 
 #Entry point for nosetests or unittests
