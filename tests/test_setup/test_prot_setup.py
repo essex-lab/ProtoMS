@@ -1,4 +1,4 @@
-# This test is to check the protoms.py Simulation None Setup.
+"""This test is to check the protoms.py Simulation None Setup."""
 
 import nose
 import unittest

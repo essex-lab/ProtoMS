@@ -1,4 +1,4 @@
-protoms3 started at 14:18:18 on the 21/10/2015
+protoms3 started at  6:08:02 on the 30/10/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
@@ -85,7 +85,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 14:18:18 on the 21/10/2015
+Starting simulation at  6:08:02 on the 30/10/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -109,11 +109,11 @@ Move probabilies: Protein =      157 Solute =        1 Solvent =      841 Insert
  Calculating the initial total energy from scratch...
 Total Energy = ************ (************ | ************)
  Equilibration complete. Attempted/accepted moves          100          47
- These moves took    8.89340043E-02  s to run.
+ These moves took    7.15089440E-02  s to run.
  Running chunk            2
 ##########################
 Printing PDB of the system
 ##########################
  Redirecting PDB to equil_bnd.pdb
  Simulation shutting down...
-protoms3 completed at 14:18:19 on the 21/10/2015
+protoms3 completed at  6:08:03 on the 30/10/2015
