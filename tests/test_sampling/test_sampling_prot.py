@@ -1,4 +1,4 @@
-# This test is to check the Sampling MC moves.
+"""This test is to check the Sampling MC moves."""
 
 import nose
 import unittest
@@ -32,6 +32,8 @@ out_sim_files = ["info", "all.pdb", "warning", "results", "restart.prev", "resta
 
 class TestSampling(unittest.TestCase):
     
+    """Test for Sampling function."""
+
     def setUp(self):
         super(TestSampling, self).setUp()
 
@@ -40,29 +42,22 @@ class TestSampling(unittest.TestCase):
 
     def test_sampling(self):
         
+        """ Test for Sampling function."""
         
         if((call("python2.7 $PROTOMSHOME/protoms.py -s sampling -l dcb.pdb -p protein.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for Sampling MC moves.
                 
             for out_files in output_files_setup:
-	        try:
-                    os.path.exists(test_dir + out_files)
-                except IOError as e:
-  		    print e
-		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
-
+                self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
+  
 	    print "Setup and command files generation is successful."
 
             if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
 
             #Checking whether the simulation output files have been created successfully for Sampling MC moves
                 for out_files in out_sim_files:
-                    try:
-                        os.path.exists("out_bnd/"+ out_files)
-                    except IOError as e:
-                        print e
-                        print "Sampling simulation file: ",out_files, "is missing."  
+                    self.assertTrue(os.path.exists("out_bnd/"+ out_files), "Sampling simulation file: %s is missing." % out_files )
                         
             else:
                # logger.error
@@ -70,7 +65,10 @@ class TestSampling(unittest.TestCase):
         else:
             # logger.error
             print "Sampling MC moves check is is not successful. Either protoms setup or simulation or both failed."
-            
+
+#Entry point for nosetests or unittests
 
 if __name__ == '__main__':
     unittest.main()
+    nose.runmodule()
+

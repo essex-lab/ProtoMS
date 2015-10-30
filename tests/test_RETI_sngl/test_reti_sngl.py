@@ -1,4 +1,4 @@
-# This test is to check the ProtoMS setup of simulations with multiple lambda windows and the MPI implementation of protoms3 program.
+"""This test is to check the ProtoMS setup of simulations with multiple lambda windows and the MPI implementation of protoms3 program."""
 
 import nose
 import unittest
@@ -18,9 +18,9 @@ from tools import simulationobjects
 
 from subprocess import call
 
-#------------------------------------------------
+#--------------------------------------------------------
 # ProtoMS setup and RETI single topology simulations test
-#------------------------------------------------
+#--------------------------------------------------------
 
 # Storing PROTOMSHOME environment variable to a python variable.
 
@@ -31,6 +31,7 @@ out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "inf
 
 class TestRETIsngl(unittest.TestCase):
     
+    """Test for RETI/MPI function."""
     def setUp(self):
         super(TestRETIsngl, self).setUp()
 
@@ -45,12 +46,7 @@ class TestRETIsngl(unittest.TestCase):
             #Checking whether the required output files have been setup for RETI single topology protoms.py setup.
                 
             for out_files in output_files_setup:
-                try:
-                    os.path.exists(test_dir + out_files)
-                except IOError as e:
-  		    print e
-		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with ligand's zmat generation, forcefield issues, template generation issues for Van der Waals, electrostatic or combined perturbation and ProtoMS input command file generation for simulation."
-
+                self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ligand's zmat generation, forcefield issues, template generation issues for Van der Waals, electrostatic or combined perturbation and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
 	    print "Setup and command files generation is successful."
 
@@ -62,11 +58,8 @@ class TestRETIsngl(unittest.TestCase):
                         if len(dirs) != 0:
                             for d in dirs:
                                 for out_files in out_sim_files:
-                                    try:
-                                        os.path.exists(os.path.join("out_comb_free",d,out_files))
-                                    except IOError as e:
-                                        print e
-                                        print "Simulation file ",os.path.join("out_comb_free",d,out_files), " is missing. Please check!"
+                                    self.assertTrue(os.path.exists(os.path.join("out_comb_free",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_free",d,out_files))
+            
             else:
                 print "RETI free phase leg of a single topology simulation is not successful."
 
@@ -79,19 +72,17 @@ class TestRETIsngl(unittest.TestCase):
                         if len(dirs) != 0:
                             for d in dirs:
                                 for out_files in out_sim_files:
-                                    try:
-                                        os.path.exists(os.path.join("out_comb_gas",d,out_files))
-                                    except IOError as e:
-                                        print e
-                                        print "Simulation file ",os.path.join("out_comb_gas",d,out_files), " is missing. Please check!"
+                                    self.assertTrue(os.path.exists(os.path.join("out_comb_gas",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_gas",d,out_files))
+         
             else:
                 print "RETI gas phase leg of a single topology simulation is not successful."
 
         else:
             print "RETI single topology check is is not successful. Either protoms setup or simulation or both failed."
-            
+
+#Entry point to nosetests or unittests
 
 if __name__ == "__main__":
     unittest.main()
-
+    nose.runmodule()
 

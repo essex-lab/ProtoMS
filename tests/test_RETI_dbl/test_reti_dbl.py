@@ -1,4 +1,4 @@
-# This test is to check the ProtoMS setup of simulations with multiple lambda windows and the MPI implementation of protoms3 program.
+"""This test is to check the ProtoMS setup of simulations with multiple lambda windows and the MPI implementation of protoms3 program."""
 
 import nose
 import unittest
@@ -30,7 +30,7 @@ output_files_setup = ["ethane_box.pdb", "eth-meo.tem", "run_free.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "info", "restart", "results_inst"]
 
 class TestRETIdbl(unittest.TestCase):
-    
+    """Test for RETI/ MPI function - short dual topology simulation."""
     def setUp(self):
         super(TestRETIdbl, self).setUp()
 
@@ -38,18 +38,13 @@ class TestRETIdbl(unittest.TestCase):
         super(TestRETIdbl, self).tearDown()
 
     def test_RETI_dbl(self):
-        
-        
+
         if((call("python2.7 $PROTOMSHOME/protoms.py -s dualtopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for RETI dual topology protoms.py setup.
                 
             for out_files in output_files_setup:
-	        try:
-                    os.path.exists(test_dir + out_files)
-                except IOError as e:
-  		    print e
-		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with ligand's zmat generation, forcefield issues, template generation issues and ProtoMS input command file generation for simulation."
+	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ligand's zmat generation, forcefield issues, template generation issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
 
 	    print "Setup and command files generation is successful."
@@ -62,20 +57,18 @@ class TestRETIdbl(unittest.TestCase):
                         if len(dirs) != 0:
                             for d in dirs:
                                 for out_files in out_sim_files:
-                                    try:
-                                        os.path.exists(os.path.join("out_free",d,out_files))
-                                    except IOError as e:
-                                        print e
-                                        print "Simulation file ",os.path.join("out_free",d,out_files), " is missing. Please check!"
+                                    self.assertTrue(os.path.exists(os.path.join("out_free",d,out_files)), "Simulation file %s is missing. Please check!" % (os.path.join("out_free",d,out_files)))
+            
             else:
                 print "RETI dual topology simulation is not successful."
 
 
         else:
             print "RETI dual topology check is is not successful. Either protoms setup or simulation or both failed."
-            
+
+#Entry point to nosetests or unittests.
 
 if __name__ == "__main__":
     unittest.main()
-
+    nose.runmodule()
 

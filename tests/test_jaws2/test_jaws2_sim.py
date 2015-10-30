@@ -1,4 +1,4 @@
-# This test is to check the ProtoMS setup and protoms3 run of JAWS stage 2 simulations.
+"""This test is to check the ProtoMS setup and protoms3 run of JAWS stage 2 simulations."""
 
 import nose
 import unittest
@@ -31,6 +31,7 @@ out_sim_files = ["accept", "all.pdb", "info", "restart", "restart.prev", "result
 
 class TestJAWS2(unittest.TestCase):
     
+    """Test for JAWS2 function."""
     def setUp(self):
         super(TestJAWS2, self).setUp()
 
@@ -45,12 +46,7 @@ class TestJAWS2(unittest.TestCase):
             #Checking whether the required output files have been setup for JAWS Stage 2 protoms.py setup.
                 
             for out_files in output_files_setup:
-	        try:
-                    os.path.exists(test_dir + out_files)
-                except IOError as e:
-  		    print e
-		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
-
+	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
 	    print "Setup and command files generation is successful."
 
@@ -62,18 +58,17 @@ class TestJAWS2(unittest.TestCase):
                         if len(dirs) != 0:
                             for d in dirs:
                                 for out_files in out_sim_files:
-                                    try:
-                                        os.path.exists(os.path.join("out_jaws2-w1",d,out_files))
-                                    except IOError as e:
-                                        print e
-                                        print "Simulation file ",os.path.join("out_jaws2-w1",d,out_files), " is missing. Please check!"
+                                    self.assertTrue(os.path.exists(os.path.join("out_jaws2-w1",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_jaws2-w1",d,out_files))
+            
             else:
                 print "JAWS Stage 2 simulation is not successful."
         else:
             print "JAWS Stage 2 check is is not successful. Either protoms setup or simulation or both failed."
-            
+
+#Entry point to unittests or nosetests
 
 if __name__ == "__main__":
     unittest.main()
+    nose.runmodule()
 
 

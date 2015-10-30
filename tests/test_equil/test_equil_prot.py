@@ -71,7 +71,7 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
 
             else:
                 print "Discrepancy in HEADER parameters in water cap-file. Please check!" 
-
+                raise ValueError
 
 	    print "Setup and command files generation is successful."
 

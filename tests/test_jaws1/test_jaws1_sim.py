@@ -1,4 +1,4 @@
-# This test is to check the ProtoMS setup and protoms3 run of JAWS stage 1 simulations.
+"""This test is to check the ProtoMS setup and protoms3 run of JAWS stage 1 simulations."""
 
 import nose
 import unittest
@@ -26,11 +26,12 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 test_dir = proto_env + "/tests/test_jaws1/"
-output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.box", "jaws1_wat.pdb", "jaws1_box.pdb", "water_clr.pdb", "run_bnd.cmd"]
+output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb", "jaws1_wat.pdb", "jaws1_box.pdb", "water_clr.pdb", "run_bnd.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
 
 class TestJAWS1(unittest.TestCase):
     
+    """Test for JAWS1 function."""
     def setUp(self):
         super(TestJAWS1, self).setUp()
 
@@ -45,12 +46,7 @@ class TestJAWS1(unittest.TestCase):
             #Checking whether the required output files have been setup for JAWS Stage 1 simulations.
                 
             for out_files in output_files_setup:
-	        try:
-                    os.path.exists(test_dir + out_files)
-                except IOError as e:
-  		    print e
-		    print "ProtoMS setup output file ",test_dir + out_files, "is missing.", "There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation."
-
+	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
 	    print "Setup and command files generation is successful."
 
@@ -58,17 +54,15 @@ class TestJAWS1(unittest.TestCase):
 
             #Checking whether the simulation output files have been created successfully for JAWS Stage 1.
                 for out_files in out_sim_files:
-                    try:
-                        os.path.exists("out/"+ out_files)
-                    except IOError as e:
-                        print e
-                        print "JAWS Stage 1 simulation file: ",out_files, "is missing."  
+                    self.assertTrue(os.path.exists("out/"+ out_files), "JAWS Stage 1 simulation file: %s is missing." % out_files )
                         
             else:
                 print "JAWS Stage 1 simulation is not successful."
         else:
             print "JAWS Stage 1 check is is not successful. Either protoms setup or simulation or both failed."
-            
+
+#Entry point to unittests or nosetests
 
 if __name__ == '__main__':
     unittest.main()
+    nose.runmodule()

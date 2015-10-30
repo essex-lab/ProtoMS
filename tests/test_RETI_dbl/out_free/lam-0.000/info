@@ -1,4 +1,4 @@
-protoms3 started at 16:53:41 on the 20/10/2015
+protoms3 started at 13:00:53 on the 30/10/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
@@ -6,9 +6,9 @@ Using protein-residue/solute-molecule/solvent-molecule cut-off
  SoftCore Parameters for this simulation :
  Coul            1  LJ            1  GB            1  Delta   0.20000000000000001       DeltaCoul    2.0000000000000000       (    64.000000000000000       ) Power            6
 Using 6-6 soft-core potential
-##########################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/amber99.ff
-##########################################################################################################
+#########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/amber99.ff
+#########################################################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -17,24 +17,24 @@ Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 Loaded    0 templates,    0 override templates,  825 clj parameters
 and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###########################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/solvents.ff
-###########################################################################################################
+##########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/solvents.ff
+##########################################################################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
 Loaded   15 templates,    0 override templates,   21 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###################################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/amber99-residues.ff
-###################################################################################################################
+##################################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/amber99-residues.ff
+##################################################################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#########################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/gaff14.ff
-#########################################################################################################
+########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/gaff14.ff
+########################################################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -95,7 +95,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 16:53:41 on the 20/10/2015
+Starting simulation at 13:00:53 on the 30/10/2015
 ######################################################################
 Running simulation in lambda window    0.000 <--    0.000 -->    0.001
 ######################################################################
@@ -135,4 +135,4 @@ Attempted/successful lambda swaps for lambdaladder   1 :      9     9 ( 100.000%
  Final volume =    13851.666436095999       A^3
 ###############################################
  Simulation shutting down...
-protoms3 completed at 16:53:42 on the 20/10/2015
+protoms3 completed at 13:00:55 on the 30/10/2015

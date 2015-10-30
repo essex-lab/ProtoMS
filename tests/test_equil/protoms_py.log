@@ -1,4 +1,4 @@
-DEBUG : Running protoms.py at 30/10/2015 - 06:08:02
+DEBUG : Running protoms.py at 30/10/2015 - 12:34:02
 DEBUG : Command line arguments = -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000 -f/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_equil/
 DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_equil/'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=100.0, nprod=40000000.0, outercut=20.0, outfolder='', protein='protein.pdb', ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='equilibration', singlemap=None, template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
 INFO : 

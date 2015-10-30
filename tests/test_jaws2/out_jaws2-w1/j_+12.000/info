@@ -1,11 +1,11 @@
-protoms3 started at 13:01:16 on the 20/10/2015
+protoms3 started at 12:41:22 on the 30/10/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-##########################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/amber99.ff
-##########################################################################################################
+#########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/amber99.ff
+#########################################################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -14,24 +14,24 @@ Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 Loaded    0 templates,    0 override templates,  825 clj parameters
 and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###########################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/solvents.ff
-###########################################################################################################
+##########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/solvents.ff
+##########################################################################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
 Loaded   15 templates,    0 override templates,   21 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###################################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/amber99-residues.ff
-###################################################################################################################
+##################################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/amber99-residues.ff
+##################################################################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#########################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/parameter/gaff14.ff
-#########################################################################################################
+########################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/parameter/gaff14.ff
+########################################################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -46,9 +46,9 @@ and    0/   0 surface/born parameters.
 Loaded    1 templates,    0 override templates,   21 clj parameters
 and    0/   0/   5/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#######################################################################################################
- Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testing/protoms-dev/data/gcmc_wat.tem
-#######################################################################################################
+######################################################################################################################
+ Reading parameter file /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/data/gcmc_wat.tem
+######################################################################################################################
 Loaded    1 templates,    0 override templates,    3 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
@@ -103,7 +103,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 13:01:17 on the 20/10/2015
+Starting simulation at 12:41:23 on the 30/10/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -145,4 +145,4 @@ Writing restart file
 Resetting free energy average to zero.
  Data collection complete. Attempted/accepted moves          100          71
  Simulation shutting down...
-protoms3 completed at 13:01:22 on the 20/10/2015
+protoms3 completed at 12:41:28 on the 30/10/2015
