@@ -23,6 +23,7 @@ c###################################################################
       integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
       integer temsbuffer(4),temrbuffer(4),tsbuffer(ntemperatures),tmbuffer(ntemperatures)
+      integer gcsbuffer(4),gcrbuffer(4),asbuffer(nadams),ambuffer(nadams)
       logical updated(nlambdas),retiTest
       double precision nrg,nrgb,nrgf,lamb,lamf,temp,inrgf,inrgb,oldlam
       double precision totalEnergy,extraEnergy
@@ -177,8 +178,28 @@ c     if a process with temid 0 is involved in the swap, since the reason to swa
         mytemid = temrbuffer(2)
         nlretry = temrbuffer(3)
         nlreswap = temrbuffer(4)
+      elseif (updated(mylamid+1).and.doMultiGCMC) then
+        gcsbuffer(1) = mytemladder
+        gcsbuffer(2) = mytemid
+        gcsbuffer(3) = nlretry
+        gcsbuffer(4) = nlreswap
+        do i=1,nlambdas
+          if (oldlam.eq.lambdaval(i)) then
+            call MPI_Sendrecv(temsbuffer,4,MPI_INTEGER,lambda2task(i),11,temrbuffer,4,
+     .           MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(task2adams,ntemperatures,MPI_INTEGER,lambda2task(i),11,
+     .           asbuffer,nadams,MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(task2adams,nadams,MPI_INTEGER,lambda2task(i),11,
+     .           ambuffer,nadams,MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
+          endif
+        enddo
+        task2adams= asbuffer
+        adams2task = ambuffer
+        mygcladder = gcrbuffer(1)
+        mygcid = gcrbuffer(2)
+        nlretry = gcrbuffer(3)
+        nlreswap = gcrbuffer(4)
       endif
-
 
       call recalculateParameters
       call recalculateGeometries    

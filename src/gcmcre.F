@@ -24,6 +24,7 @@ c###################################################################
       integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength,k
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
       logical updated(nadams), adamsretest
+      integer lamsbuffer(4),lamrbuffer(4),tsbuffer(nlambdas),lmbuffer(nlambdas)
       double precision alladam(nadams),allongc(nadams),oldB
       double precision buffer(2)
       character*255 adamstr,adamstr2
@@ -31,10 +32,10 @@ c###################################################################
 c 		GR: Assign to double pression a vector alladams(nadams), where nadams is defined elsewhere.
 c		GR: Also, I need to assign allongc(nadams), which is the vector of all on GC solutes
 
-c		GR: Not sure why I need this, maybe something to do with the folders?
+c		GR: Saving the old b value, which is needed to keep track of the folders that change.
       oldB = B
 c     check that temperature swaps are only attempted between tasks that are running temperature values
-      if (myid.lt.0) return
+      if (mygcid.lt.0) return
 
       do i = 1,nadams
         updated(i) = .false.
@@ -43,10 +44,10 @@ c     check that temperature swaps are only attempted between tasks that are run
       call closeFiles
 
 
-c		GR: This part defines how the information is communicated. myid=0 is the by convention the command process, so does not SEND information; instead, it RECIEVES information.
+c		GR: This part defines how the information is communicated. mygcid=0 is the by convention the command process, so does not SEND information; instead, it RECIEVES information.
 c		GR: I require the equivalent of mytemcom
 c		GR: Check that GCSCavity is properly read by this file.
-      if (myid.eq.0) then
+      if (mygcid.eq.0) then
         alladam(myadam) = adamparam(myadam)
         allongc(myadam) = GCSCavity
         updated(1) = .false.
@@ -64,8 +65,7 @@ c		GR: Check that GCSCavity is properly read by this file.
         call MPI_SSend(buffer,2,MPI_DOUBLE_PRECISION,0,11,mygccom,ierr)
       endif
 
-c		GR: I've started modifying the below.
-      if (myid.eq.0) then
+      if (mygcid.eq.0) then
 c       Randomly selects odd/even pairs from 1 to the max number of Adams values and attempts to swap those pairs.
         choice = ranInt(0,1)
         do i=1,nadams-(choice+1),2
@@ -119,8 +119,31 @@ c           The main task already knows bidx and aidx, so no need to send that i
 
 c		GR: Set the new adams value as B, which is used in Metropolis2.F
       B = adamparam(myadam)
-c      write(6,*)"### GR: old B, new B = ",oldB, B
    
+c     The communication in this code is not optimized. Task2temperature, temperature2task, nlretry & nlreswap probably only need to be swaped
+c     if a process with temid 0 is involved in the swap, since the reason to swap these is problems associated with the next temperatureswap
+      if (updated(mygcid+1).and.doLambdaRE) then
+        lamsbuffer(1) = mylamladder
+        lamsbuffer(2) = mylamid
+        lamsbuffer(3) = ntretry
+        lamsbuffer(4) = ntreswap
+        do i=1,nadams
+          if (oldb.eq.adamparam(i)) then 
+            call MPI_Sendrecv(lamsbuffer,4,MPI_INTEGER,adams2task(i),11,lamrbuffer,4,
+     .           MPI_INTEGER,adams2task(i),11,mygccom,mpistat,ierr)
+            call MPI_Sendrecv(task2lambda,nlambdas,MPI_INTEGER,adams2task(i),11,tsbuffer,nlambdas,
+     .           MPI_INTEGER,adams2task(i),11,mygccom,mpistat,ierr)
+            call MPI_Sendrecv(lambda2task,nlambdas,MPI_INTEGER,adams2task(i),11,lmbuffer,nlambdas,
+     .           MPI_INTEGER,adams2task(i),11,mygccom,mpistat,ierr)
+          endif
+        enddo
+        task2lambda = tsbuffer
+        lambda2task = lmbuffer
+        mylamladder = lamrbuffer(1)
+        mylamid = lamrbuffer(2)
+        ntretry = lamrbuffer(3)
+        ntreswap = lamrbuffer(4)
+      endif
 
 c     Resetting running averages
       nsteps = 0
@@ -128,11 +151,8 @@ c     Resetting running averages
 c     Defining gcmcfolder as the the folder that correponds to the NEW b value, using adamstr as a dummy variable.
       write(adamstr,"(4A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
       call writedoublestring(adamstr,adamparam(myadam),gcmcfolder)
-c      write(6,*)"### GR gcmcre.F: gcmcfolder=",gcmcfolder
-
 c     Defining adamstr as the the folder that correponds to the OLD b value.
       call writedoublestring("b_",oldB,adamstr)
-c      write(6,*)"### GR gcmcre.F: adamstr=",adamstr
 
 
       if (doLambdaRE) write(lrefolder,"(3A,F5.3)")gcmcfolder(1:lineLength(gcmcfolder)),PATHSEP,"lam-",lambdaval(mylambda)
@@ -150,16 +170,12 @@ c		GR: Must account for the fact that there must be nested folders if replica ex
         call split2(openfiles(i),PATHSEP)
 c			GR: By default, the temperature is the first folder, so the -k bit always picks that out. 
         adamstr2 = words2(nwords2-k)
-c        write(6,*)"### GR gcmcre.F: adamsrt2=",adamstr2
 c			GR: This next bit sees which of the currently opened folders corresponds to the old adams value.
         if (adamstr2(1:lineLength(adamstr2)).eq.adamstr(1:lineLength(adamstr))) then
-c          write(6,*)"### GR adamstr2 is the same as adamstr"     
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
           enddo
-c          write(6,*)"### GR gcmcre.F: words(nwords2-k)=",words(nwords2-k)
           call writedoublestring("b_",adamparam(myadam),words(nwords2-k))
-c          write(6,*)"### GR gcmcre.F: NEW words(nwords2-k)=",words(nwords2-k)
           do j=1,k
             words(nwords2-(j-1)) = words2(nwords2-(j-1))
           enddo
