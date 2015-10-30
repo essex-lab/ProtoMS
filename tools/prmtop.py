@@ -1,5 +1,7 @@
 """Module containing classes and functions for the parsing of AMBER prmtop files"""
 
+from itertools import izip_longest
+
 format_strings = { 'a' : '%{0}s',
                    'E' : '%{0}e',
                    'I' : '%{0}d' }
