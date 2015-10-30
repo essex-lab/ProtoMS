@@ -22,7 +22,7 @@ c     temperature-replica exchange
       integer task2temperature(MAXTEMPS),temperature2task(MAXTEMPS)
 
 c     GCMC replica exchange
-      integer nadams,myadam, mygccom, ngcretry, gcrefreq,ngcreswap
+      integer nadams,myadam, mygccom, ngcretry, gcrefreq,ngcreswap,mygcladder
       character*255 gcmcfolder
       double precision adamparam(MAXLAMBDAS)
       integer task2adams(MAXLAMBDAS),adams2task(MAXLAMBDAS)
@@ -43,7 +43,7 @@ c     multi JAWS-2
      .               mytemcom,mytemladder,mytemid,ntemladders,trefolder
       save /TRE/
 
-      common /MGCMC/ gcwithlad,adamparam,nadams,myadam,mygcid,ngcladders,mygccom,ngcretry,ngcreswap,
+      common /MGCMC/ gcwithlad,adamparam,nadams,myadam,mygcid,ngcladders,mygccom,mygcladder,ngcretry,ngcreswap,
      .                 task2adams, adams2task, gcrefreq, gcmcfolder
       save /MGCMC/
 

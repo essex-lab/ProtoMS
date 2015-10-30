@@ -54,7 +54,7 @@ c       Storing number of temperature ladders needed and where they should be ap
                 call closeProgram(100,printstring)
               endif
             enddo
-          elseif (words(1).eq.'adams') then
+          elseif (words(1).eq.'gcmcre') then
             do i=2,nwords
               gcwithlad(i-1) = getDouble(words(i),-1.0)
               if (gcwithlad(i).eq.-1.0) then
@@ -74,6 +74,15 @@ c       Storing number of temperature ladders needed and where they should be ap
             write(printstring,*)"Cannot generate temperature ladder for ",words(2),". Incorrect value."
             call closeProgram(100,printstring)
           endif
+        elseif (getoption('lambdare')) then
+          nlamladders = nwords - 1
+          do i=2,nwords
+            lamwithlad(i-1) = getDouble(words(i),-1.0)
+            if (lamwithlad(i).eq.-1.0) then
+              write(printstring,*)"Cannot generate temperature ladder for lambda ",words(i),". Incorrect value."
+              call closeProgram(100,printstring)
+            endif     
+          enddo
         endif
 c       Read in template folder    
         if (getOption('outfolder')) then
@@ -135,6 +144,17 @@ c       Read in frequency and number of lambdas
         enddo
 c       Storing number of lambda ladders needed and where they should be applied
         nlamladders = 1
+c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
+        if (getoption('multigcmc')) then
+          nlamladders = nwords - 1
+          do i=2,nwords
+            gcwithlad(i-1) = getDouble(words(i),-1.0)
+            if (gcwithlad(i).eq.-1.0) then
+              write(printstring,*)"Cannot generate lambda ladder for gcmc ",words(i),". Incorrect value."
+              call closeProgram(100,printstring)
+            endif
+          enddo
+        endif     
         if (getoption('lambdaladder')) then
           nlamladders = nwords - 1
           if (words(1).eq.'temperature') then
@@ -145,7 +165,7 @@ c       Storing number of lambda ladders needed and where they should be applied
                 call closeProgram(100,printstring)
               endif
             enddo
-          elseif (words(1).eq.'adams') then
+          elseif (words(1).eq.'gcmcre') then
             do i=2,nwords
               gcwithlad(i-1) = getDouble(words(i),-1.0)
               if (gcwithlad(i).eq.-1.0) then
@@ -165,6 +185,24 @@ c       Storing number of lambda ladders needed and where they should be applied
             write(printstring,*)"Cannot generate lambda ladder for ",words(2),". Incorrect value."
             call closeProgram(100,printstring)
           endif
+        elseif (getoption('multigcmc')) then
+          nlamladders = nwords - 1
+          do i=2,nwords
+            gcwithlad(i-1) = getDouble(words(i),-1.0)
+            if (gcwithlad(i).eq.-1.0) then
+              write(printstring,*)"Cannot generate lambda ladder for gcmc ",words(i),". Incorrect value."
+              call closeProgram(100,printstring)
+            endif     
+          enddo
+        elseif (getoption('temperature')) then
+          nlamladders = nwords - 1
+          do i=2,nwords
+            temwithlad(i-1) = getDouble(words(i),-1.0)
+            if (temwithlad(i).eq.-1.0) then
+              write(printstring,*)"Cannot generate lambda ladder for temperature ",words(i),". Incorrect value."
+              call closeProgram(100,printstring)
+            endif     
+          enddo
         endif
         if (ntasks.lt.nlambdas) then
           write(printstring,*)"Number of tasks is lower than the number of lambdas!",ntasks,nlambdas
@@ -236,65 +274,7 @@ c         Here is where I need to correlate a lambda to a group.
         enddo
         nlretry = 0
         nlreswap = 0
-
-c        SG is this code necessary?, temperatureC is set in getoptions.F
-c        if (doTemperatureRE.and.(mytemid.lt.0)) then
-c          call findDoubleInList(temwithlad(mylamladder),temval,ntemperatures,mytemperature)
-c          temperatureC = temval(mytemperature)
-c          temperature = temperatureC + DEG2KEL
-c        endif
-
-c        if (doTemperatureRE) then
-c          do i=1,nlamladders
-c            if (mytemladder.eq.i) then
-c              call findDoubleInList(lamwithlad(i),lambdaval,nlambdas,k)
-c              write(6,*)myid," KKKKK ", k
-c              write(6,*)myid," MYLAMBDA ",mylambda
-c              do j=1,nlambdas
-c                if (lambdaval(j).eq.lamwithlad(i)) then
-c                  mylambda = j
-c                  write(6,*)myid," MYLAMBDA ",mylambda
-c                endif
-c              enddo
-c            endif
-c          enddo
-c        endif
-c      elseif (getOption('lambdare')) then      
-c       Read in frequency and number of lambdas
-c        lrefreq = nint(getDouble(words(1),1E5))
-c        nlambdas = nwords - 1
-c        do i=2,nwords
-c          lambdaval(i-1) = getDouble(words(i),0.0)
-c        enddo
-c        if (ntasks.lt.nlambdas) then
-c          write(printstring,*)"Number of lambdas is lower than the number of tasks!",nlamtasks,nlambdas
-c          call closeProgram(100,printstring)
-c        endif  
-c        doLambdaRE = .true.
-cc       Read in template folder    
-c        if (getOption('outfolder')) then
-c          outfolder = words(1)
-c        else 
-c          outfolder = "out"
-c        endif
-c        if (myid.eq.0) then
-c          do i=1,nlambdas           
-c            write(cmd,"(3A,F5.3,A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(i),'/'
-c            call system(cmd) 
-c            task2lambda(i) = i
-c            lambda2task(i) = i-1
-c            if (i.gt.1) call MPI_Send(i,1,MPI_INTEGER,i-1,11,'lambdare',ierr)
-c          enddo
-c          mylambda = 1
-c          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(1)
-cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
-c          nlretry = 0
-c          nlreswap = 0
-c        else
-c          call MPI_Recv(mylambda,1,MPI_INTEGER,0,11,'lambdare',mpistat,ierr)
-c          write(lrefolder,"(2A,F5.3)")outfolder(1:lineLength(outfolder)),"/lam-",lambdaval(mylambda)
-cc          write(6,*)"Task = ",myid," folder = ",lrefolder(1:lineLength(lrefolder))
-c        endif
+c     End of assigning ladders
       endif
       if (getoption('multigcmc')) then
         gcrefreq = nint(getDouble(words(1),1E5))
@@ -307,7 +287,19 @@ c       Read in all B-values
           call closeProgram(100,"Number of Adam parameters is not equal to the number of tasks!")
         endif             
         doMultiGCMC = .true.
+c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
+        if (getoption('lambdare')) then
+          ngcladders = nwords - 1
+          do i=2,nwords
+            lamwithlad(i-1) = getDouble(words(i),-1.0)
+            if (lamwithlad(i).eq.-1.0) then
+              write(printstring,*)"Cannot generate gcmc ladder for lambda",words(i),". Incorrect value."
+              call closeProgram(100,printstring)
+            endif
+          enddo
+        endif
 c       Read in template folder    
+c 		GR: Remove folder creating and modify assignadamre.F amd call assignadamre.F
         if (getOption('outfolder')) then
           outfolder = words(1)
         else 
@@ -328,6 +320,30 @@ c       Read in template folder
           write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
           call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
         endif
+c Assigning gc ladders with lambda ladders
+        do i=1,ngcladders
+          if (doLambdaRE) then
+c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
+            if ((mylamid.ge.ZERO).and.(lambdaval(mylambda).eq.lamwithlad(i))) then
+              do j=1,nlamladders
+                if (mylamladder.eq.j) then
+                  do k=1,nadams
+                    if (adamparam(k).eq.gcwithlad(j)) then
+                      key = k-1
+                    endif
+                  enddo
+                endif
+              enddo
+              mygcladder = i
+            endif
+          else
+            if (((i-1)*nadams).le.myid.and.myid.lt.(i*nadams)) then
+c             all these ids should belong to the same lambda ladder
+              mygcladder = i
+            endif
+          endif
+        enddo
+c 		Finished assigning gcmc ladders.
         do i=1,nadams  
 c         Here is where I need to correlate a lambda to a group.
           task2adams(i) = i

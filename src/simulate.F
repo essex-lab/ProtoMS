@@ -125,6 +125,8 @@ c       Do lambda replica exchange
           call lambdaRE
           if (doTemperatureRE) then
             call assigntemperaturere(mytemid,.true.,.false.)
+          else if (doMultiGCMC) then
+            call assignadamre(mygcid,.true.,.false.)
           endif
         endif
 
@@ -134,12 +136,16 @@ c          write(6,*)myid, " calling TRE. Move ",i
           call temperatureRE
           if (doLambdaRE) then
             call assignlambdare(mylamid,.true.,.false.)
+          else if (doMultiGCMC) then
+            call assignadamre(mygcid,.true.,.false.)
           endif
         endif
 
 c		Do GCMC replica exchange
         if (doMultiGCMC.and.(gcrefreq.gt.0).and.(i.gt.1).and.(mod(i,gcrefreq).eq.0)) then
-c          write(6,*)myid, "#### simulate.F: doing replica exchange GCMC. Move ",i
+          if (doLambdaRE) then
+            call assignlambdare(mylamid,.true.,.false.)
+          endif 
           call gcmcRE
         endif
 #endif
@@ -169,7 +175,7 @@ c          write(6,*)myid, "#### simulate.F: doing replica exchange GCMC. Move "
       endif
 
       if (doMultiGCMC.and.(gcrefreq.gt.0)) then   
-        write(6,*)"### GR simulate.F: Printing acceptance"    
+c        write(6,*)"### GR simulate.F: Printing acceptance"    
         write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
      .     "Attempted/successful GCMC swaps for ID ",myid," : ",
      .     ngcretry,ngcreswap," (",dble(ngcreswap)/dble(ngcretry)*100,"%)" 
