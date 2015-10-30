@@ -1,10 +1,9 @@
       program main
       use timing
-#ifdef WITH_MPI_
-c     include 'mpif.h'
-      use mpi
-#endif
       include 'protoms.inc'
+#ifdef WITH_MPI_
+      include 'mpif.h'
+#endif
 C     (C) Christopher Woods  2002-2004
 c      July 2014 - Samuel Genheden added MPI stuff
 c      March 2015 - Modified MPI Ana I. Cabedo Martinez
