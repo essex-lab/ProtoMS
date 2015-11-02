@@ -32,7 +32,7 @@ c########################################################
       include 'nbenergyvar2.inc'
       double precision charge,sigma,epslon
       double precision invr2, tmp2, tmp3, tmp
-      double precision invrs(600),invrs6(600)
+      double precision invrs(900),invrs6(900)
 
       sepResResEnergy = ZERO
       nrg = ZERO
@@ -99,7 +99,7 @@ c     output to funcnbnrg,funccnrg,funcljnrg,funcmindist
          
       else
 c     optimised version of nbenergy cannot handle protein-protein
-c     softcores or implicitt solvent
+c     softcores or implicit solvent
          ui = zend1-zstrt1+1
          uj = zend2-zstrt2+1
 

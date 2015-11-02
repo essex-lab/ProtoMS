@@ -93,7 +93,6 @@ c     of the solvent molecule - cut if it greater than cutoff+residueRadius
 c     assume residue runs concurrently from N to O
       resstrt = BBZid(iprot,ires,1)
       resend = BBZid(iprot,ires,4)
-
       funciprot1 = iprot
       funcisvn2 = isvn
       if (QuickMove .and. DDDon) ddd = .true.
@@ -101,7 +100,6 @@ c     assume residue runs concurrently from N to O
 c     use unoptimised nbenergy routines that can handle implicit solvent
          do i=resstrt,resend
             funcat1 = i
-            
             if ((SvnOptimization(isvn).eq.OPTTIP3P.or.SvnOptimization(isvn).eq.OPTTIP4P)) then
             
 c     Optimized for TIP4P-TIP4P interactions
@@ -119,7 +117,7 @@ c     LJ on oxygens only
               if (funcmindist.lt.mindist) mindist = funcmindist
               
 c     Charges on the rest of the particles, i.e., between hydrogens and extra point particle
-              if (SvnOptimiZation(isvn).eq.OPTTIP3P) then
+              if (SvnOptimization(isvn).eq.OPTTIP3P) then
                  istart = 1
               else
                  istart = 2
@@ -181,7 +179,7 @@ c     test cutoff criteria here before we do expensive operations
 c     invrs currently contains the squares of the interatomic distances
          mindist = invrs(1)
          if ((mindist.gt.feather2).and.(cuttype.eq.RESIDUEMOLECULE)) then
-c     as a heuristic check if invrs(1) is greater than the feather distance
+c     as a heuristic, check if invrs(1) is greater than the feather distance
 c     only need to check other distances if true
             do ind=2,ui*uj
                if (invrs(ind) < mindist) mindist = invrs(ind)
@@ -221,45 +219,47 @@ c     we can optimize here as we only need ivrs6s for O if TIP3P / TIP4P
          endif
          
 
-         if (SvnOptimiZation(isvn).eq.OPTTIP3P) then
+         if ((SvnOptimiZation(isvn).eq.OPTTIP3P).or.(SvnOptimiZation(isvn).eq.OPTTIP4P)) then
+            if (SvnOptimiZation(isvn).eq.OPTTIP3P) then
 c     for tip3p we do both lj and colomb for the oxygen (at1)
-c     followed by only coulomb for the rest
-            ind = 1
-            do j=resstrt,resend
-               ipar1 = ZPar(iprot,j)
-               ipar2 = ZSvnPar(isvn,1)
-               par = CLJPair(ipar1,ipar2)
+               ind = 1
+               do j=resstrt,resend
+                  ipar1 = ZPar(iprot,j)
+                  ipar2 = ZSvnPar(isvn,1)
+                  par = CLJPair(ipar1,ipar2)
 c     Coulomb energy
-               cnrg = cnrg + invrs(ind) * ChgIJ(par)
+                  cnrg = cnrg + invrs(ind) * ChgIJ(par)
 c     LJ energy               
-               ljnrg = ljnrg + invrs6(ind)*(AIJ(par)*invrs6(ind) - BIJ(par))
-               ind = ind + 1
-            enddo
-         elseif (SvnOptimiZation(isvn).eq.OPTTIP4P) then
+                  ljnrg = ljnrg + invrs6(ind)*(AIJ(par)*invrs6(ind) - BIJ(par))
+                  ind = ind + 1
+               enddo
+
+            elseif (SvnOptimiZation(isvn).eq.OPTTIP4P) then
 c     for tip4p we do lj for the oxygen (at1)
-c     followed by only coulomb for the rest
-            ind = 1
-            do j=resstrt,resend
-               ipar1 = ZPar(iprot,j)
-               ipar2 = ZSvnPar(isvn,1)
-               par = CLJPair(ipar1,ipar2)
+               ind = 1
+               do j=resstrt,resend
+                  ipar1 = ZPar(iprot,j)
+                  ipar2 = ZSvnPar(isvn,1)
+                  par = CLJPair(ipar1,ipar2)
 c     LJ energy               
-               ljnrg = ljnrg + invrs6(ind)*(AIJ(par)*invrs6(ind) - BIJ(par))
-               ind = ind + 1
-            enddo
-            
+                  ljnrg = ljnrg + invrs6(ind)*(AIJ(par)*invrs6(ind) - BIJ(par))
+                  ind = ind + 1
+               enddo
+            endif               
+
+c     now do Coulomb energy for the rest of the atoms
             ind = uj + 1
             do i=2,nat
                do j=resstrt,resend
                   ipar1 = ZPar(iprot,j)
                   ipar2 = ZSvnPar(isvn,i)
                   par = CLJPair(ipar1,ipar2)
-c     Coulomb energy
+
                   cnrg = cnrg + invrs(ind) * ChgIJ(par)
                   ind = ind + 1
                enddo
             enddo
-            
+
          else
 c     anything else and we do lj and coulomb for all
             ind = 1
