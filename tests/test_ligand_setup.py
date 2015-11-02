@@ -69,3 +69,4 @@ class TestLigSetup(unittest.TestCase):
 if __name__ == '__main__':
     logger = simulationobjects.setup_logger('protoms_py.log')
     unittest.main()
+    nose.runmodule()

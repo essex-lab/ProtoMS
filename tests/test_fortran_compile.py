@@ -34,17 +34,20 @@ class TestFortran(unittest.TestCase):
         print("Cleaning up ProtoMS Fortran code test.")
 
     def test_build_folder(self):
+        """Test if ProtoMS Fortran code is compiled correctly."""
     
-        try:
-            os.mkdir(os.environ["PROTOMSHOME"] + "/build")
-        except OSError as e:
-            print e       
-            if ((call("cd $PROTOMSHOME/build && sudo make install", shell = True)) == 0):
-                print("Fortran code is compiled correctly and ProtoMS is built.")
+        if not os.path.exists((os.environ["PROTOMSHOME"] + "/build")):
+            os.makedirs(os.environ["PROTOMSHOME"] + "/build")
+
+        if (call("cd $PROTOMSHOME/build && cmake .. && make install || sudo make install", shell = True) == 0):
+            print("Fortran code is compiled correctly and ProtoMS is successfully built.")
+        else:
+            raise Exception("Either build files have not been written successfully or make install failed.")
+    
 
     def test_fortran(self):
+        """Test to check if protoms3 executable exists.""" 
         
-
         self.assertTrue(os.path.exists(os.environ["PROTOMSHOME"] + "/protoms3"), "protoms3 executable doesn't exist. Fortran code is not compiled properly.")
 
 
