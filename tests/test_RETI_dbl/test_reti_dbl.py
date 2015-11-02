@@ -61,6 +61,7 @@ class TestRETIdbl(unittest.TestCase):
             
             else:
                 print "RETI dual topology simulation is not successful."
+                
 
 
         else:
