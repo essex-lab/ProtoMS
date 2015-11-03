@@ -70,24 +70,22 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                 print "ProtoMS ligand and protein setup is successful."
 
             else:
-                print "Discrepancy in HEADER parameters in water cap-file. Please check!" 
-                raise ValueError
+                raise ValueError("Discrepancy in HEADER parameters in water cap-file. Please check!")
 
-	    print "Setup and command files generation is successful."
-
-            if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
-
-                """Checking whether the simulation output files have been created successfully for equilibration MC moves."""
-                for out_files in out_sim_files:
-                   
-                    self.assertTrue(os.path.exists("out_bnd/"+ out_files),"Equilibration simulation file: %s is missing." % ("out_bnd/"+ out_files))
-
-            else:
-                #logger.error(
-                print "Equilibration simulation is not successful."
         else:
-            #logger.error(
-            print "Equilibration MC move check is is not successful. Either protoms setup or simulation or both failed."
+            raise simulationobjects.SetupError("ProtoMS ligand and protein setup is not successful.")
+    
+	   
+
+        if ((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
+
+            """Checking whether the simulation output files have been created successfully for equilibration MC moves."""
+            for out_files in out_sim_files:
+                   
+                self.assertTrue(os.path.exists("out_bnd/"+ out_files),"Equilibration simulation file: %s is missing." % ("out_bnd/"+ out_files))
+
+        else:
+            raise simulationobjects.SetupError("Equilibration simulation is not successful.")
 
 #Entry point to nosetests or unittests.
 

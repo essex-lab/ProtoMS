@@ -20,5 +20,5 @@ temperature 25.0
 ranseed 100000
 boundary solvent
 pdbparams on
-chunk equilibrate 100 solvent=841 protein=157 solute=1 volume=0
+chunk equilibrate 100 solvent=841 protein=158 solute=1 volume=0
 chunk pdb all solvent=all file=equil_bnd.pdb standard
