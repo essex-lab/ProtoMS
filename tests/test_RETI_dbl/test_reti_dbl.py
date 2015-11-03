@@ -50,7 +50,7 @@ class TestRETIdbl(unittest.TestCase):
 
 
 	else:
-            raise simulationobjects.SetupError("ProtoMS RETI double topology setup and command files generation failed")
+            raise simulationobjects.SetupError("ProtoMS RETI dual topology setup and command files generation failed")
 
         if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_free.cmd", shell=True)) == 0):
 
