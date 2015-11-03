@@ -41,6 +41,7 @@ class TestProtSetup(unittest.TestCase):
 
     def test_prep(self):
         
+        """ Test for ProtoMS setup function."""
         
         if((call("python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb -f" + test_dir, shell=True)) == 0):
 
@@ -68,8 +69,10 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                 print "ProtoMS ligand and protein setup is successful."
 
             else:
-                print "Discrepancy in HEADER parameters in water cap-file. Please check!"
-                raise ValueError
+                raise ValueError("Discrepancy in HEADER parameters in water cap-file. Please check!")
+        else:
+            raise simulationobjects.SetupError("ProtoMS ligand and protein setup is not successful.")
+
 
 #Entry point to nosetests or unittests.
 
