@@ -46,25 +46,22 @@ class TestSampling(unittest.TestCase):
         
         if((call("python2.7 $PROTOMSHOME/protoms.py -s sampling -l dcb.pdb -p protein.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -f" + test_dir, shell=True)) == 0):
 
-            #Checking whether the required output files have been setup for Sampling MC moves.
+            """Checking whether the required output files have been setup for Sampling MC moves."""
                 
             for out_files in output_files_setup:
                 self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
   
-	    print "Setup and command files generation is successful."
-
-            if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
-
-            #Checking whether the simulation output files have been created successfully for Sampling MC moves
-                for out_files in out_sim_files:
-                    self.assertTrue(os.path.exists("out_bnd/"+ out_files), "Sampling simulation file: %s is missing." % out_files )
-                        
-            else:
-               # logger.error
-                print "Sampling simulation is not successful."
         else:
-            # logger.error
-            print "Sampling MC moves check is is not successful. Either protoms setup or simulation or both failed."
+            raise simulationobjects.SetupError("ProtoMS setup for sampling MC moves is not successful!")
+
+        if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
+
+            """Checking whether the simulation output files have been created successfully for Sampling MC moves."""
+            for out_files in out_sim_files:
+                self.assertTrue(os.path.exists("out_bnd/"+ out_files), "Sampling simulation file: %s is missing." % out_files )
+            
+        else:
+            raise simulationobjects.SetupError("Sampling MC protoms simulation failed!")
 
 #Entry point for nosetests or unittests
 
