@@ -1,4 +1,4 @@
-protoms3 started at 12:43:42 on the 30/10/2015
+protoms3 started at 15:44:41 on the  3/11/2015
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
@@ -72,7 +72,7 @@ Using no boundary conditions (gas-phase)
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 12:43:42 on the 30/10/2015
+Starting simulation at 15:44:42 on the  3/11/2015
 ######################################################################
 Running simulation in lambda window    0.669 <--    0.670 -->    0.671
 ######################################################################
@@ -107,4 +107,4 @@ Resetting free energy average to zero.
  Data collection complete. Attempted/accepted moves           10           9
 Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
  Simulation shutting down...
-protoms3 completed at 12:43:42 on the 30/10/2015
+protoms3 completed at 15:44:42 on the  3/11/2015

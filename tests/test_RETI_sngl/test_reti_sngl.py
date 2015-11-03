@@ -39,46 +39,45 @@ class TestRETIsngl(unittest.TestCase):
         super(TestRETIsngl, self).tearDown()
 
     def test_RETI_sngl(self):
-        
+        """Test for RETI single topology/ MPI function."""        
         
         if((call("python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap "+ test_dir + "single_cmap.dat -f" + test_dir, shell=True)) == 0):
 
-            #Checking whether the required output files have been setup for RETI single topology protoms.py setup.
+            """Checking whether the required output files have been setup for RETI single topology protoms.py setup."""
                 
             for out_files in output_files_setup:
                 self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ligand's zmat generation, forcefield issues, template generation issues for Van der Waals, electrostatic or combined perturbation and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
-	    print "Setup and command files generation is successful."
+	else:
+            raise simulationobjects.SetupError("ProtoMS setup for RETI single topology and command files generation failed.")
 
-            if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_comb_free.cmd", shell=True)) == 0):
+        if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_comb_free.cmd", shell=True)) == 0):
 
-            #Checking whether the simulation output files have been created successfully for RETI free phase leg of a single topology for combined perturbation .
-                if(os.path.exists("out_comb_free")):
-                    for root, dirs, files in os.walk("out_comb_free"):
-                        if len(dirs) != 0:
-                            for d in dirs:
-                                for out_files in out_sim_files:
-                                    self.assertTrue(os.path.exists(os.path.join("out_comb_free",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_free",d,out_files))
+            """Checking whether the simulation output files have been created successfully for RETI free phase leg of a single topology for combined perturbation ."""
+            if(os.path.exists("out_comb_free")):
+                for root, dirs, files in os.walk("out_comb_free"):
+                    if len(dirs) != 0:
+                        for d in dirs:
+                            for out_files in out_sim_files:
+                                self.assertTrue(os.path.exists(os.path.join("out_comb_free",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_free",d,out_files))
             
-            else:
-                print "RETI free phase leg of a single topology simulation is not successful."
-
-
-            if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_comb_gas.cmd", shell=True)) == 0):
-
-            #Checking whether the simulation output files have been created successfully for RETI gas phase leg of a single topology for combined perturbation .
-                if(os.path.exists("out_comb_gas")):
-                    for root, dirs, files in os.walk("out_comb_free"):
-                        if len(dirs) != 0:
-                            for d in dirs:
-                                for out_files in out_sim_files:
-                                    self.assertTrue(os.path.exists(os.path.join("out_comb_gas",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_gas",d,out_files))
-         
-            else:
-                print "RETI gas phase leg of a single topology simulation is not successful."
-
         else:
-            print "RETI single topology check is is not successful. Either protoms setup or simulation or both failed."
+            raise simulationobjects.SetupError("RETI free phase leg of a single topology simulation is not successful.")
+
+
+        if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_comb_gas.cmd", shell=True)) == 0):
+
+            """Checking whether the simulation output files have been created successfully for RETI gas phase leg of a single topology for combined perturbation ."""
+            if(os.path.exists("out_comb_gas")):
+                for root, dirs, files in os.walk("out_comb_free"):
+                    if len(dirs) != 0:
+                        for d in dirs:
+                            for out_files in out_sim_files:
+                                self.assertTrue(os.path.exists(os.path.join("out_comb_gas",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_gas",d,out_files))
+         
+        else:
+            raise simulationobjects.SetupError("RETI gas phase leg of a single topology simulation is not successful.")
+
 
 #Entry point to nosetests or unittests
 
