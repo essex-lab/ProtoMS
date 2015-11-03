@@ -42,32 +42,37 @@ class TestGCMC(unittest.TestCase):
 
     def test_gcmc(self):
         
+        """Test for GCMC function."""
+        
         if((call("python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s" + test_dir + "wat.pdb", shell=True)) == 0):
             
-            #Checking whether GCMC tool created the box successfully.
+            """Checking whether GCMC tool created the box successfully."""
             
             for out_files in out_gcmc_tools:
                 self.assertTrue(os.path.exists(out_files), "GCMC box file %s is missing." % (test_dir + out_files))
+        else:
+            raise simulationobjects.SetupError("Simulation box for GCMC is not successful!")
             
-            if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.dcb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb -f" + test_dir, shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.dcb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb -f" + test_dir, shell=True)) == 0):
 
-                #Checking whether the required output files have been setup for GCMC simulation.
+            """Checking whether the required output files have been setup for GCMC simulation."""
                 
-                for out_files in output_files_setup:
-	                self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ProtoMS input command file generation for simulation." % (test_dir + out_files))
+            for out_files in output_files_setup:
+                self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
   	        print "Setup and command file generation is successful."
-
-                if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
-
-                #Checking whether the simulation output files have been created successfully for Sampling MC moves
-                    for out_files in out_sim_files:
-                        self.assertTrue(os.path.exists("out/"+ out_files),"GCMC simulation file: %s is missing." % out_files)
-                        
-                else:
-                    print "GCMC simulation is not successful."
         else:
-            print "GCMC is not successful. Either protoms setup or simulation or both failed."
+            raise simulationobjects.SetupError("ProtoMS setup is not successful.")
+
+        if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
+
+            """Checking whether the simulation output files have been created successfully."""
+            for out_files in out_sim_files:
+                self.assertTrue(os.path.exists("out/"+ out_files),"GCMC simulation file: %s is missing." % out_files)
+                        
+        else:
+            raise simulationobjects.SetupError("GCMC simulation is not successful.")
+        
 
 #Entry point for nosetests or unittests
 

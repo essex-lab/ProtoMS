@@ -1,4 +1,4 @@
-DEBUG : Running protoms.py at 30/10/2015 - 12:39:37
+DEBUG : Running protoms.py at 03/11/2015 - 13:02:14
 DEBUG : Command line arguments = -sc protein.dcb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb -f/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_gcmc/
 DEBUG : Settings = Namespace(absolute=False, adams=[20.0], atomnames=None, capradius=26.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_gcmc/'], gcmcbox=['gcmc_box.pdb'], gcmcwater='wat.pdb', innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=None, nequil=0.0, nprod=100.0, outercut=20.0, outfolder='', protein=None, ranseed='100000', repeats='', scoop='protein.dcb', scooplimit=10, simulation='gcmc', singlemap=None, template=None, testrun=False, water='water.pdb', waterbox=None, watmodel='tip4p')
 INFO : 
