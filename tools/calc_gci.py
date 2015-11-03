@@ -1,4 +1,5 @@
 # Author: Gregory Ross
+
 import numpy as np
 from scipy import optimize
 from scipy import integrate
@@ -6,11 +7,9 @@ import matplotlib.pyplot as plt
 import glob
 from scipy import special
 import sys, os
-sys.path.append("/home/gar1c13/ProtoMS3.0_dev/tools")
+import pickle
 import simulationobjects
 from simulationobjects import ResultsFile
-
-import pickle
 
 ## Functions used for arguement passing and ease of command line use. 
 def intersect(a, b):
