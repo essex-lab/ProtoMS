@@ -40,26 +40,25 @@ class TestJAWS1(unittest.TestCase):
 
     def test_jaws(self):
         
-        
+        """Test for JAWS1 function."""
         if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -w water.pdb -f" + test_dir, shell=True)) == 0):
 
-            #Checking whether the required output files have been setup for JAWS Stage 1 simulations.
+            """Checking whether the required output files have been setup for JAWS Stage 1 simulations."""
                 
             for out_files in output_files_setup:
-	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
+	        self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
-	    print "Setup and command files generation is successful."
+	else:
+            raise simulationobjects.SetupError("ProtoMS setup and command files generation failed!")
 
-            if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
+        if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
 
-            #Checking whether the simulation output files have been created successfully for JAWS Stage 1.
-                for out_files in out_sim_files:
-                    self.assertTrue(os.path.exists("out/"+ out_files), "JAWS Stage 1 simulation file: %s is missing." % out_files )
+            """Checking whether the simulation output files have been created successfully for JAWS Stage 1."""
+            for out_files in out_sim_files:
+                self.assertTrue(os.path.exists("out/"+ out_files), "JAWS Stage 1 simulation file: %s is missing." % out_files )
                         
-            else:
-                print "JAWS Stage 1 simulation is not successful."
         else:
-            print "JAWS Stage 1 check is is not successful. Either protoms setup or simulation or both failed."
+            raise simulationobjects.SetupError("JAWS Stage 1 simulation is not successful.")
 
 #Entry point to unittests or nosetests
 
