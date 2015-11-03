@@ -5,21 +5,22 @@
 </HEAD>
 <BODY>
 <H1>GCMC binding free energy of a water molecule to BPTI</H1>
-This tutorial will cover the basics behind setting-up, running and analysing GCMC simulations with ProtoMS. Using GCMC, we will calculate the binding free energy of a water molecule to a small cavity in  bovine pancreatic trypsin inhibitor (BPTI). BPTI is the first protein ever to be simulated using molecular dynamics, which makes it a very worthy model system.
+This tutorial will cover the basics behind setting-up, running and analysing GCMC simulations that calculate the binding free energy of a single water molecule to a small cavity in  bovine pancreatic trypsin inhibitor (BPTI). BPTI is the first protein ever to be simulated using molecular dynamics, which makes it a very worthy model system. This tutorial is based on some of the work that appears in <em>G. A. Ross et. al, J. Am. Chem. Soc., 2015</em>. Should you find this tutorial useful in your research, please cite it.
+
 <H3>Prerequisites</H3>
 <ul>
 	<li><code>wat.pdb</code> - the PDB structure of a water molecule</li>
 	<li><code>protein.pdb</code> - the structure of the BPTI in PDB format</li>
 </ul>
 <p>
-The protein has already been protonated and had it's atoms in the ProtoMS naming scheme. Note that there are 3 disulfied bonds in the protein, which are labelled as CYX. The water molecule is the tip4p model, and is already located in the BPTI cavity. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
+The protein has already been protonated and had it's atoms in the ProtoMS naming scheme. Note that there are 3 disulfied bonds in the protein, which are labelled as CYX. The water molecule is the Tip4p model, and is already located in the BPTI cavity. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
 <p>
-We will be performing GCMC on the single water molecule, wat.pdb, at a range of different chemical potentials. From the average occupancy of the water as a function of chemical potential, we will estimate it's binding free energy. As you'll see below, we actually use something called the "Adams" value rather than the chemical potential. This is for technical reasons, and the two are related to each other by an additive constant.
+We will be performing GCMC on the single water molecule, wat.pdb, at a range of different chemical potentials. During these GCMC simulations, the water will be instantaneously switched "on" and "off", and from the average occupancy of the water as a function of chemical potential, we will estimate it's binding free energy. As you'll see below, we actually use something called the "Adams" value rather than the chemical potential. This is for technical reasons, and the two are related to each other by multiplicativen and additive constants.
 <p>
 <hr align="center"/>
 <h3>Simple setup</h3>
 <h5>Setup</h5>
-First, let's create a box around our water of interest. This will constrain the water to the cavity and stop any solvent water molecules from entering.
+First, let's create a box around our water of interest. This will constrain the GCMC water to the cavity and stop any solvent water molecules from entering.
 <p>
 <pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s wat.pdb</pre>
 <p>
@@ -38,9 +39,9 @@ You should see something like this <br>
 While your visualising the system, have a look at the cystein bridges. These need to be restrained in ProtoMS. Open up the command file <code>run_bnd.cmd</code>, and add  
 
 <pre>chunk fixresidues 1 5 14 30 38 51 55
-chunk fixbackbone 1 2 4 6 13 15 29 31 37 39 50 52 54 56</pre>
+chunk fixbackbone 1 4 6 13 15 29 31 37 39 50 52 54 56</pre>
 
-To the top of the list of "chunks". This fixes the cystein residues, as well as the neighbouring residues. If you don't include the above, the cysteine bonds will break due to a quirk in ProtoMS. 
+To the top of the list of "chunks". This fixes the cystein residues, as well as the neighbouring residues. If you don't include the above, the cysteine bonds will break due to a quirk in the backbone sampling of ProtoMS. 
 </p>
 <p> 
 <h5>Execution</h5>
@@ -57,9 +58,9 @@ This will take approximately five to six hours to run. The length of time and nu
 
 <p>
 <h5>Analysis</h5>
-Visually inspect your simulations in VMD or your favourite viewer and make sure nothing untoward has happened. VMD has a problem with simulations that change the total number of molecules. To view a movie of the simulation, we must remove the water molecules from the simulation. In one of the folders within <code>out</code>, try
+Visually inspect your simulations in VMD or your favourite viewer and make sure nothing untoward has happened. Unlike the viewer Pymol, VMD has a problem with simulations that change the total number of molecules. To view a movie of the simulation, we must remove the water molecules from the simulation. In one of the folders within <code>out</code>, try
 
-<pre>grep -v WAT all.pdb > all_nowat.pdb
+<pre>grep -v WA1 all.pdb > all_nowat.pdb
 vmd all_nowat.pdb</pre>
 
 and make sure the simulation looks okay.
@@ -72,21 +73,51 @@ You may see something like this<br>
 <img src="B-19_solventson.png" width="%" height="50%" alt="" /><br>
 Have a look at the corresponding plots for the other simulations.
 <p>
+
+As demonstrated in <em>G. A. Ross et. al, Journal of the American Chemical Society, 2015</em>, the relationship between the Adams value and the average occupancy of the GCMC region can be used to calculate the free energy to transfer the water molecule from ideal gas to the GCMC region via 
+
+<p>
+&lsaquo;<em>N</em>&rsaquo; = 1/(1 + exp(<em>&beta;&Delta;F</em><sub>trans</sub> - <em>B</em>)),
+<p>
+
+where &lsaquo;<em>N</em>&rsaquo; is the average number of water molecules, <em>B</em> is the Adams value, </em>&Delta;F</em><sub>trans</sub> is the free energy to transfer the water molecule from ideal gas, and <em>&beta;</em> is 1/<em>k<sub>B</sub>T</em>, with <em>k<sub>B</sub></em> denoting Boltzmann's constant, and <em>T</em> the temperature. This equation - a logistic equation - takes the form of a smooth step function, with the point of inflection given by </em>&Delta;F</em><sub>trans</sub>. While the transfer free energy can be estimated by eye, the most accurate way to calculate </em>&Delta;F</em><sub>trans</sub> is to fit the logistic equation to the titration data, as </em>&Delta;F</em><sub>trans</sub> is the only unknown in the equation. The transfer free energy can be calculated by typing 
+
+<pre>python2.7 $PROTOMSHOME/tools/calc_gcsingle.py -d out/b_-* -p</pre>
+
+where the <code>-p</code> flag specifies that titration data and fitted logistic curve will be plotted. The script <code>calc_gcsingle.py</code> estimates the error in the calculated free energy by performing 1000 bootstrap samples of the titration data and refitting the logistic equation each time. The printed results showed look something like:
+
+<pre>
+FREE ENERGY ESTIMATES:
+  Least squares estimate = -12.32 kcal/mol
+  Bootstrap estimate     = -12.32 +/- 0.07 kcal/mol
+</pre>
+
+The first result, <code>Least squares estimate</code>, is simply the least squares fit of the transfer free energy, and has no error associated with it. The second result, <code>Bootstrap estimate </code> is the estimate that has been calculated via bootstrap sampling. The value quoted is the mean transfer free energy from all bootstrap samples, and the error is the standard deviation. 
+
+<p> Two plots will have been produced when calling <code>calc_gcsingle.py</code>. Like the results, one shows the least squares fit of the logistic function, and the second shows the results of the bootstrap sampling and fitting, and is probably more informative. For the latter, you will probably see something like
+
+<img src="bootstapp_sampleschem.png" width="%" height="50%" alt="" /><br>
+
+The red line marks the median of the all the bootstrap fits, the orange and grey areas contain 50% and 90% of all the fits respectively. To be clear, these errors illustrate the uncertainty of the fit, not the GCMC titration data. The error produced from the bootstrap sampling can be reduced with data more GCMC simulations, particularly at Adams values near the point of inflection.
+<p>
+
+<h5>Estimating the excess chemical potential</h5>
+
 Each simulation at a different Adams value can be used to estimate the excess chemical potential of the water molecule in the protein cavity via the equation
 <p>
 <em>B</em> = <em>&mu;</em><sub>ex</sub> + ln &lsaquo;<em>N</em>&rsaquo;,
 <p>
-where <em>B</em> is the Adams value,  &lsaquo;<em>N</em>&rsaquo; is the average number of water molecules, and <em>&mu;</em><sub>ex</sub> is the excess chemical potential. We will use <em>&mu;</em><sub>ex</sub> to approximate the coupling free energy of the water. This approximation is more accurate the lower Adams value is. However, at low Adams values - when the occupancy of the water is very low - the data becomes noisier. Just as with previous studies, we will use human judgement to circumvent these issues. We can do this interactively by typing
+where <em>B</em> is the Adams value,  &lsaquo;<em>N</em>&rsaquo; is the average number of water molecules, and <em>&mu;</em><sub>ex</sub> is the excess chemical potential. As described in <em>J. Chem. Inf. Model., Vol. 54, pg. 1623</em>, it is possible to use an estimate of <em>&mu;</em><sub>ex</sub> to approximate </em>&Delta;F</em><sub>trans</sub>. This approximation is only valid when &lsaquo;<em>N</em>&rsaquo; approches zero. Unfortunately, at low Adams values - when the occupancy of the water is very low - the data becomes noisy, so that the recomended way to estimate </em>&Delta;F</em><sub>trans</sub> is via fitting the logistic function as described above. We can start estimating the excess chemical potential at each Adams value by typing
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gcsingle.py -d out/b_-*</pre>
+<pre>python2.7 $PROTOMSHOME/tools/calc_gcsingle.py -d out/b_-* --excess</pre>
 
-which brings up a plot for the estimates of the excess chemical potential. You will then be prompted to input the range of Adams values from which the excess chemical potential will be estimated. You should chose the range over which the estimates for excess chemical appears constant. For instance, for the plot<br>
+which brings up a plot for the excess chemical potential. As you can see, the line appears to become flatter but noiser at low Adams values. It is in this regime that one can approximate </em>&Delta;F</em><sub>trans</sub>. You will then be prompted to input the range of Adams values from which the excess chemical potential will be estimated. You should chose the range over which the estimates for excess chemical appears constant. For instance, for the plot<br>
 
 <img src="excess_chem.png" width="%" height="50%" alt="" /><br>
 One could enter
 <pre> -17 -24 </pre>
 
-as the line seems flatest between these values. The excess chemical potential is averaged over this range, which produces our estimate for the coupling free energy. You should the predict the coupling free energy to be about -12 kcal/mol.
+as the line seems flatest between these values. The excess chemical potential is averaged over this range, which produces our estimate for the coupling free energy. You should the predict </em>&Delta;F</em><sub>trans</sub> to be about -10 kcal/mol.
 <p>
 <h3>Exploring more options</h3>
 Here, we'll consider some points that will help with the set-up and execution of GCMC on a single water molecule.
@@ -123,7 +154,10 @@ With more than one value, ProtoMS is executed with
 <pre>mpirun -np 16 $PROTOMSHOME/protoms3 run_bnd.cmd</pre>
 
 <p>
-To choose <em>which</em> Adams values to simulate at, start by simulating with values between -16 and 0 and analysing the results. You can choose more Adams values to simulate with if you didn't get reliable free energy estimates from the runs you already have.
+
+When choosing <em>which</em> Adams values to use in ones simulations, note <em>&beta;&Delta;F</em><sub>trans</sub> is the point of half maximum of the logistic curve. Reliable transfer free energy estimates can be achieved with the Adams values around this point.
+<p>
+start by simulating with values between -16 and 0 and analysing the results. You can choose more Adams values to simulate with if you didn't get reliable free energy estimates from the runs you already have.
 <p>
 
 <p>
@@ -223,7 +257,8 @@ The make the input file for the Monte Carlo simulation, we reference the files c
 creating <code>run_bnd.cmd</code>. Finally, we need to add the contraints to the cysteine bridges:
 
 <pre>chunk fixresidues 1 5 14 30 38 51 55
-chunk fixbackbone 1 2 4 6 13 15 29 31 37 39 50 52 54 56</pre>
+chunk fixbackbone 1 4 6 13 15 29 31 37 39 50 52 54 56</pre>
 
+<h4>Written by Gregory A. Ross, 2015.</h4>
 </BODY>
 </HTML>
