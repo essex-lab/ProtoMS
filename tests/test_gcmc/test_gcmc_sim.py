@@ -51,7 +51,7 @@ class TestGCMC(unittest.TestCase):
             for out_files in out_gcmc_tools:
                 self.assertTrue(os.path.exists(out_files), "GCMC box file %s is missing." % (test_dir + out_files))
         else:
-            raise simulationobjects.SetupError("Simulation box for GCMC is not successful!")
+            raise simulationobjects.SetupError("Making of Simulation box for GCMC is not successful!")
             
         if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.dcb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb -f" + test_dir, shell=True)) == 0):
 
@@ -60,9 +60,9 @@ class TestGCMC(unittest.TestCase):
             for out_files in output_files_setup:
                 self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
-  	        print "Setup and command file generation is successful."
+  	        print "Setup and command files generation is successful."
         else:
-            raise simulationobjects.SetupError("ProtoMS setup is not successful.")
+            raise simulationobjects.SetupError("ProtoMS setup and command files generation is not successful.")
 
         if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
 
