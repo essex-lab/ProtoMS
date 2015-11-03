@@ -1,3 +1,14 @@
+########################
+##   ProtoMS 3.2      ##
+########################
+
+--------------------------------
+ Automated Force Field Addition
+
+(C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez, James Graham 2002-2015
+
+Written by Chris Cave-Ayland
+
 This folder contains tools and libraries to facilitate the automatic conversion 
 of parameter files distributed with AMBER to a ProtoMS compatible format. A 
 guide on the use of these is provided here. This should be comprehensible to 
@@ -31,7 +42,6 @@ outputs.
 It is recommended to follow the naming conventions in the examples for new 
 parameter files you will produce. Once you've executed the script you should 
 have two new parameter files ready to be used with ProtoMS.
-
 
 
 Validation of the parameter files -
@@ -72,3 +82,5 @@ $AMBERHOME/bin/sander -O -i mdin -p prmtop_mod -c prmcrd
 electrostatic and Lennard-Jones energies into two components which must be 
 summed to compare with the ProtoMS energies. All of the energy terms should 
 agree to at least 2 decimal places.
+
+

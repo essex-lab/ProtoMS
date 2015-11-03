@@ -6,10 +6,12 @@ import AmbParam, prmtop
 ambParm = AmbParam.AmbParameterSet ()
 
 amb_home = os.environ['AMBERHOME']
-#must read in .dat first followed by .frcmod then the .in files
+# must read in .dat first followed by .frcmod then the .in files
 ambParm.read_dat ( '%s/dat/leap/parm/parm99.dat' % amb_home )
 ambParm.read_frcmod ( '%s/dat/leap/parm/frcmod.ff99SB' % amb_home )
 
+# The paths below are valid for an amber 14 installation
+# for amber 12 remove the oldff sub-folder 
 ambParm.read_in ( '%s/dat/leap/prep/oldff/all_amino94.in' % amb_home )
 ambParm.read_in ( '%s/dat/leap/prep/oldff/all_aminoct94.in' % amb_home,
                   term = 'cterm' )
