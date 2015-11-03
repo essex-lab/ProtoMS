@@ -1,4 +1,4 @@
-protoms3 started at 13:00:53 on the 30/10/2015
+protoms3 started at 15:56:49 on the  3/11/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
@@ -95,7 +95,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 13:00:53 on the 30/10/2015
+Starting simulation at 15:56:50 on the  3/11/2015
 ######################################################################
 Running simulation in lambda window    0.000 <--    0.000 -->    0.001
 ######################################################################
@@ -135,4 +135,4 @@ Attempted/successful lambda swaps for lambdaladder   1 :      9     9 ( 100.000%
  Final volume =    13851.666436095999       A^3
 ###############################################
  Simulation shutting down...
-protoms3 completed at 13:00:55 on the 30/10/2015
+protoms3 completed at 15:56:51 on the  3/11/2015
