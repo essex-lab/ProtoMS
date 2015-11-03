@@ -40,7 +40,7 @@ class TestJAWS2(unittest.TestCase):
 
     def test_jaws2(self):
         
-        
+        """Test for JAWS2 function."""        
         if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws2 -l fragment.pdb -p protein.pdb --gcmcwater " + test_dir + "jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -f" + test_dir, shell=True)) == 0):
 
             #Checking whether the required output files have been setup for JAWS Stage 2 protoms.py setup.
@@ -48,22 +48,21 @@ class TestJAWS2(unittest.TestCase):
             for out_files in output_files_setup:
 	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
-	    print "Setup and command files generation is successful."
+	else:
+            raise simulationobjects.SetupError("ProtoMS setup and command files generation for JAWS Stage 2 failed.")
 
-            if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_jaws2-w1_bnd.cmd", shell=True)) == 0):
+        if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_jaws2-w1_bnd.cmd", shell=True)) == 0):
 
-            #Checking whether the simulation output files have been created successfully for JAWS Stage 2.
-                if(os.path.exists("out_jaws2-w1")):
-                    for root, dirs, files in os.walk("out_jaws2-w1"):
-                        if len(dirs) != 0:
-                            for d in dirs:
-                                for out_files in out_sim_files:
-                                    self.assertTrue(os.path.exists(os.path.join("out_jaws2-w1",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_jaws2-w1",d,out_files))
+            """Checking whether the simulation output files have been created successfully for JAWS Stage 2."""
+            if(os.path.exists("out_jaws2-w1")):
+                for root, dirs, files in os.walk("out_jaws2-w1"):
+                    if len(dirs) != 0:
+                        for d in dirs:
+                            for out_files in out_sim_files:
+                                self.assertTrue(os.path.exists(os.path.join("out_jaws2-w1",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_jaws2-w1",d,out_files))
             
-            else:
-                print "JAWS Stage 2 simulation is not successful."
         else:
-            print "JAWS Stage 2 check is is not successful. Either protoms setup or simulation or both failed."
+            raise simulationobjects.SetupError("JAWS Stage 2 check simulation failed.")
 
 #Entry point to unittests or nosetests
 

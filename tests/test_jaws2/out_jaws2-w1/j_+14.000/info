@@ -1,4 +1,4 @@
-protoms3 started at 12:41:22 on the 30/10/2015
+protoms3 started at 15:30:57 on the  3/11/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
@@ -103,7 +103,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 12:41:23 on the 30/10/2015
+Starting simulation at 15:30:57 on the  3/11/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -145,4 +145,4 @@ Writing restart file
 Resetting free energy average to zero.
  Data collection complete. Attempted/accepted moves          100          70
  Simulation shutting down...
-protoms3 completed at 12:41:28 on the 30/10/2015
+protoms3 completed at 15:31:02 on the  3/11/2015
