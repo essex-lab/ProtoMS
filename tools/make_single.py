@@ -279,11 +279,11 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
       if atoms2.atoms == atoms or atoms2 == ratoms :
         return atoms2.param.index,atom2.param.params[1]
     # Next loop through the GAFF set
-    for param in gaffset.params :
+    for param in gaffset.params.itervalues() :
       if param.ats == atoms or param.ats == ratoms :
         return param.index,param.b0
     if len(atoms) == 4 :
-      for param in gaffset.params :
+      for param in gaffset.params.itervalues() :
         if param.ats[0] == "X" and param.ats[3] == "X" and (param.ats[1:3] == atoms[1:3] or param.ats[1:3] == ratoms[1:3]) :
           return param.index,param.b0
     return -1,-1
@@ -388,8 +388,8 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
   gaffname = sim.standard_filename("gaff14.ff","parameter")
   #gaffsets = {type:sim.parameter_set(gaffname, type) for type in ["bond","angle","dihedral"]}
   gaffsets = {}
-  for type in ["bond","angle","dihedral"] :
-    gaffsets[type] = sim.ParameterSet(gaffname, type)
+  for ptype in ["bond","angle","dihedral"] :
+    gaffsets[ptype] = sim.ParameterSet(ptype,gaffname)
   temsets = {"bond" : tem1.bondatoms,"angle" : tem1.angleatoms,"dihedral" : tem1.dihedralatoms}
 
   # Now loop over all atoms that changes type
