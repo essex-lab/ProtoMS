@@ -244,6 +244,7 @@ class PDBFile:
               index = int(line[6:11].strip())
               atname = line[12:16].strip()
               resnum = int(line[22:26].strip())
+
               if resnum != prevres :
                 nres = nres + 1
               prevres = resnum
@@ -313,7 +314,12 @@ class PDBFile:
                     for atom in self.solvents[sol].atoms:
                         if renumber:
                             atom.resindex = i
-                        s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                        if atom.resindex < 10000:
+                            s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                        elif atom.resindex >= 10000 and atom.resindex < 100000:
+                            s = "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                        else:
+                            s = "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                         f.write ( s )
                     if i < len(l) : f.write ( "TER \n" )     
     def getCenter(self):
