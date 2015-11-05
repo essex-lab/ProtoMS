@@ -22,6 +22,10 @@ Run below command when python installation dependencies are missing:
 	pip install -r requirements.txt
 
 
-Code coverage
-=============
+Setting environment variables
+=============================
 
+Set the following environment variables before running protoms.py setup, protoms3 for setting up simulations and running the test-suite:
+
+export PROTOMSHOME=$PATH:/full/path/to/your/protoms-directory
+export PYTHONPATH=$PYTHONPATH:/full/path/to/your/protoms-directory-containing-tests
