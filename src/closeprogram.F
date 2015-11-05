@@ -23,7 +23,7 @@ c#######################################################
             
 c     try to print out results and restart information
       call shutdown()
-      call flush(FATAL)
+      flush(FATAL)
 
 #ifdef WITH_MPI_
       call MPI_FINALIZE(ierr)
