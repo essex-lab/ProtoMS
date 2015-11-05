@@ -17,7 +17,7 @@ c
 c#############################################################
 
       integer i,j,itry,iacp,igcs,isol
-      integer lgth,lineLength
+      integer lineLength
       double precision iprcnt
       if (NVolTry.gt.0) then
         write(printstring,*) "Attempted ",NVolTry," volume moves. Accepted ",NVolAcp," (",
@@ -27,8 +27,8 @@ c#############################################################
       
       if (NProteins.gt.0) then
         do i=1,NProteins
-          lgth = lineLength(ProteinName(i))
-          write(printstring,*) "Attempt/accept/% moves for protein ",i," ",ProteinName(i)(1:lgth)
+          write(printstring,"('Attempt/accept/% moves for protein ',i1,' ',a)")
+     &          i,adjustl(ProteinName(i))
           call prettyLine(ACCPT,printstring)
           itry = 0
           iacp = 0
@@ -55,8 +55,8 @@ c#############################################################
       if (NSolutes.gt.0) then
         do i=1,NSolutes
           if (.not.IgnoreSolute(i)) then
-            lgth = lineLength(SoluteName(i))
-            write(printstring,*) "Attempt/accept/% moves for solute ",i," ",SoluteName(i)(1:lgth)
+            write(printstring,"('Attempt/accept/% moves for solute ',i1,' ',a)")
+     &            i,adjustl(SoluteName(i))
             call prettyLine(ACCPT,printstring)     
             itry = 0
             iacp = 0
@@ -81,7 +81,7 @@ c#############################################################
       endif
       
       if (NSolvents.gt.0) then
-        write(printstring,*) "Attempt/accept/% moves for the solvent"
+        write(printstring,"('Attempt/accept/% moves for the solvent')")
         call prettyLine(ACCPT,printstring)
         itry = 0
         iacp = 0
@@ -104,8 +104,8 @@ c#############################################################
       endif
       
       if (NGCSolutes.gt.0) then
-        write(printstring,*) "Attempt/accept/% moves for insertions"
-       call prettyLine(ACCPT,printstring)
+        write(printstring,"('Attempt/accept/% moves for insertions')")
+        call prettyLine(ACCPT,printstring)
         itry = 0
         iacp = 0
       do igcs=1,NGCSolutes
@@ -113,26 +113,23 @@ c#############################################################
         iprcnt = 100.0 * dble(NInsAcp(igcs))/dble(NInsTry(igcs))
         itry = itry + NInsTry(igcs)
         iacp = iacp + NInsAcp(igcs)
-       write(printstring,40) igcs,GCSName(igcs),NInsAcp(igcs),NInsTry(igcs),iprcnt
-c        PRINT*, "iprcnt" ,iprcnt
-40          format('Insertn ',i5,' ',a,' ',i8,'/',i8,'(',f8.3,'%)')
-           
-            call printLine(ACCPT,printstring)
+        write(printstring,40) igcs,GCSName(igcs),NInsAcp(igcs),NInsTry(igcs),iprcnt
+40      format('Insertn ',i5,' ',a,' ',i8,'/',i8,'(',f8.3,'%)')   
+        call printLine(ACCPT,printstring)
         else
         endif
       enddo
         if (itry.gt.0) then
           iprcnt = 100.0 * dble(iacp)/dble(itry)
-           write(printstring,41) iacp,itry,iprcnt
+          write(printstring,41) iacp,itry,iprcnt
           call printLine(ACCPT,printstring)
-c           PRINT*, "%" ,iprcnt
 41        format('Total ',i8,'/',i8,'(',f8.3,'%)')
         endif
       endif 
 
       if (NGCSolutes.gt.0) then
-        write(printstring,*) "Attempt/accept/% moves for deletions"
-       call prettyLine(ACCPT,printstring)
+        write(printstring,"('Attempt/accept/% moves for deletions')")
+        call prettyLine(ACCPT,printstring)
         itry = 0
         iacp = 0
       do igcs=1,NGCSolutes
@@ -140,22 +137,22 @@ c           PRINT*, "%" ,iprcnt
         iprcnt = 100.0 * dble(NDelAcp(igcs))/dble(NDelTry(igcs))
         itry = itry + NDelTry(igcs)
         iacp = iacp + NDelAcp(igcs)
-       write(printstring,50) igcs,GCSName(igcs),NDelAcp(igcs),NDelTry(igcs),iprcnt
-50          format('Deletin ',i5,' ',a,' ',i8,'/',i8,'(',f8.3,'%)')        
-            call printLine(ACCPT,printstring)
+        write(printstring,50) igcs,GCSName(igcs),NDelAcp(igcs),NDelTry(igcs),iprcnt
+50      format('Deletin ',i5,' ',a,' ',i8,'/',i8,'(',f8.3,'%)')        
+        call printLine(ACCPT,printstring)
         else
         endif
       enddo
         if (itry.gt.0) then
           iprcnt = 100.0 * dble(iacp)/dble(itry)
-           write(printstring,51) iacp,itry,iprcnt
+          write(printstring,51) iacp,itry,iprcnt
           call printLine(ACCPT,printstring)
 51        format('Total ',i8,'/',i8,'(',f8.3,'%)')
         endif
       endif
 
       if (NThetaSolKind.gt.0) then
-        write(printstring,*) "Attempt/accept/% moves for solute theta moves"
+        write(printstring,"('Attempt/accept/% moves for solute theta moves')")
         call prettyLine(ACCPT,printstring)
         itry = 0
         iacp = 0
