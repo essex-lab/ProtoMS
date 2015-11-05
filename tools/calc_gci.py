@@ -1,9 +1,11 @@
 # Author: Gregory Ross
-
+import os
 import numpy as np
 from scipy import optimize
 from scipy import integrate
 import matplotlib.pyplot as plt
+if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
+  matplotlib.use('Agg') 
 import glob
 from scipy import special
 import sys, os
@@ -31,9 +33,9 @@ def pseudohuber(r,c):
 def logistic(params,x):
     return params[2]/(1+np.exp(-params[0] - x*params[1])) 
 
-# The logistic function (above) integrated over B, between Bi (initial) and Bf (final). Used in the function "insertion_pmf".
+# The logistic function (above) analytically integrated over B, between Bi (initial) and Bf (final). It can be used in the function "insertion_pmf".
 # The problem is that it is prone to numerical instabilities when the exponents are large and positive. While one could fix the problem, I've opted for
-# numerical integration instead in "insertion_pmf". This function can be used to verify the numerical integration. 
+# numerical integration instead in "insertion_pmf". This function has been used to verify the numerical integration. 
 def integrated_logistic(params,Bi,Bf):
     return -(params[2]/params[1])*( np.log(1+np.exp(Bf*params[1]+params[0])) - np.log(1+np.exp(Bi*params[1]+params[0])) )
 
@@ -195,7 +197,7 @@ def fit_boostrap(x,y,size,boot_samps=50,repeats=20,randstarts=1000,iterations=10
 
 def insertion_pmf(N,gcmc_model,T=298.15):			# Free energy to insert from the first element of N to all other elements.
     kT = T*0.0019872								# Boltmann's constant (in kcal/mol/K) multiplied by temperature (in K).
-    def integral(gcmc_model,Bi,Bf):
+    def integral(gcmc_model,Bi,Bf):					# For numerical integration.
         logies = [integrated_logistic(params,Bi,Bf) for params in gcmc_model.weights]
         return np.sum(logies)								# Under the convention that 0*log(0) = 0. 
     def nonintegral(N,B):
@@ -205,21 +207,16 @@ def insertion_pmf(N,gcmc_model,T=298.15):			# Free energy to insert from the fir
     B_lower = inverse_slp(gcmc_model,N_lower)
     for i in range(1,N.size):                         # Starting from the second element, as dG=0 at first N.
         B_upper = inverse_slp(gcmc_model,N[i])  
-        #int_old = integrate.quad(gcmc_model.predict,a=B_lower,b=B_upper)[0]
-        #int_new =  integral(gcmc_model,B_lower,B_upper)
-        #print "old,       new"
-        #print int_old, int_new
-        #dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) + integral(gcmc_model,B_lower,B_upper))[0]			# This version uses stirling's approximation.
-        dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) - integrate.quad(gcmc_model.predict,a=B_lower,b=B_upper)[0])[0]			# This version uses stirling's approximation.
+        #dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) + integral(gcmc_model,B_lower,B_upper))[0]							# This version uses analytical integration. Prone to instability.
+        dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) - integrate.quad(gcmc_model.predict,a=B_lower,b=B_upper)[0])[0]		# This version numerical integration.
     return dG*kT
+
 
 def ensemble_pmf(N,gcmc_models,T=298.15):
     energies = np.ones((len(gcmc_models),len(N)))
     for i in range(len(gcmc_models)):
         energies[i] =  insertion_pmf(N,gcmc_models[i],T=T)
     return energies.mean(axis=0), energies.std(axis=0)
-
-
 
 def ensemble_FreeEnergies(N,gcmc_models,hydration=None,T=None):
     if hydration == None: hydration = -6.2
@@ -486,7 +483,7 @@ if __name__ == '__main__' :
 
   # Calculating free energies using integration and the fitted neural network.
   if args.calc is not None:
-    if len(intersect(args.calc,["pmf","all","minimum"])) > 0:
+    if len(intersect(args.calc,["pmf","all"])) > 0:
       if args.reverse==False:
           dG_single = insertion_pmf(N_range,single_model)
           dG_samples, dG_binding_samples = ensemble_FreeEnergies(N_range,models)
@@ -510,13 +507,13 @@ if __name__ == '__main__' :
           print "  Quoted errors are from the input models." 
       print "  Binding free energies are transfer free energies minus the hydration free energy of water multiplied by the number of waters.\n"
       print "          |----------------------IDEAL GAS TRANSFER FREE ENERGIES--------------------|   |-BINDING FREE ENERGIES-|"
-      print "'# Waters' 'Mean'  'Std. dev.'  '25th Percentile'  '50th Percentile'  '75th Percentile'    'Mean'        'Median'"
+      print "'# Waters' 'Mean'  'Std. dev.'  '25th Percentile'       'Median'      '75th Percentile'    'Mean'        'Median'"
       for row in results:
           print " %5.2f %9.2f %9.2f %15.2f %19.2f %18.2f %15.2f %14.2f" % (row[0], row[1], row[2],row[3],row[4],row[5],row[1] - dG_hyd*(row[0]-N_range[0]),row[4] - dG_hyd*(row[0]-N_range[0]) )
 
     # Calculating the equilibrium number of bound waters.
     if len(intersect(args.calc,["minimum","pmf","all"])) > 0:
-      if len(intersect(args.calc,["pmf"])) > 0:
+      if len(intersect(args.calc,["pmf","all"])) > 0:
         print "\n"
         minimum_from_free_energy(models,N_range,dG_binding_samples) 
         print "\n"
@@ -540,7 +537,11 @@ if __name__ == '__main__' :
         currfig.plot(single_model.x,single_model.predicted,color="red",linewidth=3)
       currfig.xlabel("Adams parameter (B)",fontsize=15)
       currfig.ylabel("Average number of waters",fontsize=15)
-      currfig.suptitle("Water titration data and fitted model",fontweight="bold")
+      if args.calc is not None:
+        currfig.suptitle("GCMC titration data and fitted model",fontweight="bold")
+      else:
+        currfig.suptitle("GCMC titration data",fontweight="bold")   
+      currfig.savefig("Titration.png")
       currfig.show(block=False)
 
     if len(intersect(args.plot,["percentiles", "all"])) > 0:
@@ -550,15 +551,17 @@ if __name__ == '__main__' :
       currfig.xlabel("Adams parameter (B)",fontsize=15)
       currfig.ylabel("Average number of waters",fontsize=15)
       currfig.suptitle("Median and percentiles of fitted models",fontweight="bold")
+      currfig.savefig("Fit_percentiles.png")
       currfig.show(block=False)
 
-    if len(intersect(args.plot,["pmf", "all"])) > 0:
+    if len(intersect(args.plot,["pmf", "all"])) > 0 and len(intersect(args.calc,["pmf", "all"])) > 0 :
       FigNum += 1 
-      plt.figure("Insertion Free Energy")
+      plt.figure("Binding Free Energy")
       currfig = plot_PMFpercentiles(N_range,dG_binding_samples)
       currfig.xlabel("Number of inserted waters",fontsize=15)
       currfig.ylabel("Binding free energy (kcal/mol)",fontsize=15)
       currfig.suptitle("Binding free energy profile",fontweight="bold")
+      currfig.savefig("Binding_Free_Energy.png")
       currfig.show(block=False)
 
     if len(intersect(args.plot,["excess", "all"])) > 0 and len(intersect(args.calc,["minimum","excess","all",])) > 0:
@@ -570,6 +573,7 @@ if __name__ == '__main__' :
       plt.axhline(y=dG_hyd,color="grey",linewidth=2)
       plt.axvline(x=np.percentile(best_Ns,50),color="grey",linewidth=2)
       plt.xlabel("Number of inserted waters",fontsize=15)
+      plt.savefig("Excess_Chem_Potential.png")
       plt.ylabel("Excess chemical potential (kcal/mol)",fontsize=15)
       plt.show(block=False)
   
