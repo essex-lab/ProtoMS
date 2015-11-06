@@ -44,56 +44,56 @@ c       write(printstring,*) "Total Energy = ",totalEnergy(savenrg,nrgb,nrgf)
 c       call printLine(RESULTS,printstring)
 
 
-       write(printstring,*) "Number of data steps = ",NSTEPS 
+       write(printstring,"('Number of data steps',i8)") NSTEPS 
        call printLine(RESULTS,printstring)
 
        if (doLambdaRE) then
-         write(printstring,*) "Lambda replica = ",mylamid+1
+         write(printstring,"('Lambda replica = ',i8)") mylamid+1
          call printLine(RESULTS,printstring)
        endif
 
        if (doTemperatureRE) then
-         write(printstring,*) "Temperature replica = ",mytemid+1
+         write(printstring,"('Temperature replica = ',i8)") mytemid+1
          call printLine(RESULTS,printstring)
        endif
 
        if (doTemperatureRE.and.doLambdaRE) then
-         write(printstring,*) "Global replica = ",myid+1
+         write(printstring,"('Global replica = ',i8)") myid+1
          call printLine(RESULTS,printstring)
        endif
 
 
-       write(printstring,*) "Temperature = ",temperatureC," C"
+       write(printstring,"('Temperature = ',f8.3,' C')") temperatureC
        call printLine(RESULTS,printstring)
        
        if (doREST) then
-         write(printstring,*) "Effective temperature = ",resttempC," C"
+         write(printstring,"('Effective temperature = ',f8.3,' C')") resttempC
          call printLine(RESULTS,printstring)
        endif
 
-       write(printstring,*) "Solvents,Proteins,GC-solutes  =" ,NSolvents ,NProteins ,NGCSolutes
+       write(printstring,"('Solvents,Proteins,GC-solutes = ',3i8)") NSolvents ,NProteins ,NGCSolutes
        call printLine(RESULTS,printstring)
 
-       write(printstring,*) "Simulation B value =" ,B
+       write(printstring,"('Simulation B value = ',f8.3)") B
        call printLine(RESULTS,printstring)
 
-       write(printstring,*) "Molecules in grid=" ,GCSCavity
+       write(printstring,"('Molecules in grid  = ',i8)") GCSCavity
        call printLine(RESULTS,printstring)
 
         if (SolventBox) then
-         write(printstring,*) "Pressure = ",pressure," atm"
+         write(printstring,"('Pressure = ',f8.3,' atm')") pressure
          call printLine(RESULTS,printstring)
        
-         write(printstring,*) "Volume = ",volume," A^3"
+         write(printstring,"('Volume = ',f8.3,' atm')") volume
          call printLine(RESULTS,printstring)
        
          std = stdDev(AvgVolume2,AvgVolume)
-         write(printstring,*) "Average volume = ",AvgVolume," (",std,")"
+         write(printstring,"('Average volume = ',f8.3,' (',f8.3,')')") AvgVolume,std
          call printLine(RESULTS,printstring)
        endif
 
 c      write out the random number seed used to generate this trajectory
-       write(printstring,*) "Random number seed = ",ranseed
+       write(printstring,"('Random number seed = ',i12)") ranseed
        call printLine(RESULTS,printstring)
 
        if (NSteps.le.0) then
@@ -138,7 +138,7 @@ c             PRINT*, "std" ,std
              stdf = stdDev(AvgProBndF2(i),AvgProBndF(i))
              stdb = stdDev(AvgProBndB2(i),AvgProBndB(i))
              lgth = lineLength(ProteinName(i))
-             write(printstring,*) "Internal energy averages for protein ",i," ",ProteinName(i)(1:lgth)
+             write(printstring,"('Internal energy averages for protein ',i1,1x,a)") i,ProteinName(i)(1:lgth)
              call prettyLine(RESULTS,printstring)
              write(printstring,20) "BND",AvgProBnd(i),std,AvgProBndF(i),stdf,AvgProBndB(i),stdb
 20           format(a3,1x,g20.10,' ( ',f8.3,' ) | ',g20.10,' ( ',f8.3,' ) ',g20.10,' ( ',f8.3,' )')
@@ -626,7 +626,7 @@ c     print out free energy stuff
         write(printstring,"(A,I3,A)") " Individual theta solute values for ",NThetaSolutes," solutes"
         call prettyLine(RESULTS,printstring)
         do i=1,NThetaSolutes
-          write(printstring,*) "theta" ,i,SoluteTheta(i)
+          write(printstring,"('theta',i8,1x,f8.6)") i,SoluteTheta(i)
           call printLine(RESULTS,printstring)
         enddo
       endif
@@ -638,7 +638,7 @@ c     print out free energy stuff
 
 
       do i=1,NGCSolutes
-       write(printstring,*) "theta" ,i,thetaparam(i)
+       write(printstring,"('theta',i8,1x,f8.6)") i,thetaparam(i)
        call printLine(RESULTS,printstring)
       enddo
 
@@ -649,7 +649,7 @@ c      the variable 'space' determines 'cavCoordDepth'. By default both are zero
         endif
        do X = 1,cavCoordDepth
 c        print*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
-        write(printstring,*) "THETA" ,X,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
+        write(printstring,"('THETA',i8,3f12.3)") X,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
         call printLine(RESULTS,printstring)
        enddo
        cavCoordDepth = 0
@@ -667,7 +667,7 @@ c        print*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
        endif
        do s = initial,highstack
 c        print*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
-        write(printstring,*) "HIGH" ,s,stackGridX(s,1),stackGridY(s,2),stackGridZ(s,3)
+        write(printstring,"('HIGH',i8,3f12.3)") s,stackGridX(s,1),stackGridY(s,2),stackGridZ(s,3)
         call printLine(RESULTS,printstring)
        enddo
        avHighstack = highstack
@@ -685,7 +685,7 @@ c        print*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
        endif
        do t = initial,lowstack
 c        prnt*, "savedCoords?" ,stackGridX(X,1),stackGridY(X,2),stackGridZ(X,3)
-        write(printstring,*) "LOW" ,t,stackGridXL(t,1),stackGridYL(t,2),stackGridZL(t,3)
+        write(printstring,"('LOW ',i8,3f12.3)") t,stackGridXL(t,1),stackGridYL(t,2),stackGridZL(t,3)
         call printLine(RESULTS,printstring)
        enddo
        avLowstack = lowstack
