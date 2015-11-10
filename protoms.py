@@ -365,13 +365,16 @@ def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
     protobj = tools.convertwater(protobj,settings.watmodel)
 
     # Defining the center of the scoop...
-    if ligands is None :
+    if ligands is None and settings.gcmcbox is None:
       if settings.center != None :
         ligobj = settings.center
       else :
         protobj.getCenter()
         ligobj = "%f %f %f" % tuple(protobj.center)
         logger.warning("Warning: No specified center for protein scoop. Using the center of the protein." )
+    elif ligands is None and settings.gcmcbox is not None :
+      ligobj = simulationobjects.PDBFile(filename=settings.gcmcbox[0]) 
+      logger.info("Scooping protein around %s..." %  settings.gcmcbox[0])
     else :
       ligobj = ligands
 
