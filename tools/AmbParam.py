@@ -346,26 +346,26 @@ scl14coul  0.833333
 scl14lj    0.500\n"""
         
         s += '\nmode bond\n'
-        for i, j in enumerate ( sorted ( self.bnds ), 1 ):
+        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
             bnd = self.bnds[j]
             s += 'par  %4d%8.1f%15.10f  #%s-%s\n' % ( i, bnd.k, bnd.b0, bnd.at1, bnd.at2 )
 
-        for i, j in enumerate ( sorted ( self.bnds ), 1 ):
+        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
             bnd = self.bnds[j]
             s += 'atm  %4s  %4s  %4d #\n' % ( bnd.at1, bnd.at2, i )
 
         s += 'mode angle\n'
-        for i, j in enumerate ( sorted ( self.angs ), 1 ):
+        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
             ang = self.angs[j]
             s += 'par  %4d%8.1f%8.3f  #%s-%s-%s\n' % ( i, ang.k, ang.b0, ang.at1, ang.at2, ang.at3 )
 
-        for i, j in enumerate ( sorted ( self.angs ), 1 ):
+        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
             ang = self.angs[j]
             s += 'atm  %4s  %4s  %4s  %4d\n' % ( ang.at1, ang.at2, ang.at3, i )
 
 
         s += 'mode dihedral\n'
-        c = 1
+        c = 6001
         for i in sorted ( self.dihs ):
             dih = self.dihs[i]
             s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 0, 0, 0 )
@@ -378,18 +378,18 @@ scl14lj    0.500\n"""
                     s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 1, j, 0 )
                 c += 1
                 
-        for i, j in enumerate ( sorted ( self.dihs ), 1 ):
+        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
             dih = self.dihs[j]
-            terms = tuple ( range ( ( i - 1 ) * 5 + 1, ( i * 5 + 1  ) ) )
+            terms = tuple ( range ( ( i - 6001 ) * 5 + 6001, ( (i - 6000) * 5 + 6001 ) ) )
             s += 'par  %4d  %4d  %4d  %4d  %4d  %4d  # %s-%s-%s-%s\n' % ( ( i, ) + terms + ( dih.at1, dih.at2, dih.at3, dih.at4 ) )
             
-        for i, j in enumerate ( sorted ( self.dihs ), 1 ):
+        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
             dih = self.dihs[j]
             s += 'atm  %4s  %4s  %4s  %4s  %4d  #\n' % ( dih.at1, dih.at2, dih.at3, dih.at4, i )
 
         prot_no = { 'H' : 1, 'C' : 6, 'N' : 7, 'O' : 8, 'S' : 16, 'D' : 0 }
         s += 'mode clj\n'
-        for i, j in enumerate ( self.cljs, 1 ):
+        for i, j in enumerate ( self.cljs, 6001 ):
             element = j.type[0]
             try:
                 float ( element )
@@ -429,13 +429,13 @@ scl14lj    0.500\n"""
                     cols = line.strip().split()
                     at = cols[2]
                     s += ' '.join ( cols[:3] )
-                    s += ' {0} {0}\n'.format( self.cljs.cljbyres ( res, at ).id )
+                    s += ' {0} {0}\n'.format( self.cljs.cljbyres ( res, at ).id + 6000 )
 
                 elif line.startswith ( 'atom' ):
                     cols = line.strip().split()
                     at = cols[1]
                     s += ' '.join ( cols[:2] )
-                    s += ' {0} {0} '.format( self.cljs.cljbyres ( res, conv['backbone'][at] ).id )
+                    s += ' {0} {0} '.format( self.cljs.cljbyres ( res, conv['backbone'][at] ).id + 6000 )
                     s += ' '.join ( cols[4:] ) + '\n'
 
                 else:
@@ -449,9 +449,9 @@ scl14lj    0.500\n"""
                     cols = line.strip().split()
                     at = cols[1]
                     s += ' '.join ( cols[:2] )
-                    s += ' {0} {0} {1} {1} {2} {2} '.format ( self.cljs.cljbyres ( res, conv[res][at] ).id,
-                                                              self.cljs.cljbyres ( res+'nt', conv[res][at] ).id,
-                                                              self.cljs.cljbyres ( res+'ct', conv[res][at] ).id )                                                             
+                    s += ' {0} {0} {1} {1} {2} {2} '.format ( self.cljs.cljbyres ( res, conv[res][at] ).id + 6000,
+                                                              self.cljs.cljbyres ( res+'nt', conv[res][at] ).id + 6000,
+                                                              self.cljs.cljbyres ( res+'ct', conv[res][at] ).id + 6000)                                                             
                     s += ' '.join ( cols[-3:] ) + '\n'
                 else:
                     s += line
