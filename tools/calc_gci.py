@@ -1,15 +1,19 @@
 # Author: Gregory Ross
-import os
+import sys, os
+
 import numpy as np
 from scipy import optimize
 from scipy import integrate
-import matplotlib.pyplot as plt
+from scipy import special
+
+import matplotlib
 if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
   matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
+
 import glob
-from scipy import special
-import sys, os
 import pickle
+
 import simulationobjects
 from simulationobjects import ResultsFile
 
@@ -46,6 +50,31 @@ def simplex_sample(size):
     return np.diff(samp)
 
 class Slp(object):
+    """ 
+    Class for fitting and storing a monotonically increasing single layer perceptron with one input and one output.
+    
+    Fitting is achieved by iteratively optimising one unit at a time, rather than the more typical back-propigation algorithm, to make use of
+    SciPy's monotonic optimisation routines. 
+
+    Attributes
+    ----------
+    size : integer
+      the number logsistic terms, equilivalent to the number of 'hidden units' in an artificial neural network
+    x : numpy array
+      the explanatory variable, which is the Adams value or chemical potential in GCMC
+    y : numpy array
+      the response variable, which is the average number of inserted grand canonical molecules
+    weights : numpy array
+      the matrix of coefficients of the logistic terms
+    offset : numpy array
+      the intercept of the artificial neural network. Grouped together with the weights when fitting
+    streams : list
+      contains the output of each logistic function or 'unit'
+    predicted : numpy array
+      the predicted output of the artificial neural network
+    error: float
+      the error (either mean-squared, Huber, or absolute loss) of the artificial neural network with respect to the response variable.
+    """
     def __init__(self,x=np.array(0),y=np.array(0),size=1):
         self.size = size										# The number of logistic functions a.k.a the number of units in the hidden layer.
         self.x = x												# The explanatory variable.
@@ -56,35 +85,75 @@ class Slp(object):
         self.predicted = np.array(0)							# The predicted output of the slp.
         self.error = 1000.0										# The error (either mean squared, Huber, or absolute loss) of the slp w.r.t. to the response variable.
     def forward(self):
+        """
+        Evaluates the output from ALL units for a given set of weights and updates the prediction of the whole network
+        """
         self.streams = [logistic(params,self.x) for params in self.weights]
         self.predicted = np.sum(np.vstack(self.streams),axis=0) + self.offset
     def forward_unit(self,unit):
+        """
+        Evaluates the output from ONE unit for a given set of weights and updates the prediction of the whole network
+
+        Parameters
+        ----------
+        unit : the index of the logisitic function
+        """
         self.streams[unit] = logistic(self.weights[unit],self.x)
         self.predicted = np.sum(np.vstack(self.streams),axis=0) + self.offset
     def predict(self,x):
+        """
+        Returns the prediction for the artificial neural network
+
+        Parameters
+        ----------
+        x : the vector of Adams or chemical potentials
+        """
         streams = [logistic(params,x) for params in self.weights]
         return np.sum(np.vstack(streams),axis=0) + self.offset
     def msd(self):
+        """
+        Calculates the mean-squared error of the model and updates the error
+        """
         self.error = np.sum((self.y - self.predicted)**2)
         return self.error
     def huber(self,c=2):
+        """
+        Calculates the pseudo Huber loss function and updates the error of the model
+        """
         self.error = np.sum(pseudohuber(self.y - self.predicted,c))
         return self.error
     def absolute(self):
+        """
+        Calculates the absolute loss of the model and updates the error
+        """
         self.error = np.sum(np.abs(self.y - self.predicted))
         return self.error
     def randomise(self,pin_max=True):
+        """
+        Produces initial values of weights by random sampling
+
+        Parameters
+        ----------
+        pin_max : whether to constrain the random weights so that the sum of the units cannot exceed the maximum value of the response variable
+        """
         self.offset = self.y.min()
         alpha = np.random.uniform(low=0.0,high=2.0,size=self.size)
         alpha0 = np.sort(-np.random.uniform(low=self.x.min(),high=self.x.max(),size=self.size))
         if pin_max==True:
-            beta = simplex_sample(self.size)*(self.y.max() - self.offset)
+            beta = simplex_sample(self.size)*(self.y.max() - self.offset)			# The beta weights are sampled uniformally from a simplex, such that they add up to range of y values.
         else:
             beta = np.random.uniform(low=0,high=1,size=self.size)*self.y.max()
         beta.sort()												
-        self.weights = np.vstack((alpha0,alpha,beta)).T				# Each row is an element in the logistic function. 
-        self.forward()												# Update the logistic streams
+        self.weights = np.vstack((alpha0,alpha,beta)).T								# Each row is an element in the logistic function. 
+        self.forward()																# Update the logistic streams
     def randsearch(self,samples):
+        """
+        Performs a crude initial random search of the space of weights, and saves the best set of weights
+
+        Parameters
+        ----------
+        samples : how many initial guesses of the weights shall be attempted
+        """
         error_old = 1000000
         for samps in range(samples):
             self.randomise()
@@ -100,6 +169,18 @@ class Slp(object):
         self.forward()
         self.error = error_old  
     def fit_unit(self, unit, grad_tol=0.001,pin_max=None,monotonic=True, cost="msd", c=2.0):
+        """
+        Fits an individual unit of the artificial neural network
+
+        Parameters
+        ----------
+        unit : the index of the logistic function whose weights (parameters) will be optimised
+        grad_tol : the tolorance of the gradient that determines when optimisation stops
+        pin_max : the value of the maximum value to model can produce. If left blank, it will be fitted
+        monotonic : whether to insure the artificial neural network is monotonically increasing
+        cost : the type of cost/loss function that will be used
+        c : the paramater of the Huber loss function
+        """
         if cost=="msd":
             def residuals(params):
                 self.weights[unit] = params
@@ -130,6 +211,15 @@ class Slp(object):
             self.weights[unit] = fit.x
             self.error = fit.fun
     def fit_offset(self,grad_tol=0.001,cost="msd",c=2.0):
+        """
+        Fits the intercept of the artificial neural network
+
+        Parameters
+        ----------
+        grad_tol : the tolorance of the gradient that determines when optimisation stops
+        cost : the type of cost/loss function that will be used
+        c : the paramater of the Huber loss function
+        """
         diff = self.y - np.sum(np.vstack(self.streams),axis=0)
         if cost=="msd":
             def residuals(offset):
@@ -144,6 +234,18 @@ class Slp(object):
         self.offset = fit[0]
         self.error = fit[1]
     def epoch(self,grad_tol=0.001,pin_min=None,pin_max=None,monotonic=True,cost="msd",c=2.0):
+        """
+        Fits each unit and intercept of the artificial neural network once
+
+        Parameters
+        ----------
+        grad_tol : the tolorance of the gradient that determines when optimisation stops
+        pin_min : the value of the fixed intercept. If left blank, it will be fitted.
+        pin_max : the value of the maximum value to model can produce. If left blank, it will be fitted
+        monotonic : whether to insure the artificial neural network is monotonically increasing
+        cost : the type of cost/loss function that will be used
+        c : the paramater of the huber loss function
+        """
         if pin_min==None:
             self.fit_offset(grad_tol,cost,c)
         if type(pin_min) == float or type(pin_min) == int:
@@ -151,6 +253,20 @@ class Slp(object):
         for unit in range(self.size):
             self.fit_unit(unit,grad_tol,pin_max,monotonic,cost,c)
     def train(self,iterations=100,grad_tol_low=-3,grad_tol_high=1,pin_min=False,pin_max=None,monotonic=True,cost="msd",c=2.0):
+        """
+        Iterates over a specified amount of training epochs. After each epoch, the fitting tolerance will decrease to gradually refine the fits.
+
+        Parameters
+        ----------
+        iterations : the maximum number of training epochs that will be tested.
+        grad_tol_low : ten to the power of this value is the initial tolorance of the gradient
+        grad_tol_low : ten to the power of this value is the final tolorance of the gradient
+        pin_min : the value of the fixed intercept. If left blank, it will be fitted.
+        pin_max : the value of the maximum value to model can produce. If left blank, it will be fitted
+        monotonic : whether to insure the artificial neural network is monotonically increasing
+        cost : the type of cost/loss function that will be used
+        c : the paramater of the huber loss function
+        """
         tolerances = np.logspace(grad_tol_high,grad_tol_low,iterations)
         for grad_tol in tolerances:
             self.epoch(grad_tol,pin_min,pin_max,monotonic,cost,c)
@@ -494,22 +610,22 @@ if __name__ == '__main__' :
 
     if len(intersect(args.calc,["pmf","all"])) > 0:
       results = np.vstack((N_range,dG_samples.mean(axis=1), dG_samples.std(axis=1),np.percentile(dG_samples,25,axis=1),np.percentile(dG_samples,50,axis=1),np.percentile(dG_samples,75,axis=1) )).T
-      if args.bootstraps is None:
-          error_type = "'Std. dev. of fit'"
-      else:
-          error_type = "'Std. dev. of bootstrap'"
+#      if args.bootstraps is None:
+#          error_type = "'Std. dev. of fit'"
+#      else:
+#          error_type = "'Std. dev. of bootstrap'"
       print "\nFREE ENERGIES:"
       if args.bootstraps is None and args.input is None:
           print "  Quoted errors are from multiple repeats of the fitting."
       elif args.bootstraps is not None and args.input is None:
           print "  Quoted errors are from %i bootstrap samples." % args.bootstraps
       elif  args.input is not None:
-          print "  Quoted errors are from the input models." 
-      print "  Binding free energies are transfer free energies minus the hydration free energy of water multiplied by the number of waters.\n"
+          print "  Quoted errors are from the input model(s)." 
       print "          |----------------------IDEAL GAS TRANSFER FREE ENERGIES--------------------|   |-BINDING FREE ENERGIES-|"
       print "'# Waters' 'Mean'  'Std. dev.'  '25th Percentile'       'Median'      '75th Percentile'    'Mean'        'Median'"
       for row in results:
           print " %5.2f %9.2f %9.2f %15.2f %19.2f %18.2f %15.2f %14.2f" % (row[0], row[1], row[2],row[3],row[4],row[5],row[1] - dG_hyd*(row[0]-N_range[0]),row[4] - dG_hyd*(row[0]-N_range[0]) )
+      print "Binding free energies are transfer free energies minus the hydration free energy of water (%2.1f kcal/mol) multiplied by the number of waters.\n" % dG_hyd
 
     # Calculating the equilibrium number of bound waters.
     if len(intersect(args.calc,["minimum","pmf","all"])) > 0:
