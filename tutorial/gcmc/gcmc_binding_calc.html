@@ -84,19 +84,19 @@ where &lsaquo;<em>N</em>&rsaquo; is the average number of water molecules, <em>B
 
 <pre>python2.7 $PROTOMSHOME/tools/calc_gcsingle.py -d out/b_-* -p</pre>
 
-where the <code>-p</code> flag specifies that titration data and fitted logistic curve will be plotted. The script <code>calc_gcsingle.py</code> estimates the error in the calculated free energy by performing 1000 bootstrap samples of the titration data and refitting the logistic equation each time. The printed results showed look something like:
+where the <code>-p</code> flag specifies that titration data and fitted logistic curve will be plotted. The script <code>calc_gcsingle.py</code> estimates the error in the calculated free energy by performing 1000 bootstrap samples of the titration data and refitting the logistic equation each time. The printed results should look something like:
 
 <pre>
 FREE ENERGY ESTIMATES:
-  Least squares estimate = -12.32 kcal/mol
-  Bootstrap estimate     = -12.32 +/- 0.07 kcal/mol
+  Least squares estimate = -10.57 kcal/mol
+  Bootstrap estimate     = -10.57 +/- 0.19 kcal/mol
 </pre>
 
-The first result, <code>Least squares estimate</code>, is simply the least squares fit of the transfer free energy, and has no error associated with it. The second result, <code>Bootstrap estimate </code> is the estimate that has been calculated via bootstrap sampling. The value quoted is the mean transfer free energy from all bootstrap samples, and the error is the standard deviation. 
+The first result, <code>Least squares estimate</code>, is simply the least squares fit of the transfer free energy, and has no error associated with it. The second result, <code>Bootstrap estimate </code> is the estimate that has been calculated via bootstrap sampling. The value quoted is the mean transfer free energy from all bootstrap samples, and the error is the standard deviation from those samples. To get the binding free energy of water for the GCMC region, simply take the difference of the transfer free energy and hydration free energy of water. ProtoMS calculates the hydration free energy of water to be about -6.2 kcal/mol, so the binding energy is roughly -10.6 + 6.2 = -4.4 kcal/mol.
 
-<p> Two plots will have been produced when calling <code>calc_gcsingle.py</code>. Like the results, one shows the least squares fit of the logistic function, and the second shows the results of the bootstrap sampling and fitting, and is probably more informative. For the latter, you will probably see something like
+<p> Two plots will have been produced when calling <code>calc_gcsingle.py</code>. Like the results, one shows the least squares fit of the logistic function, and the second shows the results of the bootstrap sampling and fitting, and is probably more informative. For the latter, you may see something like<br>
 
-<img src="bootstapp_sampleschem.png" width="%" height="50%" alt="" /><br>
+<img src="bootstrap_samples.png" width="%" height="50%" alt="" /><br>
 
 The red line marks the median of the all the bootstrap fits, the orange and grey areas contain 50% and 90% of all the fits respectively. To be clear, these errors illustrate the uncertainty of the fit, not the GCMC titration data. The error produced from the bootstrap sampling can be reduced with data more GCMC simulations, particularly at Adams values near the point of inflection.
 <p>
@@ -117,7 +117,7 @@ which brings up a plot for the excess chemical potential. As you can see, the li
 One could enter
 <pre> -17 -24 </pre>
 
-as the line seems flatest between these values. The excess chemical potential is averaged over this range, which produces our estimate for the coupling free energy. You should the predict </em>&Delta;F</em><sub>trans</sub> to be about -10 kcal/mol.
+as the line seems flatest between these values. The excess chemical potential is averaged over this range, which produces our estimate for the coupling free energy. You should predict </em>&Delta;F</em><sub>trans</sub> to be about -10.5 kcal/mol.
 <p>
 <h3>Exploring more options</h3>
 Here, we'll consider some points that will help with the set-up and execution of GCMC on a single water molecule.
