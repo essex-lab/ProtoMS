@@ -29,6 +29,8 @@ test_dir = proto_env + "/tests/test_setup/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
 ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '1.5']
 
+outfiles = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb"]
+
 class TestProtSetup(unittest.TestCase):
     
     """ Test for ProtoMS setup function."""
@@ -70,6 +72,14 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
 
             else:
                 raise ValueError("Discrepancy in HEADER parameters in water cap-file. Please check!")
+
+            #Checking content of output files with reference data files
+
+            for out_files in outfiles:
+                if((call("diff $PROTOMSHOME/tests/test_setup/" + out_files + " $PROTOMSHOME/tests/setup/" + out_files, shell=True)) == 0):
+                    continue
+                else:
+                    raise ValueError("Content mismatch between output and reference ",out_files)
         else:
             raise simulationobjects.SetupError("ProtoMS ligand and protein setup is not successful.")
 

@@ -1,4 +1,4 @@
-DEBUG : Running protoms.py at 03/11/2015 - 15:44:39
+DEBUG : Running protoms.py at 05/11/2015 - 23:06:17
 DEBUG : Command line arguments = -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/single_cmap.dat -f/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/
 DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=True, cmdfile='run', dovacuum=False, dumpfreq=1.0, flexin='flexible', flexout='sidechain', folders=['/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[0.0, 0.33, 0.67, 1.0], ligand=['ethane.pdb', 'methanol.pdb'], nequil=0.0, nprod=10.0, outercut=20.0, outfolder='', protein=None, ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='singletopology', singlemap='/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/single_cmap.dat', template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
 INFO : 
@@ -30,17 +30,6 @@ DEBUG : This will generate a ProtoMS compatible z-matrix for a solute
 INFO : Before running a simulation, ensure that the first line of ethane.pdb reads 'HEADER ETH'.
 INFO : Created zmatrix (ethane.zmat) for ligand. Please check the output carefully
 INFO : Created ProtoMS template-file (ethane.tem) for ligand. Please check the output carefully
-DEBUG : Running solvate with arguments: 
-DEBUG : 	box        = /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/data/wbox_tip4p.pdb
-DEBUG : 	ligand     = ethane.pdb_methanol.pdb
-DEBUG : 	protein    = None
-DEBUG : 	geometry   = box
-DEBUG : 	padding    = 10.000000
-DEBUG : 	radius     = 30.000000
-DEBUG : 	center     = cent
-DEBUG : 	namescheme = ProtoMS
-DEBUG : This will solvate either a protein or a ligand using a pre-equilibrated box
-INFO : Created waterbox-file: ethane_box.pdb
 INFO : 
 INFO : Setting up ligand: methanol.pdb...
 INFO : Running antechamber. Please check the output carefully
@@ -92,6 +81,40 @@ DEBUG : 	mapfile = /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-t
 DEBUG : This will make a ProtoMS template files for single-topology perturbations
 INFO : Pre-defined maps:
 C01-C01 C05-O05 H02-H02 H03-H03 H04-H04 H06-H06 H07-DUM H08-DUM
+WARNING : 
+WARNING : Warning: could not find parameters for c3-c3 or c3-oh at atoms C01 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3 or ho-oh at atoms H06 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or h1-c3-oh at atoms H04 C01 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or ho-oh-c3 at atoms H06 C05 C01
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or h1-c3-oh at atoms H02 C01 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or h1-c3-oh at atoms H03 C01 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3-hc or ho-oh-c3-h1 at atoms H06 C05 C01 H04
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3 or h1-c3 at atoms H04 C01
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or h1-c3-oh at atoms H04 C01 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3-hc or ho-oh-c3-h1 at atoms H06 C05 C01 H04
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3 or ho-oh at atoms H06 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or ho-oh-c3 at atoms H06 C05 C01
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3-hc or ho-oh-c3-h1 at atoms H06 C05 C01 H04
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3 or h1-c3 at atoms H02 C01
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or h1-c3-oh at atoms H02 C01 C05
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3 or h1-c3 at atoms H03 C01
+WARNING : 
+WARNING : Warning: could not find parameters for hc-c3-c3 or h1-c3-oh at atoms H03 C01 C05
 DEBUG : 
 DEBUG : Atom    Ele perturbation                                        ||         Vdw perturbation
 DEBUG :   C05 :  -0.094   3.400   0.109 ==>  -0.599   3.400   0.109   c ||  -0.599   3.400   0.109 ==>  -0.599   3.066   0.210  lj
@@ -104,20 +127,10 @@ DEBUG :   H02 :   0.032   2.650   0.016 ==>   0.029   2.650   0.016   c ||   0.0
 DEBUG :   H03 :   0.032   2.650   0.016 ==>   0.029   2.650   0.016   c ||   0.029   2.650   0.016 ==>   0.029   2.471   0.016  lj
 DEBUG : 
 DEBUG : Z-matrix connectivities that changes parameter: 
-DEBUG : bond  C01 ETH  C05 ETH param 1111 1140
-DEBUG : bond  H04 ETH  C01 ETH param 1126 1123
-DEBUG : bond  H06 ETH  C05 ETH param 1126 1456
 DEBUG : bond  H07 ETH  C05 ETH param 0 0
 DEBUG : bond  H08 ETH  C05 ETH param 0 0
-DEBUG : bond  H02 ETH  C01 ETH param 1126 1123
-DEBUG : bond  H03 ETH  C01 ETH param 1126 1123
-DEBUG : angle  H04 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
-DEBUG : angle  H06 ETH  C05 ETH  C01 ETH flex 0.190 param 1326 3840
 DEBUG : angle  H07 ETH  C05 ETH  C01 ETH flex 0.190 param 0 0
 DEBUG : angle  H08 ETH  C05 ETH  C01 ETH flex 0.190 param 0 0
-DEBUG : angle  H02 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
-DEBUG : angle  H03 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
-DEBUG : dihedral  H06 ETH  C05 ETH  C01 ETH  H04 ETH flex 2.500 param 1606 1176
 DEBUG : 
 DEBUG : Variable geometries: 
 DEBUG : variable C01 ETH bond 1.526 1.410 # c3-c3 to c3-oh at atoms C01-C05

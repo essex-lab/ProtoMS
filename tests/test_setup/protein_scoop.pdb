@@ -1,4 +1,4 @@
-REMARK Scoop of /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_setup/protein.pdb
+REMARK Scoop of protein.pdb
 REMARK Inner Region :    16.00 Angstrom radius
 REMARK Outer Region :    20.00 Angstrom radius
 REMARK Num Residues 116 ( 94 inner 22 outer )

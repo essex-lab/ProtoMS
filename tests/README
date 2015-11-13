@@ -29,3 +29,25 @@ Set the following environment variables before running protoms.py setup, protoms
 
 export PROTOMSHOME=$PATH:/full/path/to/your/protoms-directory
 export PYTHONPATH=$PYTHONPATH:/full/path/to/your/protoms-directory-containing-tests
+
+Running tests
+=============
+
+The ProtoMS test scripts run under nose or unittest or CTest. 
+
+In order to run the tests on ProtoMS scripts under the nose framework, type:
+
+        nosetests tests/<test_folder>/<test_script.py>  
+
+To run the tests using unittest, type:
+
+        python -m unittest discover tests/<test_folder>/<test_script.py>
+
+
+To run all the tests using CTest, type in the build directory which has test configuration file:
+
+        ctest
+
+        OR
+
+        make test

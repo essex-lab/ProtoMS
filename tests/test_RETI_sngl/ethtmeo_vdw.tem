@@ -27,20 +27,20 @@ atom  H07 ETH 3014 100  C05 ETH  C01 ETH  H06 ETH
 atom  H08 ETH 3015 100  C05 ETH  C01 ETH  H06 ETH
 atom  H02 ETH 3006 3013  C01 ETH  C05 ETH  H04 ETH
 atom  H03 ETH 3007 3012  C01 ETH  C05 ETH  H04 ETH
-bond  C01 ETH  C05 ETH param 1111 1140
-bond  H04 ETH  C01 ETH param 1126 1123
-bond  H06 ETH  C05 ETH param 1126 1456
+bond  C01 ETH  C05 ETH
+bond  H04 ETH  C01 ETH
+bond  H06 ETH  C05 ETH
 bond  H07 ETH  C05 ETH param 0 0
 bond  H08 ETH  C05 ETH param 0 0
-bond  H02 ETH  C01 ETH param 1126 1123
-bond  H03 ETH  C01 ETH param 1126 1123
-angle  H04 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
-angle  H06 ETH  C05 ETH  C01 ETH flex 0.190 param 1326 3840
+bond  H02 ETH  C01 ETH
+bond  H03 ETH  C01 ETH
+angle  H04 ETH  C01 ETH  C05 ETH flex 0.190
+angle  H06 ETH  C05 ETH  C01 ETH flex 0.190
 #angle  H07 ETH  C05 ETH  C01 ETH flex 0.190 param 0 0
 #angle  H08 ETH  C05 ETH  C01 ETH flex 0.190 param 0 0
-angle  H02 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
-angle  H03 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
-dihedral  H06 ETH  C05 ETH  C01 ETH  H04 ETH flex 2.500 param 1606 1176
+angle  H02 ETH  C01 ETH  C05 ETH flex 0.190
+angle  H03 ETH  C01 ETH  C05 ETH flex 0.190
+dihedral  H06 ETH  C05 ETH  C01 ETH  H04 ETH flex 2.500
 # c3-c3 to c3-oh at atoms C01-C05
 variable C01 ETH bond 1.526 1.410
 # hc-c3-c3 to h1-c3-oh at atoms H04-C01-C05
