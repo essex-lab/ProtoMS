@@ -169,7 +169,7 @@ if __name__ == '__main__' :
     plt.figure("Bootstrap Samples")
     currfig = plot_FitPercentiles(B,N,dF_boots,level1=0.50,level2=0.90,smoothness=0.01)
     currfig.xlabel("Adams parameter (B)",fontsize=15)
-    currfig.ylabel("Average amount of waters",fontsize=15)
+    currfig.ylabel("Average amount of water",fontsize=15)
     currfig.suptitle("Median and percentiles of fitted free energy",fontweight="bold")
     currfig.show(block=False)
 
@@ -192,7 +192,7 @@ if __name__ == '__main__' :
       B_low = float(inputrange[1])
       B_high = float(inputrange[0])
     indices = (B_sorted[notzero] >= float(B_low))*(B_sorted[notzero] <= float(B_high)) # The indices from which the mean excess chemical potential will be calculated.
-    print "\nAverage excess chemical potential of region = %.2f kcal/mol, with standard deviation = %.2f kcal/mol. Number of data points used = %i.\n" % (np.mean(excess[indices]), np.std(excess[indices]), np.sum(indices) )
+    print "\nAverage excess chemical potential of region = %.2f kcal/mol, with standard error = %.2f kcal/mol. Number of data points used = %i.\n" % (np.mean(excess[indices]), np.std(excess[indices])/np.sqrt(np.sum(indices)), np.sum(indices) )
 
   if args.plot==True or args.excess==True:
     print "\nType enter to quit\n>"
