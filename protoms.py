@@ -544,14 +544,20 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
   def fill_box (settings,boxpdb,box,ghost_name) :
     # Fill the box with waters
     if settings.gcmcwater is None :
-      ghostobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
-                         geometry="flood",namescheme="ProtoMS")
-      boxinfo = tuple(box['origin']) + tuple(box['origin'] + box['len'])
-      ghostobj.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" %boxinfo
-      for sol in ghostobj.solvents :
-        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WA1"
+      # Creating ghost waters with a density 1.5 times the density of bulk water.
+      box_volume = box['len'][0]*box['len'][1]*box['len'][2] 
+      ghostnum = str(int(np.ceil(box_volume*0.0334*1.5)))     # 0.0334 waters per Angs.^3 is the number density of bulk water.
+      ghostobj = tools.distribute_particles(box=box,particles=ghostnum,watermodel=settings.watmodel)
+      ghostobj.write(filename=ghost_name)
+#      ghostobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
+#                         geometry="flood",namescheme="ProtoMS")
+#      boxinfo = tuple(box['origin']) + tuple(box['origin'] + box['len'])
+#      ghostobj.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" %boxinfo
+#      for sol in ghostobj.solvents :
+#        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WA1"
     elif settings.gcmcwater.isdigit() :
-      ghostobj = tools.distribute_particles(box,settings.gcmcwater)
+      print settings.gcmcwater
+      ghostobj = tools.distribute_particles(box,settings.gcmcwater,watermodel=settings.watmodel)
       ghostobj.write(filename=ghost_name)
     else :
       ghostobj, ghost_name = arrange_wats(box,settings.gcmcwater,ghost_name)

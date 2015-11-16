@@ -673,6 +673,7 @@ class GCMC(ProteinLigandSimulation) :
                     dumpfreq=1E5,
                     adamval=None,
                     ranseed=None,
+                    watmodel="tip4p",
                     outfolder="out_gcmc") :  
     """
     Parameters
@@ -722,7 +723,10 @@ class GCMC(ProteinLigandSimulation) :
  
     self.setParameter("#"," GCMC specific parameters")
     self.setParameter("gcmc","0")
-    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
+    if watmodel == "tip4p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip4p.tem"))
+    elif watmodel == "tip3p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip3p.tem"))
     self.setParameter("grand1",gcmcwater)
     #self.setParameter("outfolder",outfolder)
     if isinstance(adamval,float) or isinstance(adamval,int):
@@ -742,6 +746,7 @@ class GCMC(ProteinLigandSimulation) :
     self.setDump("averages reset",dumpfreq)
     
     moves = _assignMoveProbabilities(protein,solutes,solvent,"gcmc",self.periodic)
+    self.setChunk("equilibrate %d solvent=0 protein=0 solute=0 insertion=333 deletion=333 gcsolute=333" % nequil)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
@@ -763,6 +768,7 @@ class Jaws1(ProteinLigandSimulation) :
                     jawsbox=None,   
                     nequil=5E6,
                     nprod=40E6,
+                    watmodel="tip4p",
                     dumpfreq=1E5) :  
     """
     Parameters
@@ -805,7 +811,10 @@ class Jaws1(ProteinLigandSimulation) :
  
     self.setParameter("#"," JAWS-1 specific parameters")
     self.setParameter("jaws1","0")
-    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
+    if watmodel == "tip4p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip4p.tem"))
+    elif watmodel == "tip3p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip3p.tem"))
     self.setParameter("grand1",jawswater)
     _setbox(self,jawswater,jawsbox)
     self.setParameter("#"," End of JAWS specific parameters")
@@ -837,6 +846,7 @@ class Jaws2(ProteinLigandSimulation) :
                     jbias=6.5,
                     nequil=5E6,
                     nprod=40E6,
+                    watmodel="tip4p",
                     dumpfreq=1E5) :  
     """
     Parameters
@@ -887,7 +897,10 @@ class Jaws2(ProteinLigandSimulation) :
       self.setParameter("jbias","%.3f"%jbias[0])
     else :
       self.setParameter("multijaws2"," ".join("%.3f"%j for j in jbias))
-    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
+    if watmodel == "tip4p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip4p.tem"))
+    elif watmodel == "tip3p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip3p.tem"))
     self.setSolvent(2,jawssolvent)
     self.setParameter("grand1",jawswater)
     watobj = simulationobjects.PDBFile(filename=jawswater)
@@ -986,7 +999,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
                          templates=templates,solvent=protein_water,
                          outprefix="bnd_",
                          nequil=settings.nequil,outfolder=settings.outfolder+"_bnd",
-                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed)
+                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed,)
     elif ligands is not None :      
       if settings.dovacuum : 
         solvent = None
@@ -1071,7 +1084,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
       bnd_cmd = GCMC(protein=protein,solutes=ligands, 
                      templates=templates,solvent=protein_water,gcmcwater=settings.gcmcwater,
                      adamval=settings.adams,nequil=settings.nequil,gcmcbox=settings.gcmcbox,
-                     nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder,ranseed=ranseed)    
+                     nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder,ranseed=ranseed,watmodel=settings.watmodel)    
 
   elif settings.simulation == "jaws1" :
   
@@ -1115,6 +1128,7 @@ if __name__ == "__main__":
   parser.add_argument('--jawsbias',nargs="+",type=float,help="the bias for the JAWS-2",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
+  parser.add_argument('--watmodel',help="the name of the water model. Default = tip4p",choices=[ 'tip3p', 'tip4p'],default='tip4p')
   parser.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   parser.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
   parser.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)

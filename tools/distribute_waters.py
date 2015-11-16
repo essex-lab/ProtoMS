@@ -14,7 +14,7 @@ in the following order :
 And either the number of molecules as a string convertible to integer,
 or the pdb, which can be provided as a string with the name of the file, or an object.
 
-It produces a pdb file with the randomly distributed molecules with their oxigen atoms
+It produces a pdb file with the randomly distributed molecules with their oxygen atoms
 within the box limits.
 
 Initially thought to generate JAWS or GCMC molecules
@@ -69,7 +69,7 @@ def create_res(atnames=["O00"],resname="sol",positions=[np.array([0.0,0.0,0.0])]
 
 
 
-def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb=None) :
+def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb=None) :
   """
   Randomly distribute molecules in a box
   
@@ -84,7 +84,7 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb
     to include in the box
   watermodel : string, optional
     (only used when particles is a number)
-    either "t4p" or "t3p"
+    for instance, "t4p", "tip4p", "t3p" "tip3p",
     the water model for the generated waters
   partnumb : string,optional
     (only used when particles is a file)
@@ -129,7 +129,8 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WAT",partnumb
     watnumb = int(particles)
     particles = simulationobjects.PDBFile()
     for i in range(1,watnumb+1) :
-      oxpos = np.random.rand(len(length))*np.array(length) + np.array(orig)
+      pad = 0.3                 # Water oxygens are at least this far away (in Angs.) from the edge of the box
+      oxpos = np.random.rand(len(length))*np.array(length-2*pad) + np.array(orig+pad)
       particles.solvents[i] = create_res(resname=resname,positions=[oxpos])
     particles = convertwater.convertwater(particles,watermodel,"y",watresname=resname)
 
