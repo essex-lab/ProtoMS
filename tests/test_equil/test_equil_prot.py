@@ -94,14 +94,19 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                 self.assertTrue(os.path.exists("out_bnd/"+ out_files),"Equilibration simulation file: %s is missing." % ("out_bnd/"+ out_files))
 
             #Checking content of equilibration simulation output files with reference data in files.
-            
-                if((call("diff "+ test_dir + out_sim_files + " $PROTOMSHOME/tests/equil/out_bnd/" + out_sim_files, shell=True)) == 0):
-                    continue
+
+                if out_files == "info":
+                    if((call("bash content_info_comp.sh", shell=True)) == 0):
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference info file.")
                 else:
-                    raise ValueError("Content mismatch between output and reference ", "$PROTOMSHOME/tests/equil/out_bnd/", out_sim_files)
+                    if((call("diff "+ test_dir + "out_bnd/" + out_files + " $PROTOMSHOME/tests/equil/out_bnd/" + out_files, shell=True)) == 0):
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference ", os.path.join("$PROTOMSHOME/tests/equil/out_bnd/",out_files))
 
             
-
         else:
             raise simulationobjects.SetupError("Equilibration simulation is not successful.")
 

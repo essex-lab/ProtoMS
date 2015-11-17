@@ -1,4 +1,4 @@
-protoms3 started at 12:22:30 on the  3/11/2015
+protoms3 started at 11:49:55 on the 17/11/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
@@ -53,9 +53,9 @@ Successfully loaded protein scoop, that contains  116 residues
  Loading solute 'dcb'
  Using concentration correction
  Opening solvent file water.pdb
- Have now loaded         3092  solvent molecules (        3092  from this file)
+ Have now loaded         3103  solvent molecules (        3103  from this file)
 Spherical cap boundaries have been turned on in agreement with the solvent file
- Simulation consists of            1  protein chains,            1  solute molecules and         3092  solvent molecules
+ Simulation consists of            1  protein chains,            1  solute molecules and         3103  solvent molecules
  Fitting molecule templates to dcb
 ##################################################
  Charge on solute dcb =    1.9999999999999463E-003
@@ -72,7 +72,7 @@ Protein  1 has a total charge of      4.00000
 #####################################
 Using solvent cap boundary conditions
 #####################################
-Solvent cap origin = (  32.449,   8.075,   4.520)
+Solvent cap origin = (  32.714,   8.331,   4.500)
 Solvent cap radius =   30.000 A, constant =    1.500 kcal mol-1 A-2
  Calculating solvent axes...
  All axes successfully generated!
@@ -85,7 +85,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 12:22:30 on the  3/11/2015
+Starting simulation at 11:49:55 on the 17/11/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -100,7 +100,7 @@ There are  207 CLJ parameter types used in this simulation.
  Fixing backbone of protein            1  residue           99
  Fixing backbone of protein            1  residue          114
  Running chunk            1
-Move probabilies: Protein =      158 Solute =        1 Solvent =      841 Insertion =        0
+Move probabilies: Protein =      157 Solute =        1 Solvent =      841 Insertion =        0
                   Titrate =        0 Theta  =        0 Volume  =        0 Deletion  =        0
                   Rotamer =        0 Sample =        0 GCsolute =        0 SolTheta =        0
 ###############################################
@@ -108,12 +108,12 @@ Move probabilies: Protein =      158 Solute =        1 Solvent =      841 Insert
 ###############################################
  Calculating the initial total energy from scratch...
 Total Energy = ************ (************ | ************)
- Equilibration complete. Attempted/accepted moves          100          57
- These moves took    8.35140347E-02  s to run.
+ Equilibration complete. Attempted/accepted moves          100          49
+These moves took 105.9E-3 s to run.
  Running chunk            2
 ##########################
 Printing PDB of the system
 ##########################
  Redirecting PDB to equil_bnd.pdb
  Simulation shutting down...
-protoms3 completed at 12:22:31 on the  3/11/2015
+protoms3 completed at 11:49:56 on the 17/11/2015
