@@ -27,8 +27,8 @@ from subprocess import call
 proto_env = os.environ["PROTOMSHOME"]
 test_dir = proto_env + "/tests/test_sampling/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb", "run_bnd.cmd"]
-ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '1.5']
 out_sim_files = ["info", "all.pdb", "warning", "results", "restart.prev", "restart", "accept"]
+outfiles = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "run_bnd.cmd"]
 
 class TestSampling(unittest.TestCase):
     
@@ -50,6 +50,14 @@ class TestSampling(unittest.TestCase):
                 
             for out_files in output_files_setup:
                 self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
+
+            """Checking content of setup output files with reference data in files."""
+            
+            for out_files in outfiles:
+                if((call("diff "+ test_dir + out_files + " $PROTOMSHOME/tests/sampling/" + out_files, shell=True)) == 0):
+                    continue
+                else:
+                    raise ValueError("Content mismatch between output and reference ",out_files)
   
         else:
             raise simulationobjects.SetupError("ProtoMS setup for sampling MC moves is not successful!")
@@ -59,6 +67,18 @@ class TestSampling(unittest.TestCase):
             """Checking whether the simulation output files have been created successfully for Sampling MC moves."""
             for out_files in out_sim_files:
                 self.assertTrue(os.path.exists("out_bnd/"+ out_files), "Sampling simulation file: %s is missing." % out_files )
+
+                """Checking content of sampling MC moves output files with reference data in files."""
+                if out_files == "info":
+                   if((call("bash content_info_comp.sh", shell=True)) == 0):
+                       continue
+                   else:
+                       raise ValueError("Content mismatch between output and reference info file.")
+                else:
+                    if((call("diff " + test_dir + "out_bnd/" + out_files + " $PROTOMSHOME/tests/sampling/out_bnd/" + out_files, shell=True)) == 0):
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference ", os.path.join("$PROTOMSHOME/tests/sampling/out_bnd", out_files))
             
         else:
             raise simulationobjects.SetupError("Sampling MC protoms simulation failed!")

@@ -1,4 +1,4 @@
-protoms3 started at 13:48:08 on the  3/11/2015
+protoms3 started at 16:27:29 on the 17/11/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
@@ -53,9 +53,9 @@ Successfully loaded protein scoop, that contains  116 residues
  Loading solute 'dcb'
  Using concentration correction
  Opening solvent file water.pdb
- Have now loaded         3105  solvent molecules (        3105  from this file)
+ Have now loaded         3102  solvent molecules (        3102  from this file)
 Spherical cap boundaries have been turned on in agreement with the solvent file
- Simulation consists of            1  protein chains,            1  solute molecules and         3105  solvent molecules
+ Simulation consists of            1  protein chains,            1  solute molecules and         3102  solvent molecules
  Fitting molecule templates to dcb
 ##################################################
  Charge on solute dcb =    1.9999999999999463E-003
@@ -85,7 +85,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 13:48:08 on the  3/11/2015
+Starting simulation at 16:27:30 on the 17/11/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -116,6 +116,6 @@ Printing PDB of the system
 Writing restart file
 ####################
 Resetting free energy average to zero.
- Data collection complete. Attempted/accepted moves          100          58
+ Data collection complete. Attempted/accepted moves          100          50
  Simulation shutting down...
-protoms3 completed at 13:48:11 on the  3/11/2015
+protoms3 completed at 16:27:33 on the 17/11/2015
