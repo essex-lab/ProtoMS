@@ -26,8 +26,10 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 test_dir = proto_env + "/tests/test_jaws1/"
+ref_dir = proto_env + "/tests/jaws1/"
 output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb", "jaws1_wat.pdb", "jaws1_box.pdb", "water_clr.pdb", "run_bnd.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
+outfiles = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb", "jaws1_wat.pdb", "jaws1_box.pdb", "water_clr.pdb", "run_bnd.cmd"]
 
 class TestJAWS1(unittest.TestCase):
     
@@ -48,6 +50,14 @@ class TestJAWS1(unittest.TestCase):
             for out_files in output_files_setup:
 	        self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
+
+            """ Checking content of setup output files and reference data."""
+            for out_files in outfiles:
+                if((call("diff " + test_dir + out_files + " " + ref_dir + out_files, shell=True)) == 0):
+                    continue
+                else:
+                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
+
 	else:
             raise simulationobjects.SetupError("ProtoMS setup and command files generation failed!")
 
@@ -56,6 +66,17 @@ class TestJAWS1(unittest.TestCase):
             """Checking whether the simulation output files have been created successfully for JAWS Stage 1."""
             for out_files in out_sim_files:
                 self.assertTrue(os.path.exists("out/"+ out_files), "JAWS Stage 1 simulation file: %s is missing." % out_files )
+
+            """Comparing content of JAWS Stage 1 simulation output files with reference data."""
+            for out_files in out_sim_files:
+                if((call("bash "+test_dir+"content_info_comp.sh", shell=True)) == 0):
+                    continue
+                else:
+                    if((call("diff "+test_dir+"out/"+out_files+" "+ref_dir + "out/"+out_files, shell=True)) == 0):
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join(test_dir, "out/", out_files)))
+ 
                         
         else:
             raise simulationobjects.SetupError("JAWS Stage 1 simulation is not successful.")
