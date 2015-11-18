@@ -27,7 +27,14 @@
       ngcladders = 0
       njawsladders = 0
 
-      if (ntasks.lt.2) return
+      if (ntasks.lt.2.and.(getoption('temperaturere').or.getOption('lambdare')
+     .     .or.getoption('multigcmc').or.getoption('multijaws2') ) ) then
+         call printLine(FATAL,"Trying to run replica exchange/multigcmc/multijaws2 simulation with only")
+         call printLine(FATAL,"one process. You may have forgotten to use mpirun. If you only want a single")
+         call printLine(FATAL,"lambda/temp/B/bias use the non parallel keyword equivalents in the .cmd file.")
+
+         call closeProgram(100,"")
+      endif
 
       if (getoption('temperaturere')) then
 c       Read in frequency and number of temperatures

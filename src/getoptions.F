@@ -73,6 +73,12 @@ c     If compiled without MPI replica exchange is not available
       if (getOption('lambdare') .or. getOption('temperaturere')) then
         call closeProgram(-1,"Replica exchange is not available as ProtoMS was compiled without MPI.")
       endif
+      if (getOption('multigcmc')) then
+         call closeProgram(-1,"Multigcmc is not available as ProtoMS was compiled without MPI.")
+      endif
+      if (getOPtion('multijaws2')) then
+         call closeProgram(-1,"Multijaws2 is not available as ProtoMS was compiled without MPI.")
+      endif
 #endif
 
 c     get the current value of lambda
