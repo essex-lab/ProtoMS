@@ -26,9 +26,11 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 test_dir = proto_env + "/tests/test_gcmc/"
+ref_dir = proto_env + "tests/gcmc/"
 out_gcmc_tools = ["gcmc_box.pdb"]
 output_files_setup = ["gcmc_wat.pdb","run_bnd.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
+outfiles = ["gcmc_box.pdb", "gcmc_wat.pdb","run_bnd.cmd"]
 
 class TestGCMC(unittest.TestCase):
     
@@ -61,6 +63,14 @@ class TestGCMC(unittest.TestCase):
                 self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
   	        print "Setup and command files generation is successful."
+
+            """ Checking content of GCMC box and setup output files with reference data in files. """
+            for out_files in outfiles:
+                if((call("diff "+ test_dir + out_files + " $PROTOMSHOME/tests/gcmc/" + out_files, shell=True)) == 0):
+                    continue
+                else:
+                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
+
         else:
             raise simulationobjects.SetupError("ProtoMS setup and command files generation is not successful.")
 
@@ -69,6 +79,18 @@ class TestGCMC(unittest.TestCase):
             """Checking whether the simulation output files have been created successfully."""
             for out_files in out_sim_files:
                 self.assertTrue(os.path.exists("out/"+ out_files),"GCMC simulation file: %s is missing." % out_files)
+
+                """ Checking content of GCMC simulation output files with reference data in files."""
+                if out_files == "info":
+                    if((call("bash content_info_comp.sh", shell=True)) == 0):
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference info files.")
+                else:
+                    if((call("diff "+test_dir+ "out/" + out_files+ " $PROTOMSHOME/tests/gcmc/out/" + out_files, shell=True)) == 0):
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join(ref_dir, "out/", out_files)))
                         
         else:
             raise simulationobjects.SetupError("GCMC simulation is not successful.")

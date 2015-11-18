@@ -57,7 +57,7 @@ class TestSampling(unittest.TestCase):
                 if((call("diff "+ test_dir + out_files + " $PROTOMSHOME/tests/sampling/" + out_files, shell=True)) == 0):
                     continue
                 else:
-                    raise ValueError("Content mismatch between output and reference ",out_files)
+                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
   
         else:
             raise simulationobjects.SetupError("ProtoMS setup for sampling MC moves is not successful!")
@@ -78,7 +78,7 @@ class TestSampling(unittest.TestCase):
                     if((call("diff " + test_dir + "out_bnd/" + out_files + " $PROTOMSHOME/tests/sampling/out_bnd/" + out_files, shell=True)) == 0):
                         continue
                     else:
-                        raise ValueError("Content mismatch between output and reference ", os.path.join("$PROTOMSHOME/tests/sampling/out_bnd", out_files))
+                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join("$PROTOMSHOME/tests/sampling/out_bnd", out_files)))
             
         else:
             raise simulationobjects.SetupError("Sampling MC protoms simulation failed!")

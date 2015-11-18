@@ -79,7 +79,7 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                 if((call("diff $PROTOMSHOME/tests/test_setup/" + out_files + " $PROTOMSHOME/tests/setup/" + out_files, shell=True)) == 0):
                     continue
                 else:
-                    raise ValueError("Content mismatch between output and reference ",out_files)
+                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
         else:
             raise simulationobjects.SetupError("ProtoMS ligand and protein setup is not successful.")
 

@@ -79,7 +79,7 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                 if((call("diff "+ test_dir + out_files + " $PROTOMSHOME/tests/equil/" + out_files, shell=True)) == 0):
                     continue
                 else:
-                    raise ValueError("Content mismatch between output and reference ",out_files)
+                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
 
         else:
             raise simulationobjects.SetupError("ProtoMS ligand and protein setup is not successful.")
@@ -91,7 +91,7 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
             """Checking whether the simulation output files have been created successfully for equilibration MC moves."""
             for out_files in out_sim_files:
                    
-                self.assertTrue(os.path.exists("out_bnd/"+ out_files),"Equilibration simulation file: %s is missing." % ("out_bnd/"+ out_files))
+                self.assertTrue(os.path.exists("out_bnd/"+ out_files),"Equilibration simulation file: %s is missing." %("out_bnd/"+ out_files))
 
             #Checking content of equilibration simulation output files with reference data in files.
 
@@ -104,7 +104,7 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                     if((call("diff "+ test_dir + "out_bnd/" + out_files + " $PROTOMSHOME/tests/equil/out_bnd/" + out_files, shell=True)) == 0):
                         continue
                     else:
-                        raise ValueError("Content mismatch between output and reference ", os.path.join("$PROTOMSHOME/tests/equil/out_bnd/",out_files))
+                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join("$PROTOMSHOME/tests/equil/out_bnd/",out_files)))
 
             
         else:
