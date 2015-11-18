@@ -685,7 +685,7 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
         atypes = [ atoms[i].atype for i in angle ]
         try:
             k = angle_params.get_params ( atypes ).k
-        except IndexError:
+        except KeyError:
             #parameter not in gaff.ff try frcmod params
             try:
                 k = [ i for i in frcangles
@@ -716,7 +716,7 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
         missing = False
         try:
             dihedral_params.get_params ( atypes )
-        except IndexError:
+        except KeyError:
             # If not in gaff.ff then check frcmod
             try:
                 [ i for i in frcdihedrals
