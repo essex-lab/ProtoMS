@@ -68,7 +68,7 @@ class TestRETIsngl(unittest.TestCase):
                     if len(dirs) != 0:
                         for d in dirs:
                             for out_files in out_sim_files:
-                                self.assertTrue(os.path.exists(os.path.join("out_comb_free",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_free",d,out_files))
+                                self.assertTrue(os.path.exists(os.path.join("out_comb_free/",d+"/",out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_free/",d+"/",out_files))
 
                                 """Checking content of RETI free phase leg of a single topology simulation output files with reference data. """
                                 if out_files == "info":
@@ -77,10 +77,10 @@ class TestRETIsngl(unittest.TestCase):
                                     else:
                                         raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
                                 else:
-                                    if((call("diff "+ out_files+ " " + ref_dir +"out_comb_free" + d + out_files,shell=True)) == 0):
+                                    if((call("diff "+ "out_comb_free/"+d+"/"+out_files+ " " + ref_dir +"out_comb_free/" + d + "/"+ out_files,shell=True)) == 0):
                                         continue
                                     else:
-                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_comb_free",d,out_files)))
+                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_comb_free/",d+"/",out_files)))
                             
             
         else:
@@ -95,7 +95,7 @@ class TestRETIsngl(unittest.TestCase):
                     if len(dirs) != 0:
                         for d in dirs:
                             for out_files in out_sim_files:
-                                self.assertTrue(os.path.exists(os.path.join("out_comb_gas",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_gas",d,out_files))
+                                self.assertTrue(os.path.exists(os.path.join("out_comb_gas/",d+"/",out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_gas/",d+"/",out_files))
 
                                 """Checking content of RETI gas phase leg of a single topology simulation output files with reference data. """
                                 if out_files == "info":
@@ -104,10 +104,10 @@ class TestRETIsngl(unittest.TestCase):
                                     else:
                                         raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
                                 else:
-                                    if((call("diff "+ out_files+ " "+ref_dir+ "out_comb_gas" + d + out_files,shell=True)) == 0):
+                                    if((call("diff "+"out_comb_gas/"+d+"/"+out_files+ " "+ref_dir+ "out_comb_gas/" + d + "/"+out_files,shell=True)) == 0):
                                         continue
                                     else:
-                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_comb_gas",d,out_files)))
+                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_comb_gas/",d+"/",out_files)))
          
         else:
             raise simulationobjects.SetupError("RETI gas phase leg of a single topology simulation is not successful.")

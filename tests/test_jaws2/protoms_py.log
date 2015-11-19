@@ -1,20 +1,8 @@
-DEBUG : Running protoms.py at 19/11/2015 - 10:44:27
+DEBUG : Running protoms.py at 19/11/2015 - 16:49:53
 DEBUG : Command line arguments = -s jaws2 -l fragment.pdb -p protein.pdb --gcmcwater /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_jaws2/jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -f/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_jaws2/
 DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_jaws2/'], gcmcbox=None, gcmcwater='/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_jaws2/jaws2_waters.pdb', innercut=16.0, jawsbias=[8.0, 10.0, 12.0, 14.0], lambdas=[16], ligand=['fragment.pdb'], nequil=0.0, nprod=100.0, outercut=20.0, outfolder='', protein='protein.pdb', ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='jaws2', singlemap=None, template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
 INFO : 
 INFO : Setting up ligand: fragment.pdb...
-INFO : Running antechamber. Please check the output carefully
-DEBUG : Running run_antechamber with arguments: 
-DEBUG : 	lig    = fragment.pdb
-DEBUG : 	charge = 0
-DEBUG : 	resnam = XDK
-DEBUG : This will generate an Amber prepi file with AM1-BCC and GAFF atom types
-INFO : Created prepi-file: fragment.prepi
-INFO : Running parmchk. Please check the output carefully
-DEBUG : Running run_parmchk with arguments: 
-DEBUG : 	lig = fragment.pdb
-DEBUG : This will generate an Amber frcmod file with additional parameters
-INFO : Created frcmod-file: fragment.frcmod
 DEBUG : Running build_template with arguments: 
 DEBUG : 	temfile    = fragment.tem
 DEBUG : 	prepifile  = fragment.prepi
