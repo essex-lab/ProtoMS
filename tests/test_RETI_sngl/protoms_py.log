@@ -1,4 +1,4 @@
-DEBUG : Running protoms.py at 05/11/2015 - 23:06:17
+DEBUG : Running protoms.py at 19/11/2015 - 13:09:39
 DEBUG : Command line arguments = -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/single_cmap.dat -f/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/
 DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=True, cmdfile='run', dovacuum=False, dumpfreq=1.0, flexin='flexible', flexout='sidechain', folders=['/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[0.0, 0.33, 0.67, 1.0], ligand=['ethane.pdb', 'methanol.pdb'], nequil=0.0, nprod=10.0, outercut=20.0, outfolder='', protein=None, ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='singletopology', singlemap='/Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/tests/test_RETI_sngl/single_cmap.dat', template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
 INFO : 
@@ -30,6 +30,17 @@ DEBUG : This will generate a ProtoMS compatible z-matrix for a solute
 INFO : Before running a simulation, ensure that the first line of ethane.pdb reads 'HEADER ETH'.
 INFO : Created zmatrix (ethane.zmat) for ligand. Please check the output carefully
 INFO : Created ProtoMS template-file (ethane.tem) for ligand. Please check the output carefully
+DEBUG : Running solvate with arguments: 
+DEBUG : 	box        = /Users/user/Work/ProtoMS-Work/protoms-dev-testsuite/protoms-testsuite-branch/data/wbox_tip4p.pdb
+DEBUG : 	ligand     = ethane.pdb_methanol.pdb
+DEBUG : 	protein    = None
+DEBUG : 	geometry   = box
+DEBUG : 	padding    = 10.000000
+DEBUG : 	radius     = 30.000000
+DEBUG : 	center     = cent
+DEBUG : 	namescheme = ProtoMS
+DEBUG : This will solvate either a protein or a ligand using a pre-equilibrated box
+INFO : Created waterbox-file: ethane_box.pdb
 INFO : 
 INFO : Setting up ligand: methanol.pdb...
 INFO : Running antechamber. Please check the output carefully

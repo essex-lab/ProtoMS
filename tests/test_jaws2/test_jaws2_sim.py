@@ -78,7 +78,7 @@ class TestJAWS2(unittest.TestCase):
                                     else:
                                         raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
                                 else:
-                                    if((call("diff "+ out_files+ " $PROTOMSHOME/tests/test_jaws2/out_jaws2-w1" + d + out_files,shell=True)) == 0):
+                                    if((call("diff "+ out_files+ " $PROTOMSHOME/tests/jaws2/out_jaws2-w1" + d + out_files,shell=True)) == 0):
                                         continue
                                     else:
                                         raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_jaws2-w1",d,out_files)))
