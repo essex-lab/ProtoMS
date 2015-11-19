@@ -77,7 +77,7 @@ class TestRETIsngl(unittest.TestCase):
                                     else:
                                         raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
                                 else:
-                                    if((call("diff "+ out_files+ " $PROTOMSHOME/tests/RETI_sngl/out_comb_free" + d + out_files,shell=True)) == 0):
+                                    if((call("diff "+ out_files+ " " + ref_dir +"out_comb_free" + d + out_files,shell=True)) == 0):
                                         continue
                                     else:
                                         raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_comb_free",d,out_files)))
@@ -104,7 +104,7 @@ class TestRETIsngl(unittest.TestCase):
                                     else:
                                         raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
                                 else:
-                                    if((call("diff "+ out_files+ " $PROTOMSHOME/tests/RETI_sngl/out_comb_gas" + d + out_files,shell=True)) == 0):
+                                    if((call("diff "+ out_files+ " "+ref_dir+ "out_comb_gas" + d + out_files,shell=True)) == 0):
                                         continue
                                     else:
                                         raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_comb_gas",d,out_files)))
