@@ -4,16 +4,16 @@ RESULTS FILE    1
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            4
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        4
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.34252729278705590713E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -93,8 +93,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.4253       3.4277
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    2
@@ -102,16 +102,16 @@ RESULTS FILE    2
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            4
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        4
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.34203736863673553023E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -191,8 +191,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.4204       3.4228
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    3
@@ -200,16 +200,16 @@ RESULTS FILE    3
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            3
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        3
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.34203736786366269185E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -289,8 +289,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.4204       3.4228
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    4
@@ -298,16 +298,16 @@ RESULTS FILE    4
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            3
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        3
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.34182819686065721299E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -387,8 +387,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.4183       3.4207
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    5
@@ -396,16 +396,16 @@ RESULTS FILE    5
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            4
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        4
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.33464041734987911604E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -485,8 +485,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.3464       3.3488
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    6
@@ -494,16 +494,16 @@ RESULTS FILE    6
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            4
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        4
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.33347141879858138887E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -583,8 +583,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.3347       3.3371
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    7
@@ -592,16 +592,16 @@ RESULTS FILE    7
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            3
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        3
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.33347141938975637110E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -681,8 +681,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.3347       3.3371
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    8
@@ -690,16 +690,16 @@ RESULTS FILE    8
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            3
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        3
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.33347141938975637110E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -779,8 +779,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.3347       3.3371
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE    9
@@ -788,16 +788,16 @@ RESULTS FILE    9
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            4
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        4
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.33347141911690540185E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -877,8 +877,8 @@ lambda | Total Energy
 ##################################
 Gradient       3.3347       3.3371
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
   -
 #################
 RESULTS FILE   10
@@ -886,16 +886,16 @@ RESULTS FILE   10
 #####################################################
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
- Number of data steps =            1
- Lambda replica =            4
- Temperature =    25.000000000000000       C
- Solvents,Proteins,GC-solutes  =         300           0           0
- Simulation B value =   0.0000000000000000
- Molecules in grid=           0
- Pressure =    1.0000000000000000       atm
- Volume =    13851.666436095999       A^3
- Average volume =    13851.666436095999       (   0.0000000000000000      )
- Random number seed =       209999
+Number of data steps       1
+Lambda replica =        4
+Temperature =   25.000 C
+Solvents,Proteins,GC-solutes =      300       0       0
+Simulation B value =    0.000
+Molecules in grid  =        0
+Pressure =    1.000 atm
+Volume = ******** atm
+Average volume = ******** (   0.000)
+Random number seed =       209999
 Backwards Free Energy =    -0.33347141911690540185E-02 ( 0.000000000     )
 Forwards  Free Energy =      0.0000000000000000000     ( 0.000000000     )
 ###########################################################
@@ -975,5 +975,5 @@ lambda | Total Energy
 ##################################
 Gradient       3.3347       3.3371
 ##################################
- HIGH           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
- LOW           0   0.0000000000000000        0.0000000000000000        0.0000000000000000
+HIGH       0       0.000       0.000       0.000
+LOW        0       0.000       0.000       0.000
