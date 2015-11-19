@@ -26,8 +26,11 @@ from subprocess import call
 
 proto_env = os.environ["PROTOMSHOME"]
 test_dir = proto_env + "/tests/test_jaws2/"
+ref_dir= proto_env + "/tests/jaws2/"
 output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb", "jaws2_wat1.pdb", "jaws2_wat2.pdb", "jaws2_wat3.pdb", "jaws2_not1.pdb", "jaws2_not2.pdb", "jaws2_not3.pdb", "run_jaws2-w1_bnd.cmd", "run_jaws2-w2_bnd.cmd", "run_jaws2-w3_bnd.cmd"]
 out_sim_files = ["accept", "all.pdb", "info", "restart", "restart.prev", "results", "warning"]
+
+outfiles=["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb", "jaws2_wat1.pdb", "jaws2_wat2.pdb", "jaws2_wat3.pdb", "jaws2_not1.pdb", "jaws2_not2.pdb", "jaws2_not3.pdb", "run_jaws2-w1_bnd.cmd", "run_jaws2-w2_bnd.cmd", "run_jaws2-w3_bnd.cmd"]
 
 class TestJAWS2(unittest.TestCase):
     
@@ -48,6 +51,13 @@ class TestJAWS2(unittest.TestCase):
             for out_files in output_files_setup:
 	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with zmat generation, forcefield issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
+            """Checking content of setup output and reference files for JAWS Stage II."""
+
+            for out_files in outfiles:
+                if((call("diff "+ test_dir + out_files+" "+ref_dir+out_files, shell=True) == 0)):
+                    continue
+                else:
+                    raise ValueError("Content mismatch between output and reference setup file %s." %(out_files))
 	else:
             raise simulationobjects.SetupError("ProtoMS setup and command files generation for JAWS Stage 2 failed.")
 
@@ -60,6 +70,19 @@ class TestJAWS2(unittest.TestCase):
                         for d in dirs:
                             for out_files in out_sim_files:
                                 self.assertTrue(os.path.exists(os.path.join("out_jaws2-w1",d,out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_jaws2-w1",d,out_files))
+
+                                """Checking content of JAWS stage2 simulation output files with reference data. """
+                                if out_files == "info":
+                                    if((call("bash "+test_dir+"content_info_comp.sh", shell=True)) == 0):
+                                        continue
+                                    else:
+                                        raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
+                                else:
+                                    if((call("diff "+ out_files+ " $PROTOMSHOME/tests/test_jaws2/out_jaws2-w1" + d + out_files,shell=True)) == 0):
+                                        continue
+                                    else:
+                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_jaws2-w1",d,out_files)))
+                            
             
         else:
             raise simulationobjects.SetupError("JAWS Stage 2 check simulation failed.")
