@@ -53,6 +53,7 @@ class TestRETIdbl(unittest.TestCase):
             """Checking content of RETI dual topology setup output files with reference data files."""  
             for out_files in outfiles:
                 if((call("diff "+ test_dir + out_files + " "+ ref_dir + out_files, shell=True)) == 0):
+                    print "\n Content matched for %s." %out_files
                     continue
                 else:
                     raise ValueError("Content mismatch between output and reference %s" %(out_files))  
@@ -75,11 +76,13 @@ class TestRETIdbl(unittest.TestCase):
                                 """Checking content of RETI free phase leg of a dual topology simulation output files with reference data. """
                                 if out_files == "info":
                                     if((call("bash "+test_dir+"content_info_comp.sh", shell=True)) == 0):
+                                        print "\n RETI free phase dual topology info files matched,"
                                         continue
                                     else:
                                         raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
                                 else:
                                     if((call("diff "+ "out_free/" + d + "/"+ out_files+ " " + ref_dir +"out_free/" + d + "/"+out_files,shell=True)) == 0):
+                                        print "\n Content matched for %s." %"out_free/"+d+"/"+out_files
                                         continue
                                     else:
                                         raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_free/",d+"/",out_files)))

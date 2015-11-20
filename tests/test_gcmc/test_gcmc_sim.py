@@ -67,6 +67,7 @@ class TestGCMC(unittest.TestCase):
             """ Checking content of GCMC box and setup output files with reference data in files. """
             for out_files in outfiles:
                 if((call("diff "+ test_dir + out_files + " "+ ref_dir + out_files, shell=True)) == 0):
+                    print "\n Content matched for file %s." %out_files
                     continue
                 else:
                     raise ValueError("Content mismatch between output and reference %s" %(out_files))
@@ -85,11 +86,13 @@ class TestGCMC(unittest.TestCase):
                 """ Checking content of GCMC simulation output files with reference data in files."""
                 if out_files == "info":
                     if((call("bash "+ test_dir +"content_info_comp.sh", shell=True)) == 0):
+                        print "\n Info files content matched."
                         continue
                     else:
                         raise ValueError("Content mismatch between output and reference info files.")
                 else:
                     if((call("diff "+test_dir+ "out/" + out_files+ " "+ ref_dir + "out/" + out_files, shell=True)) == 0):
+                        print "\n Content matched for file %s." %"out/"+out_files
                         continue
                     else:
                         raise ValueError("Content mismatch between output and reference %s" %(os.path.join(test_dir, "out/", out_files)))

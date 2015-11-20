@@ -54,6 +54,7 @@ class TestJAWS1(unittest.TestCase):
             """ Checking content of setup output files and reference data."""
             for out_files in outfiles:
                 if((call("diff " + test_dir + out_files + " " + ref_dir + out_files, shell=True)) == 0):
+                    print "\n Content matched for %s." %out_files
                     continue
                 else:
                     raise ValueError("Content mismatch between output and reference %s" %(out_files))
@@ -67,15 +68,17 @@ class TestJAWS1(unittest.TestCase):
             for out_files in out_sim_files:
                 self.assertTrue(os.path.exists("out/"+ out_files), "JAWS Stage 1 simulation file: %s is missing." % out_files )
 
-            """Comparing content of JAWS Stage 1 simulation output files with reference data."""
-            for out_files in out_sim_files:
-                if((call("bash "+test_dir+"content_info_comp.sh", shell=True)) == 0):
-                    continue
-                else:
-                    if((call("diff "+test_dir+"out/"+out_files+" "+ref_dir + "out/"+out_files, shell=True)) == 0):
+                """Comparing content of JAWS Stage 1 simulation output files with reference data."""
+                if out_files == "info":
+                    if((call("bash "+test_dir+"content_info_comp.sh", shell=True)) == 0):
+                        print "\n Info file content matched."
                         continue
                     else:
-                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join(test_dir, "out/", out_files)))
+                        if((call("diff "+test_dir+"out/"+out_files+" "+ref_dir + "out/"+out_files, shell=True)) == 0):
+                            print "\n Content matched for %s." %"out/"+out_files
+                            continue
+                        else:
+                            raise ValueError("Content mismatch between output and reference %s" %(os.path.join(test_dir, "out/", out_files)))
  
                         
         else:

@@ -72,11 +72,13 @@ class TestSampling(unittest.TestCase):
                 """Checking content of sampling MC moves output files with reference data in files."""
                 if out_files == "info":
                    if((call("bash "+ test_dir+"content_info_comp.sh", shell=True)) == 0):
+                       print "\n Info files content matched."
                        continue
                    else:
                        raise ValueError("Content mismatch between output and reference info file.")
                 else:
                     if((call("diff " + test_dir + "out_bnd/" + out_files + " "+ ref_dir+"out_bnd/" + out_files, shell=True)) == 0):
+                        print "\n %s content matched." %"out_bnd/" + out_files
                         continue
                     else:
                         raise ValueError("Content mismatch between output and reference %s" %(os.path.join(test_dir,"out_bnd/", out_files)))
