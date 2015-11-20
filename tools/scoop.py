@@ -143,9 +143,9 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
 
     both = sorted ( inner + outer )
 
-    #All CYS must be fixed to preserve disulphide bridges
+    #All CYX must be fixed to preserve disulphide bridges
     #this may be improved in future
-    rigid = [ res for res in both if pdb_out.residues[res].name == 'CYS' ]
+    rigid = [ res for res in both if pdb_out.residues[res].name == 'CYX' ]
     backBoneRigid = []
 
     if flexout in [ 'rigid', 'sidechain' ]:

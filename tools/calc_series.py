@@ -641,7 +641,7 @@ if __name__ == '__main__' :
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to analyze and plot a time series")
   parser.add_argument('-f','--file',nargs="+",help="the name of the file to analyse. Default is results. ",default=["results"])
-  parser.add_argument('-o','--out',help="the prefix of the output figure. Default is results. ",default="results")
+  parser.add_argument('-o','--out',help="the prefix of the output figure. Default is series. ",default="series")
   parser.add_argument('-s','--series',nargs="+",help="the series to analyze")
   parser.add_argument('-p','--plot',choices=["sep","sub","single","single_first0","single_last0"],help="the type of plot to generate for several series")
   parser.add_argument('--nperm',type=int,help="if larger than zero, perform a permutation test to determine equilibration, default=0",default=0)

@@ -10,7 +10,7 @@ This tutorial will cover the basics behind setting-up, running and analysing GCM
 <H3>Prerequisites</H3>
 <ul>
 	<li><code>wat.pdb</code> - the PDB structure of a water molecule</li>
-	<li><code>protein.pdb</code> - the structure of the BPTI in PDB format</li>
+	<li><code>protein_pms.pdb</code> - the structure of the BPTI in PDB format</li>
 </ul>
 <p>
 The protein has already been protonated and had it's atoms in the ProtoMS naming scheme. Note that there are 3 disulfied bonds in the protein, which are labelled as CYX. The water molecule is the Tip4p model, and is already located in the BPTI cavity. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
@@ -26,13 +26,13 @@ First, let's create a box around our water of interest. This will constrain the 
 <p>
 This has created a file called gcmc_box.pdb. Next, we'll use the automatic capabilities of protoms.py to do the rest of the set-up.
 <p>
-<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12 -13 -14 -15 -16 -17 -18 -19 -20 -21 -22 -23 -24 -25 -26 --capradius 26</pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein_pms.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12 -13 -14 -15 -16 -17 -18 -19 -20 -21 -22 -23 -24 -25 -26 --capradius 26</pre>
 <p>
 We've input which Adams values (i.e. chemical potentials) we will use with <code>--adams</code>. These can be chosen after some preliminary analysis that we'll come to later. As the protein was already in the ProtoMS format, we gave it the flag <code>-sc</code> (for scoop). We also specified the radius of the water droplet with <code>--capradius</code>; the default radius in protoms.py is 30 Angstroms, which is unnecessary for such a small protein.
 <p>
 Have a look at the simulation system we've created with your favourite molecular viewer. For instance, with vmd:
 <p>
-<pre>vmd -m protein.pdb water.pdb wat.pdb gcmc_box.pdb</pre>
+<pre>vmd -m protein_pms.pdb water.pdb wat.pdb gcmc_box.pdb</pre>
 <p>
 You should see something like this <br>
 <img src="setup.png" width="%" height="50%" alt="" /><br>
@@ -131,7 +131,7 @@ The Adams parameter affects the probability to accept and insert or deletion mov
 </ul>  
 If only one value is entered, for instance 
 
-<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 </pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein_pms.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 </pre>
 
 the command file <code>run_bnd.cmd</code> will have the line
 
@@ -139,7 +139,7 @@ the command file <code>run_bnd.cmd</code> will have the line
 
 On the other hand, if one were to enter multiple Adams values, for instance
 
-<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12</pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein_pms.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12</pre>
 
 one would find this line in <code>run_bnd.cmd</code>:
 
@@ -164,7 +164,7 @@ start by simulating with values between -16 and 0 and analysing the results. You
 <h5>Running independent repeats</h5>
 Multiple independant repeats are essential for well resolved free energy estimates. Every GCMC simulation counts as an individual repeat, and one can always run additional simulations at different Adams values. If you're sure of the Adams value(s) from the start and want, say, 3 repeats, typing
 
-<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -19 -20 -21 -r 3</pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein_pms.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -19 -20 -21 -r 3</pre>
 
 will create 3 command files called <code>run1_bnd.cmd</code>, <code>run2_bnd.cmd</code>, and <code>run3_bnd.cmd</code>, which, when executed, create the output folders <code>out1</code>, <code>out2</code>, and <code>out3</code>. Analysing the results from multiple directories is trivial; all you need to do is enter the directories that contain the ProtoMS <code>results</code> files. For instance, one can type
 
@@ -227,7 +227,7 @@ Here, we've explicitly stated the size of the box in each direction, meaning we 
 To solvate the protein with a sphere of water, up to a radius of 26 Angstroms, one can enter the following:
 
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/solvate.py -pr protein.pdb -g droplet -r 26 -b $PROTOMSHOME/data/wbox_tip4p.pdb -o water.pdb</pre>
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -pr protein_pms.pdb -g droplet -r 26 -b $PROTOMSHOME/data/wbox_tip4p.pdb -o water.pdb</pre>
 <p>
 
 This makes <code>water.pdb</code>.
@@ -251,7 +251,7 @@ In the BPTI test case, no water molcules in <code>water.pdb</code> are within th
 The make the input file for the Monte Carlo simulation, we reference the files created thus far
 
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -p protein.pdb -pw water.pdb --gcmcwater gcmc_wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12 -13 -14 -15 -16 -17 -18 -19 -20 -21 -22 -23 -24 -25 -26 -o run</pre>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -p protein_pms.pdb -pw water.pdb --gcmcwater gcmc_wat.pdb --gcmcbox gcmc_box.pdb --adams -11 -12 -13 -14 -15 -16 -17 -18 -19 -20 -21 -22 -23 -24 -25 -26 -o run</pre>
 <p>
 
 creating <code>run_bnd.cmd</code>. Finally, we need to add the contraints to the cysteine bridges:
