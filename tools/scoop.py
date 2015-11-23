@@ -25,7 +25,7 @@ import simulationobjects
 logger = logging.getLogger('protoms')
 
 def scoop ( protein, ligand, innercut = 16, outercut  = 20, 
-            flexin = 'full', flexout = 'sidechain', terminal = 'neutralize', excluded = [], added = [] ) :
+            flexin = 'full', flexout = 'sidechain', terminal = 'neutralize', excluded = [], added = [], scooplimit=10 ) :
 
     """
     Generates a scoop from protein structure
@@ -102,9 +102,9 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
     #any atom of the ligand, add then to the appropriate list
     outer = []
     inner = []
+    kill_list = [True]*len(pdb_out.residues)
+    in_kill_list = [True]*len(pdb_out.residues)
     for res in pdb_out.residues:
-        kill = True
-        in_kill = True
         for atom in pdb_out.residues[res].atoms:
             if ( atom.name.startswith( ( 'H', 'h', '1' ) )
                  or atom.name in ( 'N', 'C', 'O' ) ):
@@ -115,16 +115,18 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
                         continue
                     distance = np.linalg.norm ( atom.coords - lat.coords )
                     if distance < outercut:
-                        kill = False
+                        kill_list[res-1] = False
                     if distance < innercut:
-                        in_kill = False
-
-        if not kill and in_kill and not res in excluded:
+                        in_kill_list[res-1] = False
+        if not kill_list[res-1] and in_kill_list[res-1] and not res in excluded:
             outer.append ( res )
-        if kill and res in added:
+        if kill_list[res-1] and res in added:
             outer.append ( res )
-        if not in_kill:
+        if not in_kill_list[res-1]:
             inner.append ( res )
+
+    kill_list=np.array(kill_list)
+    in_kill_list=np.array(in_kill_list)
 
     # Also eliminate Xray waters beyond outer cutoff
     waters = []
@@ -135,28 +137,36 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
                 for lat in lig.atoms:
                     distance = np.linalg.norm ( atom.coords - lat.coords )
                     if distance < outercut:
-                        kill = False
-                        break
+                       kill = False
+                       break
         if not kill:
             waters.append(mol)
 
 
     both = sorted ( inner + outer )
 
-    #All CYX must be fixed to preserve disulphide bridges
-    #this may be improved in future
-    rigid = [ res for res in both if pdb_out.residues[res].name == 'CYX' ]
-    backBoneRigid = []
+    #All CYX residues and the backbone of neighbouring residues must be fixed to preserve disulphide bridges.  
+    rigid = []
+    backBoneRigid =[]
+    for res in both:
+        if pdb_out.residues[res].name == 'CYX':
+            rigid.append(res)
+            if res != 0:
+                backBoneRigid.append(res-1)
+            if res != len(pdb_out.residues):
+                backBoneRigid.append(res+1)
 
-    if flexout in [ 'rigid', 'sidechain' ]:
-        backBoneRigid += [ res for res in outer ]
-    if flexout == 'rigid':
-        rigid += [ res for res in outer ]
+    #Constrain outer residues only if the number of discarded residues is less than scooplimit.
+    if kill_list.sum() > scooplimit:
+        if flexout in [ 'rigid', 'sidechain' ]:
+            backBoneRigid += [ res for res in outer ]
+        if flexout == 'rigid':
+            rigid += [ res for res in outer ]
     # Same thing for inner residues
-    if flexin in [ 'rigid', 'sidechain' ]:
-        backBoneRigid += [ res for res in inner ]
-    if flexin == 'rigid':
-        rigid += [ res for res in inner ]
+        if flexin in [ 'rigid', 'sidechain' ]:
+            backBoneRigid += [ res for res in inner ]
+        if flexin == 'rigid':
+            rigid += [ res for res in inner ]
 
     outres = []
     rigidBB = []
@@ -191,13 +201,17 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
     outSC = outSC[:-2]
 
     #Purge residues outside the outer scoop from the protein pdb and save it
-    for res in pdb_out.residues.keys():
-        if res not in both :
-            pdb_out.residues.pop ( res )
-
-    for res in pdb_out.solvents.keys():
-        if res not in waters:
-            pdb_out.solvents.pop ( res )
+    #Only do it if the number of discarded residues is less than scooplimit.
+    if kill_list.sum() > scooplimit:
+        for res in pdb_out.residues.keys():
+            if res not in both :
+                pdb_out.residues.pop ( res )
+        for res in pdb_out.solvents.keys():
+            if res not in waters:
+                pdb_out.solvents.pop ( res )
+    else:
+        #print "Not scooping, lower than limit."
+        logger.info("Not scooping. Number of residues removed from the protein is too small (%s less than %s)" % (kill_list.sum(),scooplimit))
 
     # Check of terminal residue
     headerscoop = False
@@ -235,26 +249,29 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
             if atom.name.upper().strip() in ["OT","OXT"]  : remthis.append(atom)
           for atom in remthis :
             cres.atoms.remove(atom)
-   
-    header  = "REMARK Scoop of %s\n" % pdb_out
-    header += "REMARK Inner Region : %8.2f Angstrom radius\n" % innercut
-    header += "REMARK Outer Region : %8.2f Angstrom radius\n" % outercut
-    header += "REMARK Num Residues %d ( %d inner %d outer )\n" % (len(inner)+len(outer),
+
+    header  = "REMARK Original file: %s\n" % pdb_out
+    if kill_list.sum() > scooplimit:
+        header += "REMARK Scoop of %s was made\n" % pdb_out
+        header += "REMARK Inner Region : %8.2f Angstrom radius\n" % innercut
+        header += "REMARK Outer Region : %8.2f Angstrom radius\n" % outercut
+        header += "REMARK Num Residues %d ( %d inner %d outer )\n" % (len(inner)+len(outer),
                                                              len(inner),len(outer))
-    header += "REMARK %d residues have a fixed backbone\n" % (len(rigidBB))
-    header += "REMARK %d residues are fixed\n" % (len(rigidSC))
-    header += "REMARK flexibility of the inner part : %s\n" % flexin
-    header += "REMARK flexibility of the outer part : %s\n" % flexout
-    header += "REMARK ProtoMS keyword to use\n"
+        header += "REMARK %d residues have a fixed backbone\n" % (len(rigidBB))
+        header += "REMARK %d residues are fixed\n" % (len(rigidSC))
+        header += "REMARK flexibility of the inner part : %s\n" % flexin
+        header += "REMARK flexibility of the outer part : %s\n" % flexout
+        header += "REMARK ProtoMS keyword to use\n"
+
     if not len(rigidBB) == 0 : header += "REMARK chunk fixbackbone 1 %s\n" % outBB
     if not len(rigidSC) == 0 : header += "REMARK chunk fixresidues 1 %s\n" % outSC
 
-    header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
-    header += "REMARK of the ligand\n"
+    if kill_list.sum() > scooplimit:
+        header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
+        header += "REMARK of the ligand\n"
+        if headerscoop : 
+          header += 'HEADER scoop\n'
 
-    if headerscoop : 
-      header += 'HEADER scoop\n'
-    
     pdb_out.header = header
 
     return pdb_out
@@ -278,6 +295,7 @@ if __name__ == "__main__":
     parser.add_argument('--terminal',choices=[ 'keep', 'doublekeep', 'neutralize' ],help="controls of to deal with charged terminal",default="neutralize")
     parser.add_argument('--excluded',nargs="+",type=int,help="a list of indices for residues to be excluded from scoops",default=[])
     parser.add_argument('--added',nargs="+",type=int,help="a list of indices for residues to be included in outer scoops",default=[])
+    parser.add_argument('--scooplimit',help="the minimum difference between number of residues in protein and scoop for scoop to be retained",default=10)
     args = parser.parse_args()
 
     # Setup the logger
@@ -288,6 +306,6 @@ if __name__ == "__main__":
     else :
       ligand = simulationobjects.PDBFile(filename=args.ligand)
     protein = simulationobjects.PDBFile(filename=args.protein)
-    protein = scoop(protein,ligand,args.innercut,args.outercut,args.flexin,args.flexout,args.terminal,args.excluded,args.added)
+    protein = scoop(protein,ligand,args.innercut,args.outercut,args.flexin,args.flexout,args.terminal,args.excluded,args.added,args.scooplimit)
     protein.write(args.out,renumber=True)
   

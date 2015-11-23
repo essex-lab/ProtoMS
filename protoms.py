@@ -381,23 +381,26 @@ def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
     # Here we need to call the routine to make a scoop
     protobj_scooped = tools.scoop(protobj,ligobj,
                                   innercut=settings.innercut,outercut=settings.outercut,
-                                  flexin=settings.flexin,flexout=settings.flexout)
+                                  flexin=settings.flexin,flexout=settings.flexout,scooplimit=settings.scooplimit)
 
     nresdiff = len(protobj.residues)-len(protobj_scooped.residues)
     protein_scoop_file = _get_prefix(protein_orig_file)+"_scoop.pdb"
-    logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))    
+    #logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))  
+    protobj = protobj_scooped
     if nresdiff < settings.scooplimit:
       if not abortedconv : 
         protein_pms_file = _get_prefix(protein_orig_file)+"_pms.pdb"
-        logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d). Created %s instead."%(nresdiff,protein_pms_file))
-        protobj.write(filename=protein_pms_file,header='REMARK Original file %s\nREMARK Atoms renamed according to ProtoMS naming standards.\n'%protein_orig_file, solvents = False)
+        logger.info("Created %s instead."%protein_pms_file)
+        header = protobj.header
+        header += 'REMARK Atoms renamed according to ProtoMS naming standards.\n'
+        protobj.write(filename=protein_pms_file,header=header, solvents = False)
       else : 
-        logger.info("Discarding scoop. Number of residues removed from the protein is too small (%d)."%nresdiff)
+        #logger.info("Not scooping. Number of residues removed from the protein is too small.")
         protein_pms_file = protein_orig_file
       tarlist.append(protein_scoop_file)
       protein_scoop_file = None
     else :
-      protobj = protobj_scooped
+      logger.info("Created scoop-pdb file by removing %d residues: %s"%(nresdiff,protein_scoop_file))  
       protobj.write(protein_scoop_file, renumber=True, solvents = False)
       
   if protein_water is None :
