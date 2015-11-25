@@ -25,6 +25,11 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+
+# Storing present working directory path to a variable.
+proto_path = os.popen("pwd").read()
+proto_path = re.sub('\\n$','',proto_path)
+
 test_dir = proto_env + "/tests/test_setup/"
 ref_dir = proto_env + "/tests/setup/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
@@ -52,11 +57,14 @@ class TestProtSetup(unittest.TestCase):
                 
             for out_files in output_files_setup:
                 
-                self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file (%s) is missing. There could be problems with zmat generation or forcefield issues." % out_files)
+                if out_files == "water.pdb":
+                    self.assertTrue(os.path.exists(proto_path +"/"+"water.pdb"), "Water-cap file is missing.")
+                else:
+                    self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file (%s) is missing. There could be problems with zmat generation or forcefield issues." % out_files)
             
             #Checking whether the setup output water HEADER is approximately same as reference water.pdb file.
 
-            water_file = open(test_dir+"water.pdb", "r")
+            water_file = open(proto_path+"/"+"water.pdb", "r")
             header_line = water_file.readline()
             header_line = header_line.replace('\n', '')
             header_list = re.split(" +",header_line)
@@ -77,11 +85,19 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
             #Checking content of output files with reference data files
 
             for out_files in outfiles:
-                if((call("diff "+test_dir + out_files + " " +ref_dir + out_files, shell=True)) == 0):
-                    print "\n Contents matched for %s." %out_files
-                    continue
+
+                if out_files == "protein_scoop.pdb":
+                    if((call("bash "+test_dir+"content_ps_comp.sh", shell=True)) == 0):
+                        print "\n Protein scoop files matched."
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference Protein scoop files.")
                 else:
-                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
+                    if((call("diff "+test_dir + out_files + " " +ref_dir + out_files, shell=True)) == 0):
+                        print "\n Contents matched for %s." %out_files
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference %s" %(out_files))
         else:
             raise simulationobjects.SetupError("ProtoMS ligand and protein setup is not successful.")
 
