@@ -128,11 +128,11 @@ header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]:
                     else:
                         raise ValueError("Content mismatch between output and reference info file.")
                 else:
-                    if((call("diff "+ test_dir + "out_bnd/" + out_files + " "+ ref_dir+"out_bnd/" + out_files, shell=True)) == 0):
+                    if((call("diff out_bnd/" + out_files + " "+ ref_dir+"out_bnd/" + out_files, shell=True)) == 0):
                         print "\n Contents matched for %s." %"out_bnd/"+out_files
                         continue
                     else:
-                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join(test_dir,"out_bnd/",out_files)))
+                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join("out_bnd/",out_files)))
 
             
         else:

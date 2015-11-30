@@ -27,10 +27,15 @@ from subprocess import call
 proto_env = os.environ["PROTOMSHOME"]
 test_dir = proto_env + "/tests/test_gcmc/"
 ref_dir = proto_env + "/tests/gcmc/"
+
+#Storing present working directory path to a variable.
+proto_path = os.popen("pwd").read()
+proto_path = re.sub('\\n$','',proto_path)
+
 out_gcmc_tools = ["gcmc_box.pdb"]
 output_files_setup = ["gcmc_wat.pdb","run_bnd.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
-outfiles = ["gcmc_box.pdb", "gcmc_wat.pdb","run_bnd.cmd"]
+outfiles = ["gcmc_wat.pdb","run_bnd.cmd"]
 
 class TestGCMC(unittest.TestCase):
     
@@ -52,6 +57,14 @@ class TestGCMC(unittest.TestCase):
             
             for out_files in out_gcmc_tools:
                 self.assertTrue(os.path.exists(out_files), "GCMC box file %s is missing." % (test_dir + out_files))
+
+                """Checking content of GCMC Box with reference GCMC Box file."""
+
+                if((call("diff gcmc_box.pdb "+ref_dir+out_files, shell=True)) == 0):
+                    print "\n Content matched for file %s." %out_files
+                    continue
+                else:
+                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
         else:
             raise simulationobjects.SetupError("Making of Simulation box for GCMC is not successful!")
             
@@ -64,13 +77,22 @@ class TestGCMC(unittest.TestCase):
 
   	        print "Setup and command files generation is successful."
 
-            """ Checking content of GCMC box and setup output files with reference data in files. """
+            """ Checking content of GCMC setup output files with reference data in files. """
             for out_files in outfiles:
-                if((call("diff "+ test_dir + out_files + " "+ ref_dir + out_files, shell=True)) == 0):
-                    print "\n Content matched for file %s." %out_files
-                    continue
+
+                if out_files == "run_bnd.cmd":
+                    if((call("bash "+ test_dir+"content_cmd_comp.sh", shell=True)) == 0):
+                        print "\n Output Command files matched."
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference command files.")
+
                 else:
-                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
+                    if((call("diff "+ out_files + " "+ ref_dir + out_files, shell=True)) == 0):
+                        print "\n Content matched for file %s." %out_files
+                        continue
+                    else:
+                        raise ValueError("Content mismatch between output and reference %s" %(out_files))
 
         else:
             raise simulationobjects.SetupError("ProtoMS setup and command files generation is not successful.")
@@ -91,11 +113,11 @@ class TestGCMC(unittest.TestCase):
                     else:
                         raise ValueError("Content mismatch between output and reference info files.")
                 else:
-                    if((call("diff "+test_dir+ "out/" + out_files+ " "+ ref_dir + "out/" + out_files, shell=True)) == 0):
+                    if((call("diff out/" + out_files+ " "+ ref_dir + "out/" + out_files, shell=True)) == 0):
                         print "\n Content matched for file %s." %"out/"+out_files
                         continue
                     else:
-                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join(test_dir, "out/", out_files)))
+                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join("out/", out_files)))
                         
         else:
             raise simulationobjects.SetupError("GCMC simulation is not successful.")
