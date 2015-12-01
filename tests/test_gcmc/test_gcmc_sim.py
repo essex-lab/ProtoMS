@@ -56,7 +56,7 @@ class TestGCMC(unittest.TestCase):
             """Checking whether GCMC tool created the box successfully."""
             
             for out_files in out_gcmc_tools:
-                self.assertTrue(os.path.exists(out_files), "GCMC box file %s is missing." % (test_dir + out_files))
+                self.assertTrue(os.path.exists(proto_path+"/"+out_files), "GCMC box file %s is missing." % (out_files))
 
                 """Checking content of GCMC Box with reference GCMC Box file."""
 
@@ -73,7 +73,7 @@ class TestGCMC(unittest.TestCase):
             """Checking whether the required output files have been setup for GCMC simulation."""
                 
             for out_files in output_files_setup:
-                self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ProtoMS input command file generation for simulation." % (test_dir + out_files))
+                self.assertTrue(os.path.exists(proto_path+"/"+ out_files), "ProtoMS setup output file %s is missing. There could be problems with ProtoMS input command file generation for simulation." % (test_dir + out_files))
 
   	        print "Setup and command files generation is successful."
 
@@ -103,7 +103,7 @@ class TestGCMC(unittest.TestCase):
 
             """Checking whether the simulation output files have been created successfully."""
             for out_files in out_sim_files:
-                self.assertTrue(os.path.exists("out/"+ out_files),"GCMC simulation file: %s is missing." % out_files)
+                self.assertTrue(os.path.exists(proto_path+"/"+"out/"+ out_files),"GCMC simulation file: %s is missing." % out_files)
 
                 """ Checking content of GCMC simulation output files with reference data in files."""
                 if out_files == "info":
