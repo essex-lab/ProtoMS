@@ -1,9 +1,0 @@
-Overwriting bond parameter for no-os, parameter 1653 with parameter 1654
-atm no os     1654
-Overwriting angle parameter for c -cc-n , parameter 1892 with parameter 1971
-atm  n cc  c    1971
-Overwriting clj parameter  100, atm=DU, new atm=DU
-par   100   DU    00      0.0000    0.0000    0.0000  # dummy atom
-Could not find angle parameter between amber atoms DU-oh-c3. Will treat this angle as a dummy. This angle should not be sampled!
-Could not find angle parameter between amber atoms DU-oh-ho. Will treat this angle as a dummy. This angle should not be sampled!
-Could not find angle parameter between amber atoms DU-oh-DU. Will treat this angle as a dummy. This angle should not be sampled!
