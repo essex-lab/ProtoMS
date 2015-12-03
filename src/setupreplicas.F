@@ -54,7 +54,9 @@ c       Storing number of temperature ladders needed and where they should be ap
                 call closeProgram(100,printstring)
               endif
             enddo
-          elseif (words(1).eq.'gcmcre') then
+          elseif (words(1).eq.'multigcmc') then
+            ngcladders = nwords - 1
+            write(6,*)"GR setupreplicas.F: ngcladders=",ngcladders
             do i=2,nwords
               gcwithlad(i-1) = getDouble(words(i),-1.0)
               if (gcwithlad(i).eq.-1.0) then
@@ -165,7 +167,7 @@ c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
                 call closeProgram(100,printstring)
               endif
             enddo
-          elseif (words(1).eq.'gcmcre') then
+          elseif (words(1).eq.'multigcmc') then
             do i=2,nwords
               gcwithlad(i-1) = getDouble(words(i),-1.0)
               if (gcwithlad(i).eq.-1.0) then
@@ -287,6 +289,7 @@ c       Read in all B-values
           call closeProgram(100,"Number of Adam parameters is not equal to the number of tasks!")
         endif             
         doMultiGCMC = .true.
+        ngcladders = 1
 c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
         if (getoption('lambdare')) then
           ngcladders = nwords - 1
@@ -305,22 +308,28 @@ c 		GR: Remove folder creating and modify assignadamre.F amd call assignadamre.F
         else 
           outfolder = "out_gcmc"
         endif
-        if (myid.eq.0) then
-          do i=1,nadams
-            write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
-            call writedoublestring(tmpstr,adamparam(i),cmd)
-            call system(cmd) 
-            if (i.gt.1) call MPI_Send(i,1,MPI_INTEGER,i-1,11,MPI_COMM_WORLD,ierr)
-          enddo
-          myadam = 1
-          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
-          call writedoublestring(tmpstr,adamparam(1),gcmcfolder)
-        else
-          call MPI_Recv(myadam,1,MPI_INTEGER,0,11,MPI_COMM_WORLD,mpistat,ierr)
-          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
-          call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
-        endif
+c        if (myid.eq.0) then
+c          do i=1,nadams
+c            write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
+c            call writedoublestring(tmpstr,adamparam(i),cmd)
+c            call system(cmd) 
+c            if (i.gt.1) call MPI_Send(i,1,MPI_INTEGER,i-1,11,MPI_COMM_WORLD,ierr)
+c          enddo
+c          myadam = 1
+c          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
+c          call writedoublestring(tmpstr,adamparam(1),gcmcfolder)
+c        else
+c          call MPI_Recv(myadam,1,MPI_INTEGER,0,11,MPI_COMM_WORLD,mpistat,ierr)
+c          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
+c          call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
+c        endif
+        write(6,*)"GR setupreplicas.F: About to start setting up gc ladders"
 c Assigning gc ladders with lambda ladders
+c GR NEW
+        mygcid = -1
+        mygcladder = -1
+        key = -1
+c GR NEW
         do i=1,ngcladders
           if (doLambdaRE) then
 c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
@@ -335,15 +344,21 @@ c           Matching tasks wich should belong to both a lambda ladder and a temp
                 endif
               enddo
               mygcladder = i
+              write(6,*)myid,"GR setupreplicas.F: mygcladder=",mygcladder
             endif
           else
             if (((i-1)*nadams).le.myid.and.myid.lt.(i*nadams)) then
 c             all these ids should belong to the same lambda ladder
               mygcladder = i
+              write(6,*)myid,"GR setupreplicas.F: mygcladder=",mygcladder
             endif
           endif
         enddo
+        write(6,*)"GR setupreplicas.F: Finished assigning gc ladders"
 c 		Finished assigning gcmc ladders.
+c GR NEW
+        call assignadamre(key,.false.,.true.)
+c GR NEW
         do i=1,nadams  
 c         Here is where I need to correlate a lambda to a group.
           task2adams(i) = i

@@ -143,7 +143,9 @@ c          write(6,*)myid, " calling TRE. Move ",i
 
 c		Do GCMC replica exchange
         if (doMultiGCMC.and.(gcrefreq.gt.0).and.(i.gt.1).and.(mod(i,gcrefreq).eq.0)) then
+          write(6,*)"GR simulate.F: Doing replica gcmc move"
           if (doLambdaRE) then
+            write(6,*)"GR simulate.F: Should only be here if doing lambda re"
             call assignlambdare(mylamid,.true.,.false.)
           endif 
           call gcmcRE

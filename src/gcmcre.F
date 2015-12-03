@@ -29,6 +29,10 @@ c###################################################################
       double precision buffer(2)
       character*255 adamstr,adamstr2
 
+
+
+      write(6,*)"GR gcmcre.F: start of file" 
+      write(6,*)"GR gcmcre,F mygcid=",mygcid
 c 		GR: Assign to double pression a vector alladams(nadams), where nadams is defined elsewhere.
 c		GR: Also, I need to assign allongc(nadams), which is the vector of all on GC solutes
 
@@ -66,6 +70,7 @@ c		GR: Check that GCSCavity is properly read by this file.
       endif
 
       if (mygcid.eq.0) then
+        write(6,*)"GR gcmcre.F: I am the main core. About to start gcmc re" 
 c       Randomly selects odd/even pairs from 1 to the max number of Adams values and attempts to swap those pairs.
         choice = ranInt(0,1)
         do i=1,nadams-(choice+1),2
