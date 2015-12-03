@@ -54,7 +54,7 @@ class TestRETIdbl(unittest.TestCase):
             """Checking whether the required output files have been setup for RETI dual topology protoms.py setup."""
                 
             for out_files in output_files_setup:
-                if out_files == "run_free.cmd":
+                if out_files in ("run_free.cmd", "eth-meo.tem"):
                     self.assertTrue(os.path.exists(proto_path+"/"+out_files), "ProtoMS setup output file %s is missing. Please check!" % (os.path.join(proto_path,"/"+out_files)))
                 else:
 	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ligand's zmat generation, forcefield issues, template generation issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
