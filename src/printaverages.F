@@ -36,7 +36,7 @@ c####################################################################
 10       format("RESULTS for lambda ",f8.5," <-- ",f8.5," --> ",f8.5)
        else 
          write(printstring,11) lambda
-11       format("RESULTS for lambda = ",f15.10)
+11       format("RESULTS for lambda = ",f8.5)
        endif
        call prettyLine(RESULTS,printstring)
             
@@ -117,7 +117,7 @@ c      write out the random number seed used to generate this trajectory
          write(printstring,19) "Forwards ",gfor,std
          call printLine(RESULTS,printstring)
 
-19       format(a9,' Free Energy = ',g18.8,' ( ',g15.8,' )')
+19       format(a9,' Free Energy = ',f15.4,' ( ',f8.3,' )')
        endif
        write(printstring,*) "Averages. Stddev in brackets. Average | forwards backwards"
        call prettyLine(RESULTS,printstring)
@@ -126,7 +126,7 @@ c      write out the random number seed used to generate this trajectory
        stdf = stdDev(AVGTOTALENERGYF2,AVGTOTALENERGYF)
        stdb = stdDev(AVGTOTALENERGYB2,AVGTOTALENERGYB)
        write(printstring,43) AVGTOTALENERGY,std,AVGTOTALENERGYF,stdf,AVGTOTALENERGYB,stdb
-43     format('Total Energy ',f18.8,' ( ',f12.4,' ) | ',f18.8,' ( ',f12.4,' ) ',f18.8,' ( ',f12.4,' )')
+43     format('Total Energy ',f15.4,' ( ',f8.3,' ) | ',f15.4,' ( ',f8.3,' ) ',f15.4,' ( ',f8.3,' )')
        call printLine(RESULTS,printstring)
 
        if (NProteins.gt.0) then
@@ -141,11 +141,11 @@ c             PRINT*, "std" ,std
              write(printstring,"('Internal energy averages for protein ',i1,1x,a)") i,ProteinName(i)(1:lgth)
              call prettyLine(RESULTS,printstring)
              write(printstring,20) "BND",AvgProBnd(i),std,AvgProBndF(i),stdf,AvgProBndB(i),stdb
-20           format(a3,1x,g18.8,' ( ',f12.4,' ) | ',g18.8,' ( ',f12.4,' ) ',g18.8,' ( ',f12.4,' )')
+20           format(a3,1x,f15.4,' ( ',f8.3,' ) | ',f15.4,' ( ',f8.3,' ) ',f15.4,' ( ',f8.3,' )')
              call printLine(RESULTS,printstring)
              write(printstring,21) AvgProBndF(i)-AvgProBnd(i),AvgProBndB(i)-AvgProBnd(i)
              call printLine(RESULTS,printstring)
-21           format('DIFF',36x,g18.8,14x,g18.8)
+21           format('DIFF',31x,f15.4,14x,f15.4)
            endif
            
            if (NAngles(i).gt.0) then
@@ -478,7 +478,7 @@ c            lj
              std = stdDev(AvgProSvnLJ2(i),AvgProSvnLJ(i))
              stdf = stdDev(AvgProSvnLJF2(i),AvgProSvnLJF(i))
              stdb = stdDev(AvgProSvnLJB2(i),AvgProSvnLJB(i))
-             write(printstring,20) 'LJ',AvgProSvnLJ(i),std,AvgProSvnLJF(i),stdf,
+             write(printstring,20) 'LJ ',AvgProSvnLJ(i),std,AvgProSvnLJF(i),stdf,
      .                                                    AvgProSvnLJB(i),stdb
              call printLine(RESULTS,printstring)
              write(printstring,21) AvgProSvnLJF(i)-AvgProSvnLJ(i),AvgProSvnLJB(i)-AvgProSvnLJ(i)
