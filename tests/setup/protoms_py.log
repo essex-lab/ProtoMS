@@ -1,4 +1,4 @@
-DEBUG : Running protoms.py at 16/07/2015 - 16:36:57
+DEBUG : Running protoms.py at 04/12/2015 - 14:53:43
 DEBUG : Command line arguments = -s none -l dcb.pdb -p protein.pdb
 DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=5000000.0, nprod=40000000.0, outercut=20.0, outfolder='', protein='protein.pdb', ranseed=None, repeats='', scoop=None, scooplimit=10, simulation='none', singlemap=None, template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
 INFO : 
@@ -31,7 +31,7 @@ INFO : Before running a simulation, ensure that the first line of dcb.pdb reads 
 INFO : Created zmatrix (dcb.zmat) for ligand. Please check the output carefully
 INFO : Created ProtoMS template-file (dcb.tem) for ligand. Please check the output carefully
 DEBUG : Running solvate with arguments: 
-DEBUG : 	box        = /home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb
+DEBUG : 	box        = /home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/wbox_tip4p.pdb
 DEBUG : 	ligand     = dcb.pdb
 DEBUG : 	protein    = None
 DEBUG : 	geometry   = box
@@ -46,7 +46,7 @@ INFO : Setting up protein: protein.pdb...
 DEBUG : Running pdb2pms with arguments: 
 DEBUG : 	pdb_in          = protein.pdb
 DEBUG : 	forcefield      = amber
-DEBUG : 	conversion_file = /home/aicm1f12/ProtoMS3/data/atomnamesmap.dat
+DEBUG : 	conversion_file = /home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/atomnamesmap.dat
 DEBUG : This will rename atoms in a PDB-file to match ProtoMS naming convention
 DEBUG : Running convertwater with arguments: 
 DEBUG : 	pdb_in     = protein.pdb
@@ -65,7 +65,7 @@ DEBUG : 	added    =
 DEBUG : This will generate a truncated version for a protein
 INFO : Created scoop-pdb file by removing 46 residues: protein_scoop.pdb
 DEBUG : Running solvate with arguments: 
-DEBUG : 	box        = /home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb
+DEBUG : 	box        = /home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/wbox_tip4p.pdb
 DEBUG : 	ligand     = dcb.pdb
 DEBUG : 	protein    = protein.pdb
 DEBUG : 	geometry   = droplet
@@ -81,5 +81,5 @@ DEBUG : 	ligands       = dcb.pdb
 DEBUG : 	templates     = dcb.tem
 DEBUG : 	protein_water = water.pdb
 DEBUG : 	ligand_water  = dcb_box.pdb
-DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=5000000.0, nprod=40000000.0, outercut=20.0, outfolder='out', protein='protein.pdb', ranseed=None, repeats=[''], scoop=None, scooplimit=10, simulation='none', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=5000000.0, nprod=40000000.0, outercut=20.0, outfolder='out', protein='protein.pdb', ranseed=None, repeats=[''], scoop=None, scooplimit=10, simulation='none', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/wbox_tip4p.pdb', watmodel='tip4p')
 DEBUG : This will make an input file for ProtoMS

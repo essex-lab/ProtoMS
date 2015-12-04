@@ -1,37 +1,37 @@
-protoms3 started at 17:49:12 on the 10/ 8/2015
+protoms3 started at 15:37:10 on the  4/12/2015
 Using whatever boundary conditions the solvent desires
  Non-bonded cutoff =    10.000000000000000       angstroms.
  Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-#############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99.ff
-#############################################################################
+################################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/amber14SB.ff
+################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
  Using a 1-4 coulomb scaling factor of   0.83333299999999999
  Using a 1-4 LJ scaling factor of   0.50000000000000000
-Loaded    0 templates,    0 override templates,  825 clj parameters
-and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
+Loaded    0 templates,    0 override templates,  797 clj parameters
+and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-##############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/solvents.ff
-##############################################################################
+###############################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/solvents.ff
+###############################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
 Loaded   15 templates,    0 override templates,   21 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-######################################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99-residues.ff
-######################################################################################
+#########################################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/amber14SB-residues.ff
+#########################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/gaff14.ff
-############################################################################
+#############################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/gaff14.ff
+#############################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -85,11 +85,11 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 17:49:14 on the 10/ 8/2015
+Starting simulation at 15:37:11 on the  4/12/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
-There are  207 CLJ parameter types used in this simulation.
+There are  201 CLJ parameter types used in this simulation.
  Pre-calculating all the charge and LJ pairs...
  Fixing backbone of protein            1  residues:            1  to            2
  Fixing backbone of protein            1  residues:            4  to            5
@@ -118,4 +118,4 @@ Writing restart file
 Resetting free energy average to zero.
  Data collection complete. Attempted/accepted moves          100          58
  Simulation shutting down...
-protoms3 completed at 17:49:19 on the 10/ 8/2015
+protoms3 completed at 15:37:14 on the  4/12/2015

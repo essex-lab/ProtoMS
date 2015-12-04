@@ -1,4 +1,4 @@
-DEBUG : Running protoms.py at 10/08/2015 - 17:55:45
+DEBUG : Running protoms.py at 04/12/2015 - 15:16:28
 DEBUG : Command line arguments = -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000
 DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=100.0, nprod=40000000.0, outercut=20.0, outfolder='', protein='protein.pdb', ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='equilibration', singlemap=None, template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
 INFO : 
@@ -11,5 +11,5 @@ DEBUG : 	ligands       = dcb.pdb
 DEBUG : 	templates     = dcb.tem
 DEBUG : 	protein_water = water.pdb
 DEBUG : 	ligand_water  = dcb_box.pdb
-DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=100.0, nprod=40000000.0, outercut=20.0, outfolder='out', protein='protein.pdb', ranseed='100000', repeats=[''], scoop=None, scooplimit=10, simulation='equilibration', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/rtb1c13/WORK/Hg/ProtoMS3.0/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100000.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=['dcb.pdb'], nequil=100.0, nprod=40000000.0, outercut=20.0, outfolder='out', protein='protein.pdb', ranseed='100000', repeats=[''], scoop=None, scooplimit=10, simulation='equilibration', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/wbox_tip4p.pdb', watmodel='tip4p')
 DEBUG : This will make an input file for ProtoMS
