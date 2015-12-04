@@ -63,32 +63,32 @@ c       call printLine(RESULTS,printstring)
        endif
 
 
-       write(printstring,"('Temperature = ',f8.3,' C')") temperatureC
+       write(printstring,"('Temperature = ',f12.4,' C')") temperatureC
        call printLine(RESULTS,printstring)
        
        if (doREST) then
-         write(printstring,"('Effective temperature = ',f8.3,' C')") resttempC
+         write(printstring,"('Effective temperature = ',f12.4,' C')") resttempC
          call printLine(RESULTS,printstring)
        endif
 
        write(printstring,"('Solvents,Proteins,GC-solutes = ',3i8)") NSolvents ,NProteins ,NGCSolutes
        call printLine(RESULTS,printstring)
 
-       write(printstring,"('Simulation B value = ',f8.3)") B
+       write(printstring,"('Simulation B value = ',f12.4)") B
        call printLine(RESULTS,printstring)
 
        write(printstring,"('Molecules in grid  = ',i8)") GCSCavity
        call printLine(RESULTS,printstring)
 
         if (SolventBox) then
-         write(printstring,"('Pressure = ',f8.3,' atm')") pressure
+         write(printstring,"('Pressure = ',f12.4,' atm')") pressure
          call printLine(RESULTS,printstring)
        
-         write(printstring,"('Volume = ',f8.3,' atm')") volume
+         write(printstring,"('Volume = ',f12.4,' A^3')") volume
          call printLine(RESULTS,printstring)
        
          std = stdDev(AvgVolume2,AvgVolume)
-         write(printstring,"('Average volume = ',f8.3,' (',f8.3,')')") AvgVolume,std
+         write(printstring,"('Average volume = ',f12.4,' (',f12.4,')')") AvgVolume,std
          call printLine(RESULTS,printstring)
        endif
 
@@ -117,7 +117,7 @@ c      write out the random number seed used to generate this trajectory
          write(printstring,19) "Forwards ",gfor,std
          call printLine(RESULTS,printstring)
 
-19       format(a9,' Free Energy = ',g30.20,' ( ',g15.10,' )')
+19       format(a9,' Free Energy = ',g18.8,' ( ',g15.8,' )')
        endif
        write(printstring,*) "Averages. Stddev in brackets. Average | forwards backwards"
        call prettyLine(RESULTS,printstring)
@@ -126,7 +126,7 @@ c      write out the random number seed used to generate this trajectory
        stdf = stdDev(AVGTOTALENERGYF2,AVGTOTALENERGYF)
        stdb = stdDev(AVGTOTALENERGYB2,AVGTOTALENERGYB)
        write(printstring,43) AVGTOTALENERGY,std,AVGTOTALENERGYF,stdf,AVGTOTALENERGYB,stdb
-43     format('Total Energy ',f18.8,' ( ',f8.3,' ) | ',f18.8,' ( ',f8.3,' ) ',f18.8,' ( ',f8.3,' )')
+43     format('Total Energy ',f18.8,' ( ',f12.4,' ) | ',f18.8,' ( ',f12.4,' ) ',f18.8,' ( ',f12.4,' )')
        call printLine(RESULTS,printstring)
 
        if (NProteins.gt.0) then
@@ -141,11 +141,11 @@ c             PRINT*, "std" ,std
              write(printstring,"('Internal energy averages for protein ',i1,1x,a)") i,ProteinName(i)(1:lgth)
              call prettyLine(RESULTS,printstring)
              write(printstring,20) "BND",AvgProBnd(i),std,AvgProBndF(i),stdf,AvgProBndB(i),stdb
-20           format(a3,1x,g20.10,' ( ',f8.3,' ) | ',g20.10,' ( ',f8.3,' ) ',g20.10,' ( ',f8.3,' )')
+20           format(a3,1x,g18.8,' ( ',f12.4,' ) | ',g18.8,' ( ',f12.4,' ) ',g18.8,' ( ',f12.4,' )')
              call printLine(RESULTS,printstring)
              write(printstring,21) AvgProBndF(i)-AvgProBnd(i),AvgProBndB(i)-AvgProBnd(i)
              call printLine(RESULTS,printstring)
-21           format('DIFF',36x,g20.10,14x,g20.10)
+21           format('DIFF',36x,g18.8,14x,g18.8)
            endif
            
            if (NAngles(i).gt.0) then
