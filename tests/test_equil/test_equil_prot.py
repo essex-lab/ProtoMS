@@ -29,11 +29,6 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 
-# Storing present working directory path to a variable.
-proto_path = os.popen("pwd").read()
-proto_path = re.sub('\\n$', '', proto_path)
-
-test_dir = proto_env + "/tests/test_equil/"
 ref_dir = proto_env + "/tests/equil/"
 input_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem",
                      "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
@@ -57,24 +52,24 @@ class TestEquilibrationSetup(unittest.TestCase):
 
             # Checking whether the required output files have been setup for equilibration MC moves.
             for infile in input_files_setup:
-                self.assertTrue(os.path.exists(test_dir + infile),
+                self.assertTrue(os.path.exists(infile),
                                 "Setup input file {0} is missing.".format(infile))
 
             for outfile in output_files_setup:
-                self.assertTrue(os.path.exists(test_dir + outfile),
+                self.assertTrue(os.path.exists(outfile),
                                 "Setup output file {0} is missing.".format(outfile))
 
             print "ProtoMS ligand and protein setup is successful."
 
             # Checking content of setup output files with reference data in files.
             for outfile in output_files_setup:
-                self.assertTrue(filecmp.cmp(test_dir+outfile, ref_dir+outfile),
+                self.assertTrue(filecmp.cmp(outfile, os.path.join(ref_dir, outfile)),
                                 "Content mismatch between output and reference for file {0}".format(outfile))
 
         else:
             raise simulationobjects.SetupError("ProtoMS ligand and protein setup failed.")
 
-        if ((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
+        if ((call("$PROTOMSHOME/build/protoms3 run_bnd.cmd", shell=True)) == 0):
 
             # Checking whether the simulation output files have been created successfully for equilibration MC moves.
             for outfile in out_sim_files:
@@ -84,14 +79,14 @@ class TestEquilibrationSetup(unittest.TestCase):
 
             # Checking content of equilibration simulation output files with reference data in files.
                 if outfile == "info":
-                    if((call("bash "+test_dir+"content_info_comp.sh", shell=True)) == 0):
+                    if((call("bash content_info_comp.sh", shell=True)) == 0):
                         print "\n Info file contents matched."
                     else:
                         raise ValueError("Content mismatch between output and reference info file.")
 
                 else:
                     self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
-                                    "Content mismatch between output and reference for file {0}".format(os.path.join("out_bnd", outfile)))
+                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
 
         else:
             raise simulationobjects.SetupError("Simulation was not successful.")
