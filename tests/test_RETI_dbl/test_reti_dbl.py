@@ -11,6 +11,7 @@ import time
 import numpy as np
 import protoms
 import re
+import filecmp
 
 from protoms import _is_float, _get_prefix, _locate_file, _merge_templates, _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology, _prep_gcmc, _prep_jaws2, _cleanup, _wizard
 
@@ -69,7 +70,9 @@ class TestRETIdbl(unittest.TestCase):
                         continue
                     else:
                         raise ValueError("Content mismatch between output and reference %s" %(out_files))
-
+                elif out_files == "eth-meo.tem":
+                    self.assertTrue(filecmp.cmp(out_files, ref_dir+out_files),"Content mismatch between output and reference for file {0}".format(out_files))
+                    
                 else:
                     if((call("diff "+ test_dir + out_files + " "+ ref_dir + out_files, shell=True)) == 0):
                         print "\n Content matched for %s." %out_files
