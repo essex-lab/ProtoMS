@@ -199,8 +199,8 @@ c     get here when hit end of the file
 9800  continue
 c     -------------------------------
 
-      write(printstring,*) "Have now loaded ",NSolvents," solvent molecules (",nsvn,
-     .                     " from this file)"
+      write(printstring,400) NSolvents,nsvn
+400   format("Have now loaded ",i8," solvent molecules (",i8," from this file)")
       call printLine(INFO,printstring)
 
       close(FILE)

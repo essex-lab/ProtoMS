@@ -33,7 +33,8 @@ proto_path = re.sub('\\n$','',proto_path)
 test_dir = proto_env + "/tests/test_setup/"
 ref_dir = proto_env + "/tests/setup/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
-ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '1.5']
+#ref_header_list = ['HEADER', 'cap' , '32.7139', '8.3309', '4.4997', '30.0000', '1.5']
+ref_header_list = ['HEADER', 'cap' , '32.4493', '8.0751', '4.5203', '30.0000', '1.5']
 
 outfiles = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb"]
 

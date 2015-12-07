@@ -30,7 +30,8 @@
       if (abs(sumSoluteCharge).lt.0.00001) sumSoluteCharge = ZERO
 
       lgth = lineLength(SoluteName(isol))
-      write(printstring,*) "Charge on solute ",SoluteName(isol)(1:lgth)," = ",sumSoluteCharge
+      write(printstring,12) SoluteName(isol)(1:lgth),sumSoluteCharge
+12    format("Charge on solute ",a," = ",f12.5)        
       call prettyLine(INFO,printstring)
       
       return

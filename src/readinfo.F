@@ -54,12 +54,14 @@ c         Option is either 'geometric' or 'arithmetic'
         else if (words(1).eq.'scl14coul') then
 c         read in the 1-4 coulomb scale factor
           OneOverScl14C = readDouble(words(2))
-          write(printstring,*) "Using a 1-4 coulomb scaling factor of ",OneOverScl14C
+          write(printstring,11) OneOverScl14C
+11        format("Using a 1-4 coulomb scaling factor of ",f8.4)
           call printLine(INFO,printstring)
         else if (words(1).eq.'scl14lj') then
 c         read in the 1-4 LJ scale factor
           OneOverScl14LJ = readDouble(words(2))
-          write(printstring,*) "Using a 1-4 LJ scaling factor of ",OneOverScl14LJ
+          write(printstring,12) OneOverScl14LJ
+12        format("Using a 1-4 LJ scaling factor of ",f8.4)
           call printLine(INFO,printstring)
         else
           call printLine(WARNING,"Could not interpret info line;")

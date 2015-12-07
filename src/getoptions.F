@@ -203,14 +203,16 @@ c     get the non-bonded cutoff
       if (getOption('cutoff')) cut = getDouble(words(1),cut)
       if (cut.le.ZERO) cut = ZERO
       cut2 = cut**2
-      write(printstring,*) "Non-bonded cutoff = ",cut," angstroms."
+      write(printstring,410) cut
+410   format("Non-bonded cutoff = ",f12.4," angstroms.")
       call printLine(INFO,printstring)
       
 c     get the feather factor
       if (getOption('feather')) feather = getDouble(words(1),feather)      
       if (feather.le.ZERO) feather = ZERO
       if (feather.gt.cut) feather = cut
-      write(printstring,*) "Non-bonded cutoff feathered over the last ",feather," angstroms."
+      write(printstring,411) feather
+411   format("Non-bonded cutoff feathered over the last = ",f12.4," angstroms.")
       call printLine(INFO,printstring)
       feather = (cut-feather)
       feather2 = feather**2
@@ -509,8 +511,9 @@ c     get the names of all of the solvent files and read them in
         endif
 c     end of do-while
 
-      write(printstring,*) "Simulation consists of ",NProteins," protein chains, ",NSolutes,
-     .                     " solute molecules and ",NSolvents," solvent molecules"
+      write(printstring,430) NProteins,NSolutes,NSolvents
+430   format("Simulation consists of ",i4," protein chains, ",i4
+     .       " solute molecules and ",i8," solvent molecules")
       call printLine(INFO,printstring)
 
 c     check that at least something will be loaded!
@@ -764,15 +767,15 @@ c     get the temperature
         endif
         temperature = temperatureC + DEG2KEL
       endif
-      write(printstring,*) "Simulation temperature = ",temperatureC," C, (",
-     .                              temperature," K)"
+      write(printstring,400) temperatureC,temperature
+400   format("Simulation temperature = ",f12.4," C, (",f12.4," K)")
       call printLine(INFO,printstring)
       mt_beta_t = dble(1.0) / (GASR*temperature)
 
 c     Now we can complete the setup of REST temperatures
       if (doRest) then
-        write(printstring,*) "Effective REST temperature  = ",resttempC," C, (",
-     .                              resttemp," K)"
+        write(printstring,*) resttempC,resttemp
+401   format("Effective REST temperature = ",f12.4," C, (",f12.4," K)")
         call printLine(INFO,printstring)
         restfac1 = rest_beta / mt_beta_t
         restfac2 = (mt_beta_t+rest_beta)/(2.0d0*mt_beta_t)
