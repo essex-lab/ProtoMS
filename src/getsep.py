@@ -6,7 +6,7 @@ import sys,os
 try:
     filename = sys.argv[1]
 except:
-    print ( "USAGE: getsep.py outputfile" )
+    print ("USAGE: getsep.py outputfile" )
     sys.exit(0)
 
 #open the include file

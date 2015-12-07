@@ -1,0 +1,43 @@
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1) 
+par 3000    c3    06    -0.09410    3.39967    0.10940
+par 3001    c3    06    -0.09410    3.39967    0.10940
+par 3002    hc    01    0.03170    2.64953    0.01570
+par 3003    hc    01    0.03170    2.64953    0.01570
+par 3004    hc    01    0.03170    2.64953    0.01570
+par 3005    hc    01    0.03170    2.64953    0.01570
+par 3006    hc    01    0.03170    2.64953    0.01570
+par 3007    hc    01    0.03170    2.64953    0.01570
+par 3008    c3    06    0.11670    3.39967    0.10940
+par 3009    c3    06    -0.59880    3.39967    0.10940
+par 3010    hc    01    0.39600    2.64953    0.01570
+par 3011    hc    01    0.02870    2.64953    0.01570
+par 3012    hc    01    0.02870    2.64953    0.01570
+par 3013    hc    01    0.02870    2.64953    0.01570
+par 3014    hc    01    0.00000    2.64953    0.01570
+par 3015    hc    01    0.00000    2.64953    0.01570
+mode template
+solute ETH
+info translate 0.250 rotate 5.000
+atom  C05 ETH 3000 3009  DM3 DUM  DM2 DUM  DM1 DUM
+atom  C01 ETH 3001 3008  C05 ETH  DM3 DUM  DM2 DUM
+atom  H04 ETH 3002 3011  C01 ETH  C05 ETH  DM3 DUM
+atom  H06 ETH 3003 3010  C05 ETH  C01 ETH  H04 ETH
+atom  H07 ETH 3004 3014  C05 ETH  C01 ETH  H06 ETH
+atom  H08 ETH 3005 3015  C05 ETH  C01 ETH  H06 ETH
+atom  H02 ETH 3006 3013  C01 ETH  C05 ETH  H04 ETH
+atom  H03 ETH 3007 3012  C01 ETH  C05 ETH  H04 ETH
+bond  C01 ETH  C05 ETH
+bond  H04 ETH  C01 ETH
+bond  H06 ETH  C05 ETH
+bond  H07 ETH  C05 ETH
+bond  H08 ETH  C05 ETH
+bond  H02 ETH  C01 ETH
+bond  H03 ETH  C01 ETH
+angle  H04 ETH  C01 ETH  C05 ETH flex 0.190
+angle  H06 ETH  C05 ETH  C01 ETH flex 0.190
+angle  H07 ETH  C05 ETH  C01 ETH flex 0.190
+angle  H08 ETH  C05 ETH  C01 ETH flex 0.190
+angle  H02 ETH  C01 ETH  C05 ETH flex 0.190
+angle  H03 ETH  C01 ETH  C05 ETH flex 0.190
+dihedral  H06 ETH  C05 ETH  C01 ETH  H04 ETH flex 2.500

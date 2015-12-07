@@ -1,4 +1,5 @@
 # CMake file for ProtoMS
+
 cmake_minimum_required(VERSION 2.8.7)
 
 # Project name and language - enables Fortran dependency checking
@@ -19,7 +20,7 @@ if(NOT CMAKE_Fortran_FLAGS_Release)
     set(CMAKE_Fortran_FLAGS_Release "-O3")
 endif()
 if(NOT CMAKE_Fortran_FLAGS_Debug)
-    set(CMAKE_Fortran_FLAGS_Debug "-Og -g")
+    set(CMAKE_Fortran_FLAGS_Debug "-g")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "Release")
@@ -118,6 +119,38 @@ install(TARGETS protoms3
 # Needs actual unit/integration tests here
 add_test(TestPrintVersion protoms3 -v)
 
+###################################
+# Python Unit tests
+###################################
+set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B})
+
+add_test(test_install_dependencies ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
+add_test(test_ligand_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_ligand_setup.py)
+add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
+add_test(test_parameters_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parameters_ff.py)
+add_test(test_path ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.py)
+add_test(test_tools_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
+
+add_test(NAME test_prot_setup
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup/test_prot_setup.py)
+
+add_test(NAME test_equil_setup
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil/test_equil_prot.py)
+
+add_test(NAME test_sampling_prot 
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling/test_sampling_prot.py)
+
+add_test(test_gcmc_sim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc/test_gcmc_sim.py)
+add_test(test_jaws1_sim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1/test_jaws1_sim.py)
+add_test(test_jaws2_sim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2/test_jaws2_sim.py)
+add_test(test_reti_sngl ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl/test_reti_sngl.py)
+add_test(test_reti_dbl ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl/test_reti_dbl.py)
+
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
                   DEPENDS protoms3)
+
+add_custom_target(clean-test COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/clean-test.cmake)

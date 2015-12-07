@@ -60,9 +60,8 @@ c-------------------------------------------------------------------------------
       endif
 
 c     flush the output (since generally the output is quite slow)
-c     **THIS IS NOT A STANDARD INTRINSIC FUNCTION!**
-c     ** Comment out this line if your compiler does not support it! **
-      call flush(FILE)
+c     Fortran2003: comment this line out if your compiler does not support it
+      flush(FILE)
 
       return
       

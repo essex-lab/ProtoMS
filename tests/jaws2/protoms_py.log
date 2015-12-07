@@ -1,0 +1,121 @@
+DEBUG : Running protoms.py at 16/07/2015 - 17:44:25
+DEBUG : Command line arguments = -s jaws2 -l fragment.pdb -p protein.pdb --gcmcwater jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10
+DEBUG : Settings = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=None, gcmcwater='jaws2_waters.pdb', innercut=16.0, jawsbias=[8.0, 10.0, 12.0, 14.0], lambdas=[16], ligand=['fragment.pdb'], nequil=0.0, nprod=100.0, outercut=20.0, outfolder='', protein='protein.pdb', ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='jaws2', singlemap=None, template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
+INFO : 
+INFO : Setting up ligand: fragment.pdb...
+INFO : Running antechamber. Please check the output carefully
+DEBUG : Running run_antechamber with arguments: 
+DEBUG : 	lig    = fragment.pdb
+DEBUG : 	charge = 0
+DEBUG : 	resnam = XDK
+DEBUG : This will generate an Amber prepi file with AM1-BCC and GAFF atom types
+INFO : Created prepi-file: fragment.prepi
+INFO : Running parmchk. Please check the output carefully
+DEBUG : Running run_parmchk with arguments: 
+DEBUG : 	lig = fragment.pdb
+DEBUG : This will generate an Amber frcmod file with additional parameters
+INFO : Created frcmod-file: fragment.frcmod
+DEBUG : Running build_template with arguments: 
+DEBUG : 	temfile    = fragment.tem
+DEBUG : 	prepifile  = fragment.prepi
+DEBUG : 	translate  = 0.250000
+DEBUG : 	rotate     = 5.000000
+DEBUG : 	zmatfile   = None
+DEBUG : 	frcmodfile = fragment.frcmod
+DEBUG : 	resname    = XDK
+DEBUG : This will generate a ProtoMS template file for a solute
+DEBUG : Running make_zmat with arguments: 
+DEBUG : 	prepifile = fragment.prepi
+DEBUG : This will generate a ProtoMS compatible z-matrix for a solute
+INFO : Before running a simulation, ensure that the first line of fragment.pdb reads 'HEADER XDK'.
+INFO : Created zmatrix (fragment.zmat) for ligand. Please check the output carefully
+INFO : Created ProtoMS template-file (fragment.tem) for ligand. Please check the output carefully
+DEBUG : Running solvate with arguments: 
+DEBUG : 	box        = /home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb
+DEBUG : 	ligand     = fragment.pdb
+DEBUG : 	protein    = None
+DEBUG : 	geometry   = box
+DEBUG : 	padding    = 10.000000
+DEBUG : 	radius     = 30.000000
+DEBUG : 	center     = cent
+DEBUG : 	namescheme = ProtoMS
+DEBUG : This will solvate either a protein or a ligand using a pre-equilibrated box
+INFO : Created waterbox-file: fragment_box.pdb
+INFO : 
+INFO : Setting up protein: protein.pdb...
+DEBUG : Running pdb2pms with arguments: 
+DEBUG : 	pdb_in          = protein.pdb
+DEBUG : 	forcefield      = amber
+DEBUG : 	conversion_file = /home/aicm1f12/ProtoMS3/data/atomnamesmap.dat
+DEBUG : This will rename atoms in a PDB-file to match ProtoMS naming convention
+DEBUG : Running convertwater with arguments: 
+DEBUG : 	pdb_in     = protein.pdb
+DEBUG : 	watermodel = tip4p
+DEBUG : This will change the water molecule in the pdb file to match the water model
+DEBUG : Running scoop with arguments: 
+DEBUG : 	protein  = protein.pdb
+DEBUG : 	ligand   = fragment.pdb
+DEBUG : 	innercut = 16.000000
+DEBUG : 	outercut = 20.000000
+DEBUG : 	flexin   = flexible
+DEBUG : 	flexout  = sidechain
+DEBUG : 	terminal  = neutralize
+DEBUG : 	excluded = 
+DEBUG : 	added    = 
+DEBUG : This will generate a truncated version for a protein
+INFO : Created scoop-pdb file by removing 34 residues: protein_scoop.pdb
+DEBUG : Running solvate with arguments: 
+DEBUG : 	box        = /home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb
+DEBUG : 	ligand     = fragment.pdb
+DEBUG : 	protein    = protein.pdb
+DEBUG : 	geometry   = droplet
+DEBUG : 	padding    = 10.000000
+DEBUG : 	radius     = 30.000000
+DEBUG : 	center     = cent
+DEBUG : 	namescheme = ProtoMS
+DEBUG : This will solvate either a protein or a ligand using a pre-equilibrated box
+INFO : Created water cap-file: water.pdb
+DEBUG : Running split_waters with arguments: 
+DEBUG : 	waters = jaws2_waters.pdb
+DEBUG : This will make PDB files suitable for JAWS-2
+INFO : 
+INFO : Creating water PDB-files for JAWS-2 called jaws2_wat*.pdb and jaws2_not*.pdb
+DEBUG : Running clear_gcmcbox with arguments: 
+DEBUG : 	gcmcbox = jaws2_wat1.pdb
+DEBUG : 	waters = water.pdb
+DEBUG : This will remove solvent molecules within the GCMC/JAWS box
+INFO : Removed 0 water molecules from water.pdb that were inside the GCMC/JAWS box jaws2_wat1.pdb
+DEBUG : Running clear_gcmcbox with arguments: 
+DEBUG : 	gcmcbox = jaws2_wat2.pdb
+DEBUG : 	waters = water.pdb
+DEBUG : This will remove solvent molecules within the GCMC/JAWS box
+INFO : Removed 0 water molecules from water.pdb that were inside the GCMC/JAWS box jaws2_wat2.pdb
+DEBUG : Running clear_gcmcbox with arguments: 
+DEBUG : 	gcmcbox = jaws2_wat3.pdb
+DEBUG : 	waters = water.pdb
+DEBUG : This will remove solvent molecules within the GCMC/JAWS box
+INFO : Removed 0 water molecules from water.pdb that were inside the GCMC/JAWS box jaws2_wat3.pdb
+DEBUG : Running generate_input with arguments: 
+DEBUG : 	protein       = protein_scoop.pdb
+DEBUG : 	ligands       = fragment.pdb
+DEBUG : 	templates     = fragment.tem
+DEBUG : 	protein_water = water.pdb jaws2_not1.pdb
+DEBUG : 	ligand_water  = fragment_box.pdb
+DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater='jaws2_wat1.pdb', innercut=16.0, jawsbias=[8.0, 10.0, 12.0, 14.0], lambdas=[16], ligand=['fragment.pdb'], nequil=0.0, nprod=100.0, outercut=20.0, outfolder='out_jaws2-w1', protein='protein.pdb', ranseed='100000', repeats=[''], scoop=None, scooplimit=10, simulation='jaws2', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : This will make an input file for ProtoMS
+DEBUG : Running generate_input with arguments: 
+DEBUG : 	protein       = protein_scoop.pdb
+DEBUG : 	ligands       = fragment.pdb
+DEBUG : 	templates     = fragment.tem
+DEBUG : 	protein_water = water.pdb jaws2_not2.pdb
+DEBUG : 	ligand_water  = fragment_box.pdb
+DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater='jaws2_wat2.pdb', innercut=16.0, jawsbias=[8.0, 10.0, 12.0, 14.0], lambdas=[16], ligand=['fragment.pdb'], nequil=0.0, nprod=100.0, outercut=20.0, outfolder='out_jaws2-w2', protein='protein.pdb', ranseed='100000', repeats=[''], scoop=None, scooplimit=10, simulation='jaws2', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : This will make an input file for ProtoMS
+DEBUG : Running generate_input with arguments: 
+DEBUG : 	protein       = protein_scoop.pdb
+DEBUG : 	ligands       = fragment.pdb
+DEBUG : 	templates     = fragment.tem
+DEBUG : 	protein_water = water.pdb jaws2_not3.pdb
+DEBUG : 	ligand_water  = fragment_box.pdb
+DEBUG : 	settings      = Namespace(absolute=False, adams=0, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater='jaws2_wat3.pdb', innercut=16.0, jawsbias=[8.0, 10.0, 12.0, 14.0], lambdas=[16], ligand=['fragment.pdb'], nequil=0.0, nprod=100.0, outercut=20.0, outfolder='out_jaws2-w3', protein='protein.pdb', ranseed='100000', repeats=[''], scoop=None, scooplimit=10, simulation='jaws2', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : This will make an input file for ProtoMS

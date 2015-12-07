@@ -53,13 +53,13 @@ c####################################################################
 c         write information about the boundary conditions for the solvent
           if (SolventBox) then
 c           write the box dimensions to the file            
-            write(printstring,*) "HEADER box ",(BoxOrigin(i)," ",i=1,3),(BoxTop(i)," ",i=1,3)
-            call leftJustify(printstring)
+            write(printstring,"('HEADER ',a3,'  ',6f12.4)") 
+     &            "box",(BoxOrigin(i),i=1,3),(BoxTop(i),i=1,3)
             call printLine(PDB,printstring)
           else if (SolventCap) then
 c           write out the solvent cap information to the file
-            write(printstring,*) "HEADER cap ",(cap(i)," ",i=1,3),capradius," ",capconstant
-            call leftJustify(printstring)
+            write(printstring,"('HEADER ',a3,'  ',5f12.4)") 
+     &            "cap",(cap(i),i=1,3),capradius,capconstant
             call printLine(PDB,printstring)
           endif
         endif
@@ -100,10 +100,8 @@ c           write out the solvent cap information to the file
 c     now do the solvent...
       if (NSolvents.gt.0) then
         if (svndist.lt.ZERO) then
-c          PRINT*, "NSol" ,NSolvents
 c         print all of the solvent      
           do k=1,NSolvents
-c            PRINT*, "working, aye"
             call printPDBSolvent(k,showdummies,printstd)
           enddo
         else if (svndist.gt.ZERO) then

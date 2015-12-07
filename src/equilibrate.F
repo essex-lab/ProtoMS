@@ -11,7 +11,7 @@ c     (C) Christopher Woods     9 August 2002
 c
 c###########################################################
                                      
-      real etime, elapsed(2), total
+      double precision tstart,tend,telapsed
       integer nconfig
       integer i,imov     
       integer NAcceptedMoves,NTotalMoves
@@ -30,7 +30,7 @@ c     check that the initial total energy has been calculated
       NAcceptedMoves = 0
       NTotalMoves = 0
 
-      total = etime(elapsed)
+      call cpu_time(tstart)
       
       do i=1,nconfig
         NTotalMoves = NTotalMoves + 1
@@ -69,13 +69,14 @@ c       obtain the move type based on probabilities entered by the user
 
       enddo
             
-      total = etime(elapsed) - total
+      call cpu_time(tend)
+      telapsed = tend - tstart
     
       write(printstring,*) "Equilibration complete. Attempted/accepted moves ",
      .                           NTotalMoves,NAcceptedMoves
       call printLine(INFO,printstring)
 
-      write(printstring,*) "These moves took ",total," s to run."
+      write(printstring,"('These moves took ',EN8.1E1,' s to run.')") telapsed
       call printLine(INFO,printstring)
 
       return
