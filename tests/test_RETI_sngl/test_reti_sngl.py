@@ -31,7 +31,7 @@ proto_env = os.environ["PROTOMSHOME"]
 ref_dir = proto_env + "/tests/RETI_sngl/"
 
 output_files_setup = ["ethane_box.pdb", "ethtmeo_ele.tem", "ethtmeo_vdw.tem", "ethtmeo_comb.tem"]
-outfiles_setup=["run_comb_free.cmd", "run_comb_gas.cmd", "run_ele_free.cmd", "run_ele_gas.cmd", "run_vdw_free.cmd", "run_vdw_gas.cmd" ]
+outfiles_setup = ["run_comb_free.cmd", "run_comb_gas.cmd", "run_ele_free.cmd", "run_ele_gas.cmd", "run_vdw_free.cmd", "run_vdw_gas.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "info", "restart", "results_inst"]
 
 
@@ -45,29 +45,31 @@ class TestRETIsngl(unittest.TestCase):
         super(TestRETIsngl, self).tearDown()
 
     def test_RETI_sngl(self):
-        """Test for RETI single topology/MPI function."""        
+        """Test for RETI single topology/MPI function."""
 
         if((call("python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap single_cmap.dat", shell=True)) == 0):
             # Checking whether the required output files have been setup for RETI single topology protoms.py setup.
 
-            for out_files in output_files_setup:
-                self.assertTrue(os.path.exists(out_files), "ProtoMS setup output file %s is missing. There could be problems with ligand's zmat generation, forcefield issues, template generation issues for Van der Waals, electrostatic or combined perturbation and ProtoMS input command file generation for simulation." % (out_files))
+            for outfile in output_files_setup:
+                self.assertTrue(os.path.exists(outfile),
+                                "ProtoMS setup output file {0} is missing.".format(outfile))
 
-            for out_files in outfiles_setup:
-                self.assertTrue(os.path.exists(out_files), "ProtoMS setup output file %s is missing. Please check!" % (out_files))
+            for outfile in outfiles_setup:
+                self.assertTrue(os.path.exists(outfile),
+                                "ProtoMS setup output file {0} is missing.".format(outfile))
 
-            # Checking content of RETI single topology setup output files with reference data files.  
-            for out_files in output_files_setup:
-                self.assertTrue(filecmp.cmp(out_files, os.path.join(ref_dir, out_files)),
-                                "Content mismatch between output and reference for file{0}".format(out_files)) 
+            # Checking content of RETI single topology setup output files with reference data files.
+            for outfile in output_files_setup:
+                self.assertTrue(filecmp.cmp(outfile, os.path.join(ref_dir, outfile)),
+                                "Content mismatch between output and reference for file {0}".format(outfile))
 
             for out_files in outfiles_setup:
                 if((call("bash content_cmd_comp.sh", shell=True)) == 0):
-                    print("\n Content matched for %s." %out_files)
+                    print("\n Content matched for %s." % out_files)
                 else:
-                    raise ValueError("Content mismatch between output and reference %s" %(out_files)) 
+                    raise ValueError("Content mismatch between output and reference %s" % (out_files))
 
-	else:
+        else:
             raise simulationobjects.SetupError("ProtoMS setup for RETI single topology and command files generation failed.")
 
         if((call("mpirun -np 4 $PROTOMSHOME/build/protoms3 run_comb_free.cmd", shell=True)) == 0):
@@ -78,21 +80,19 @@ class TestRETIsngl(unittest.TestCase):
                     if len(dirs) != 0:
                         for d in dirs:
                             for out_files in out_sim_files:
-                                self.assertTrue(os.path.exists(os.path.join("out_comb_free/",d+"/",out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_free/",d+"/",out_files))
+                                outfile_rel = os.path.join("out_comb_free", d, out_files)
+                                self.assertTrue(os.path.exists(outfile_rel),
+                                                "Simulation file {0} is missing.".format(outfile_rel))
 
                                 # Checking content of RETI free phase leg of a single topology simulation output files with reference data.
                                 if out_files == "info":
                                     if((call("bash content_info_freecomp.sh", shell=True)) == 0):
-                                        print "\n Free phase leg info files content matched."
-                                        continue
+                                        print("\n Free phase leg info files content matched.")
                                     else:
-                                        raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
+                                        raise ValueError("Content mismatch between output and reference info file for lambda value {0}.".format(d))
                                 else:
-                                    if((call("diff "+ "out_comb_free/"+d+"/"+out_files+ " " + ref_dir +"out_comb_free/" + d + "/"+ out_files,shell=True)) == 0):
-                                        print "\n Content matched for %s." %("out_comb_free/"+d+"/"+out_files)
-                                        continue
-                                    else:
-                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join("out_comb_free/",d,out_files)))
+                                    self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
+                                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
 
         else:
             raise simulationobjects.SetupError("RETI free phase leg of a single topology simulation is not successful.")
@@ -100,28 +100,27 @@ class TestRETIsngl(unittest.TestCase):
         if((call("mpirun -np 4 $PROTOMSHOME/build/protoms3 run_comb_gas.cmd", shell=True)) == 0):
             # Checking whether the simulation output files have been created successfully for RETI gas phase leg of a single topology for combined perturbation.
             if(os.path.exists("out_comb_gas")):
-                for root, dirs, files in os.walk("out_comb_free"):
+                for root, dirs, files in os.walk("out_comb_gas"):
                     if len(dirs) != 0:
                         for d in dirs:
                             for out_files in out_sim_files:
-                                self.assertTrue(os.path.exists(os.path.join("out_comb_gas/",d+"/",out_files)), "Simulation file %s is missing. Please check!" % os.path.join("out_comb_gas/",d+"/",out_files))
+                                outfile_rel = os.path.join("out_comb_gas", d, out_files)
+                                self.assertTrue(os.path.exists(outfile_rel),
+                                                "Simulation file {0} is missing.".format(outfile_rel))
 
                                 # Checking content of RETI gas phase leg of a single topology simulation output files with reference data.
                                 if out_files == "info":
                                     if((call("bash content_info_gascomp.sh", shell=True)) == 0):
-                                        print "\n Gas phase leg info files matched."
+                                        print("\n Gas phase leg info files matched.")
                                         continue
                                     else:
-                                        raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
+                                        raise ValueError("Content mismatch between output and reference info file for lambda value {0}.".format(d))
                                 else:
-                                    if((call("diff "+"out_comb_gas/"+d+"/"+out_files+ " "+ref_dir+ "out_comb_gas/" + d + "/"+out_files,shell=True)) == 0):
-                                        print "\n Content matched for %s." %"out_comb_gas/"+d+"/"+out_files
-                                        continue
-                                    else:
-                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join(test_dir,"out_comb_gas/",d+"/",out_files)))
+                                    self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
+                                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
 
         else:
-            raise simulationobjects.SetupError("RETI gas phase leg of a single topology simulation is not successful.")
+            raise simulationobjects.SetupError("RETI gas phase leg of a single topology simulation was not successful.")
 
 
 # Entry point to nosetests or unittests
