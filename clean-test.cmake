@@ -24,6 +24,14 @@ set(DELFILES
     "test_jaws1/jaws1_wat.pdb"
     "test_jaws1/run_jaws.cmd"
     "test_jaws1/out_jaws"
+    # RETI single test
+    "test_RETI_sngl/eth-meo_comp.tem"
+    "test_RETI_sngl/eth-meo_ele.tem"
+    "test_RETI_sngl/eth-meo_gas.tem"
+    "test_RETI_sngl/run_free.cmd"
+    "test_RETI_sngl/run_gas.cmd"
+    "test_RETI_sngl/out_free"
+    "test_RETI_sngl/out_gas"
     )
 
 foreach(f ${DELFILES})

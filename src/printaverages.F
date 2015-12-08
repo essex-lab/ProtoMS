@@ -65,7 +65,7 @@ c       call printLine(RESULTS,printstring)
 
        write(printstring,"('Temperature = ',f12.4,' C')") temperatureC
        call printLine(RESULTS,printstring)
-       
+
        if (doREST) then
          write(printstring,"('Effective temperature = ',f12.4,' C')") resttempC
          call printLine(RESULTS,printstring)

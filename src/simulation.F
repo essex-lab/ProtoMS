@@ -374,7 +374,8 @@ c             get which solute will be printed
             endif
             if (nwords.ge.4) SolRDel(i) = deg2Rad(getDouble(words(4),Rad2deg(SolRDel(i))))
             if (nwords.ge.3) then 
-              write(printstring,*)"New displacements for solute ",i," translation=",SolADel(i)," rotation=",SolRDel(i)
+              write(printstring,400) i,SolADel(i),SolRDel(i)
+400           format("New displacements for solute",i4," translation =",f8.4," rotation =",f8.4)
               call printLine(INFO,printstring)
             endif
 

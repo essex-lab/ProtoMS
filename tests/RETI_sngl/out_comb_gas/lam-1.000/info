@@ -79,7 +79,7 @@ Running simulation in lambda window    0.999 <--    1.000 -->    1.000
 There are   15 CLJ parameter types used in this simulation.
  Pre-calculating all the charge and LJ pairs...
  Running chunk            1
- New displacements for solute            1  translation=   0.0000000000000000       rotation=   0.0000000000000000
+New displacements for solute   1 translation =  0.0000 rotation =  0.0000
  Running chunk            2
 Move probabilies: Protein =        0 Solute =     1000 Solvent =        0 Insertion =        0
                   Titrate =        0 Theta  =        0 Volume  =        0 Deletion  =        0
