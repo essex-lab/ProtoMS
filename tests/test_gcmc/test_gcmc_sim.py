@@ -10,37 +10,34 @@ import logging
 import time
 import re
 import numpy as np
+import filecmp
 import protoms
 
-from protoms import _is_float, _get_prefix, _locate_file, _merge_templates, _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology, _prep_gcmc, _prep_jaws2, _cleanup, _wizard
+from protoms import _is_float, _get_prefix, _locate_file, _merge_templates
+from protoms import _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology
+from protoms import _prep_gcmc, _prep_jaws2, _cleanup, _wizard
 
 import tools
 from tools import simulationobjects
 
 from subprocess import call
 
-#---------------------------------------------
+# ---------------------------------------------
 # ProtoMS setup and GCMC simulations test
-#---------------------------------------------
+# ---------------------------------------------
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
-test_dir = proto_env + "/tests/test_gcmc/"
 ref_dir = proto_env + "/tests/gcmc/"
 
-#Storing present working directory path to a variable.
-proto_path = os.popen("pwd").read()
-proto_path = re.sub('\\n$','',proto_path)
-
 out_gcmc_tools = ["gcmc_box.pdb"]
-output_files_setup = ["gcmc_wat.pdb","run_bnd.cmd"]
+output_files_setup = ["gcmc_wat.pdb", "run_gcmc.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
-outfiles = ["gcmc_wat.pdb","run_bnd.cmd"]
+
 
 class TestGCMC(unittest.TestCase):
-    
     """Test for GCMC function."""
-    
+
     def setUp(self):
         super(TestGCMC, self).setUp()
 
@@ -48,83 +45,63 @@ class TestGCMC(unittest.TestCase):
         super(TestGCMC, self).tearDown()
 
     def test_gcmc(self):
-        
         """Test for GCMC function."""
-        
-        if((call("python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s" + test_dir + "wat.pdb", shell=True)) == 0):
-            
-            """Checking whether GCMC tool created the box successfully."""
-            
-            for out_files in out_gcmc_tools:
-                self.assertTrue(os.path.exists(proto_path+"/"+out_files), "GCMC box file %s is missing." % (out_files))
 
-                """Checking content of GCMC Box with reference GCMC Box file."""
+        if((call("python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s wat.pdb", shell=True)) == 0):
+            # Checking whether GCMC tool created the box successfully.
 
-                if((call("diff gcmc_box.pdb "+ref_dir+out_files, shell=True)) == 0):
-                    print "\n Content matched for file %s." %out_files
-                    continue
-                else:
-                    raise ValueError("Content mismatch between output and reference %s" %(out_files))
+            for outfile in out_gcmc_tools:
+                self.assertTrue(os.path.exists(outfile),
+                                "GCMC setup output file {0} is missing.".format(outfile))
+
+            for outfile in out_gcmc_tools:
+                # Checking content of GCMC Box with reference GCMC Box file.
+                self.assertTrue(filecmp.cmp(outfile, os.path.join(ref_dir, outfile)),
+                                "Content mismatch between output and reference for file {0}".format(outfile))
+
         else:
-            raise simulationobjects.SetupError("Making of Simulation box for GCMC is not successful!")
-            
-        if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.dcb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb -f" + test_dir, shell=True)) == 0):
+            raise simulationobjects.SetupError("Creation of GCMC simulation box was not successful!")
 
-            """Checking whether the required output files have been setup for GCMC simulation."""
-                
-            for out_files in output_files_setup:
-                self.assertTrue(os.path.exists(proto_path+"/"+ out_files), "ProtoMS setup output file %s is missing. There could be problems with ProtoMS input command file generation for simulation." % (test_dir + out_files))
+        if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb", shell=True)) == 0):
+            # Checking whether the required output files have been setup for GCMC simulation.
 
-  	        print "Setup and command files generation is successful."
+            for outfile in output_files_setup:
+                self.assertTrue(os.path.exists(outfile),
+                                "Setup output file {0} is missing.".format(outfile))
 
-            """ Checking content of GCMC setup output files with reference data in files. """
-            for out_files in outfiles:
+            for outfile in output_files_setup:
+                # Checking content of GCMC setup output files with reference data in files.
+                self.assertTrue(filecmp.cmp(outfile, os.path.join(ref_dir, outfile)),
+                                "Content mismatch between output and reference for file {0}".format(outfile))
 
-                if out_files == "run_bnd.cmd":
-                    if((call("bash "+ test_dir+"content_cmd_comp.sh", shell=True)) == 0):
-                        print "\n Output Command files matched."
-                        continue
-                    else:
-                        raise ValueError("Content mismatch between output and reference command files.")
-
-                else:
-                    if((call("diff "+ out_files + " "+ ref_dir + out_files, shell=True)) == 0):
-                        print "\n Content matched for file %s." %out_files
-                        continue
-                    else:
-                        raise ValueError("Content mismatch between output and reference %s" %(out_files))
-
+            print("Setup and command files generation is successful.")
         else:
             raise simulationobjects.SetupError("ProtoMS setup and command files generation is not successful.")
 
-        """Test for ProtoMS simulation."""
+        # Test for ProtoMS simulation.
+        if((call("$PROTOMSHOME/build/protoms3 run_gcmc.cmd", shell=True)) == 0):
+            # Checking whether the simulation output files have been created successfully.
+            for outfile in out_sim_files:
+                outfile_rel = os.path.join("out_gcmc", outfile)
+                self.assertTrue(os.path.exists(outfile_rel),
+                                "GCMC simulation file {0} is missing.".format(outfile_rel))
 
-        if((call("$PROTOMSHOME/protoms3 run_bnd.cmd", shell=True)) == 0):
-
-            """Checking whether the simulation output files have been created successfully."""
-            for out_files in out_sim_files:
-                self.assertTrue(os.path.exists(proto_path+"/"+"out/"+ out_files),"GCMC simulation file: %s is missing." % out_files)
-
-                """ Checking content of GCMC simulation output files with reference data in files."""
-                if out_files == "info":
-                    if((call("bash "+ test_dir +"content_info_comp.sh", shell=True)) == 0):
-                        print "\n Info files content matched."
+                # Checking content of GCMC simulation output files with reference data in files.
+                if outfile == "info":
+                    if((call("bash content_info_comp.sh", shell=True)) == 0):
+                        print("\n Info files content matched.")
                         continue
                     else:
                         raise ValueError("Content mismatch between output and reference info files.")
                 else:
-                    if((call("diff out/" + out_files+ " "+ ref_dir + "out/" + out_files, shell=True)) == 0):
-                        print "\n Content matched for file %s." %"out/"+out_files
-                        continue
-                    else:
-                        raise ValueError("Content mismatch between output and reference %s" %(os.path.join("out/", out_files)))
-                        
+                    self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
+                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
+
         else:
-            raise simulationobjects.SetupError("GCMC simulation is not successful.")
-        
+            raise simulationobjects.SetupError("GCMC simulation was not successful.")
 
-#Entry point for nosetests or unittests
 
+# Entry point for nosetests or unittests
 if __name__ == '__main__':
     unittest.main()
     nose.runmodule()

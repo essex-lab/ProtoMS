@@ -13,6 +13,11 @@ set(DELFILES
     # sampling test
     "test_sampling/run_bnd.cmd"
     "test_sampling/out_bnd"
+    # GCMC test
+    "test_gcmc/gcmc_box.pdb"
+    "test_gcmc/gcmc_wat.pdb"
+    "test_gcmc/run_bnd.cmd"
+    "test_gcmc/out_gcmc"
     )
 
 foreach(f ${DELFILES})

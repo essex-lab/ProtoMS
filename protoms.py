@@ -1040,7 +1040,14 @@ if __name__ == "__main__":
       repeats.append(str(repeat) + post)
 
   outfolder = args.outfolder
-  if args.outfolder == "" : outfolder = "out"
+  if args.outfolder == "" : 
+    if args.simulation == "gcmc" :
+      outfolder = "out_gcmc"
+    elif args.simulation in ["jaws1","jaws2"] :
+      outfolder = "out_jaws"
+    else :
+      outfolder = "out"
+
   for repeat in repeats :
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
@@ -1058,8 +1065,13 @@ if __name__ == "__main__":
 
     if free_cmd is not None : 
       free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")
-    if bnd_cmd is not None : 
-      bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_bnd.cmd")       
+    if bnd_cmd is not None :
+      if args.simulation == "gcmc" :
+        bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_gcmc.cmd") 
+      elif args.simulation in ["jaws1","jaws2"] :
+        bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_jaws.cmd") 
+      else :
+        bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_bnd.cmd")       
     if gas_cmd is not None : 
       gas_cmd.writeCommandFile(args.cmdfile+repeat+"_gas.cmd")   
       
