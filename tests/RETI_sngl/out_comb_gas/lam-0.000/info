@@ -1,41 +1,41 @@
-protoms3 started at 16:32:22 on the 10/ 8/2015
- Non-bonded cutoff =    10.000000000000000       angstroms.
- Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
+protoms3 started at 12:36:25 on the  8/12/2015
+Non-bonded cutoff =      10.0000 angstroms.
+Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-#############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99.ff
-#############################################################################
+################################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/amber14SB.ff
+################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
- Using a 1-4 coulomb scaling factor of   0.83333299999999999
- Using a 1-4 LJ scaling factor of   0.50000000000000000
-Loaded    0 templates,    0 override templates,  825 clj parameters
-and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
+Loaded    0 templates,    0 override templates,  797 clj parameters
+and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-##############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/solvents.ff
-##############################################################################
+###############################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/solvents.ff
+###############################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
 Loaded   15 templates,    0 override templates,   21 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-######################################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99-residues.ff
-######################################################################################
+#########################################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/amber14SB-residues.ff
+#########################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/gaff14.ff
-############################################################################
+#############################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/gaff14.ff
+#############################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
- Using a 1-4 coulomb scaling factor of   0.83333299999999999
- Using a 1-4 LJ scaling factor of   0.50000000000000000
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,    1 clj parameters
 and 1582/8142/4050/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
@@ -56,23 +56,23 @@ and    0/   0 surface/born parameters.
  Opening solute file ethane.pdb
  Loading solute 'eth'
  Using concentration correction
- Simulation consists of            0  protein chains,            1  solute molecules and            0  solvent molecules
+Simulation consists of    0 protein chains,    1 solute molecules and        0 solvent molecules
  Fitting molecule templates to eth
-##################################################
- Charge on solute eth =   2.00000000000000872E-003
-##################################################
+###################################
+Charge on solute eth =      0.00200
+###################################
  Assigning non-bonded atoms for solute            1
  Building geometry duplicates for eth
  Finished fitting template...
 ########################################
 Using no boundary conditions (gas-phase)
 ########################################
- Simulation temperature =    25.000000000000000       C, (   298.14999999999998       K)
+Simulation temperature =      25.0000 C, (    298.1500 K)
  Got initial random number seed       100000
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 16:32:22 on the 10/ 8/2015
+Starting simulation at 12:36:26 on the  8/12/2015
 ######################################################################
 Running simulation in lambda window    0.000 <--    0.000 -->    0.001
 ######################################################################
@@ -107,4 +107,4 @@ Resetting free energy average to zero.
  Data collection complete. Attempted/accepted moves           10           9
 Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
  Simulation shutting down...
-protoms3 completed at 16:32:23 on the 10/ 8/2015
+protoms3 completed at 12:36:26 on the  8/12/2015

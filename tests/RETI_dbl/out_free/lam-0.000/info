@@ -1,45 +1,45 @@
-protoms3 started at 16:25:15 on the 10/ 8/2015
+protoms3 started at 12:40:06 on the  8/12/2015
 Using whatever boundary conditions the solvent desires
- Non-bonded cutoff =    10.000000000000000       angstroms.
- Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
+Non-bonded cutoff =      10.0000 angstroms.
+Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
  SoftCore Parameters for this simulation :
  Coul            1  LJ            1  GB            1  Delta   0.20000000000000001       DeltaCoul    2.0000000000000000       (    64.000000000000000       ) Power            6
 Using 6-6 soft-core potential
-#############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99.ff
-#############################################################################
+################################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/amber14SB.ff
+################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
- Using a 1-4 coulomb scaling factor of   0.83333299999999999
- Using a 1-4 LJ scaling factor of   0.50000000000000000
-Loaded    0 templates,    0 override templates,  825 clj parameters
-and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
+Loaded    0 templates,    0 override templates,  797 clj parameters
+and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-##############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/solvents.ff
-##############################################################################
+###############################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/solvents.ff
+###############################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
 Loaded   15 templates,    0 override templates,   21 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-######################################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/amber99-residues.ff
-######################################################################################
+#########################################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/amber14SB-residues.ff
+#########################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-############################################################################
- Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS3.0/parameter/gaff14.ff
-############################################################################
+#############################################################################
+ Reading parameter file /home/rtb1c13/WORK/Hg/ProtoMS-Dev/parameter/gaff14.ff
+#############################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
- Using a 1-4 coulomb scaling factor of   0.83333299999999999
- Using a 1-4 LJ scaling factor of   0.50000000000000000
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,    1 clj parameters
 and 1582/8142/4050/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
@@ -55,19 +55,19 @@ and    0/   0 surface/born parameters.
  Loading solute 'meo'
  Using concentration correction
  Opening solvent file ethane_box.pdb
- Have now loaded          300  solvent molecules (         300  from this file)
+Have now loaded      300 solvent molecules (     300 from this file)
 Periodic boundaries have been turned on in agreement with solvent file
- Simulation consists of            0  protein chains,            2  solute molecules and          300  solvent molecules
+Simulation consists of    0 protein chains,    2 solute molecules and      300 solvent molecules
  Fitting molecule templates to eth
-##################################################
- Charge on solute eth =   2.00000000000000872E-003
-##################################################
+###################################
+Charge on solute eth =      0.00200
+###################################
  Assigning non-bonded atoms for solute            1
  Finished fitting template...
  Fitting molecule templates to meo
-#############################################
- Charge on solute meo =    0.0000000000000000
-#############################################
+###################################
+Charge on solute meo =      0.00000
+###################################
  Assigning non-bonded atoms for solute            2
  Finished fitting template...
 ##################################
@@ -86,7 +86,7 @@ Solutes will be translated together
 Solutes will rotated together
  Turning softcore on for Solute 1
  Turning softcore on for Solute 2
- Simulation temperature =    25.000000000000000       C, (   298.14999999999998       K)
+Simulation temperature =      25.0000 C, (    298.1500 K)
 ########################################################################################################################################################################################################
  Running an NPT periodic boundaries simulation with pressure =    1.0000000000000000       atm (   101325.00000000000       pascals) and with a maximum volume change of    30.000000000000000       A^3
 ########################################################################################################################################################################################################
@@ -95,7 +95,7 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 16:25:16 on the 10/ 8/2015
+Starting simulation at 12:40:07 on the  8/12/2015
 ######################################################################
 Running simulation in lambda window    0.000 <--    0.000 -->    0.001
 ######################################################################
@@ -135,4 +135,4 @@ Attempted/successful lambda swaps for lambdaladder   1 :      9     9 ( 100.000%
  Final volume =    13851.666436095999       A^3
 ###############################################
  Simulation shutting down...
-protoms3 completed at 16:25:18 on the 10/ 8/2015
+protoms3 completed at 12:40:07 on the  8/12/2015

@@ -1,6 +1,6 @@
-parfile $PROTOMSHOME/parameter/amber99.ff
+parfile $PROTOMSHOME/parameter/amber14SB.ff
 parfile $PROTOMSHOME/parameter/solvents.ff
-parfile $PROTOMSHOME/parameter/amber99-residues.ff
+parfile $PROTOMSHOME/parameter/amber14SB-residues.ff
 parfile $PROTOMSHOME/parameter/gaff14.ff
 parfile eth-meo.tem
 solute1 ethane.pdb

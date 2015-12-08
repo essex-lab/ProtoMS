@@ -1,6 +1,6 @@
+Overwriting dihedral parameter for CT-CX-C -N
+atm     N     C    CX    CT  6167  #
 Overwriting bond parameter for no-os, parameter 1653 with parameter 1654
 atm no os     1654
 Overwriting angle parameter for c -cc-n , parameter 1892 with parameter 1971
 atm  n cc  c    1971
-Overwriting clj parameter  100, atm=DU, new atm=DU
-par   100   DU    00      0.0000    0.0000    0.0000  # dummy atom

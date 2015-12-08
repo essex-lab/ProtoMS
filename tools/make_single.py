@@ -279,13 +279,12 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
       if atoms2.atoms == atoms or atoms2 == ratoms :
         return atoms2.param.index,atom2.param.params[1]
     # Next loop through the GAFF set
-    for param in gaffset.params.itervalues() :
-      if param.ats == atoms or param.ats == ratoms :
-        return param.index,param.b0
     if len(atoms) == 4 :
-      for param in gaffset.params.itervalues() :
-        if param.ats[0] == "X" and param.ats[3] == "X" and (param.ats[1:3] == atoms[1:3] or param.ats[1:3] == ratoms[1:3]) :
-          return param.index,param.b0
+       param = gaffset.get_params(atoms)
+       return param.index,param.terms
+    else:
+       param = gaffset.get_params(atoms)
+       return param.index,param.b0
     return -1,-1
 
   def find_pdbparam(atoms,objdict) :
