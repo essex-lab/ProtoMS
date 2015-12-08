@@ -1,12 +1,12 @@
-parfile $PROTOMSHOME/parameter/amber99.ff
+parfile $PROTOMSHOME/parameter/amber14SB.ff
 parfile $PROTOMSHOME/parameter/solvents.ff
-parfile $PROTOMSHOME/parameter/amber99-residues.ff
+parfile $PROTOMSHOME/parameter/amber14SB-residues.ff
 parfile $PROTOMSHOME/parameter/gaff14.ff
 parfile fragment.tem
 protein1 protein_scoop.pdb
 solute1 fragment.pdb
 solvent1 water_clr.pdb
-outfolder out
+outfolder out_jaws
 streamheader off
 streamdetail off
 streamwarning warning
@@ -22,7 +22,7 @@ boundary solvent
 pdbparams on
 #  JAWS-1 specific parameters
 jaws1 0
-parfile $PROTOMSHOME/data/gcmc_wat.tem
+parfile $PROTOMSHOME/data/gcmc_tip4p.tem
 grand1 jaws1_wat.pdb
 originx 59.774
 originy 31.007

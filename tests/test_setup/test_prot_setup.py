@@ -66,6 +66,8 @@ class TestProtSetup(unittest.TestCase):
 (header_list[3] == ref_header_list[3]) or ('{:0.2f}'.format(float(header_list[3])) == '{:0.2f}'.format(float(ref_header_list[3]))) and \
 (header_list[4] == ref_header_list[4]) or ('{:0.2f}'.format(float(header_list[4])) == '{:0.2f}'.format(float(ref_header_list[4]))) and \
 header_list[5] == ref_header_list[5] and header_list[6] == ref_header_list[6]):
+                print(ref_header_list)
+                print(header_list)
                 raise ValueError("Discrepancy in HEADER parameters in water cap-file. Please check!")
 
             # Checking content of output files with reference data files

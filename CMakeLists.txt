@@ -147,7 +147,10 @@ add_test(NAME test_gcmc_sim
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc/test_gcmc_sim.py)
 
-add_test(test_jaws1_sim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1/test_jaws1_sim.py)
+add_test(NAME test_jaws1_sim
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1/test_jaws1_sim.py)
+
 add_test(test_jaws2_sim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2/test_jaws2_sim.py)
 add_test(test_reti_sngl ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl/test_reti_sngl.py)
 add_test(test_reti_dbl ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl/test_reti_dbl.py)
