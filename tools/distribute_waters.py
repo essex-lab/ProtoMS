@@ -24,7 +24,6 @@ Can be executed from the command line as a stand-alone program
 
 import simulationobjects
 import logging
-import random
 import convertwater
 import numpy as np
 
@@ -69,7 +68,7 @@ def create_res(atnames=["O00"],resname="sol",positions=[np.array([0.0,0.0,0.0])]
 
 
 
-def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb=None) :
+def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb=None,ranseed=None) :
   """
   Randomly distribute molecules in a box
   
@@ -90,6 +89,9 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb
     (only used when particles is a file)
     the number of particles. If not specified it is set
     to be as many as there are in the file
+  ranseed : integer, optional
+    seed for the random number generator, allows water
+    box to be reproduced
 
   Returns
   -------
@@ -112,7 +114,11 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb
     logger.debug("\tparticles %s"%particles.name)
   logger.debug("\twatermodel %s"%watermodel)
   logger.debug("\tpartnumb %s"%partnumb)
+  if ranseed is not None:
+      logger.debug("\transeed %d"%ranseed)
   logger.debug("This will distribute the molecules given in 'particles' randomly in the box given in box. If a number is given in 'particles', it assumes them to be waters.")
+
+  np.random.seed(ranseed)
 
   if isinstance(box,list) :
     try :
@@ -157,8 +163,8 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb
       parts = particles.residues    
     for ind,keypart in enumerate(parts) :
       parts[keypart].getCenter()
-      displace = [coord_len*random.random() + orig[jnd] - parts[keypart].center[jnd] for jnd,coord_len in enumerate(length)]
-      rotated_coords = convertwater.rotatesolute(np.array([myat.coords for myat in parts[keypart].atoms]),random.uniform(0,2*np.pi),random.uniform(0,2*np.pi),random.uniform(0,2*np.pi))
+      displace = [coord_len*np.random.uniform() + orig[jnd] - parts[keypart].center[jnd] for jnd,coord_len in enumerate(length)]
+      rotated_coords = convertwater.rotatesolute(np.array([myat.coords for myat in parts[keypart].atoms]),np.random.uniform(0,2*np.pi),np.random.uniform(0,2*np.pi),np.random.uniform(0,2*np.pi))
       for jnd,atom in enumerate(parts[keypart].atoms) :
         atom.coords = np.array([rotated_coords.item((jnd,i)) + displace[i] for i in range(3)])
       
@@ -181,11 +187,12 @@ if __name__ == "__main__":
   parser.add_argument('--model', help="Water model. Used when only the amount of waters is specified. Options: 't4p','t3p'. Default='t4p'",default='t4p')
   parser.add_argument('--resname',help="Residue name of the molecules writen to output. Default='WAT'",default='WAT')
   parser.add_argument('--number',help="Required number of molecules when it differs from the number of residues in the file.",default=None)
+  parser.add_argument('--ranseed',help="Optional random number seed for generation of water coordinates.",default=None)
   args = parser.parse_args()
 
   logger = simulationobjects.setup_logger("distribute_waters_py.log")
 
-  outobj = distribute_particles(args.box,args.molecules,args.model,args.resname,args.number)
+  outobj = distribute_particles(args.box,args.molecules,args.model,args.resname,args.number,args.ranseed)
   outobj.write(filename=args.outfile)
   print "\nMolecules printed in %s"%args.outfile
 
