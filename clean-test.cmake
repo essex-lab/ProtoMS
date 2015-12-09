@@ -32,6 +32,10 @@ set(DELFILES
     "test_RETI_sngl/run_gas.cmd"
     "test_RETI_sngl/out_free"
     "test_RETI_sngl/out_gas"
+    # RETI double test
+    "test_RETI_dbl/eth-meo.tem"
+    "test_RETI_dbl/run_free.cmd"
+    "test_RETI_dbl/out_free"
     )
 
 foreach(f ${DELFILES})

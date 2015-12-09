@@ -8,38 +8,34 @@ import sys
 import subprocess
 import logging
 import time
-import numpy as np
-import protoms
 import re
+import numpy as np
 import filecmp
+import protoms
 
-from protoms import _is_float, _get_prefix, _locate_file, _merge_templates, _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology, _prep_gcmc, _prep_jaws2, _cleanup, _wizard
+from protoms import _is_float, _get_prefix, _locate_file, _merge_templates
+from protoms import _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology
+from protoms import _prep_gcmc, _prep_jaws2, _cleanup, _wizard
 
 import tools
 from tools import simulationobjects
 
 from subprocess import call
 
-#-------------------------------------------------------
+# -------------------------------------------------------
 # ProtoMS setup and RETI dual topology simulations test
-#-------------------------------------------------------
+# -------------------------------------------------------
 
 # Storing PROTOMSHOME environment variable to a python variable.
-
 proto_env = os.environ["PROTOMSHOME"]
-test_dir = proto_env + "/tests/test_RETI_dbl/"
 ref_dir = proto_env + "/tests/RETI_dbl/"
-
-#Storing present working directory path to a variable.
-proto_path = os.popen("pwd").read()
-proto_path = re.sub('\\n$','',proto_path)
 
 output_files_setup = ["ethane_box.pdb", "eth-meo.tem", "run_free.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "info", "restart", "results_inst"]
 
 
 class TestRETIdbl(unittest.TestCase):
-    """Test for RETI/ MPI function - short dual topology simulation."""
+    """Test for RETI/MPI function - short dual topology simulation."""
     def setUp(self):
         super(TestRETIdbl, self).setUp()
 
@@ -47,75 +43,56 @@ class TestRETIdbl(unittest.TestCase):
         super(TestRETIdbl, self).tearDown()
 
     def test_RETI_dbl(self):
-    
-        """Test for RETI/ MPI function - short dual topology simulation."""
+        """Test for RETI/MPI function - short dual topology simulation."""
 
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s dualtopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup -f" + test_dir, shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s dualtopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup", shell=True)) == 0):
+            # Checking whether the required output files have been setup for RETI dual topology protoms.py setup.
 
-            """Checking whether the required output files have been setup for RETI dual topology protoms.py setup."""
-                
             for out_files in output_files_setup:
-                if out_files in ("run_free.cmd", "eth-meo.tem"):
-                    self.assertTrue(os.path.exists(proto_path+"/"+out_files), "ProtoMS setup output file %s is missing. Please check!" % (os.path.join(proto_path,"/"+out_files)))
-                else:
-	            self.assertTrue(os.path.exists(test_dir + out_files), "ProtoMS setup output file %s is missing. There could be problems with ligand's zmat generation, forcefield issues, template generation issues and ProtoMS input command file generation for simulation." % (test_dir + out_files))
+                self.assertTrue(os.path.exists(out_files),
+                                "ProtoMS setup output file {0} is missing.".format(out_files))
 
-
-            """Checking content of RETI dual topology setup output files with reference data files."""  
+            # Checking content of RETI dual topology setup output files with reference data files.
             for out_files in output_files_setup:
 
                 if out_files == "run_free.cmd":
-                    if((call("bash "+ test_dir+"content_cmd_comp.sh", shell=True)) == 0):
-                        print "\n Content matched for command file %s." %out_files
-                        continue
+                    if((call("bash content_cmd_comp.sh", shell=True)) == 0):
+                        print("\n Content matched for command file {0}.").format(out_files)
                     else:
-                        raise ValueError("Content mismatch between output and reference %s" %(out_files))
-                elif out_files == "eth-meo.tem":
-                    self.assertTrue(filecmp.cmp(out_files, ref_dir+out_files),"Content mismatch between output and reference for file {0}".format(out_files))
-                    
+                        raise ValueError("Content mismatch between output and reference for file {0}".format(out_files))
                 else:
-                    if((call("diff "+ test_dir + out_files + " "+ ref_dir + out_files, shell=True)) == 0):
-                        print "\n Content matched for %s." %out_files
-                        continue
-                    else:
-                        raise ValueError("Content mismatch between output and reference %s" %(out_files))  
+                    self.assertTrue(filecmp.cmp(out_files, os.path.join(ref_dir, out_files)),
+                                    "Content mismatch between output and reference for file {0}".format(out_files))
 
-	else:
+        else:
             raise simulationobjects.SetupError("ProtoMS RETI dual topology setup and command files generation failed")
 
-        """Test for RETI dual topology simulation."""
-
-        if((call("mpirun -np 4 $PROTOMSHOME/protoms3 run_free.cmd", shell=True)) == 0):
-
-            """Checking whether the simulation output files have been created successfully for RETI dual topology."""
+        # Test for RETI dual topology simulation.
+        if((call("mpirun -np 4 $PROTOMSHOME/build/protoms3 run_free.cmd", shell=True)) == 0):
+            # Checking whether the simulation output files have been created successfully for RETI dual topology.
             if(os.path.exists("out_free")):
                 for root, dirs, files in os.walk("out_free"):
                     if len(dirs) != 0:
                         for d in dirs:
                             for out_files in out_sim_files:
-                                self.assertTrue(os.path.exists(os.path.join("out_free/",d+"/",out_files)), "Simulation file %s is missing. Please check!" % (os.path.join("out_free",d+"/",out_files)))
+                                outfile_rel = os.path.join("out_free", d, out_files)
+                                self.assertTrue(os.path.exists(outfile_rel),
+                                                "Simulation file {0} is missing.".format(outfile_rel))
 
-                                """Checking content of RETI free phase leg of a dual topology simulation output files with reference data. """
+                                # Checking content of RETI free phase leg of a dual topology simulation output files with reference data.
                                 if out_files == "info":
-                                    if((call("bash "+test_dir+"content_info_comp.sh", shell=True)) == 0):
-                                        print "\n RETI free phase dual topology info files matched,"
-                                        continue
+                                    if((call("bash content_info_comp.sh", shell=True)) == 0):
+                                        print("\n RETI free phase dual topology info files matched.")
                                     else:
-                                        raise ValueError("Content mismatch between output and reference info file for lambda value %s."%(d))
+                                        raise ValueError("Content mismatch between output and reference info file for lambda value {0}.".format(d))
                                 else:
-                                    if((call("diff "+ "out_free/" + d + "/"+ out_files+ " " + ref_dir +"out_free/" + d + "/"+out_files,shell=True)) == 0):
-                                        print "\n Content matched for %s." %"out_free/"+d+"/"+out_files
-                                        continue
-                                    else:
-                                        raise ValueError("Content mismatch between output and reference %s." %(os.path.join("out_free/",d+"/",out_files)))
-                            
-            
+                                    self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
+                                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
+
         else:
-            raise simulationobjects.SetupError("RETI dual topology simulation is not successful.")
+            raise simulationobjects.SetupError("RETI dual topology simulation was not successful.")
 
-#Entry point to nosetests or unittests.
-
+# Entry point to nosetests or unittests.
 if __name__ == "__main__":
     unittest.main()
     nose.runmodule()
-

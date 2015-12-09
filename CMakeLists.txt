@@ -157,7 +157,9 @@ add_test(NAME test_reti_sngl
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl/test_reti_sngl.py)
 
-add_test(test_reti_dbl ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl/test_reti_dbl.py)
+add_test(NAME test_reti_dbl
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl/test_reti_dbl.py)
 
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
