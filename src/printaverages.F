@@ -44,7 +44,7 @@ c       write(printstring,*) "Total Energy = ",totalEnergy(savenrg,nrgb,nrgf)
 c       call printLine(RESULTS,printstring)
 
 
-       write(printstring,"('Number of data steps',i8)") NSTEPS 
+       write(printstring,"('Number of data steps = ',i8)") NSTEPS 
        call printLine(RESULTS,printstring)
 
        if (doLambdaRE) then

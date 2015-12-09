@@ -985,24 +985,24 @@ class SnapshotResults :
     
     # Extract various energies and properties
     line = fileobj.readline()
-    line = fileobj.readline()
+    line = fileobj.readline().strip()
     while line[0] != "#" :
-      if line.startswith(" Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
-      if line.startswith(" Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
-      if line.startswith(" Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
-      if line.startswith(" Global replica") : self.globalreplica = int(line.split("=")[1].strip())
-      if line.startswith(" Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Effective temperature") : self.efftemperature = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
-      if line.startswith(" Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
-      if line.startswith(" Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
-      if line.startswith(" Molecules in grid") : self.solventson = int(line.split("=")[1].strip())
-      if line.startswith(" Pressure") : self.pressure = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Volume") : self.volume = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Random number seed") : self.seed = int(line.split("=")[1].strip())
+      if line.startswith("Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
+      if line.startswith("Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
+      if line.startswith("Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
+      if line.startswith("Global replica") : self.globalreplica = int(line.split("=")[1].strip())
+      if line.startswith("Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Effective temperature") : self.efftemperature = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
+      if line.startswith("Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
+      if line.startswith("Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
+      if line.startswith("Molecules in grid") : self.solventson = int(line.split("=")[1].strip())
+      if line.startswith("Pressure") : self.pressure = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Volume") : self.volume = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Random number seed") : self.seed = int(line.split("=")[1].strip())
       if line.startswith("Backwards Free Energy") : self.backfe = float(line.split("=")[1].strip().split()[0])
       if line.startswith("Forwards  Free Energy") : self.forwfe = float(line.split("=")[1].strip().split()[0])
-      line = fileobj.readline()
+      line = fileobj.readline().strip()
 
     # Look for the total energy
     while not line.startswith("Total Energy ") : line = fileobj.readline()
@@ -1013,7 +1013,7 @@ class SnapshotResults :
     self.internal_energies = {}
     self.interaction_energies = {}
     while line :
-      if line.startswith("Internal ") or  line.startswith(" Internal ") :
+      if line.startswith("Internal "):
         cols = line.strip().split()  
         if cols[4] == "solute" :
           key = cols[6]
@@ -1028,7 +1028,7 @@ class SnapshotResults :
           line=fileobj.readline()
       elif line.startswith("Average extra energies") :
         pass
-      elif line.startswith(" Average inter-molecular interaction energies") :
+      elif line.startswith("Average inter-molecular interaction energies") :
         pass
       elif line.startswith("Average total extra energy") :
         line = fileobj.readline() # Dummy line
@@ -1073,20 +1073,20 @@ class SnapshotResults :
         self.gradient = float(cols[1])
         if len(cols) > 2 :
           self.agradient = float(cols[2])
-      elif line.startswith(" Individual theta values"):
+      elif line.startswith("Individual theta values"):
         self.thetavals = [None]*self.ngcsolutes
         line = fileobj.readline() # Dummy line
         for i in range(self.ngcsolutes) :
           self.thetavals[i] = (fileobj.readline().strip().split()[2])
-      elif line.startswith(" Individual theta solute values"):
+      elif line.startswith("Individual theta solute values"):
         self.nthetasolutes = int(line[36:39])
         self.thetasolvals = [None]*self.nthetasolutes
         line = fileobj.readline() # Dummy line
         for i in range(self.nthetasolutes) :
           self.thetasolvals[i] = (fileobj.readline().strip().split()[2])
         
-      line = fileobj.readline()
-      if line.startswith("  -") or line.startswith("RESULTS FILE") : break
+      line = fileobj.readline().strip()
+      if line.startswith("-") or line.startswith("RESULTS FILE") : break
     # Sum of contributions for the different internal and interaction energies
     for attr in ["internal_energies","interaction_energies"] :
       if not hasattr(self,attr) : continue

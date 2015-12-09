@@ -4,7 +4,7 @@ RESULTS FILE    1
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -58,7 +58,7 @@ RESULTS FILE    2
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -112,7 +112,7 @@ RESULTS FILE    3
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -166,7 +166,7 @@ RESULTS FILE    4
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -220,7 +220,7 @@ RESULTS FILE    5
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -274,7 +274,7 @@ RESULTS FILE    6
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -328,7 +328,7 @@ RESULTS FILE    7
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        2
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -382,7 +382,7 @@ RESULTS FILE    8
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        2
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -436,7 +436,7 @@ RESULTS FILE    9
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0
@@ -490,7 +490,7 @@ RESULTS FILE   10
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =        0       0       0

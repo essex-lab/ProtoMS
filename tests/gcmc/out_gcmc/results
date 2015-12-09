@@ -4,7 +4,7 @@ RESULTS FILE    1
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -86,7 +86,7 @@ RESULTS FILE    2
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -168,7 +168,7 @@ RESULTS FILE    3
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -250,7 +250,7 @@ RESULTS FILE    4
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -332,7 +332,7 @@ RESULTS FILE    5
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -414,7 +414,7 @@ RESULTS FILE    6
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -496,7 +496,7 @@ RESULTS FILE    7
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -578,7 +578,7 @@ RESULTS FILE    8
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -660,7 +660,7 @@ RESULTS FILE    9
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
@@ -742,7 +742,7 @@ RESULTS FILE   10
 #############################
 RESULTS for lambda =  0.00000
 #############################
-Number of data steps      10
+Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2126       1       1
 Simulation B value =      20.0000
