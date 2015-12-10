@@ -65,7 +65,7 @@ c         try to read in a GCsolute atom line
 c         'ok' is true if this line contained a valid pdb atom
           if (.not.ok) then
              if (words(1).eq.'atom' .or. words(1).eq.'hetatm') then
-               write(printstring,*) "Could not understand the following PDB line: ",linenum
+               write(printstring,"(a,i8)") "Could not understand the following PDB line: ",linenum
                call printLine(WARNING,printstring)
                call printLine(WARNING,line)
              endif
@@ -76,9 +76,9 @@ c         'ok' is true if this line contained a valid pdb atom
 c           this is the first atom of a new GCsolute.
             igcs = NGCsolutes + 1
             if (igcs.gt.MAXSOLVENTS) then
-              write(printstring,*) "Exceeded maximum number of GC-solute molecules, ",MAXSOLVENTS
+              write(printstring,"(a,i8)") "Exceeded maximum number of GC-solute molecules, ",MAXSOLVENTS
               call printLine(FATAL,printstring)
-              write(printstring,*)"Increase MAXSOLVENTS and recompile"
+              write(printstring,*) "Increase MAXSOLVENTS and recompile"
               call closeProgram(-1,printstring)
               goto 100
             endif
@@ -93,10 +93,9 @@ c           this is the first atom of a new GCsolute.
 
           iatm = iatm + 1
           if (iatm.gt.MAXSOLUTEATOMS) then
-            write(printstring,*) "Exceeded maximum number of atoms per gc-solute molecule (",
-     .                           MAXSOLUTEATOMS,")"
+            write(printstring,"(a,i8)") "Exceeded maximum number of atoms per GC-solute molecule ,",MAXSOLUTEATOMS
             call printLine(FATAL,printstring)
-            write(printstring,*)"Increase MAXSOLUTEATOMS and recompile"
+            write(printstring,*) "Increase MAXSOLUTEATOMS and recompile"
             call closeProgram(-1,printstring)
             goto 100
           endif
@@ -115,15 +114,15 @@ c     end of do-while loop
 9600  continue
 c     get here if we could not open the file
       lgth = lineLength(filename)
-      write(printstring,*) "FATAL - unable to load GC solute PDB file ",filename(1:lgth)
+      write(printstring,"(a,a)") "FATAL - unable to load GC solute PDB file ",filename(1:lgth)
       call closeProgram(-1,printstring)
       return
 
 9700  continue
 c     got here if there was a problem reading a line
       lgth = lineLength(filename)
-      write(printstring,*) "WARNING - problem reading line ",linenum," of the GCsolute file ",
-     .     filename(1:lgth)
+      write(printstring,"(a,i8,a,a)") "WARNING - problem reading line ",linenum,
+     .      " of the GCsolute file ",filename(1:lgth)
       call printLine(WARNING,printstring)
       call printLine(WARNING,line)
       call printLine(WARNING,"Skipping the rest of the file!")
@@ -133,8 +132,8 @@ c     get here when hit end of the file
 9800  continue
 c     -------------------------------
 
-      write(printstring,*) "Have now loaded ",NGCsolutes," GCsolute molecules (",ngcs,
-     .                     " from this file)"
+      write(printstring,"(a,i8,a,i8,a)")
+     .      "Have now loaded ",NGCsolutes," GCsolute molecules (",ngcs," from this file)"
       call printLine(INFO,printstring)
       
       close(FILE)

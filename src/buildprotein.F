@@ -22,7 +22,7 @@ c##################################################
       integer inflx
 
       if ((iprot.gt.MAXPROTEINS).or.(iprot.le.0)) then
-        write(printstring,*) "Requesting the building of an invalid protein! (",iprot,")"
+        write(printstring,"(a,i8,a)") "Requesting the building of an invalid protein! (",iprot,")"
         call printLine(WARNING,printstring)
         call printLine(WARNING,"This is probably a programming bug!")
         return
@@ -73,16 +73,17 @@ c     now work out how many flexible residues there are in this protein
       NResMove(iprot) = inflx
 
 c     write out some statistics about the protein
-      write(printstring,*) "Protein contains ",NZAtoms(iprot)," atoms, ",NBonds(iprot)," bonds, ",
-     .   NAngles(iprot)," angles, ",NDihedrals(iprot)," dihedrals and ",NUreyBradleys(iprot),
-     .    " Urey Bradley terms."
+      write(printstring,"(a,i8,a,i8,a,i8,a,i8,a,i8,a)")
+     .     "Protein contains ",NZAtoms(iprot)," atoms, ",NBonds(iprot)," bonds, ",
+     .     NAngles(iprot)," angles, ",NDihedrals(iprot)," dihedrals and ",NUreyBradleys(iprot),
+     .     " Urey Bradley terms."
       call printLine(INFO,printstring)     
 
 c     if we have 'DETAIL' output then output the entire protein zmatrix
       if (streamhandle(DETAIL).lt.0) return
 
       do i=1,nres
-        write(printstring,*) "Residue ",ResNam(iprot,i)," (",ResNum(iprot,i),")"
+        write(printstring,"(a,a,a,i8,a)") "Residue ",ResNam(iprot,i)," (",ResNum(iprot,i),")"
         call printLine(DETAIL,printstring)
         
 c       print out the backbone atoms of this residue        

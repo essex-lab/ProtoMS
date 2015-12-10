@@ -206,7 +206,7 @@ c           we can read the cap coordinates/parameters fmro the option
           boundary = AGREESOLVENT
           call printLine(INFO,"Using whatever boundary conditions the solvent desires")
         else
-          write(printstring,*) "Could not determine boundary conditions from ",words(1)
+          write(printstring,"(a,a)") "Could not determine boundary conditions from ",words(1)
           call printLine(WARNING,printstring)
           call printLine(INFO,"Using whatever boundary conditions the solvent desires")
           boundary = AGREESOLVENT
@@ -240,7 +240,7 @@ c     now get the type of cutting
         else if (words(1).eq.'molecule') then
           cuttype = MOLECULEMOLECULE
         else
-          write(printstring,*) "Could not interpret cuttype from ",words(1)
+          write(printstring,"(a,a)") "Could not interpret cuttype from ",words(1)
           call prettyLine(WARNING,printstring)
           call printLine(WARNING,"Using default cuttype instead")
         endif
@@ -265,17 +265,16 @@ c
           if (words(j) .eq. 'quality') then
             if (j .eq. nwords) then
               SAquality = 3
-              write(printstring,*) 'SA quality is not determined ',
-     &          ' assuming a value of ',SAquality
+              write(printstring,"(a,i4)") 'SA quality is not determined assuming a value of ',SAquality
               call printLine(INFO,printstring)
             else
               SAquality = getInt(words(j+1),3)
-              write(printstring,*) 'SA quality set to ',SAquality
+              write(printstring,"(a,i4)") 'SA quality set to ',SAquality
               call printLine(INFO,printstring)
             endif
           else if (words(j) .eq. 'probe') then
             probe = getDouble(words(j+1),1.4d0)
-            write(printstring,*) 'Probe radius set to ',probe
+            write(printstring,"(a,f12.4)") 'Probe radius set to ',probe
             call printLine(INFO,printstring)
           endif
         enddo
@@ -283,7 +282,7 @@ c
         if (SAquality .eq. -1) then
 c         Problem, we did not read quality
           SAquality = 3
-          write(printstring,*) 'SA quality is not determined assuming a value of ',SAquality
+          write(printstring,"(a,i4)") 'SA quality is not determined assuming a value of ',SAquality
           call printLine(INFO,printstring)
         endif
 c       Now specify the number of points on the surface of each sphere
@@ -299,7 +298,7 @@ c       Now specify the number of points on the surface of each sphere
         if (probe .eq. -1) then
 c         Problem, we dit not read a probe
           probe = 1.4d0
-          write(printstring,*) 'Probe radius not determined assuming a value of ',probe
+          write(printstring,"(a,f12.4)") 'Probe radius not determined assuming a value of ',probe
           call printLine(INFO,printstring)          
         endif
 c       Set SurfCut
@@ -321,12 +320,12 @@ c
           call lowercase(words(j))
           if (words(j) .eq. 'cut') then
             BornCut = getDouble(words(j+1),25.0d0)
-            write(printstring,*) 'BornCut set to ',BornCut
+            write(printstring,"(a,f12.4)") 'BornCut set to ',BornCut
             call printLine(INFO,printstring)             
           endif
           if (words(j) .eq. 'threshold') then
             gbthreshold = getDouble(words(j+1),0.01d0)
-            write(printstring,*) 'GBthreshold set to ',gbthreshold
+            write(printstring,"(a,f12.4)") 'GBthreshold set to ',gbthreshold
             call printLine(INFO,printstring)           
           endif
           if (words(j) .eq. 'proteins') then
@@ -338,7 +337,7 @@ c
  92     continue
         if (BornCut .lt. ZERO) then
           BornCut = 25.0d0
-          write(printstring,*) 'Default BornCut set to ',BornCut
+          write(printstring,"(a,f12.4)") 'Default BornCut set to ',BornCut
           call printLine(INFO,printstring)             
         endif
         BornCut2 = BornCut**2
@@ -381,7 +380,7 @@ c       SG these two are not used since general soft-core is not yet supported
         SoftPower2 = SoftPower / 2.0d0
         write(printstring,*) 'SoftCore Parameters for this simulation :'
         call printLine(INFO,printstring)          
-        write(printstring,*) 'Coul ',CoulSoftPower,' LJ ',LJSoftPower,
+        write(printstring,"(6(a,f12.4),a,i4)") 'Coul ',CoulSoftPower,' LJ ',LJSoftPower,
      .    ' GB ',GBSoftPower,' Delta ',DeltaCore, ' DeltaCoul ',DeltaCoreCoulL, ' ( ',
      .     DeltaCoreCoul,' ) Power ',int(SoftPower)
         call printLine(INFO,printstring)
@@ -440,7 +439,7 @@ c     Try to read in number of solute theta kinds
       NThetaSolKind = 0
       if (getOption('nthetasolutes').or.getOption('nfrag')) then
         NThetaSolKind = getInt(words(1),0)  
-        write(printstring,*)"Will consider the first ",NThetaSolKind, "soluteX as theta-solutes"
+        write(printstring,"(a,i4,a)") "Will consider the first ",NThetaSolKind, "soluteX as theta-solutes"
         call printLine(INFO,printstring)
       endif      
       nkind = 0
@@ -494,10 +493,10 @@ c     SG, set hydration scaling variable
         UseConcCorr = (words(1).eq."on") 
       endif
       if (UseConcCorr) then
-        write(printstring,*)"Using concentration correction"
+        write(printstring,*) "Using concentration correction"
         call printLine(INFO,printstring)
       else
-        write(printstring,*)"NOT using concentration correction"
+        write(printstring,*) "NOT using concentration correction"
         call printLine(INFO,printstring)
       endif
 
@@ -591,7 +590,7 @@ c           read in both solutes
               lgth0 = lineLength(SoluteName(lowgroup))
               lgth1 = lineLength(SoluteName(highgroup))
               
-              write(printstring,*) "Dual topology simulation with group ",
+              write(printstring,"(2(a,i4),2a)") "Dual topology simulation with group ",
      .              lowgroup," at lambda=0, and group ",
      .              highgroup," at lambda=1. If groups are not defined, ",
      .              "each group corresponds to the solute with the same number."
@@ -599,14 +598,14 @@ c           read in both solutes
             
               if (DualTopologySolute(SolGroup(lowgroup,1)).ne.0.and.
      .        DualTopologySolute(SolGroup(lowgroup,NGroupSols(lowgroup))).ne.0) then
-                write(printstring,*) "Group ",
+                write(printstring,"(a,i4,a)") "Group ",
      .               lowgroup," already has a dual topology partner!"
                 call printLine(WARNING,printstring)
                 i = i-1
                 goto 200
               else if (DualTopologySolute(SolGroup(highgroup,1)).ne.0.and.
      .        DualTopologySolute(SolGroup(highgroup,NGroupSols(highgroup))).ne.0) then
-                write(printstring,*) "Group ",
+                write(printstring,"(a,i4,a)") "Group ",
      .               highgroup," already has a dual topology partner!"
                 call printLine(WARNING,printstring)
                 i = i-1
@@ -661,7 +660,7 @@ c                 we will rotate these solutes together
               enddo
 201           continue
             else
-              write(printstring,*) "Problem specifying dual topology solutes, ",
+              write(printstring,"(2a,i4,a,i4)") "Problem specifying dual topology solutes, ",
      .           "lowgroup = ",lowgroup," and highgroup = ",highgroup
               call printLine(WARNING,printstring)
 c             The following line will cause an infinite loop
@@ -706,7 +705,7 @@ c     A softcore is applied if either atom is part of a softcore residue
           else
             SoluteSoftCore(imol) = .true.
           endif
-          write(printstring,*) 'Turning softcore on for Solute ',words(2)  
+          write(printstring,"(2a)") 'Turning softcore on for Solute ',words(2)  
         else if (words(1) .eq. 'gcsolute') then
          if (imol .eq. -1) then
             do j=1,NSolutes
@@ -715,11 +714,11 @@ c     A softcore is applied if either atom is part of a softcore residue
           else
             GCsoluteSoftCore(imol) = .true.
           endif
-          write(printstring,*) 'Turning softcore on for GCsolute ',words(2)                
+          write(printstring,"(2a)") 'Turning softcore on for GCsolute ',words(2)                
         else if (words(1) .eq. 'protein') then
-          write(printstring,*) 'No Softcore for Proteins ',words(2)
+          write(printstring,"(2a)") 'No Softcore for Proteins ',words(2)
         else if (words(1) .eq. 'solvent') then
-          write(printstring,*) 'No Softcore for Solvent ',words(2)
+          write(printstring,"(2a)") 'No Softcore for Solvent ',words(2)
         else
           call printLine(WARNING,"cannot interpret type of molecule !")
           call join(1,nwords,printstring)
@@ -756,7 +755,8 @@ c       Now try to find them in the input
             restlevel(7) = nint(getDouble(words(j+1),2))
           endif      
         enddo
-        write(printstring,*)"REST levels solute intra/bond-angle = ",restlevel(1),
+        write(printstring,"(7(a,i4))")
+     .  "REST levels solute intra/bond-angle = ",restlevel(1),
      .                      " intra/dihedral = ",restlevel(2),
      .                      " intra/lj = ",restlevel(3),
      .                      " intra/coul = ",restlevel(4),
@@ -807,99 +807,101 @@ c     Now we can complete the setup of REST temperatures
 c     get the B factor for GCMC simulations
       if ((.not.doMultiGCMC).and.getOption('potential')) then
          B = getDouble(words(1),B)
-        write(printstring,*) "Simulation B value / Adams parameter = ",B," AU"
+        write(printstring,"(a,f12.4,a)") "Simulation B value / Adams parameter = ",B," AU"
         call printLine(INFO,printstring)
       endif
       if (doMultiGCMC) then
         B = adamparam(myadam)
-        write(printstring,*) "Simulation B value / Adams parameter = ",B," AU"
+        write(printstring,"(a,f12.4,a)") "Simulation B value / Adams parameter = ",B," AU"
         call printLine(INFO,printstring) 
       endif
 
 c     Get the JAWS biasing term for JAWS-II simulations
       if ((.not.doMultiJaws2).and.getOption('jbias')) then
          bias = getDouble(words(1),bias)
-        write(printstring,*) "JAWS biasing term = ",bias," kcal/mol"
+        write(printstring,"(a,f12.4,a)") "JAWS biasing term = ",bias," kcal/mol"
         call printLine(INFO,printstring)
       endif
       if (doMultiJaws2) then
         bias = alljbias(myjbias)
-        write(printstring,*) "JAWS biasing term = ",bias," kcal/mol"
+        write(printstring,"(a,f12.4,a)") "JAWS biasing term = ",bias," kcal/mol"
         call printLine(INFO,printstring) 
       endif
 
+300   format("a,f12.4")
+
       if (getOption('x').or.getOption('lenx')) then
       gridx = getDouble(words(1),gridx)
-      write(printstring,*) "Grid size in X dimension" ,gridx
+      write(printstring,300) "Grid size in X dimension" ,gridx
       call printLine(INFO,printstring)
       endif
       if (getOption('y').or.getOption('leny')) then
       gridy = getDouble(words(1),gridy)
-      write(printstring,*) "Grid size in Y dimension" ,gridy
+      write(printstring,300) "Grid size in Y dimension" ,gridy
       call printLine(INFO,printstring)
       endif
       if (getOption('z').or.getOption('lenz')) then
       gridz = getDouble(words(1),gridz)
-      write(printstring,*) "Grid size in Z dimension" ,gridz
+      write(printstring,300) "Grid size in Z dimension" ,gridz
       call printLine(INFO,printstring)
       endif
 
       if (getOption('spacing')) then
       space = getDouble(words(1),space)
-      write(printstring,*) "Grid granularity" ,space, "A"
+      write(printstring,"(a,f12.4,a)") "Grid granularity" ,space, "A"
       call printLine(INFO,printstring)
       endif
 
 c     get grid centers
       if (getOption('centerx')) then
       centerx = getDouble(words(1),centerx)
-      write(printstring,*) "Grid center in X dimension" ,centerx
+      write(printstring,300) "Grid center in X dimension" ,centerx
       call printLine(INFO,printstring)
       coordx = centerx - gridx / 2.0
-      write(printstring,*) "Grid origin in X dimension" ,coordx
+      write(printstring,300) "Grid origin in X dimension" ,coordx
       call printLine(INFO,printstring)
       endif
 
       if (getOption('centery')) then
       centery = getDouble(words(1),centery)
-      write(printstring,*) "Grid center in Y dimension" ,centery
+      write(printstring,300) "Grid center in Y dimension" ,centery
       call printLine(INFO,printstring)
       coordy = centery - gridy / 2.0
-      write(printstring,*) "Grid origin in Y dimension" ,coordy
+      write(printstring,300) "Grid origin in Y dimension" ,coordy
       call printLine(INFO,printstring)
       endif
 
       if (getOption('centerz')) then
       centerz = getDouble(words(1),centerz)
-      write(printstring,*) "Grid center in Z dimension" ,centerz
+      write(printstring,300) "Grid center in Z dimension" ,centerz
       call printLine(INFO,printstring)
       coordz = centerz - gridz / 2.0
-      write(printstring,*) "Grid origin in Z dimension" ,coordz
+      write(printstring,300) "Grid origin in Z dimension" ,coordz
       call printLine(INFO,printstring)
       endif
 
 c     get grid origins
       if (getOption('originx')) then
        coordx = getDouble(words(1),coordx)
-      write(printstring,*) "Grid origin in X dimension" ,coordx
+      write(printstring,300) "Grid origin in X dimension" ,coordx
       call printLine(INFO,printstring)
       endif
 
       if (getOption('originy')) then
        coordy = getDouble(words(1),coordy)
-      write(printstring,*) "Grid origin in Y dimension" ,coordy
+      write(printstring,300) "Grid origin in Y dimension" ,coordy
       call printLine(INFO,printstring)
       endif
-c"
+
       if (getOption('originz')) then
        coordz = getDouble(words(1),coordz)
-      write(printstring,*) "Grid origin in Z dimension" ,coordz
+      write(printstring,300) "Grid origin in Z dimension" ,coordz
       call printLine(INFO,printstring)
       endif
 
       if (getOption('gcmc')) then
       GCtheta = getDouble(words(1),GCtheta)
-      write(printstring,*) "Running a GCMC sim",GCtheta
+      write(printstring,300) "Running a GCMC sim",GCtheta
       call printLine(INFO,printstring)
         do i=1,NGCSolutes
          thetaparam(i) = GCtheta
@@ -917,7 +919,7 @@ c"
 
       if (getOption('thres')) then
       thres = getDouble(words(1),thres)
-      write(printstring,*) "JAWS threshold for theta sampling is" ,thres
+      write(printstring,300) "JAWS threshold for theta sampling is" ,thres
       call printLine(INFO,printstring)
       endif
 
@@ -956,7 +958,7 @@ c           get the maximum change in volume
 
 c           must have periodic boundaries or spherical harmonic
             if (boundary .eq. PERIODICBOUNDARIES) then
-              write(printstring,*) "Running an NPT periodic boundaries ",
+              write(printstring,"(2a,2(f12.4,a),a,f12.4,a)") "Running an NPT periodic boundaries ",
      .           "simulation with pressure = ",
      .           pressure," atm (",pressure*ATM2PASCAL," pascals) and with ",
      .           "a maximum volume change of ",maxVolChange," A^3"
@@ -966,22 +968,23 @@ c            calculate a rough 'volume' of this cap. This will be the volume
 c            of the cap, plus an additional radius of kT into the harmonic potential
              volume = sqrt(GASR*temperature / capconstant)
 
-             write(printstring,*) "Solvent cap volume calculated using extra radius of ",
+             write(printstring,"(a,f12.4,a)") "Solvent cap volume calculated using extra radius of ",
      .                            volume, " A "
              call printLine(INFO,printstring)
 
              volume = (4.0/3.0) * PI * (capradius+volume)**3
 
-             write(printstring,*) "Solvent cap volume = ",volume," A^3"
+             write(printstring,"(a,f12.4,a)") "Solvent cap volume = ",volume," A^3"
              call printLine(INFO,printstring)
 
-             write(printstring,*) "Running an NPT solvent cap simulation ",
+             write(printstring,"(a,a,f12.4,a,f12.4,a,f12.4,a)")
+     .           "Running an NPT solvent cap simulation ",
      .           "with pressure = ",pressure," atm (",pressure*ATM2PASCAL,
      .           " pascals) and with a maximum volume change of ",
      .           maxVolChange," A^3"
              call prettyLine(INFO,printstring)
 
-           write(printstring,*) "Adjusting the volume when using a cap is not recommended.",
+           write(printstring,"(a,a)") "Adjusting the volume when using a cap is not recommended.",
      .           "This may seriously harm your simulation!"
              call printLINE(WARNING,printstring)
             else
@@ -1019,7 +1022,7 @@ c         see if the line also contains the pref sampling parameter
           if (nwords.ge.2) svnProbParam = getDouble(words(2),svnProbParam)
         
           lgth = lineLength(SoluteName(svnPrefSol))
-          write(printstring,*) "Performing preferential sampling with ",
+          write(printstring,"(a,a,f12.4,a,a,a,a,i4,a)") "Performing preferential sampling with ",
      .         "sampling parameter = ",svnProbParam," and centered ",
      .         "on solute ",SoluteName(svnPrefSol)(1:lgth)," (",
      .         svnPrefSol,")"
@@ -1040,14 +1043,14 @@ c     generate a different seed based on this time
       
       if (getOption('ranseed')) ranseed = getInt(words(1),ranseed)
       
-      write(printstring,*) "Got initial random number seed ",ranseed
+      write(printstring,"(a,i12)") "Got initial random number seed ",ranseed
       call printLine(INFO,printstring)
       
 c     make into an i6 or i7 positive, odd integer...
       if (ranseed.lt.0) ranseed = -ranseed
       if (mod(ranseed,2).eq.0) ranseed = ranseed - 1
       if (ranseed.lt.100000) ranseed = ranseed+110000
-      write(printstring,*) "Sanitised random number seed = ",ranseed
+      write(printstring,"(a,i12)") "Sanitised random number seed = ",ranseed
       call prettyLine(INFO,printstring)
       
 c     initialise the random number generator with this seed
