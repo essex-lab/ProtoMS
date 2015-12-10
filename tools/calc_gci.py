@@ -17,9 +17,22 @@ import pickle
 import simulationobjects
 from simulationobjects import ResultsFile
 
-## Functions used for arguement passing and ease of command line use. 
+## Functions
 def intersect(a, b):
-     return list(set(a) & set(b))
+    """ 
+    Finds the intersection of lists. Used for arguement passing from the command line. 
+
+    Parameters
+    ----------
+    a : list
+    b : list
+   
+    Return
+    ------
+    list
+      List of elements that are found in a and b
+    """
+    return list(set(a) & set(b))
 
 # Disable
 def blockPrint():
@@ -32,18 +45,82 @@ def enablePrint():
 
 ## Functions specific to grand canonical integration and neural network fitting.
 def pseudohuber(r,c):
+    """ 
+    The pseudo Huber loss/cost function. Smooth version of Huber loss function.
+
+    Parameters
+    ----------
+    r : float
+      residual, i.e. difference between predicted value and its target
+    c : float
+      parameter that determines roughly where residuals will have less weight
+
+    Return
+    ------
+    float
+      The pseudo Huber cost for a residual r and parameter c
+
+    """
     return (np.sqrt(1+(r/c)**2) -1)*(c**2)
 
 def logistic(params,x):
+    """ 
+    Logistic function
+
+    Parameters
+    ----------
+    params : list or numpy array
+      the three parameters of the logistic function
+    x : numpy array
+      the explanatory variable
+   
+    Return
+    ------
+    numpy array
+      the output of the logistic function
+
+    """
     return params[2]/(1+np.exp(-params[0] - x*params[1])) 
 
-# The logistic function (above) analytically integrated over B, between Bi (initial) and Bf (final). It can be used in the function "insertion_pmf".
-# The problem is that it is prone to numerical instabilities when the exponents are large and positive. While one could fix the problem, I've opted for
-# numerical integration instead in "insertion_pmf". This function has been used to verify the numerical integration. 
+
 def integrated_logistic(params,Bi,Bf):
+    """ 
+    The integral of the logistic function, for use in the function "insertion_pmf". The problem is that it is prone to numerical instabilities 
+    when the exponents are large and positive. While one could fix the problem, I've opted for numerical integration instead in "insertion_pmf". 
+    This function has been used to verify the numerical integration.
+
+    Parameters
+    ----------
+    params : list or numpy array
+      the parameters of the logistic function
+    Bi : float
+      the lower value of the interval of integration
+    Bf : float
+      the higher value of the interval of integration
+
+    Return
+    ------
+    float
+      the area under the logistic curve between Bi and Bf
+
+    """
     return -(params[2]/params[1])*( np.log(1+np.exp(Bf*params[1]+params[0])) - np.log(1+np.exp(Bi*params[1]+params[0])) )
 
 def simplex_sample(size):
+    """ 
+    Samples uniformly over a simplex, such that the output sums to 1.
+
+    Parameters
+    ----------
+    size : integer
+      the number of random numbers you want
+   
+    Return
+    ------
+    numpy array
+      vector of uniform random numbers that will sum to 1.
+
+    """
     samp = np.random.uniform(0.0,1.0,size-1)
     samp = np.append([0.0,1.0],samp)
     samp = np.sort(samp)
@@ -274,6 +351,22 @@ class Slp(object):
 
 
 def inverse_slp(model,y):
+    """
+    For a given ANN model, this function returns the value of x that corresponds to the value of y. It's basically the inverse function of an ANN. Used to determine
+    which B value produces a given average of waters.
+
+    Parameters
+    ----------
+    model : Slp object
+      the fitted ANN (single layer perceptron) which you want the inverse function of
+    y : float
+      the value which you want to find the corresponding value of x
+
+    Return
+    ------
+    float
+      the value of x that produced y in the input ANN
+    """
     dev = (model.predicted - y)**2
     x_guess = model.x[np.where(dev == dev.min())][0]
     def errfunc(x): return (y - model.predict(x))**2
@@ -284,6 +377,25 @@ def inverse_slp(model,y):
 
 
 def fit_ensemble(x,y,size,repeats=20,randstarts=1000,iterations=100,grad_tol_low=-3,grad_tol_high=1,pin_min=False,pin_max=None,monotonic=True,cost="msd",c=2.0,verbose=True):
+    """
+    Fits a collection of ANN models to GCMC titration data. Each ANN is fitted with different set of initial ANN weights.
+
+    Parameters
+    ----------
+    x : numpy array
+      the B/Adams values or chemical potentials used in a titration
+    y : numpy array
+      the average value of water at each chemical potential
+    repeats : int
+      the number of repeats of the fitting. This constitutes the "ensemble" of models
+    others 
+      As specified in Slp.
+
+    Return
+    ------
+    list
+      a list of Slp objects, each has been fit with different initial weights.
+    """
     models = []									# A list that contains the fitted single layer perceptrons.
     error = 1E5									# Initialising the lowest error. The best model is the one with the lowest error.
     for i in range(repeats):
@@ -298,7 +410,28 @@ def fit_ensemble(x,y,size,repeats=20,randstarts=1000,iterations=100,grad_tol_low
     return single_model, models
 
 
-def fit_boostrap(x,y,size,boot_samps=50,repeats=20,randstarts=1000,iterations=100,grad_tol_low=-3,grad_tol_high=1,pin_min=False,pin_max=None,monotonic=True,cost="msd",c=2.0,verbose=True):
+def fit_boostrap(x,y,size,boot_samps=50,repeats=10,randstarts=1000,iterations=100,grad_tol_low=-3,grad_tol_high=1,pin_min=False,pin_max=None,monotonic=True,cost="msd",c=2.0,verbose=True):
+    """
+    Fits a collection of ANN models to GCMC bootstrap samples of the titration data.
+
+    Parameters
+    ----------
+    x : numpy array
+      the B/Adams values or chemical potentials used in a titration
+    y : numpy array
+      the average value of water at each chemical potential
+    boot_samps : int
+      the number of bootstrap samples of the titration data
+    repeats : int
+      the number of initial weights that are attempted when fitting each ANN
+    others 
+      As specified in Slp.
+
+    Return
+    ------
+    list
+      a list of Slp objects, each has been fit to different bootstrap samples of the titration data
+    """
     bootstrap_models = []
     indices = range(len(x))
     for boot in range(boot_samps):
@@ -311,7 +444,24 @@ def fit_boostrap(x,y,size,boot_samps=50,repeats=20,randstarts=1000,iterations=10
             print "...Bootstrap model %i fitted." % (boot+1)
     return bootstrap_models
 
-def insertion_pmf(N,gcmc_model,T=298.15):			# Free energy to insert from the first element of N to all other elements.
+def insertion_pmf(N,gcmc_model,T=298.15):
+    """
+    Calculates the free energy to insert water from ideal gas to the GCMC volume.
+
+    Parameters
+    ----------
+    N : numpy array
+      vector of bound water numbers between which relative free energies will be calculated
+    gcmc_model : Slp object
+      a ANN model (single layer perceptron) that will be used to calculate the free energy
+    T : float
+      the temperature of the simulation in Kelvin
+
+    Return
+    ------
+    numpy array
+      relative ideal gas transfer free energies for each water specified in N
+    """
     kT = T*0.0019872								# Boltmann's constant (in kcal/mol/K) multiplied by temperature (in K).
     def integral(gcmc_model,Bi,Bf):					# For numerical integration.
         logies = [integrated_logistic(params,Bi,Bf) for params in gcmc_model.weights]
@@ -335,6 +485,25 @@ def ensemble_pmf(N,gcmc_models,T=298.15):
     return energies.mean(axis=0), energies.std(axis=0)
 
 def ensemble_FreeEnergies(N,gcmc_models,hydration=None,T=None):
+    """
+    Calculates the free energy to insert water from ideal gas to the GCMC volume from multiple ANNs.
+
+    Parameters
+    ----------
+    N : numpy array
+      vector of bound water numbers between which relative free energies will be calculated.
+    gcmc_models : Slp objects
+      a list of ANN models (single layer perceptrons) that will be used to calculate the free energy
+    hydration : float
+      the hydration free energy of water in kcal/mol
+    T : float
+      the temperature of the simulation in Kelvin
+
+    Return
+    ------
+    numpy array, numpy array
+      matrix of relative ideal gas transfer free energies for each water specified in N, matrix of relative binding free energies for each water specified in N
+    """
     if hydration == None: hydration = -6.2
     if T==None: T= 298.15
     dG_samples = np.zeros((len(N),len(gcmc_models)))
@@ -346,6 +515,21 @@ def ensemble_FreeEnergies(N,gcmc_models,hydration=None,T=None):
 
 # A function to find the percentiles.
 def percentile_intervals(yvals,level):
+    """
+    Calculates the percentiles of a given input. Very much like numpy's np.percentiles. Written before I realised it existed :-/
+
+    Parameters
+    ----------
+    yvals : numpy array
+      vector of values that you want to find the percentiles for
+    level : float
+      the confidense level you want the percentiles for, eg the top 50% of the data requires level=0.5
+
+    Return
+    ------
+    numpy array, numpy array, numpy array
+      median, lower confidence level, upper confidence level
+    """
     if level > 1:
         print "Fatal error: confidense level must be between zero and one."
         return None
@@ -365,8 +549,24 @@ def percentile_intervals(yvals,level):
     return y_median, y_lower, y_upper
 
 
-# A Gaussian smoother used in the plotting of the fitted model percentiles
 def gaussian_smooth(x,y,sigma=None):
+    """
+    A Gaussian smoother used in the plotting of the fitted model percentiles.
+
+    Parameters
+    ----------
+    x : numpy array
+      vector of the explanatory variable
+    y : numpy array
+      vector of the response variable    
+    sigma : float
+      the standard deviation of over x with which y will be smoothed with
+
+    Return
+    ------
+    numpy array
+      smoothed response variable
+    """
     if sigma is None:
         sigma = 0.05
     smooth_y = np.zeros(len(y))
@@ -378,6 +578,37 @@ def gaussian_smooth(x,y,sigma=None):
 
 
 def plot_FitPercentiles(B,N,gcmc_models,resolution=None,level1=None,level1_colour=None,level2=None,level2_colour=None,median_colour=None,smoothness=None):
+    """
+    Tool to plot a collection of fitted ANNs at two confidence limits.
+
+    Parameters
+    ----------
+    B : numpy array
+      vector of the explanatory variable, the B/Adams value
+    N : numpy array
+      vector of the response variable, the average number of waters for a given B
+    gcmc_models : list of Slp objects 
+      the fitted ANNs that will be plotted
+    resolution : float
+      the number of data points that will be plotted, i.e. resolution of plotted lines
+    level1 : float
+      the  confidence level (eg top 50% as a fraction) that will be plotted
+    level2 : float
+      the  confidence level that will be plotted
+    level1_color : string
+      the color of the level1 confidence region
+    level2_color : string
+      the color of the level2 confidence region
+    median_colour : string
+      colour that the median of all the fits will be plotted in
+    smoothness : float
+      the standard deviation over x that will be used to smooth over y
+
+    Return
+    ------
+    matplotlib.pyplot object
+      plot object
+    """
     # Setting the defaults:
     if resolution == None: resolution = 50					# Number of points with which the lines will be drawn.
     if level1 == None: level1=0.50							# Default is also shade the region that contains 50% of the data
@@ -413,6 +644,37 @@ def plot_FitPercentiles(B,N,gcmc_models,resolution=None,level1=None,level1_colou
     return plt
 
 def plot_PMFpercentiles(N_range,dG_samples,level1=None,level1_colour=None,level2=None,level2_colour=None,median_colour=None):
+    """
+    Tool to plot a ensemble of calculated free energies
+
+    Parameters
+    ----------
+    N_range : numpy array
+      vector of the explanatory variable, the B/Adams value
+    dG_samples : numpy array
+      vector of the calculated free energies, either from repeated fits or bootstrap sampling
+    gcmc_models : list of Slp objects 
+      the fitted ANNs that will be plotted
+    resolution : float
+      the number of data points that will be plotted, i.e. resolution of plotted lines
+    level1 : float
+      the  confidence level (eg top 50% as a fraction) that will be plotted
+    level2 : float
+      the  confidence level that will be plotted
+    level1_color : string
+      the color of the level1 confidence region
+    level2_color : string
+      the color of the level2 confidence region
+    median_colour : string
+      colour that the median of all the fits will be plotted in
+    smoothness : float
+      the standard deviation over x that will be used to smooth over y
+
+    Return
+    ------
+    matplotlib.pyplot object
+      plot object
+    """
     # Setting the defaults:
     if level1 == None: level1=0.5							# Default is also shade the region that contains 50% of the data
     if level2 == None: level2=0.90				        	# Default is NOT to shade a region at a lower percentile level.
@@ -428,8 +690,22 @@ def plot_PMFpercentiles(N_range,dG_samples,level1=None,level1_colour=None,level2
     plt.plot(N_range, g_median,color=median_colour,linewidth=3)
     return plt
 
-# Calculates the minimum value from free energy profiles. Exact for stastical mechanics although requires the computation of the area under the titration curve.
+
 def minimum_from_free_energy(models,N_range,dG_binding_samples,print_lines=True):
+    """
+    Calculates the minimum value from free energy profiles. Exact for stastical thermodynamics although requires the computation of the area under the titration curve.
+
+    Parameters
+    ----------
+    models : list of Slp objects
+      multiple fitted ANNs
+    N_range : numpy array
+      vector of the number of water molecules   
+    dG_binding_samples : numpy array
+      collection of free energies that have been calculated with models
+    print_lines : boolean
+      whether to print the minimum free energy state with errors
+   """
     min_inds = np.argmin(dG_binding_samples,axis=0)
     min_range = np.round(np.percentile(a=N_range[min_inds],q=[25,75]))
     min_hist,junk = np.histogram(N_range[min_inds],range=(N_range.min()-0.5,N_range.max()+0.5),bins=len(N_range))
@@ -451,6 +727,22 @@ def minimum_from_free_energy(models,N_range,dG_binding_samples,print_lines=True)
 
 # Calculates the minimum free energy state by matching the excess chemical potential to hydration free energy. Valid in the thermodynamic limit, but requires minimal data processing.
 def minimum_from_thermo_limit(models,B,dG_hyd,kT=0.592,print_lines=True):
+    """
+    Calculates the minimum free energy state by matching the excess chemical potential to hydration free energy. Valid in the thermodynamic limit, but requires minimal data processing.
+
+    Parameters
+    ----------
+    models : list of Slp objects
+      multiple fitted ANNs
+    B : numpy array
+      vector of the Adams values
+    dG_hyd : float
+      hydration free energy of water in kcal/mol
+    kT : float
+      temperature multiplied by Boltzmann's constant, ie thermal energy, in kcal/mol
+    print_lines : boolean
+      whether to print the minimum free energy state with errors
+   """
     best_Bs = []
     best_Ns = []
     mu_ex = []
