@@ -6,6 +6,7 @@ atom   H01  8004 8004
 atom   H02  8004 8004  
 mode clj
 #parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1)
-par  8003   OW    8    0.000      3.15363    0.1550
-par  8004   HW    1    0.520      0.0        0.0
+par  8003   OW    8   -0.834  3.15061  0.1521
+par  8004   HW    1    0.417  0.0      0.0 
+
 
