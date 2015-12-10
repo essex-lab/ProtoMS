@@ -14,7 +14,6 @@ Can be executed from the command line as a stand-alone program
 """
 
 import sys
-import random
 import logging
 
 import numpy as np
@@ -402,13 +401,13 @@ def solvate(box, ligand=None, protein=None, geometry="box",
     numpy array
       the generated vector
     """
-    x = random.uniform(-rad,rad)
-    y = random.uniform(-rad,rad)
-    z = random.uniform(-rad,rad)
+    x = np.random.uniform(-rad,rad)
+    y = np.random.uniform(-rad,rad)
+    z = np.random.uniform(-rad,rad)
     while (x**2+y**2+z**2)>rad**2 :
-      x = random.uniform(-rad,rad)
-      y = random.uniform(-rad,rad)
-      z = random.uniform(-rad,rad)  
+      x = np.random.uniform(-rad,rad)
+      y = np.random.uniform(-rad,rad)
+      z = np.random.uniform(-rad,rad)  
     return np.array([x,y,z])
 
   def make_droplet(watbox,solute,radius,droplet) :
@@ -447,7 +446,7 @@ def solvate(box, ligand=None, protein=None, geometry="box",
           # Check if we are on the sphere
           r2 = (x-droplet["cent"][0])**2+(y-droplet["cent"][1])**2+(z-droplet["cent"][2])**2
           if r2 <= rad2 :
-            wi = random.randint(0,len(watbox["xyz"])-1)
+            wi = np.random.randint(0,len(watbox["xyz"])-1)
             randxyz = rand_sphere(1.0)
             offset = watbox["xyz"][wi][0,:]-np.array([x,y,z])+randxyz
             wat = watbox["xyz"][wi]-offset
@@ -604,10 +603,14 @@ if __name__ == '__main__' :
   parser.add_argument('-c','--center',help="definition of center, default='cent'",default="cent")
   parser.add_argument('-n','--names',choices=["Amber","ProtoMS"],help="the naming convention, should be either Amber or ProtoMS",default="ProtoMS")
   parser.add_argument('--offset',type=float,help="the offset to be added to vdW radii of the atoms to avoid overfilling cavities with water.",default=0.89)
+  parser.add_argument('--setupseed',type=int,help="optional random number seed for generation of water coordinates..",default=None)
   args = parser.parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("solvate_py.log")
+  if args.setupseed is not None :
+    logger.debug("Setup seed = %d"%args.setupseed)
+  np.random.seed(args.setupseed)
 
   # Ask for input that is absolutely necessary and that do not have any defaults
   if args.solute is None and args.protein is None:

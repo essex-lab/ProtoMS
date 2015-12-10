@@ -68,7 +68,7 @@ def create_res(atnames=["O00"],resname="sol",positions=[np.array([0.0,0.0,0.0])]
 
 
 
-def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb=None,ranseed=None) :
+def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb=None) :
   """
   Randomly distribute molecules in a box
   
@@ -89,9 +89,6 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb
     (only used when particles is a file)
     the number of particles. If not specified it is set
     to be as many as there are in the file
-  ranseed : integer, optional
-    seed for the random number generator, allows water
-    box to be reproduced
 
   Returns
   -------
@@ -114,11 +111,7 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb
     logger.debug("\tparticles %s"%particles.name)
   logger.debug("\twatermodel %s"%watermodel)
   logger.debug("\tpartnumb %s"%partnumb)
-  if ranseed is not None :
-    logger.debug("\transeed %d"%ranseed)
   logger.debug("This will distribute the molecules given in 'particles' randomly in the box given in box. If a number is given in 'particles', it assumes them to be waters.")
-
-  np.random.seed(ranseed)
 
   if isinstance(box,list) :
     try :
@@ -191,8 +184,11 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   logger = simulationobjects.setup_logger("distribute_waters_py.log")
+  if args.setupseed is not None:
+    logger.debug("Setup seed = %d"%args.setupseed)
+  np.random.seed(args.setupseed)
 
-  outobj = distribute_particles(args.box,args.molecules,args.model,args.resname,args.number,args.setupseed)
+  outobj = distribute_particles(args.box,args.molecules,args.model,args.resname,args.number)
   outobj.write(filename=args.outfile)
   print "\nMolecules printed in %s"%args.outfile
 

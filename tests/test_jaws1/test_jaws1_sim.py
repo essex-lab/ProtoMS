@@ -47,7 +47,7 @@ class TestJAWS1(unittest.TestCase):
     def test_jaws(self):
         """Test for JAWS1 function."""
 
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -w water.pdb", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb --nequil 0 --nprod 100 --ranseed 100000 --setupseed 100000 --dumpfreq 10 -w water.pdb", shell=True)) == 0):
             # Checking whether the required output files have been setup for JAWS Stage 1 simulations.
 
             for outfile in output_files_setup:
@@ -70,12 +70,6 @@ class TestJAWS1(unittest.TestCase):
             for outfile in outfiles_setup:
                 self.assertTrue(filecmp.cmp(outfile, os.path.join(ref_dir, outfile)),
                                 "Content mismatch between output and reference for file {0}".format(outfile))
-                #if outfile == "run_bnd.cmd":
-                #    if((call("bash "+ test_dir+"content_cmd_comp.sh", shell=True)) == 0):
-                #        print("\n Output Command files matched.")
-                #        continue
-                #    else:
-                #        raise ValueError("Content mismatch between output and reference command files.")
 
 	else:
             raise simulationobjects.SetupError("ProtoMS setup and command files generation failed!")
@@ -90,9 +84,8 @@ class TestJAWS1(unittest.TestCase):
 
                 # Comparing content of JAWS Stage 1 simulation output files with reference data.
                 if outfile == "info":
-                    if((call("bash content_info_comp.sh", shell=True)) == 0):
-                        print("\n Info file content matched.")
-                        continue
+                    self.assertTrue(call("bash content_info_comp.sh", shell=True) == 0,
+                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
                 else:
                     self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
                                     "Content mismatch between output and reference for file {0}".format(outfile_rel))

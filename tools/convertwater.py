@@ -17,7 +17,6 @@ import logging
 
 import numpy as np
 from scipy.optimize import minimize
-import random
 import simulationobjects 
 
 
@@ -219,7 +218,7 @@ def _rottranstemplate(solvents,wattemplate,watatomnames,ignorH,watresname=None):
           wat = np.vstack((solvents[sol].atoms[0].coords,solvents[sol].atoms[1].coords,solvents[sol].atoms[2].coords))
           wat_new = alignhydrogens(wat,wat_new)
       else:																	# ... if not, the template is randomly orientated.
-          wat_new = rotatewat(wat_new,random.uniform(0,2*3.142),random.uniform(0,2*3.142),random.uniform(0,2*3.142)).round(3)
+          wat_new = rotatewat(wat_new,np.random.uniform(0,2*3.142),np.random.uniform(0,2*3.142),np.random.uniform(0,2*3.142)).round(3)
       new_solvents[sol] = simulationobjects.Residue(name=wresnm,index=sol)			# Creating a new pdb object that contains the water.
       for ind in range(len(watatomnames)):
           newatom = simulationobjects.Atom(index=ind,name=watatomnames[ind],resindex=sol,resname=wresnm,coords=wat_new[ind])
@@ -292,10 +291,14 @@ if __name__ == "__main__":
     parser.add_argument('-m','--model',help="the water model,default=tip4p",default="tip4p")
     parser.add_argument('-i','--ignoreh',action='store_true',help="whether to ignore hydrogens in input water. If no hydrogens are present, waters are randomly orientated. default=No",default=False)
     parser.add_argument('-n','--resname',help="the residue name that will be applied to the water molecules. When it is not specified, it is chosen based on the water model",default=None)
+    parser.add_argument('--setupseed',help="optional random number seed for generation of water coordinates.",default=None,type=int)
     args = parser.parse_args()
 
     # Setup the logger
     logger = simulationobjects.setup_logger("convertwater_py.log")
+    if args.setupseed is not None :
+      logger.debug("Setup seed = %d"%args.setupseed) 
+    np.random.seed(args.setupseed)
 
     pdb_in = simulationobjects.PDBFile(filename=args.pdb)
     pdb_out = convertwater(pdb_in,args.model,ignorH=args.ignoreh,watresname=args.resname)	# Possibly add a check for whether the solvent contains hydrogens before this line.

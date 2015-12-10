@@ -538,7 +538,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     if not (box_origen_below and box_end_avobe) or (np.all(waterbox['len'] < 0.5) and len(waterobj.solvents) > 1) :
       # re-distribute the waters if required according to provided box
       logger.info("\nRedistributing your GCMC / JAWS1 waters according to the specified box\n")
-      arranged_obj = tools.distribute_particles(box,water_file,ranseed=settings.setupseed)
+      arranged_obj = tools.distribute_particles(box,water_file)
       arranged_obj.write(filename=out_name)
       return arranged_obj, out_name
     else :
@@ -553,7 +553,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       # Creating ghost waters with a density 1.5 times the density of bulk water.
       box_volume = box['len'][0]*box['len'][1]*box['len'][2] 
       ghostnum = str(int(np.ceil(box_volume*0.0334*1.5)))     # 0.0334 waters per Angs.^3 is the number density of bulk water.
-      ghostobj = tools.distribute_particles(box=box,particles=ghostnum,watermodel=settings.watmodel,ranseed=settings.setupseed)
+      ghostobj = tools.distribute_particles(box=box,particles=ghostnum,watermodel=settings.watmodel)
       ghostobj.write(filename=ghost_name)
 #      ghostobj = tools.solvate(settings.waterbox, ligand=boxpdb, protein=None,
 #                         geometry="flood",namescheme="ProtoMS")
@@ -563,7 +563,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
 #        for atom in ghostobj.solvents[sol].atoms : atom.resname = "WA1"
     elif settings.gcmcwater.isdigit() :
       print settings.gcmcwater
-      ghostobj = tools.distribute_particles(box,settings.gcmcwater,watermodel=settings.watmodel,ranseed=settings.setupseed)
+      ghostobj = tools.distribute_particles(box,settings.gcmcwater,watermodel=settings.watmodel)
       ghostobj.write(filename=ghost_name)
     else :
       ghostobj, ghost_name = arrange_wats(box,settings.gcmcwater,ghost_name)
@@ -837,13 +837,13 @@ if __name__ == "__main__":
   parser.add_argument('-sc','--scoop',help="the name of your protein scoop")
   parser.add_argument('-t','--template',nargs="+",help="the template files for your ligands")
   parser.add_argument('-r','--repeats',help="the number of repeats to be run (if more than 1) or a name for your repeat",default="") 
-  parser.add_argument('--setupseed',help="optional seed for random number generators in setup",default=None,type=int) 
   # General control variables
   cntrlgroup = parser.add_argument_group("General control variables")
   cntrlgroup.add_argument('--outfolder',help="the ProtoMS output folder",default="")
   cntrlgroup.add_argument('--atomnames',help="a file with atom name conversions")
   cntrlgroup.add_argument('--watmodel',help="the name of the water model. Default = tip4p",choices=[ 'tip3p', 'tip4p'],default='tip4p')
   cntrlgroup.add_argument('--waterbox',help="a file with pre-equilibrated water molecules")
+  cntrlgroup.add_argument('--setupseed',help="optional seed for random number generators in setup",default=None,type=int) 
   # Ligand setup variables
   liggroup = parser.add_argument_group("Ligand setup variables")
   liggroup.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
@@ -895,6 +895,8 @@ if __name__ == "__main__":
   logger.debug("Running protoms.py at %s"%time.strftime("%d/%m/%Y - %H:%M:%S"))
   logger.debug("Command line arguments = %s"%" ".join(sys.argv[1:]))
   logger.debug("Settings = %s"%args)
+
+  np.random.seed(args.setupseed)
 
   # Adds current folder to the folders
   args.folders.append(".")
