@@ -1,42 +1,42 @@
-protoms3 started at 18:02:06 on the 16/ 7/2015
+protoms3 started at 11:37:03 on the 10/12/2015
 Using whatever boundary conditions the solvent desires
- Non-bonded cutoff =    10.000000000000000       angstroms.
- Non-bonded cutoff feathered over the last   0.50000000000000000       angstroms.
+Non-bonded cutoff =      10.0000 angstroms.
+Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-####################################################################
- Reading parameter file /home/aicm1f12/ProtoMS3/parameter/amber99.ff
-####################################################################
+###############################################################################
+ Reading parameter file /home/james/projects/protoms-dev/parameter/amber14SB.ff
+###############################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
- Using a 1-4 coulomb scaling factor of   0.83333299999999999
- Using a 1-4 LJ scaling factor of   0.50000000000000000
-Loaded    0 templates,    0 override templates,  825 clj parameters
-and  234/ 569/ 869/   0 bond/angle/dihedral/urey-bradley parameters.
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
+Loaded    0 templates,    0 override templates,  797 clj parameters
+and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#####################################################################
- Reading parameter file /home/aicm1f12/ProtoMS3/parameter/solvents.ff
-#####################################################################
+##############################################################################
+ Reading parameter file /home/james/projects/protoms-dev/parameter/solvents.ff
+##############################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
 Loaded   15 templates,    0 override templates,   21 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#############################################################################
- Reading parameter file /home/aicm1f12/ProtoMS3/parameter/amber99-residues.ff
-#############################################################################
+########################################################################################
+ Reading parameter file /home/james/projects/protoms-dev/parameter/amber14SB-residues.ff
+########################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###################################################################
- Reading parameter file /home/aicm1f12/ProtoMS3/parameter/gaff14.ff
-###################################################################
+############################################################################
+ Reading parameter file /home/james/projects/protoms-dev/parameter/gaff14.ff
+############################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
- Using a 1-4 coulomb scaling factor of   0.83333299999999999
- Using a 1-4 LJ scaling factor of   0.50000000000000000
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,    1 clj parameters
 and 1582/8142/4050/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
@@ -46,9 +46,9 @@ and    0/   0 surface/born parameters.
 Loaded    1 templates,    0 override templates,   21 clj parameters
 and    0/   0/   5/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#################################################################
- Reading parameter file /home/aicm1f12/ProtoMS3/data/gcmc_wat.tem
-#################################################################
+############################################################################
+ Reading parameter file /home/james/projects/protoms-dev/data/gcmc_tip4p.tem
+############################################################################
 Loaded    1 templates,    0 override templates,    3 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
@@ -61,15 +61,15 @@ Successfully loaded protein scoop, that contains  181 residues
  Opening GC-solute file jaws2_wat1.pdb
  Have now loaded            1  GCsolute molecules (           1  from this file)
  Opening solvent file water.pdb
- Have now loaded         2745  solvent molecules (        2745  from this file)
+Have now loaded     2745 solvent molecules (    2745 from this file)
 Spherical cap boundaries have been turned on in agreement with the solvent file
  Opening solvent file jaws2_not1.pdb
- Have now loaded         2747  solvent molecules (           2  from this file)
- Simulation consists of            1  protein chains,            1  solute molecules and         2747  solvent molecules
+Have now loaded     2747 solvent molecules (       2 from this file)
+Simulation consists of    1 protein chains,    1 solute molecules and     2747 solvent molecules
  Fitting molecule templates to xdk
-##################################################
- Charge on solute xdk =   1.99999999999996361E-003
-##################################################
+###################################
+Charge on solute xdk =      0.00200
+###################################
  Assigning non-bonded atoms for solute            1
  Finished fitting template...
 Fitting amino acids to a template...
@@ -86,7 +86,7 @@ Solvent cap origin = (  65.653,  31.491,  28.259)
 Solvent cap radius =   30.000 A, constant =    1.500 kcal mol-1 A-2
  Calculating solvent axes...
  All axes successfully generated!
- Simulation temperature =    25.000000000000000       C, (   298.14999999999998       K)
+Simulation temperature =      25.0000 C, (    298.1500 K)
  JAWS biasing term =    14.000000000000000       kcal/mol
  Grid size in X dimension   3.0000000000000000
  Grid size in Y dimension   3.0000000000000000
@@ -103,11 +103,11 @@ Not performing preferential sampling
 ############################################
  Sanitised random number seed =       209999
 ############################################
-Starting simulation at 18:02:07 on the 16/ 7/2015
+Starting simulation at 11:37:04 on the 10/12/2015
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
-There are  219 CLJ parameter types used in this simulation.
+There are  213 CLJ parameter types used in this simulation.
  Pre-calculating all the charge and LJ pairs...
  Fixing backbone of protein            1  residues:            1  to            3
  Fixing backbone of protein            1  residue            5
@@ -145,4 +145,4 @@ Writing restart file
 Resetting free energy average to zero.
  Data collection complete. Attempted/accepted moves          100          70
  Simulation shutting down...
-protoms3 completed at 18:02:10 on the 16/ 7/2015
+protoms3 completed at 11:37:06 on the 10/12/2015

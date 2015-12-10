@@ -47,7 +47,7 @@ class TestJAWS2(unittest.TestCase):
     def test_jaws2(self):
         """Test for JAWS2 function."""
 
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws2 -l fragment.pdb -p protein.pdb --gcmcwater jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -s jaws2 -l fragment.pdb -p protein.pdb --gcmcwater jaws2_waters.pdb --jawsbias 8 10 12 14 --nequil 0 --nprod 100 --ranseed 100000 --setupseed 100000 --dumpfreq 10", shell=True)) == 0):
             # Checking whether the required output files have been setup for JAWS Stage 2 protoms.py setup.
 
             for outfile in output_files_setup:
