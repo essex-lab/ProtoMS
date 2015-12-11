@@ -114,7 +114,7 @@ Move probabilies: Protein =       60 Solute =        0 Solvent =      440 Insert
 Requested          100 steps of simulation
 ##########################################
 Calculating the initial total energy from scratch...
-Total Energy = ************ (************ | ************)
+Total Energy =     128574.1585 (    128574.1585 |     128574.1585)
 ##########################
 Printing PDB of the system
 ##########################

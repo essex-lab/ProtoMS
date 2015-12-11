@@ -89,7 +89,7 @@ class TestRETIsngl(unittest.TestCase):
                                     if((call("bash content_info_freecomp.sh", shell=True)) == 0):
                                         print("\n Free phase leg info files content matched.")
                                     else:
-                                        raise ValueError("Content mismatch between output and reference info file for lambda value {0}.".format(d))
+                                        raise ValueError("Content mismatch between output and reference for file {0}.".format(outfile_rel))
                                 else:
                                     self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
                                                     "Content mismatch between output and reference for file {0}".format(outfile_rel))
@@ -114,7 +114,7 @@ class TestRETIsngl(unittest.TestCase):
                                         print("\n Gas phase leg info files matched.")
                                         continue
                                     else:
-                                        raise ValueError("Content mismatch between output and reference info file for lambda value {0}.".format(d))
+                                        raise ValueError("Content mismatch between output and reference for file {0}.".format(outfile_rel))
                                 else:
                                     self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
                                                     "Content mismatch between output and reference for file {0}".format(outfile_rel))

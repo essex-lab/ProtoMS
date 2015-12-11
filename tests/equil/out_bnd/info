@@ -107,7 +107,7 @@ Move probabilies: Protein =      157 Solute =        1 Solvent =      841 Insert
 Requested          100 steps of equilibration
 #############################################
 Calculating the initial total energy from scratch...
-Total Energy = ************ (************ | ************)
+Total Energy =     196339.9074 (    196339.9074 |     196339.9074)
 Equilibration complete. Attempted/accepted moves      100      58
 These moves took  52.8E-3 s to run.
 Running chunk    2

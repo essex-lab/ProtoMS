@@ -49,7 +49,7 @@ c     get the value of the geometry at lam=0 and lam=1
       ival1 = readDouble(words(6))
       
 c     are we looking at a bond/angle/dihedral?
-10    format(2(a,i8),2(a,f12.4))
+10    format(4a,2(a,f12.4))
       if (words(4).eq.'bond') then
         write(printstring,10)
      .        "Variable bond for atom ",iatm,"-",ires," starting from ",ival0," going to ",ival1

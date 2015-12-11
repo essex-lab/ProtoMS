@@ -40,7 +40,7 @@ c     need to update the extra energies to update 'OLD' from 'NEW'
       call updateExtraEnergies
       
       write(printstring,10) nrg,nrgf,nrgb
-10    format('Total Energy = ',f12.6,' (',f12.6,' | ',f12.6,')')
+10    format('Total Energy = ',f15.4,' (',f15.4,' | ',f15.4,')')
       call printLine(INFO,printstring)
 
       GotInitialTotalEnergy = .true.
