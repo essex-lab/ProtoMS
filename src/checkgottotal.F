@@ -19,8 +19,7 @@ c#########################################################
 
       if (GotInitialTotalEnergy) return
                        
-      write(printstring,*) "Calculating the initial total energy from scratch..."
-      call printLine(INFO,printstring)
+      call printLine(INFO,"Calculating the initial total energy from scratch...")
 
 c     need to set all moved to calculate the total extra energies
       call setAllMoved      

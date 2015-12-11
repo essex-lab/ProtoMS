@@ -30,7 +30,7 @@ c#############################################################
       
       lgth = lineLength(filename)
       
-      write(printstring,*) "Opening GC-solute file ",filename(1:lgth)
+      write(printstring,"(2a)") "Opening GC-solute file ",filename(1:lgth)
       call printLine(INFO,printstring)
       
       open(unit=FILE,file=filename,status="old",form='formatted',err=9600)
@@ -78,8 +78,7 @@ c           this is the first atom of a new GCsolute.
             if (igcs.gt.MAXSOLVENTS) then
               write(printstring,"(a,i8)") "Exceeded maximum number of GC-solute molecules, ",MAXSOLVENTS
               call printLine(FATAL,printstring)
-              write(printstring,*) "Increase MAXSOLVENTS and recompile"
-              call closeProgram(-1,printstring)
+              call closeProgram(-1,"Increase MAXSOLVENTS and recompile")
               goto 100
             endif
             
@@ -95,8 +94,7 @@ c           this is the first atom of a new GCsolute.
           if (iatm.gt.MAXSOLUTEATOMS) then
             write(printstring,"(a,i8)") "Exceeded maximum number of atoms per GC-solute molecule ,",MAXSOLUTEATOMS
             call printLine(FATAL,printstring)
-            write(printstring,*) "Increase MAXSOLUTEATOMS and recompile"
-            call closeProgram(-1,printstring)
+            call closeProgram(-1,"Increase MAXSOLUTEATOMS and recompile")
             goto 100
           endif
           
@@ -121,8 +119,8 @@ c     get here if we could not open the file
 9700  continue
 c     got here if there was a problem reading a line
       lgth = lineLength(filename)
-      write(printstring,"(a,i8,a,a)") "WARNING - problem reading line ",linenum,
-     .      " of the GCsolute file ",filename(1:lgth)
+      write(printstring,"(a,i8,a,a)")
+     .      "WARNING - problem reading line ",linenum," of the GCsolute file ",filename(1:lgth)
       call printLine(WARNING,printstring)
       call printLine(WARNING,line)
       call printLine(WARNING,"Skipping the rest of the file!")

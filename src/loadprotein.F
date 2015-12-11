@@ -35,10 +35,9 @@ c##################################################
       iprot = NProteins + 1
       
       if (iprot.gt.MAXPROTEINS) then
-        write(printstring,*) "Exceeded maximum number of proteins (",MAXPROTEINS,")"
+        write(printstring,"(a,i4,a)") "Exceeded maximum number of proteins (",MAXPROTEINS,")"
         call printLine(FATAL,printstring)
-        write(printstring,*)"Increase MAXPROTEINS and recompile"
-        call closeProgram(-1,printstring)
+        call closeProgram(-1,"Increase MAXPROTEINS and recompile")
         return
       endif
       
@@ -46,7 +45,7 @@ c     first clear space for the protein
       call initialiseProtein(iprot)
 
       lgth = lineLength(pfile)
-      write(printstring,*) "Opening protein file ",pfile(1:lgth)
+      write(printstring,"(2a)") "Opening protein file ",pfile(1:lgth)
       call printLine(INFO,printstring)
       open(unit=FILE,file=pfile,status="old",form='formatted',err=9600)
      
@@ -86,14 +85,14 @@ c         the rest of the header line contains the protein name
           call join(2,nwords,line)
           lgth = lineLength(line)
           ProteinName(iprot) = line(1:lgth)
-          write(printstring,*) "Loading protein ",ProteinName(iprot)(1:lgth)
+          write(printstring,"(2a)") "Loading protein ",ProteinName(iprot)(1:lgth)
           call printLine(INFO,printstring)
           if (ProteinName(iprot) .eq. 'scoop') then 
             ProteinScoop = .true.
           endif
         else if (words(1)(1:3).eq.'ter') then
 c         we cannot load multiple proteins from a protein file!
-          write(printstring,*)
+          write(printstring,"(2a,i4)")
      .      "Cannot load multiple proteins from a PDB file - each chain must be in a separate file with ",
      .      "no 'ter' records. Skipping the rest of the PDB file from line ",linenum
           call printLine(WARNING,printstring)
@@ -113,7 +112,7 @@ c         read the pdb line
 c         'ok' is true if this line contained a valid pdb atom
           if (.not.ok) then
              if (words(1).eq.'atom' .or. words(1).eq.'hetatm') then
-               write(printstring,*) "Could not understand the following PDB line: ",linenum
+               write(printstring,"(a,i4)") "Could not understand the following PDB line: ",linenum
                call printLine(WARNING,printstring)
                call printLine(WARNING,line)
              endif
@@ -123,7 +122,7 @@ c         'ok' is true if this line contained a valid pdb atom
 c         see if we have changed residues since the last line
           if (iresnum.eq.oldresnum) then
             if (iresnam.ne.oldresnam) then
-              write(printstring,*) "Error in protein PDB on line ",linenum,
+              write(printstring,"(a,i4,a)") "Error in protein PDB on line ",linenum,
      .                         " - two residues have the same residue number but different names!"
               call printLine(WARNING,printstring)
               call printLine(WARNING,line)
@@ -137,18 +136,17 @@ c           one has already been loaded
 c             we have not yet loaded up this residue
               ires = NResidues(iprot) + 1
               if (ires.gt.MAXRESIDUES) then
-                write(printstring,*) "Exceeded maximum number of residues per protein (",
+                write(printstring,"(a,i4,a)") "Exceeded maximum number of residues per protein (",
      .                    MAXRESIDUES,") on line ",linenum
                 call printLine(FATAL,printstring)
-                write(printstring,*)"Increase MAXRESIDUES and recompile"
-                call closeProgram(-1,printstring)
+                call closeProgram(-1,"Increase MAXRESIDUES and recompile")
                 goto 100            
               endif
               
 c             now find the template for this residue
               itmpl = findTemplate(iresnam)
               if (itmpl.le.0) then
-                write(printstring,*) "Unable to find a template for residue ",iresnam," on line ",linenum
+                write(printstring,"(3a,i4)") "Unable to find a template for residue ",iresnam," on line ",linenum
                 call printLine(WARNING,printstring)
                 call printLine(WARNING,"Check to see if this residue is listed in your parameter files")
                 goto 100
@@ -177,7 +175,7 @@ c             save this as the 'old' residue
               oldresnum = iresnum
               oldresnam = iresnam              
             else if (ResNam(iprot,ires).ne.iresnam) then
-              write(printstring,*) "Error in protein PDB on line ",linenum,
+              write(printstring,"(a,i4,a)") "Error in protein PDB on line ",linenum,
      .                     " - two residues have the same residue number but different names!"
               call printLine(WARNING,printstring)
               call printLine(WARNING,line)
@@ -188,7 +186,7 @@ c             save this as the 'old' residue
 c         now find out which atom in the template this atom refers to...
           iatm = findTemplateAtom(itmpl,atnam,ipos)
           if (iatm.eq.0) then
-            write(printstring,*) "Cannot find atom ",atnam," in template for ",iresnam,
+            write(printstring,"(5a,i4)") "Cannot find atom ",atnam," in template for ",iresnam,
      .                            " from line ",linenum
             call printLine(WARNING,printstring)
             call printLine(WARNING,
@@ -200,9 +198,7 @@ c         if iatm < 0 then this is a BB atom
           if (iatm.lt.0) then
             iatm = -iatm
             if (iatm.gt.4) then
-              write(printstring,*) "Serious problem with ProtoMS BB atom assignment from line ",
-     .                             "! This is a bug!"
-              call printLine(WARNING,printstring)
+              call printLine(WARNING,"Serious problem with ProtoMS BB atom assignment from line! This is a bug!")
               goto 100
             endif
 c           save the BB atoms data
@@ -214,11 +210,10 @@ c           save the BB atoms data
           else
 c           this is a side chain atom
             if (iatm.gt.MAXSCATOMS) then
-              write(printstring,*) "Exceeded maximum number of sidechain atoms (",
-     .                                    MAXSCATOMS,") on line ",linenum
+              write(printstring,"(2(a,i4))")
+     .              "Exceeded maximum number of sidechain atoms (",MAXSCATOMS,") on line ",linenum
               call printLine(FATAL,printstring)
-              write(printstring,*)"Increase MAXSCATOMS and recompile"
-              call closeProgram(-1,printstring)
+              call closeProgram(-1,"Increase MAXSCATOMS and recompile")
               goto 100
             endif
             SCNam(iprot,ires,iatm) = atnam
@@ -235,11 +230,11 @@ c           make sure that we know how many side chain atoms there are
  
 9600  continue
       lgth = lineLength(pfile)
-      write(printstring,*) "FATAL - unable to load protein PDB file ",pfile(1:lgth)
+      write(printstring,"(2a)") "FATAL - unable to load protein PDB file ",pfile(1:lgth)
       call closeProgram(-1,printstring)
       return
 9700  continue
-      write(printstring,*) "Error while reading protein file line ",linenum,
+      write(printstring,"(a,i4,a)") "Error while reading protein file line ",linenum,
      .                     ". Skipping the rest of the PDB file!"
       call printLine(WARNING,printstring)
 9800  continue

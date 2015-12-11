@@ -57,7 +57,7 @@ c           scan the words to see if the file or solvent have been specified
                 if (words(j)(1:4).eq.'file') then
 c                 change the pdb file! - connect the PDB stream to a new filehandle
                   if (numb.le.1) then
-                    write(printstring,*) "Redirecting PDB to ",words(j)(6:lgth)
+                    write(printstring,"(2a)") "Redirecting PDB to ",words(j)(6:lgth)
                     call printLine(INFO,printstring)
                   endif
                   streamhandle(PDB) = openFILE(words(j)(6:lgth))
@@ -179,7 +179,7 @@ c           'restart read|write filename'
               
               ilgth = lineLength(words(3))
               if (numb.le.1) then
-                write(printstring,*) "Reading restart file from file '",words(3)(1:ilgth),"'"
+                write(printstring,"(3a)") "Reading restart file from file '",words(3)(1:ilgth),"'"
                 call prettyLine(INFO,printstring)
               endif
 c                    do i=1,NGCSolutes

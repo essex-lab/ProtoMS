@@ -18,7 +18,7 @@ c#############################################################
       nres = NResidues(iprot)
       if (nres.le.0) return
 
-      write(printstring,*) "Getting the non-bonded list for protein ",iprot
+      write(printstring,"(a,i4)") "Getting the non-bonded list for protein ",iprot
       call printLine(INFO,printstring)      
       do i=1,nres
 c       call routine to get intraresidue nb interactions - this sets
@@ -37,7 +37,7 @@ c               and the ires1-ires2 connectivity into TempResResMap
           endif
         enddo
       enddo
-      write(printstring,*) "Finished getting non-bonded list for protein ",iprot
+      write(printstring,"(a,i4)") "Finished getting non-bonded list for protein ",iprot
       call printLine(INFO,printstring)
       return
       end

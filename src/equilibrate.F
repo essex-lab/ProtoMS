@@ -61,8 +61,7 @@ c       obtain the move type based on probabilities entered by the user
         else if (imov.eq.TRYSOLTHETA) then
           templ = solThetaMove(UPDATEENERGY,i,0)
         else
-          write(printstring,*) "Problems sorting out the move type in equilibrate()!"
-          call closeProgram(-1,printstring)
+          call closeProgram(-1,"Problems sorting out the move type in equilibrate()!")
           templ = .false.
         endif
         if (templ) NAcceptedMoves = NAcceptedMoves + 1
@@ -72,8 +71,8 @@ c       obtain the move type based on probabilities entered by the user
       call cpu_time(tend)
       telapsed = tend - tstart
     
-      write(printstring,*) "Equilibration complete. Attempted/accepted moves ",
-     .                           NTotalMoves,NAcceptedMoves
+      write(printstring,"(a,2i8)")
+     .      "Equilibration complete. Attempted/accepted moves ",NTotalMoves,NAcceptedMoves
       call printLine(INFO,printstring)
 
       write(printstring,"('These moves took ',EN8.1E1,' s to run.')") telapsed

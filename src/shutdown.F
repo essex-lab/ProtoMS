@@ -13,8 +13,7 @@ c###########################################################
 c     variables that hold the current date and time
       integer year,month,day,hour,mins,secs
 
-      write(printstring,*) "Simulation shutting down..."
-      call printLine(INFO,printstring)
+      call printLine(INFO,"Simulation shutting down...")
 
 c     print the time that everything finished
       call getDateAndTime(year,month,day,hour,mins,secs)

@@ -23,7 +23,7 @@ c#########################################################
       nats = NSolAtoms(isol)
       if (nats.le.2) return
 
-      write(printstring,*) "Assigning non-bonded atoms for solute ",isol
+      write(printstring,"(a,i4)") "Assigning non-bonded atoms for solute ",isol
       call printLine(INFO,printstring)
      
 c     initialise the bonded array

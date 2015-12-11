@@ -110,14 +110,15 @@ c       make sure that the box is greater than the cutoff
         enddo
         
         if (.not.ok) then
-          write(printstring,*) "Non-bonded cutoff (",cut," A) is too large for this solvent box!"
+          write(printstring,"(a,f12.4,a)")
+     .          "Non-bonded cutoff (",cut," A) is too large for this solvent box!"
           call prettyLine(INFO,printstring)
           call printLine(WARNING,printstring)
         endif
         
 c       calculate the volume of the box
         volume = BoxDimension(1)*BoxDimension(2)*BoxDimension(3)
-        write(printstring,*) "Initial volume = ",volume," A^3"
+        write(printstring,"(a,f12.4,a)") "Initial volume = ",volume," A^3"
         call prettyLine(INFO,printstring)
       else if (SolventCap) then
         if (boundary.eq.AGREESOLVENT) boundary = SPHERICALHARMONIC
@@ -173,13 +174,13 @@ c       now assign the templates of all of the solvents
 
 c       now all of the solvents have been loaded, get their centres of
 c       geometry, and internal axes
-        write(printstring,*) "Calculating solvent axes..."
+        write(printstring,"(a)") "Calculating solvent axes..."
         call printLine(INFO,printstring)
         do i=1,NSolvents
           call addSolventAxes(i)
         enddo
 
-        write(printstring,*) "All axes successfully generated!"
+        write(printstring,"(a)") "All axes successfully generated!"
         call printLine(INFO,printstring)
       endif
         

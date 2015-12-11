@@ -62,7 +62,7 @@ c     read in each simulation chunk via a do loop
         if (keys(k)(1:5) .eq. 'chunk') then
           call split(values(k))
           ichunk = ichunk+1
-          write(printstring,*) "Running chunk ",ichunk
+          write(printstring,"(a,i4)") "Running chunk ",ichunk
           call printLine(INFO,printstring)
           
 c         now see what we will do based on the first word...
@@ -124,8 +124,8 @@ c           get the move probabilities etc.
             
             nstps = getInt(words(2),0)
             nsplit = getInt(words(3),0)
-            write(printstring,"(a,i12,a,i8)") "Requested ",nstps,
-     .        " steps of splitDDDGBSAsimulation split= ",nsplit
+            write(printstring,"(a,i12,a,i8)")
+     .           "Requested ",nstps," steps of splitDDDGBSAsimulation split= ",nsplit
             call prettyLine(INFO,printstring) 
 c           actually perform the simulation
             if (.not.check) call splitDDDSAsimulate(nstps,nsplit) 
@@ -142,8 +142,8 @@ c           get the move probabilities etc.
             
             nstps = getInt(words(2),0)
             nsplit = getInt(words(3),0)
-            write(printstring,"(a,i12,a,i8)") "Requested ",nstps,
-     .        " steps of split-simulationGBSA split= ",nsplit
+            write(printstring,"(a,i12,a,i8)")
+     .            "Requested ",nstps," steps of split-simulationGBSA split= ",nsplit
             call prettyLine(INFO,printstring) 
 c           actually perform the simulation
             if (.not.check) call splitGBSAsimulate(nstps,nsplit)                   
@@ -449,7 +449,7 @@ c           sanitise the values of lambda
             if (lambdaf.lt.ZERO) lambdaf = ZERO
             if (lambdaf.gt.ONE) lambdaf = ONE
                 
-            write(printstring,"(a,f12.4,a,f12.4,a,f12.4,a)")
+            write(printstring,"(3(a,f12.4),a)")
      .            "Changing lambda to ",lambda,"(",lambdab,",",lambdaf,")"
             call printLine(INFO,printstring)
             
@@ -480,8 +480,8 @@ c             scan the letters to find the '=' sign
                   
 c                 set the stream file
                   if (check) then
-                    write(printstring,"(a,a,a,a)") "Directing stream ",words(i)(1:j-1)," to file ",
-     .                                   words(i)(j+1:lgth)
+                    write(printstring,"(a,a,a,a)")
+     .                    "Directing stream ",words(i)(1:j-1)," to file ",words(i)(j+1:lgth)
                     call printLine(INFO,printstring)
                     goto 200
                   else
@@ -510,7 +510,7 @@ c           Deal with the adding of restrains
           else if (words(1) .eq. 'addclj') then
             call addSoluteCLJ(getInt(words(2),ZERO),getInt(words(3),ZERO),getDouble(words(4),ZERO))
           else if (words(1) .eq. 'gradient') then
-            write(printstring,"(A,F20.5)")"Gradient = ",lambdaderivative()
+            write(printstring,"(A,F20.5)") "Gradient = ",lambdaderivative()
             call printLine(INFO,printstring)
           else
             call printLine(WARNING,"Cannot interpret simulation chunk!")

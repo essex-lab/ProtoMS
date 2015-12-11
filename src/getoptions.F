@@ -257,8 +257,7 @@ c
       if (getOption('surface')) then
         doSA = .true.
         probe = -1
-        write(printstring,*) 'Doing Surface Area calculations'
-        call printLine(INFO,printstring)        
+        call printLine(INFO,"Doing Surface Area calculations")        
         do j=1,nwords
           if (words(j)(1:1) .eq. '#') goto 91
           call lowercase(words(j))
@@ -310,8 +309,7 @@ c     JM Check if we want to run Generalised Born calculations
 c
       if (getOption('born')) then
         doGB = .true.
-        write(printstring,*) 'Doing Generalised Born calculations'
-        call printLine(INFO,printstring)
+        call printLine(INFO,"Doing Generalised Born calculations")
         BornCut = -1.0d0
         gbproteins = .false.
         gbthreshold = -1.0d0
@@ -330,8 +328,7 @@ c
           endif
           if (words(j) .eq. 'proteins') then
             gbproteins = .true.
-            write(printstring,*) 'Using Born corrections for Proteins'
-            call printLine(INFO,printstring)  
+            call printLine(INFO,"Using Born corrections for Proteins")  
           endif
         enddo
  92     continue
@@ -378,11 +375,11 @@ c         Different types of soft-core potentials
 c       SG these two are not used since general soft-core is not yet supported
         SoftPowerInv6 = 6.0d0 / SoftPower
         SoftPower2 = SoftPower / 2.0d0
-        write(printstring,*) 'SoftCore Parameters for this simulation :'
-        call printLine(INFO,printstring)          
-        write(printstring,"(6(a,f12.4),a,i4)") 'Coul ',CoulSoftPower,' LJ ',LJSoftPower,
-     .    ' GB ',GBSoftPower,' Delta ',DeltaCore, ' DeltaCoul ',DeltaCoreCoulL, ' ( ',
-     .     DeltaCoreCoul,' ) Power ',int(SoftPower)
+        call printLine(INFO,"SoftCore Parameters for this simulation :")          
+        write(printstring,"(3(a,i4),3(a,f12.4),a,i4)")
+     .        'Coul ',CoulSoftPower,' LJ ',LJSoftPower,' GB ',GBSoftPower,
+     .        ' Delta ',DeltaCore, ' DeltaCoul ',DeltaCoreCoulL,
+     .        ' ( ',DeltaCoreCoul,' ) Power ',int(SoftPower)
         call printLine(INFO,printstring)
         if (SoftType.eq.SOFTAMB) then
           call printLine(INFO,"Using Amber-like (2-6) soft-core potential")
@@ -439,7 +436,8 @@ c     Try to read in number of solute theta kinds
       NThetaSolKind = 0
       if (getOption('nthetasolutes').or.getOption('nfrag')) then
         NThetaSolKind = getInt(words(1),0)  
-        write(printstring,"(a,i4,a)") "Will consider the first ",NThetaSolKind, "soluteX as theta-solutes"
+        write(printstring,"(a,i4,a)")
+     .        "Will consider the first ",NThetaSolKind, "soluteX as theta-solutes"
         call printLine(INFO,printstring)
       endif      
       nkind = 0
@@ -493,11 +491,9 @@ c     SG, set hydration scaling variable
         UseConcCorr = (words(1).eq."on") 
       endif
       if (UseConcCorr) then
-        write(printstring,*) "Using concentration correction"
-        call printLine(INFO,printstring)
+        call printLine(INFO,"Using concentration correction")
       else
-        write(printstring,*) "NOT using concentration correction"
-        call printLine(INFO,printstring)
+        call printLine(INFO,"Not using concentration correction")
       endif
 
 c     get the names of all of the gc- solute files and read them in
@@ -828,21 +824,21 @@ c     Get the JAWS biasing term for JAWS-II simulations
         call printLine(INFO,printstring) 
       endif
 
-300   format("a,f12.4")
+300   format(a,f12.4)
 
       if (getOption('x').or.getOption('lenx')) then
       gridx = getDouble(words(1),gridx)
-      write(printstring,300) "Grid size in X dimension" ,gridx
+      write(printstring,300) "Grid size in X dimension",gridx
       call printLine(INFO,printstring)
       endif
       if (getOption('y').or.getOption('leny')) then
       gridy = getDouble(words(1),gridy)
-      write(printstring,300) "Grid size in Y dimension" ,gridy
+      write(printstring,300) "Grid size in Y dimension",gridy
       call printLine(INFO,printstring)
       endif
       if (getOption('z').or.getOption('lenz')) then
       gridz = getDouble(words(1),gridz)
-      write(printstring,300) "Grid size in Z dimension" ,gridz
+      write(printstring,300) "Grid size in Z dimension",gridz
       call printLine(INFO,printstring)
       endif
 
@@ -910,8 +906,7 @@ c     get grid origins
 
       if (getOption('jaws2')) then
       jaws2 = getDouble(words(1),jaws2)
-      write(printstring,*) "Running a JAWS-2 sim"
-      call printLine(INFO,printstring)
+      call printLine(INFO,"Running a JAWS-2 sim")
         do i=1,NGCSolutes
         thetaparam(i) = jaws2
         enddo
@@ -926,8 +921,7 @@ c     get grid origins
 
       if (getOption('jaws1')) then
       jaws1 = getDouble(words(1),jaws1)
-      write(printstring,*) "Running a JAWS-1 sim"
-      call printLine(INFO,printstring)
+      call printLine(INFO,"Running a JAWS-1 sim")
         do i=1,NGCSolutes
         thetaparam(i) = jaws1
         enddo
@@ -939,8 +933,7 @@ c     read perturbeIntra flag
         call lowercase(words(1))
         if (words(1).eq.'off') then
           perturbeIntra = .false.
-          write(printstring,*) "Will not perturbe intramolecule solute energies"
-          call printLine(INFO,printstring)
+          call printLine(INFO,"Will not perturb intramolecule solute energies")
         endif
       endif 
 
@@ -958,8 +951,8 @@ c           get the maximum change in volume
 
 c           must have periodic boundaries or spherical harmonic
             if (boundary .eq. PERIODICBOUNDARIES) then
-              write(printstring,"(2a,2(f12.4,a),a,f12.4,a)") "Running an NPT periodic boundaries ",
-     .           "simulation with pressure = ",
+              write(printstring,"(a,2(f12.4,a),a,f12.4,a)")
+     .           "Running an NPT periodic boundaries simulation with pressure = ",
      .           pressure," atm (",pressure*ATM2PASCAL," pascals) and with ",
      .           "a maximum volume change of ",maxVolChange," A^3"
               call prettyLine(INFO,printstring)
@@ -968,8 +961,8 @@ c            calculate a rough 'volume' of this cap. This will be the volume
 c            of the cap, plus an additional radius of kT into the harmonic potential
              volume = sqrt(GASR*temperature / capconstant)
 
-             write(printstring,"(a,f12.4,a)") "Solvent cap volume calculated using extra radius of ",
-     .                            volume, " A "
+             write(printstring,"(a,f12.4,a)")
+     .             "Solvent cap volume calculated using extra radius of ",volume, " A"
              call printLine(INFO,printstring)
 
              volume = (4.0/3.0) * PI * (capradius+volume)**3

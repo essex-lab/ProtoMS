@@ -34,10 +34,9 @@ c##################################################
       
       isol = NSolutes + 1
       if (isol.gt.MAXSOLUTES) then
-        write(printstring,*) "Exceeded maximum number of solutes (",MAXSOLUTES,")"
+        write(printstring,"(a,i4,a)") "Exceeded maximum number of solutes (",MAXSOLUTES,")"
         call printLine(FATAL,printstring)
-        write(printstring,*)"Increase MAXSOLUTES and recompile"
-        call closeProgram(-1,printstring)
+        call closeProgram(-1,"Increase MAXSOLUTES and recompile")
         return
       endif
       
@@ -45,7 +44,7 @@ c     first clear space for the protein
       call initialiseSolute(isol)
 
       lgth = lineLength(filename)
-      write(printstring,*) "Opening solute file ",filename(1:lgth)
+      write(printstring,"(2a)") "Opening solute file ",filename(1:lgth)
       call printLine(INFO,printstring)
       open(unit=FILE,file=filename,status="old",form='formatted',err=9600)
 
@@ -68,10 +67,9 @@ c       If last line was a TER record, then we need to start a new residue here
         if (foundter) then
           isol = NSolutes + 1
           if (isol.gt.MAXSOLUTES) then
-            write(printstring,*) "Exceeded maximum number of solutes (",MAXSOLUTES,")"
+            write(printstring,"(a,i4,a)") "Exceeded maximum number of solutes (",MAXSOLUTES,")"
             call printLine(FATAL,printstring)
-            write(printstring,*)"Increase MAXSOLUTES and recompile"
-            call closeProgram(-1,printstring)
+            call closeProgram(-1,"Increase MAXSOLUTES and recompile")
             return
           endif
           call initialiseSolute(isol)                    
@@ -103,17 +101,16 @@ c         the rest of the header line contains the solute name
 c         SG
           savenam = line(1:lgth)
           SoluteName(isol) = line(1:lgth)
-          write(printstring,*) "Loading solute '",SoluteName(isol)(1:lgth),"'"
+          write(printstring,"(3a)") "Loading solute '",SoluteName(isol)(1:lgth),"'"
           call printLine(INFO,printstring)
           
 c         try to find the solute template for this molecule
           itmpl = findMoleculeTemplate(SoluteName(isol)(1:lgth))          
           
           if (itmpl.le.0) then
-            write(printstring,*) "Cannot find a template for solute ",SoluteName(isol)(1:lgth)
+            write(printstring,"(2a)") "Cannot find a template for solute ",SoluteName(isol)(1:lgth)
             call printLine(FATAL,printstring)
-            write(printstring,*)"Cannot load a solute PDB file unless it has a valid template."
-            call closeProgram(-1,printstring)
+            call closeProgram(-1,"Cannot load a solute PDB file unless it has a valid template.")
             return
           endif        
         else if (words(1)(1:3).eq.'ter') then
@@ -139,7 +136,7 @@ c         read the pdb line
 c         'ok' is true if this line contained a valid pdb atom
           if (.not.ok) then
              if (words(1).eq.'atom' .or. words(1).eq.'hetatm') then
-               write(printstring,*) "Could not understand the following PDB line: ",linenum
+               write(printstring,"(a,i4)") "Could not understand the following PDB line: ",linenum
                call printLine(WARNING,printstring)
                call printLine(WARNING,line)
              endif
@@ -150,8 +147,8 @@ c         try to find this atom in the solute template
           izid = findMolTemplateAtom(itmpl,atnam,iresnam)
           
           if (izid.le.0) then
-            write(printstring,*) "Cannot find atom ",atnam,", residue ",iresnam," in the template ",
-     .            "for solute ",SoluteName(isol)
+            write(printstring,"(6a)") "Cannot find atom ",atnam,", residue ",iresnam,
+     .            " in the template for solute ",SoluteName(isol)
             call printLine(WARNING,printstring)
             call printLine(WARNING,"This atom will be ignored!")
             goto 100
@@ -165,7 +162,7 @@ c          write(printstring,*) ix,iy,iz
 c          call printLine(DEBUG,printstring)
 c         save the name of the solute atom           
           if (SolAtomNam(isol,izid).eq.atnam) then
-            write(printstring,*) "Something strange going on at line ",linenum," of the solute file!"
+            write(printstring,"(a,i4,a)") "Something strange going on at line ",linenum," of the solute file!"
             call printLine(WARNING,printstring)
             call printLine(WARNING,"An atom-resname seems to appear twice within the PDB file!")
             call printLine(WARNING,"Each atom in the PDB must have a unique atom name / residue name")
@@ -194,7 +191,7 @@ c     -----------------------------------
 c     make sure that the solute has a name
       if (SoluteName(isol).eq.' ') then
         lgth = lineLength(filename)
-        write(printstring,*) "You haven't named the solute in file ",filename(1:lgth)
+        write(printstring,"(2a)") "You haven't named the solute in file ",filename(1:lgth)
         call printLine(WARNING,printstring)
         call printLine(WARNING,"You need to name the solute so that ProtoMS can find its template.")
         call printLine(WARNING,"You name a solute by adding the line;")
@@ -212,15 +209,15 @@ c     now that the solute has been read, close the file
 9600  continue
 c     get here if we could not open the file
       lgth = lineLength(filename)
-      write(printstring,*) "FATAL - unable to load solute PDB file ",filename(1:lgth)
+      write(printstring,"(2a)") "FATAL - unable to load solute PDB file ",filename(1:lgth)
       call closeProgram(-1,printstring)
       return
 
 9700  continue
 c     got here if there was a problem reading a line
       lgth = lineLength(filename)
-      write(printstring,*) "WARNING - problem reading line ",linenum," of the solute file ",
-     .     filename(1:lgth)
+      write(printstring,"(a,i4,2a)")
+     .      "WARNING - problem reading line ",linenum," of the solute file ",filename(1:lgth)
       call printLine(WARNING,printstring)
       call printLine(WARNING,line)
       call printLine(WARNING,"Skipping the rest of the file!")

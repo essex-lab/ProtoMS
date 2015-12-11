@@ -23,8 +23,7 @@ c#################################################
 10    format("There are ",i4," CLJ parameter types used in this simulation.")
       call printLine(INFO,printstring)
 
-      write(printstring,*) "Pre-calculating all the charge and LJ pairs..."
-      call printLine(INFO,printstring)
+      call printLine(INFO,"Pre-calculating all the charge and LJ pairs...")
 
       ncljpairs = 0
       do i=1,NCLJTypes
@@ -34,8 +33,7 @@ c#################################################
             write(printstring,11) MAXCLJPAIRS
 11          format("Exceeded maximum number of CLJ atom pairs(",i4,")")
             call printLine(FATAL,printstring)
-            write(printstring,*)"Increase MAXCLJPAIRS and recompile"
-            call closeProgram(-1,printstring)
+            call closeProgram(-1,"Increase MAXCLJPAIRS and recompile")
             return
           endif
           

@@ -18,7 +18,7 @@ c#######################################################
       integer stat,ierr
       
       call printLine(FATAL,str)
-      write(printstring,*) "Program exiting with status ",stat      
+      write(printstring,"(a,i4)") "Program exiting with status ",stat      
       call printLine(FATAL,printstring)
             
 c     try to print out results and restart information
