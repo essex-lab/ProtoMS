@@ -17,7 +17,7 @@ streamaccept accept
 cutoff 10.0
 feather 0.5
 temperature 25.0
-ranseed 100000
+ranseed 100001
 boundary solvent
 pdbparams on
 #  JAWS-1 specific parameters
