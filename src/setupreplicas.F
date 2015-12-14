@@ -56,7 +56,6 @@ c       Storing number of temperature ladders needed and where they should be ap
             enddo
           elseif (words(1).eq.'multigcmc') then
             ngcladders = nwords - 1
-            write(6,*)"GR setupreplicas.F: ngcladders=",ngcladders
             do i=2,nwords
               gcwithlad(i-1) = getDouble(words(i),-1.0)
               if (gcwithlad(i).eq.-1.0) then
@@ -151,10 +150,10 @@ c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
           nlamladders = nwords - 1
           do i=2,nwords
             gcwithlad(i-1) = getDouble(words(i),-1.0)
-            if (gcwithlad(i).eq.-1.0) then
-              write(printstring,*)"Cannot generate lambda ladder for gcmc ",words(i),". Incorrect value."
-              call closeProgram(100,printstring)
-            endif
+c            if (gcwithlad(i).eq.-1.0) then
+c              write(printstring,*)"Cannot generate lambda ladder for gcmc ",words(i),". Incorrect value."
+c              call closeProgram(100,printstring)
+c            endif
           enddo
         endif     
         if (getoption('lambdaladder')) then
@@ -170,10 +169,10 @@ c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
           elseif (words(1).eq.'multigcmc') then
             do i=2,nwords
               gcwithlad(i-1) = getDouble(words(i),-1.0)
-              if (gcwithlad(i).eq.-1.0) then
-                write(printstring,*)"Cannot generate lambda ladder for adams ",words(i),". Incorrect value."
-                call closeProgram(100,printstring)
-              endif
+c              if (gcwithlad(i).eq.-1.0) then
+c                write(printstring,*)"Cannot generate lambda ladder for adams ",words(i),". Incorrect value."
+c                call closeProgram(100,printstring)
+c              endif
             enddo
           elseif (words(1).eq.'jbias') then
             do i=2,nwords
@@ -187,24 +186,27 @@ c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
             write(printstring,*)"Cannot generate lambda ladder for ",words(2),". Incorrect value."
             call closeProgram(100,printstring)
           endif
-        elseif (getoption('multigcmc')) then
-          nlamladders = nwords - 1
-          do i=2,nwords
-            gcwithlad(i-1) = getDouble(words(i),-1.0)
-            if (gcwithlad(i).eq.-1.0) then
-              write(printstring,*)"Cannot generate lambda ladder for gcmc ",words(i),". Incorrect value."
-              call closeProgram(100,printstring)
-            endif     
-          enddo
-        elseif (getoption('temperature')) then
-          nlamladders = nwords - 1
-          do i=2,nwords
-            temwithlad(i-1) = getDouble(words(i),-1.0)
-            if (temwithlad(i).eq.-1.0) then
-              write(printstring,*)"Cannot generate lambda ladder for temperature ",words(i),". Incorrect value."
-              call closeProgram(100,printstring)
-            endif     
-          enddo
+c        elseif (getoption('multigcmc')) then
+c          nlamladders = nwords - 1
+c          write(6,*)myid,"GR setupreplicas.F:nwords=",nwords
+c          do i=2,nwords
+c            gcwithlad(i-1) = getDouble(words(i),-1.0)
+c            write(6,*)myid,"GR setupreplicas.F: c) gcwithlad=",gcwithlad(i-1)
+c            if (gcwithlad(i).eq.-1.0) then
+c              write(printstring,*)"Cannot generate lambda ladder for gcmc ",words(i),". Incorrect value."
+c              call closeProgram(100,printstring)
+c            endif     
+c          enddo
+c        elseif (getoption('temperature')) then
+c          write(6,*)myid,"GR setupreplicas.F: b) SHOULDN'T BE HERE"
+c          nlamladders = nwords - 1
+c          do i=2,nwords
+c            temwithlad(i-1) = getDouble(words(i),-1.0)
+c            if (temwithlad(i).eq.-1.0) then
+c              write(printstring,*)"Cannot generate lambda ladder for temperature ",words(i),". Incorrect value."
+c              call closeProgram(100,printstring)
+c            endif     
+c          enddo
         endif
         if (ntasks.lt.nlambdas) then
           write(printstring,*)"Number of tasks is lower than the number of lambdas!",ntasks,nlambdas
@@ -230,7 +232,7 @@ c       I am currently creating the subgroups one at a time in the loop
         key = -1
         do i=1,nlamladders
           if (doTemperatureRE) then
-c           Matching tasks wich should belong to both a lambda ladder and a temperature ladder
+c           Matching tasks which should belong to both a lambda ladder and a temperature ladder
             if ((mytemid.ge.ZERO).and.(temval(mytemperature).eq.temwithlad(i))) then
               do j=1,ntemladders
                 if (mytemladder.eq.j) then
@@ -284,10 +286,7 @@ c       Read in all B-values
         nadams = nwords - 1
         do i=2,nwords
           adamparam(i-1) = getDouble(words(i),0.0)
-        enddo     
-        if (ntasks.ne.nadams) then
-          call closeProgram(100,"Number of Adam parameters is not equal to the number of tasks!")
-        endif             
+        enddo                 
         doMultiGCMC = .true.
         ngcladders = 1
 c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
@@ -295,11 +294,18 @@ c 		GR: Simplifying the syntax to generate ladders for GCMC and lambda RE.
           ngcladders = nwords - 1
           do i=2,nwords
             lamwithlad(i-1) = getDouble(words(i),-1.0)
-            if (lamwithlad(i).eq.-1.0) then
+            if (lamwithlad(i-1).eq.-1.0) then
               write(printstring,*)"Cannot generate gcmc ladder for lambda",words(i),". Incorrect value."
               call closeProgram(100,printstring)
             endif
           enddo
+          if (ntasks.ne.(nadams*nlambdas)) then
+            call closeProgram(100,"Number of Adam parameters and lambda values is not equal to the number of tasks!")
+          endif
+        else 
+          if (ntasks.ne.nadams) then
+            call closeProgram(100,"Number of Adam parameters is not equal to the number of tasks!")
+          endif 
         endif
 c       Read in template folder    
 c 		GR: Remove folder creating and modify assignadamre.F amd call assignadamre.F
@@ -323,7 +329,6 @@ c          call MPI_Recv(myadam,1,MPI_INTEGER,0,11,MPI_COMM_WORLD,mpistat,ierr)
 c          write(tmpstr,"(3A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
 c          call writedoublestring(tmpstr,adamparam(myadam),gcmcfolder)
 c        endif
-        write(6,*)"GR setupreplicas.F: About to start setting up gc ladders"
 c Assigning gc ladders with lambda ladders
 c GR NEW
         mygcid = -1
@@ -344,17 +349,14 @@ c           Matching tasks wich should belong to both a lambda ladder and a temp
                 endif
               enddo
               mygcladder = i
-              write(6,*)myid,"GR setupreplicas.F: mygcladder=",mygcladder
             endif
           else
             if (((i-1)*nadams).le.myid.and.myid.lt.(i*nadams)) then
 c             all these ids should belong to the same lambda ladder
               mygcladder = i
-              write(6,*)myid,"GR setupreplicas.F: mygcladder=",mygcladder
             endif
           endif
         enddo
-        write(6,*)"GR setupreplicas.F: Finished assigning gc ladders"
 c 		Finished assigning gcmc ladders.
 c GR NEW
         call assignadamre(key,.false.,.true.)

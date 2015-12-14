@@ -21,13 +21,12 @@ c##########################################################################
       logical freeCom,mkdirs
       character*255 cmd, tmpstr
 
-      write(6,*)myid,"GR assignadamre:",mylamid,mylamladder,mygcid,mygccom,mygcladder
       if (freeCom.and.(mygccom.ne.MPI_COMM_NULL)) call MPI_Comm_free(mygccom,ierr)
-
+c      write(6,*)myid,"GR assignadamre.F: before MPI_COMM_SPLIT"
       call MPI_COMM_SPLIT(MPI_COMM_WORLD,mygcladder,key,mygccom,ierr)
-      write(6,*)"GR assignadamre: MPI_COMM_SPLIT called"
+c      write(6,*)myid,"GR setupreplicas.F: after MPI_COMM_SPLIT"
       call MPI_COMM_RANK(mygccom,mygcid,ierr)
-      write(6,*)"GR assignadamre: MPI_COMM_RANK called"
+c      write(6,*)myid,"GR setupreplicas.F: after MPI_COMM_RANK"
       if (mkdirs) then
         myadam = mygcid + 1
         if (doTemperatureRE) then
@@ -64,7 +63,6 @@ c          write(gcmcfolder,"(3A,F5.3)")lrefolder(1:lineLength(lrefolder)),PATHS
 c          write(cmd,"(3A)")"mkdir -p ",gcmcfolder(1:lineLength(gcmcfolder)),PATHSEP
           call system(cmd)        
         else
-          write(6,*)"GR assignadamre: Goes here when only doing re gcmc"
 c			GCMC folder needs to be formatted correctly
           write(tmpstr,"(4A)")"mkdir -p ",outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
           call writedoublestring(tmpstr,adamparam(myadam),cmd)

@@ -122,7 +122,10 @@ c       taking care of dumping with the right frequency
 #ifdef WITH_MPI_
 c       Do lambda replica exchange
         if (doLambdaRE.and.(lrefreq.gt.0).and.(i.gt.1).and.(mod(i,lrefreq).eq.0)) then
+          write(6,*)myid,"mylamid",mylamid, " Attempting LRE Move ",i
+          write(6,*)myid,"mygcid",mygcid
           call lambdaRE
+          write(6,*)myid,mylamid, " Finished LRE Move ",i
           if (doTemperatureRE) then
             call assigntemperaturere(mytemid,.true.,.false.)
           else if (doMultiGCMC) then
@@ -143,12 +146,16 @@ c          write(6,*)myid, " calling TRE. Move ",i
 
 c		Do GCMC replica exchange
         if (doMultiGCMC.and.(gcrefreq.gt.0).and.(i.gt.1).and.(mod(i,gcrefreq).eq.0)) then
-          write(6,*)"GR simulate.F: Doing replica gcmc move"
-          if (doLambdaRE) then
-            write(6,*)"GR simulate.F: Should only be here if doing lambda re"
-            call assignlambdare(mylamid,.true.,.false.)
-          endif 
+c       GR This if statement is will help track which nodes are going where
+          write(6,*)myid,mygcid, " Attempting GCMC-RE Move ",i
+          write(6,*)myid,"mylamid",mylamid
           call gcmcRE
+          write(6,*)myid,mygcid, " Finished GCMC-RE Move ",i
+          if (doLambdaRE) then
+            call assignlambdare(mylamid,.true.,.false.)
+          else if (doTemperatureRE) then
+            call assigntemperaturere(mytemid,.true.,.false.)
+          endif 
         endif
 #endif
         

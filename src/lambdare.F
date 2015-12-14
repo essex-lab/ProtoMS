@@ -20,7 +20,7 @@ c     modified - A. Cabedo Martinez, 2015
 c
 c###################################################################
 
-      integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength
+      integer i,j,ranInt,task1,task2,choice,aidx,bidx,linelength,k
       integer mpistat(MPI_STATUS_SIZE),ierr,nrecieved
       integer temsbuffer(4),temrbuffer(4),tsbuffer(ntemperatures),tmbuffer(ntemperatures)
       integer gcsbuffer(4),gcrbuffer(4),asbuffer(nadams),ambuffer(nadams)
@@ -32,7 +32,6 @@ c###################################################################
       double precision delf,delb
       double precision buffer(5)
       character*255 tempstr,tempstr2
-
 
 c     check that lambda swaps are only attempted between tasks that are running lambda values
       if (mylamid.lt.0) return
@@ -86,8 +85,8 @@ c     The loop below should not be needed
         call MPI_SSend(buffer,5,MPI_DOUBLE_PRECISION,0,11,mylamcom,ierr)
       endif
 
-      if (mylamid.eq.0) then
 
+      if (mylamid.eq.0) then
 c       Randomly selects odd/even pairs
         choice = ranInt(0,1)
         do i=1,nlambdas-(choice+1),2
@@ -95,10 +94,11 @@ c       Randomly selects odd/even pairs
           bidx = i + choice + 1
 
           nlretry = nlretry + 1
+          write(6,*)myid, mylamid,"Attempting lambda swap",lambdaval(aidx),lambdaval(bidx)
           if (retiTest(lambdaval(aidx),alllamf(aidx),alllamb(aidx),allnrg(aidx),allnrgf(aidx),allnrgb(aidx),
 
      .                 lambdaval(bidx),alllamf(bidx),alllamb(bidx),allnrg(bidx),allnrgf(bidx),allnrgb(bidx))) then
-
+            write(6,*)myid, mylamid,"GR lambdare.F SUCCESSFUL SWAP!!!" 
 c            write(6,*)"Swapping ",lambdaval(aidx),lambdaval(bidx),allnrgb(bidx)-allnrg(aidx),allnrgf(aidx)-allnrg(bidx)
 c            write(6,*)allnrg(aidx),allnrgf(aidx),allnrg(bidx),allnrgb(bidx)
 c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
@@ -109,14 +109,16 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
             task2lambda(task2+1) = aidx
             lambda2task(aidx) = task2
             lambda2task(bidx) = task1
-
+            write(6,*)"GR lambdare.F: task1, task2",task1, task2
             nlreswap = nlreswap + 1
             if (task1.ne.0) then
+              write(6,*)myid, mygcid,"GR lambdare.F a)i) MPI SSend"  
               call MPI_SSend(bidx,1,MPI_INTEGER,task1,11,mylamcom,ierr)
             else
               mylambda = bidx
             endif
             if (task2.ne.0) then
+              write(6,*)myid, mygcid,"GR lambdare.F a)ii) MPI SSend"  
               call MPI_SSend(aidx,1,MPI_INTEGER,task2,11,mylamcom,ierr)
             else
               mylambda = aidx
@@ -145,6 +147,10 @@ c     The broadcast of nlretry needs to be dealt with in here, since it is ignor
 
       oldlam = lambda
       lambda = lambdaval(mylambda)
+
+      write(6,*)myid, mylamid,"my old lambda",oldlam
+      write(6,*)myid, mylamid,"my current lambda",lambda
+
       if (DifferentLambdas) then
         lambdaf = lambda+deltalam
         lambdab = lambda-deltalam
@@ -179,17 +185,17 @@ c     if a process with temid 0 is involved in the swap, since the reason to swa
         nlretry = temrbuffer(3)
         nlreswap = temrbuffer(4)
       elseif (updated(mylamid+1).and.doMultiGCMC) then
-        gcsbuffer(1) = mytemladder
-        gcsbuffer(2) = mytemid
+        gcsbuffer(1) = mygcladder
+        gcsbuffer(2) = mygcid
         gcsbuffer(3) = nlretry
         gcsbuffer(4) = nlreswap
         do i=1,nlambdas
           if (oldlam.eq.lambdaval(i)) then
-            call MPI_Sendrecv(temsbuffer,4,MPI_INTEGER,lambda2task(i),11,temrbuffer,4,
+            call MPI_Sendrecv(gcsbuffer,4,MPI_INTEGER,lambda2task(i),11,gcrbuffer,4,
      .           MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
-            call MPI_Sendrecv(task2adams,ntemperatures,MPI_INTEGER,lambda2task(i),11,
-     .           asbuffer,nadams,MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
             call MPI_Sendrecv(task2adams,nadams,MPI_INTEGER,lambda2task(i),11,
+     .           asbuffer,nadams,MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
+            call MPI_Sendrecv(adams2task,nadams,MPI_INTEGER,lambda2task(i),11,
      .           ambuffer,nadams,MPI_INTEGER,lambda2task(i),11,mylamcom,mpistat,ierr)
           endif
         enddo
@@ -216,12 +222,17 @@ c     if a process with temid 0 is involved in the swap, since the reason to swa
 
 c     Re-setting all running averages    
       nsteps = 0
-
+c		NEW GR: every where there is a k used to be a 1.
+      k = 1
+      if (doMultiGCMC)then
+        k = 2
+      endif
       write(tempstr,"(1A,F5.3)")"lam-",oldlam
       if (doTemperatureRE)then
         write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
       else
         write(lrefolder,"(3A,F5.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"lam-",lambdaval(mylambda)
+c        write(6,*)myid, "GR lambdare.F lrefolder = ",lrefolder
       endif
       do i=1,nOpenFiles    
         if (wasopened(i)) fileappend(i) = .true.
@@ -230,15 +241,19 @@ c     Re-setting all running averages
         endif
         fileopened(i) = .False.
         call split2(openfiles(i),PATHSEP)
-        tempstr2 = words2(nwords2-1)
+        tempstr2 = words2(nwords2-k) 
+c        write(6,*)myid, "GR lambdare.F tempstr2, tempstr ", tempstr2,tempstr   
         if (tempstr2(1:lineLength(tempstr2)).eq.tempstr(1:lineLength(tempstr))) then
-          do j=1,nwords2-2
+c          write(6,*)myid, "GR lambdare.F MATCH! tempstr2 = tempstr ", tempstr2,tempstr 
+          do j=1,nwords2-(k+1)
             words(j) = words2(j)
           enddo
-           write(words(nwords2-1),"(1A,F5.3)")"lam-",lambda
-           words(nwords2) = words2(nwords2)
-           nwords = nwords2
-           call join2(1,nwords,PATHSEP,openfiles(i))
+          write(words(nwords2-k),"(1A,F5.3)")"lam-",lambda
+          do j=1,k
+            words(nwords2-(j-1)) = words2(nwords2-(j-1))
+          enddo
+          nwords = nwords2
+          call join2(1,nwords,PATHSEP,openfiles(i))
         endif
       enddo
 

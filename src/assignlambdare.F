@@ -21,7 +21,6 @@ c##########################################################################
       logical freeCom,mkdirs
       character*255 cmd
 
-
       if (freeCom.and.(mylamcom.ne.MPI_COMM_NULL)) call MPI_Comm_free(mylamcom,ierr)
 
 

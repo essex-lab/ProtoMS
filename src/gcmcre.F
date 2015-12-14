@@ -31,8 +31,6 @@ c###################################################################
 
 
 
-      write(6,*)"GR gcmcre.F: start of file" 
-      write(6,*)"GR gcmcre,F mygcid=",mygcid
 c 		GR: Assign to double pression a vector alladams(nadams), where nadams is defined elsewhere.
 c		GR: Also, I need to assign allongc(nadams), which is the vector of all on GC solutes
 
@@ -69,8 +67,10 @@ c		GR: Check that GCSCavity is properly read by this file.
         call MPI_SSend(buffer,2,MPI_DOUBLE_PRECISION,0,11,mygccom,ierr)
       endif
 
+
+
       if (mygcid.eq.0) then
-        write(6,*)"GR gcmcre.F: I am the main core. About to start gcmc re" 
+c        write(6,*)myid,mygcid, "GR gcmcre.F Trying adam swap" 
 c       Randomly selects odd/even pairs from 1 to the max number of Adams values and attempts to swap those pairs.
         choice = ranInt(0,1)
         do i=1,nadams-(choice+1),2
@@ -79,8 +79,9 @@ c       Randomly selects odd/even pairs from 1 to the max number of Adams values
 
           ngcretry = ngcretry + 1
 c			GR: The Metropolis test is below. THIS IS THE IMPORTANT BIT!
+            write(6,*)myid, mygcid,"Attempting GC swap",alladam(aidx),alladam(bidx)
           if (adamsretest(alladam(aidx),alladam(bidx),allongc(aidx),allongc(bidx))) then
-
+            write(6,*)myid, mygcid,"GR gcmcre.F SUCCESSFUL SWAP!!!" 
             task1 = adams2task(aidx)
             task2 = adams2task(bidx)
 
@@ -88,16 +89,21 @@ c			GR: The Metropolis test is below. THIS IS THE IMPORTANT BIT!
             task2adams(task2+1) = aidx
             adams2task(aidx) = task2
             adams2task(bidx) = task1
-
+            write(6,*)"GR gcmcre.F: task1, task2",task1, task2
             ngcreswap = ngcreswap + 1
 c           The main task already knows bidx and aidx, so no need to send that information in that case
+c            write(6,*)myid, mygcid,"GR gcmcre.F Sending GC swap info to other gcmc nodes"
+            write(6,*)myid, mygcid,"GR gcmcre.F a) MPI SSend"  
             if (task1.ne.0) then 
+              write(6,*)myid, mygcid,"GR gcmcre.F a)i) MPI SSend"  
               call MPI_SSend(bidx,1,MPI_INT,task1,11,mygccom,ierr)
             else
               myadam = bidx
             endif
             if (task2.ne.0) then
+              write(6,*)myid, mygcid,"GR gcmcre.F a)ii) MPI SSend"  
               call MPI_SSend(aidx,1,MPI_INT,task2,11,mygccom,ierr)
+              write(6,*)myid, mygcid,"GR gcmcre.F a)ii) MPI SSend SENT"  
             else
               myadam = aidx
             endif
@@ -106,32 +112,34 @@ c           The main task already knows bidx and aidx, so no need to send that i
           else
           endif
         enddo
-
+        write(6,*)myid, mygcid,"GR gcmcre.F b) MPI SSend"  
         do i=2,nadams
           if (.not.updated(i)) call MPI_SSend(task2adams(i),1,MPI_INT,i-1,11,mygccom,ierr)
         enddo
-
+      write(6,*)myid, mygcid,"GR gcmcre.F MPI Recv"  
       else    
          call MPI_Recv(myadam,1,MPI_INT,0,11,mygccom,mpistat,ierr)
       endif
-
+      write(6,*)myid, mygcid,"GR gcmcre.F a) MPI BCAST"  
       call MPI_BCAST (ngcretry, 1, MPI_INTEGER, 0, mygccom, ierr)
       call MPI_BCAST (ngcreswap, 1, MPI_INTEGER, 0, mygccom, ierr)
-      
+      write(6,*)myid, mygcid,"GR gcmcre.F b) MPI BCAST"  
       call MPI_BCAST (updated,nadams,MPI_LOGICAL,0,mygccom,ierr)
       call MPI_BCAST (adams2task,nadams,MPI_INTEGER,0,mygccom,ierr)
       call MPI_BCAST (task2adams,nadams,MPI_INTEGER,0,mygccom,ierr)
 
 c		GR: Set the new adams value as B, which is used in Metropolis2.F
       B = adamparam(myadam)
-   
+      write(6,*)myid, mygcid,"my old B",oldB
+      write(6,*)myid, mygcid,"my current B",B
 c     The communication in this code is not optimized. Task2temperature, temperature2task, nlretry & nlreswap probably only need to be swaped
 c     if a process with temid 0 is involved in the swap, since the reason to swap these is problems associated with the next temperatureswap
+      write(6,*)myid, mygcid,"GR gcmcre.F comunicating lambda info"  
       if (updated(mygcid+1).and.doLambdaRE) then
         lamsbuffer(1) = mylamladder
         lamsbuffer(2) = mylamid
-        lamsbuffer(3) = ntretry
-        lamsbuffer(4) = ntreswap
+        lamsbuffer(3) = ngcretry
+        lamsbuffer(4) = ngcreswap
         do i=1,nadams
           if (oldb.eq.adamparam(i)) then 
             call MPI_Sendrecv(lamsbuffer,4,MPI_INTEGER,adams2task(i),11,lamrbuffer,4,
@@ -146,26 +154,30 @@ c     if a process with temid 0 is involved in the swap, since the reason to swa
         lambda2task = lmbuffer
         mylamladder = lamrbuffer(1)
         mylamid = lamrbuffer(2)
-        ntretry = lamrbuffer(3)
-        ntreswap = lamrbuffer(4)
+        ngcretry = lamrbuffer(3)
+        ngcreswap = lamrbuffer(4)
       endif
 
 c     Resetting running averages
       nsteps = 0
 
+      if (doLambdaRE) then
 c     Defining gcmcfolder as the the folder that correponds to the NEW b value, using adamstr as a dummy variable.
-      write(adamstr,"(4A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
-      call writedoublestring(adamstr,adamparam(myadam),gcmcfolder)
+        write(adamstr,"(4A)")lrefolder(1:lineLength(lrefolder)),PATHSEP,"b_"
+        call writedoublestring(adamstr,adamparam(myadam),gcmcfolder)
+      else 
+c     Defining gcmcfolder as the the folder that correponds to the NEW b value, using adamstr as a dummy variable.
+        write(adamstr,"(4A)")outfolder(1:lineLength(outfolder)),PATHSEP,"b_"
+        call writedoublestring(adamstr,adamparam(myadam),gcmcfolder)
 c     Defining adamstr as the the folder that correponds to the OLD b value.
+      endif
       call writedoublestring("b_",oldB,adamstr)
 
-
-      if (doLambdaRE) write(lrefolder,"(3A,F5.3)")gcmcfolder(1:lineLength(gcmcfolder)),PATHSEP,"lam-",lambdaval(mylambda)
-
+c      if (doLambdaRE) write(lrefolder,"(3A,F5.3)")gcmcfolder(1:lineLength(gcmcfolder)),PATHSEP,"lam-",lambdaval(mylambda)
 
 c		GR: Must account for the fact that there must be nested folders if replica exchange is attempted along another dimention.
       k = 1
-      if ((dolambdaRE).or.(doREST).or.(doMultiJaws2).or.(doTemperatureRE)) k = 2
+c      if ((dolambdaRE).or.(doREST).or.(doMultiJaws2).or.(doTemperatureRE)) k = 1
       do i=1,nOpenFiles    
         if (wasopened(i)) fileappend(i) = .true.
         if (i.eq.streamhandle(RESTART)-40) then
@@ -176,7 +188,9 @@ c		GR: Must account for the fact that there must be nested folders if replica ex
 c			GR: By default, the temperature is the first folder, so the -k bit always picks that out. 
         adamstr2 = words2(nwords2-k)
 c			GR: This next bit sees which of the currently opened folders corresponds to the old adams value.
+c        write(6,*)myid, "GR gcmcre.F adamstr2, adamstr ", adamstr2,adamstr 
         if (adamstr2(1:lineLength(adamstr2)).eq.adamstr(1:lineLength(adamstr))) then
+c          write(6,*)myid, "GR gcmcre.F MATCH! adamstr2 = adamstr ", adamstr2,adamstr 
           do j=1,nwords2-(k+1)
             words(j) = words2(j)
           enddo
@@ -188,5 +202,7 @@ c			GR: This next bit sees which of the currently opened folders corresponds to 
           call join2(1,nwords,PATHSEP,openfiles(i))
         endif
       enddo
+
+
 
       end subroutine
