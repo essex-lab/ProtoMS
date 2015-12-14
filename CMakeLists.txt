@@ -35,6 +35,22 @@ message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERS
 # Find Fortran MPI libraries
 option(AVOID_MPI "Don't use MPI even if available" OFF)
 find_package(MPI)
+
+if(NOT MPI_Fortran_FOUND AND NOT AVOID_MPI AND CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
+    # Attempt fix for Southampton RedHat configuration
+    message("-- Attempting fix for Southampton RedHat configuration")
+    set(MPIEXEC "/local/software/openmpi/1.6.4/intel/bin/mpiexec")
+    set(MPI_Fortran_COMPILER "/local/software/openmpi/1.6.4/intel/bin/mpif90")
+    set(MPI_Fortran_INCLUDE_PATH "/local/software/openmpi/1.6.4/intel/include")
+    set(MPI_Fortran_LIBRARIES "/local/software/openmpi/1.6.4/intel/lib/libmpi_f90.so")
+    find_package(MPI)
+    if(MPI_Fortran_FOUND)
+        message("-- Fix successful")
+    else()
+        message("-- Fix unsuccessful")
+    endif()
+endif()
+
 if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
     message("-- Using MPI")
     add_definitions(${MPI_Fortran_COMPILE_FLAGS})
