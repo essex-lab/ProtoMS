@@ -32,6 +32,7 @@ class CompareTools:
             "restart"     : self.diff_text_try_number,
             "restart.prev": self.diff_text_try_number,
             "results"     : self.diff_text_try_number,
+            "results_inst": self.diff_text_try_number,
             "UNKNOWN"     : self.diff_filecmp
         }
 
@@ -56,6 +57,7 @@ class CompareTools:
         file, type = filetuple
         reffile = os.path.join(self.refdir, file)
         if type not in self.comparetools:
+            print("Unrecognised type, using filecmp: {0}".format(type))
             type = "UNKNOWN"
 
         if self.comparetools[type](file, reffile, type):
