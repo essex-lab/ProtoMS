@@ -37,7 +37,7 @@ class CompareTools:
 
         self.ign_starts_with = {
             "cmd" : {"parfile"},
-            "info": {"protoms3 started at", "Reading parameter file", "Starting simulation at", "protoms3 completed at"}
+            "info": {"#", "protoms3 started at", "Reading parameter file", "Starting simulation at", "protoms3 completed at"}
         }
 
     def compare(self, filetuple):
@@ -63,8 +63,7 @@ class CompareTools:
                 print("File matched reference: {0}".format(file))
             return True
         else:
-            if self.verbose:
-                print("File did not match reference: {0}".format(file))
+            print("File did not match reference: {0}".format(file))
             return False
 
     def diff_filecmp(self, file1, file2, type):
