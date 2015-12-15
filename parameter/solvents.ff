@@ -127,6 +127,34 @@ atom H01 2010 2010
 atom H02 2010 2010
 
 #
+# SPC/E water model
+#
+# J. Phys. Chem A, Vol. 105, No. 43, 2001 (not original reference)
+#
+
+#
+# SPC/E
+#
+#   O00    dist(OH) = 1.0 A
+#   / \    ang(HOH) = 109.47 deg
+# H01 H02
+#
+
+mode clj
+par 2011  OW  8  -0.8476  3.16563   0.1553
+par 2012  HW  1   0.4238  0.0       0.0
+
+mode template
+solvent SPE
+opt tip3p
+info translate 0.15 rotate 15.0
+atom O00 2011 2011
+atom H01 2012 2012
+atom H02 2012 2012
+
+
+
+#
 # TIPS2 water model
 #
 # Again need original reference...
