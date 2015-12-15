@@ -25,13 +25,13 @@ class CompareTools:
 
         self.comparetools = {
             "accept"      : self.diff_filecmp,
-            "results"     : self.diff_filecmp,
             "warning"     : self.diff_filecmp,
             "cmd"         : self.diff_filecmp,  # Use ign_starts_with if paths vary on different systems
             "info"        : self.diff_text_ign_starts_with,
             "all.pdb"     : self.diff_text_try_number,
             "restart"     : self.diff_text_try_number,
             "restart.prev": self.diff_text_try_number,
+            "results"     : self.diff_text_try_number,
             "UNKNOWN"     : self.diff_filecmp
         }
 
