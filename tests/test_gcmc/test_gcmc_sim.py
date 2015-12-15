@@ -19,6 +19,7 @@ from protoms import _prep_gcmc, _prep_jaws2, _cleanup, _wizard
 
 import tools
 from tools import simulationobjects
+from tools import testtools
 
 from subprocess import call
 
@@ -28,7 +29,7 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
-ref_dir = proto_env + "/tests/gcmc/"
+ref_dir = os.path.join(proto_env, "tests/gcmc/")
 
 out_gcmc_tools = ["gcmc_box.pdb"]
 output_files_setup = ["gcmc_wat.pdb", "run_gcmc.cmd"]
@@ -81,21 +82,16 @@ class TestGCMC(unittest.TestCase):
         # Test for ProtoMS simulation.
         if((call("$PROTOMSHOME/build/protoms3 run_gcmc.cmd", shell=True)) == 0):
             # Checking whether the simulation output files have been created successfully.
+            comparetools = testtools.CompareTools(ref_dir, verbose=True)
+
             for outfile in out_sim_files:
                 outfile_rel = os.path.join("out_gcmc", outfile)
                 self.assertTrue(os.path.exists(outfile_rel),
                                 "GCMC simulation file {0} is missing.".format(outfile_rel))
 
                 # Checking content of GCMC simulation output files with reference data in files.
-                if outfile == "info":
-                    if((call("bash content_info_comp.sh", shell=True)) == 0):
-                        print("\n Info files content matched.")
-                        continue
-                    else:
-                        raise ValueError("Content mismatch between output and reference info files.")
-                else:
-                    self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
-                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
+                self.assertTrue(comparetools.compare((outfile_rel, outfile)),
+                                "Content mismatch between output and reference for file {0}".format(outfile_rel))
 
         else:
             raise simulationobjects.SetupError("GCMC simulation was not successful.")
