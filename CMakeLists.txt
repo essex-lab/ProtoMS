@@ -36,7 +36,7 @@ message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERS
 option(AVOID_MPI "Don't use MPI even if available" OFF)
 find_package(MPI)
 
-if(NOT MPI_Fortran_FOUND AND NOT AVOID_MPI AND CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
+if(NOT MPI_Fortran_FOUND AND NOT AVOID_MPI AND CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" AND EXISTS "/local/software/openmpi/1.6.4/intel/lib/libmpi_f90.so")
     # Attempt fix for Southampton RedHat configuration
     message("-- Attempting fix for Southampton RedHat configuration")
     set(MPIEXEC "/local/software/openmpi/1.6.4/intel/bin/mpiexec")
