@@ -155,6 +155,10 @@ add_test(NAME test_equil_setup
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil/test_equil_prot.py)
 
+add_test(NAME test_system_energies
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies/test_energies.py)
+
 add_test(NAME test_sampling_prot 
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling/test_sampling_prot.py)
