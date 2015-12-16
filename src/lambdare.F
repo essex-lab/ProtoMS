@@ -94,11 +94,9 @@ c       Randomly selects odd/even pairs
           bidx = i + choice + 1
 
           nlretry = nlretry + 1
-          write(6,*)myid, mylamid,"Attempting lambda swap",lambdaval(aidx),lambdaval(bidx)
           if (retiTest(lambdaval(aidx),alllamf(aidx),alllamb(aidx),allnrg(aidx),allnrgf(aidx),allnrgb(aidx),
 
      .                 lambdaval(bidx),alllamf(bidx),alllamb(bidx),allnrg(bidx),allnrgf(bidx),allnrgb(bidx))) then
-            write(6,*)myid, mylamid,"GR lambdare.F SUCCESSFUL SWAP!!!" 
 c            write(6,*)"Swapping ",lambdaval(aidx),lambdaval(bidx),allnrgb(bidx)-allnrg(aidx),allnrgf(aidx)-allnrg(bidx)
 c            write(6,*)allnrg(aidx),allnrgf(aidx),allnrg(bidx),allnrgb(bidx)
 c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
@@ -109,16 +107,13 @@ c            write(6,*)-(allnrg(bidx)-allnrgf(aidx)-allnrgb(bidx)+allnrg(aidx))
             task2lambda(task2+1) = aidx
             lambda2task(aidx) = task2
             lambda2task(bidx) = task1
-            write(6,*)"GR lambdare.F: task1, task2",task1, task2
             nlreswap = nlreswap + 1
             if (task1.ne.0) then
-              write(6,*)myid, mygcid,"GR lambdare.F a)i) MPI SSend"  
               call MPI_SSend(bidx,1,MPI_INTEGER,task1,11,mylamcom,ierr)
             else
               mylambda = bidx
             endif
             if (task2.ne.0) then
-              write(6,*)myid, mygcid,"GR lambdare.F a)ii) MPI SSend"  
               call MPI_SSend(aidx,1,MPI_INTEGER,task2,11,mylamcom,ierr)
             else
               mylambda = aidx
@@ -147,9 +142,6 @@ c     The broadcast of nlretry needs to be dealt with in here, since it is ignor
 
       oldlam = lambda
       lambda = lambdaval(mylambda)
-
-      write(6,*)myid, mylamid,"my old lambda",oldlam
-      write(6,*)myid, mylamid,"my current lambda",lambda
 
       if (DifferentLambdas) then
         lambdaf = lambda+deltalam
@@ -232,7 +224,6 @@ c		NEW GR: every where there is a k used to be a 1.
         write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
       else
         write(lrefolder,"(3A,F5.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"lam-",lambdaval(mylambda)
-c        write(6,*)myid, "GR lambdare.F lrefolder = ",lrefolder
       endif
       do i=1,nOpenFiles    
         if (wasopened(i)) fileappend(i) = .true.

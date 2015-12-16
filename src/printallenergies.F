@@ -58,7 +58,12 @@ c####################################################################
          call printLine(RESULTS,printstring)
        endif
        
-       if (doTemperatureRE.and.doLambdaRE) then
+       if (doMultiGCMC) then
+         write(printstring,*) "GCMC replica = ",mygcid+1
+         call printLine(RESULTS,printstring)
+       endif
+
+       if (doTemperatureRE.and.doLambdaRE .or. doMultiGCMC.and.doLambdaRE) then
          write(printstring,*) "Global replica = ",myid+1
          call printLine(RESULTS,printstring)
        endif
