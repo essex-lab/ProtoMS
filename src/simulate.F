@@ -55,7 +55,7 @@ c       4 in the line below stands for the lenght of 'dump'
             kdumps(ndumps) = k
           else
             ndumps = ndumps -1
-            write(printstring,*) "Ignoring dump: unable to parse frequency or frequency less than 1: ", words(1)
+            write(printstring,"(2a)") "Ignoring dump: unable to parse frequency or frequency less than 1: ", words(1)
             call printLine(WARNING,printstring)            
           endif  
         endif
@@ -95,7 +95,7 @@ c       obtain the move type based on probabilities entered by the user
         else if (imov.eq.TRYSOLTHETA) then
           templ = solThetaMove(UPDATEENERGY,i,0)
         else
-          write(printstring,*) "Problems sorting out the move type! ",imov
+          write(printstring,"(a,i4)") "Problems sorting out the move type! ",imov
           call printLine(WARNING,printstring)
           call printLine(WARNING,"This is probably a programming bug!")
           templ = .false.
@@ -156,7 +156,7 @@ c       GR This if statement is will help track which nodes are going where
       enddo
 
       if (NTotalMoves.gt.0) then
-        write(printstring,*) "Data collection complete. Attempted/accepted moves ",
+        write(printstring,"(a,2i12)") "Data collection complete. Attempted/accepted moves ",
      .                             NTotalMoves,NAcceptedMoves
         call printLine(INFO,printstring)
         
@@ -186,7 +186,7 @@ c        write(6,*)"### GR simulate.F: Printing acceptance"
       endif
      
       if (SolventBox) then
-        write(printstring,*) "Final volume = ",volume," A^3"
+        write(printstring,"(a,f12.4,a)") "Final volume = ",volume," A^3"
         call prettyLine(INFO,printstring)
       endif
 

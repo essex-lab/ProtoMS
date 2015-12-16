@@ -32,7 +32,7 @@ c#############################################################
       
       lgth = lineLength(filename)
       
-      write(printstring,*) "Opening solvent file ",filename(1:lgth)
+      write(printstring,"(2a)") "Opening solvent file ",filename(1:lgth)
       call printLine(INFO,printstring)
       
       open(unit=FILE,file=filename,status="old",form='formatted',err=9600)
@@ -132,7 +132,7 @@ c         try to read in a solvent atom line
 c         'ok' is true if this line contained a valid pdb atom
           if (.not.ok) then
              if (words(1).eq.'atom' .or. words(1).eq.'hetatm') then
-               write(printstring,*) "Could not understand the following PDB line: ",linenum
+               write(printstring,"(a,i4)") "Could not understand the following PDB line: ",linenum
                call printLine(WARNING,printstring)
                call printLine(WARNING,line)
              endif
@@ -143,10 +143,9 @@ c         'ok' is true if this line contained a valid pdb atom
 c           this is the first atom of a new solvent...
             isvn = NSolvents + 1
             if (isvn.gt.MAXSOLVENTS) then
-              write(printstring,*) "Exceeded maximum number of solvent molecules, ",MAXSOLVENTS
+              write(printstring,"(a,i4)") "Exceeded maximum number of solvent molecules, ",MAXSOLVENTS
               call printLine(FATAL,printstring)
-              write(printstring,*)"Increase MAXSOLVENTS and recompile"
-              call closeProgram(-1,printstring)
+              call closeProgram(-1,"Increase MAXSOLVENTS and recompile")
               goto 100
             endif
             
@@ -160,11 +159,10 @@ c           this is the first atom of a new solvent...
 
           iatm = iatm + 1
           if (iatm.gt.MAXSOLVENTATOMS) then
-            write(printstring,*) "Exceeded maximum number of atoms per solvent molecule (",
-     .                           MAXSOLVENTATOMS,")"
+            write(printstring,"(a,i4,a)")
+     .            "Exceeded maximum number of atoms per solvent molecule (",MAXSOLVENTATOMS,")"
             call printLine(FATAL,printstring)
-            write(printstring,*)"Increase MAXSOLVENTATOMS and recompile"
-            call closeProgram(-1,printstring)
+            call closeProgram(-1,"Increase MAXSOLVENTATOMS and recompile")
             goto 100
           endif
           
@@ -181,15 +179,15 @@ c     end of do-while loop
 9600  continue
 c     get here if we could not open the file
       lgth = lineLength(filename)
-      write(printstring,*) "FATAL - unable to load solvent PDB file ",filename(1:lgth)
+      write(printstring,"(2a)") "FATAL - unable to load solvent PDB file ",filename(1:lgth)
       call closeProgram(-1,printstring)
       return
 
 9700  continue
 c     got here if there was a problem reading a line
       lgth = lineLength(filename)
-      write(printstring,*) "WARNING - problem reading line ",linenum," of the solvent file ",
-     .     filename(1:lgth)
+      write(printstring,"(a,i4,2a)")
+     .      "WARNING - problem reading line ",linenum," of the solvent file ",filename(1:lgth)
       call printLine(WARNING,printstring)
       call printLine(WARNING,line)
       call printLine(WARNING,"Skipping the rest of the file!")
@@ -199,8 +197,8 @@ c     get here when hit end of the file
 9800  continue
 c     -------------------------------
 
-      write(printstring,*) "Have now loaded ",NSolvents," solvent molecules (",nsvn,
-     .                     " from this file)"
+      write(printstring,400) NSolvents,nsvn
+400   format("Have now loaded ",i8," solvent molecules (",i8," from this file)")
       call printLine(INFO,printstring)
 
       close(FILE)
@@ -248,7 +246,7 @@ c         modify the existing box dimensions - make sure that we use the largest
           enddo
         endif
 
-c       if the boundary is set to agree with the solvent then turn on periodic boundaries                
+c       if the boundary is set to agree with the solvent then turn on periodic boundaries
         if (boundary.eq.AGREESOLVENT) then
           call printLine(INFO,"Periodic boundaries have been turned on in agreement with solvent file")
           boundary = PERIODICBOUNDARIES

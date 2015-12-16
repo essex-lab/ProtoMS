@@ -91,7 +91,7 @@ c     (this slows things down, but is useful to allow debugging of Sire)
      .           OneOverScl14C,OneOverScl14LJ,thres,
      .             SIRE_COMPATIBILITY_MODE  
       common /SIMPARAMVALS2/ DeltaCoreCoul,DeltaCoreCoulL,SoftPower,SoftPowerInv,SoftPower2,SoftPowerInv6,
-     .                          DeltaCore,CoulSoftPower,LJSoftPower,GBSoftPower
+     .                          DeltaCore,CoulSoftPower,LJSoftPower,GBSoftPower,SoftType
       
       save /SIMPARAMVALS/
       save /SIMPARAMVALS2/

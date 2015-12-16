@@ -29,11 +29,10 @@ c     increment the number of variable geometries
       NMolTemplVar(itmpl) = NMolTemplVar(itmpl) + 1
       ivar = NMolTemplVar(itmpl)
       if (ivar.gt.MAXMOLTEMPLVAR) then
-        write(printstring,*) "Exceeded maximum number of template solute variations (",
-     .                        MAXMOLTEMPLVAR,")"
+        write(printstring,"(a,i8,a)")
+     .        "Exceeded maximum number of template solute variations (",MAXMOLTEMPLVAR,")"
         call printLine(FATAL,printstring)
-        write(printstring,*)"Increase MAXMOLTEMPVAR and recompile"
-        call closeProgram(-1,printstring)
+        call closeProgram(-1,"Increase MAXMOLTEMPVAR and recompile")
         NMolTemplVar(itmpl) = NMolTemplVar(itmpl) - 1
       endif
       
@@ -50,9 +49,10 @@ c     get the value of the geometry at lam=0 and lam=1
       ival1 = readDouble(words(6))
       
 c     are we looking at a bond/angle/dihedral?
+10    format(4a,2(a,f12.4))
       if (words(4).eq.'bond') then
-        write(printstring,*) "Variable bond for atom ",iatm,"-",ires," starting from ", 
-     .          ival0," going to ",ival1
+        write(printstring,10)
+     .        "Variable bond for atom ",iatm,"-",ires," starting from ",ival0," going to ",ival1
         call printLine(INFO,printstring)
         MolTemplVarTyp(itmpl,ivar) = BONDS
         MolTemplVarVal(itmpl,ivar,1) = ival0
@@ -60,8 +60,8 @@ c     are we looking at a bond/angle/dihedral?
       else if (words(4).eq.'angle') then
 c       get the smallest perturbation
         call getSmallestDelta(ival0,ival1)
-        write(printstring,*) "Variable angle for atom ",iatm,"-",ires," starting from ", 
-     .          ival0," going to ",ival1
+        write(printstring,10)
+     .        "Variable angle for atom ",iatm,"-",ires," starting from ",ival0," going to ",ival1
         call printLine(INFO,printstring)
         MolTemplVarTyp(itmpl,ivar) = ANGLES
         MolTemplVarVal(itmpl,ivar,1) = deg2Rad(ival0)
@@ -69,8 +69,8 @@ c       get the smallest perturbation
       else if (words(4).eq.'dihedral') then
 c       we need to ensure that the perturb over the smallest delta
         call getSmallestDelta(ival0,ival1)
-        write(printstring,*) "Variable dihedral for atom ",iatm,"-",ires," starting from ", 
-     .          ival0," going to ",ival1
+        write(printstring,10)
+     .        "Variable dihedral for atom ",iatm,"-",ires," starting from ",ival0," going to ",ival1
         call printLine(INFO,printstring)
         MolTemplVarTyp(itmpl,ivar) = DIHEDRALS
         MolTemplVarVal(itmpl,ivar,1) = deg2Rad(ival0)

@@ -514,8 +514,8 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     else :  
       frcbonds, frcangles, frcdihedrals = _readfrcmod ( frcmodfile )
 
-    angle_params = sim.ParameterSet (sim.standard_filename("gaff14.ff","parameter"), 'angle' )
-    dihedral_params = sim.ParameterSet ( sim.standard_filename("gaff14.ff","parameter"), 'dihedral' )
+    angle_params = sim.ParameterSet ('angle', sim.standard_filename("gaff14.ff","parameter") )
+    dihedral_params = sim.ParameterSet ( 'dihedral', sim.standard_filename("gaff14.ff","parameter") )
 
     with open ( sim.standard_filename("gaff.types","parameter") ) as f:
         at_params = [ line.split() for line in f ]
@@ -685,7 +685,7 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
         atypes = [ atoms[i].atype for i in angle ]
         try:
             k = angle_params.get_params ( atypes ).k
-        except IndexError:
+        except KeyError:
             #parameter not in gaff.ff try frcmod params
             try:
                 k = [ i for i in frcangles
@@ -716,7 +716,7 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
         missing = False
         try:
             dihedral_params.get_params ( atypes )
-        except IndexError:
+        except KeyError:
             # If not in gaff.ff then check frcmod
             try:
                 [ i for i in frcdihedrals

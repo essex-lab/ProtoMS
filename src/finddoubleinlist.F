@@ -1,4 +1,4 @@
-      integer function findDoubleInList(element,list,listlength,ind)
+      subroutine findDoubleInList(element,list,listlength,ind)
 c      implicit none
 
       include 'dimensions.inc'

@@ -196,9 +196,18 @@ c     Re-setting all running averages
       
       write(tempstr,"(1A,F6.3)")"t-",oldtem
       write(trefolder,"(3A,F6.3)")outfolder(1:lineLength(outfolder)),PATHSEP,"t-",temval(mytemperature)
-      if (oldtem.ge.100.0) write(tempstr,"(1A,F7.3)")"t-",oldtem
-      if (temval(mytemperature).ge.100.0) write(trefolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
+      if (oldtem.ge.1000.0) then
+        write(tempstr,"(1A,F8.3)")"t-",oldtem
+      else if (oldtem.ge.100.0) then
+        write (tempstr,"(1A,F7.3)")"t-",oldtem
+      endif
+      if (temval(mytemperature).ge.1000.0) then
+        write(trefolder,"(3A,F8.3)")outfolder(1:lineLength(outfolder)),
      .                                    PATHSEP,"t-",temval(mytemperature)
+      else if (temval(mytemperature).ge.100.0) then
+        write(trefolder,"(3A,F7.3)")outfolder(1:lineLength(outfolder)),
+     .                                    PATHSEP,"t-",temval(mytemperature)
+      endif
       if (doLambdaRE) write(lrefolder,"(3A,F5.3)")trefolder(1:lineLength(trefolder)),PATHSEP,"lam-",lambdaval(mylambda)
 
 
@@ -218,7 +227,11 @@ c     Replacing the old temperature for the new one in the file name.
             words(j) = words2(j)
           enddo
            write(words(nwords2-k),"(1A,F6.3)")"t-",temval(mytemperature)
-           if (temval(mytemperature).ge.100.0) write(words(nwords2-k),"(1A,F7.3)")"t-",temval(mytemperature)
+           if (temval(mytemperature).ge.1000.0) then
+             write(words(nwords2-k),"(1A,F8.3)")"t-",temval(mytemperature)
+           else if (temval(mytemperature).ge.100.0) then 
+             write(words(nwords2-k),"(1A,F7.3)")"t-",temval(mytemperature)
+           endif
            do j=1,k
              words(nwords2-(j-1)) = words2(nwords2-(j-1))
            enddo

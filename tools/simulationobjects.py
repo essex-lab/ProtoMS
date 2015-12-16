@@ -244,6 +244,7 @@ class PDBFile:
               index = int(line[6:11].strip())
               atname = line[12:16].strip()
               resnum = int(line[22:26].strip())
+
               if resnum != prevres :
                 nres = nres + 1
               prevres = resnum
@@ -313,7 +314,12 @@ class PDBFile:
                     for atom in self.solvents[sol].atoms:
                         if renumber:
                             atom.resindex = i
-                        s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                        if atom.resindex < 10000:
+                            s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                        elif atom.resindex >= 10000 and atom.resindex < 100000:
+                            s = "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                        else:
+                            s = "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
                         f.write ( s )
                     if i < len(l) : f.write ( "TER \n" )     
     def getCenter(self):
@@ -591,6 +597,50 @@ class Parameter:
         self.k = float ( k )
         self.b0 = float ( b0 )
 
+class DihParameter:
+    """Class to hold a dihedral parameter from a ProtoMS template file
+    
+    A separate class is needed to handle dihedral parameters due to their
+    composition of multiple terms.
+
+    Attributes
+    ----------
+    index : integer
+      the serial number of the parameter
+    ats : list of string
+      the name of the atoms associated with the parameter
+    b0 : list of DihTerm
+      the terms that make up this dihedral parameter
+    """
+    def __init__ ( self, index, ats, terms ):
+        self.index = int ( index )
+        self.ats = ats
+        self.terms = terms
+
+class DihTerm:
+    """Class to hold individual terms making up a Dihedral
+    
+    Attributes
+    ----------
+    index : integer
+      the serial number of the parameter
+    k1 : float
+      The term barrier height 
+    k2 : float
+      OPLS inversion constant (should be either 0.0 or 1.0 for AMBER ffs)
+    k3 : float
+      The term periodicity
+    k4 : float
+      The term phase
+    """
+
+    def __init__ ( self, index, k1, k2, k3, k4 ):
+        self.index = int ( index )
+        self.k1, self.k2, self.k3, self.k4 = map ( float, ( k1, k2, k3, k4 ) )
+
+    def __repr__ ( self ):
+        return "<DihTerm instance: index = %d, k1 = %.3f, k2 = %.3f, k3 = %.3f, k4 = %.3f>" % ( self.index, self.k1, self.k2, self.k3, self.k4 )
+
 class ParameterSet:
     """
     Class to hold a collection of parameters
@@ -602,38 +652,113 @@ class ParameterSet:
     params : list of Parameter objects
       the parameters in this collection
     """
-    def __init__ ( self, param_file, ptype ):
+    formats = { 'bond' : { 'par' : ( str, int, float, float ),
+                           'atm' : ( str, str, str, int ) },
+                'angle' : { 'par' : ( str, int, float, float ),
+                            'atm' : ( str, str, str, str, int ) },
+                'dihedral' : { 'par' : ( str, int, int, int, int, int, int ),
+                               'atm' : ( str, str, str, str, str, int ),
+                               'term' : ( str, int, float, float, float, float ) },
+                'clj': { 'par' : ( str, int, str, int, float, float, float ) } }
+
+    def __init__ ( self, ptype, param_file = None ):
+
         self.file_name = param_file
-        
-        assert ptype in ['bond','angle','dihedral']
-        pars = []
-        atms = []
+        assert ptype in ['bond','angle','dihedral','clj',]
+        self.ptype = ptype
+        self.pars = []
+        self.atms = []
+        self.terms = {}
+        self.params = {}
+
+        if param_file != None:
+            self.read ( param_file )
+
+    def read ( self, param_file ):
+        self.file_name = param_file
+
         with open ( param_file ) as f:
-            while not f.next().startswith ( 'mode %s' % ptype ):
+            #wind through file until we reach the section we want
+            while not f.next().startswith ( 'mode %s' % self.ptype ):
                 pass
             
             for line in f:
                 if line.startswith ( "par" ):
-                    pars += [ line ]
+                    self.pars += [ tuple ( fmt ( i )
+                                           for fmt, i in zip ( self.formats[self.ptype]['par'], line.split() ) ) ]
                 elif line.startswith ( "atm" ):
-                    atms += [ line ]
+                    self.atms += [ tuple ( fmt ( i )
+                                           for fmt, i in zip ( self.formats[self.ptype]['atm'], line.split() ) ) ]
+                elif line.startswith ( "term" ):
+                    cols = tuple ( fmt ( i )
+                                   for fmt, i in zip ( self.formats[self.ptype]['term'], line.split() ) )
+                    self.terms[ cols[1] ] = DihTerm ( *cols[1:] )
                 elif line.startswith ( "mode" ):
+                    #only read until the next mode section
                     break
-        
-        self.params = []
-        for par, at in zip ( pars, atms ):
-            par_cols, at_cols = par.split(), at.split()
-            if par_cols[1] != at_cols[-1]:
-                raise ValueError ( "No matching values in gaff parameter file" )
-            self.params += [ Parameter ( par_cols[1], at_cols[1:-1], par_cols[2], par_cols[3] ) ]
 
+        #combine information from atm and par lines to create Parameter objects
+        for at_cols in self.atms:
+            # at_cols = at.split()
+            par_cols = self.get_par_by_index ( at_cols[-1] )
+            if self.ptype == 'dihedral':
+                pterms = [ self.terms[i] for i in par_cols[2:7] ]
+                ats = at_cols[1:-1]
+                p = DihParameter ( par_cols[1], ats, pterms )
+            else:
+                ats = at_cols[1:-1]
+                p = Parameter ( par_cols[1], ats, par_cols[2], par_cols[3] )
+            self.params[ tuple ( ats ) ] = p
+            self.params[ tuple ( ats [::-1]) ] = p
+            
+        if self.ptype == 'clj':
+            for par in self.pars:
+                cols = par.split()
+                self.params[int(cols[1])] = cols[2]
+
+    def get_par_by_index ( self, ind ):
+        """For an atm line index find matching the par line"""
+        for par in self.pars:
+            if par[1] == ind:
+                return par
+        raise ValueError ( "No matching values in gaff paramater file. Parameter file malformed." )
+                
+    def __getitem__ ( self, ats ):
+        try:
+            ats = tuple ( ats )
+        except TypeError:
+            raise TypeError ( 'Must provide sequence specifying atom types, got %s instead' % type ( ats ) )
+            
+        try:
+            return self.params[ats]
+        except KeyError:
+            try:
+                return self.params[ats[::-1]]
+            except KeyError:
+                pass
+
+        if self.ptype == 'dihedral':
+            try:
+                return self.params[ ( 'X', ) + ats[1:3]  + ( 'X', ) ]
+            except KeyError:
+                pass
+
+            try:
+              # print ('X',) + tuple ( 'N*' if i[0] == 'N' else i for i in ats[1:3]  ) + ('X',)
+              return self.params[('X',) + tuple ( 'N*' if i[0] == 'N' else i for i in ats[1:3]  ) + ('X',)]
+            except KeyError:
+              pass
+              
+
+        raise KeyError ( 'Unable to find parameter set for %s' % '-'.join ( ats ) )
+            
     def get_params ( self, ats ):
         """
-        Find parameters for specific atoms
+        Find parameter sets for specific atoms. 
         
         Parameters
         ----------
-        ats : list of string
+        ats : sequence of strings
           the query atoms
 
         Returns
@@ -641,12 +766,8 @@ class ParameterSet:
         Parameter object
           the found parameter
         """
-        try:
-            return [ i for i in self.params 
-                     if i.ats == ats or i.ats == ats[::-1] ][0]
-        except IndexError:
-            return [ i for i in self.params 
-                     if i.ats[1:3] in [ ats[1:3], ats[1:3:-1] ] ][0]
+        return self.__getitem__ ( ats )
+
 #--------------------------------------------------
 # Classes to read and store ProtoMS restart files
 #--------------------------------------------------
@@ -864,24 +985,24 @@ class SnapshotResults :
     
     # Extract various energies and properties
     line = fileobj.readline()
-    line = fileobj.readline()
+    line = fileobj.readline().strip()
     while line[0] != "#" :
-      if line.startswith(" Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
-      if line.startswith(" Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
-      if line.startswith(" Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
-      if line.startswith(" Global replica") : self.globalreplica = int(line.split("=")[1].strip())
-      if line.startswith(" Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Effective temperature") : self.efftemperature = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
-      if line.startswith(" Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
-      if line.startswith(" Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
-      if line.startswith(" Molecules in grid") : self.solventson = int(line.split("=")[1].strip())
-      if line.startswith(" Pressure") : self.pressure = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Volume") : self.volume = float(line.split("=")[1].strip().split()[0])
-      if line.startswith(" Random number seed") : self.seed = int(line.split("=")[1].strip())
+      if line.startswith("Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
+      if line.startswith("Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
+      if line.startswith("Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
+      if line.startswith("Global replica") : self.globalreplica = int(line.split("=")[1].strip())
+      if line.startswith("Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Effective temperature") : self.efftemperature = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
+      if line.startswith("Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
+      if line.startswith("Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
+      if line.startswith("Molecules in grid") : self.solventson = int(line.split("=")[1].strip())
+      if line.startswith("Pressure") : self.pressure = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Volume") : self.volume = float(line.split("=")[1].strip().split()[0])
+      if line.startswith("Random number seed") : self.seed = int(line.split("=")[1].strip())
       if line.startswith("Backwards Free Energy") : self.backfe = float(line.split("=")[1].strip().split()[0])
       if line.startswith("Forwards  Free Energy") : self.forwfe = float(line.split("=")[1].strip().split()[0])
-      line = fileobj.readline()
+      line = fileobj.readline().strip()
 
     # Look for the total energy
     while not line.startswith("Total Energy ") : line = fileobj.readline()
@@ -892,7 +1013,7 @@ class SnapshotResults :
     self.internal_energies = {}
     self.interaction_energies = {}
     while line :
-      if line.startswith("Internal ") or  line.startswith(" Internal ") :
+      if line.startswith("Internal "):
         cols = line.strip().split()  
         if cols[4] == "solute" :
           key = cols[6]
@@ -907,7 +1028,7 @@ class SnapshotResults :
           line=fileobj.readline()
       elif line.startswith("Average extra energies") :
         pass
-      elif line.startswith(" Average inter-molecular interaction energies") :
+      elif line.startswith("Average inter-molecular interaction energies") :
         pass
       elif line.startswith("Average total extra energy") :
         line = fileobj.readline() # Dummy line
@@ -952,20 +1073,20 @@ class SnapshotResults :
         self.gradient = float(cols[1])
         if len(cols) > 2 :
           self.agradient = float(cols[2])
-      elif line.startswith(" Individual theta values"):
+      elif line.startswith("Individual theta values"):
         self.thetavals = [None]*self.ngcsolutes
         line = fileobj.readline() # Dummy line
         for i in range(self.ngcsolutes) :
           self.thetavals[i] = (fileobj.readline().strip().split()[2])
-      elif line.startswith(" Individual theta solute values"):
+      elif line.startswith("Individual theta solute values"):
         self.nthetasolutes = int(line[36:39])
         self.thetasolvals = [None]*self.nthetasolutes
         line = fileobj.readline() # Dummy line
         for i in range(self.nthetasolutes) :
           self.thetasolvals[i] = (fileobj.readline().strip().split()[2])
         
-      line = fileobj.readline()
-      if line.startswith("  -") or line.startswith("RESULTS FILE") : break
+      line = fileobj.readline().strip()
+      if line.startswith("-") or line.startswith("RESULTS FILE") : break
     # Sum of contributions for the different internal and interaction energies
     for attr in ["internal_energies","interaction_energies"] :
       if not hasattr(self,attr) : continue

@@ -79,7 +79,7 @@ c     zero the number of parameters read
       
 c     open the file      
 
-      write(printstring,*) "Reading parameter file ",filename(1:ilgth)
+      write(printstring,"(2a)") "Reading parameter file ",filename(1:ilgth)
       call prettyLine(INFO,printstring)
             
       open(unit=FILE,file=filename,status='old',err=9600)
@@ -155,7 +155,7 @@ c             read in the overrides
 c             read in forcefield information
               call readInfo(FILE,line,changemode,endfile)            
             else
-              write(printstring,*) "Unknown mode requested in parameter file: ",line
+              write(printstring,"(2a)") "Unknown mode requested in parameter file: ",line
               call printLine(WARNING,line)
             endif                        
           else
@@ -194,14 +194,14 @@ c     write some statistics
 
 c     get here if there was a problem while reading the file
 9700  continue
-      write(printstring,*) "There was a problem reading the parameter file ",filename
+      write(printstring,"(2a)") "There was a problem reading the parameter file ",filename
       call printLine(WARNING,printstring)
       
       return
       
 c     get here if there was a problem while opening the file
 9600  continue
-      write(printstring,*) "FATAL - There was a problem opening the parameter file ",filename(1:ilgth)
+      write(printstring,"(2a)") "FATAL - There was a problem opening the parameter file ",filename(1:ilgth)
       call closeProgram(-1,printstring)
       
       return

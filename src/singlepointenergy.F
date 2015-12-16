@@ -14,16 +14,17 @@ c###########################################################
 
       double precision tempval,nrgb,nrgf,inrgb,inrgf
       double precision totalEnergy,extraEnergy
-      real etime, elapsed(2), total
+      double precision tstart,tend,telapsed
 
 c     need to set all moved so that the total extra energy is calculated correctly
       call setAllMoved      
       
-      total = etime(elapsed)
+      call cpu_time(tstart)
 
       tempval = totalEnergy(DONTCARE,nrgb,nrgf) + extraEnergy(DONTCARE,inrgb,inrgf)
  
-      total = etime(elapsed) - total  
+      call cpu_time(tend)
+      telapsed = tend - tstart
  
       nrgb = nrgb + inrgb
       nrgf = nrgf + inrgf
@@ -35,7 +36,7 @@ c     can now clear the move list
       call printLine(INFO,printstring)
       call printLine(SPENERGY,printstring)
 
-      write(printstring,*) "Energy calculation took ",total," s"
+      write(printstring,"('Energy calculation took ',EN8.1E1,' s')") telapsed
       call printLine(INFO,printstring)
 
       return

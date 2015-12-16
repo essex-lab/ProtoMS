@@ -14,7 +14,7 @@
 
       logical getLogical,printdummies,showhidden,printstd,append,newfile,getoption
       double precision printsolvent,getDouble,lb,lf,lambda
-      integer lgth,j,iprnt,ilgth,lineLength,openFILE,getint,i
+      integer lgth,j,iprnt,ilgth,lineLength,openFILE,getint,i,ios,filehandle
       integer numb
       character*64 line,tempstring
       character*600 tempname,cmd
@@ -57,7 +57,7 @@ c           scan the words to see if the file or solvent have been specified
                 if (words(j)(1:4).eq.'file') then
 c                 change the pdb file! - connect the PDB stream to a new filehandle
                   if (numb.le.1) then
-                    write(printstring,*) "Redirecting PDB to ",words(j)(6:lgth)
+                    write(printstring,"(2a)") "Redirecting PDB to ",words(j)(6:lgth)
                     call printLine(INFO,printstring)
                   endif
                   streamhandle(PDB) = openFILE(words(j)(6:lgth))
@@ -179,7 +179,7 @@ c           'restart read|write filename'
               
               ilgth = lineLength(words(3))
               if (numb.le.1) then
-                write(printstring,*) "Reading restart file from file '",words(3)(1:ilgth),"'"
+                write(printstring,"(3a)") "Reading restart file from file '",words(3)(1:ilgth),"'"
                 call prettyLine(INFO,printstring)
               endif
 c                    do i=1,NGCSolutes
@@ -192,15 +192,15 @@ c                   enddo
               if (nwords.ge.3) then
 c               redirect the stream to 'filename'
                 if (numb.gt.1) then
-                  do i=1,nOpenFiles
-                    if (i.eq.(streamhandle(RESTART)-40)) then
-c                      write(6,*) openfiles
-                      tempname=openfiles(i)(1:lineLength(openfiles(i)))//".prev"
-                      write(cmd,"(4A)")"mv ",openfiles(i)(1:lineLength(openfiles(i)))," ",tempname(1:lineLength(tempname))
-                      call system(cmd)
-                      fileopened(i)=.false. 
-                    endif
-                  enddo         
+                  filehandle = streamhandle(RESTART)-40
+                  if ((filehandle.ge.1).and.(filehandle.le.nOpenFiles)) then
+                    close(unit=streamhandle(RESTART),iostat=ios)
+                    if (ios.ne.0) call printLine(WARNING,"Restart file did not close correctly")
+                    fileopened(filehandle)=.false.
+                    tempname=trim(openfiles(filehandle))//".prev"
+                    write(cmd,"('mv ',A,' ',A)") trim(openfiles(filehandle)),trim(tempname)
+                    call system(cmd)
+                  endif
                 endif
                 ilgth = lineLength(words(3))
                 streamhandle(RESTART) = openFile(words(3)(1:ilgth))

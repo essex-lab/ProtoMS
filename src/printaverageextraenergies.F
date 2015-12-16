@@ -28,7 +28,7 @@ c     components are printed out
 c       print out the average solvent cap energies
         write(printstring,20) avgSvnCapEnergy,stdDev(avgSvnCapEnergy2,avgSvnCapEnergy)
         call printLine(RESULTS,printstring)
-20      format("Average solvent cap energy ",g20.10,' ( ',f8.3,' ) ')        
+20      format("Average solvent cap energy ",f15.4,' ( ',f8.3,' ) ')        
       endif
 
       if (NHarmonicRestraints.gt.0) then
@@ -134,8 +134,8 @@ c       print out the average Generalised Born energies
 c
 c
 c############################################     
-25      format(a8,1x,g20.10,' ( ',f6.3,' ) | ',g20.10,' ( ',f6.3,' ) ',g20.10,' ( ',f6.3,' )')            
-26      format("DIFF     ",34x,g20.10,12x,g20.10)
+25      format(a8,1x,f15.4,' ( ',f8.3,' ) | ',f15.4,' ( ',f8.3,' ) ',f15.4,' ( ',f8.3,' )')            
+26      format("DIFF     ",31x,f15.4,12x,f15.4)
 c     if we have printed something above, then print out the total
 c     extra energy
       if (printxtra) then
@@ -144,11 +144,11 @@ c     extra energy
      .                        avgExtraEnergyF,stdDev(avgExtraEnergyF2,avgExtraEnergyF),
      .                        avgExtraEnergyB,stdDev(avgExtraEnergyB2,avgExtraEnergyB)
         call printLine(RESULTS,printstring)
-10      format("EXTRA ",g20.10,' ( ',f8.3,' ) | ',g20.10,' ( ',f8.3,' ) ',g20.10,' ( ',f8.3,' )')
+10      format("EXTRA ",f15.4,' ( ',f8.3,' ) | ',f15.4,' ( ',f8.3,' ) ',f15.4,' ( ',f8.3,' )')
 
         write(printstring,11) avgExtraEnergyF-avgExtraEnergy,avgExtraEnergyB-avgExtraEnergy
         call printLine(RESULTS,printstring)
-11      format("DIFF  ",36x,g20.10,14x,g20.10)
+11      format("DIFF  ",31x,f15.4,14x,f15.4)
       endif
       
       return

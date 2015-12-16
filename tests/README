@@ -1,0 +1,53 @@
+==============================================
+ProtoMS test suite, code samples and utilities
+==============================================
+
+Copyright and license
+=====================
+
+Copyright (c) 2015, The University of Edinburgh,
+All rights reserved.
+
+This program is distributed under the GNU GPL License
+
+See License.txt for details.
+
+Third-party code
+================
+
+This directory contains third-party code with its own copyright and licensing:
+
+Run below command when python installation dependencies are missing:
+
+	pip install -r requirements.txt
+
+
+Setting environment variables
+=============================
+
+Set the following environment variables before running protoms.py setup, protoms3 for setting up simulations and running the test-suite:
+
+export PROTOMSHOME=$PATH:/full/path/to/your/protoms-directory
+export PYTHONPATH=$PYTHONPATH:/full/path/to/your/protoms-directory-containing-tests
+
+Running tests
+=============
+
+The ProtoMS test scripts run under nose or unittest or CTest. 
+
+In order to run the tests on ProtoMS scripts under the nose framework, type:
+
+        nosetests tests/<test_folder>/<test_script.py>  
+
+To run the tests using unittest, type:
+
+        python -m unittest discover tests/<test_folder>/<test_script.py>
+
+
+To run all the tests using CTest, type in the build directory which has test configuration file:
+
+        ctest
+
+        OR
+
+        make test

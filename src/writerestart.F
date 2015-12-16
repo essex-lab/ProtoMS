@@ -180,7 +180,7 @@ c       now write the coordinates of all of the GC-solutes
           call printLine(RESTART,printstring)
 
           write(printstring,99) thetaparam(i)
-99        format('Theta = ',g20.8)
+99        format('Theta = ',f12.8)
           call printLine(RESTART,printstring)
 
           write(printstring,41) NGCSAtoms(i)

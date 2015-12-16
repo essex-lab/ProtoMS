@@ -27,7 +27,14 @@
       ngcladders = 0
       njawsladders = 0
 
-      if (ntasks.lt.2) return
+      if (ntasks.lt.2.and.(getoption('temperaturere').or.getOption('lambdare')
+     .     .or.getoption('multigcmc').or.getoption('multijaws2') ) ) then
+         call printLine(FATAL,"Trying to run replica exchange/multigcmc/multijaws2 simulation with only")
+         call printLine(FATAL,"one process. You may have forgotten to use mpirun. If you only want a single")
+         call printLine(FATAL,"lambda/temp/B/bias use the non parallel keyword equivalents in the .cmd file.")
+
+         call closeProgram(100,"")
+      endif
 
       if (getoption('temperaturere')) then
 c       Read in frequency and number of temperatures
@@ -35,6 +42,8 @@ c       Read in frequency and number of temperatures
         ntemperatures = nwords - 1
         do i=2,nwords
           temval(i-1) = getDouble(words(i),25.0)
+          if ((temval(i-1).lt.0).or.(temval(i-1).gt.9999).and.(myid.eq.0)) 
+     &   call closeProgram(-1,"ProtoMS exiting as a temperature set with temperaturere is less than 0 or larger than 9999 ")
 c          pt_beta_t(1,i-1) = dble(1.0) / (GASR*temval(i-1))
         enddo
         if (ntasks.lt.ntemperatures) then

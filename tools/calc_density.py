@@ -270,7 +270,7 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Program to discretize atoms on a 3D grid",)
   parser.add_argument('-f','--files',nargs="+",help="the input PDB-files")
   parser.add_argument('-o','--out',help="the name of the output grid-file in DX-format, default='grid.dx'",default="grid.dx")
-  parser.add_argument('-r','--residue',help="the name of the residue to extract, default='wat'",default="wat")
+  parser.add_argument('-r','--residue',help="the name of the residue to extract, default='wa1'",default="wa1")
   parser.add_argument('-a','--atom',help="the name of the atom to extract, default='o00'",default="o00")
   parser.add_argument('-p','--padding',type=float,help="the amount to increase the minimum box in each direction, default=2 A",default=2.0)
   parser.add_argument('-s','--spacing',type=float,help="the grid resolution, default=0.5 A",default=0.5)

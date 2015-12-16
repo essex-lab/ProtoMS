@@ -317,7 +317,8 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
                     solutes=["solute.pdb"],
                     solvent="water.pdb",
                     templates=["solute.tem"],
-                    outfolder=None) :
+                    outfolder=None,
+                    ranseed=None) :
     """
     Parameters
     ----------
@@ -334,9 +335,9 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     """
     
     ProtoMSSimulation.__init__(self)
-    self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber99.ff"))
+    self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber14SB.ff"))
     self.setForceField(os.path.join("$PROTOMSHOME","parameter","solvents.ff"))
-    self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber99-residues.ff"))
+    self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber14SB-residues.ff"))
     self.setForceField(os.path.join("$PROTOMSHOME","parameter","gaff14.ff"))
     if templates is not None and templates :
       for tem in templates :
@@ -364,9 +365,12 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     self.setParameter("cutoff",10.0)
     self.setParameter("feather",0.5)
     self.setParameter("temperature",25.0)
-    r = random.randrange(110000,11000000)
-    if r % 2 == 0 : r = r + -1
-    self.setParameter("ranseed",r)
+    if ranseed is None:				
+      r = random.randrange(110000,11000000)
+      if r % 2 == 0 : r = r + -1
+      self.setParameter("ranseed",r)
+    else:
+      self.setParameter("ranseed",ranseed)
     if not solvent is None :
       self.setParameter("boundary","solvent")
       if self.periodic  :
@@ -390,6 +394,7 @@ class Equilibration(ProteinLigandSimulation) :
                     solvent="water.pdb",
                     templates=["solute.tem"],
                     outfolder="",
+                    ranseed=None,
                     nsteps=1E5,
                     pdbfile="equilibrated.pdb") :
     """
@@ -410,7 +415,7 @@ class Equilibration(ProteinLigandSimulation) :
     pdbfile  : string, optional
       name of the filename to save the equilibrated system to
     """                
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
 
     #moves = assignMoveProbabilities(protein is not None,solutes,solvent is not None,self.periodic)
     moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
@@ -428,6 +433,7 @@ class Sampling(ProteinLigandSimulation) :
                     solvent="water.pdb",
                     templates=["solute.tem"],
                     outfolder="",
+                    ranseed=None,
                     nequil=5E6,
                     nprod=40E6,
                     dumpfreq=1E5,
@@ -454,7 +460,7 @@ class Sampling(ProteinLigandSimulation) :
     outprefix  : string, optional
       the prefix for all output files
     """                 
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
 
     self.setDump("results write results",dumpfreq)
     self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
@@ -480,6 +486,7 @@ class DualTopology(ProteinLigandSimulation) :
                     nequil=5E6,
                     nprod=40E6,
                     dumpfreq=1E5,
+                    ranseed=None,
                     lambdaval=None,
                     outfolder="out",
                     restrained=[]) :  
@@ -513,7 +520,7 @@ class DualTopology(ProteinLigandSimulation) :
       less than two solutes given or no lambda values given
     """      
     if len(outfolder) == 0 : outfolder = "out"          
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
 
     if len(solutes) < 2 and restrained is [] :
       raise simulationobjects.SetupError("Cannot do dual topology with less than 2 solutes")
@@ -569,6 +576,7 @@ class SingleTopology(ProteinLigandSimulation) :
                     nprod=40E6,
                     dumpfreq=1E5,
                     lambdaval=None,
+                    ranseed=None,
                     outfolder="out",
                     restrained=[]) :  
     """
@@ -601,7 +609,7 @@ class SingleTopology(ProteinLigandSimulation) :
       no lambda values given
     """      
     if len(outfolder) == 0 : outfolder = "out"          
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if lambdaval is None or len(lambdaval) < 2 :
       raise simulationobjects.SetupError("Must give at least two lambda values")
@@ -664,6 +672,8 @@ class GCMC(ProteinLigandSimulation) :
                     nprod=40E6,
                     dumpfreq=1E5,
                     adamval=None,
+                    ranseed=None,
+                    watmodel="tip4p",
                     outfolder="out_gcmc") :  
     """
     Parameters
@@ -700,7 +710,7 @@ class GCMC(ProteinLigandSimulation) :
       no Adam values givens
     """      
     #if len(outfolder) == 0 : outfolder = "out_gcmc"
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if adamval is None :
       raise simulationobjects.SetupError("Must give at least one Adam value")
@@ -713,7 +723,10 @@ class GCMC(ProteinLigandSimulation) :
  
     self.setParameter("#"," GCMC specific parameters")
     self.setParameter("gcmc","0")
-    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
+    if watmodel == "tip4p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip4p.tem"))
+    elif watmodel == "tip3p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip3p.tem"))
     self.setParameter("grand1",gcmcwater)
     #self.setParameter("outfolder",outfolder)
     if isinstance(adamval,float) or isinstance(adamval,int):
@@ -733,6 +746,7 @@ class GCMC(ProteinLigandSimulation) :
     self.setDump("averages reset",dumpfreq)
     
     moves = _assignMoveProbabilities(protein,solutes,solvent,"gcmc",self.periodic)
+    self.setChunk("equilibrate %d solvent=0 protein=0 solute=0 insertion=333 deletion=333 gcsolute=333" % nequil)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
@@ -749,10 +763,12 @@ class Jaws1(ProteinLigandSimulation) :
                     solvent="water.pdb",
                     templates=[],
                     outfolder="",
+                    ranseed=None,
                     jawswater="jaws_water.pdb",
                     jawsbox=None,   
                     nequil=5E6,
                     nprod=40E6,
+                    watmodel="tip4p",
                     dumpfreq=1E5) :  
     """
     Parameters
@@ -785,7 +801,7 @@ class Jaws1(ProteinLigandSimulation) :
       no box dimensions found
       no JAWS water given
     """      
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if protein is None :
       raise simulationobjects.SetupError("Cannot setup GCMC without protein")
@@ -795,7 +811,10 @@ class Jaws1(ProteinLigandSimulation) :
  
     self.setParameter("#"," JAWS-1 specific parameters")
     self.setParameter("jaws1","0")
-    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
+    if watmodel == "tip4p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip4p.tem"))
+    elif watmodel == "tip3p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip3p.tem"))
     self.setParameter("grand1",jawswater)
     _setbox(self,jawswater,jawsbox)
     self.setParameter("#"," End of JAWS specific parameters")
@@ -822,10 +841,12 @@ class Jaws2(ProteinLigandSimulation) :
                     solvent="water.pdb",
                     templates=[],
                     outfolder="",
+                    ranseed=None,
                     jawswater="jaws_water.pdb",
                     jbias=6.5,
                     nequil=5E6,
                     nprod=40E6,
+                    watmodel="tip4p",
                     dumpfreq=1E5) :  
     """
     Parameters
@@ -860,7 +881,7 @@ class Jaws2(ProteinLigandSimulation) :
     """      
     solvent,jawssolvent = solvent.split()
     if len(outfolder) == 0 : outfolder = "out_jaws2"
-    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder)
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if protein is None :
       raise simulationobjects.SetupError("Cannot setup GCMC without protein")
@@ -876,7 +897,10 @@ class Jaws2(ProteinLigandSimulation) :
       self.setParameter("jbias","%.3f"%jbias[0])
     else :
       self.setParameter("multijaws2"," ".join("%.3f"%j for j in jbias))
-    self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_wat.tem"))
+    if watmodel == "tip4p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip4p.tem"))
+    elif watmodel == "tip3p" :
+      self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip3p.tem"))
     self.setSolvent(2,jawssolvent)
     self.setParameter("grand1",jawswater)
     watobj = simulationobjects.PDBFile(filename=jawswater)
@@ -896,7 +920,7 @@ class Jaws2(ProteinLigandSimulation) :
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
-def generate_input(protein,ligands,templates,protein_water,ligand_water,settings) :
+def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,settings) :
 
   """
   Generates ProtoMS command files
@@ -945,13 +969,14 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
   logger.debug("This will make an input file for ProtoMS")
   
   free_cmd = bnd_cmd = gas_cmd = None
-  
+  ranseed=settings.ranseed
+
   if settings.simulation == "equilibration" :
 
     if protein is not None : # Setup a protein simulation
       bnd_cmd = Equilibration(protein=protein,solutes=ligands, 
                               templates=templates,solvent=protein_water,outfolder=settings.outfolder+"_bnd",
-                              nsteps=settings.nequil,pdbfile="equil_bnd.pdb")
+                              nsteps=settings.nequil,pdbfile="equil_bnd.pdb",ranseed=ranseed)
     elif ligands is not None :      
       if settings.dovacuum : 
         solvent = None
@@ -963,7 +988,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       free_cmd = Equilibration(protein=None,solutes=ligands[:min(len(ligands),2)], 
                               templates=templates,
                               solvent=solvent,outfolder=settings.outfolder+"_"+prestr,
-                              nsteps=settings.nequil,pdbfile="equil_%s.pdb"%prestr)
+                              nsteps=settings.nequil,pdbfile="equil_%s.pdb"%prestr,ranseed=ranseed)
       if settings.dovacuum :
         gas_cmd = free_cmd
         free_cmd = None
@@ -974,7 +999,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
                          templates=templates,solvent=protein_water,
                          outprefix="bnd_",
                          nequil=settings.nequil,outfolder=settings.outfolder+"_bnd",
-                         nprod=settings.nprod,dumpfreq=settings.dumpfreq)
+                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed,)
     elif ligands is not None :      
       if settings.dovacuum : 
         solvent = None
@@ -987,7 +1012,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
                          templates=templates,
                          solvent=solvent,outprefix=prestr+"_",
                          nequil=settings.nequil,outfolder=settings.outfolder+"_"+prestr,
-                         nprod=settings.nprod,dumpfreq=settings.dumpfreq)
+                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed)
       if settings.dovacuum :
         gas_cmd = free_cmd
         free_cmd = None
@@ -1021,18 +1046,18 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
     if settings.simulation == "singletopology"  :
       gas_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                               templates=templates,solvent=None,
-                              lambdaval=lambdavals,nequil=settings.nequil,
+                              lambdaval=lambdavals,nequil=settings.nequil,ranseed=ranseed,
                               nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_gas",restrained=rest_solutes)
 
     free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
-                            lambdaval=lambdavals,nequil=settings.nequil,
+                            lambdaval=lambdavals,nequil=settings.nequil,ranseed=ranseed,
                             nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_free",restrained=rest_solutes)
       
     if protein is not None :
       bnd_cmd = cmdcls[settings.simulation](protein=protein,solutes=ligands, 
                              templates=templates,solvent=protein_water,
-                             lambdaval=lambdavals,nequil=settings.nequil,
+                             lambdaval=lambdavals,nequil=settings.nequil,ranseed=ranseed,
                              nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_bnd",restrained=rest_solutes)
 
   elif settings.simulation == "gcmc" :
@@ -1043,16 +1068,29 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
       else :
         outfolder = "out_gcmc"
 
+      if settings.adamsrange is not None:
+        if len(settings.adamsrange) != 2:
+          msg = "If using --adamsrange, please specify exactly two Adams values from which to form a range of integers"
+          logger.error(msg)
+          raise simulationobjects.SetupError(msg)
+        else:
+          adams1 = int(settings.adamsrange[0])
+          adams2 = int(settings.adamsrange[1])
+          if adams2-adams1 > 0 : 
+            settings.adams = range(adams1,adams2+1)
+          else: 
+            settings.adams = range(adams1,adams2-1,-1)
+
       bnd_cmd = GCMC(protein=protein,solutes=ligands, 
                      templates=templates,solvent=protein_water,gcmcwater=settings.gcmcwater,
                      adamval=settings.adams,nequil=settings.nequil,gcmcbox=settings.gcmcbox,
-                     nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder)    
+                     nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder,ranseed=ranseed,watmodel=settings.watmodel)    
 
   elif settings.simulation == "jaws1" :
   
       bnd_cmd = Jaws1(protein=protein,solutes=ligands, 
                      templates=templates,solvent=protein_water,jawswater=settings.gcmcwater,
-                     nequil=settings.nequil,jawsbox=settings.gcmcbox,
+                     nequil=settings.nequil,jawsbox=settings.gcmcbox,ranseed=ranseed,
                      nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=settings.outfolder) 
 
   elif settings.simulation == "jaws2" :
@@ -1064,7 +1102,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,settings
 
       bnd_cmd = Jaws2(protein=protein,solutes=ligands, 
                      templates=templates,solvent=protein_water,jawswater=settings.gcmcwater,
-                     nequil=settings.nequil,jbias=settings.jawsbias,
+                     nequil=settings.nequil,jbias=settings.jawsbias,ranseed=ranseed,
                      nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder) 
                      
   return free_cmd,bnd_cmd,gas_cmd  
@@ -1086,22 +1124,30 @@ if __name__ == "__main__":
   parser.add_argument('--outfolder',help="the ProtoMS output folder",default="out")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
+  parser.add_argument('--adamsrange',nargs="+",type=int,help="the upper and lower Adam/B values for the GCMC, e.g. -1 -16 for all integers between and including -1 and -16",default=None)
   parser.add_argument('--jawsbias',nargs="+",type=float,help="the bias for the JAWS-2",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
+  parser.add_argument('--watmodel',help="the name of the water model. Default = tip4p",choices=[ 'tip3p', 'tip4p'],default='tip4p')
   parser.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   parser.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
   parser.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
+  parser.add_argument('--ranseed',help="the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None",default=None)
   args = parser.parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("generate_input_py.log")
 
-  free_cmd,bnd_cmd,gas_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args) 
+  free_cmd,bnd_cmd,gas_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args.ranseed,args) 
   if free_cmd is not None : 
     free_cmd.writeCommandFile(args.out+"_free.cmd")
   if bnd_cmd is not None : 
-    bnd_cmd.writeCommandFile(args.out+"_bnd.cmd")    
+    if args.simulation == "gcmc" :
+      bnd_cmd.writeCommandFile(args.cmdfile+"_gcmc.cmd") 
+    elif args.simulation in ["jaws1","jaws2"] :
+      bnd_cmd.writeCommandFile(args.cmdfile+"_jaws.cmd") 
+    else :
+      bnd_cmd.writeCommandFile(args.cmdfile+"_bnd.cmd")      
   if gas_cmd is not None : 
     gas_cmd.writeCommandFile(args.out+"_gas.cmd")    

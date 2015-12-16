@@ -34,7 +34,7 @@ c########################################################
       if (isol.le.0 .or. isol.gt.NSolutes) return
       
       lgth = lineLength(SoluteName(isol))
-      write(printstring,*) "Fitting molecule templates to ",SoluteName(isol)(1:lgth)
+      write(printstring,"(2a)") "Fitting molecule templates to ",SoluteName(isol)(1:lgth)
       call printLine(INFO,printstring)
       tmol = findMoleculeTemplate(SoluteName(isol))
       if (tmol.le.0) then
@@ -43,8 +43,7 @@ c########################################################
         call printLine(FATAL,printstring)
         call printLine(FATAL,
      .       "Ensure that there is a solute template with this name in one of your parameter files")
-        write(printstring,*)"ProtoMS is stopping, because the simulation is now very broken!"
-        call closeProgram(-1,printstring)
+        call closeProgram(-1,"ProtoMS is stopping, because the simulation is now very broken!")
         return
       endif
 
@@ -93,11 +92,10 @@ c           save the range of atoms in each residue
             SolResidues(isol,nres,2) = i-1
             nres = nres + 1
             if (nres.gt.MAXSOLUTERESIDUES) then
-              write(printstring,*) "Exceeded maximum number of residues per solute (",
-     .                           MAXSOLUTERESIDUES,")"
+              write(printstring,"(a,i4,a)")
+     .              "Exceeded maximum number of residues per solute (",MAXSOLUTERESIDUES,")"
               call printLine(FATAL,printstring)
-              write(printstring,*)"Increase MAXSOLUTERESIDUES and recompile"
-              call closeProgram(-1,printstring)
+              call closeProgram(-1,"Increase MAXSOLUTERESIDUES and recompile")
               nres = MAXSOLUTERESIDUES
             endif
             
@@ -113,14 +111,13 @@ c           save the range of atoms in each residue
 c         the solute has been loaded such that if this atom existed in the PDB, it
 c         has been loaded at this index - check this...
           if (iatm .ne. SolAtomNam(isol,i)) then
-            write(printstring,*) "Atom ",iatm," in residue ",ires," was not found in the PDB. ",
+            write(printstring,"(6a)") "Atom ",iatm," in residue ",ires," was not found in the PDB. ",
      .                         "Will attempt to build this atom (please check the coordinates)"
             call printLine(FATAL,printstring)
 
             call printLine(FATAL,"Uh-oh! This version of the code does not yet support the building")
             call printLine(FATAL,"of missing solute atoms! This feature is planned though...")
-            write(printstring,*)"Until then, this simulation is now very broken!"
-            call closeProgram(-1,printstring)
+            call closeProgram(-1,"Until then, this simulation is now very broken!")
             
             SolAtomNam(isol,i) = iatm
             SolAtomNum(isol,i) = 9999
@@ -148,7 +145,7 @@ c     thus we will check it here...
       do i=1,NSolAtoms(isol)
         do j=1,3
           if (ZSolMat(isol,i,j).eq.0) then
-            write(printstring,*) "The zmatrix has not been completely assigned! ",
+            write(printstring,"(2a,i4,3a,i8,a,i4,a)") "The zmatrix has not been completely assigned! ",
      .             "Atom ",i,"(",SolAtomNam(isol,i),"-",SolResidue(isol,i),
      .             ") is missing a ",j," (1=bond, 2=angle, 3=dihedral)"
             call printLine(WARNING,printstring)
@@ -157,12 +154,11 @@ c     thus we will check it here...
         enddo
       enddo
       if (.not.ok) then
-        write(printstring,*) "There have been errors setting up the zmatrix for solute ",
-     .                       SoluteName(isol)(1:lgth)
+        write(printstring,"(2a)")
+     .        "There have been errors setting up the zmatrix for solute ",SoluteName(isol)(1:lgth)
         call printLine(FATAL,printstring)
         call printLine(FATAL,"Check the pdb and template input for this solute")
-        write(printstring,*)"ProtoMS is stopping because the simulation is now broken!"
-        call closeProgram(-1,printstring)
+        call closeProgram(-1,"ProtoMS is stopping because the simulation is now broken!")
         return
       endif
       
@@ -206,7 +202,7 @@ c     now get all of the non-bonded pairs in this solute
       
 c     assign all of the variable geometries from the template
       if (NMolTemplVar(tmol).gt.0) then
-        write(printstring,*) "Building geometry duplicates for ",SoluteName(isol)
+        write(printstring,"(2a)") "Building geometry duplicates for ",SoluteName(isol)
         call printLine(INFO,printstring)
 c       assign the variable atoms
         call assignSoluteVariables(isol,tmol)
@@ -229,7 +225,7 @@ c     calculation right
 c       duplicate the solute
         newsol = duplicateSolute(isol)
         if (newsol.le.0) then
-          write(printstring,*) "Problem duplicating solute ",SoluteName(isol)
+          write(printstring,"(2a)") "Problem duplicating solute ",SoluteName(isol)
           call closeProgram(-1,printstring)
         endif
 c       set this as the forwards structure - built with lambda=1
@@ -240,7 +236,7 @@ c       set this as the forwards structure - built with lambda=1
 c       do this again for the backwards structure
         newsol = duplicateSolute(isol)
         if (newsol.le.0) then
-          write(printstring,*) "Problem duplicating solute ",SoluteName(isol)
+          write(printstring,"(2a)") "Problem duplicating solute ",SoluteName(isol)
           call closeProgram(-1,printstring)
         endif
 c       set this as the backwards structure, with lambda=0
@@ -336,8 +332,7 @@ c     bonds/angles/dihedrals
 16      format("Urey-Bradley ",i5,2x,a," - ",a," - ",a,1x,i5)
       endif
          
-      write(printstring,*) "Finished fitting template..."
-      call printLine(INFO,printstring)
+      call printLine(INFO,"Finished fitting template...")
                
       return
       end

@@ -1347,17 +1347,22 @@ As well as controlling the sampling, you can also control the collection and out
 
 ::
   
-  chunk averages reset
+  chunk results reset
   
 Reset all averages to zero and start collection of results from scratch. ::
  
-   chunk averages write
+   chunk results write
    
-Write out the energy and free energy averages to the RESULTS stream. It is probably a good idea to do this a some point before the end of the simulation! ::
+Write out the energy and free energy averages to the RESULTS stream. It is probably a good idea to do this a some point before the end of the simulation. ::
 
-  chunk averages write myfile.txt
+  chunk results write myfile.txt
   
-Does the same as above, but redirects the RESULTS stream to myfile.txt before the results are written. 
+Does the same as above, but redirects the RESULTS stream to myfile.txt before the results are written.  ::
+
+  chunk results writeinst myfile.txt
+
+Does the same av `write` but instead write instantaneous energies (the energies of the current snapshot) rather than average energies. This can be useful for some analyses. 
+
 
 .. index::
   single: restart command

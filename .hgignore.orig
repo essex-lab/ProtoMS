@@ -1,0 +1,20 @@
+syntax: glob
+
+protoms3
+src/*.o
+tools/*.pyc
+src/makefile.*
+src/idme.inc
+src/sep.inc
+build/
+*.pyc
+ProtoMS_code_coverage_report
+ProtoMS_coverage_current
+htmlcov/
+tests/*.pyc
+html/
+.figleaf
+.coverage
+tests/test_setup/.coverage
+tests/test_setup/.DS_Store
+.DS_Store

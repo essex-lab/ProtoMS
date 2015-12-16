@@ -62,7 +62,7 @@ c     read in each simulation chunk via a do loop
         if (keys(k)(1:5) .eq. 'chunk') then
           call split(values(k))
           ichunk = ichunk+1
-          write(printstring,*) "Running chunk ",ichunk
+          write(printstring,"(a,i4)") "Running chunk ",ichunk
           call printLine(INFO,printstring)
           
 c         now see what we will do based on the first word...
@@ -82,7 +82,7 @@ c           get the move probabilities and print move from this line
             call getMoveInfo()
             
             nstps = getInt(words(2),0)
-            write(printstring,*) "Requested ",nstps," steps of equilibration"
+            write(printstring,"(a,i12,a)") "Requested ",nstps," steps of equilibration"
             call prettyLine(INFO,printstring)
 
 c           actually run the equilibration
@@ -92,7 +92,7 @@ c           actually run the equilibration
 c           the format is;
 c           'simulate nsteps (newprob) (protein=1) (solute=2) (solvent=3) (printinfo=10)'
             if (nwords.lt.2) then
-              call printLine(WARNING,"Could not intepret simulation line")
+              call printLine(WARNING,"Could not interpret simulation line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -102,7 +102,7 @@ c           get the move probabilities etc.
             call getMoveInfo()
             
             nstps = getInt(words(2),0)
-            write(printstring,*) "Requested ",nstps," steps of simulation"
+            write(printstring,"(a,i12,a)") "Requested ",nstps," steps of simulation"
             call prettyLine(INFO,printstring)
             
 c           actually perform the simulation
@@ -114,7 +114,7 @@ c           actually perform the simulation
           else if (words(1) .eq. 'splitdddsasimulate') then
 c           JM format is splitsimulate nstps split (probs)
             if (nwords.lt.3) then
-              call printLine(WARNING,"Could not intepret simulation line")
+              call printLine(WARNING,"Could not interpret simulation line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -124,15 +124,15 @@ c           get the move probabilities etc.
             
             nstps = getInt(words(2),0)
             nsplit = getInt(words(3),0)
-            write(printstring,*) "Requested ",nstps,
-     .        " steps of splitDDDGBSAsimulation split= ",nsplit
+            write(printstring,"(a,i12,a,i8)")
+     .           "Requested ",nstps," steps of splitDDDGBSAsimulation split= ",nsplit
             call prettyLine(INFO,printstring) 
 c           actually perform the simulation
             if (.not.check) call splitDDDSAsimulate(nstps,nsplit) 
           else if (words(1) .eq. 'splitgbsasimulate') then
 c           JM format is splitsimulate nstps split (probs)
             if (nwords.lt.3) then
-              call printLine(WARNING,"Could not intepret simulation line")
+              call printLine(WARNING,"Could not interpret simulation line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -142,8 +142,8 @@ c           get the move probabilities etc.
             
             nstps = getInt(words(2),0)
             nsplit = getInt(words(3),0)
-            write(printstring,*) "Requested ",nstps,
-     .        " steps of split-simulationGBSA split= ",nsplit
+            write(printstring,"(a,i12,a,i8)")
+     .            "Requested ",nstps," steps of split-simulationGBSA split= ",nsplit
             call prettyLine(INFO,printstring) 
 c           actually perform the simulation
             if (.not.check) call splitGBSAsimulate(nstps,nsplit)                   
@@ -167,14 +167,14 @@ c           the format is 'soluteenergy isol'
 c           get the solute and calculate its energy in detail            
             isol = getInt(words(2),0)
             if (isol.le.0 .or. isol.gt.NSolutes) then
-              write(printstring,*) "Cannot request detailed energy of invalid solute ",isol
+              write(printstring,"(a,i8)") "Cannot request detailed energy of invalid solute ",isol
               call printLine(WARNING,printstring)
               cycle
             endif
             
             lgth = lineLength(SoluteName(isol))
             
-            write(printstring,*) "Requested detailed energy of solute ",isol," ",SoluteName(isol)(1:lgth)
+            write(printstring,"(a,i8,a,a)") "Requested detailed energy of solute ",isol," ",SoluteName(isol)(1:lgth)
             call prettyLine(INFO,printstring)
             if (.not.check) call detailedSoluteEnergy(isol)            
           
@@ -190,13 +190,13 @@ c           the format is 'residueenergy iprot ires'
             iprot = getInt(words(2),0)
             ires = getInt(words(3),0)
             if (iprot.le.0 .or. iprot.gt.NProteins .or. ires.le.0 .or. ires.gt.NResidues(iprot)) then
-              write(printstring,*) "Cannot request detailed energy of invalid residue ",iprot," ",ires
+              write(printstring,"(a,i8,a,i8)") "Cannot request detailed energy of invalid residue ",iprot," ",ires
               call printLine(WARNING,printstring)
               cycle
             endif
             
             lgth = lineLength(ProteinName(iprot))
-            write(printstring,*) "Requested detailed energy of residue ",ResNam(iprot,ires),
+            write(printstring,"(a,a,a,i8,a,a)") "Requested detailed energy of residue ",ResNam(iprot,ires),
      .                           "-",ResNum(iprot,ires)," in protein ",ProteinName(iprot)(1:lgth)
             call printLine(INFO,printstring)
             if (.not.check) call detailedResidueEnergy(iprot,ires)       
@@ -220,7 +220,7 @@ c            restscale3 = oldscale3
 c           the format is 'retienergy retidelta'
 c           JM mod format can also be retienergy retideltau retideltal
             if (nwords.lt.2) then
-              call printLine(WARNING,"Could not intepret retienergy line")
+              call printLine(WARNING,"Could not interpret retienergy line")
               call join(1,nwords,printstring)
               call printLine(WARNING,printstring)
               cycle
@@ -232,7 +232,7 @@ c           JM mod format can also be retienergy retideltau retideltal
             else
               retideltal = retideltau
             endif
-            write(printstring,*) "Requested retienergy using retidelta=",retideltau,retideltal
+            write(printstring,"(a,f12.4,f12.4)") "Requested retienergy using retidelta=",retideltau,retideltal
             call prettyLine(INFO,printstring)
             
             if (.not.check) call retiEnergy(retideltau,retideltal)
@@ -288,7 +288,7 @@ c           now see if we should read in the rotamer library
               endif
 
               ilgth = lineLength(words(3))
-              write(printstring,*) "Reading rotamer library file ",words(3)(1:ilgth)
+              write(printstring,"(a,a)") "Reading rotamer library file ",words(3)(1:ilgth)
               call prettyLine(INFO,printstring)
               if (check) cycle
      
@@ -296,8 +296,9 @@ c             actually read in the rotamer library file
               call readRotamer(words(3)(1:ilgth))
             endif
 
-            write(printstring,*) "BigMoveProb = ",BigMoveProb*100.0,"%, BigMoveDelta = ",
-     .           BigMoveDelta," degrees, RotamerDelta = ",RotamerDelta," degrees"
+            write(printstring,"(a,f12.4,a,f12.4,a,f12.4,a)")
+     .            "BigMoveProb = ",BigMoveProb*100.0,"%, BigMoveDelta = ",
+     .            BigMoveDelta," degrees, RotamerDelta = ",RotamerDelta," degrees"
             call printLine(INFO,printstring)
 
 c           convert the deltas to radians
@@ -328,7 +329,7 @@ c           scan the words to see if the file has been specified
                 lgth = lineLength(words(j))
                 if (words(j)(1:4).eq.'file') then
 c                 change the pdb file! - connect the PDB stream to a new filehandle
-                  write(printstring,*) "Redirecting PDB to ",words(j)(6:lgth)
+                  write(printstring,"(a,a)") "Redirecting PDB to ",words(j)(6:lgth)
                   call printLine(INFO,printstring)
                   streamhandle(MCPRO) = openFILE(words(j)(6:lgth))
                 endif
@@ -341,7 +342,7 @@ c                 change the pdb file! - connect the PDB stream to a new filehan
 c             get which protein will be printed
               iprnt = getInt(words(2)(9:lgth),0)
               if (check) then
-                write(printstring,*) "Printing protein ",iprnt
+                write(printstring,"(a,i8)") "Printing protein ",iprnt
                 call printLine(INFO,printstring)
               endif
               if (.not.check) call WriteMCPro(PROTEIN,iprnt)
@@ -349,7 +350,7 @@ c             get which protein will be printed
 c             get which solute will be printed
               iprnt = getInt(words(2)(8:lgth),0)
               if (check) then
-                write(printstring,*) "Printing solute ",iprnt
+                write(printstring,"(a,i8)") "Printing solute ",iprnt
                 call printLine(INFO,printstring)
               endif
               if (.not.check) call WriteMCPro(SOLUTE,iprnt)
@@ -374,7 +375,8 @@ c             get which solute will be printed
             endif
             if (nwords.ge.4) SolRDel(i) = deg2Rad(getDouble(words(4),Rad2deg(SolRDel(i))))
             if (nwords.ge.3) then 
-              write(printstring,*)"New displacements for solute ",i," translation=",SolADel(i)," rotation=",SolRDel(i)
+              write(printstring,400) i,SolADel(i),SolRDel(i)
+400           format("New displacements for solute",i4," translation =",f8.4," rotation =",f8.4)
               call printLine(INFO,printstring)
             endif
 
@@ -447,7 +449,8 @@ c           sanitise the values of lambda
             if (lambdaf.lt.ZERO) lambdaf = ZERO
             if (lambdaf.gt.ONE) lambdaf = ONE
                 
-            write(printstring,*) "Changing lambda to ",lambda,"(",lambdab,",",lambdaf,")"
+            write(printstring,"(3(a,f12.4),a)")
+     .            "Changing lambda to ",lambda,"(",lambdab,",",lambdaf,")"
             call printLine(INFO,printstring)
             
             if (.not.check) call changeLambda()
@@ -477,8 +480,8 @@ c             scan the letters to find the '=' sign
                   
 c                 set the stream file
                   if (check) then
-                    write(printstring,*) "Directing stream ",words(i)(1:j-1)," to file ",
-     .                                   words(i)(j+1:lgth)
+                    write(printstring,"(a,a,a,a)")
+     .                    "Directing stream ",words(i)(1:j-1)," to file ",words(i)(j+1:lgth)
                     call printLine(INFO,printstring)
                     goto 200
                   else
@@ -507,10 +510,10 @@ c           Deal with the adding of restrains
           else if (words(1) .eq. 'addclj') then
             call addSoluteCLJ(getInt(words(2),ZERO),getInt(words(3),ZERO),getDouble(words(4),ZERO))
           else if (words(1) .eq. 'gradient') then
-            write(printstring,"(A,F20.5)")"Gradient = ",lambdaderivative()
+            write(printstring,"(A,F20.5)") "Gradient = ",lambdaderivative()
             call printLine(INFO,printstring)
           else
-            call printLine(WARNING,"Cannot intepret simulation chunk!")
+            call printLine(WARNING,"Cannot interpret simulation chunk!")
             call join(1,nwords,printstring)
             call printLine(WARNING,printstring)
           endif

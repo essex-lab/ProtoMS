@@ -90,7 +90,7 @@ c          call printLine(DEBUG,printstring)
           else if (imov.eq.TRYSOLVENT) then
             templ = solventMove(UPDATEENERGY,i,0)
           else
-            write(printstring,*) "Problems sorting out the move type! ",imov
+            write(printstring,"(a,i4)") "Problems sorting out the move type! ",imov
             call printLine(WARNING,printstring)
             call printLine(WARNING,"This is probably a programming bug!")
             templ = .false.
@@ -165,14 +165,12 @@ c       *** Perform Acceptance Test
         if (accept) then 
 c         New must become old...
           call updateMultipleMovesEnergies()
-          write(printstring,*) '$$$$$$$SPLIT MOVE ACCEPTED$$$$$$$$'
-          call printLine(DEBUG,printstring)
+          call printLine(DEBUG,"$$$$$$$SPLIT MOVE ACCEPTED$$$$$$$$")
           NAcceptedMoves = NAcceptedMoves + 1
           call StoreEnergies(ACCNRGI)
           call StoreCoordinates(CONFI)
         else
-          write(printstring,*) '$$$$$$$SPLIT MOVE REJECTED$$$$$$$'
-          call printLine(DEBUG,printstring)
+          call printLine(DEBUG,"$$$$$$$SPLIT MOVE REJECTED$$$$$$$")
           call RevertEnergies(ACCNRGI)
           call RevertCoordinates(CONFI)
         endif
@@ -206,9 +204,10 @@ c      GotInitialTotalEnergy = .false.
 c      call checkGotTotal
 
       if (NTotalMoves.gt.0) then
-        write(printstring,*) "Data collection complete. Attempted/accepted quick moves ",NQuickMoves,NAcceptedQuickMoves
+        write(printstring,"(a,2i12)")
+     .        "Data collection complete. Attempted/accepted quick moves ",NQuickMoves,NAcceptedQuickMoves
         call printLine(INFO,printstring)
-        write(printstring,*) "Attempted/accepted split moves ",NTotalMoves,NAcceptedMoves
+        write(printstring,"(a,2i12)") "Attempted/accepted split moves ",NTotalMoves,NAcceptedMoves
         call printLine(INFO,printstring)
         call printLine(SPLITPOT,printstring)
         
@@ -216,7 +215,7 @@ c      call checkGotTotal
       endif
       
       if (SolventBox) then
-        write(printstring,*) "Final volume = ",volume," A^3"
+        write(printstring,"(a,f12.4,a)") "Final volume = ",volume," A^3"
         call prettyLine(INFO,printstring)
       endif
 

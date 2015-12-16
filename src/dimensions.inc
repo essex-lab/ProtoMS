@@ -84,16 +84,16 @@ c     in a single simulation. (should equal MAXCLJTYPES**2 / 2)
       parameter(MAXCLJPAIRS=(MAXCLJTYPES**2)/2)
 c     the maximum number of bond types
       integer MAXBNDPARAM
-      parameter(MAXBNDPARAM=5000)
+      parameter(MAXBNDPARAM=10000)
 c     the maximum number of angle types
       integer MAXANGPARAM
-      parameter(MAXANGPARAM=5100)
+      parameter(MAXANGPARAM=10100)
 c     the maximum number of dihedral types
       integer MAXDIHPARAM
-      parameter(MAXDIHPARAM=5000)
+      parameter(MAXDIHPARAM=10000)
 c     the maximum number of dihedral terms
       integer MAXDIHTERMS
-      parameter(MAXDIHTERMS=6000)
+      parameter(MAXDIHTERMS=10000)
 c     the maximum number of terms in each dihedral
       integer MAXDIHTERMSPERDIHEDRAL
       parameter(MAXDIHTERMSPERDIHEDRAL=6)

@@ -19,8 +19,7 @@ c#########################################################
 
       if (GotInitialTotalEnergy) return
                        
-      write(printstring,*) "Calculating the initial total energy from scratch..."
-      call printLine(INFO,printstring)
+      call printLine(INFO,"Calculating the initial total energy from scratch...")
 
 c     need to set all moved to calculate the total extra energies
       call setAllMoved      
@@ -41,7 +40,7 @@ c     need to update the extra energies to update 'OLD' from 'NEW'
       call updateExtraEnergies
       
       write(printstring,10) nrg,nrgf,nrgb
-10    format('Total Energy = ',f12.6,' (',f12.6,' | ',f12.6,')')
+10    format('Total Energy = ',f15.4,' (',f15.4,' | ',f15.4,')')
       call printLine(INFO,printstring)
 
       GotInitialTotalEnergy = .true.

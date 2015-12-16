@@ -1,4 +1,5 @@
 # CMake file for ProtoMS
+
 cmake_minimum_required(VERSION 2.8.7)
 
 # Project name and language - enables Fortran dependency checking
@@ -6,7 +7,7 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Setting install
 project(ProtoMS Fortran)
 set(prog_name "protoms3")
 set(ProtoMS_VERSION_MAJOR 3)
-set(ProtoMS_VERSION_MINOR 1)
+set(ProtoMS_VERSION_MINOR 2)
 
 # Check build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -19,7 +20,7 @@ if(NOT CMAKE_Fortran_FLAGS_Release)
     set(CMAKE_Fortran_FLAGS_Release "-O3")
 endif()
 if(NOT CMAKE_Fortran_FLAGS_Debug)
-    set(CMAKE_Fortran_FLAGS_Debug "-Og -g")
+    set(CMAKE_Fortran_FLAGS_Debug "-g")
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "Release")
@@ -29,11 +30,27 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_Debug}")
 endif()
 
-message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID}")
+message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}")
 
 # Find Fortran MPI libraries
 option(AVOID_MPI "Don't use MPI even if available" OFF)
 find_package(MPI)
+
+if(NOT MPI_Fortran_FOUND AND NOT AVOID_MPI AND CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" AND EXISTS "/local/software/openmpi/1.6.4/intel/lib/libmpi_f90.so")
+    # Attempt fix for Southampton RedHat configuration
+    message("-- Attempting fix for Southampton RedHat configuration")
+    set(MPIEXEC "/local/software/openmpi/1.6.4/intel/bin/mpiexec")
+    set(MPI_Fortran_COMPILER "/local/software/openmpi/1.6.4/intel/bin/mpif90")
+    set(MPI_Fortran_INCLUDE_PATH "/local/software/openmpi/1.6.4/intel/include")
+    set(MPI_Fortran_LIBRARIES "/local/software/openmpi/1.6.4/intel/lib/libmpi_f90.so")
+    find_package(MPI)
+    if(MPI_Fortran_FOUND)
+        message("-- Fix successful")
+    else()
+        message("-- Fix unsuccessful")
+    endif()
+endif()
+
 if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
     message("-- Using MPI")
     add_definitions(${MPI_Fortran_COMPILE_FLAGS})
@@ -60,12 +77,17 @@ execute_process(COMMAND python
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fomit-frame-pointer -ffixed-line-length-none")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none")
 
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
     message("-- Using Intel compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
+
+# Set flags for IBM compiler
+elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
+    message("-- Using IBM compiler flags")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed=132")
 
 # Compiler not recognised
 else()
@@ -113,6 +135,52 @@ install(TARGETS protoms3
 # Needs actual unit/integration tests here
 add_test(TestPrintVersion protoms3 -v)
 
+###################################
+# Python Unit tests
+###################################
+set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B})
+
+add_test(test_install_dependencies ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
+add_test(test_ligand_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_ligand_setup.py)
+add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
+add_test(test_parameters_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parameters_ff.py)
+add_test(test_path ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.py)
+add_test(test_tools_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
+
+add_test(NAME test_prot_setup
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup/test_prot_setup.py)
+
+add_test(NAME test_equil_setup
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil/test_equil_prot.py)
+
+add_test(NAME test_sampling_prot 
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling/test_sampling_prot.py)
+
+add_test(NAME test_gcmc_sim
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc/test_gcmc_sim.py)
+
+add_test(NAME test_jaws1_sim
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1/test_jaws1_sim.py)
+
+add_test(NAME test_jaws2_sim
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2/test_jaws2_sim.py)
+
+add_test(NAME test_reti_sngl
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl/test_reti_sngl.py)
+
+add_test(NAME test_reti_dbl
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl/test_reti_dbl.py)
+
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
                   DEPENDS protoms3)
+
+add_custom_target(clean-test COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/clean-test.cmake)
