@@ -29,7 +29,7 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
-def _print_ene(lam,ene,std,print_uncert,print_lam) :
+def print_ene(lam,ene,std,print_uncert,print_lam) :
   """ 
   Print energy row to standard output
   
@@ -51,7 +51,7 @@ def _print_ene(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8.4f"%std,
   print ""
 
-def _print_head(lam,ene,std,print_uncert,print_lam) :
+def print_head(lam,ene,std,print_uncert,print_lam) :
   """ 
   Print energy header to standard output
 
@@ -74,7 +74,7 @@ def _print_head(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8s"%std,
   print ""
 
-def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
+def parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
   """ 
   Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
   
@@ -196,7 +196,7 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   lambdas = []
   for path in paths :
     (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical)
-    if verbose["gradient"] : _print_ene(lam,grad,std,verbose["uncert"],verbose["lambda"])
+    if verbose["gradient"] : print_ene(lam,grad,std,verbose["uncert"],verbose["lambda"])
     gradients.append(grad)
     lambdas.append(lam)
     stds.append(std)
@@ -284,18 +284,18 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
 
   # Calculate the gradient
   if verbose["gradient"] :
-    _print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
+    print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
   lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
 
   
   # Calculate and print the PMF 
   pmf = np.zeros(gradients.shape)
   pmf_std = np.zeros(gradients.shape)
-  if verbose["pmf"] : _print_head("lambda","PMF","std",verbose["uncert"],verbose["lambda"])
+  if verbose["pmf"] : print_head("lambda","PMF","std",verbose["uncert"],verbose["lambda"])
   pmf[0] = 0.0
   w = 0.5*(lambdas[0]+lambdas[1])
   pmf_std[0] = w**2*stds[0]**2
-  if verbose["pmf"] : _print_ene(lambdas[0],pmf[0],np.sqrt(pmf_std[0]),verbose["uncert"],verbose["lambda"])
+  if verbose["pmf"] : print_ene(lambdas[0],pmf[0],np.sqrt(pmf_std[0]),verbose["uncert"],verbose["lambda"])
   # Trapezium integration
   for i in range(1,len(lambdas)) :
     h = lambdas[i]-lambdas[i-1]
@@ -305,10 +305,10 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     else :
       w = 0.5*(lambdas[i+1]-lambdas[i-1])      
     pmf_std[i] = pmf_std[i-1] + w**2*stds[i]**2
-    if verbose["pmf"] : _print_ene(lambdas[i],pmf[i],np.sqrt(pmf_std[i]),verbose["uncert"],verbose["lambda"])
+    if verbose["pmf"] : print_ene(lambdas[i],pmf[i],np.sqrt(pmf_std[i]),verbose["uncert"],verbose["lambda"])
 
   if not verbose["pmf"] and verbose["total"] : 
-    _print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
+    print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
 
   return lambdas,gradients,stds,pmf,np.sqrt(pmf_std)
 #
