@@ -34,7 +34,7 @@ fflags += -DWITH_MPI_
 #Compile flags for pgf77
 #fflags = -O2 -fast -Mextend
 #Compile flags for ifort
-#fflags = -O3 -132
+#fflags = -O3 -132 -I. -funroll-loops -pg
 
 # the link flags - either edit the below line or uncomment the line that matches
 # your system
