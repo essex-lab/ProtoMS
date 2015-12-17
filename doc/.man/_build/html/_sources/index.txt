@@ -16,4 +16,5 @@ Contents:
    protoms
    protomspy
    tools
+   testsuite
 

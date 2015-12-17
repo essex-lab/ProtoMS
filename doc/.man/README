@@ -9,6 +9,7 @@ The files that consitutes the manual are
     * introduction.rst - intro chapter
     * protomspy.rst - describes the protoms.py program
     * protoms.rst - describes most of the MC engine
+    * testsuite.rst - describes the protoms test suite
     * tools.rst - describes the python tools
 
 These files are formatted using reStructured text (http://sphinx-doc.org/rest.html).
@@ -29,6 +30,9 @@ Compilation
 -----------
 make html
 make latexpdf
+
+Files created in _build/html and _build/latex.
+Symbolic links to those files in the parent directory from this file in protoms3.html and ProtoMS.pdf.
 
 
    

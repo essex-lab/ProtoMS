@@ -51,4 +51,8 @@
 \BOOKMARK [1][-]{section.7.24}{scoop.py}{chapter.7}
 \BOOKMARK [1][-]{section.7.25}{solvate.py}{chapter.7}
 \BOOKMARK [1][-]{section.7.26}{split\137jawswater.py}{chapter.7}
+\BOOKMARK [0][-]{chapter.8}{Test Suite}{}
+\BOOKMARK [1][-]{section.8.1}{Dependencies}{chapter.8}
+\BOOKMARK [1][-]{section.8.2}{Running all tests}{chapter.8}
+\BOOKMARK [1][-]{section.8.3}{Individual tests}{chapter.8}
 \BOOKMARK [0][-]{section*.24}{Index}{}

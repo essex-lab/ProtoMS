@@ -36,6 +36,7 @@ The ProtoMS tools have the following requirements:
 Optional:
 * AmberTools (http://www.ambermd.org/)          : Required to paramterise small molecules
 * pymbar (https://github.com/choderalab/pymbar) : Required to perform MBAR calculations
+* Nose (https://nose.readthedocs.org/en/latest/): Required to run the test suite
 
 To learn how to use ProtoMS read the manual that can be found in the doc folder
 
@@ -61,3 +62,5 @@ Contents of directory:
 * tools 	    : This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
 
 * tutorial 	    : This directory contains a number of examples that demonstrate applications of ProtoMS.
+
+* tests             : This directory contains the python scripts and input data required to run the test suite
