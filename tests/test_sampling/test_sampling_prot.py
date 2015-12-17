@@ -21,7 +21,7 @@ from tools import simulationobjects
 from tools import testtools
 
 output_files_setup = ["run_bnd.cmd"]
-out_sim_files = ["info", "all.pdb", "warning", "results", "restart.prev", "restart", "accept"]
+out_sim_files = ["all.pdb", "warning", "results", "restart.prev", "restart", "accept"]
 
 
 class TestSampling(unittest.TestCase):

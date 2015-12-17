@@ -23,7 +23,7 @@ ref_dir = proto_env + "/tests/equil/"
 input_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem",
                      "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
 output_files_setup = ["run_bnd.cmd"]
-out_sim_files = ["info", "equil_bnd.pdb", "warning"]
+out_sim_files = ["equil_bnd.pdb", "warning"]
 
 
 class TestEquilibrationSetup(unittest.TestCase):

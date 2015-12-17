@@ -22,7 +22,7 @@ from tools import testtools
 
 out_gcmc_tools = ["gcmc_box.pdb"]
 output_files_setup = ["gcmc_wat.pdb", "run_gcmc.cmd"]
-out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
+out_sim_files = ["results", "accept", "all.pdb", "restart", "warning"]
 
 
 class TestGCMC(unittest.TestCase):

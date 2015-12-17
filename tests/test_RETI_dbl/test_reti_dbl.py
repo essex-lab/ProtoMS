@@ -22,7 +22,7 @@ from tools import testtools
 
 output_files_setup = ["ethane_box.pdb", "eth-meo.tem", "run_free.cmd"]
 output_subdirs = ["lam-0.000", "lam-0.330", "lam-0.670", "lam-1.000"]
-out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "info", "restart", "results_inst"]
+out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "restart", "results_inst"]
 
 
 class TestRETIdbl(unittest.TestCase):

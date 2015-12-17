@@ -28,7 +28,7 @@ class CompareTools:
             "warning"     : self.diff_filecmp,
             "cmd"         : self.diff_filecmp,  # Use ign_starts_with if paths vary on different systems
             "info"        : self.diff_text_ign_starts_with,
-            ".pdb"         : self.diff_text_try_number,
+            ".pdb"        : self.diff_text_try_number,
             "restart"     : self.diff_text_try_number,
             "restart.prev": self.diff_text_try_number,
             "results"     : self.diff_text_try_number,

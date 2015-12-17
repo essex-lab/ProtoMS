@@ -23,7 +23,7 @@ from tools import testtools
 output_files_setup = ["ethane_box.pdb", "ethtmeo_ele.tem", "ethtmeo_vdw.tem", "ethtmeo_comb.tem"]
 outfiles_setup = ["run_comb_free.cmd", "run_comb_gas.cmd", "run_ele_free.cmd", "run_ele_gas.cmd", "run_vdw_free.cmd", "run_vdw_gas.cmd"]
 output_subdirs = ["lam-0.000", "lam-0.330", "lam-0.670", "lam-1.000"]
-out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "info", "restart", "results_inst"]
+out_sim_files = ["results", "accept", "all.pdb", "restart.prev", "warning", "restart", "results_inst"]
 
 
 class TestRETIsngl(unittest.TestCase):
