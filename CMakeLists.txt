@@ -16,20 +16,6 @@ if(NOT CMAKE_BUILD_TYPE)
         FORCE)
 endif()
 
-if(NOT CMAKE_Fortran_FLAGS_Release)
-    set(CMAKE_Fortran_FLAGS_Release "-O3")
-endif()
-if(NOT CMAKE_Fortran_FLAGS_Debug)
-    set(CMAKE_Fortran_FLAGS_Debug "-g")
-endif()
-
-if(CMAKE_BUILD_TYPE MATCHES "Release")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_Release}")
-endif()
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_Debug}")
-endif()
-
 message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}")
 
 # Find Fortran MPI libraries
@@ -78,16 +64,34 @@ execute_process(COMMAND python
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none")
+    if(CMAKE_BUILD_TYPE MATCHES "Release")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -fgcse-lm -fgcse-sm -fgcse-las -fsched-spec-load")
+    endif()
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
+    endif()
 
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
     message("-- Using Intel compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
+    if(CMAKE_BUILD_TYPE MATCHES "Release")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3")
+    endif()
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
+    endif()
 
 # Set flags for IBM compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
     message("-- Using IBM compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed=132")
+    if(CMAKE_BUILD_TYPE MATCHES "Release")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3")
+    endif()
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
+    endif()
 
 # Compiler not recognised
 else()
@@ -142,7 +146,6 @@ set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B})
 
 add_test(test_install_dependencies ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
 add_test(test_ligand_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_ligand_setup.py)
-add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
 add_test(test_parameters_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parameters_ff.py)
 add_test(test_path ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.py)
 add_test(test_tools_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
@@ -171,17 +174,22 @@ add_test(NAME test_jaws1_sim
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1/test_jaws1_sim.py)
 
-add_test(NAME test_jaws2_sim
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2/test_jaws2_sim.py)
+# Skip MPI tests is not using MPI
+if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
+    add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
 
-add_test(NAME test_reti_sngl
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl/test_reti_sngl.py)
+    add_test(NAME test_jaws2_sim
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2/test_jaws2_sim.py)
 
-add_test(NAME test_reti_dbl
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl/test_reti_dbl.py)
+    add_test(NAME test_reti_sngl
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl/test_reti_sngl.py)
+
+    add_test(NAME test_reti_dbl
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_dbl/test_reti_dbl.py)
+endif()
 
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
