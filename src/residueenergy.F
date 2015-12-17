@@ -371,6 +371,10 @@ c     residue-GCsolute energy
         newResNBLJF = nbljnrgf
         newResNBLJB = nbljnrgb
       endif    
+c$$$
+c$$$10    format('Energies= ',3f8.3)
+c$$$      write(printstring,10) residueEnergy,cnrg,ljnrg
+c$$$      call printLine(RESULTS,printstring)
 
       return
       end
