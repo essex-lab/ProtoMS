@@ -4,8 +4,7 @@ import nose
 import unittest
 import os
 import filecmp
-
-from tools import simulationobjects
+import site
 
 from subprocess import call
 
@@ -17,8 +16,12 @@ from subprocess import call
 proto_env = os.environ["PROTOMSHOME"]
 ref_dir = proto_env + "/tests/jaws1/"
 
+site.addsitedir(proto_env)
+from tools import simulationobjects
+from tools import testtools
+
 output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb"]
-outfiles_setup = ["water_clr.pdb","jaws1_box.pdb", "jaws1_wat.pdb", "run_jaws.cmd"]
+outfiles_setup = ["water_clr.pdb", "jaws1_box.pdb", "jaws1_wat.pdb", "run_jaws.cmd"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning", "info"]
 
 
@@ -64,6 +67,7 @@ class TestJAWS1(unittest.TestCase):
             raise simulationobjects.SetupError("ProtoMS setup and command files generation failed!")
 
         if call("$PROTOMSHOME/build/protoms3 run_jaws.cmd", shell=True) == 0:
+            comparetools = testtools.CompareTools(ref_dir, verbose=True)
 
             # Checking whether the simulation output files have been created successfully for JAWS Stage 1.
             for outfile in out_sim_files:
@@ -72,12 +76,8 @@ class TestJAWS1(unittest.TestCase):
                                 "JAWS Stage 1 simulation file {0} is missing.".format(outfile_rel))
 
                 # Comparing content of JAWS Stage 1 simulation output files with reference data.
-                if outfile == "info":
-                    self.assertTrue(call("bash content_info_comp.sh", shell=True) == 0,
-                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
-                else:
-                    self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
-                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
+                self.assertTrue(comparetools.compare((outfile_rel, outfile)),
+                                "Content mismatch between output and reference for file {0}".format(outfile_rel))
 
         else:
             raise simulationobjects.SetupError("JAWS Stage 1 simulation was not successful.")

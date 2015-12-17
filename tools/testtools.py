@@ -28,7 +28,7 @@ class CompareTools:
             "warning"     : self.diff_filecmp,
             "cmd"         : self.diff_filecmp,  # Use ign_starts_with if paths vary on different systems
             "info"        : self.diff_text_ign_starts_with,
-            "all.pdb"     : self.diff_text_try_number,
+            ".pdb"         : self.diff_text_try_number,
             "restart"     : self.diff_text_try_number,
             "restart.prev": self.diff_text_try_number,
             "results"     : self.diff_text_try_number,
@@ -38,7 +38,12 @@ class CompareTools:
 
         self.ign_starts_with = {
             "cmd" : {"parfile"},
-            "info": {"#", "protoms3 started at", "Reading parameter file", "Starting simulation at", "protoms3 completed at"}
+            "info": {"#",
+                     "protoms3 started at",
+                     "Reading parameter file",
+                     "Starting simulation at",
+                     "protoms3 completed at",
+                     "These moves took"}
         }
 
     def compare(self, filetuple):
@@ -57,8 +62,10 @@ class CompareTools:
         file, type = filetuple
         reffile = os.path.join(self.refdir, file)
         if type not in self.comparetools:
-            print("Unrecognised type, using filecmp: {0}".format(type))
-            type = "UNKNOWN"
+            type = os.path.splitext(type)[1]
+            if type not in self.comparetools:
+                print("Unrecognised type, using filecmp: {0}".format(type))
+                type = "UNKNOWN"
 
         if self.comparetools[type](file, reffile, type):
             if self.verbose:

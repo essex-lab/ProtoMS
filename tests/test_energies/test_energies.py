@@ -2,13 +2,8 @@
 
 import nose
 import unittest
-#import argparse
 import os
-import sys
-import subprocess
-
-import tools
-from tools import simulationobjects as sim
+import site
 
 from subprocess import call
 
@@ -19,6 +14,9 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 ref_dir = proto_env + "/tests/energies/"
+
+site.addsitedir(proto_env)
+from tools import simulationobjects as sim
 
 #Energy components stored by SnapshotResults objects
 comps = [ 'interaction_energies', 'internal_energies', 'capenergy', 'extraenergy' ]

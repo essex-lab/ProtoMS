@@ -4,9 +4,7 @@ import nose
 import unittest
 import os
 import filecmp
-
-from tools import simulationobjects
-from tools import testtools
+import site
 
 from subprocess import call
 
@@ -17,6 +15,10 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 ref_dir = proto_env + "/tests/RETI_dbl/"
+
+site.addsitedir(proto_env)
+from tools import simulationobjects
+from tools import testtools
 
 output_files_setup = ["ethane_box.pdb", "eth-meo.tem", "run_free.cmd"]
 output_subdirs = ["lam-0.000", "lam-0.330", "lam-0.670", "lam-1.000"]

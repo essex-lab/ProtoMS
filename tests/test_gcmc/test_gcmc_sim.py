@@ -2,24 +2,9 @@
 
 import nose
 import unittest
-import argparse
 import os
-import sys
-import subprocess
-import logging
-import time
-import re
-import numpy as np
 import filecmp
-import protoms
-
-from protoms import _is_float, _get_prefix, _locate_file, _merge_templates
-from protoms import _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology
-from protoms import _prep_gcmc, _prep_jaws2, _cleanup, _wizard
-
-import tools
-from tools import simulationobjects
-from tools import testtools
+import site
 
 from subprocess import call
 
@@ -30,6 +15,10 @@ from subprocess import call
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 ref_dir = os.path.join(proto_env, "tests/gcmc/")
+
+site.addsitedir(proto_env)
+from tools import simulationobjects
+from tools import testtools
 
 out_gcmc_tools = ["gcmc_box.pdb"]
 output_files_setup = ["gcmc_wat.pdb", "run_gcmc.cmd"]

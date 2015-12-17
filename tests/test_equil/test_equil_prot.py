@@ -2,23 +2,9 @@
 
 import nose
 import unittest
-import argparse
 import os
-import sys
-import subprocess
-import logging
-import time
-import re
-import numpy as np
 import filecmp
-import protoms
-
-from protoms import _is_float, _get_prefix, _locate_file, _merge_templates
-from protoms import _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology
-from protoms import _prep_gcmc, _prep_jaws2, _cleanup, _wizard
-
-import tools
-from tools import simulationobjects
+import site
 
 from subprocess import call
 
@@ -28,6 +14,10 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+
+site.addsitedir(proto_env)
+from tools import simulationobjects
+from tools import testtools
 
 ref_dir = proto_env + "/tests/equil/"
 input_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem",
@@ -47,8 +37,9 @@ class TestEquilibrationSetup(unittest.TestCase):
 
     def test_equil(self):
         """ Test for equilibration function."""
+        comparetools = testtools.CompareTools(ref_dir, verbose=True)
 
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000", shell=True)) == 0):
+        if call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000", shell=True) == 0:
 
             # Checking whether the required output files have been setup for equilibration MC moves.
             for infile in input_files_setup:
@@ -59,7 +50,7 @@ class TestEquilibrationSetup(unittest.TestCase):
                 self.assertTrue(os.path.exists(outfile),
                                 "Setup output file {0} is missing.".format(outfile))
 
-            print "ProtoMS ligand and protein setup is successful."
+            print("ProtoMS ligand and protein setup is successful.")
 
             # Checking content of setup output files with reference data in files.
             for outfile in output_files_setup:
@@ -69,24 +60,17 @@ class TestEquilibrationSetup(unittest.TestCase):
         else:
             raise simulationobjects.SetupError("ProtoMS ligand and protein setup failed.")
 
-        if ((call("$PROTOMSHOME/build/protoms3 run_bnd.cmd", shell=True)) == 0):
+        if call("$PROTOMSHOME/build/protoms3 run_bnd.cmd", shell=True) == 0:
 
             # Checking whether the simulation output files have been created successfully for equilibration MC moves.
             for outfile in out_sim_files:
                 outfile_rel = os.path.join("out_bnd", outfile)
                 self.assertTrue(os.path.exists(outfile_rel),
-                                "Simulation output file {0} is missing.".format(outfile_rel))
+                                "Simulation file {0} is missing.".format(outfile_rel))
 
-            # Checking content of equilibration simulation output files with reference data in files.
-                if outfile == "info":
-                    if((call("bash content_info_comp.sh", shell=True)) == 0):
-                        print "\n Info file contents matched."
-                    else:
-                        raise ValueError("Content mismatch between output and reference info file.")
-
-                else:
-                    self.assertTrue(filecmp.cmp(outfile_rel, os.path.join(ref_dir, outfile_rel)),
-                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
+                # Checking content of RETI free phase leg of a single topology simulation output files with reference data.
+                self.assertTrue(comparetools.compare((outfile_rel, outfile)),
+                                "Content mismatch between output and reference for file {0}".format(outfile_rel))
 
         else:
             raise simulationobjects.SetupError("Simulation was not successful.")

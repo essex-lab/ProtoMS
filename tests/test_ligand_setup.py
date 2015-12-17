@@ -2,23 +2,8 @@
 
 import nose
 import unittest
-import argparse
 import os
-import sys
-import subprocess
-import logging
-import time
-
-import numpy as np
-import protoms
-
-from protoms import _is_float, _get_prefix, _locate_file, _merge_templates
-from protoms import _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology
-from protoms import _prep_gcmc, _prep_jaws2, _cleanup, _wizard
-
-import tools
-from tools import simulationobjects
-
+import site
 
 # ---------------------------------------------
 # Ligand Setup test
@@ -26,6 +11,10 @@ from tools import simulationobjects
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+
+site.addsitedir(proto_env)
+from protoms import _get_prefix, _load_ligand_pdb, _prep_ligand
+from tools import simulationobjects
 
 
 class MockArgs:
@@ -60,10 +49,10 @@ class TestLigSetup(unittest.TestCase):
             args = MockArgs()
             _prep_ligand(self.ligfiles[self.prefix], 0, 0, self.ligobj, [" "], self.tarlist, args)
 
-            print self.tarlist
+            print(self.tarlist)
 
         except ImportError as e:
-            print e
+            print(e)
             print("Ligand file not found.")
 
 

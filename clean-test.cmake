@@ -12,6 +12,9 @@ set(DELFILES
     "test_equil/run_bnd.cmd"
     "test_equil/out_bnd"
     "test_equil/protoms_py.log"
+    # Energies test
+    "test_energies/out_t3p"
+    "test_energies/out_t4p"
     # Sampling test
     "test_sampling/run_bnd.cmd"
     "test_sampling/out_bnd"

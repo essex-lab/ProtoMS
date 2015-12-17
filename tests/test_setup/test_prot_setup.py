@@ -2,23 +2,9 @@
 
 import nose
 import unittest
-import argparse
 import os
-import sys
-import subprocess
-import logging
-import time
-import re
-import numpy as np
 import filecmp
-import protoms
-
-from protoms import _is_float, _get_prefix, _locate_file, _merge_templates
-from protoms import _load_ligand_pdb, _prep_ligand, _prep_protein, _prep_singletopology
-from protoms import _prep_gcmc, _prep_jaws2, _cleanup, _wizard
-
-import tools
-from tools import simulationobjects
+import site
 
 from subprocess import call
 
@@ -28,6 +14,9 @@ from subprocess import call
 
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
+
+site.addsitedir(proto_env)
+from tools import simulationobjects
 
 ref_dir = proto_env + "/tests/setup/"
 output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
@@ -45,7 +34,7 @@ class TestProtSetup(unittest.TestCase):
     def test_prep(self):
         """ Test for ProtoMS setup function."""
 
-        if((call("python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb --setupseed 100000", shell=True)) == 0):
+        if call("python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb --setupseed 100000", shell=True) == 0:
 
             # Checking whether the required output files have been setup.
             for outfile in output_files_setup:
