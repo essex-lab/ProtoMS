@@ -1,12 +1,6 @@
-/*
- * basic.css
- * ~~~~~~~~~
- *
- * Sphinx stylesheet -- basic theme.
- *
- * :copyright: Copyright 2007-2014 by the Sphinx team, see AUTHORS.
- * :license: BSD, see LICENSE for details.
- *
+/**
+ * Sphinx stylesheet -- basic theme
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
 /* -- main layout ----------------------------------------------------------- */
@@ -79,17 +73,8 @@ div.sphinxsidebar input {
     font-size: 1em;
 }
 
-div.sphinxsidebar #searchbox input[type="text"] {
-    width: 170px;
-}
-
-div.sphinxsidebar #searchbox input[type="submit"] {
-    width: 30px;
-}
-
 img {
     border: 0;
-    max-width: 100%;
 }
 
 /* -- search page ----------------------------------------------------------- */
@@ -142,10 +127,6 @@ span.linkdescr {
 
 /* -- general index --------------------------------------------------------- */
 
-table.indextable {
-    width: 100%;
-}
-
 table.indextable td {
     text-align: left;
     vertical-align: top;
@@ -171,20 +152,6 @@ img.toggler {
     cursor: pointer;
 }
 
-div.modindex-jumpbox {
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    margin: 1em 0 1em 0;
-    padding: 0.4em;
-}
-
-div.genindex-jumpbox {
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    margin: 1em 0 1em 0;
-    padding: 0.4em;
-}
-
 /* -- general body styles --------------------------------------------------- */
 
 a.headerlink {
@@ -197,10 +164,7 @@ h3:hover > a.headerlink,
 h4:hover > a.headerlink,
 h5:hover > a.headerlink,
 h6:hover > a.headerlink,
-dt:hover > a.headerlink,
-caption:hover > a.headerlink,
-p.caption:hover > a.headerlink,
-div.code-block-caption:hover > a.headerlink {
+dt:hover > a.headerlink {
     visibility: visible;
 }
 
@@ -223,36 +187,6 @@ div.body td {
 p.rubric {
     margin-top: 30px;
     font-weight: bold;
-}
-
-img.align-left, .figure.align-left, object.align-left {
-    clear: left;
-    float: left;
-    margin-right: 1em;
-}
-
-img.align-right, .figure.align-right, object.align-right {
-    clear: right;
-    float: right;
-    margin-left: 1em;
-}
-
-img.align-center, .figure.align-center, object.align-center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.align-left {
-    text-align: left;
-}
-
-.align-center {
-    text-align: center;
-}
-
-.align-right {
-    text-align: right;
 }
 
 /* -- sidebars -------------------------------------------------------------- */
@@ -318,7 +252,7 @@ table.docutils {
 }
 
 table.docutils td, table.docutils th {
-    padding: 1px 8px 1px 5px;
+    padding: 1px 8px 1px 0;
     border-top: 0;
     border-left: 0;
     border-right: 0;
@@ -338,36 +272,7 @@ th {
     padding-right: 5px;
 }
 
-table.citation {
-    border-left: solid 1px gray;
-    margin-left: 1px;
-}
-
-table.citation td {
-    border-bottom: none;
-}
-
 /* -- other body styles ----------------------------------------------------- */
-
-ol.arabic {
-    list-style: decimal;
-}
-
-ol.loweralpha {
-    list-style: lower-alpha;
-}
-
-ol.upperalpha {
-    list-style: upper-alpha;
-}
-
-ol.lowerroman {
-    list-style: lower-roman;
-}
-
-ol.upperroman {
-    list-style: upper-roman;
-}
 
 dl {
     margin-bottom: 15px;
@@ -387,7 +292,7 @@ dd {
     margin-left: 30px;
 }
 
-dt:target, .highlighted {
+dt:target, .highlight {
     background-color: #fbe54e;
 }
 
@@ -405,12 +310,12 @@ dl.glossary dt {
     margin: 0;
 }
 
-.optional {
-    font-size: 1.3em;
+.refcount {
+    color: #060;
 }
 
-.sig-paren {
-    font-size: larger;
+.optional {
+    font-size: 1.3em;
 }
 
 .versionmodified {
@@ -424,7 +329,7 @@ dl.glossary dt {
 }
 
 .footnote:target  {
-    background-color: #ffa;
+    background-color: #ffa
 }
 
 .line-block {
@@ -439,28 +344,10 @@ dl.glossary dt {
     margin-left: 1.5em;
 }
 
-.guilabel, .menuselection {
-    font-family: sans-serif;
-}
-
-.accelerator {
-    text-decoration: underline;
-}
-
-.classifier {
-    font-style: oblique;
-}
-
-abbr, acronym {
-    border-bottom: dotted 1px;
-    cursor: help;
-}
-
 /* -- code displays --------------------------------------------------------- */
 
 pre {
     overflow: auto;
-    overflow-y: hidden;  /* fixes display issues on Chrome browsers */
 }
 
 td.linenos pre {
@@ -478,50 +365,23 @@ table.highlighttable td {
     padding: 0 0.5em 0 0.5em;
 }
 
-div.code-block-caption {
-    padding: 2px 5px;
-    font-size: small;
-}
-
-div.code-block-filename code {
-    background-color: transparent;
-}
-
-div.code-block-caption + div > div.highlight > pre {
-    margin-top: 0;
-}
-
-code.descname {
+tt.descname {
     background-color: transparent;
     font-weight: bold;
     font-size: 1.2em;
 }
 
-code.descclassname {
+tt.descclassname {
     background-color: transparent;
 }
 
-code.xref, a code {
+tt.xref, a tt {
     background-color: transparent;
     font-weight: bold;
 }
 
-h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
     background-color: transparent;
-}
-
-.viewcode-link {
-    float: right;
-}
-
-.viewcode-back {
-    float: right;
-    font-family: sans-serif;
-}
-
-div.viewcode-block:target {
-    margin: -1px -10px;
-    padding: 0 10px;
 }
 
 /* -- math display ---------------------------------------------------------- */

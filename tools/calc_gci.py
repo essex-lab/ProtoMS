@@ -1,4 +1,12 @@
 # Author: Gregory Ross
+
+""" 
+Routines to calculate free energies with GCMC as outlined in J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943
+    
+Can be executed from the command line as a stand-alone program
+"""
+
+
 import sys, os
 
 import numpy as np
@@ -33,15 +41,6 @@ def intersect(a, b):
       List of elements that are found in a and b
     """
     return list(set(a) & set(b))
-
-# Disable
-def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
-
-# Restore
-def enablePrint():
-    sys.stdout = sys.__stdout__
-
 
 ## Functions specific to grand canonical integration and neural network fitting.
 def pseudohuber(r,c):
@@ -370,9 +369,7 @@ def inverse_slp(model,y):
     dev = (model.predicted - y)**2
     x_guess = model.x[np.where(dev == dev.min())][0]
     def errfunc(x): return (y - model.predict(x))**2
-    blockPrint()
     solution = optimize.minimize(errfunc, x0 = x_guess,method="BFGS") 
-    enablePrint()
     return solution.x   
 
 
@@ -774,15 +771,15 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyse and plot free energies from GCMC simulations")
   parser.add_argument('-d','--directories',nargs="+",help="the directories containing the GCMC simulation data, default=None",default=None)
   parser.add_argument('-f','--file',help="the name of the file to analyse. Default is results.",default="results")
-  parser.add_argument('-o','--out',help="the pickled file name where the fitted neural networks will be output, default=ANNs.pickle",default=None)
-  parser.add_argument('-i','--input',help="the pickled neural networks that will be read, bypassing the fitting procedure, default=ANNs.pickle",default=None)
   parser.add_argument('-p','--plot',nargs="+",choices=["titration","fit","percentiles","pmf","excess","all"],help="whether to plot the GCMC simulation data or analysis, default=None",default=None)
   parser.add_argument('-c','--calc',nargs="+",choices=["fit","pmf","minimum","excess","all"], help="fit an artificial neural network to the data, the potential of mean force to bind a specified number of waters, locate the minimum of the pmf",default=None)
   parser.add_argument('-s','--skip',help="the number of initial snapshots that will be discarded when fitting",type=int,default=0)
   parser.add_argument('-b','--bootstraps',help="the number of bootstrap samples to perform.",type=int,default=None)
+  parser.add_argument('-i','--input',help="the pickled neural networks that will be read, bypassing the fitting procedure, default=ANNs.pickle",default=None)
+  parser.add_argument('-o','--out',help="the pickled file name where the fitted neural networks will be output, default=ANNs.pickle",default=None)
   parser.add_argument('--steps', help="the number of steps observed in the titration data that will be fitted to",type=int,default=1)
   parser.add_argument('--range',nargs="+",help="range of water molecules to calculate free energy",default=None)
-  parser.add_argument('--reverse',help="reverse the direction of integration, starting from the highest number of waters to the lowest number, default=False",type=bool,default=False)
+  parser.add_argument('--reverse',action='store_true',help="reverse the direction of integration, starting from the highest number of waters to the lowest number, default=False",default=False)
   parser.add_argument('--fit_options',help="additional options to be passed to the artificial neural network",default=None)
   args = parser.parse_args()
 

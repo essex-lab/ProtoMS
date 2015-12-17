@@ -1,39 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>protoms.py &mdash; ProtoMS 3.1 documentation</title>
-    
+    <title>protoms.py &mdash; ProtoMS v3.1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '3.1',
-        COLLAPSE_INDEX: false,
+        COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="ProtoMS 3.1 documentation" href="index.html" />
+    <link rel="top" title="ProtoMS v3.1 documentation" href="index.html" />
     <link rel="next" title="Tools" href="tools.html" />
     <link rel="prev" title="Design of ProtoMS" href="protoms.html" /> 
   </head>
-  <body role="document">
+  <body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
 <a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
 </div>-->
 
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -51,37 +47,37 @@
       </ul>
     </div>
 
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/dolphin.png" alt="Logo"/>
             </a></p>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="protoms.html"
-                        title="previous chapter">Design of ProtoMS</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="tools.html"
-                        title="next chapter">Tools</a></p>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="protoms.html"
+                                  title="previous chapter">Design of ProtoMS</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="tools.html"
+                                  title="next chapter">Tools</a></p>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body">
             
   <div class="section" id="protoms-py">
 <h1>protoms.py<a class="headerlink" href="#protoms-py" title="Permalink to this headline">¶</a></h1>
@@ -98,270 +94,269 @@
 <p>The program will create files and inputs based on experience that should work in most situations. However there might be situations where the created settings are not appropriate. One can then use individual tools to make a more custom setup, see <a class="reference external" href="tools.html">this</a>. One might also have to edit the files manually.</p>
 <p><strong>Syntax:</strong></p>
 <blockquote>
-<div><code class="docutils literal"><span class="pre">protoms.py</span> <span class="pre">[-s</span> <span class="pre">none|equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2]</span> <span class="pre">[-f</span> <span class="pre">folder1</span> <span class="pre">folder2]</span> <span class="pre">[-p</span> <span class="pre">protein.pdb]</span> <span class="pre">[-sc</span> <span class="pre">scoop.pdb]</span> <span class="pre">[-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...]</span> <span class="pre">[-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...]</span> <span class="pre">[-w</span> <span class="pre">water.pdb]</span> <span class="pre">[-c</span> <span class="pre">cmdfile]</span> <span class="pre">[-r</span> <span class="pre">nrepeats</span> <span class="pre">|</span> <span class="pre">prefix]</span> <span class="pre">[--outfolder</span> <span class="pre">folder]</span> <span class="pre">[--atomnames</span> <span class="pre">namefile]</span> <span class="pre">[--watmodel</span> <span class="pre">tip4p|tip3p]</span> <span class="pre">[--waterbox</span> <span class="pre">watbox]</span> <span class="pre">[--charge</span> <span class="pre">charge1</span> <span class="pre">charge2]</span> <span class="pre">[--singlemap</span> <span class="pre">mapfile]</span>&nbsp; <span class="pre">[--center</span> <span class="pre">cent]</span> <span class="pre">[--innercut</span> <span class="pre">icut]</span> <span class="pre">[--outercut</span> <span class="pre">ocut]</span> <span class="pre">[--flexin</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--flexout</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--scooplimit</span> <span class="pre">N]</span> <span class="pre">[--capradius</span> <span class="pre">radius]</span> <span class="pre">[--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambda2</span> <span class="pre">...]</span> <span class="pre">[--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...]</span> <span class="pre">[--jawsbias</span> <span class="pre">bias]</span> <span class="pre">[--gcmcwater</span> <span class="pre">wat.pdb</span> <span class="pre">|</span> <span class="pre">N]</span> <span class="pre">[--gcmcbox</span> <span class="pre">box.pdb</span> <span class="pre">|</span> <span class="pre">X</span> <span class="pre">Y</span> <span class="pre">Z</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C]</span> <span class="pre">[--nequil</span> <span class="pre">N]</span> <span class="pre">[--nprod</span> <span class="pre">N]</span> <span class="pre">[--dumpfreq</span> <span class="pre">N]</span> <span class="pre">[--absolute]</span> <span class="pre">[--dovacuum]</span> <span class="pre">[--testrun]</span> <span class="pre">[--cleanup]</span></code></div></blockquote>
+<tt class="docutils literal"><span class="pre">protoms.py</span> <span class="pre">[-s</span> <span class="pre">none|equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2]</span> <span class="pre">[-f</span> <span class="pre">folder1</span> <span class="pre">folder2]</span> <span class="pre">[-p</span> <span class="pre">protein.pdb]</span> <span class="pre">[-sc</span> <span class="pre">scoop.pdb]</span> <span class="pre">[-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...]</span> <span class="pre">[-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...]</span> <span class="pre">[-w</span> <span class="pre">water.pdb]</span> <span class="pre">[-c</span> <span class="pre">cmdfile]</span> <span class="pre">[-r</span> <span class="pre">nrepeats</span> <span class="pre">|</span> <span class="pre">prefix]</span> <span class="pre">[--outfolder</span> <span class="pre">folder]</span> <span class="pre">[--atomnames</span> <span class="pre">namefile]</span> <span class="pre">[--watmodel</span> <span class="pre">tip4p|tip3p]</span> <span class="pre">[--waterbox</span> <span class="pre">watbox]</span> <span class="pre">[--charge</span> <span class="pre">charge1</span> <span class="pre">charge2]</span> <span class="pre">[--singlemap</span> <span class="pre">mapfile]</span>&nbsp; <span class="pre">[--center</span> <span class="pre">cent]</span> <span class="pre">[--innercut</span> <span class="pre">icut]</span> <span class="pre">[--outercut</span> <span class="pre">ocut]</span> <span class="pre">[--flexin</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--flexout</span> <span class="pre">sidechain|flexible|rigid]</span> <span class="pre">[--scooplimit</span> <span class="pre">N]</span> <span class="pre">[--capradius</span> <span class="pre">radius]</span> <span class="pre">[--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambda2</span> <span class="pre">...]</span> <span class="pre">[--adams</span> <span class="pre">B1</span> <span class="pre">B2</span> <span class="pre">...]</span> <span class="pre">[--jawsbias</span> <span class="pre">bias]</span> <span class="pre">[--gcmcwater</span> <span class="pre">wat.pdb</span> <span class="pre">|</span> <span class="pre">N]</span> <span class="pre">[--gcmcbox</span> <span class="pre">box.pdb</span> <span class="pre">|</span> <span class="pre">X</span> <span class="pre">Y</span> <span class="pre">Z</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C]</span> <span class="pre">[--nequil</span> <span class="pre">N]</span> <span class="pre">[--nprod</span> <span class="pre">N]</span> <span class="pre">[--dumpfreq</span> <span class="pre">N]</span> <span class="pre">[--absolute]</span> <span class="pre">[--dovacuum]</span> <span class="pre">[--testrun]</span> <span class="pre">[--cleanup]</span></tt></blockquote>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-s</span> <span class="pre">none|equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2</span></code> = the type of simulation to perform</dt>
-<dd><p class="first last">optional, default = <code class="docutils literal"><span class="pre">none</span></code></p>
+<dt><tt class="docutils literal"><span class="pre">-s</span> <span class="pre">none|equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2</span></tt> = the type of simulation to perform</dt>
+<dd><p class="first last">optional, default = <tt class="docutils literal"><span class="pre">none</span></tt></p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-f</span> <span class="pre">folder1</span> <span class="pre">folder2</span></code> = name of folders to search for input files</dt>
+<dt><tt class="docutils literal"><span class="pre">-f</span> <span class="pre">folder1</span> <span class="pre">folder2</span></tt> = name of folders to search for input files</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-p</span> <span class="pre">protein.pdb</span></code> = the name of the protein PDB file</dt>
+<dt><tt class="docutils literal"><span class="pre">-p</span> <span class="pre">protein.pdb</span></tt> = the name of the protein PDB file</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-o</span> <span class="pre">scoop.pdb</span></code> = the name of a protein scoop PDB file</dt>
+<dt><tt class="docutils literal"><span class="pre">-o</span> <span class="pre">scoop.pdb</span></tt> = the name of a protein scoop PDB file</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...</span></code> = the name(s) of PDB file(s) containing ligand(s)</dt>
+<dt><tt class="docutils literal"><span class="pre">-l</span> <span class="pre">lig1.pdb</span> <span class="pre">lig2.pdb</span> <span class="pre">...</span></tt> = the name(s) of PDB file(s) containing ligand(s)</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...</span></code> = the name(s) of ProtoMS template file(s) that needs to be loaded</dt>
+<dt><tt class="docutils literal"><span class="pre">-t</span> <span class="pre">template1</span> <span class="pre">template2</span> <span class="pre">...</span></tt> = the name(s) of ProtoMS template file(s) that needs to be loaded</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-w</span> <span class="pre">water.pdb</span></code> = the name of a PDB file with bulk water for the protein</dt>
+<dt><tt class="docutils literal"><span class="pre">-w</span> <span class="pre">water.pdb</span></tt> = the name of a PDB file with bulk water for the protein</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-c</span> <span class="pre">cmdfile</span></code> = the prefix for the created ProtoMS command file</dt>
-<dd><p class="first last">optional, default = <code class="docutils literal"><span class="pre">run</span></code></p>
+<dt><tt class="docutils literal"><span class="pre">-c</span> <span class="pre">cmdfile</span></tt> = the prefix for the created ProtoMS command file</dt>
+<dd><p class="first last">optional, default = <tt class="docutils literal"><span class="pre">run</span></tt></p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">-r</span> <span class="pre">nrepeats</span> <span class="pre">|</span> <span class="pre">prefix</span></code> = setup independent repeats of the simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">-r</span> <span class="pre">nrepeats</span> <span class="pre">|</span> <span class="pre">prefix</span></tt> = setup independent repeats of the simulation</dt>
 <dd><p class="first last">optional, default = 1
-<code class="docutils literal"><span class="pre">nrepeat</span></code> = repeats a created from 1 to <code class="docutils literal"><span class="pre">nrepeat</span></code>
-<code class="docutils literal"><span class="pre">prefix</span></code> = a single repeat is created, but prefix is appended to folders and files</p>
+<tt class="docutils literal"><span class="pre">nrepeat</span></tt> = repeats a created from 1 to <tt class="docutils literal"><span class="pre">nrepeat</span></tt>
+<tt class="docutils literal"><span class="pre">prefix</span></tt> = a single repeat is created, but prefix is appended to folders and files</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--outfolder</span> <span class="pre">folder</span></code> = the ProtoMS output folder</dt>
-<dd><p class="first last">optional, default = <code class="docutils literal"><span class="pre">&quot;&quot;</span></code> (empty string)</p>
+<dt><tt class="docutils literal"><span class="pre">--outfolder</span> <span class="pre">folder</span></tt> = the ProtoMS output folder</dt>
+<dd><p class="first last">optional, default = <tt class="docutils literal"><span class="pre">&quot;&quot;</span></tt> (empty string)</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--atomnames</span> <span class="pre">namefile</span></code> = the name of file containing conversion instructions</dt>
+<dt><tt class="docutils literal"><span class="pre">--atomnames</span> <span class="pre">namefile</span></tt> = the name of file containing conversion instructions</dt>
 <dd><p class="first last">optional, no default
-if not given, takes the one in <code class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></code></p>
+if not given, takes the one in <tt class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></tt></p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--watermodel</span> <span class="pre">tip4p|tip3p</span></code> = the water model to use</dt>
-<dd><p class="first last">optional, default = <code class="docutils literal"><span class="pre">tip4p</span></code></p>
+<dt><tt class="docutils literal"><span class="pre">--watermodel</span> <span class="pre">tip4p|tip3p</span></tt> = the water model to use</dt>
+<dd><p class="first last">optional, default = <tt class="docutils literal"><span class="pre">tip4p</span></tt></p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--waterbox</span> <span class="pre">watbox</span></code> = the name a of a PDB file with a pre-equilibrated water box</dt>
+<dt><tt class="docutils literal"><span class="pre">--waterbox</span> <span class="pre">watbox</span></tt> = the name a of a PDB file with a pre-equilibrated water box</dt>
 <dd><p class="first last">optional, no default
-if not given, takes one in <code class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></code></p>
+if not given, takes one in <tt class="docutils literal"><span class="pre">$PROTOMSHOME/data</span></tt></p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--charge</span> <span class="pre">charge1</span> <span class="pre">charge2</span></code> ... = the charges of the ligands</dt>
+<dt><tt class="docutils literal"><span class="pre">--charge</span> <span class="pre">charge1</span> <span class="pre">charge2</span></tt> ... = the charges of the ligands</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--singlemap</span> <span class="pre">mapfile</span></code> = the correspondence map for single-topology setup</dt>
+<dt><tt class="docutils literal"><span class="pre">--singlemap</span> <span class="pre">mapfile</span></tt> = the correspondence map for single-topology setup</dt>
 <dd><p class="first last">optional, no default</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--center</span> <span class="pre">cent</span></code> = the centre of the scoop</dt>
+<dt><tt class="docutils literal"><span class="pre">--center</span> <span class="pre">cent</span></tt> = the centre of the scoop</dt>
 <dd><p class="first last">optional, default = 0.0,0.0,0.0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--innercut</span> <span class="pre">icut</span></code> == the inner region cut-off in Angstroms</dt>
+<dt><tt class="docutils literal"><span class="pre">--innercut</span> <span class="pre">icut</span></tt> == the inner region cut-off in Angstroms</dt>
 <dd><p class="first last">optional, default = 16.9 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--outercut</span> <span class="pre">ocut</span></code> == the outer region cut-off in Angstroms</dt>
+<dt><tt class="docutils literal"><span class="pre">--outercut</span> <span class="pre">ocut</span></tt> == the outer region cut-off in Angstroms</dt>
 <dd><p class="first last">optional, default = 20.0 A</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--flexin</span> <span class="pre">sidechain|flexible|rigid</span></code> = determine the flexibility of the inner region</dt>
-<dd><p class="first last">optional, default = <code class="docutils literal"><span class="pre">flexible</span></code>
-<code class="docutils literal"><span class="pre">sidechain</span></code> = only the sidechains will be sampled in the simulation
-<code class="docutils literal"><span class="pre">flexible</span></code> = both sidechain and backbone will be sampled in the simulation
-<code class="docutils literal"><span class="pre">rigid</span></code> = no residues will be sampled</p>
+<dt><tt class="docutils literal"><span class="pre">--flexin</span> <span class="pre">sidechain|flexible|rigid</span></tt> = determine the flexibility of the inner region</dt>
+<dd><p class="first last">optional, default = <tt class="docutils literal"><span class="pre">flexible</span></tt>
+<tt class="docutils literal"><span class="pre">sidechain</span></tt> = only the sidechains will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">flexible</span></tt> = both sidechain and backbone will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">rigid</span></tt> = no residues will be sampled</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--flexout</span> <span class="pre">sidechain|flexible|rigid</span></code> = determine the flexibility of the outer region</dt>
-<dd><p class="first last">optional, default = <code class="docutils literal"><span class="pre">sidechain</span></code>
-<code class="docutils literal"><span class="pre">sidechain</span></code> = only the sidechains will be sampled in the simulation
-<code class="docutils literal"><span class="pre">flexible</span></code> = both sidechain and backbone will be sampled in the simulation
-<code class="docutils literal"><span class="pre">rigid</span></code> = no residues will be sampled</p>
+<dt><tt class="docutils literal"><span class="pre">--flexout</span> <span class="pre">sidechain|flexible|rigid</span></tt> = determine the flexibility of the outer region</dt>
+<dd><p class="first last">optional, default = <tt class="docutils literal"><span class="pre">sidechain</span></tt>
+<tt class="docutils literal"><span class="pre">sidechain</span></tt> = only the sidechains will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">flexible</span></tt> = both sidechain and backbone will be sampled in the simulation
+<tt class="docutils literal"><span class="pre">rigid</span></tt> = no residues will be sampled</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--scooplimit</span> <span class="pre">N</span></code> = the minimum removed number of residues in a scoop</dt>
+<dt><tt class="docutils literal"><span class="pre">--scooplimit</span> <span class="pre">N</span></tt> = the minimum removed number of residues in a scoop</dt>
 <dd><p class="first last">optional, default = 10</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--capradius</span> <span class="pre">radius</span></code> = the radius of the droplet solvating the protein</dt>
+<dt><tt class="docutils literal"><span class="pre">--capradius</span> <span class="pre">radius</span></tt> = the radius of the droplet solvating the protein</dt>
 <dd><p class="first last">optional, default = 30</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambada2</span></code> ... = specification of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>; space for free energy calculations</dt>
+<dt><tt class="docutils literal"><span class="pre">--lambdas</span> <span class="pre">nlambdas</span> <span class="pre">|</span> <span class="pre">lambda1</span> <span class="pre">lambada2</span></tt> ... = specification of <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>; space for free energy calculations</dt>
 <dd><p class="first last">optional, default = 16
-if a single value is given, this number of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values is created uniformly from 0 to 1
-if a list of values are given, this is the <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-values to use</p>
+if a single value is given, this number of <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-values is created uniformly from 0 to 1
+if a list of values are given, this is the <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-values to use</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--adams</span> <span class="pre">B1</span> <span class="pre">B2</span></code> ... = the Adams parameter for GCMC</dt>
+<dt><tt class="docutils literal"><span class="pre">--adams</span> <span class="pre">B1</span> <span class="pre">B2</span></tt> ... = the Adams parameter for GCMC</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--jawsbias</span> <span class="pre">bias</span></code> = the bias to apply in JAWS-2 simulations</dt>
+<dt><tt class="docutils literal"><span class="pre">--jawsbias</span> <span class="pre">bias</span></tt> = the bias to apply in JAWS-2 simulations</dt>
 <dd><p class="first last">optional, default = 0</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--gcmcwater</span> <span class="pre">wat.pdb</span> <span class="pre">|</span> <span class="pre">N</span></code> = the name of a PDB file with reservoir waters for GCMC and JAWS-1 or an integer</dt>
+<dt><tt class="docutils literal"><span class="pre">--gcmcwater</span> <span class="pre">wat.pdb</span> <span class="pre">|</span> <span class="pre">N</span></tt> = the name of a PDB file with reservoir waters for GCMC and JAWS-1 or an integer</dt>
 <dd><p class="first last">optional, no default
 if an integer is given this corresponds to the number of water to add to the GCMC/JAWS-1 box</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--gcmcbox</span> <span class="pre">box.pdb</span> <span class="pre">|</span> <span class="pre">X</span> <span class="pre">Y</span> <span class="pre">X</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span></code> = the name of a PDB file with GCMC or JAWS-1 simulation box dimension or the box dimensions</dt>
+<dt><tt class="docutils literal"><span class="pre">--gcmcbox</span> <span class="pre">box.pdb</span> <span class="pre">|</span> <span class="pre">X</span> <span class="pre">Y</span> <span class="pre">X</span> <span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span></tt> = the name of a PDB file with GCMC or JAWS-1 simulation box dimension or the box dimensions</dt>
 <dd><p class="first last">optional, no default
 if six numbers are given this corresponds to the origin (first three) and the length (last three) of the box</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--nequil</span> <span class="pre">N</span></code> = the number of equilibration moves</dt>
+<dt><tt class="docutils literal"><span class="pre">--nequil</span> <span class="pre">N</span></tt> = the number of equilibration moves</dt>
 <dd><p class="first last">optional, default = 5E6</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--nprod</span> <span class="pre">N</span></code> = the number of production moves</dt>
+<dt><tt class="docutils literal"><span class="pre">--nprod</span> <span class="pre">N</span></tt> = the number of production moves</dt>
 <dd><p class="first last">optional, default = 40E6</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--dumpfreq</span> <span class="pre">N</span></code> = the frequency with which output is written to disc</dt>
+<dt><tt class="docutils literal"><span class="pre">--dumpfreq</span> <span class="pre">N</span></tt> = the frequency with which output is written to disc</dt>
 <dd><p class="first last">optional, default = 1E5</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--absolute</span></code> = turns <em>on</em> the setup of absolute free energies</dt>
+<dt><tt class="docutils literal"><span class="pre">--absolute</span></tt> = turns <em>on</em> the setup of absolute free energies</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--dovacuum</span></code> = turns <em>on</em> the setup of vacuum simulation</dt>
+<dt><tt class="docutils literal"><span class="pre">--dovacuum</span></tt> = turns <em>on</em> the setup of vacuum simulation</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--testrun</span></code> = turns <em>on</em> the setup of a short simulations appropiate for tests</dt>
+<dt><tt class="docutils literal"><span class="pre">--testrun</span></tt> = turns <em>on</em> the setup of a short simulations appropiate for tests</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">--cleanup</span></code> = cleans up extraenous files and put them in a tar-ball</dt>
+<dt><tt class="docutils literal"><span class="pre">--cleanup</span></tt> = cleans up extraenous files and put them in a tar-ball</dt>
 <dd><p class="first last">optional, default = off</p>
 </dd>
 </dl>
 </li>
 </ul>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre>protoms.py
+<div class="highlight-python"><pre>protoms.py
 protoms.py.py -s sampling -l lig1.pdb --dovacuum --testrun
 protoms.py -s dualtopology -l lig1.pdb lig2.pdb -p protein.pdb
 protoms.py -s dualtopology -l lig1.pdb --absolute
-protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6
-</pre></div>
+protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6</pre>
 </div>
 <p><strong>Notes:</strong></p>
-<p>The program will try to locate previously created files for the protein and ligand in the current working directory or any folder specified with the <code class="docutils literal"><span class="pre">-f</span></code> flag. For ligands the program will replace <code class="docutils literal"><span class="pre">.pdb</span></code> with the appropriate ending, such as <code class="docutils literal"><span class="pre">.prepi</span></code> for Amber prepi files and <code class="docutils literal"><span class="pre">.tem</span></code> for ProtoMS template files.</p>
+<p>The program will try to locate previously created files for the protein and ligand in the current working directory or any folder specified with the <tt class="docutils literal"><span class="pre">-f</span></tt> flag. For ligands the program will replace <tt class="docutils literal"><span class="pre">.pdb</span></tt> with the appropriate ending, such as <tt class="docutils literal"><span class="pre">.prepi</span></tt> for Amber prepi files and <tt class="docutils literal"><span class="pre">.tem</span></tt> for ProtoMS template files.</p>
 <p>Starting with just the PDB-files of the ligand(s) and the protein, the program will create the following files in the same folder as those PDB-files</p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">lig.prepi</span></code> = the z-matrix and atom types of the ligand in Amber format</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">lig.prepi</span></tt> = the z-matrix and atom types of the ligand in Amber format</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">lig.frcmod</span></code> = additional parameters not in GAFF</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">lig.frcmod</span></tt> = additional parameters not in GAFF</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">lig.zmat</span></code> = the z-matrix of the ligand used to sample it in the MC simulation</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">lig.zmat</span></tt> = the z-matrix of the ligand used to sample it in the MC simulation</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">lig.tem</span></code> = the complete template (force field) file for the ligand in ProtoMS format</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">lig.tem</span></tt> = the complete template (force field) file for the ligand in ProtoMS format</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">li1-li2.tem</span></code> = the combined template file of all ligands</dt>
+<dt><tt class="docutils literal"><span class="pre">li1-li2.tem</span></tt> = the combined template file of all ligands</dt>
 <dd><p class="first last">the filename is a combination of the residue name of all ligands</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">lig_box.pdb</span></code> = the box of water solvating the ligand</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">lig_box.pdb</span></tt> = the box of water solvating the ligand</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">protein_scoop.pdb</span></code> = the truncated protein structure</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">protein_scoop.pdb</span></tt> = the truncated protein structure</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">protein_pms.pdb</span></code> = the original protein structure with ProtoMS naming convention</dt>
+<dt><tt class="docutils literal"><span class="pre">protein_pms.pdb</span></tt> = the original protein structure with ProtoMS naming convention</dt>
 <dd><p class="first last">if the scoop removes to few residues, this file be created instead</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">water.pdb</span></code> = the cap of water solvating the protein system</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">water.pdb</span></tt> = the cap of water solvating the protein system</p>
 </li>
 </ul>
 <p>In addition, for dual-topology simulations the following files are created: :</p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">lig1_dummy.pdb</span></code> = the dummy particle that the ligand will be perturbed to</dt>
+<dt><tt class="docutils literal"><span class="pre">lig1_dummy.pdb</span></tt> = the dummy particle that the ligand will be perturbed to</dt>
 <dd><p class="first last">only created if the &#8211;absolute flag is set</p>
 </dd>
 </dl>
@@ -369,14 +364,14 @@ protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6
 </ul>
 <p>In addition, for single-topology simulations the following files are created:</p>
 <ul>
-<li><p class="first"><code class="docutils literal"><span class="pre">li1-li2_ele.tem</span></code> = the ProtoMS template file for electrostatic single-topology perturbation</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">li1-li2_ele.tem</span></tt> = the ProtoMS template file for electrostatic single-topology perturbation</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">li1-li2_vdw.tem</span></code> = the ProtoMS template file for van der Waals single-topology perturbation</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">li1-li2_vdw.tem</span></tt> = the ProtoMS template file for van der Waals single-topology perturbation</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">li1-li2_comb.tem</span></code> = the ProtoMS template file for combined/single-step single-topology perturbation</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">li1-li2_comb.tem</span></tt> = the ProtoMS template file for combined/single-step single-topology perturbation</p>
 </li>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">settings.singlemap</span></code> = the created correspondance map for single topology</dt>
+<dt><tt class="docutils literal"><span class="pre">settings.singlemap</span></tt> = the created correspondance map for single topology</dt>
 <dd><p class="first last">only named like this if the &#8211;singlemap argument is not set</p>
 </dd>
 </dl>
@@ -384,26 +379,25 @@ protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6
 </ul>
 <p>In addition, for GCMC / JAWS-1 simulations the following files are created:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">gcmc_box.pdb</span></code> / <code class="docutils literal"><span class="pre">jaws1_box.pdb</span></code> = the GCMC / JAWS-1 simulation box</li>
-<li><code class="docutils literal"><span class="pre">gcmc_wat.pdb</span></code> = the GCMC / JAWS-1 reservoire waters</li>
-<li><code class="docutils literal"><span class="pre">water_clr.pdb</span></code> = the cap of water solvating the protein system, cleared from the GCMC / JAWS-1 simulation box</li>
+<li><tt class="docutils literal"><span class="pre">gcmc_box.pdb</span></tt> / <tt class="docutils literal"><span class="pre">jaws1_box.pdb</span></tt> = the GCMC / JAWS-1 simulation box</li>
+<li><tt class="docutils literal"><span class="pre">gcmc_wat.pdb</span></tt> = the GCMC / JAWS-1 reservoire waters</li>
+<li><tt class="docutils literal"><span class="pre">water_clr.pdb</span></tt> = the cap of water solvating the protein system, cleared from the GCMC / JAWS-1 simulation box</li>
 </ul>
 <p>In addition, for JAWS-2 simulations the following files are created:</p>
 <ul>
 <li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">jaws2_watN.pdb</span></code> = the JAWS-2 water</dt>
-<dd><p class="first last">each of the water given with the <code class="docutils literal"><span class="pre">--gcmc_water</span></code> flag will be written to an individual file</p>
+<dt><tt class="docutils literal"><span class="pre">jaws2_watN.pdb</span></tt> = the JAWS-2 water</dt>
+<dd><p class="first last">each of the water given with the <tt class="docutils literal"><span class="pre">--gcmc_water</span></tt> flag will be written to an individual file</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">jaws2_notN.pdb</span></code> = the rest of the JAWS-2 water</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">jaws2_notN.pdb</span></tt> = the rest of the JAWS-2 water</p>
 </li>
-<li><p class="first"><code class="docutils literal"><span class="pre">water_clr.pdb</span></code> = the cap of water solvating the protein system, cleared from the GCMC / JAWS-1 simulation box</p>
+<li><p class="first"><tt class="docutils literal"><span class="pre">water_clr.pdb</span></tt> = the cap of water solvating the protein system, cleared from the GCMC / JAWS-1 simulation box</p>
 </li>
 </ul>
 <p>It will create at most three ProtoMS command files, one for the protein simulation, one for the ligand simulation and one for the gas-phase simulation. These can be used to run ProtoMS, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>$PROTOMS/protoms3 run_free.cmd
-</pre></div>
+<div class="highlight-python"><pre>$PROTOMS/protoms3 run_free.cmd</pre>
 </div>
 <p><strong>Prerequisites:</strong></p>
 <p>The program assumes that both the ligand and the protein is prepared before. This includes for instance protonation. At the moment <em>only</em> Amber naming convention is supported.</p>
@@ -416,7 +410,7 @@ protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -433,9 +427,9 @@ protoms.py -s gcmc -p protein.pdb --adams -4 -2 0 2 4 6
  
       </ul>
     </div>
-    <div class="footer" role="contentinfo">
-        &copy; Copyright 2015, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, J. Graham.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    <div class="footer">
+      &copy; Copyright 2015, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, J. Graham.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.6.
     </div>
   </body>
 </html>

@@ -9,25 +9,11 @@ ARCHIVEPRREFIX =
 # Additional LaTeX options
 LATEXOPTS =
 
-LATEX = latex
-PDFLATEX = pdflatex
-MAKEINDEX = makeindex
-
 all: $(ALLPDF)
 all-pdf: $(ALLPDF)
 all-dvi: $(ALLDVI)
 all-ps: all-dvi
 	for f in *.dvi; do dvips $$f; done
-
-all-pdf-ja:
-	for f in *.pdf *.png *.gif *.jpg *.jpeg; do extractbb $$f; done
-	for f in *.tex; do platex -kanji=utf8 $(LATEXOPTS) $$f; done
-	for f in *.tex; do platex -kanji=utf8 $(LATEXOPTS) $$f; done
-	for f in *.tex; do platex -kanji=utf8 $(LATEXOPTS) $$f; done
-	-for f in *.idx; do mendex -U -f -d "`basename $$f .idx`.dic" -s python.ist $$f; done
-	for f in *.tex; do platex -kanji=utf8 $(LATEXOPTS) $$f; done
-	for f in *.tex; do platex -kanji=utf8 $(LATEXOPTS) $$f; done
-	for f in *.dvi; do dvipdfmx $$f; done
 
 zip: all-$(FMT)
 	mkdir $(ARCHIVEPREFIX)docs-$(FMT)
@@ -47,24 +33,26 @@ bz2: tar
 # The number of LaTeX runs is quite conservative, but I don't expect it
 # to get run often, so the little extra time won't hurt.
 %.dvi: %.tex
-	$(LATEX) $(LATEXOPTS) '$<'
-	$(LATEX) $(LATEXOPTS) '$<'
-	$(LATEX) $(LATEXOPTS) '$<'
-	-$(MAKEINDEX) -s python.ist '$(basename $<).idx'
-	$(LATEX) $(LATEXOPTS) '$<'
-	$(LATEX) $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
+	-makeindex -s python.ist '$(basename $<).idx'
+	-makeindex -s python.ist '$(basename mod$<).idx'
+	latex $(LATEXOPTS) '$<'
+	latex $(LATEXOPTS) '$<'
 
 %.pdf: %.tex
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	-$(MAKEINDEX) -s python.ist '$(basename $<).idx'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
-	$(PDFLATEX) $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
+	-makeindex -s python.ist '$(basename $<).idx'
+	-makeindex -s python.ist '$(basename mod$<).idx'
+	pdflatex $(LATEXOPTS) '$<'
+	pdflatex $(LATEXOPTS) '$<'
 
 clean:
-	rm -f *.dvi *.log *.ind *.aux *.toc *.syn *.idx *.out *.ilg *.pla
+	rm -f *.pdf *.dvi *.ps
+	rm -f *.log *.ind *.aux *.toc *.syn *.idx *.out *.ilg *.pla
 
 .PHONY: all all-pdf all-dvi all-ps clean
-.PHONY: all-pdf-ja
 

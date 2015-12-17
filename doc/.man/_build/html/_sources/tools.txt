@@ -299,37 +299,120 @@ If the ``-gr`` flag is set the gradient with respect to :math:`\lambda` is plott
 The MBAR estimator only works if PyMBAR is properly installed and can be loaded as a python library. 
 
 
+
+-----------------------
+calc_gci.py
+-----------------------
+
+**Syntax:**
+ 
+``calc_gci.py -d directories [-f file] [-p titration|fit|percentiles|pmf|excess|all] [-c fit|pmf|minimum|excess|all] [-s nskip] [-b nboots] [-i] [-o] [--steps nsteps] [--range A B] [--reverse] [--fit_options]``
+
+* ``-d directories`` = the output directories from GCMC
+* ``-f file`` = the name of ProtoMS results file
+  optional, default =results
+* ``-p`` = the selections for ploting data, 
+  optional, default = none
+    ``titration`` = the average number of GCMC waters at each B value
+    ``fit`` = titration plot with line of best fit
+    ``percentiles`` = titration plot with median fit (red line), 50% confidense region of fit (orange), and 90% confidense region of fit (gray)
+    ``pmf`` = relative binding free energy of a given number of waters, median (blue line), 50% confidense region of fit (light blue), and 90% confidense region of fit (gray)
+    ``excess`` = excess chemical potential of cavity as a function of water occupancy and equilibrium point with bulk water
+    ``all`` = calculate everything
+* ``-c`` = selection for one or several calculations, 
+  optional, default = none
+    ``fit`` = whether to fit and artficial neural network to smooth GCMC titration data
+    ``pmf`` = potential of mean force: free energies for inserting or deleting waters calculated with grand canonical integration
+    ``minimum`` = whether to calculate the occupancy that minimises binding free energy 
+    ``excess`` = excess chemical potential of cavity as a function of water
+    ``all`` = calculate everything
+* ``-s nskip`` = the number of initial snapshots to discard
+  optional, default = 0 
+* ``-b`` = the number of bootstrap samples
+  optional, default = none
+* ``-i`` = python pickle of fitted artificial neural network you wish to use
+  optional, default = none
+* ``-o`` = name of the python pickle of fitted artificial neural network you wish to save
+  optional, default = none
+* ``--steps nsteps`` = the number of units that will comprise the artificial neural network, recommended to be set to equal the number of steps observed in the titration data
+  optional, default = 1
+* ``--range A B`` = the minimum and maximum number of waters you wish to consider
+  optional, default = the range spanned by the titration data
+* ``--reverse`` = whether to peform grand canonical integration in the reverse direction: from the high to low water occupancy, instead of low to high
+  optional, default = False
+* ``--fit_options`` = set of fitting options to parse to the artificial neural network optimisation.
+  optional, default = None
+
+
+**Examples:**
+
+::
+
+  calc_gci.py -d out_gcmc/b_* -p titration
+  calc_gci.py -d out_gcmc/b_* -p all -c all --steps 3
+  calc_gci.py -d out_gcmc/b_* -p percentiles -c fit --steps 3 -b 1000 --fit_options "repeats 1 pin_min 0.0 cost huber c 1" -o ANN.pickle 
+  calc_gci.py -d out_gcmc/b_* -i ANN.pickle -p pmf -c pmf minimum
+  calc_gci.py -d out_gcmc/b_* -i ANN.pickle -c pmf --range 3 4
+
+
+**Description:**
+
+Collection of tools to analyse and visualise GCMC titration data of water using grand canonical integration (GCI). Used to plot average number of waters for a given Adams value, i.e. GCMC titration data, calculate transfer free energies from ideal gas, calculate absolute and relative binding free energies of water, calculate and/or estimate optimal number of bound waters. As described in Ross et al., J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943. 
+
+Prior to using the armoury of options available in this script, it is wise to first view the titration data with ``-p titration``. The plot shows the average number of water molecules at each Adams value. It's important to use ``--skip nframes`` to check that the form of the graph doesn't significantly change if some initial snapshots are discarded when computing the average. The value of ``nframes`` can be informed by the tool ``calc_series.py``. 
+
+All the other functions contained in this tool require the fitting of a monotonically increasing artificial neural network (ANN) to the titration data. This is merely a sum of logistic/step functions that has been constrained to produce a line with upward steps. The purpose of the ANN is to smooth over the titration data so the area under the curve can be reliably evaluated; the imposition of monotonicity is important as it is a property the titration data should have. The number of units in the ANN (i.e. the number of step functions) is input using ``--steps nsteps`` and should be chosen to capture the major features of the titration data. It is better to err on the side of over-fitting than under-fitting, so don't be stingy with how many steps you use. To improve reproducibility and to save time in subsequent analyses, an ANN can be saved and loaded using the flags ``-i`` and ``-o`` respectively. The fitting of an ANN is performed automatically if any of the calculation options (other than ``fit``) with ``-c`` are specified. Detailed fitting parameters can be parsed to the ANN using ``--fit_options``, discussed below.
+
+Error estimates of free energies and optimal number of waters are based on either (a) automatic repeated fitting of the ANN from different random initial parameters or (b) bootstrap sampling of the titration data, which samples B-values with replacement. The latter is selected with ``-b nboots``, where ``nboots`` is the number of bootstrap samples. When running a large number of bootstrap samples (eg 1000), its recommended to save to bootstrap ANNs with ``-o``.
+
+The flag ``-c pmf`` calculates the free energy to transfer water molecules from ideal gas, and from bulk water, where the abbreviation stands for “potential of mean force”. A table will be printed
+that contains the free energy to transfer water from ideal gas to the simulated volume (with the heading ``IDEAL GAS TRANSFER FREE ENERGIES``), and the free energy to transfer from bulk water at a temperature of 298.15 K (with the heading ``BINDING FREE ENERGIES``). From the multiple ANN fits (either automatic repeated fits or bootstrap sampling), various statistics have been calculated. The ``Mean`` and ``Median`` are different averages of the calculated free energies, with the median being more robust to bad fits of the ANN than the mean. The standard deviation (``Std.  Dev.``) as well as the range between the 25th and 75th percentiles serve as error estimates.
+
+Due to the accumulation of error when performing integration, the estimated error of the calculated free energies increases with the number of water molecules. To emphasise this, one can also perform GCI in the reverse direction and calculate the free energy to decouple water from the simulated volume with the flag ``--reverse``.  
+
+One can calculate the free energy to add and remove a specific number of waters with the ``--range`` flag, which requires and upper and a lower number of waters as input. Particularly, the estimated error for the relative free energy between two occupancies is improved as accumulated integration error is reduced.
+
+If this flag is specified along with 'minimum', eg ``-c pmf minimum``, then the number of water molecules that minimises the explicitly calculated binding free energy (the optimal number) is printed under the heading ``MINIMUM BINDING FREE ENERGY STATE``. The B-value that produces an average number of waters equal to the optimal number is also estimated. If only ``-c minimum`` is specified, the B-value that replicates equilibrium with bulk water at a temperature of 298.15 K is estimated using an analytical formula, without calculating binding free energies with GCI. This B-value, and the average number of waters that appear at this B-value are printed under ``THERMODYNAMIC EQUILIBRIUM STATE``.
+
+The flag ``--fit_options`` allows one to pass commands into the ANN fitting tool. The default options for the ANN may need tweaking to accurately reproduce the GCMC titration data. The most important options for the user are “repeats" - number of times the entire process of fitting an ANN is repeated, all fits are retained to estimate the fitting error, default=20; “pin_min” - value to constrain the intercept to, useful when a titration goes to zero waters; “cost” - the type of cost/loss function that is minimised when fitting, the three choices are 'msd' (mean squared deviation), 'absolute' (absolute error), and 'huber' (pseudo Huber loss), default=msd; “c” - the parameter in the pseudo Huber loss function, default=2. Both the 'absolute' and 'huber' loss functions are suited to very noisy titration data, as they are more robust to outliers than 'msd', although using  the fitting algorithm may produce unstable fits with 'absolute'.
+
+
 -----------------------
 calc_gcsingle.py
 -----------------------
 
 **Syntax:**
  
-``calc_gcsingle.py -d directories [-f file] [-s nskip] [-r A B] [--plot]``
+``calc_gcsingle.py -d directories [-f file] [-s nskip] [-c] [-p] [--guess number] [--excess]``
 
 * ``-d directories`` = the output directories from GCMC
 * ``-f file`` = the name of ProtoMS results file
   optional, default =results
 * ``-s nskip`` = the number of initial snapshots to discard
   optional, default = 0 
-* ``-r A B`` = the range of the Adams value to make the estimate on
-  optional
+* ``-c`` = whether to calculate the ideal gas transfer free energy, 
+  optional, default = True
   if not set the program will use all data
-* ``--plot`` = whether to plot the estimated excess chemical potential
-  optional, default = yes
+* ``-p`` = whether to plot the titration data with least squares fit and bootstrap fit
+  optional
+* ``--guess number`` = the initial estimate of the transfer free energy used as the initial value in least squares fitting
+  optional, default = -6.2
+* ``--excess`` = whether to view and calculate the excess chemical potential
+  optional
+
 
 **Examples:**
 
 ::
 
-  calc_gcsingle.py -d out_gcmc
-  calc_gcsingle.py -d out_gcmc -s 100
-  calc_gcsingle.py -d out_gcmc -r -8 -12
+  calc_gcsingle.py -d out_gcmc/b_* -p 
+  calc_gcsingle.py -d out_gcmc/b_* -p --guess -10
+  calc_gcsingle.py -d out_gcmc/b_* --excess
 
 
 **Description:**
 
-This tool analyse and plot free energies from GCMC simulations
+This tool analyses and plots free energies from GCMC simulations on sites that can bind only a single water molecule as described in Ross et al., J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943. The tool fits a logistic function to GCMC titration data, where the point of inflection/point of half maximum is equals the free energy to transfer a water molecule from ideal gas to the GCMC volume, divided by kT. This tool should only be applied to GCMC titration data where the maximum occupancy equals 1.
 
 -----------------------
 calc_replicapath.py
