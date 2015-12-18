@@ -1,11 +1,11 @@
 mode template
 chain aacenterILE
-bbatom 1 N 6001 6001
-bbatom 2 CA 6033 6033
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6034 6034 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 33 33 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 34 34 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -20,12 +20,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterCYX
-bbatom 1 N 6001 6001
-bbatom 2 CA 6222 6222
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6223 6223 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 219 219 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 220 220 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -40,14 +40,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermALA
-bbatom 1 N 6517 6517
-bbatom 2 CA 6519 6519
-bbatom 3 C 6522 6522
-bbatom 4 O 6523 6523
-atom HN1 6518 6518 N CA C
-atom HN2 6518 6518 N CA C
-atom HN3 6518 6518 N CA C
-atom HA 6520 6520 CA N C
+bbatom 1 N 516 516 
+bbatom 2 CA 518 518 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 517 517 N CA C 
+atom HN2 517 517 N CA C 
+atom HN3 517 517 N CA C 
+atom HA 519 519 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -70,12 +70,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterHIP
-bbatom 1 N 6067 6067
-bbatom 2 CA 6109 6109
-bbatom 3 C 6082 6082
-bbatom 4 O 6083 6083
-atom HN 6068 6068 N CA C
-atom HA 6110 6110 CA N C
+bbatom 1 N 109 109 
+bbatom 2 CA 111 111 
+bbatom 3 C 124 124 
+bbatom 4 O 125 125 
+atom HN 110 110 N CA C 
+atom HA 112 112 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -90,14 +90,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermCYX
-bbatom 1 N 6755 6755
-bbatom 2 CA 6757 6757
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6756 6756 N CA C
-atom HN2 6756 6756 N CA C
-atom HN3 6756 6756 N CA C
-atom HA 6758 6758 CA N C
+bbatom 1 N 763 763 
+bbatom 2 CA 765 765 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 764 764 N CA C 
+atom HN2 764 764 N CA C 
+atom HN3 764 764 N CA C 
+atom HA 766 766 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -120,12 +120,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterTRP
-bbatom 1 N 6001 6001
-bbatom 2 CA 6122 6122
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6123 6123 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 126 126 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 127 127 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -140,12 +140,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterASP
-bbatom 1 N 6163 6163
-bbatom 2 CA 6175 6175
-bbatom 3 C 6173 6173
-bbatom 4 O 6174 6174
-atom HN 6164 6164 N CA C
-atom HA 6176 6176 CA N C
+bbatom 1 N 168 168 
+bbatom 2 CA 180 180 
+bbatom 3 C 178 178 
+bbatom 4 O 179 179 
+atom HN 169 169 N CA C 
+atom HA 181 181 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -160,12 +160,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterCYS
-bbatom 1 N 6001 6001
-bbatom 2 CA 6216 6216
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6217 6217 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 213 213 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 214 214 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -180,12 +180,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain glycenterGLY
-bbatom 1 N 6001 6001
-bbatom 2 CA 6009 6009
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA1 6010 6010 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 9 9 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA1 10 10 CA N C 
 zmat HA1 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -200,14 +200,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermTRP
-bbatom 1 N 6657 6657
-bbatom 2 CA 6659 6659
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6658 6658 N CA C
-atom HN2 6658 6658 N CA C
-atom HN3 6658 6658 N CA C
-atom HA 6660 6660 CA N C
+bbatom 1 N 661 661 
+bbatom 2 CA 663 663 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 662 662 N CA C 
+atom HN2 662 662 N CA C 
+atom HN3 662 662 N CA C 
+atom HA 678 678 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -230,12 +230,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterSER
-bbatom 1 N 6001 6001
-bbatom 2 CA 6011 6011
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6012 6012 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 11 11 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 12 12 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -250,12 +250,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterALA
-bbatom 1 N 6001 6001
-bbatom 2 CA 6003 6003
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6004 6004 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 3 3 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 4 4 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -270,14 +270,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermTYR
-bbatom 1 N 6691 6691
-bbatom 2 CA 6693 6693
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6692 6692 N CA C
-atom HN2 6692 6692 N CA C
-atom HN3 6692 6692 N CA C
-atom HA 6694 6694 CA N C
+bbatom 1 N 695 695 
+bbatom 2 CA 697 697 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 696 696 N CA C 
+atom HN2 696 696 N CA C 
+atom HN3 696 696 N CA C 
+atom HA 698 698 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -300,13 +300,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermMET
-bbatom 1 N 6258 6258
-bbatom 2 CA 6506 6506
-bbatom 3 C 6515 6515
-bbatom 4 O 6516 6516
-atom HN 6259 6259 N CA C
-atom OT 6516 6516 C O CA
-atom HA 6507 6507 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 505 505 
+bbatom 3 C 514 514 
+bbatom 4 O 515 515 
+atom HN 252 252 N CA C 
+atom OT 515 515 C O CA 
+atom HA 506 506 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -323,13 +323,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermARG
-bbatom 1 N 6340 6340
-bbatom 2 CA 6342 6342
-bbatom 3 C 6355 6355
-bbatom 4 O 6356 6356
-atom HN 6341 6341 N CA C
-atom OT 6356 6356 C O CA
-atom HA 6343 6343 CA N C
+bbatom 1 N 333 333 
+bbatom 2 CA 335 335 
+bbatom 3 C 348 348 
+bbatom 4 O 349 349 
+atom HN 334 334 N CA C 
+atom OT 349 349 C O CA 
+atom HA 336 336 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -346,12 +346,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain proctermPRO
-bbatom 1 N 6480 6480
-bbatom 2 CA 6487 6487
-bbatom 3 C 6489 6489
-bbatom 4 O 6490 6490
-atom HA 6488 6488 CA N C
-atom OT 6490 6490 C O CA
+bbatom 1 N 479 479 
+bbatom 2 CA 486 486 
+bbatom 3 C 488 488 
+bbatom 4 O 489 489 
+atom HA 487 487 CA N C 
+atom OT 489 489 C O CA 
 zmat HA 1.090 109.5 120.0
 zmat OT 1.229 120.0 180.0
 bond O C 
@@ -363,13 +363,13 @@ angle HA CA N flex 0.50
 
 mode template
 chain prontermPRO
-bbatom 1 N 6738 6738
-bbatom 2 CA 6744 6744
-bbatom 3 C 6745 6745
-bbatom 4 O 6746 6746
-atom HA 6741 6741 CA N C
-atom HN1 6739 6739 N CA C
-atom HN2 6739 6739 N CA C
+bbatom 1 N 745 745 
+bbatom 2 CA 752 752 
+bbatom 3 C 753 753 
+bbatom 4 O 754 754 
+atom HA 748 748 CA N C 
+atom HN1 746 746 N CA C 
+atom HN2 746 746 N CA C 
 zmat HN1 1.010 119.8 180.0
 zmat HN2 1.010 119.8 60.0
 zmat HA 1.090 109.5 120.0
@@ -388,14 +388,14 @@ dihedral HN2 N CA C flex 3.0
 
 mode template
 chain aantermARG
-bbatom 1 N 6599 6599
-bbatom 2 CA 6601 6601
-bbatom 3 C 6613 6613
-bbatom 4 O 6614 6614
-atom HN1 6600 6600 N CA C
-atom HN2 6600 6600 N CA C
-atom HN3 6600 6600 N CA C
-atom HA 6602 6602 CA N C
+bbatom 1 N 599 599 
+bbatom 2 CA 601 601 
+bbatom 3 C 614 614 
+bbatom 4 O 615 615 
+atom HN1 600 600 N CA C 
+atom HN2 600 600 N CA C 
+atom HN3 600 600 N CA C 
+atom HA 602 602 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -418,12 +418,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterTYR
-bbatom 1 N 6001 6001
-bbatom 2 CA 6152 6152
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6153 6153 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 156 156 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 157 157 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -438,13 +438,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermILE
-bbatom 1 N 6258 6258
-bbatom 2 CA 6298 6298
-bbatom 3 C 6308 6308
-bbatom 4 O 6309 6309
-atom HN 6259 6259 N CA C
-atom OT 6309 6309 C O CA
-atom HA 6299 6299 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 291 291 
+bbatom 3 C 301 301 
+bbatom 4 O 302 302 
+atom HN 252 252 N CA C 
+atom OT 302 302 C O CA 
+atom HA 292 292 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -461,14 +461,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermLYS
-bbatom 1 N 6724 6724
-bbatom 2 CA 6726 6726
-bbatom 3 C 6613 6613
-bbatom 4 O 6614 6614
-atom HN1 6725 6725 N CA C
-atom HN2 6725 6725 N CA C
-atom HN3 6725 6725 N CA C
-atom HA 6727 6727 CA N C
+bbatom 1 N 729 729 
+bbatom 2 CA 731 731 
+bbatom 3 C 743 743 
+bbatom 4 O 744 744 
+atom HN1 730 730 N CA C 
+atom HN2 730 730 N CA C 
+atom HN3 730 730 N CA C 
+atom HA 732 732 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -491,11 +491,11 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain procenterPRO
-bbatom 1 N 6205 6205
-bbatom 2 CA 6212 6212
-bbatom 3 C 6214 6214
-bbatom 4 O 6215 6215
-atom HA 6213 6213 CA N C
+bbatom 1 N 202 202 
+bbatom 2 CA 209 209 
+bbatom 3 C 211 211 
+bbatom 4 O 212 212 
+atom HA 210 210 CA N C 
 zmat HA 1.090 109.5 120.0
 bond O C 
 bond CA HA 
@@ -505,13 +505,13 @@ angle HA CA N flex 0.50
 
 mode template
 chain glyctermGLY
-bbatom 1 N 6258 6258
-bbatom 2 CA 6266 6266
-bbatom 3 C 6268 6268
-bbatom 4 O 6269 6269
-atom HN 6259 6259 N CA C
-atom OT 6269 6269 C O CA
-atom HA1 6267 6267 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 259 259 
+bbatom 3 C 261 261 
+bbatom 4 O 262 262 
+atom HN 252 252 N CA C 
+atom OT 262 262 C O CA 
+atom HA1 260 260 CA N C 
 zmat HA1 1.090 109.5 120.0
 zmat OT 1.229 120.0 180.0
 zmat HN 1.010 119.8 180.0
@@ -528,14 +528,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermPHE
-bbatom 1 N 6677 6677
-bbatom 2 CA 6678 6678
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6578 6578 N CA C
-atom HN2 6578 6578 N CA C
-atom HN3 6578 6578 N CA C
-atom HA 6679 6679 CA N C
+bbatom 1 N 682 682 
+bbatom 2 CA 684 684 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 683 683 N CA C 
+atom HN2 683 683 N CA C 
+atom HN3 683 683 N CA C 
+atom HA 685 685 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -558,12 +558,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterASN
-bbatom 1 N 6001 6001
-bbatom 2 CA 6049 6049
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6050 6050 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 49 49 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 50 50 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -578,14 +578,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermGLH
-bbatom 1 N 6001 6001
-bbatom 2 CA 6248 6248
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN1 6002 6002 N CA C
-atom HN2 6002 6002 N CA C
-atom HN3 6002 6002 N CA C
-atom HA 6249 6249 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 241 241 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN1 2 2 N CA C 
+atom HN2 2 2 N CA C 
+atom HN3 2 2 N CA C 
+atom HA 242 242 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -608,12 +608,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterASH
-bbatom 1 N 6001 6001
-bbatom 2 CA 6240 6240
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6241 6241 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 233 233 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 234 234 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -628,13 +628,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermLEU
-bbatom 1 N 6258 6258
-bbatom 2 CA 6288 6288
-bbatom 3 C 6296 6296
-bbatom 4 O 6297 6297
-atom HN 6259 6259 N CA C
-atom OT 6297 6297 C O CA
-atom HA 6289 6289 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 281 281 
+bbatom 3 C 289 289 
+bbatom 4 O 290 290 
+atom HN 252 252 N CA C 
+atom OT 290 290 C O CA 
+atom HA 282 282 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -651,13 +651,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermTYR
-bbatom 1 N 6258 6258
-bbatom 2 CA 6433 6433
-bbatom 3 C 6445 6445
-bbatom 4 O 6446 6446
-atom HN 6259 6259 N CA C
-atom OT 6446 6446 C O CA
-atom HA 6434 6434 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 429 429 
+bbatom 3 C 441 441 
+bbatom 4 O 442 442 
+atom HN 252 252 N CA C 
+atom OT 442 442 C O CA 
+atom HA 430 430 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -674,14 +674,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermVAL
-bbatom 1 N 6569 6569
-bbatom 2 CA 6571 6571
-bbatom 3 C 6522 6522
-bbatom 4 O 6523 6523
-atom HN1 6570 6570 N CA C
-atom HN2 6570 6570 N CA C
-atom HN3 6570 6570 N CA C
-atom HA 6572 6572 CA N C
+bbatom 1 N 569 569 
+bbatom 2 CA 571 571 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 570 570 N CA C 
+atom HN2 570 570 N CA C 
+atom HN3 570 570 N CA C 
+atom HA 572 572 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -704,13 +704,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermPHE
-bbatom 1 N 6258 6258
-bbatom 2 CA 6005 6005
-bbatom 3 C 6431 6431
-bbatom 4 O 6432 6432
-atom HN 6259 6259 N CA C
-atom OT 6432 6432 C O CA
-atom HA 6421 6421 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 416 416 
+bbatom 3 C 427 427 
+bbatom 4 O 428 428 
+atom HN 252 252 N CA C 
+atom OT 428 428 C O CA 
+atom HA 417 417 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -727,13 +727,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermALA
-bbatom 1 N 6258 6258
-bbatom 2 CA 6260 6260
-bbatom 3 C 6264 6264
-bbatom 4 O 6265 6265
-atom HN 6259 6259 N CA C
-atom OT 6265 6265 C O CA
-atom HA 6261 6261 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 253 253 
+bbatom 3 C 257 257 
+bbatom 4 O 258 258 
+atom HN 252 252 N CA C 
+atom OT 258 258 C O CA 
+atom HA 254 254 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -750,13 +750,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermSER
-bbatom 1 N 6258 6258
-bbatom 2 CA 6270 6270
-bbatom 3 C 6276 6276
-bbatom 4 O 6277 6277
-atom HN 6259 6259 N CA C
-atom OT 6277 6277 C O CA
-atom HA 6271 6271 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 263 263 
+bbatom 3 C 269 269 
+bbatom 4 O 270 270 
+atom HN 252 252 N CA C 
+atom OT 270 270 C O CA 
+atom HA 264 264 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -773,12 +773,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterHIE
-bbatom 1 N 6001 6001
-bbatom 2 CA 6096 6096
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6097 6097 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 96 96 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 97 97 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -793,13 +793,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermHIE
-bbatom 1 N 6258 6258
-bbatom 2 CA 6371 6371
-bbatom 3 C 6383 6383
-bbatom 4 O 6384 6384
-atom HN 6259 6259 N CA C
-atom OT 6384 6384 C O CA
-atom HA 6372 6372 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 364 364 
+bbatom 3 C 376 376 
+bbatom 4 O 377 377 
+atom HN 252 252 N CA C 
+atom OT 377 377 C O CA 
+atom HA 365 365 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -816,14 +816,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermMET
-bbatom 1 N 6762 6762
-bbatom 2 CA 6764 6764
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6763 6763 N CA C
-atom HN2 6763 6763 N CA C
-atom HN3 6763 6763 N CA C
-atom HA 6765 6765 CA N C
+bbatom 1 N 770 770 
+bbatom 2 CA 772 772 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 771 771 N CA C 
+atom HN2 771 771 N CA C 
+atom HN3 771 771 N CA C 
+atom HA 773 773 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -846,14 +846,14 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aantermHIS
-bbatom 1 N 6615 6615
-bbatom 2 CA 6617 6617
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6616 6616 N CA C
-atom HN2 6616 6616 N CA C
-atom HN3 6616 6616 N CA C
-atom HA 6618 6618 CA N C
+bbatom 1 N 616 616 
+bbatom 2 CA 618 618 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 617 617 N CA C 
+atom HN2 617 617 N CA C 
+atom HN3 617 617 N CA C 
+atom HA 619 619 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -876,14 +876,14 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aantermHIP
-bbatom 1 N 6642 6642
-bbatom 2 CA 6644 6644
-bbatom 3 C 6613 6613
-bbatom 4 O 6614 6614
-atom HN1 6643 6643 N CA C
-atom HN2 6643 6643 N CA C
-atom HN3 6643 6643 N CA C
-atom HA 6645 6645 CA N C
+bbatom 1 N 644 644 
+bbatom 2 CA 646 646 
+bbatom 3 C 659 659 
+bbatom 4 O 660 660 
+atom HN1 645 645 N CA C 
+atom HN2 645 645 N CA C 
+atom HN3 645 645 N CA C 
+atom HA 647 647 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -906,13 +906,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermTRP
-bbatom 1 N 6258 6258
-bbatom 2 CA 6400 6400
-bbatom 3 C 6419 6419
-bbatom 4 O 6420 6420
-atom HN 6259 6259 N CA C
-atom OT 6420 6420 C O CA
-atom HA 6401 6401 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 395 395 
+bbatom 3 C 414 414 
+bbatom 4 O 415 415 
+atom HN 252 252 N CA C 
+atom OT 415 415 C O CA 
+atom HA 396 396 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -929,13 +929,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermGLN
-bbatom 1 N 6258 6258
-bbatom 2 CA 6328 6328
-bbatom 3 C 6338 6338
-bbatom 4 O 6339 6339
-atom HN 6259 6259 N CA C
-atom OT 6339 6339 C O CA
-atom HA 6329 6329 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 321 321 
+bbatom 3 C 331 331 
+bbatom 4 O 332 332 
+atom HN 252 252 N CA C 
+atom OT 332 332 C O CA 
+atom HA 322 322 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -952,13 +952,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermGLH
-bbatom 1 N 6001 6001
-bbatom 2 CA 6248 6248
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom OT 6008 6008 C O CA
-atom HA 6249 6249 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 241 241 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom OT 8 8 C O CA 
+atom HA 242 242 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -975,14 +975,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermASN
-bbatom 1 N 6577 6577
-bbatom 2 CA 6579 6579
-bbatom 3 C 6522 6522
-bbatom 4 O 6523 6523
-atom HN1 6578 6578 N CA C
-atom HN2 6578 6578 N CA C
-atom HN3 6578 6578 N CA C
-atom HA 6580 6580 CA N C
+bbatom 1 N 577 577 
+bbatom 2 CA 579 579 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 578 578 N CA C 
+atom HN2 578 578 N CA C 
+atom HN3 578 578 N CA C 
+atom HA 580 580 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1005,13 +1005,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermLYS
-bbatom 1 N 6340 6340
-bbatom 2 CA 6467 6467
-bbatom 3 C 6478 6478
-bbatom 4 O 6479 6479
-atom HN 6341 6341 N CA C
-atom OT 6479 6479 C O CA
-atom HA 6311 6311 CA N C
+bbatom 1 N 463 463 
+bbatom 2 CA 465 465 
+bbatom 3 C 477 477 
+bbatom 4 O 478 478 
+atom HN 464 464 N CA C 
+atom OT 478 478 C O CA 
+atom HA 466 466 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1028,13 +1028,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermGLU
-bbatom 1 N 6447 6447
-bbatom 2 CA 6449 6449
-bbatom 3 C 6457 6457
-bbatom 4 O 6458 6458
-atom HN 6448 6448 N CA C
-atom OT 6458 6458 C O CA
-atom HA 6450 6450 CA N C
+bbatom 1 N 443 443 
+bbatom 2 CA 445 445 
+bbatom 3 C 453 453 
+bbatom 4 O 454 454 
+atom HN 444 444 N CA C 
+atom OT 454 454 C O CA 
+atom HA 446 446 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1051,14 +1051,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermHIE
-bbatom 1 N 6629 6629
-bbatom 2 CA 6604 6604
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6630 6630 N CA C
-atom HN2 6630 6630 N CA C
-atom HN3 6630 6630 N CA C
-atom HA 6631 6631 CA N C
+bbatom 1 N 630 630 
+bbatom 2 CA 632 632 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 631 631 N CA C 
+atom HN2 631 631 N CA C 
+atom HN3 631 631 N CA C 
+atom HA 633 633 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1081,13 +1081,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermHIS
-bbatom 1 N 6258 6258
-bbatom 2 CA 6357 6357
-bbatom 3 C 6369 6369
-bbatom 4 O 6370 6370
-atom HN 6259 6259 N CA C
-atom OT 6370 6370 C O CA
-atom HA 6358 6358 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 350 350 
+bbatom 3 C 362 362 
+bbatom 4 O 363 363 
+atom HN 252 252 N CA C 
+atom OT 363 363 C O CA 
+atom HA 351 351 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1104,12 +1104,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterPHE
-bbatom 1 N 6001 6001
-bbatom 2 CA 6141 6141
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6142 6142 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 145 145 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 146 146 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1124,12 +1124,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterTHR
-bbatom 1 N 6001 6001
-bbatom 2 CA 6017 6017
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6018 6018 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 17 17 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 18 18 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1144,12 +1144,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterLYS
-bbatom 1 N 6067 6067
-bbatom 2 CA 6181 6181
-bbatom 3 C 6082 6082
-bbatom 4 O 6083 6083
-atom HN 6068 6068 N CA C
-atom HA 6182 6182 CA N C
+bbatom 1 N 186 186 
+bbatom 2 CA 188 188 
+bbatom 3 C 200 200 
+bbatom 4 O 201 201 
+atom HN 187 187 N CA C 
+atom HA 189 189 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1163,12 +1163,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterLYN
-bbatom 1 N 6001 6001
-bbatom 2 CA 6193 6193
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6194 6194 CA N C
+bbatom 1 N 810 810 
+bbatom 2 CA 812 812 
+bbatom 3 C 824 824 
+bbatom 4 O 825 825 
+atom HN 811 811 N CA C 
+atom HA 813 813 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1182,13 +1182,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermTHR
-bbatom 1 N 6258 6258
-bbatom 2 CA 6278 6278
-bbatom 3 C 6286 6286
-bbatom 4 O 6287 6287
-atom HN 6259 6259 N CA C
-atom OT 6287 6287 C O CA
-atom HA 6279 6279 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 271 271 
+bbatom 3 C 279 279 
+bbatom 4 O 280 280 
+atom HN 252 252 N CA C 
+atom OT 280 280 C O CA 
+atom HA 272 272 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1205,14 +1205,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermCYS
-bbatom 1 N 6747 6747
-bbatom 2 CA 6749 6749
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6748 6748 N CA C
-atom HN2 6748 6748 N CA C
-atom HN3 6748 6748 N CA C
-atom HA 6750 6750 CA N C
+bbatom 1 N 755 755 
+bbatom 2 CA 757 757 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 756 756 N CA C 
+atom HN2 756 756 N CA C 
+atom HN3 756 756 N CA C 
+atom HA 758 758 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1235,14 +1235,14 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aantermTHR
-bbatom 1 N 6536 6536
-bbatom 2 CA 6538 6538
-bbatom 3 C 6522 6522
-bbatom 4 O 6523 6523
-atom HN1 6537 6537 N CA C
-atom HN2 6537 6537 N CA C
-atom HN3 6537 6537 N CA C
-atom HA 6539 6539 CA N C
+bbatom 1 N 536 536 
+bbatom 2 CA 538 538 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 537 537 N CA C 
+atom HN2 537 537 N CA C 
+atom HN3 537 537 N CA C 
+atom HA 539 539 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1265,13 +1265,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermHIP
-bbatom 1 N 6340 6340
-bbatom 2 CA 6385 6385
-bbatom 3 C 6398 6398
-bbatom 4 O 6399 6399
-atom HN 6341 6341 N CA C
-atom OT 6399 6399 C O CA
-atom HA 6386 6386 CA N C
+bbatom 1 N 378 378 
+bbatom 2 CA 380 380 
+bbatom 3 C 393 393 
+bbatom 4 O 394 394 
+atom HN 379 379 N CA C 
+atom OT 394 394 C O CA 
+atom HA 381 381 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1288,14 +1288,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermSER
-bbatom 1 N 6528 6528
-bbatom 2 CA 6530 6530
-bbatom 3 C 6522 6522
-bbatom 4 O 6523 6523
-atom HN1 6529 6529 N CA C
-atom HN2 6529 6529 N CA C
-atom HN3 6529 6529 N CA C
-atom HA 6531 6531 CA N C
+bbatom 1 N 528 528 
+bbatom 2 CA 530 530 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 529 529 N CA C 
+atom HN2 529 529 N CA C 
+atom HN3 529 529 N CA C 
+atom HA 531 531 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1318,13 +1318,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermCYX
-bbatom 1 N 6258 6258
-bbatom 2 CA 6499 6499
-bbatom 3 C 6504 6504
-bbatom 4 O 6505 6505
-atom HN 6259 6259 N CA C
-atom OT 6505 6505 C O CA
-atom HA 6500 6500 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 498 498 
+bbatom 3 C 503 503 
+bbatom 4 O 504 504 
+atom HN 252 252 N CA C 
+atom OT 504 504 C O CA 
+atom HA 499 499 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1341,14 +1341,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermASH
-bbatom 1 N 6001 6001
-bbatom 2 CA 6240 6240
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN1 6002 6002 N CA C
-atom HN2 6002 6002 N CA C
-atom HN3 6002 6002 N CA C
-atom HA 6241 6241 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 233 233 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN1 2 2 N CA C 
+atom HN2 2 2 N CA C 
+atom HN3 2 2 N CA C 
+atom HA 234 234 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1371,13 +1371,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermCYS
-bbatom 1 N 6258 6258
-bbatom 2 CA 6491 6491
-bbatom 3 C 6497 6497
-bbatom 4 O 6498 6498
-atom HN 6259 6259 N CA C
-atom OT 6498 6498 C O CA
-atom HA 6492 6492 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 490 490 
+bbatom 3 C 496 496 
+bbatom 4 O 497 497 
+atom HN 252 252 N CA C 
+atom OT 497 497 C O CA 
+atom HA 491 491 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1394,13 +1394,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermASN
-bbatom 1 N 6258 6258
-bbatom 2 CA 6318 6318
-bbatom 3 C 6326 6326
-bbatom 4 O 6327 6327
-atom HN 6259 6259 N CA C
-atom OT 6327 6327 C O CA
-atom HA 6319 6319 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 311 311 
+bbatom 3 C 319 319 
+bbatom 4 O 320 320 
+atom HN 252 252 N CA C 
+atom OT 320 320 C O CA 
+atom HA 312 312 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1417,12 +1417,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterMET
-bbatom 1 N 6001 6001
-bbatom 2 CA 6227 6227
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6176 6176 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 224 224 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 225 225 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1437,12 +1437,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterGLH
-bbatom 1 N 6001 6001
-bbatom 2 CA 6248 6248
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6249 6249 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 241 241 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 242 242 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1457,14 +1457,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermLEU
-bbatom 1 N 6546 6546
-bbatom 2 CA 6548 6548
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6547 6547 N CA C
-atom HN2 6547 6547 N CA C
-atom HN3 6547 6547 N CA C
-atom HA 6549 6549 CA N C
+bbatom 1 N 546 546 
+bbatom 2 CA 548 548 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 547 547 N CA C 
+atom HN2 547 547 N CA C 
+atom HN3 547 547 N CA C 
+atom HA 549 549 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1487,12 +1487,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterGLN
-bbatom 1 N 6001 6001
-bbatom 2 CA 6057 6057
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6058 6058 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 57 57 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 58 58 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1507,14 +1507,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermGLU
-bbatom 1 N 6705 6705
-bbatom 2 CA 6707 6707
-bbatom 3 C 6714 6714
-bbatom 4 O 6715 6715
-atom HN1 6706 6706 N CA C
-atom HN2 6706 6706 N CA C
-atom HN3 6706 6706 N CA C
-atom HA 6708 6708 CA N C
+bbatom 1 N 709 709 
+bbatom 2 CA 711 711 
+bbatom 3 C 719 719 
+bbatom 4 O 720 720 
+atom HN1 710 710 N CA C 
+atom HN2 710 710 N CA C 
+atom HN3 710 710 N CA C 
+atom HA 712 712 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1537,13 +1537,13 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aactermASH
-bbatom 1 N 6001 6001
-bbatom 2 CA 6240 6240
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom OT 6008 6008 C O CA
-atom HA 6241 6241 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 233 233 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom OT 8 8 C O CA 
+atom HA 234 234 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1560,14 +1560,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermILE
-bbatom 1 N 6558 6558
-bbatom 2 CA 6560 6560
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6559 6559 N CA C
-atom HN2 6559 6559 N CA C
-atom HN3 6559 6559 N CA C
-atom HA 6561 6561 CA N C
+bbatom 1 N 557 557 
+bbatom 2 CA 559 559 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 558 558 N CA C 
+atom HN2 558 558 N CA C 
+atom HN3 558 558 N CA C 
+atom HA 560 560 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1590,12 +1590,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterHIS
-bbatom 1 N 6001 6001
-bbatom 2 CA 6084 6084
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6085 6085 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 84 84 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 85 85 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1610,14 +1610,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain glyntermGLY
-bbatom 1 N 6524 6524
-bbatom 2 CA 6526 6526
-bbatom 3 C 6522 6522
-bbatom 4 O 6523 6523
-atom HN1 6525 6525 N CA C
-atom HN2 6525 6525 N CA C
-atom HN3 6525 6525 N CA C
-atom HA1 6527 6527 CA N C
+bbatom 1 N 524 524 
+bbatom 2 CA 526 526 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 525 525 N CA C 
+atom HN2 525 525 N CA C 
+atom HN3 525 525 N CA C 
+atom HA1 527 527 CA N C 
 zmat HN1 1.010 119.8 180.0
 zmat HA1 1.090 109.5 120.0
 zmat HN3 1.010 119.8 300.0
@@ -1640,14 +1640,14 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aantermGLN
-bbatom 1 N 6587 6587
-bbatom 2 CA 6589 6589
-bbatom 3 C 6556 6556
-bbatom 4 O 6557 6557
-atom HN1 6588 6588 N CA C
-atom HN2 6588 6588 N CA C
-atom HN3 6588 6588 N CA C
-atom HA 6590 6590 CA N C
+bbatom 1 N 587 587 
+bbatom 2 CA 589 589 
+bbatom 3 C 522 522 
+bbatom 4 O 523 523 
+atom HN1 588 588 N CA C 
+atom HN2 588 588 N CA C 
+atom HN3 588 588 N CA C 
+atom HA 590 590 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1670,12 +1670,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterGLU
-bbatom 1 N 6163 6163
-bbatom 2 CA 6165 6165
-bbatom 3 C 6173 6173
-bbatom 4 O 6174 6174
-atom HN 6164 6164 N CA C
-atom HA 6166 6166 CA N C
+bbatom 1 N 168 168 
+bbatom 2 CA 170 170 
+bbatom 3 C 178 178 
+bbatom 4 O 179 179 
+atom HN 169 169 N CA C 
+atom HA 171 171 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1690,13 +1690,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermASP
-bbatom 1 N 6447 6447
-bbatom 2 CA 6459 6459
-bbatom 3 C 6465 6465
-bbatom 4 O 6466 6466
-atom HN 6448 6448 N CA C
-atom OT 6466 6466 C O CA
-atom HA 6460 6460 CA N C
+bbatom 1 N 443 443 
+bbatom 2 CA 455 455 
+bbatom 3 C 461 461 
+bbatom 4 O 462 462 
+atom HN 444 444 N CA C 
+atom OT 462 462 C O CA 
+atom HA 456 456 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1713,12 +1713,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterARG
-bbatom 1 N 6067 6067
-bbatom 2 CA 6069 6069
-bbatom 3 C 6082 6082
-bbatom 4 O 6083 6083
-atom HN 6068 6068 N CA C
-atom HA 6070 6070 CA N C
+bbatom 1 N 67 67 
+bbatom 2 CA 69 69 
+bbatom 3 C 82 82 
+bbatom 4 O 83 83 
+atom HN 68 68 N CA C 
+atom HA 70 70 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1733,14 +1733,14 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aantermASP
-bbatom 1 N 6716 6716
-bbatom 2 CA 6718 6718
-bbatom 3 C 6714 6714
-bbatom 4 O 6715 6715
-atom HN1 6717 6717 N CA C
-atom HN2 6717 6717 N CA C
-atom HN3 6717 6717 N CA C
-atom HA 6719 6719 CA N C
+bbatom 1 N 721 721 
+bbatom 2 CA 723 723 
+bbatom 3 C 719 719 
+bbatom 4 O 720 720 
+atom HN1 722 722 N CA C 
+atom HN2 722 722 N CA C 
+atom HN3 722 722 N CA C 
+atom HA 724 724 CA N C 
 zmat HN1 1.010 109.4 180.0
 zmat HN3 1.010 109.4 300.0
 zmat HN2 1.010 109.4 60.0
@@ -1763,12 +1763,12 @@ dihedral HN3 N CA C flex 3.0
 
 mode template
 chain aacenterLEU
-bbatom 1 N 6001 6001
-bbatom 2 CA 6025 6025
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6026 6026 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 25 25 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 26 26 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1783,13 +1783,13 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aactermVAL
-bbatom 1 N 6258 6258
-bbatom 2 CA 6310 6310
-bbatom 3 C 6316 6316
-bbatom 4 O 6317 6317
-atom HN 6259 6259 N CA C
-atom OT 6317 6317 C O CA
-atom HA 6311 6311 CA N C
+bbatom 1 N 251 251 
+bbatom 2 CA 303 303 
+bbatom 3 C 309 309 
+bbatom 4 O 310 310 
+atom HN 252 252 N CA C 
+atom OT 310 310 C O CA 
+atom HA 304 304 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 zmat OT 1.229 120.0 180.0
@@ -1806,12 +1806,12 @@ dihedral HN N CA C flex 3.0
 
 mode template
 chain aacenterVAL
-bbatom 1 N 6001 6001
-bbatom 2 CA 6043 6043
-bbatom 3 C 6007 6007
-bbatom 4 O 6008 6008
-atom HN 6002 6002 N CA C
-atom HA 6044 6044 CA N C
+bbatom 1 N 1 1 
+bbatom 2 CA 43 43 
+bbatom 3 C 7 7 
+bbatom 4 O 8 8 
+atom HN 2 2 N CA C 
+atom HA 44 44 CA N C 
 zmat HA 1.090 109.5 120.0
 zmat HN 1.010 119.8 180.0
 bond O C 
@@ -1827,16 +1827,16 @@ mode template
 residue GLH
 info rotate 2.000 translate 0.050
 backbone first aantermGLH middle aacenterGLH last aactermGLH
-atom CB 6250 6250 6250 6250 6250 6250 CA N C
-atom CG 6252 6252 6252 6252 6252 6252 CB CA N
-atom CD 6254 6254 6254 6254 6254 6254 CG CB CA
-atom OE1 6255 6255 6255 6255 6255 6255 CD CG CB
-atom OE2 6256 6256 6256 6256 6256 6256 CD CG OE1
-atom HB1 6251 6251 6251 6251 6251 6251 CB CA CG
-atom HB2 6251 6251 6251 6251 6251 6251 CB CA CG
-atom HG1 6253 6253 6253 6253 6253 6253 CG CB CD
-atom HG2 6253 6253 6253 6253 6253 6253 CG CB CD
-atom HE2 6257 6257 6257 6257 6257 6257 OE2 CD OE1
+atom CB 243 243 243 243 243 243 CA N C 
+atom CG 245 245 245 245 245 245 CB CA N 
+atom CD 247 247 247 247 247 247 CG CB CA 
+atom OE1 248 248 248 248 248 248 CD CG CB 
+atom OE2 249 249 249 249 249 249 CD CG OE1 
+atom HB1 244 244 244 244 244 244 CB CA CG 
+atom HB2 244 244 244 244 244 244 CB CA CG 
+atom HG1 246 246 246 246 246 246 CG CB CD 
+atom HG2 246 246 246 246 246 246 CG CB CD 
+atom HE2 250 250 250 250 250 250 OE2 CD OE1 
 zmat HE2 0.970 107.0 0.0
 zmat CB 1.529 111.1 -120.0
 zmat OE1 1.250 108.0 -90.0
@@ -1876,19 +1876,19 @@ mode template
 residue ILE
 info rotate 2.000 translate 0.050
 backbone first aantermILE middle aacenterILE last aactermILE
-atom CB 6035 6035 6562 6562 6300 6300 CA N C
-atom CG1 6039 6039 6565 6565 6304 6304 CB CA N
-atom CG2 6037 6037 6563 6563 6302 6302 CB CA CG1
-atom CD1 6041 6041 6567 6567 6306 6306 CG1 CB CA
-atom HB 6036 6036 6209 6209 6301 6301 CB CA CG1
-atom HG4 6040 6040 6566 6566 6305 6305 CG1 CB CD1
-atom HG5 6040 6040 6566 6566 6305 6305 CG1 CB CD1
-atom HG1 6038 6038 6564 6564 6303 6303 CG2 CB CA
-atom HG2 6038 6038 6564 6564 6303 6303 CG2 CB HG1
-atom HG3 6038 6038 6564 6564 6303 6303 CG2 CB HG1
-atom HD1 6042 6042 6568 6568 6307 6307 CD1 CG1 CB
-atom HD2 6042 6042 6568 6568 6307 6307 CD1 CG1 HD1
-atom HD3 6042 6042 6568 6568 6307 6307 CD1 CG1 HD1
+atom CB 35 35 561 561 293 293 CA N C 
+atom CG1 39 39 565 565 297 297 CB CA N 
+atom CG2 37 37 563 563 295 295 CB CA CG1 
+atom CD1 41 41 567 567 299 299 CG1 CB CA 
+atom HB 36 36 562 562 294 294 CB CA CG1 
+atom HG4 38 38 564 564 296 296 CG1 CB CD1 
+atom HG5 38 38 564 564 296 296 CG1 CB CD1 
+atom HG1 40 40 566 566 298 298 CG2 CB CA 
+atom HG2 40 40 566 566 298 298 CG2 CB HG1 
+atom HG3 38 38 564 564 296 296 CG2 CB HG1 
+atom HD1 42 42 568 568 300 300 CD1 CG1 CB 
+atom HD2 42 42 568 568 300 300 CD1 CG1 HD1 
+atom HD3 42 42 568 568 300 300 CD1 CG1 HD1 
 zmat HD3 1.090 109.5 -120.0
 zmat HD2 1.090 109.5 120.0
 zmat HD1 1.090 109.5 180.0
@@ -1938,17 +1938,17 @@ mode template
 residue GLN
 info rotate 2.000 translate 0.050
 backbone first aantermGLN middle aacenterGLN last aactermGLN
-atom CB 6059 6059 6591 6591 6330 6330 CA N C
-atom CG 6061 6061 6593 6593 6332 6332 CB CA N
-atom CD 6063 6063 6595 6595 6334 6334 CG CB CA
-atom NE2 6065 6065 6597 6597 6336 6336 CD CG CB
-atom HE1 6066 6066 6598 6598 6337 6337 NE2 CD CG
-atom HE2 6066 6066 6598 6598 6337 6337 NE2 CD HE1
-atom OE1 6064 6064 6596 6596 6335 6335 CD CG NE2
-atom HB1 6060 6060 6592 6592 6331 6331 CB CA CG
-atom HB2 6060 6060 6592 6592 6331 6331 CB CA CG
-atom HG1 6062 6062 6594 6594 6333 6333 CG CB CD
-atom HG2 6062 6062 6594 6594 6333 6333 CG CB CD
+atom CB 59 59 591 591 323 323 CA N C 
+atom CG 61 61 593 593 325 325 CB CA N 
+atom CD 63 63 595 595 327 327 CG CB CA 
+atom NE2 65 65 597 597 329 329 CD CG CB 
+atom HE1 66 66 598 598 330 330 NE2 CD CG 
+atom HE2 66 66 598 598 330 330 NE2 CD HE1 
+atom OE1 64 64 596 596 328 328 CD CG NE2 
+atom HB1 60 60 592 592 324 324 CB CA CG 
+atom HB2 60 60 592 592 324 324 CB CA CG 
+atom HG1 62 62 594 594 326 326 CG CB CD 
+atom HG2 62 62 594 594 326 326 CG CB CD 
 zmat HE1 1.008 119.2 180.0
 zmat HE2 1.008 119.2 180.0
 zmat CB 1.535 111.1 -120.0
@@ -1990,7 +1990,7 @@ mode template
 residue GLY
 info rotate 2.000 translate 0.050
 backbone first glyntermGLY middle glycenterGLY last glyctermGLY
-atom HA2 6010 6010 6527 6527 6267 6267 CA N C
+atom HA2 10 10 527 527 260 260 CA N C 
 zmat HA2 1.090 109.5 -120.0
 bond HA2 CA 
 angle HA2 CA N flex 0.50
@@ -1999,16 +1999,16 @@ mode template
 residue GLU
 info rotate 2.000 translate 0.050
 backbone first aantermGLU middle aacenterGLU last aactermGLU
-atom CB 6167 6167 6709 6709 6451 6451 CA N C
-atom CG 6169 6169 6508 6508 6453 6453 CB CA N
-atom CD 6171 6171 6712 6712 6455 6455 CG CB CA
-atom OE1 6172 6172 6713 6713 6456 6456 CD CG CB
-atom OE2 6172 6172 6713 6713 6456 6456 CD CG OE1
-atom HB1 6168 6168 6710 6710 6452 6452 CB CA CG
-atom HB2 6168 6168 6710 6710 6452 6452 CB CA CG
-atom HG1 6170 6170 6711 6711 6454 6454 CG CB CD
-atom HG2 6170 6170 6711 6711 6454 6454 CG CB CD
-atom HE2 6100 6100 6100 6100 6100 6100 OE2 CD OE1
+atom CB 172 172 713 713 447 447 CA N C 
+atom CG 174 174 715 715 449 449 CB CA N 
+atom CD 176 176 717 717 451 451 CG CB CA 
+atom OE1 177 177 718 718 452 452 CD CG CB 
+atom OE2 177 177 718 718 452 452 CD CG OE1 
+atom HB1 173 173 714 714 448 448 CB CA CG 
+atom HB2 173 173 714 714 448 448 CB CA CG 
+atom HG1 175 175 716 716 450 450 CG CB CD 
+atom HG2 175 175 716 716 450 450 CG CB CD 
+atom HE2 100 100 100 100 100 100 OE2 CD OE1 
 zmat HE2 0.970 107.0 0.0
 zmat CB 1.529 111.1 -120.0
 zmat OE1 1.250 117.0 -90.0
@@ -2047,11 +2047,11 @@ mode template
 residue CYS
 info rotate 2.000 translate 0.050
 backbone first aantermCYS middle aacenterCYS last aactermCYS
-atom CB 6218 6218 6751 6751 6493 6493 CA N C
-atom SG 6220 6220 6753 6753 6495 6495 CB CA N
-atom HG 6221 6221 6754 6754 6496 6496 SG CB CA
-atom HB1 6219 6219 6752 6752 6494 6494 CB CA SG
-atom HB2 6219 6219 6752 6752 6494 6494 CB CA SG
+atom CB 215 215 759 759 492 492 CA N C 
+atom SG 217 217 761 761 494 494 CB CA N 
+atom HG 218 218 762 762 495 495 SG CB CA 
+atom HB1 216 216 760 760 493 493 CB CA SG 
+atom HB2 216 216 760 760 493 493 CB CA SG 
 zmat CB 1.544 111.1 -120.0
 zmat SG 1.813 113.6 180.0
 zmat HB1 1.090 109.5 120.0
@@ -2075,18 +2075,18 @@ mode template
 residue HIS
 info rotate 2.000 translate 0.050
 backbone first aantermHIS middle aacenterHIS last aactermHIS
-atom CB 6086 6086 6619 6619 6359 6359 CA N C
-atom CG 6088 6088 6621 6621 6361 6361 CB CA N
-atom ND1 6089 6089 6622 6622 6362 6362 CG CB CA
-atom CE1 6091 6091 6624 6624 6364 6364 ND1 CG CB
-atom HND 6090 6090 6623 6623 6363 6363 ND1 CG CE1
-atom NE2 6093 6093 6626 6626 6366 6366 CE1 ND1 CG
-atom HE 6092 6092 6625 6625 6365 6365 CE1 ND1 NE2
-atom CD2 6094 6094 6627 6627 6367 6367 NE2 CE1 ND1
-atom HD 6095 6095 6628 6628 6368 6368 CD2 NE2 CG
-atom HNE 6100 6100 6100 6100 6100 6100 NE2 CE1 CD2
-atom HB1 6087 6087 6620 6620 6360 6360 CB CA CG
-atom HB2 6087 6087 6620 6620 6360 6360 CB CA CG
+atom CB 86 86 620 620 352 352 CA N C 
+atom CG 88 88 622 622 354 354 CB CA N 
+atom ND1 89 89 623 623 355 355 CG CB CA 
+atom CE1 91 91 625 625 357 357 ND1 CG CB 
+atom HND 90 90 624 624 356 356 ND1 CG CE1 
+atom NE2 93 93 627 627 359 359 CE1 ND1 CG 
+atom HE 92 92 626 626 358 358 CE1 ND1 NE2 
+atom CD2 94 94 628 628 360 360 NE2 CE1 ND1 
+atom HD 95 95 629 629 361 361 CD2 NE2 CG 
+atom HNE 100 100 100 100 100 100 NE2 CE1 CD2 
+atom HB1 87 87 621 621 353 353 CB CA CG 
+atom HB2 87 87 621 621 353 353 CB CA CG 
 zmat HNE 1.010 125.0 180.0
 zmat HND 1.010 126.0 180.0
 zmat CB 1.555 111.1 -120.0
@@ -2127,11 +2127,11 @@ mode template
 residue SER
 info rotate 2.000 translate 0.050
 backbone first aantermSER middle aacenterSER last aactermSER
-atom CB 6013 6013 6532 6532 6272 6272 CA N C
-atom OG 6015 6015 6534 6534 6274 6274 CB CA N
-atom HG 6016 6016 6535 6535 6275 6275 OG CB CA
-atom HB1 6014 6014 6533 6533 6273 6273 CB CA OG
-atom HB2 6014 6014 6533 6533 6273 6273 CB CA OG
+atom CB 13 13 532 532 265 265 CA N C 
+atom OG 15 15 534 534 267 267 CB CA N 
+atom HG 16 16 535 535 268 268 OG CB CA 
+atom HB1 14 14 533 533 266 266 CB CA OG 
+atom HB2 14 14 533 533 266 266 CB CA OG 
 zmat OG 1.427 114.4 180.0
 zmat CB 1.543 111.1 -120.0
 zmat HB1 1.090 109.5 120.0
@@ -2155,22 +2155,22 @@ mode template
 residue LYS
 info rotate 2.000 translate 0.050
 backbone first aantermLYS middle aacenterLYS last aactermLYS
-atom CB 6183 6183 6728 6728 6468 6468 CA N C
-atom CG 6185 6185 6730 6730 6470 6470 CB CA N
-atom CD 6187 6187 6732 6732 6472 6472 CG CB CA
-atom CE 6189 6189 6734 6734 6474 6474 CD CG CB
-atom NZ 6191 6191 6736 6736 6476 6476 CE CD CG
-atom HZ1 6192 6192 6737 6737 6477 6477 NZ CE CD
-atom HZ2 6192 6192 6737 6737 6477 6477 NZ CE HZ1
-atom HZ3 6192 6192 6737 6737 6477 6477 NZ CE HZ1
-atom HB1 6184 6184 6729 6729 6469 6469 CB CA CG
-atom HB2 6184 6184 6729 6729 6469 6469 CB CA CG
-atom HG1 6186 6186 6731 6731 6471 6471 CG CB CD
-atom HG2 6186 6186 6731 6731 6471 6471 CG CB CD
-atom HD1 6188 6188 6733 6733 6473 6473 CD CG CE
-atom HD2 6188 6188 6733 6733 6473 6473 CD CG CE
-atom HE1 6190 6190 6735 6735 6475 6475 CE CD NZ
-atom HE2 6190 6190 6735 6735 6475 6475 CE CD NZ
+atom CB 190 190 733 733 467 467 CA N C 
+atom CG 192 192 735 735 469 469 CB CA N 
+atom CD 194 194 737 737 471 471 CG CB CA 
+atom CE 196 196 739 739 473 473 CD CG CB 
+atom NZ 198 198 741 741 475 475 CE CD CG 
+atom HZ1 199 199 742 742 476 476 NZ CE CD 
+atom HZ2 199 199 742 742 476 476 NZ CE HZ1 
+atom HZ3 199 199 742 742 476 476 NZ CE HZ1 
+atom HB1 191 191 734 734 468 468 CB CA CG 
+atom HB2 191 191 734 734 468 468 CB CA CG 
+atom HG1 193 193 736 736 470 470 CG CB CD 
+atom HG2 193 193 736 736 470 470 CG CB CD 
+atom HD1 195 195 738 738 472 472 CD CG CE 
+atom HD2 195 195 738 738 472 472 CD CG CE 
+atom HE1 197 197 740 740 474 474 CE CD NZ 
+atom HE2 197 197 740 740 474 474 CE CD NZ 
 zmat HE2 1.090 109.5 -120.0
 zmat HD2 1.090 109.5 -120.0
 zmat HD1 1.090 109.5 120.0
@@ -2232,22 +2232,22 @@ mode template
 residue LYN
 info rotate 2.000 translate 0.050
 backbone middle aacenterLYN 
-atom CB 6195 6195 6100 6100 6100 6100 CA N C
-atom CG 6197 6197 6100 6100 6100 6100 CB CA N
-atom CD 6199 6199 6100 6100 6100 6100 CG CB CA
-atom CE 6201 6201 6100 6100 6100 6100 CD CG CB
-atom NZ 6203 6203 6100 6100 6100 6100 CE CD CG
-atom HZ1 6100 6100 6100 6100 6100 6100 NZ CE CD
-atom HZ2 6204 6204 6100 6100 6100 6100 NZ CE CD
-atom HZ3 6204 6204 6100 6100 6100 6100 NZ CE HZ2
-atom HB1 6196 6196 6100 6100 6100 6100 CB CA CG
-atom HB2 6196 6196 6100 6100 6100 6100 CB CA CG
-atom HG1 6198 6198 6100 6100 6100 6100 CG CB CD
-atom HG2 6198 6198 6100 6100 6100 6100 CG CB CD
-atom HD1 6200 6200 6100 6100 6100 6100 CD CG CE
-atom HD2 6200 6200 6100 6100 6100 6100 CD CG CE
-atom HE1 6202 6202 6100 6100 6100 6100 CE CD NZ
-atom HE2 6202 6202 6100 6100 6100 6100 CE CD NZ
+atom CB 814 814 100 100 100 100 CA N C 
+atom CG 816 816 100 100 100 100 CB CA N 
+atom CD 818 818 100 100 100 100 CG CB CA 
+atom CE 820 820 100 100 100 100 CD CG CB 
+atom NZ 822 822 100 100 100 100 CE CD CG 
+atom HZ1 100 100 100 100 100 100 NZ CE CD
+atom HZ2 823 823 100 100 100 100 NZ CE CD
+atom HZ3 823 823 100 100 100 100 NZ CE HZ2 
+atom HB1 815 815 100 100 100 100 CB CA CG 
+atom HB2 815 815 100 100 100 100 CB CA CG 
+atom HG1 817 817 100 100 100 100 CG CB CD 
+atom HG2 817 817 100 100 100 100 CG CB CD 
+atom HD1 819 819 100 100 100 100 CD CG CE 
+atom HD2 819 819 100 100 100 100 CD CG CE 
+atom HE1 821 821 100 100 100 100 CE CD NZ 
+atom HE2 821 821 100 100 100 100 CE CD NZ 
 zmat HE2 1.090 109.5 -120.0
 zmat HD2 1.090 109.5 -120.0
 zmat HD1 1.090 109.5 120.0
@@ -2307,15 +2307,15 @@ mode template
 residue PRO
 info rotate 2.000 translate 0.050
 backbone first prontermPRO middle procenterPRO last proctermPRO
-atom CB 6210 6210 6743 6743 6485 6485 CA N C
-atom CG 6208 6208 6742 6742 6483 6483 CB CA N
-atom CD 6206 6206 6740 6740 6481 6481 CG CB CA
-atom HB1 6211 6211 6032 6032 6486 6486 CB CA CG
-atom HB2 6211 6211 6032 6032 6486 6486 CB CA CG
-atom HG1 6209 6209 6032 6032 6484 6484 CG CB CD
-atom HG2 6209 6209 6032 6032 6484 6484 CG CB CD
-atom HD1 6207 6207 6741 6741 6482 6482 CD CG N
-atom HD2 6207 6207 6741 6741 6482 6482 CD CG N
+atom CB 207 207 751 751 484 484 CA N C 
+atom CG 205 205 749 749 482 482 CB CA N 
+atom CD 203 203 747 747 480 480 CG CB CA 
+atom HB1 208 208 750 750 485 485 CB CA CG 
+atom HB2 208 208 750 750 485 485 CB CA CG 
+atom HG1 206 206 750 750 483 483 CG CB CD 
+atom HG2 206 206 750 750 483 483 CG CB CD 
+atom HD1 204 204 748 748 481 481 CD CG N 
+atom HD2 204 204 748 748 481 481 CD CG N 
 zmat HD2 1.090 109.5 -120.0
 zmat HD1 1.090 109.5 120.0
 zmat CB 1.484 104.0 -120.0
@@ -2352,11 +2352,11 @@ mode template
 residue CYX
 info rotate 2.000 translate 0.050
 backbone first aantermCYX middle aacenterCYX last aactermCYX
-atom CB 6224 6224 6759 6759 6501 6501 CA N C
-atom SG 6226 6226 6761 6761 6503 6503 CB CA N
-atom HB1 6225 6225 6760 6760 6502 6502 CB CA SG
-atom HB2 6225 6225 6760 6760 6502 6502 CB CA SG
-atom HG 6100 6100 6100 6100 6100 6100 SG CB CA
+atom CB 221 221 767 767 500 500 CA N C 
+atom SG 223 223 769 769 502 502 CB CA N 
+atom HB1 222 222 768 768 501 501 CB CA SG 
+atom HB2 222 222 768 768 501 501 CB CA SG 
+atom HG 100 100 100 100 100 100 SG CB CA 
 zmat CB 1.544 111.1 -120.0
 zmat SG 1.813 113.6 180.0
 zmat HB1 1.090 109.5 120.0
@@ -2378,18 +2378,18 @@ mode template
 residue HIE
 info rotate 2.000 translate 0.050
 backbone first aantermHIE middle aacenterHIE last aactermHIE
-atom CB 6098 6098 6632 6632 6373 6373 CA N C
-atom CG 6101 6101 6634 6634 6375 6375 CB CA N
-atom ND1 6102 6102 6635 6635 6376 6376 CG CB CA
-atom CE1 6103 6103 6636 6636 6377 6377 ND1 CG CB
-atom HND 6100 6100 6100 6100 6100 6100 ND1 CG CE1
-atom NE2 6105 6105 6638 6638 6379 6379 CE1 ND1 CG
-atom HE 6104 6104 6637 6637 6378 6378 CE1 ND1 NE2
-atom CD2 6107 6107 6640 6640 6381 6381 NE2 CE1 ND1
-atom HNE 6106 6106 6639 6639 6380 6380 NE2 CE1 CD2
-atom HD 6108 6108 6641 6641 6382 6382 CD2 NE2 CG
-atom HB1 6099 6099 6633 6633 6374 6374 CB CA CG
-atom HB2 6099 6099 6633 6633 6374 6374 CB CA CG
+atom CB 98 98 634 634 366 366 CA N C 
+atom CG 101 101 636 636 368 368 CB CA N 
+atom ND1 102 102 637 637 369 369 CG CB CA 
+atom CE1 103 103 638 638 370 370 ND1 CG CB 
+atom HND 100 100 100 100 100 100 ND1 CG CE1 
+atom NE2 105 105 640 640 372 372 CE1 ND1 CG 
+atom HE 104 104 639 639 371 371 CE1 ND1 NE2 
+atom CD2 107 107 642 642 374 374 NE2 CE1 ND1 
+atom HNE 106 106 641 641 373 373 NE2 CE1 CD2 
+atom HD 108 108 643 643 375 375 CD2 NE2 CG 
+atom HB1 99 99 635 635 367 367 CB CA CG 
+atom HB2 99 99 635 635 367 367 CB CA CG 
 zmat HNE 1.010 125.0 180.0
 zmat HND 1.010 126.0 180.0
 zmat CB 1.555 111.1 -120.0
@@ -2430,13 +2430,13 @@ mode template
 residue ASH
 info rotate 2.000 translate 0.050
 backbone first aantermASH middle aacenterASH last aactermASH
-atom CB 6242 6242 6242 6242 6242 6242 CA N C
-atom CG 6244 6244 6244 6244 6244 6244 CB CA N
-atom OD1 6245 6245 6245 6245 6245 6245 CG CB CA
-atom OD2 6246 6246 6246 6246 6246 6246 CG CB OD1
-atom HB1 6243 6243 6243 6243 6243 6243 CB CA CG
-atom HB2 6243 6243 6243 6243 6243 6243 CB CA CG
-atom HD2 6247 6247 6247 6247 6247 6247 OD2 CG OD1
+atom CB 235 235 235 235 235 235 CA N C 
+atom CG 237 237 237 237 237 237 CB CA N 
+atom OD1 238 238 238 238 238 238 CG CB CA 
+atom OD2 239 239 239 239 239 239 CG CB OD1 
+atom HB1 236 236 236 236 236 236 CB CA CG 
+atom HB2 236 236 236 236 236 236 CB CA CG 
+atom HD2 240 240 240 240 240 240 OD2 CG OD1 
 zmat HD2 0.970 107.0 0.0
 zmat CB 1.530 111.1 -120.0
 zmat OD2 1.364 116.7 180.0
@@ -2466,14 +2466,14 @@ mode template
 residue ASN
 info rotate 2.000 translate 0.050
 backbone first aantermASN middle aacenterASN last aactermASN
-atom CB 6051 6051 6581 6581 6320 6320 CA N C
-atom CG 6053 6053 6583 6583 6322 6322 CB CA N
-atom ND2 6055 6055 6585 6585 6324 6324 CG CB CA
-atom HD1 6056 6056 6586 6586 6325 6325 ND2 CG CB
-atom HD2 6056 6056 6586 6586 6325 6325 ND2 CG HD1
-atom OD1 6054 6054 6584 6584 6323 6323 CG CB ND2
-atom HB1 6052 6052 6582 6582 6321 6321 CB CA CG
-atom HB2 6052 6052 6582 6582 6321 6321 CB CA CG
+atom CB 51 51 581 581 313 313 CA N C 
+atom CG 52 52 583 583 315 315 CB CA N 
+atom ND2 54 54 585 585 317 317 CG CB CA 
+atom HD1 55 55 586 586 318 318 ND2 CG CB 
+atom HD2 55 55 586 586 318 318 ND2 CG HD1 
+atom OD1 53 53 584 584 316 316 CG CB ND2 
+atom HB1 56 56 582 582 314 314 CB CA CG 
+atom HB2 56 56 582 582 314 314 CB CA CG 
 zmat HD2 1.008 119.2 180.0
 zmat HD1 1.008 119.2 180.0
 zmat CB 1.535 111.1 -120.0
@@ -2507,18 +2507,18 @@ mode template
 residue HIP
 info rotate 2.000 translate 0.050
 backbone first aantermHIP middle aacenterHIP last aactermHIP
-atom CB 6111 6111 6646 6646 6387 6387 CA N C
-atom CG 6113 6113 6648 6648 6389 6389 CB CA N
-atom ND1 6114 6114 6649 6649 6390 6390 CG CB CA
-atom CE1 6116 6116 6651 6651 6392 6392 ND1 CG CB
-atom HND 6115 6115 6650 6650 6391 6391 ND1 CG CE1
-atom NE2 6118 6118 6653 6653 6394 6394 CE1 ND1 CG
-atom HE 6117 6117 6652 6652 6393 6393 CE1 ND1 NE2
-atom CD2 6120 6120 6655 6655 6396 6396 NE2 CE1 ND1
-atom HD 6121 6121 6656 6656 6397 6397 CD2 NE2 CG
-atom HNE 6119 6119 6654 6654 6395 6395 NE2 CE1 CD2
-atom HB1 6112 6112 6647 6647 6388 6388 CB CA CG
-atom HB2 6112 6112 6647 6647 6388 6388 CB CA CG
+atom CB 113 113 648 648 382 382 CA N C 
+atom CG 115 115 650 650 384 384 CB CA N 
+atom ND1 116 116 651 651 385 385 CG CB CA 
+atom CE1 118 118 653 653 387 387 ND1 CG CB 
+atom HND 117 117 652 652 386 386 ND1 CG CE1 
+atom NE2 120 120 655 655 389 389 CE1 ND1 CG 
+atom HE 119 119 654 654 388 388 CE1 ND1 NE2 
+atom CD2 122 122 657 657 391 391 NE2 CE1 ND1 
+atom HD 123 123 658 658 392 392 CD2 NE2 CG 
+atom HNE 121 121 656 656 390 390 NE2 CE1 CD2 
+atom HB1 114 114 649 649 383 383 CB CA CG 
+atom HB2 114 114 649 649 383 383 CB CA CG 
 zmat HNE 1.010 125.0 180.0
 zmat HND 1.010 126.0 180.0
 zmat CB 1.555 111.1 -120.0
@@ -2561,16 +2561,16 @@ residue VAL
 info rotate 2.000 translate 0.050
 #center // Nterm // Cterm
 backbone first aantermVAL middle aacenterVAL last aactermVAL
-atom CB 6045 6045 6573 6573 6312 6312 CA N C
-atom CG1 6047 6047 6575 6575 6314 6314 CB CA N
-atom CG2 6047 6047 6575 6575 6314 6314 CB CA CG1
-atom HB 6046 6046 6574 6574 6313 6313 CB CA CG1
-atom HG1 6048 6048 6576 6576 6315 6315 CG1 CB CA
-atom HG2 6048 6048 6576 6576 6315 6315 CG1 CB HG1
-atom HG3 6048 6048 6576 6576 6315 6315 CG1 CB HG1
-atom HG4 6048 6048 6576 6576 6315 6315 CG2 CB CA
-atom HG5 6048 6048 6576 6576 6315 6315 CG2 CB HG4
-atom HG6 6048 6048 6576 6576 6315 6315 CG2 CB HG4
+atom CB 45 45 573 573 305 305 CA N C 
+atom CG1 47 47 575 575 307 307 CB CA N 
+atom CG2 47 47 575 575 307 307 CB CA CG1 
+atom HB 46 46 574 574 306 306 CB CA CG1 
+atom HG1 48 48 576 576 308 308 CG1 CB CA 
+atom HG2 48 48 576 576 308 308 CG1 CB HG1 
+atom HG3 48 48 576 576 308 308 CG1 CB HG1 
+atom HG4 48 48 576 576 308 308 CG2 CB CA 
+atom HG5 48 48 576 576 308 308 CG2 CB HG4 
+atom HG6 48 48 576 576 308 308 CG2 CB HG4 
 zmat HG6 1.090 109.5 -120.0
 zmat CB 1.568 111.1 -120.0
 zmat HG4 1.090 109.5 180.0
@@ -2610,14 +2610,14 @@ mode template
 residue THR
 info rotate 2.000 translate 0.050
 backbone first aantermTHR middle aacenterTHR last aactermTHR
-atom CB 6019 6019 6540 6540 6280 6280 CA N C
-atom OG1 6023 6023 6544 6544 6284 6284 CB CA N
-atom HG 6024 6024 6545 6545 6285 6285 OG1 CB CA
-atom CG2 6021 6021 6542 6542 6282 6282 CB CA OG1
-atom HB 6020 6020 6541 6541 6281 6281 CB CA OG1
-atom HG1 6022 6022 6543 6543 6283 6283 CG2 CB CA
-atom HG2 6022 6022 6543 6543 6283 6283 CG2 CB HG1
-atom HG3 6022 6022 6543 6543 6283 6283 CG2 CB HG1
+atom CB 19 19 540 540 273 273 CA N C 
+atom OG1 23 23 544 544 277 277 CB CA N 
+atom HG 24 24 545 545 278 278 OG1 CB CA 
+atom CG2 21 21 542 542 275 275 CB CA OG1 
+atom HB 20 20 541 541 274 274 CB CA OG1 
+atom HG1 22 22 543 543 278 278 CG2 CB CA 
+atom HG2 22 22 543 543 278 278 CG2 CB HG1 
+atom HG3 22 22 543 543 278 278 CG2 CB HG1 
 zmat CB 1.525 121.1 -120.0
 zmat OG1 1.430 109.5 60.0
 zmat HG3 1.090 109.5 -120.0
@@ -2651,13 +2651,13 @@ mode template
 residue ASP
 info rotate 2.000 translate 0.050
 backbone first aantermASP middle aacenterASP last aactermASP
-atom CB 6177 6177 6720 6720 6461 6461 CA N C
-atom CG 6179 6179 6722 6722 6463 6463 CB CA N
-atom OD1 6180 6180 6723 6723 6464 6464 CG CB CA
-atom OD2 6180 6180 6723 6723 6464 6464 CG CB OD1
-atom HB1 6178 6178 6721 6721 6462 6462 CB CA CG
-atom HB2 6178 6178 6721 6721 6462 6462 CB CA CG
-atom HD2 6100 6100 6100 6100 6100 6100 OD2 CG OD1
+atom CB 182 182 725 725 457 457 CA N C 
+atom CG 184 184 727 727 459 459 CB CA N 
+atom OD1 185 185 728 728 460 460 CG CB CA 
+atom OD2 185 185 728 728 460 460 CG CB OD1 
+atom HB1 183 183 726 726 458 458 CB CA CG 
+atom HB2 183 183 726 726 458 458 CB CA CG 
+atom HD2 100 100 100 100 100 100 OD2 CG OD1 
 zmat HD2 0.970 107.0 0.0
 zmat CB 1.530 111.1 -120.0
 zmat OD2 1.250 116.7 180.0
@@ -2686,24 +2686,24 @@ mode template
 residue TRP
 info rotate 2.000 translate 0.050
 backbone first aantermTRP middle aacenterTRP last aactermTRP
-atom CB 6124 6124 6661 6661 6402 6402 CA N C
-atom CG 6126 6126 6663 6663 6404 6404 CB CA N
-atom CD1 6127 6127 6664 6664 6405 6405 CG CB CA
-atom NE1 6129 6129 6666 6666 6407 6407 CD1 CG CB
-atom HD1 6128 6128 6665 6665 6406 6406 CD1 CG NE1
-atom CE2 6131 6131 6667 6667 6409 6409 NE1 CD1 CG
-atom HNE 6130 6130 6130 6130 6408 6408 NE1 CD1 CE2
-atom CZ2 6132 6132 6668 6668 6410 6410 CE2 NE1 CD1
-atom CH2 6134 6134 6670 6670 6412 6412 CZ2 CE2 NE1
-atom HZ2 6133 6133 6669 6669 6411 6411 CZ2 CE2 CH2
-atom CZ3 6136 6136 6672 6672 6414 6414 CH2 CZ2 CE2
-atom HH2 6135 6135 6671 6671 6413 6413 CH2 CZ2 CZ3
-atom CE3 6138 6138 6674 6674 6416 6416 CZ3 CH2 CZ2
-atom HZ3 6137 6137 6673 6673 6415 6415 CZ3 CH2 CE3
-atom CD2 6140 6140 6676 6676 6418 6418 CE3 CZ3 CH2
-atom HE3 6139 6139 6675 6675 6417 6417 CE3 CZ3 CD2
-atom HB1 6125 6125 6662 6662 6403 6403 CB CA CG
-atom HB2 6125 6125 6662 6662 6403 6403 CB CA CG
+atom CB 128 128 665 665 397 397 CA N C 
+atom CG 130 130 667 667 399 399 CB CA N 
+atom CD1 131 131 668 668 400 400 CG CB CA 
+atom NE1 133 133 670 670 402 402 CD1 CG CB 
+atom HD1 132 132 669 669 401 401 CD1 CG NE1 
+atom CE2 135 135 672 672 404 404 NE1 CD1 CG 
+atom HNE 134 134 671 671 403 403 NE1 CD1 CE2 
+atom CZ2 136 136 673 673 405 405 CE2 NE1 CD1 
+atom CH2 138 138 675 675 407 407 CZ2 CE2 NE1 
+atom HZ2 137 137 674 674 406 406 CZ2 CE2 CH2 
+atom CZ3 140 140 677 677 409 409 CH2 CZ2 CE2 
+atom HH2 139 139 676 676 408 408 CH2 CZ2 CZ3 
+atom CE3 142 142 679 679 411 411 CZ3 CH2 CZ2 
+atom HZ3 141 141 678 678 410 410 CZ3 CH2 CE3 
+atom CD2 144 144 681 681 413 413 CE3 CZ3 CH2 
+atom HE3 143 143 680 680 412 412 CE3 CZ3 CD2 
+atom HB1 129 129 666 666 398 398 CB CA CG 
+atom HB2 129 129 666 666 398 398 CB CA CG 
 zmat HH2 1.090 120.0 180.0
 zmat HNE 1.010 125.5 180.0
 zmat HZ3 1.090 120.0 180.0
@@ -2760,20 +2760,20 @@ mode template
 residue PHE
 info rotate 2.000 translate 0.050
 backbone first aantermPHE middle aacenterPHE last aactermPHE
-atom CB 6143 6143 6680 6680 6422 6422 CA N C
-atom CG 6145 6145 6682 6682 6424 6424 CB CA N
-atom CD1 6146 6146 6683 6683 6425 6425 CG CB CA
-atom CE1 6148 6148 6685 6685 6427 6427 CD1 CG CB
-atom HD1 6147 6147 6684 6684 6426 6426 CD1 CG CE1
-atom CZ 6150 6150 6687 6687 6429 6429 CE1 CD1 CG
-atom HE1 6149 6149 6686 6686 6428 6428 CE1 CD1 CZ
-atom CE2 6148 6148 6689 6689 6427 6427 CZ CE1 CD1
-atom HZ 6151 6151 6688 6688 6430 6430 CZ CE1 CE2
-atom CD2 6146 6146 6690 6690 6425 6425 CE2 CZ CE1
-atom HE2 6149 6149 6686 6686 6428 6428 CE2 CZ CD2
-atom HD2 6147 6147 6684 6684 6426 6426 CD2 CE2 CG
-atom HB1 6144 6144 6681 6681 6423 6423 CB CA CG
-atom HB2 6144 6144 6681 6681 6423 6423 CB CA CG
+atom CB 147 147 686 686 418 418 CA N C 
+atom CG 149 149 688 688 420 420 CB CA N 
+atom CD1 150 150 689 689 421 421 CG CB CA 
+atom CE1 152 152 691 691 423 423 CD1 CG CB 
+atom HD1 151 151 690 690 422 422 CD1 CG CE1 
+atom CZ 154 154 693 693 425 425 CE1 CD1 CG 
+atom HE1 153 153 692 692 424 424 CE1 CD1 CZ 
+atom CE2 152 152 691 691 423 423 CZ CE1 CD1 
+atom HZ 155 155 694 694 426 426 CZ CE1 CE2 
+atom CD2 150 150 689 689 421 421 CE2 CZ CE1 
+atom HE2 153 153 692 692 424 424 CE2 CZ CD2 
+atom HD2 151 151 690 690 422 422 CD2 CE2 CG 
+atom HB1 148 148 687 687 419 419 CB CA CG 
+atom HB2 148 148 687 687 419 419 CB CA CG 
 zmat HZ 1.090 120.0 180.0
 zmat HE2 1.090 120.0 180.0
 zmat HD1 1.090 120.0 180.0
@@ -2821,10 +2821,10 @@ mode template
 residue ALA
 info rotate 2.000 translate 0.050
 backbone first aantermALA middle aacenterALA last aactermALA
-atom CB 6005 6005 6033 6033 6262 6262 CA N C
-atom HB1 6006 6006 6521 6521 6263 6263 CB CA N
-atom HB2 6006 6006 6521 6521 6263 6263 CB CA HB1
-atom HB3 6006 6006 6521 6521 6263 6263 CB CA HB1
+atom CB 5 5 520 520 255 255 CA N C 
+atom HB1 6 6 521 521 256 256 CB CA N 
+atom HB2 6 6 521 521 256 256 CB CA HB1 
+atom HB3 6 6 521 521 256 256 CB CA HB1 
 zmat CB 1.525 111.1 -120.0
 zmat HB1 1.090 109.5 180.0
 zmat HB3 1.090 109.5 -120.0
@@ -2844,17 +2844,17 @@ mode template
 residue MET
 info rotate 2.000 translate 0.050
 backbone first aantermMET middle aacenterMET last aactermMET
-atom CB 6228 6228 6766 6766 6508 6508 CA N C
-atom CG 6230 6230 6768 6768 6510 6510 CB CA N
-atom SD 6232 6232 6770 6770 6512 6512 CG CB CA
-atom CE 6233 6233 6771 6771 6513 6513 SD CG CB
-atom HB1 6229 6229 6767 6767 6509 6509 CB CA CG
-atom HB2 6229 6229 6767 6767 6509 6509 CB CA CG
-atom HG1 6231 6231 6769 6769 6511 6511 CG CB SD
-atom HG2 6231 6231 6769 6769 6511 6511 CG CB SD
-atom HE1 6234 6234 6772 6772 6514 6514 CE SD CG
-atom HE2 6234 6234 6772 6772 6514 6514 CE SD HE1
-atom HE3 6234 6234 6772 6772 6514 6514 CE SD HE1
+atom CB 226 226 774 774 507 507 CA N C 
+atom CG 228 228 776 776 509 509 CB CA N 
+atom SD 230 230 778 778 511 511 CG CB CA 
+atom CE 231 231 779 779 512 512 SD CG CB 
+atom HB1 227 227 775 775 508 508 CB CA CG 
+atom HB2 227 227 775 775 508 508 CB CA CG 
+atom HG1 229 229 777 777 510 510 CG CB SD 
+atom HG2 229 229 777 777 510 510 CG CB SD 
+atom HE1 232 232 780 780 513 513 CE SD CG 
+atom HE2 232 232 780 780 513 513 CE SD HE1 
+atom HE3 232 232 780 780 513 513 CE SD HE1 
 zmat HE1 1.090 109.5 180.0
 zmat HE2 1.090 109.5 120.0
 zmat HE3 1.090 109.5 -120.0
@@ -2898,19 +2898,19 @@ mode template
 residue LEU
 info rotate 2.000 translate 0.050
 backbone first aantermLEU middle aacenterLEU last aactermLEU
-atom CB 6027 6027 6550 6550 6290 6290 CA N C
-atom CG 6029 6029 6551 6551 6292 6292 CB CA N
-atom CD1 6031 6031 6553 6553 6294 6294 CG CB CA
-atom CD2 6031 6031 6555 6555 6294 6294 CG CB CD1
-atom HB1 6028 6028 6251 6251 6291 6291 CB CA CG
-atom HB2 6028 6028 6251 6251 6291 6291 CB CA CG
-atom HG 6030 6030 6552 6552 6293 6293 CG CB CD1
-atom HD1 6032 6032 6554 6554 6295 6295 CD1 CG CB
-atom HD2 6032 6032 6554 6554 6295 6295 CD1 CG HD1
-atom HD3 6032 6032 6554 6554 6295 6295 CD1 CG HD1
-atom HD4 6032 6032 6554 6554 6295 6295 CD2 CG CB
-atom HD5 6032 6032 6554 6554 6295 6295 CD2 CG HD4
-atom HD6 6032 6032 6554 6554 6295 6295 CD2 CG HD4
+atom CB 27 27 550 550 283 283 CA N C 
+atom CG 29 29 552 552 285 285 CB CA N 
+atom CD1 31 31 554 554 287 287 CG CB CA 
+atom CD2 31 31 554 554 287 287 CG CB CD1 
+atom HB1 28 28 551 551 284 284 CB CA CG 
+atom HB2 28 28 551 551 284 284 CB CA CG 
+atom HG 30 30 553 553 286 286 CG CB CD1 
+atom HD1 32 32 555 555 288 288 CD1 CG CB 
+atom HD2 32 32 555 555 288 288 CD1 CG HD1 
+atom HD3 32 32 555 555 288 288 CD1 CG HD1 
+atom HD4 32 32 555 555 288 288 CD2 CG CB 
+atom HD5 32 32 555 555 288 288 CD2 CG HD4 
+atom HD6 32 32 555 555 288 288 CD2 CG HD4 
 zmat HD6 1.090 109.5 -120.0
 zmat HD5 1.090 109.5 120.0
 zmat HD4 1.090 109.5 180.0
@@ -2960,24 +2960,24 @@ mode template
 residue ARG
 info rotate 2.000 translate 0.050
 backbone first aantermARG middle aacenterARG last aactermARG
-atom CB 6071 6071 6603 6603 6344 6344 CA N C
-atom CG 6073 6073 6604 6604 6346 6346 CB CA N
-atom CD 6075 6075 6606 6606 6348 6348 CG CB CA
-atom NE 6077 6077 6608 6608 6350 6350 CD CG CB
-atom CZ 6079 6079 6610 6610 6352 6352 NE CD CG
-atom HE 6078 6078 6609 6609 6351 6351 NE CD CZ
-atom NH1 6080 6080 6611 6611 6353 6353 CZ NE CD
-atom H11 6081 6081 6612 6612 6354 6354 NH1 CZ NE
-atom H12 6081 6081 6612 6612 6354 6354 NH1 CZ H11
-atom NH2 6080 6080 6611 6611 6353 6353 CZ NE NH1
-atom H21 6081 6081 6612 6612 6354 6354 NH2 CZ NE
-atom H22 6081 6081 6612 6612 6354 6354 NH2 CZ H21
-atom HB1 6072 6072 6568 6568 6345 6345 CB CA CG
-atom HB2 6072 6072 6568 6568 6345 6345 CB CA CG
-atom HG1 6074 6074 6605 6605 6347 6347 CG CB CD
-atom HG2 6074 6074 6605 6605 6347 6347 CG CB CD
-atom HD1 6076 6076 6607 6607 6349 6349 CD CG NE
-atom HD2 6076 6076 6607 6607 6349 6349 CD CG NE
+atom CB 71 71 603 603 337 337 CA N C 
+atom CG 73 73 605 605 339 339 CB CA N 
+atom CD 75 75 607 607 341 341 CG CB CA 
+atom NE 77 77 609 609 343 343 CD CG CB 
+atom CZ 79 79 611 611 345 345 NE CD CG 
+atom HE 78 78 610 610 344 344 NE CD CZ 
+atom NH1 80 80 612 612 346 346 CZ NE CD 
+atom H11 81 81 613 613 347 347 NH1 CZ NE 
+atom H12 81 81 613 613 347 347 NH1 CZ H11 
+atom NH2 80 80 612 612 346 346 CZ NE NH1 
+atom H21 81 81 613 613 347 347 NH2 CZ NE 
+atom H22 81 81 613 613 347 347 NH2 CZ H21 
+atom HB1 72 72 604 604 338 338 CB CA CG 
+atom HB2 72 72 604 604 338 338 CB CA CG 
+atom HG1 74 74 606 606 340 340 CG CB CD 
+atom HG2 74 74 606 606 340 340 CG CB CD 
+atom HD1 76 76 608 608 342 342 CD CG NE 
+atom HD2 76 76 608 608 342 342 CD CG NE 
 zmat H22 1.012 122.4 180.0
 zmat HE 1.012 107.9 180.0
 zmat HD1 1.090 109.5 120.0
@@ -3040,21 +3040,21 @@ mode template
 residue TYR
 info rotate 2.000 translate 0.050
 backbone first aantermTYR middle aacenterTYR last aactermTYR
-atom CB 6154 6154 6695 6695 6435 6435 CA N C
-atom CG 6155 6155 6697 6697 6437 6437 CB CA N
-atom CD1 6156 6156 6698 6698 6438 6438 CG CB CA
-atom CE1 6158 6158 6700 6700 6440 6440 CD1 CG CB
-atom HD1 6157 6157 6699 6699 6439 6439 CD1 CG CE1
-atom CZ 6160 6160 6702 6702 6442 6442 CE1 CD1 CG
-atom HE1 6159 6159 6701 6701 6441 6441 CE1 CD1 CZ
-atom CE2 6158 6158 6700 6700 6440 6440 CZ CE1 CD1
-atom OH 6161 6161 6703 6703 6443 6443 CZ CE1 CE2
-atom CD2 6156 6156 6698 6698 6438 6438 CE2 CZ CE1
-atom HE2 6159 6159 6701 6701 6441 6441 CE2 CZ CD2
-atom HD2 6157 6157 6699 6699 6439 6439 CD2 CE2 CG
-atom HH 6162 6162 6704 6704 6444 6444 OH CZ CE1
-atom HB1 6144 6144 6696 6696 6436 6436 CB CA CG
-atom HB2 6144 6144 6696 6696 6436 6436 CB CA CG
+atom CB 158 158 699 699 431 431 CA N C 
+atom CG 160 160 701 701 433 433 CB CA N 
+atom CD1 161 161 702 702 434 434 CG CB CA 
+atom CE1 163 163 704 704 436 436 CD1 CG CB 
+atom HD1 162 162 703 703 435 435 CD1 CG CE1 
+atom CZ 165 165 706 706 438 438 CE1 CD1 CG 
+atom HE1 164 164 705 705 437 437 CE1 CD1 CZ 
+atom CE2 163 163 704 704 436 436 CZ CE1 CD1 
+atom OH 166 166 707 707 439 439 CZ CE1 CE2 
+atom CD2 161 161 702 702 434 434 CE2 CZ CE1 
+atom HE2 164 164 705 705 437 437 CE2 CZ CD2 
+atom HD2 162 162 703 703 435 435 CD2 CE2 CG 
+atom HH 167 167 708 708 440 440 OH CZ CE1 
+atom HB1 159 159 700 700 432 432 CB CA CG 
+atom HB2 159 159 700 700 432 432 CB CA CG 
 zmat HE2 1.090 120.0 180.0
 zmat HD1 1.090 120.0 180.0
 zmat OH 1.360 120.0 180.0
