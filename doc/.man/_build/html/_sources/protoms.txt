@@ -102,7 +102,7 @@ ProtoMS is written using slightly extended Fortran 77 (see :ref:`fortran77`). Th
 Classical forcefields
 ======================
 
-ProtoMS was designed to perform simulations using a range of different molecular mechanics (MM) forcefields. To achieve this aim, a generic forcefield has been implemented, and this can be specialised into a specific, traditional forcefield.
+ProtoMS was designed to perform simulations using a range of different molecular mechanics (MM) forcefields. To achieve this aim, a generic forcefield has been implemented, and this can be specialised into a specific, traditional forcefield. Specifically, ProtoMS supports the use of the Amber ff99, ff99SB and ff14SB protein forcefields, along with OPLS 96. The General Amber Forcefield (GAFF) is used for solutes, whilst various solvent forcefield models including TIP3P, TIP4P, SPC and SPC/E can be used.
 
 The forcefield in ProtoMS is comprised of several terms;
 
@@ -2258,6 +2258,12 @@ where ``name`` is the uniquely identifying name of the GCsolute template. As in 
   atom nam par0 par1
 
 which states that the GCsolute atom called ``nam`` has CLJ parameters ``par0`` at :math:`\lambda`  = 0.0 and ``par1`` at :math:`\lambda` = 1.0. GCsolute templates should have values of CLJ parameters used in the files ranging from 8001 to 8999.
+
+==================================================
+Automated Creation of Parameter and Template Files
+==================================================
+
+Using an unsupported protein forcefield with ProtoMS requires the creation of a pair of parameter and template files. This process has been automated through a set of scripts that are able to import amber forcefield files and produce the necessary inputs for ProtoMS. For details of this please see the README in $PROTOMSHOME parameter/dev.
 
 .. _protpdb:
 
