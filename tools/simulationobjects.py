@@ -1039,7 +1039,7 @@ class SnapshotResults :
           self.internal_energies[key].append(EnergyResults(line=line)) # Coul
           line = fileobj.readline() # Dummy line    
           line=fileobj.readline()
-      elif line.startswith("Average extra energies") :
+      elif line.lower().startswith("average extra energies") :
         pass
       elif line.startswith("Average inter-molecular interaction energies") :
         pass
