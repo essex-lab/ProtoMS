@@ -118,8 +118,8 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb
       box = [float(val) for val in box]
     except :
       raise simulationobjects.SetupError("The box dimensions %s could not be correctly interpreted"%box)
-    orig = box[:3]
-    length = box[3:]
+    orig = np.array(box[:3])
+    length = np.array(box[3:])
   elif isinstance(box,dict) :
     orig = box['origin']
     length = box['len']
