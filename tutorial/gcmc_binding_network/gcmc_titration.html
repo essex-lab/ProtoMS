@@ -6,7 +6,7 @@
 <BODY>
 <H1>GCMC titration and grand canonical integration</H1>
 Here, we'll go through the basics of setting up running a GCMC simulation to calculate the absolute binding free energy for a small network of waters. The example we use is a small binding site in BPTI that can bind 3 water molecules, which has been taken from the recent ProtoMS paper: <em>G. A. Ross et. al, J. Am. Chem. Soc., 2015</em>. Although it's a small site, exactly the same procedure can be followed to calculate the binding free energy of a large network.
-
+<p>To come back to the tutorial index, click <a href="../tutorials.html">here</a>.
 <H3>Prerequisite</H3>
 <ul>
 	<li><code>protein_pms.pdb</code> - the structure of the BPTI in PDB format</li>
@@ -45,27 +45,27 @@ This has automatically solvated our protein in a droplet of water (<code>water.p
 <h5>Execution</h5>
 To run the simulation, you need 24 cores and MPI. Execute by typing
 
-<pre>mpirun -np 24 $PROTOMSHOME/protoms3 run_bnd.cmd</pre>
+<pre>mpirun -np 24 $PROTOMSHOME/protoms3 run_gcmc.cmd</pre>
 
 <p>
 <h5>Analysis</h5>
 It is vital that you check the simulations by eye. If you have Pymol, you can check the output structures from one of the GCMC simulations by typing
 
-<pre> pymol out/b_-9.000/all.pdb </pre>
+<pre> pymol out_gcmc/b_-9.000/all.pdb </pre>
 
 Check your <code>warning</code> files as well to make sure nothing untoward has happened.
 <p>
 
 Before calculating occupancies and free energies with grand canonical integration, we should check to see if the simulations are approximately equilibrated. For one simulation, we can see the average number of inserted GCMC waters for each snapshot by typing
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f out/b_-9.000/results -s solventson </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f out_gcmc/b_-9.000/results -s solventson </pre> 
 
 This would have produced an estimate for the start of the equilibrated period. Check to see if that value matches what you see in the graph that gets automatically plotted.
 <p>
 For the rest of this analysis, we'll focus on the script <code>calc_gci.py</code> which contains a lot of functionality. To see how the average number of waters varies with the applied chemical potential - in other words, a titration - type
 
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out/b_-* -p titration </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p titration </pre> 
 
 Depending on what you found with <code>calc_series.py</code>, you can discard the first <code>X</code> snapshots of each simulation by additing the flag <code>--skip X</code>. The titration plot should look something like<br>
 
@@ -76,7 +76,7 @@ The plot shows that the average number of waters at each Adams value occurs in '
 <p>
 To calculate the area under the titration curve, it is prudent to smooth over the data. The script <code>calc_gci.py</code> can fit a curve by modelling the titration data as sum of logistic functions, which is equivalent to a very simple type of artificial neural network (ANN). As the titration data shows what looks like 2 steps, we can input that into the model. To calculate the fit with 2 steps and plot it, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out/b_-* -p fit -c fit --steps 2 </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p fit -c fit --steps 2 </pre> 
 
 The result looks like<br>
 
@@ -86,7 +86,7 @@ The result looks like<br>
 The line of best fit is shown in red. The fit correctly captures the shape of the titration data, and looks good except for the plateau at 2 water molecules; the data point at B=-15 seems to have pulled the fitted plateau slightly higher than one would intuitively expect. This results from the fact the ANN was optimised by minimising the mean squared error, which is notorious for being overly influenced by outliers. We can try to improve the fit by trying to optimise a different "cost" function. The pseudo-Huber cost function puts less weight on outliers at the expense of an additional free parameter, denoted <em>c</em>. To use the pseudo-Huber cost function and to set <em>c</em>=0.1, we type
 
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out/b_-* -p fit -c fit --steps 2  --fit_options "cost huber c 0.1" </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p fit -c fit --steps 2  --fit_options "cost huber c 0.1" </pre> 
 
 The new fit looks like this<br>
 
@@ -99,7 +99,7 @@ The fit is qualitatively similar to when mean squared error was used as the cost
 
 To calculate the binding free energies of adding water to the cavity with the chosen fitted parameters, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out/b_-* -c pmf --steps 2  --fit_options "cost huber c 0.1" </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -c pmf --steps 2  --fit_options "cost huber c 0.1" </pre> 
 
 where <code>-c pmf</code> indicates that the 'potential of mean force', i.e. the free energy, will be calculated. This will bring up a table like this one:
 
@@ -118,7 +118,7 @@ If the ANN was fitted by minimising the mean-squared error, the calculated bindi
 <p>
 You should do as many bootstrap samples as possible, but this can take some time using the default fitting parameters. To speed up the bootstrapping, you can run just 1 random seed for each fit by typing <code>fit_options 'repeats 1'</code>. Also, you can save the ensemble of fitted ANNs using the <code>-o</code> flag. To do 1000 bootstrap samples, plot the fits with error bars, and save the ANNs, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out/b_-* -p percentiles pmf -c pmf --steps 2  --fit_options "cost huber c 0.1 repeats 1" -b 1000 -o ANNs.pickle </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p percentiles pmf -c pmf --steps 2  --fit_options "cost huber c 0.1 repeats 1" -b 1000 -o ANNs.pickle </pre> 
 
 The output, <code>ANNs.pickle</code>, can be read in by <code>calc_gci.py</code> when you want to use the same fitted models again. The ensemble of titration fits looks like<br>
 
@@ -144,7 +144,7 @@ The blue and grey area show the 50% and 90% confidense intervals, respectively, 
 <p>
 To calculate the free energy to add a specific number of waters, say the free energy to bind 1 water when 2 are already bound, use the <code>--range</code> flag. We'll input the 1000 boostrap fits with the <code>-i</code> flag. We no longer need to specify the fitting options because the models have already been fitted. The binding free energy of the 3rd water can be calculated with
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out/b_-* -c pmf -i ANNs.pickle --range 2 3 </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -c pmf -i ANNs.pickle --range 2 3 </pre> 
 
 with the result
 
