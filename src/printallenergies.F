@@ -45,7 +45,7 @@ c####################################################################
        call prettyLine(RESULTS,printstring)
 
 
-       write(printstring,"('Number of data steps',i8)") 1
+       write(printstring,"('Number of data steps = ',i8)") 1
        call printLine(RESULTS,printstring)
 
        if (doLambdaRE) then
