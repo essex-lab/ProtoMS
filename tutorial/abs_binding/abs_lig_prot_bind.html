@@ -12,7 +12,7 @@ In this tutorial, you will setup, run and analyse the calculation of the binding
 	<li><code>benzene.pdb</code> - the structure of the benzene molecule in PDB format</li>
 	<li><code>protein.pdb</code> - the structure of the T4 lysozyme in PDB format</li>
 </ul>
-Both the benzene and protein need to be prepared before they are used with ProtoMS. For instance, you must make sure that they are correctly protonated. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
+Both the benzene and protein would need to be prepared before they are used with ProtoMS. For simplicity, tutorial input files have been prepared in advance, but it still is good practice to check. For instance, you must make sure that they are correctly protonated. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
 <p>
 <hr align="center"/>
 <h3>Simple setup</h3>
@@ -39,7 +39,7 @@ To run the bound and free legs of the simulation you need to execute
 mpirun -np 16 $PROTOMSHOME/protoms3 run_bnd.cmd
 mpirun -np 16 $PROTOMSHOME/protoms3 run_free.cmd
 </pre>
-This is most conveniently done on a computer cluster. The calculations will take approximately 24 h to complete.
+This is most conveniently done on a computer cluster. The calculations will take up to 24 h to complete.
 <p>
 <h5>Analysis</h5>
 When the simulations are finished you need to analyse the simulation and extract the free energy of the bound and free legs. We will start with looking at some energy series to investigate whether the simulations are converged. Type
@@ -128,7 +128,7 @@ by typing for instance
 you will create 5 input files for the bound leg and 5 input files for the free leg. Therefore, you also need to execute ProtoMS 10 times with the different input files. The output will be in 10 different folders, e.g. <code>out1_bnd</code> and <code>out2_bnd</code>.
 <p>
 <h5>Running with temperature replica-exchange</h5>
-To improve sampling, one could add temperature ladders to the simulation and perform replica-exchange swaps between neighboring values of temperatures. To add eight additional temperatures to &lambda;-values 0 and 1.0, add the following lines to the command file(s).
+To improve sampling, one could add temperature ladders to the simulation and perform replica-exchange swaps between neighboring values of temperatures. To add eight additional temperatures to &lambda;-values 0 and 1.0, add the following lines to the command file(s) (files ending in <i>.cmd</i>).
 
 <pre>temperaturere 1E5 25.0 27.0 30.0 34.0 39.0 45.0 52.0 60.0 69.0
 temperatureladder lambda 0.00 1.00 
