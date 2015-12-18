@@ -1144,10 +1144,10 @@ if __name__ == "__main__":
     free_cmd.writeCommandFile(args.out+"_free.cmd")
   if bnd_cmd is not None : 
     if args.simulation == "gcmc" :
-      bnd_cmd.writeCommandFile(args.cmdfile+"_gcmc.cmd") 
+      bnd_cmd.writeCommandFile(args.out+"_gcmc.cmd") 
     elif args.simulation in ["jaws1","jaws2"] :
-      bnd_cmd.writeCommandFile(args.cmdfile+"_jaws.cmd") 
+      bnd_cmd.writeCommandFile(args.out+"_jaws.cmd") 
     else :
-      bnd_cmd.writeCommandFile(args.cmdfile+"_bnd.cmd")      
+      bnd_cmd.writeCommandFile(args.out+"_bnd.cmd")      
   if gas_cmd is not None : 
     gas_cmd.writeCommandFile(args.out+"_gas.cmd")    
