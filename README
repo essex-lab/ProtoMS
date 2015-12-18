@@ -1,11 +1,11 @@
 ########################
-##   ProtoMS 3.1      ##
+##   ProtoMS 3.2      ##
 ########################
 
 --------------------------------
  Prototype Molecular Simulation
 
-Version 3.1
+Version 3.2
 
 (C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez, James Graham 2002-2015
       
@@ -25,7 +25,7 @@ Requirements:
 Optional:
 * MPI                                 : Recommended OpenMPI (http://www.open-mpi.org/) or MPICH (https://www.mpich.org/) - some functions will be unavailable without MPI
 
-We recommend to set the environmental variable $PROTOMSHOME to the installation directory of ProtoMS.
+Set the environmental variable $PROTOMSHOME to the installation directory of ProtoMS.
 
 The ProtoMS tools have the following requirements:
 * Python, version 2.7
@@ -34,14 +34,17 @@ The ProtoMS tools have the following requirements:
 * Matplotlib (http://www.matplotlib.org/)
 
 Optional:
-* AmberTools (http://www.ambermd.org/)          : Required to paramterise small molecules
+* AmberTools (http://www.ambermd.org/)          : Required to paramterise small molecules (and for the test suite)
 * pymbar (https://github.com/choderalab/pymbar) : Required to perform MBAR calculations
 * Nose (https://nose.readthedocs.org/en/latest/): Required to run the test suite
 
+The environmental variable $AMBERHOME is required to run various components of the tools and test suite.
+
 To learn how to use ProtoMS read the manual that can be found in the doc folder
 
+ProtoMS comes with a test suite. You can find it, together with its own README, in the test directory.
+
 There are some examples of using ProtoMS in the tutorial directory.
-Use these examples to test that ProtoMS is working correctly.
 
 Contents of directory:
 
