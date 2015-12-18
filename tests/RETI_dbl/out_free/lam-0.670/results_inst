@@ -4,7 +4,7 @@ RESULTS FILE    1
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -78,7 +78,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1344 (    0.000 ) |         -3.1388 (    0.000 )         -3.1301 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -102,7 +102,7 @@ RESULTS FILE    2
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -176,7 +176,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1346 (    0.000 ) |         -3.1390 (    0.000 )         -3.1303 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -200,7 +200,7 @@ RESULTS FILE    3
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -274,7 +274,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1346 (    0.000 ) |         -3.1390 (    0.000 )         -3.1303 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -298,7 +298,7 @@ RESULTS FILE    4
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -372,7 +372,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1347 (    0.000 ) |         -3.1390 (    0.000 )         -3.1303 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -396,7 +396,7 @@ RESULTS FILE    5
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -470,7 +470,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1349 (    0.000 ) |         -3.1392 (    0.000 )         -3.1306 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -494,7 +494,7 @@ RESULTS FILE    6
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -568,7 +568,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1349 (    0.000 ) |         -3.1392 (    0.000 )         -3.1305 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -592,7 +592,7 @@ RESULTS FILE    7
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -666,7 +666,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1349 (    0.000 ) |         -3.1392 (    0.000 )         -3.1305 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -690,7 +690,7 @@ RESULTS FILE    8
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -764,7 +764,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1349 (    0.000 ) |         -3.1392 (    0.000 )         -3.1305 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -788,7 +788,7 @@ RESULTS FILE    9
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -862,7 +862,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1349 (    0.000 ) |         -3.1392 (    0.000 )         -3.1305 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
@@ -886,7 +886,7 @@ RESULTS FILE   10
 #####################################################
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
-Number of data steps       1
+Number of data steps =        1
 Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
@@ -960,7 +960,7 @@ DIFF                                        0.0012                      -0.0012
 LJ          -3.1349 (    0.000 ) |         -3.1392 (    0.000 )         -3.1305 (    0.000 )
 DIFF                                       -0.0043                       0.0043
 #######################
- Average Extra energies
+ Average extra energies
 #######################
 ################
 FREE ENERGY DATA
