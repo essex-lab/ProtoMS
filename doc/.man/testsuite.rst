@@ -14,7 +14,7 @@ The python module ``nose`` is required to run the test suite. You can find more 
 Running all tests
 ==========================================
 
-The simplest and recommended way to run the tests is to run the command ``ctest`` while in the build directory ``$PROTOMSHOME/build``.  This will run all tests and report the success or failure of each.  For more information use the command ``ctest -V`` which will print all output from the tests as well as output from both the python and Fortran components of ProtoMS.
+The simplest and recommended way to run the tests is to run the command ``ctest`` while in the build directory ``$PROTOMSHOME/build``.  This will run all tests and report the success or failure of each.  For more information use the command ``ctest -V`` which will print all output from the tests as well as output from both the python and Fortran components of ProtoMS.  To clean up after running the tests use the command ``make clean-test`` from the build directory.
 
 If ProtoMS was compiled without MPI, the following tests will not be run automatically:
 

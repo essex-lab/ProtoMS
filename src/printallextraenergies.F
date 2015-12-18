@@ -15,7 +15,7 @@ c##################################################
 
       logical printxtra
       
-      write(printstring,*) "Average Extra energies"
+      write(printstring,*) "Average extra energies"
       call prettyLine(RESULTS,printstring)
 c     only print out the extra averages if extra energy
 c     components are printed out      
