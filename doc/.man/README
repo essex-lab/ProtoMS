@@ -32,7 +32,8 @@ make html
 make latexpdf
 
 Files created in _build/html and _build/latex.
-Symbolic links to those files in the parent directory from this file in protoms3.html and ProtoMS.pdf.
+The pdf version of the manual in _build/latex/ProtoMS.pdf must be copied to the parent directory of the current one after compilation with make latexpdf
+The html version of the manual will be displayed automatically when opening ../protoms3.html. This html file should simply redirect to _build/html/index.html
 
 
    
