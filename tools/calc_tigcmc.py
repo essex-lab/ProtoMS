@@ -27,7 +27,94 @@ import calc_gci
 import calc_ti
 
 logger = logging.getLogger('protoms')
+def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
+  """ 
+  Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
+  
+  Parameters
+  ----------
+  path : string 
+    the directory where the result files are located
+  res_tem : string
+    the prefix of the result files
+  skip : int
+    number of snapshots to skip
+  maxread : int
+    maximum number of snapshots to read
+  numkind : string
+    the kind of numerical gradient, should be either both, forw, or back
+  useanalytical : boolean
+    if to use analytical gradients
+    
+  Returns
+  -------
+  float
+    the lambda value
+  float
+    the average gradient
+  float
+    the standard deviation of the average gradient
+  float
+    the average number of GCMC waters
+  float
+    the Adams value
+  """
+   
+  # List all results files and sort them
+  filenames = glob.glob(os.path.join(path,"%s*"%res_tem))
+  if len(filenames) > 1 : filenames.sort()
 
+  watsum = 0.0
+  gradsum = 0.0
+  gradsum2 = 0.0
+  n = 0
+  lam = None
+
+  for f in filenames:
+    results_file = simulationobjects.ResultsFile()
+    results_file.read(filename=f,skip=skip,readmax=maxread)
+    for snapshot in results_file.snapshots:
+      # Counting the number of waters. Will divide by number of snapshots at the end.  
+      watsum = watsum + snapshot.solventson
+      # what you want here is to get the current lambda and the gradient for this snapshot, so that you can do (9) 
+      if useanalytical and hasattr(snapshot,"agradient") :
+        gradient = snapshot.agradient
+        lam = snapshot.lam
+      elif numkind == "both" and hasattr(snapshot,"gradient") :
+        gradient = snapshot.gradient
+        lam = snapshot.lam
+      else :
+        if not (hasattr(snapshot,"backfe") and hasattr(snapshot,"forwfe")) :
+          raise simulationobjects.SetupError("This results file does not contain any data on which one can estimate gradients.")
+        lam = snapshot.lam
+        lamB = snapshot.lamb
+        lamF = snapshot.lamf        
+        dGB = snapshot.backfe
+        dGF = snapshot.forwfe
+        # Calculate and return the gradient
+        deltalam = max(lam-lamB,lamF-lam)
+        # This is needed for the end-points
+        if (lam < 0.0001):
+          dGB = -dGF
+        if (lam > 0.9999):
+          dGF = -dGB
+        if numkind == "back" :
+          gradient = -dGB / deltalam
+        elif numkind == "forw" :
+          gradient = dGF / deltalam
+        else :
+          gradient = (dGF - dGB) / (2*deltalam)      
+      if gradient != None :
+        gradsum = gradsum + gradient
+        gradsum2 = gradsum2 + gradient*gradient
+        n = n + 1
+    # Computes ensemble average and standard error
+    av_wats = watsum / n
+    av_grad = gradsum / n
+    std_grad = 0.0
+    if n > 2 :
+      std_grad = np.sqrt((gradsum2-av_grad*gradsum)/(n-1)/n)
+    return lam,av_grad,std_grad,av_wats,snapshot.bvalue
 
 def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
     """ 
@@ -80,29 +167,41 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
         gcmcfolders = glob.glob(lamfldr+"/b_*")
         gcmcfolders.sort(reverse=True)
         for gcfldr in gcmcfolders:
-            (lambmat[i,j],gradmat[i,j],stdmat[i,j], watmat[i,j],adamsmat[i,j]) = calc_ti.parse_folder(gcfldr,res_tem,skip,maxread,numkind,useanalytical)
+            (lambmat[i,j],gradmat[i,j],stdmat[i,j], watmat[i,j],adamsmat[i,j]) = _parse_folder(gcfldr,res_tem,skip,maxread,numkind,useanalytical)
             j = j + 1        # Updating so the gradient at the next B value can be stored
         j = 0                # Restarts the column index
         i = i + 1            # Moves to the next row 
     # THE MATRICES SHOULD BE ORDERED PROPERLY!!!
     # May be okay, as final collapsed matrices MAY be properly ordered.
+    #print gradmat
     return lambmat,gradmat,stdmat, watmat,adamsmat
 
-def _calc_gcweights(lambmat,gradmat,stdmat,watmat,adamsmat,singlepath=False,hyd_nrg =-6.2,T=298.15):
+def _calc_gcweights(lambmat,gradmat,stdmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg =-6.2,T=298.15):
  
     kT = T*0.0019872
     
     gci_energy_mat = np.zeros(np.shape(adamsmat))
     gci_weight_mat = np.zeros(np.shape(adamsmat))
     
+    if sizes==None:
+        sizes=np.tile(5,np.shape(watmat)[0])
+    elif len(sizes) != np.shape(watmat)[0]:
+        msg = "Number of fitting paramaters (%s) does not equal the number of B values (%s)" % (len(sizes),np.shape(watmat)[0])
+        logger.error(msg)
+        raise simulationobjects.SetupError(msg)
+
     # Check to make sure all B values are the same
     
     # MOVE THESE TO THE READ DATA FUNCTION
     if adamsmat.std(axis=0).max() != 0.0:
-        print "Error: B values between lambda folders don't match!"
+        msg = "B values between lambda folders don't match!"
+        logger.error(msg)
+        raise simulationobjects.SetupError(msg)
         return
     if lambmat.std(axis=1).max() != 0.0:
-        print "Error: Unequal lambda values found between replicas!"
+        msg = "Unequal lambda values found between replicas!"
+        logger.error(msg)
+        raise simulationobjects.SetupError(msg)
         return
     
     # Looping over each lambda value and calculating the GCI free energy
@@ -110,7 +209,7 @@ def _calc_gcweights(lambmat,gradmat,stdmat,watmat,adamsmat,singlepath=False,hyd_
         #print watmat[i,]
         
         # Smoothing data by fitting an artifial neural network for a given lambda. Note that the fitting is independent of the other lambdas.
-        single_model, models = calc_gci.fit_ensemble(x=adamsmat[i,],y=watmat[i,],size=size,verbose=False,randstarts=10)
+        single_model, models = calc_gci.fit_ensemble(x=adamsmat[i,],y=watmat[i,],size=sizes[i],verbose=False,randstarts=10)
         
         # Based on the (best) model, what is the predicted number of waters at each B]
         smoothed_watnums = single_model.predicted
@@ -134,13 +233,18 @@ def _calc_gcweights(lambmat,gradmat,stdmat,watmat,adamsmat,singlepath=False,hyd_
     return gci_energy_mat, gci_weight_mat
 
 
-def _collapse_matrices(gradmat,weightmat,lambmat,stdmat):
+def _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose):
     gradients = (weightmat*gradmat).sum(axis=1)    
     std = np.sqrt((weightmat*(stdmat**2)).sum(axis=1))    # Weighted sum of variance. May or may not be the correct formular
+
+    if verbose["gradient"] :   
+        for i in range(len(gradients)):
+            calc_ti.print_ene(lambmat[i,1],gradients[i],std[i],verbose["uncert"],verbose["lambda"])
+
     return lambmat[:,1],gradients,std
 
 
-def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlpath) :
+def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath) :
   """
   Do thermodynamic integration using data from GCMC-lambda replica exchange. Based on calc_ti.ti()
   
@@ -182,7 +286,7 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlpath) :
 
   (lambmat,gradmat,stdmat,watmat,adamsmat) = _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
   (energy_mat,weightmat) = _calc_gcweights(lambmat,gradmat,stdmat, watmat,adamsmat,singlepath)
-  lambdas,gradients,stds = _collapse_matrices(gradmat,weightmat,lambmat,stdmat)
+  lambdas,gradients,stds = _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose)
   
   # Calculate and print the PMF 
   pmf = np.zeros(gradients.shape)
