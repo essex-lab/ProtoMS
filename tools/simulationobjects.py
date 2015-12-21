@@ -848,7 +848,8 @@ class EnergyResults :
     self.back = 0.0
     self.forw = 0.0
     self.type = ""
-    if line is not None :
+  
+    if line is not None and line[0] != "#":
       self.parse_line(line)
   def parse_line(self,line) :
     """
@@ -861,9 +862,21 @@ class EnergyResults :
     """
     cols = line.strip().split()
     self.type = cols[0] 
-    self.curr = float(cols[1])
-    self.forw = float(cols[6])
-    self.back = float(cols[10])
+    try: 
+      self.curr = float(cols[1])
+    except ValueError:
+      self.curr = 10000000000.
+      print "Warning. Energy has value of '%s', setting value to 10000000000" % cols[1]
+    try:
+      self.forw = float(cols[6])
+    except ValueError:
+      self.forw = 10000000000.
+      print "Warning. Energy has value of '%s', setting value to 10000000000" % cols[6]
+    try:
+      self.back = float(cols[10])
+    except ValueError:
+      self.back = 10000000000.
+      print "Warning. Energy has value of '%s', setting value to 10000000000" % cols[10]
   def __str__(self) :
     if isinstance(self.curr,float) :
       return "%s %20.10F %20.10F %20.10F"%(self.type,self.curr,self.back,self.forw)

@@ -30,6 +30,7 @@ logger = logging.getLogger('protoms')
 def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
   """ 
   Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
+  at each chemical potential and lambda value.
   
   Parameters
   ----------
@@ -119,7 +120,7 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
 def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
     """ 
     Parse a number of ProtoMS result files and calculate the ensemble average of the gradient for each
-    lambda Adams value pair. 
+    lambda-Adams value pair. 
   
     Parameters
     ----------
@@ -173,11 +174,44 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
         i = i + 1            # Moves to the next row 
     # THE MATRICES SHOULD BE ORDERED PROPERLY!!!
     # May be okay, as final collapsed matrices MAY be properly ordered.
-    #print gradmat
+    if verbose["gradient"] :
+        print "\n Gradients for each lambda value and Adams value:"
+        print "Lambda    Gradients"
+        for i in range(np.shape(gradmat)[0]):
+            print lambmat[i,1],"     ", gradmat[i,:]
+        print "Adams values  ", adamsmat[1,:],"\n"
+
     return lambmat,gradmat,stdmat, watmat,adamsmat
 
-def _calc_gcweights(lambmat,gradmat,stdmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg =-6.2,T=298.15):
- 
+def _calc_gcweights(lambmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg =-6.2,T=298.15):
+    """ 
+    For each Adams value/chemical potential at each lambda value, calculate the free energy to bind water
+    from bulk using grand canonical integration (GCI).
+
+    Parameters
+    ----------
+    lambdamat : numpy array 
+      2D array with the lambda values of each simulation
+    watmat : numpy array
+      2D array with the average number of waters per lambda-Adams pair
+    adamsmat : numpy array
+      2D array with the Adams value at each simulation
+    singlepath : boolean
+      whether to return the weights associated with the lowest free energy path through the gradient matrix
+    sizes : list
+      list of integers specifying how many steps to use for the fitted artificial neural network at each lambda value
+    hyd_nrg : float
+      the hydration free energy of water, used to calculate binding energies
+    T : float
+      temperature of the simulation in Kelvin
+
+    Returns
+    -------
+    numpy array
+      the GCI binding free energy profile of water per lambda
+    numpy
+      the probability to observe a given number of waters at each lambda
+    """
     kT = T*0.0019872
     
     gci_energy_mat = np.zeros(np.shape(adamsmat))
@@ -191,7 +225,6 @@ def _calc_gcweights(lambmat,gradmat,stdmat,watmat,adamsmat,singlepath=False,size
         raise simulationobjects.SetupError(msg)
 
     # Check to make sure all B values are the same
-    
     # MOVE THESE TO THE READ DATA FUNCTION
     if adamsmat.std(axis=0).max() != 0.0:
         msg = "B values between lambda folders don't match!"
@@ -234,6 +267,32 @@ def _calc_gcweights(lambmat,gradmat,stdmat,watmat,adamsmat,singlepath=False,size
 
 
 def _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose):
+    """ 
+    Calculates the average gradient over the Adams values for each lambda by using
+    the free energies to bind water at each Adams value. 
+
+    Parameters
+    ----------
+    gradmat : numpy array
+      2D array of the average gradients of each lambda-Adams value pair
+    weightmat : numpy array
+      water probabilities for each lambda-Adams pair calculated with GCI
+    lambmat : numpy array 
+      2D array with the lambda values of each simulation
+    stdmat : numpy array
+      2D array with standard deviations of the gradients from each simulation
+    verbose : dictionary of booleans
+       tune the printing to standard output
+    
+    Returns
+    -------
+    numpy array
+      the lambda values
+    numpy array
+      the average gradients at each lambda
+    numpy array
+      the average standard deviations of the gradients at each lambda
+    """
     gradients = (weightmat*gradmat).sum(axis=1)    
     std = np.sqrt((weightmat*(stdmat**2)).sum(axis=1))    # Weighted sum of variance. May or may not be the correct formular
 
@@ -244,7 +303,7 @@ def _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose):
     return lambmat[:,1],gradients,std
 
 
-def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath) :
+def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,sizes) :
   """
   Do thermodynamic integration using data from GCMC-lambda replica exchange. Based on calc_ti.ti()
   
@@ -281,11 +340,12 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath) :
   """
 
   # Calculate the gradient
+  (lambmat,gradmat,stdmat,watmat,adamsmat) = _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
+  (energy_mat,weightmat) = _calc_gcweights(lambmat,watmat,adamsmat,singlepath,sizes)
+
   if verbose["gradient"] :
     calc_ti.print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
 
-  (lambmat,gradmat,stdmat,watmat,adamsmat) = _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
-  (energy_mat,weightmat) = _calc_gcweights(lambmat,gradmat,stdmat, watmat,adamsmat,singlepath)
   lambdas,gradients,stds = _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose)
   
   # Calculate and print the PMF 
@@ -333,6 +393,7 @@ if __name__ == '__main__' :
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   parser.add_argument('--singlepath',action='store_true',default=False, help="whether to integrate over the lowest GCMC free energy B value when doing TI, instead of performing a weighted average")
+  parser.add_argument('--steps',nargs="+",default=None, help="list of number of steps for each titration at each lambda value")
   args = parser.parse_args()
 
   # Setup the logger
@@ -345,7 +406,7 @@ if __name__ == '__main__' :
     args.skip = -1
   # Do thermodynamic integration
   verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam}
-  lambdas,gradients,grad_std,pmf,pmf_std= tigcmc(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.singlepath)
+  lambdas,gradients,grad_std,pmf,pmf_std= tigcmc(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.singlepath,args.steps)
 
   # Do the fit
   if args.fitPMF :
