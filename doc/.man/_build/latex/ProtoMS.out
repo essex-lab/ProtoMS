@@ -1,60 +1,60 @@
-\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.1.1}{Formatting}{chapter.1}% 2
-\BOOKMARK [0][-]{chapter.2}{Compilation and Installation}{}% 3
-\BOOKMARK [1][-]{section.2.1}{Programming Language}{chapter.2}% 4
-\BOOKMARK [1][-]{section.2.2}{Building ProtoMS}{chapter.2}% 5
-\BOOKMARK [1][-]{section.2.3}{Requirements}{chapter.2}% 6
-\BOOKMARK [0][-]{chapter.3}{Design of ProtoMS}{}% 7
-\BOOKMARK [1][-]{section.3.1}{Proteins / Solutes / Solvents / GCSolutes}{chapter.3}% 8
-\BOOKMARK [1][-]{section.3.2}{Classical forcefields}{chapter.3}% 9
-\BOOKMARK [1][-]{section.3.3}{Perturbations}{chapter.3}% 10
-\BOOKMARK [1][-]{section.3.4}{Generic Moves}{chapter.3}% 11
-\BOOKMARK [0][-]{chapter.4}{Executing ProtoMS}{}% 12
-\BOOKMARK [1][-]{section.4.1}{File output}{chapter.4}% 13
-\BOOKMARK [1][-]{section.4.2}{Simulation parameters}{chapter.4}% 14
-\BOOKMARK [1][-]{section.4.3}{Specifying input files}{chapter.4}% 15
-\BOOKMARK [1][-]{section.4.4}{Running a Simulation}{chapter.4}% 16
-\BOOKMARK [1][-]{section.4.5}{Setup and analysis tools}{chapter.4}% 17
-\BOOKMARK [0][-]{chapter.5}{Input Files}{}% 18
-\BOOKMARK [1][-]{section.5.1}{Parameter / Forcefield Files}{chapter.5}% 19
-\BOOKMARK [1][-]{section.5.2}{Templates}{chapter.5}% 20
-\BOOKMARK [1][-]{section.5.3}{Automated Creation of Parameter and Template Files}{chapter.5}% 21
-\BOOKMARK [1][-]{section.5.4}{Protein File}{chapter.5}% 22
-\BOOKMARK [1][-]{section.5.5}{Solute File}{chapter.5}% 23
-\BOOKMARK [1][-]{section.5.6}{GCsolute File}{chapter.5}% 24
-\BOOKMARK [1][-]{section.5.7}{Solvent File}{chapter.5}% 25
-\BOOKMARK [1][-]{section.5.8}{Restart File}{chapter.5}% 26
-\BOOKMARK [0][-]{chapter.6}{protoms.py}{}% 27
-\BOOKMARK [0][-]{chapter.7}{Tools}{}% 28
-\BOOKMARK [1][-]{section.7.1}{ambertools.py}{chapter.7}% 29
-\BOOKMARK [1][-]{section.7.2}{build\137template.py}{chapter.7}% 30
-\BOOKMARK [1][-]{section.7.3}{calc\137bar.py}{chapter.7}% 31
-\BOOKMARK [1][-]{section.7.4}{calc\137clusters.py}{chapter.7}% 32
-\BOOKMARK [1][-]{section.7.5}{calc\137density.py}{chapter.7}% 33
-\BOOKMARK [1][-]{section.7.6}{calc\137dg.py}{chapter.7}% 34
-\BOOKMARK [1][-]{section.7.7}{calc\137gci.py}{chapter.7}% 35
-\BOOKMARK [1][-]{section.7.8}{calc\137gcsingle.py}{chapter.7}% 36
-\BOOKMARK [1][-]{section.7.9}{calc\137replicapath.py}{chapter.7}% 37
-\BOOKMARK [1][-]{section.7.10}{calc\137rmsd.py}{chapter.7}% 38
-\BOOKMARK [1][-]{section.7.11}{calc\137series.py}{chapter.7}% 39
-\BOOKMARK [1][-]{section.7.12}{calc\137ti.py}{chapter.7}% 40
-\BOOKMARK [1][-]{section.7.13}{clear\137gcmcbox.py}{chapter.7}% 41
-\BOOKMARK [1][-]{section.7.14}{convertatomnames.py}{chapter.7}% 42
-\BOOKMARK [1][-]{section.7.15}{convertwater.py}{chapter.7}% 43
-\BOOKMARK [1][-]{section.7.16}{distribute\137waters.py}{chapter.7}% 44
-\BOOKMARK [1][-]{section.7.17}{divide\137pdb.py}{chapter.7}% 45
-\BOOKMARK [1][-]{section.7.18}{generate\137input.py}{chapter.7}% 46
-\BOOKMARK [1][-]{section.7.19}{make\137dummy.py}{chapter.7}% 47
-\BOOKMARK [1][-]{section.7.20}{make\137gcmcbox.py}{chapter.7}% 48
-\BOOKMARK [1][-]{section.7.21}{make\137single.py}{chapter.7}% 49
-\BOOKMARK [1][-]{section.7.22}{merge\137templates.py}{chapter.7}% 50
-\BOOKMARK [1][-]{section.7.23}{plot\137theta.py}{chapter.7}% 51
-\BOOKMARK [1][-]{section.7.24}{pms2pymbar.py}{chapter.7}% 52
-\BOOKMARK [1][-]{section.7.25}{scoop.py}{chapter.7}% 53
-\BOOKMARK [1][-]{section.7.26}{solvate.py}{chapter.7}% 54
-\BOOKMARK [1][-]{section.7.27}{split\137jawswater.py}{chapter.7}% 55
-\BOOKMARK [0][-]{chapter.8}{Test Suite}{}% 56
-\BOOKMARK [1][-]{section.8.1}{Dependencies}{chapter.8}% 57
-\BOOKMARK [1][-]{section.8.2}{Running all tests}{chapter.8}% 58
-\BOOKMARK [1][-]{section.8.3}{Individual tests}{chapter.8}% 59
-\BOOKMARK [0][-]{section*.24}{Index}{}% 60
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}
+\BOOKMARK [1][-]{section.1.1}{Formatting}{chapter.1}
+\BOOKMARK [0][-]{chapter.2}{Compilation and Installation}{}
+\BOOKMARK [1][-]{section.2.1}{Programming Language}{chapter.2}
+\BOOKMARK [1][-]{section.2.2}{Building ProtoMS}{chapter.2}
+\BOOKMARK [1][-]{section.2.3}{Requirements}{chapter.2}
+\BOOKMARK [0][-]{chapter.3}{Design of ProtoMS}{}
+\BOOKMARK [1][-]{section.3.1}{Proteins / Solutes / Solvents / GCSolutes}{chapter.3}
+\BOOKMARK [1][-]{section.3.2}{Classical forcefields}{chapter.3}
+\BOOKMARK [1][-]{section.3.3}{Perturbations}{chapter.3}
+\BOOKMARK [1][-]{section.3.4}{Generic Moves}{chapter.3}
+\BOOKMARK [0][-]{chapter.4}{Executing ProtoMS}{}
+\BOOKMARK [1][-]{section.4.1}{File output}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Simulation parameters}{chapter.4}
+\BOOKMARK [1][-]{section.4.3}{Specifying input files}{chapter.4}
+\BOOKMARK [1][-]{section.4.4}{Running a Simulation}{chapter.4}
+\BOOKMARK [1][-]{section.4.5}{Setup and analysis tools}{chapter.4}
+\BOOKMARK [0][-]{chapter.5}{Input Files}{}
+\BOOKMARK [1][-]{section.5.1}{Parameter / Forcefield Files}{chapter.5}
+\BOOKMARK [1][-]{section.5.2}{Templates}{chapter.5}
+\BOOKMARK [1][-]{section.5.3}{Automated Creation of Parameter and Template Files}{chapter.5}
+\BOOKMARK [1][-]{section.5.4}{Protein File}{chapter.5}
+\BOOKMARK [1][-]{section.5.5}{Solute File}{chapter.5}
+\BOOKMARK [1][-]{section.5.6}{GCsolute File}{chapter.5}
+\BOOKMARK [1][-]{section.5.7}{Solvent File}{chapter.5}
+\BOOKMARK [1][-]{section.5.8}{Restart File}{chapter.5}
+\BOOKMARK [0][-]{chapter.6}{protoms.py}{}
+\BOOKMARK [0][-]{chapter.7}{Tools}{}
+\BOOKMARK [1][-]{section.7.1}{ambertools.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.2}{build\137template.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.3}{calc\137bar.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.4}{calc\137clusters.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.5}{calc\137density.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.6}{calc\137dg.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.7}{calc\137gci.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.8}{calc\137gcsingle.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.9}{calc\137replicapath.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.10}{calc\137rmsd.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.11}{calc\137series.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.12}{calc\137ti.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.13}{clear\137gcmcbox.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.14}{convertatomnames.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.15}{convertwater.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.16}{distribute\137waters.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.17}{divide\137pdb.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.18}{generate\137input.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.19}{make\137dummy.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.20}{make\137gcmcbox.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.21}{make\137single.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.22}{merge\137templates.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.23}{plot\137theta.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.24}{pms2pymbar.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.25}{scoop.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.26}{solvate.py}{chapter.7}
+\BOOKMARK [1][-]{section.7.27}{split\137jawswater.py}{chapter.7}
+\BOOKMARK [0][-]{chapter.8}{Test Suite}{}
+\BOOKMARK [1][-]{section.8.1}{Dependencies}{chapter.8}
+\BOOKMARK [1][-]{section.8.2}{Running all tests}{chapter.8}
+\BOOKMARK [1][-]{section.8.3}{Individual tests}{chapter.8}
+\BOOKMARK [0][-]{section*.24}{Index}{}
