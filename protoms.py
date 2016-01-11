@@ -1006,7 +1006,11 @@ if __name__ == "__main__":
 
   # Extra preparation for GCMC or JAWS-1     
   if args.simulation in ["gcmc","jaws1"] :
-    args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,tarlist,args)    
+    if water_file is None:
+        msg = "GCMC and JAWS1 not supported without protein or scoop"
+        logger.error(msg)
+        raise simulationobjects.SetupError(msg)
+    args.gcmcwater,water_file = _prep_gcmc(ligands,ligand_files,water_file,tarlist,args)
   
   # Extra preparation for JAWS-2
   if args.simulation == "jaws2"  :
