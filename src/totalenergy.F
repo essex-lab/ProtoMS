@@ -11,6 +11,8 @@
       include 'enums.inc'
       include 'energies.inc'
       include 'quickpot.inc'
+c ### delete later below
+      include 'parallel.inc'
 c###########################################################
 c
 c     This function returns the total energy of the 
@@ -50,6 +52,12 @@ c###########################################################
       totalEnergy = ZERO
       nrgb = ZERO
       nrgf = ZERO
+
+      write(6,*)"\n###########################################"
+
+      write(6,*) myid," Within Total energy. My lamid: ",mylamid,". Mygcid: ",mygcid
+
+      write(6,*) myid," Total energy before Protein calculations ",totalEnergy
 
       if (NProteins.gt.0) then
 c       loop over all proteins and get them to return thier
@@ -374,6 +382,8 @@ c                totalEnergy = totalEnergy + nrg
 
 c      write(6,*)totalEnergy,nrgf,nrgb
 
+      write(6,*) myid," Total energy before GCsolute calculations ",totalEnergy
+
 
 c########################################### 
 c     now do the same for the GCS
@@ -529,6 +539,8 @@ c             totalEnergy = totalEnergy + nrg
           enddo
         endif
       endif
+
+      write(6,*) myid," Total energy before Solvent calculations ",totalEnergy
       
 c####################################
 
@@ -693,6 +705,8 @@ c       if lambdas are all the same then reference and perturbed energies should
           call printLine(WARNING,"or try to submit a bug report.")
         endif
       endif
+
+      write(6,*)myid," My total energy is ",totalEnergy
           
       return
 

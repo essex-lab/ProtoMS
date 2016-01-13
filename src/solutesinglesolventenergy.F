@@ -11,6 +11,8 @@
       include 'printer.inc'
       include 'parameters.inc'
       include 'quickpot.inc'
+c ### delete later below
+      include 'parallel.inc'
 c##########################################################
 c
 c     This function calculates the interaction energy
@@ -113,7 +115,7 @@ c         LJ on oxygens only
           funcat2 = 1
           include 'nbinitial.inc'
           include 'nbsolsvn.inc'
-          include 'nbenergy_lj.inc'         
+          include 'nbenergy_lj.inc'   
         
           nrg = nrg + funcnbnrg
           ljnrg = ljnrg + funcljnrg
@@ -201,6 +203,8 @@ c           however, outside into feather region
       endif
       
       soluteSingleSolventEnergy = nrg
+
+      write(6,*) myid," solvent-solute energy is ", soluteSingleSolventEnergy,". Mylambdaval ",lambdaval(mylambda)
       
       return
       end

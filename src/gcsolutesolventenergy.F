@@ -22,6 +22,7 @@ c################################################################
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb,icnrgf,icnrgb,iljnrgf,iljnrgb
       double precision GCsoluteSingleSolventEnergy
       double precision scl,sclf,sclb
+
       GCsoluteSolventEnergy = ZERO
       cnrg = ZERO
       ljnrg = ZERO
@@ -49,5 +50,6 @@ c################################################################
       enddo
 
       GCsoluteSolventEnergy = nrg
+
       return
       end

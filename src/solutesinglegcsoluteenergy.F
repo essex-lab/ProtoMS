@@ -11,6 +11,8 @@
       include 'printer.inc'
       include 'parameters.inc'
       include 'quickpot.inc'
+c ### delete later below
+      include 'parallel.inc'
 c##########################################################
 c
 c     This function calculates the interaction energy
@@ -93,12 +95,26 @@ c     thier interaction energy
       funcisol1 = isol
       funcigcs2 = igcs
 c     Are we going to use a softcore ? 
-      if (SoluteSoftCore(isol)) softcore = .true.
-      if (GCsoluteSoftCore(igcs)) softcore = .true.
+      if (SoluteSoftCore(isol).and.GCsoluteSoftCore(igcs)) then
+c       Break if both solute and gcsolute have softcore assigned
+        call printLine(FATAL,"The calculation of interactions between softcored solute and softcored gcsolute is not implemented.")
+        call printLine(FATAL,"The combination of lambda and JAWS calculations with softcores may be causing the issue.")
+        call closeProgram(100,"")
+      elseif  (SoluteSoftCore(isol)) then 
+        softcore = .true.
+        thet = scl
+        write(6,*)"scl, sclf, sclb: ",scl,sclf,sclb
+c        thet = ONE-lambda
+      elseif (GCsoluteSoftCore(igcs)) then
+        softcore = .true.
+        thet = thetaparam(funcigcs2)
+      endif
 c     Activate Distance Dependent Dielectric calculation
       if (QuickMove .and. DDDon) ddd = .true. 
       do i=1,nat1
         funcat1 = i
+
+      write(6,*) myid," Do we have softcore in solute-gcsolute interactions? ",softcore
 
         do j=1,nat2
           funcat2 = j
@@ -164,6 +180,8 @@ c        scale to the theta jaws parameter
       endif
      
       soluteSingleGCSoluteEnergy = nrg
+
+      write(6,*) myid," gcsol-solute energy is ", soluteSingleGCSoluteEnergy,". Mylambdaval ",lambdaval(mylambda)
       
       return
       end

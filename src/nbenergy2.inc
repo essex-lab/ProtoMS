@@ -232,12 +232,14 @@ c           ...Otherwise we have to get it by lookup
             invfuncdist6 = ONE / (funcdist2**3 + softdist)
           else
             softdist = (1-scl)*DeltaCore*shift
+            write(6,*)"2This is softdist in nbenergy2 ",softdist
             invfuncdist6 = ONE / (funcdist2 + softdist)**3
           endif
           invfuncdist12 = invfuncdist6**2
         else
           invfuncdist = ONE / dsqrt(funcdist2)
           invfuncdist6 = ONE / funcdist2**3
+          write(6,*)"2This is invfuncdist6 in nbenergy3 ",invfuncdist6
           invfuncdist12 = invfuncdist6**2
         endif
 c       calculate the distances for variable geometry (if necessary)
