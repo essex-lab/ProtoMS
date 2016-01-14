@@ -7,6 +7,8 @@
       include 'solutes.inc'
       include 'constants.inc'
       include 'flags.inc'
+c ### delete later below
+      include 'parallel.inc'
 c################################################################
 c
 c     This function calculates the total interaction energy
@@ -75,6 +77,8 @@ c       for the maximum probability..
       endif
 
       soluteGCSEnergy = nrg
+
+c      if (myid.eq.1.and.isol.eq.1) write(6,*)myid," HERE My gcsol energy within solute-gcsol energy ",soluteGCSEnergy
 
       return
       end

@@ -66,6 +66,7 @@ c       4 in the line below stands for the lenght of 'dump'
       NAcceptedMoves = 0
       NTotalMoves = 0
       do i=1,nconfig
+        if (myid.eq.1) write(6,*)myid,"###########################################",i
         NTotalMoves = NTotalMoves + 1
 
 c       obtain the move type based on probabilities entered by the user
@@ -83,8 +84,10 @@ c       obtain the move type based on probabilities entered by the user
         else if (imov.eq.TRYROTAMER) then
           templ = rotamerMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYINSERTION) then
+          if (myid.eq.1) write(6,*) "Doing insertion move."
           templ = insertionMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYDELETION) then
+          if (myid.eq.1) write(6,*) "Doing deletion move."
           templ = deletionMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYGCSOLUTE) then
           templ = gcsoluteMove(UPDATEENERGY,i,0)

@@ -32,7 +32,7 @@ c###########################################################
 
       integer savenrg
       integer i,j
-      double precision nrg,nrgb,nrgf
+      double precision nrg,nrgb,nrgf,myenergy
       double precision cnrg,ljnrg,mindist
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision bndnrg,angnrg,dihnrg,ubynrg,nbcnrg,nbljnrg
@@ -53,11 +53,11 @@ c###########################################################
       nrgb = ZERO
       nrgf = ZERO
 
-      write(6,*)"\n###########################################"
+c      write(6,*)"\n###########################################"
 
-      write(6,*) myid," Within Total energy. My lamid: ",mylamid,". Mygcid: ",mygcid
+c      write(6,*) myid," Within Total energy. My lamid: ",mylamid,". Mygcid: ",mygcid
 
-      write(6,*) myid," Total energy before Protein calculations ",totalEnergy
+c      write(6,*) myid," Total energy before Protein calculations ",totalEnergy
 
       if (NProteins.gt.0) then
 c       loop over all proteins and get them to return thier
@@ -382,7 +382,7 @@ c                totalEnergy = totalEnergy + nrg
 
 c      write(6,*)totalEnergy,nrgf,nrgb
 
-      write(6,*) myid," Total energy before GCsolute calculations ",totalEnergy
+c      write(6,*) myid," Total energy before GCsolute calculations ",totalEnergy
 
 
 c########################################### 
@@ -468,6 +468,8 @@ c           add the total GCS-protein energy for protein i
         endif
 
 c      write(6,*)totalEnergy,nrgf,nrgb
+
+        myenergy = totalenergy
         
 c       now the solute-solvent energy
         if (NSolutes.gt.0) then
@@ -498,6 +500,8 @@ c             SG theta scaling for fragments
      .              cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist,
      .              scl,sclf,sclb)
 
+c              if (myid.eq.1) write(6,*)myid," ## Before Scaling gcsolenergies ",nrg
+
 c      write(6,*)"H",nrg,cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf
 
 c             scale the energies
@@ -508,6 +512,7 @@ c             scale the energies
               ljnrgf = ljnrgf*sclf
               cnrgb = cnrgb*sclb
               ljnrgb = ljnrgb*sclb
+c              if (myid.eq.1) write(6,*)myid," ## After Simple Scaling gcsol ",nrg
 c      write(6,*)ljnrg,ljnrgf,ljnrgb,nrg,cnrg+ljnrg
 c             If the soft-core is on, the coulombic is scaled further here
               if (Solutesoftcore(i)) then
@@ -519,9 +524,11 @@ c             If the soft-core is on, the coulombic is scaled further here
               nrgb = nrgb + cnrgb + ljnrgb
 c             totalEnergy = totalEnergy + nrg
               totalEnergy = totalEnergy + cnrg + ljnrg
-              
+              if (myid.eq.1) write(6,*)myid," ## After SoluteSoftcore gcsol coul ",cnrg," lj ",ljnrg
+c              if (myid.eq.1) write(6,*)"savenrg ",savenrg
               if (savenrg.eq.OLD) then
                 OldSolGCSC(i) = cnrg
+c                if (myid.eq.1) write(6,*)"^^ i = ",i," OldSolGCSC(1) = ",OldSolGCSC(1)
                 OldSolGCSLJ(i) = ljnrg
                 OldSolGCSCF(i) = cnrgf
                 OldSolGCSLJF(i) = ljnrgf
@@ -540,7 +547,11 @@ c             totalEnergy = totalEnergy + nrg
         endif
       endif
 
-      write(6,*) myid," Total energy before Solvent calculations ",totalEnergy
+      if (myid.eq.1) write(6,*) myid," Just wrote OldSolGCSC(1) ",OldSolGCSC(1)," equal to ",cnrg
+
+c      if (myid.eq.1) write(6,*)myid," my gcsolenergies ",TotalEnergy-myenergy
+
+c      write(6,*) myid," Total energy before Solvent calculations ",totalEnergy
       
 c####################################
 
@@ -603,7 +614,7 @@ c           add the total solvent-protein energy for protein i
         endif
       
       
-        
+        myenergy = totalenergy
 c       now the solute-solvent energy
         if (NSolutes.gt.0) then
           do i=1,NSolutes
@@ -632,6 +643,7 @@ c             SG theta scaling for fragments
               nrg = soluteSolventEnergy(DONTCARE,i,
      .              cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist,
      .              scl,sclf,sclb)
+c              if (myid.eq.1) write(6,*)myid," ## Before Scaling solvent ",nrg
 c             scale the energies
               nrg = nrg*scl
               cnrg = cnrg*scl
@@ -640,6 +652,7 @@ c             scale the energies
               ljnrgf = ljnrgf*sclf
               cnrgb = cnrgb*sclb
               ljnrgb = ljnrgb*sclb
+c              if (myid.eq.1) write(6,*)myid," ## After Simple Scaling solvent ",nrg
 c             If the soft-core is on, the coulombic is scaled further here
               if (Solutesoftcore(i)) then
                 cnrg = cnrg * (scl)**CoulSoftPower
@@ -650,6 +663,8 @@ c             If the soft-core is on, the coulombic is scaled further here
               nrgb = nrgb + cnrgb + ljnrgb
 c             totalEnergy = totalEnergy + nrg
               totalEnergy = totalEnergy + cnrg + ljnrg
+
+              if (myid.eq.1) write(6,*)myid," ## After Solute Softcore solvent coul ",cnrg," lj ",ljnrg
               
               if (savenrg.eq.OLD) then
                 OldSolSvnC(i) = cnrg
@@ -661,6 +676,7 @@ c             totalEnergy = totalEnergy + nrg
                 OldSolSvnDist(i) = mindist
                 if (i.eq.SvnPrefSol .and. PrefSample) then
 c                 save the solvent probabilities...
+c                  write(6,*) "Inside prefsampling!!!!!!!!!!!!!!!!!"
                   do j=1,NSolvents
                     SvnProb(j) = SvnNewProb(j)
                   enddo
@@ -680,6 +696,8 @@ c                 save the solvent probabilities...
           enddo
         endif
       endif
+
+c      if (myid.eq.1) write(6,*)myid," my solventenergies ",TotalEnergy-myenergy
 
       if (savenrg.eq.OLD) then
         OldTotalEnergy = totalEnergy
@@ -706,7 +724,13 @@ c       if lambdas are all the same then reference and perturbed energies should
         endif
       endif
 
-      write(6,*)myid," My total energy is ",totalEnergy
+       if (myid.eq.1) then
+         write(6,*) "TOTAL This two things have to be different"
+         write(6,*) " GCS ",OldSolGCSC(1)
+         write(6,*) " Svn ",OldSolSvnC(1)
+       endif
+
+c      write(6,*)myid," My total energy is ",totalEnergy
           
       return
 

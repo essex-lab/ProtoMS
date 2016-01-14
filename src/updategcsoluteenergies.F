@@ -9,6 +9,8 @@
       include 'solvents.inc'
       include 'simparams.inc'
       include 'enums.inc'
+c ### delete later below
+      include 'parallel.inc'
           
 c######################################################
 c
@@ -69,13 +71,15 @@ c       now update the protein-solvent bulk energy
 
       if (NSolutes.gt.0) then
 c       now update the GCS-solute bulk energy
+        if (myid.eq.1) write(6,*) "UPDATE gcse GCSC (before) ",OldSolGCSC(1)
         do 300 i=1,NSolutes
           OldSolGCSC(i) = OldSolGCSC(i) + newIndGCSSolC(i) - oldIndGCSSolC(i)
           OldSolGCSLJ(i) = OldSolGCSLJ(i) + newIndGCSSolLJ(i) - oldIndGCSSolLJ(i)      
           OldSolGCSCF(i) = OldSolGCSCF(i) + newIndGCSSolCF(i) - oldIndGCSSolCF(i)
           OldSolGCSLJF(i) = OldSolGCSLJF(i) + newIndGCSSolLJF(i) - oldIndGCSSolLJF(i)      
           OldSolGCSCB(i) = OldSolGCSCB(i) + newIndGCSSolCB(i) - oldIndGCSSolCB(i)
-          OldSolGCSLJB(i) = OldSolGCSLJB(i) + newIndGCSSolLJB(i) - oldIndGCSSolLJB(i)      
+          OldSolGCSLJB(i) = OldSolGCSLJB(i) + newIndGCSSolLJB(i) - oldIndGCSSolLJB(i)    
+        if (myid.eq.1) write(6,*) "UPDATE gcse GCSC (after) ",OldSolGCSC(1)  
 300     continue
       endif
 

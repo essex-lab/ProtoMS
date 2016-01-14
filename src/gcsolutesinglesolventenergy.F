@@ -166,7 +166,7 @@ c       Now scale these energies according to theta...
       endif
       
       GCsoluteSingleSolventEnergy = nrg
-      write(6,*) myid," gcsol-solvent energy is ", GCsoluteSingleSolventEnergy
+c      write(6,*) myid," gcsol-solvent energy is ", GCsoluteSingleSolventEnergy
 c      PRINT*, "mindist-nrg" ,mindist,GCsoluteSingleSolventEnergy
       return
       end

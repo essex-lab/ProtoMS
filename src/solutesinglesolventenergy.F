@@ -204,7 +204,9 @@ c           however, outside into feather region
       
       soluteSingleSolventEnergy = nrg
 
-      write(6,*) myid," solvent-solute energy is ", soluteSingleSolventEnergy,". Mylambdaval ",lambdaval(mylambda)
-      
+c      if (isol.eq.1) then
+c        if (myid.eq.1) write(6,*) myid," solvent-solute energy is ", soluteSingleSolventEnergy,". Solute ",isol,
+c     .                            " Solvent ",isvn," Mylambda ",lambdaval(mylambda)
+c      endif
       return
       end

@@ -84,7 +84,7 @@ c         *** Reference state non bonded parameters ***
           funcaij = funcbij*funcsig3
 c         Calculate forwards and backwards free energies if there is a difference in 
 c         lambda
-          write(6,*) "Do I have different lambdas? ",DifferentLambdas
+c          write(6,*) "Do I have different lambdas? ",DifferentLambdas
           if (DifferentLambdas) then
             if (ipar1.lt.0) then
                funcichg1b = VariableChg(-ipar1,4)
@@ -118,7 +118,7 @@ c         lambda
             endif 
 
 c           forward and backward LJ energies
-            write(6,*) "Do I have to worry? ",lorentzberthelot
+c            write(6,*) "Do I have to worry? ",lorentzberthelot
             if (lorentzberthelot) then
             
 c             get the mixed sigma and epsilon parameters            
@@ -131,13 +131,13 @@ c             try to fix sigma scaling problem for disappering atoms
               if (funcsigsclf.and.funcsigsclb) then
                 funcsig3f = ZERO
                 funcsig3b = ZERO
-                write(6,*) "I will not be entering the lambdaf lambdab business"
+c                write(6,*) "I will not be entering the lambdaf lambdab business"
               else if (funcsigsclf) then
-                write(6,*) "ENTERING lambdaf lambdab business 1"
+c                write(6,*) "ENTERING lambdaf lambdab business 1"
                 funcsig3f = funcsig3f * (thet)
                 funcsig3b = funcsig3b * (thet)
               else if (funcsigsclb) then
-                write(6,*) "ENTERING lambdaf lambdab business 2"
+c                write(6,*) "ENTERING lambdaf lambdab business 2"
                 funcsig3f = funcsig3f * (1-thet)
                 funcsig3b = funcsig3b * (1-thet)
               endif
@@ -196,43 +196,43 @@ c         Soften the distance for the coulombic term
           invfuncdist = ONE / dsqrt( funcdist2 + (1-thet) )
 c         Check if we have alread worked out sigmaij6...
           if (ipar1 .lt. 0 .or. ipar2 .lt.0) then
-            write(6,*) "One of my particles is lower than 0"
+c            write(6,*) "One of my particles is lower than 0"
 c           Calculate the shift parameter
 c           Taken as the sigma value for this pair pair interaction
-           write(6,*) "Do I have to worry? ",lorentzberthelot
+c           write(6,*) "Do I have to worry? ",lorentzberthelot
            if (lorentzberthelot) then 
-             write(6,*) "What is deltacore? ",DeltaCore
+c             write(6,*) "What is deltacore? ",DeltaCore
              shift = HALF*(funcisig1+funcisig2)*DeltaCore
            else
              shift = funcisig1*funcisig2*DeltaCore
            endif
             softdist = (1-thet)*shift
           else
-            write(6,*) "Are we here then?"
+c            write(6,*) "Are we here then?"
 c           ...Otherwise we have to get it by lookup
             sigat1 = sigma(ipar1)
             sigat2 = sigma(ipar2)
-            write(6,*) "Do I have to worry? ",lorentzberthelot
+c            write(6,*) "Do I have to worry? ",lorentzberthelot
             if (lorentzberthelot) then
-             write(6,*) "What is deltacore? ",DeltaCore
+c             write(6,*) "What is deltacore? ",DeltaCore
               shift = HALF*(sigat1+sigat2)*DeltaCore
             else
               shift = ( sigat1*sigat2 )*DeltaCore
             endif
             softdist = (1-thet)*shift
-            write(6,*)"3This is softdist in nbenergy3 ",softdist
+c            write(6,*)"3This is softdist in nbenergy3 ",softdist
           endif
           invfuncdist6 = ONE / (funcdist2 + softdist)**3
           invfuncdist12 = invfuncdist6**2
         else
           invfuncdist = ONE / dsqrt(funcdist2)
           invfuncdist6 = invfuncdist**6
-          write(6,*)"3This is invfuncdist6 in nbenergy3 ",invfuncdist6
-          write(6,*)"3The alternative is ",ONE / funcdist2**3
+c          write(6,*)"3This is invfuncdist6 in nbenergy3 ",invfuncdist6
+c          write(6,*)"3The alternative is ",ONE / funcdist2**3
           invfuncdist12 = invfuncdist6**2
         endif
 c       calculate the distances for variable geometry (if necessary)
-        write(6,*) "Do we have different lambdas? ",DifferentLambdas
+c        write(6,*) "Do we have different lambdas? ",DifferentLambdas
         if (funcdogeom .and. DifferentLambdas) then
           if (boundx) then
             funcdxf = funcdxf - BoxDimension(1)
@@ -249,9 +249,9 @@ c       calculate the distances for variable geometry (if necessary)
           funcdistf2 = funcdxf**2+funcdyf**2+funcdzf**2
           funcdistb2 = funcdxb**2+funcdyb**2+funcdzb**2
           if (softcore) then 
-            write(6,*) "Do we get to the forwards & backwards bit?"
-            invfuncdistf = ONE / dsqrt(funcdistf2 + (1-thet) )
-            invfuncdistb = ONE / dsqrt(funcdistb2 + (1-thet) )
+c            write(6,*) "Do we get to the forwards & backwards bit?"
+            invfuncdistf = ONE / dsqrt(funcdistf2 + (1-thetf) )
+            invfuncdistb = ONE / dsqrt(funcdistb2 + (1-thetb) )
             if (ipar1 .lt. 0 .or. ipar2 .lt.0) then
               if (lorentzberthelot) then 
                 shiftf = HALF*(funcisig1f+funcisig2f)*DeltaCore
@@ -271,8 +271,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = ( sigat1*sigat2 )*DeltaCore
                 shiftb = shiftf
               endif
-              softdistf = (1-thet)*shiftf
-              softdistb = (1-thet)*shiftb
+              softdistf = (1-thetf)*shiftf
+              softdistb = (1-thetb)*shiftb
             endif
             invfuncdist6f = ONE / (funcdistf2+ softdistf)**3
             invfuncdist12f = invfuncdist6f**2        
@@ -289,11 +289,11 @@ c             ...Otherwise we have to get it by lookup
           endif
         else
           if (softcore) then
-            write(6,*) "Do we get to the forwards & backwards bit? - Latter on -"
-            invfuncdistf = ONE / dsqrt(funcdist2 + (1-thet) )
-            invfuncdistb = ONE / dsqrt(funcdist2 + (1-thet) )
+c            write(6,*) "Do we get to the forwards & backwards bit? - Latter on -"
+            invfuncdistf = ONE / dsqrt(funcdist2 + (1-thetf) )
+            invfuncdistb = ONE / dsqrt(funcdist2 + (1-thetb) )
             if (ipar1 .lt. 0 .or. ipar2 .lt.0) then
-              write(6,*) "One of my particles is lower than 0"
+c              write(6,*) "One of my particles is lower than 0"
               if (lorentzberthelot) then 
                 shiftf = HALF*(funcisig1f+funcisig2f)*DeltaCore
                 shiftb = HALF*(funcisig1b+funcisig2b)*DeltaCore
@@ -301,8 +301,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = funcisig1f*funcisig2f*DeltaCore
                 shiftb = funcisig1b*funcisig2b*DeltaCore
               endif
-              softdistf = (1-thet)*shiftf
-              softdistb = (1-thet)*shiftb
+              softdistf = (1-thetf)*shiftf
+              softdistb = (1-thetb)*shiftb
             else
 c             ...Otherwise we have to get it by lookup
               if (lorentzberthelot) then
@@ -312,8 +312,9 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = ( sigat1*sigat2 )*DeltaCore
                 shiftb = shiftf
               endif
-              softdistf = (1-thet)*shiftf
-              softdistb = (1-thet)*shiftb
+c             fb change below
+              softdistf = (1-thetf)*shiftf
+              softdistb = (1-thetb)*shiftb
             endif
             invfuncdist6f = ONE / (funcdist2 + softdistf)**3
             invfuncdist12f = invfuncdist6f**2        

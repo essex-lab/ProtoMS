@@ -103,18 +103,22 @@ c       Break if both solute and gcsolute have softcore assigned
       elseif  (SoluteSoftCore(isol)) then 
         softcore = .true.
         thet = scl
-        write(6,*)"scl, sclf, sclb: ",scl,sclf,sclb
+        thetf = sclf
+        thetb = sclb
+c        write(6,*)"scl, sclf, sclb: ",scl,sclf,sclb
 c        thet = ONE-lambda
       elseif (GCsoluteSoftCore(igcs)) then
         softcore = .true.
         thet = thetaparam(funcigcs2)
+        thetf = thet
+        thetb = thet
       endif
 c     Activate Distance Dependent Dielectric calculation
       if (QuickMove .and. DDDon) ddd = .true. 
       do i=1,nat1
         funcat1 = i
 
-      write(6,*) myid," Do we have softcore in solute-gcsolute interactions? ",softcore
+c      write(6,*) myid," Do we have softcore in solute-gcsolute interactions? ",softcore
 
         do j=1,nat2
           funcat2 = j
@@ -181,7 +185,9 @@ c        scale to the theta jaws parameter
      
       soluteSingleGCSoluteEnergy = nrg
 
-      write(6,*) myid," gcsol-solute energy is ", soluteSingleGCSoluteEnergy,". Mylambdaval ",lambdaval(mylambda)
-      
+      if (isol.eq.1) then
+        if (myid.eq.1) write(6,*) myid," gcsol-solute energy is ", soluteSingleGCSoluteEnergy,". cnrg ",cnrg,
+     .                            " Mylambda ",lambdaval(mylambda)
+      endif
       return
       end

@@ -9,6 +9,8 @@
       include 'simparams.inc'
       include 'enums.inc'
       include 'energies.inc'
+c ### delete later below
+      include 'parallel.inc'
 c##############################################################
 c
 c     This function returns the total energy of GC-Solute igcs,
@@ -186,11 +188,21 @@ c         this being a dual topology solute
           nrg = soluteSingleGCSoluteEnergy(i,igcs,
      .        icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,
      .        scl,sclf,sclb)
+          if (myid.eq.1) then
+            write(6,*) "right after gcsol-solute energy ",nrg," COUL ",icnrg
+            write(6,*) "scl ",scl," CoulSoftPower ",CoulSoftPower
+          endif
+
+c          if (Solutesoftcore(i)) then
+c            cnrg = cnrg * (scl)**CoulSoftPower
+c            cnrgf = cnrgf * (sclf)**CoulSoftPower
+c            cnrgb = cnrgb * (sclb)**CoulSoftPower
+c          endif
 
           if (Solutesoftcore(i)) then
-            cnrg = cnrg * (scl)**CoulSoftPower
-            cnrgf = cnrgf * (sclf)**CoulSoftPower
-            cnrgb = cnrgb * (sclb)**CoulSoftPower
+            icnrg = icnrg * (scl)**CoulSoftPower
+            icnrgf = icnrgf * (sclf)**CoulSoftPower
+            icnrgb = icnrgb * (sclb)**CoulSoftPower
           endif
   
           cnrg = cnrg + icnrg*scl
@@ -207,16 +219,16 @@ c         this being a dual topology solute
             OldIndGCSSolLJF(i) = iljnrgf*sclf
             OldIndGCSSolCB(i) = icnrgb*sclb
             OldIndGCSSolLJB(i) = iljnrgb*sclb
-        else if (savenrg.eq.NEW) then
-          NewIndGCSSolC(i) = icnrg*scl
-          NewIndGCSSolLJ(i) = iljnrg*scl
-          NewIndGCSSolCF(i) = icnrgf*sclf
-          NewIndGCSSolLJF(i) = iljnrgf*sclf
-          NewIndGCSSolCB(i) = icnrgb*sclb
-          NewIndGCSSolLJB(i) = iljnrgb*sclb
-          NewGCSSvnDist(i) = imindist
-        endif
-       enddo
+          else if (savenrg.eq.NEW) then
+            NewIndGCSSolC(i) = icnrg*scl
+            NewIndGCSSolLJ(i) = iljnrg*scl
+            NewIndGCSSolCF(i) = icnrgf*sclf
+            NewIndGCSSolLJF(i) = iljnrgf*sclf
+            NewIndGCSSolCB(i) = icnrgb*sclb
+            NewIndGCSSolLJB(i) = iljnrgb*sclb
+            NewGCSSvnDist(i) = imindist
+          endif
+        enddo
       endif
 
       if (savenrg.eq.NEW) then
@@ -238,6 +250,8 @@ c        PRINT*, "OldIndGCSC" ,OldIndGCSC
       endif
       nrgf = cnrgf + ljnrgf
       nrgb = cnrgb + ljnrgb
+
+      if (myid.eq.1) write(6,*) "For gcsoluteenergy NewIndGCSSolC(1)",NewIndGCSSolC(1)," with scl ",scl
       
       return
       end
