@@ -11,8 +11,7 @@
       include 'printer.inc'
       include 'parameters.inc'
       include 'quickpot.inc'
-c ### delete later below
-      include 'parallel.inc'
+
 c##########################################################
 c
 c     This function calculates the interaction energy
@@ -105,8 +104,6 @@ c       Break if both solute and gcsolute have softcore assigned
         thet = scl
         thetf = sclf
         thetb = sclb
-c        write(6,*)"scl, sclf, sclb: ",scl,sclf,sclb
-c        thet = ONE-lambda
       elseif (GCsoluteSoftCore(igcs)) then
         softcore = .true.
         thet = thetaparam(funcigcs2)
@@ -117,8 +114,6 @@ c     Activate Distance Dependent Dielectric calculation
       if (QuickMove .and. DDDon) ddd = .true. 
       do i=1,nat1
         funcat1 = i
-
-c      write(6,*) myid," Do we have softcore in solute-gcsolute interactions? ",softcore
 
         do j=1,nat2
           funcat2 = j
@@ -185,9 +180,5 @@ c        scale to the theta jaws parameter
      
       soluteSingleGCSoluteEnergy = nrg
 
-      if (isol.eq.1) then
-        if (myid.eq.1) write(6,*) myid," gcsol-solute energy is ", soluteSingleGCSoluteEnergy,". cnrg ",cnrg,
-     .                            " Mylambda ",lambdaval(mylambda)
-      endif
       return
       end

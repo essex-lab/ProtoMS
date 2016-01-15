@@ -34,11 +34,6 @@ c####################################################################
        integer lineLength,lgth,lgth2,igcs,savenrg,Molcount
        integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
 
-       if (myid.eq.1) then
-         write(6,*) "PRINT This two things have to be different"
-         write(6,*) " GCS ",OldSolGCSC(1)
-         write(6,*) " Svn ",OldSolSvnC(1)
-       endif
 
 
        if (DifferentLambdas) then

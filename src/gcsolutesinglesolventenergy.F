@@ -11,8 +11,6 @@
       include 'printer.inc'
       include 'parameters.inc'
       include 'quickpot.inc'
-c ### delete later below
-      include 'parallel.inc'
 c##########################################################
 c
 c     This function calculates the interaction energy
@@ -166,7 +164,6 @@ c       Now scale these energies according to theta...
       endif
       
       GCsoluteSingleSolventEnergy = nrg
-c      write(6,*) myid," gcsol-solvent energy is ", GCsoluteSingleSolventEnergy
-c      PRINT*, "mindist-nrg" ,mindist,GCsoluteSingleSolventEnergy
+
       return
       end

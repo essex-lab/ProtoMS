@@ -9,8 +9,6 @@
       include 'simparams.inc'
       include 'enums.inc'
       include 'energies.inc'
-c ### delete later below
-      include 'parallel.inc'
 c##############################################################
 c
 c     This function returns the total energy of GC-Solute igcs,
@@ -188,16 +186,6 @@ c         this being a dual topology solute
           nrg = soluteSingleGCSoluteEnergy(i,igcs,
      .        icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,
      .        scl,sclf,sclb)
-          if (myid.eq.1) then
-            write(6,*) "right after gcsol-solute energy ",nrg," COUL ",icnrg
-            write(6,*) "scl ",scl," CoulSoftPower ",CoulSoftPower
-          endif
-
-c          if (Solutesoftcore(i)) then
-c            cnrg = cnrg * (scl)**CoulSoftPower
-c            cnrgf = cnrgf * (sclf)**CoulSoftPower
-c            cnrgb = cnrgb * (sclb)**CoulSoftPower
-c          endif
 
           if (Solutesoftcore(i)) then
             icnrg = icnrg * (scl)**CoulSoftPower
@@ -250,8 +238,6 @@ c        PRINT*, "OldIndGCSC" ,OldIndGCSC
       endif
       nrgf = cnrgf + ljnrgf
       nrgb = cnrgb + ljnrgb
-
-      if (myid.eq.1) write(6,*) "For gcsoluteenergy NewIndGCSSolC(1)",NewIndGCSSolC(1)," with scl ",scl
       
       return
       end

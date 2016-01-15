@@ -9,8 +9,7 @@
       include 'simparams.inc'
       include 'enums.inc'
       include 'energies.inc'
-c ### delete later below
-      include 'parallel.inc'
+
 c##############################################################
 c
 c     This function returns the total energy of solvent isvn,
@@ -248,8 +247,6 @@ c             - also watch for the maximum probability
       
       nrgf = cnrgf + ljnrgf
       nrgb = cnrgb + ljnrgb
-
-      if (myid.eq.1) write(6,*) "For solventenergy NewIndSvnSolC(1)",NewIndSvnSolC(1)
       
       return
       end

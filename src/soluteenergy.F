@@ -9,8 +9,6 @@
       include 'simparams.inc'
       include 'enums.inc'
       include 'energies.inc'
-c ### delete later below
-      include 'parallel.inc'
 c#################################################################
 c
 c     This function returns the total energy of solute isol
@@ -322,11 +320,6 @@ c         then save the preferential sampling parameters
 c      write(printstring,*) 'solNrg ',soluteEnergy,' F ',nrgf,' B ',nrgb
 c      call printLine(DEBUG,printstring)
 
-       if (myid.eq.1) then
-         write(6,*) "SOLUTE This two things have to be different"
-         write(6,*) " GCS ",OldSolGCSC(1)
-         write(6,*) " Svn ",OldSolSvnC(1)
-       endif
 
       return
       end

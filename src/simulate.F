@@ -66,7 +66,6 @@ c       4 in the line below stands for the lenght of 'dump'
       NAcceptedMoves = 0
       NTotalMoves = 0
       do i=1,nconfig
-        if (myid.eq.1) write(6,*)myid,"###########################################",i
         NTotalMoves = NTotalMoves + 1
 
 c       obtain the move type based on probabilities entered by the user
@@ -84,10 +83,8 @@ c       obtain the move type based on probabilities entered by the user
         else if (imov.eq.TRYROTAMER) then
           templ = rotamerMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYINSERTION) then
-          if (myid.eq.1) write(6,*) "Doing insertion move."
           templ = insertionMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYDELETION) then
-          if (myid.eq.1) write(6,*) "Doing deletion move."
           templ = deletionMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYGCSOLUTE) then
           templ = gcsoluteMove(UPDATEENERGY,i,0)
@@ -135,7 +132,6 @@ c       Do lambda replica exchange
 
 c       Do temperature replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
-c          write(6,*)myid, " calling TRE. Move ",i
           call temperatureRE
           if (doLambdaRE) then
             call assignlambdare(mylamid,.true.,.false.)
@@ -180,8 +176,7 @@ c       GR This if statement is will help track which nodes are going where
         call printLine(INFO,printstring)
       endif
 
-      if (doMultiGCMC.and.(gcrefreq.gt.0)) then   
-c        write(6,*)"### GR simulate.F: Printing acceptance"    
+      if (doMultiGCMC.and.(gcrefreq.gt.0)) then     
         write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
      .     "Attempted/successful GCMC swaps for ID ",myid," : ",
      .     ngcretry,ngcreswap," (",dble(ngcreswap)/dble(ngcretry)*100,"%)" 
