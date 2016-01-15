@@ -125,16 +125,30 @@ c       Do lambda replica exchange
           call lambdaRE
           if (doTemperatureRE) then
             call assigntemperaturere(mytemid,.true.,.false.)
+          else if (doMultiGCMC) then
+            call assignadamre(mygcid,.true.,.false.)
           endif
         endif
 
 c       Do temperature replica exchange
         if (doTemperatureRE.and.(trefreq.gt.0).and.(i.gt.1).and.(mod(i,trefreq).eq.0)) then
-c          write(6,*)myid, " calling TRE. Move ",i
           call temperatureRE
           if (doLambdaRE) then
             call assignlambdare(mylamid,.true.,.false.)
+          else if (doMultiGCMC) then
+            call assignadamre(mygcid,.true.,.false.)
           endif
+        endif
+
+c		Do GCMC replica exchange
+        if (doMultiGCMC.and.(gcrefreq.gt.0).and.(i.gt.1).and.(mod(i,gcrefreq).eq.0)) then
+c       GR This if statement is will help track which nodes are going where
+          call gcmcRE
+          if (doLambdaRE) then
+            call assignlambdare(mylamid,.true.,.false.)
+          else if (doTemperatureRE) then
+            call assigntemperaturere(mytemid,.true.,.false.)
+          endif 
         endif
 #endif
         
@@ -159,6 +173,13 @@ c          write(6,*)myid, " calling TRE. Move ",i
         write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
      .     "Attempted/successful temperature swaps for temperatureladder ",mytemladder," : ",
      .     ntretry,ntreswap," (",dble(ntreswap)/dble(ntretry)*100,"%)" 
+        call printLine(INFO,printstring)
+      endif
+
+      if (doMultiGCMC.and.(gcrefreq.gt.0)) then     
+        write(printstring,"(A,I3,A,2I6,A,F8.3,A)")
+     .     "Attempted/successful GCMC swaps for ID ",myid," : ",
+     .     ngcretry,ngcreswap," (",dble(ngcreswap)/dble(ngcretry)*100,"%)" 
         call printLine(INFO,printstring)
       endif
      

@@ -57,11 +57,15 @@ c       call printLine(RESULTS,printstring)
          call printLine(RESULTS,printstring)
        endif
 
-       if (doTemperatureRE.and.doLambdaRE) then
-         write(printstring,"('Global replica = ',i8)") myid+1
+       if (doMultiGCMC) then
+         write(printstring,"('GCMC replica = ',i8)") mygcid+1
          call printLine(RESULTS,printstring)
        endif
 
+       if (doTemperatureRE.and.doLambdaRE .or. doMultiGCMC.and.doLambdaRE) then
+         write(printstring,"('Global replica = ',i8)") myid+1
+         call printLine(RESULTS,printstring)
+       endif
 
        write(printstring,"('Temperature = ',f12.4,' C')") temperatureC
        call printLine(RESULTS,printstring)

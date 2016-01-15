@@ -19,7 +19,7 @@ c###############################################
       character*14 optn
       character*300 tempstring
       
-c     check if we are dumping files to folder
+c     check if we are dumping files to folderF
       if (.not.(doLambdaRE.or.doMultiGCMC.or.doMultiJAws2.or.doTemperatureRe)) then
         if(getOption('outfolder')) then
           outfolder = words(1)

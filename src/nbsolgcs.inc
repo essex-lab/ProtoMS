@@ -25,5 +25,5 @@
         funcdyb = dabs(ZSolCoords(funcitmp,funcat1,2)-ZGCSCoords(funcigcs2,funcat2,2))
         funcdzb = dabs(ZSolCoords(funcitmp,funcat1,3)-ZGCSCoords(funcigcs2,funcat2,3))
       endif
-      thet = thetaparam(funcigcs2)
+c      thet = thetaparam(funcigcs2)
 

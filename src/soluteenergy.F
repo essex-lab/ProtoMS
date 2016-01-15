@@ -320,5 +320,6 @@ c         then save the preferential sampling parameters
 c      write(printstring,*) 'solNrg ',soluteEnergy,' F ',nrgf,' B ',nrgb
 c      call printLine(DEBUG,printstring)
 
+
       return
       end

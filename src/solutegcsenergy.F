@@ -76,5 +76,6 @@ c       for the maximum probability..
 
       soluteGCSEnergy = nrg
 
+
       return
       end

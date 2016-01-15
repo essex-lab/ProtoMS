@@ -229,8 +229,8 @@ c       calculate the distances for variable geometry (if necessary)
           funcdistf2 = funcdxf**2+funcdyf**2+funcdzf**2
           funcdistb2 = funcdxb**2+funcdyb**2+funcdzb**2
           if (softcore) then 
-            invfuncdistf = ONE / dsqrt(funcdistf2 + (1-thet) )
-            invfuncdistb = ONE / dsqrt(funcdistb2 + (1-thet) )
+            invfuncdistf = ONE / dsqrt(funcdistf2 + (1-thetf) )
+            invfuncdistb = ONE / dsqrt(funcdistb2 + (1-thetb) )
             if (ipar1 .lt. 0 .or. ipar2 .lt.0) then
               if (lorentzberthelot) then 
                 shiftf = HALF*(funcisig1f+funcisig2f)*DeltaCore
@@ -250,8 +250,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = ( sigat1*sigat2 )*DeltaCore
                 shiftb = shiftf
               endif
-              softdistf = (1-thet)*shiftf
-              softdistb = (1-thet)*shiftb
+              softdistf = (1-thetf)*shiftf
+              softdistb = (1-thetb)*shiftb
             endif
             invfuncdist6f = ONE / (funcdistf2+ softdistf)**3
             invfuncdist12f = invfuncdist6f**2        
@@ -268,8 +268,8 @@ c             ...Otherwise we have to get it by lookup
           endif
         else
           if (softcore) then
-            invfuncdistf = ONE / dsqrt(funcdist2 + (1-thet) )
-            invfuncdistb = ONE / dsqrt(funcdist2 + (1-thet) )
+            invfuncdistf = ONE / dsqrt(funcdist2 + (1-thetf) )
+            invfuncdistb = ONE / dsqrt(funcdist2 + (1-thetb) )
             if (ipar1 .lt. 0 .or. ipar2 .lt.0) then
               if (lorentzberthelot) then 
                 shiftf = HALF*(funcisig1f+funcisig2f)*DeltaCore
@@ -278,8 +278,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = funcisig1f*funcisig2f*DeltaCore
                 shiftb = funcisig1b*funcisig2b*DeltaCore
               endif
-              softdistf = (1-thet)*shiftf
-              softdistb = (1-thet)*shiftb
+              softdistf = (1-thetf)*shiftf
+              softdistb = (1-thetb)*shiftb
             else
 c             ...Otherwise we have to get it by lookup
               if (lorentzberthelot) then
@@ -289,8 +289,9 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = ( sigat1*sigat2 )*DeltaCore
                 shiftb = shiftf
               endif
-              softdistf = (1-thet)*shiftf
-              softdistb = (1-thet)*shiftb
+c             fb change below
+              softdistf = (1-thetf)*shiftf
+              softdistb = (1-thetb)*shiftb
             endif
             invfuncdist6f = ONE / (funcdist2 + softdistf)**3
             invfuncdist12f = invfuncdist6f**2        

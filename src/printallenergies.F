@@ -35,6 +35,7 @@ c####################################################################
        integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
 
 
+
        if (DifferentLambdas) then
          write(printstring,10) lambdab,lambda,lambdaf
 10       format("RESULTS for lambda ",f8.5," <-- ",f8.5," --> ",f8.5)
@@ -58,7 +59,12 @@ c####################################################################
          call printLine(RESULTS,printstring)
        endif
        
-       if (doTemperatureRE.and.doLambdaRE) then
+       if (doMultiGCMC) then
+         write(printstring,"('GCMC replica = ',i8)") mygcid+1
+         call printLine(RESULTS,printstring)
+       endif
+
+       if (doTemperatureRE.and.doLambdaRE .or. doMultiGCMC.and.doLambdaRE) then
          write(printstring,"('Global replica = ',i8)") myid+1
          call printLine(RESULTS,printstring)
        endif
