@@ -135,8 +135,12 @@ if __name__ == '__main__' :
 
     all_dgs = []
     for directory in args.directories : 
-      lambdas,energies,paths = pms2pymbar.extract_energies(directory,args.results,args.skip,args.max)    
-      resp = pms2pymbar.mbar(lambdas,energies,RT)
+      lambdas,energies,paths = pms2pymbar.extract_energies(directory,args.results,args.skip,args.max)
+      try:
+        resp = pms2pymbar.mbar(lambdas,energies,RT)
+      except np.linalg.LinAlgError:
+        print "MBAR (%s): nan +- nan" % directory
+        continue
       (Deltaf_ij, dDeltaf_ij) = (resp[0],resp[1])
       if args.printEach or len(args.directories) == 1:
         print "MBAR (%s): %.3f +- %.3f"%(directory,Deltaf_ij[0,-1]*RT,dDeltaf_ij[0,-1]*RT)
