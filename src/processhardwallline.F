@@ -102,7 +102,13 @@ c       Make sure the IDs are valid
           resnumid1 = LabelResidueNumber(idnum)
           nameid1 = LabelName(idnum)
         endif
-c
+
+      if (nwords.eq.4) then
+        ixcen = SolGeomCentre(molid1,1)
+        iycen = SolGeomCentre(molid1,2)
+        izcen = SolGeomCentre(molid1,3)
+      endif
+
       if (typeid1 .eq. PROTEIN) then
         call printLine(WARNING,"Hardwall potentials can not be applied to proteins at this time")
         return
@@ -115,11 +121,6 @@ c
             call printLine(INFO,printstring)
       endif
 c          
-      if (nwords.eq.4) then
-        ixcen = SolGeomCentre(molid1,1)
-        iycen = SolGeomCentre(molid1,2)
-        izcen = SolGeomCentre(molid1,3)
-      endif
 
       nHardwallPotential = nHardwallPotential + 1
             HardwallCenter(nHardwallPotential,1) = ixcen

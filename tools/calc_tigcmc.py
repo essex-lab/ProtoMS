@@ -77,7 +77,7 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
     for snapshot in results_file.snapshots:
       # Counting the number of waters. Will divide by number of snapshots at the end.  
       watsum = watsum + snapshot.solventson
-      # what you want here is to get the current lambda and the gradient for this snapshot, so that you can do (9) 
+      # what you want here is to get the current lambda and the gradient for this snapshot, so that you can do (9)
       if useanalytical and hasattr(snapshot,"agradient") :
         gradient = snapshot.agradient
         lam = snapshot.lam
@@ -262,7 +262,13 @@ def _calc_gcweights(lambmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg 
         else:
             weights = (gci_energy_mat[i,] == gci_energy_mat[i,].min())*1.0   # Finds the B value with lowest binding free energy
             gci_weight_mat[i,] =  weights/np.sum(weights)                    # In case the minimum is not unique, give equal weight
-        
+
+
+    if verbose['weights']:
+        print adamsmat[0]
+        for lam, line in zip ( lambmat[:,0], gci_weight_mat ):
+          print lam, line
+      
     return gci_energy_mat, gci_weight_mat
 
 
@@ -390,6 +396,7 @@ if __name__ == '__main__' :
   parser.add_argument('-pl','--print-lam',dest='printLam',action='store_false',help="turns off printing of lambda-values",default=True)
   parser.add_argument('-gr','--plot-grads',dest='plotGrad',action='store_true',help="turns on producing plot of gradients",default=False)
   parser.add_argument('-pf','--print-fit',dest='fitPMF',action='store_true',help="turns on fitting the pmf to a polynomial",default=False)
+  parser.add_argument('-pw','--print-weights',dest='printWeights',action='store_true',help='turns on printing of gradient weights derived from Adams values',default=False)
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   parser.add_argument('--singlepath',action='store_true',default=False, help="whether to integrate over the lowest GCMC free energy B value when doing TI, instead of performing a weighted average")
@@ -405,7 +412,7 @@ if __name__ == '__main__' :
   if args.skip <= 0 :
     args.skip = -1
   # Do thermodynamic integration
-  verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam}
+  verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam,"weights":args.printWeights}
   lambdas,gradients,grad_std,pmf,pmf_std= tigcmc(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.singlepath,args.steps)
 
   # Do the fit

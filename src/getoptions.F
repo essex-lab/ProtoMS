@@ -472,12 +472,6 @@ c           Set default values of fragment variables
         endif        
 c     end of do-while
 
-c     SG, set initial theta values
-      if (getOption('theta0')) then
-        do i=1,min(NThetaSolutes,nwords)
-          SoluteTheta(i) = getDouble(words(i),SoluteTheta(i)) 
-        enddo
-      endif 
 
 c     SG, set hydration scaling variable
       if (getOption('hydscaling')) then
@@ -519,6 +513,17 @@ c     get the names of all of the solvent files and read them in
           goto 104
         endif
 c     end of do-while
+
+c     SG, set initial theta values 
+c     use the same keyword for thetasolutes and gcsolutes
+      if (getOption('theta0')) then
+        do i=1,min(NThetaSolutes,nwords)
+          SoluteTheta(i) = getDouble(words(i),SoluteTheta(i)) 
+        enddo
+        do i=1, min(NGCSolutes,nwords)
+          thetaparam(i) = getDouble(words(i),thetaparam(i))
+        enddo
+      endif 
 
       write(printstring,430) NProteins,NSolutes,NSolvents
 430   format("Simulation consists of ",i4," protein chains, ",i4

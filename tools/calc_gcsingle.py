@@ -107,11 +107,14 @@ if __name__ == '__main__' :
         sys.exit()
     for folder in folders:
         results = ResultsFile()
-        resultsfiles = glob.glob(folder+ "/"+args.file+"*")
+        fpath = os.path.join ( folder, args.file )
+        resultsfiles = [ fpath ] if os.path.exists ( fpath ) else []
+        resultsfiles += glob.glob(fpath+"-*")
+
         if len(resultsfiles) > 1: # It is assumed the results are from ProtoMS 2.
             results.read([folder,args.file])
         elif len(resultsfiles)==1: # It is assumed the results are from ProtoMS 3.
-            results.read(folder+ "/"+args.file)
+            results.read(fpath)
         else:
            print "\nError. No results file matching %s. Exiting program\n" % folder+"/"+args.file 
            sys.exit()

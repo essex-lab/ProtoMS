@@ -74,7 +74,7 @@ def print_head(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8s"%std,
   print ""
 
-def parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
+def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
   """ 
   Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
   
@@ -155,7 +155,7 @@ def parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
       std = np.sqrt((gradsum2-av*gradsum)/(n-1)/n)
     return lam,av,std
 
-def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
+def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical,subd) :
   """
   Calculate gradients for a number of folders
   
@@ -175,6 +175,8 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
+  subd : string
+    optional subdirectory to check for each lambda
     
   Returns
   -------
@@ -187,7 +189,7 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   """
 
   # List all lambda folders and sort them
-  paths = glob.glob(os.path.join(path,"lam-*"))
+  paths = glob.glob(os.path.join(path,"lam-*",subd))
   paths.sort()
 
   # Process all lambda folders
@@ -246,7 +248,7 @@ def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
   return None
     
 
-def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
+def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical,subd) :
   """
   Do thermodynamic integration
   
@@ -266,6 +268,8 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
+  subd : string
+    optional subdirectory to check for each lambda value
 
   Returns
   -------
@@ -285,7 +289,7 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   # Calculate the gradient
   if verbose["gradient"] :
     print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
-  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
+  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical,subd)
 
   
   # Calculate and print the PMF 
@@ -321,6 +325,7 @@ if __name__ == '__main__' :
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to calculate free energy from thermodynamic integration")
   parser.add_argument('-d','--directory',help="the root directory that contains all the output files of the simulation. Default is cwd.",default="./")
+  parser.add_argument('--subdir',help='optional subdirectory to check for each lamda value',default='')
   parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results_inst")
   parser.add_argument('-s','--skip',type=int,help="the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0",default=0)
   parser.add_argument('-m','--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
@@ -344,7 +349,7 @@ if __name__ == '__main__' :
     args.skip = -1
   # Do thermodynamic integration
   verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam}
-  lambdas,gradients,grad_std,pmf,pmf_std= ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
+  lambdas,gradients,grad_std,pmf,pmf_std= ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.subdir)
 
   # Do the fit
   if args.fitPMF :
