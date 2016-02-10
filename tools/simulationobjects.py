@@ -22,6 +22,7 @@ import logging
 import copy
 import gettext
 import argparse
+import StringIO
 
 import numpy as np
 
@@ -280,6 +281,49 @@ class PDBFile:
           # Read next line
           line = f.readline()
         self.residues,self.solvents = residues,solvents
+    
+    def _write_text ( self, f, renumber = False, header = None, solvents = True ):
+        """
+        Function to write text output. 
+        Parameters
+        ----------
+        f : open file
+          the name of the file
+        renumber : boolean, optional
+          indicate if residues should be renumbered
+        header : string, optional
+          additional lines to print before the atom records
+        solvents : boolean, optional
+          if to write the solvents """
+        if header is None :
+            f.write ( self.header)
+        else :
+            f.write ( header )
+        for i, res in enumerate ( sorted ( self.residues.keys() ), 1 ):
+            for atom in self.residues[res].atoms:
+                if renumber:
+                    atom.resindex = i
+                s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                f.write ( s )
+            if i < len(self.residues.keys()) and not self.residues[self.residues.keys()[i]].isAminoacid() : f.write ( "TER \n" )     
+        if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
+        if solvents :
+            l = sorted ( self.solvents.keys() )
+            for i, sol in enumerate (l , 1 ):
+                for atom in self.solvents[sol].atoms:
+                    if renumber:
+                        atom.resindex = i
+                    if atom.resindex < 10000:
+                        s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                    elif atom.resindex >= 10000 and atom.resindex < 100000:
+                        s = "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                    else:
+                        s = "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                    f.write ( s )
+                if i < len(l) : f.write ( "TER \n" )     
+        
+
+
     def write ( self, filename, renumber = False, header = None, solvents = True ):
         """
         Write the PDB file to disc
@@ -296,32 +340,8 @@ class PDBFile:
           if to write the solvents
         """
         with open ( filename, 'w' ) as f:
-            if header is None :
-                f.write ( self.header)
-            else :
-                f.write ( header )
-            for i, res in enumerate ( sorted ( self.residues.keys() ), 1 ):
-                for atom in self.residues[res].atoms:
-                    if renumber:
-                        atom.resindex = i
-                    s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                    f.write ( s )
-                if i < len(self.residues.keys()) and not self.residues[self.residues.keys()[i]].isAminoacid() : f.write ( "TER \n" )     
-            if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
-            if solvents :
-                l = sorted ( self.solvents.keys() )
-                for i, sol in enumerate (l , 1 ):
-                    for atom in self.solvents[sol].atoms:
-                        if renumber:
-                            atom.resindex = i
-                        if atom.resindex < 10000:
-                            s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                        elif atom.resindex >= 10000 and atom.resindex < 100000:
-                            s = "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                        else:
-                            s = "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                        f.write ( s )
-                    if i < len(l) : f.write ( "TER \n" )     
+            self._write_text ( f, **kwargs )
+
     def getCenter(self):
         """
         Calculate the center of geometry  
@@ -446,7 +466,14 @@ class  PDBSet :
           for pdb,filename in zip(self.pdbs,filenames) :
             pdb.write(filename,solvents=solvents)
         elif isinstance(filenames,basestring) or len(filenames) == 1 :
-          raise SetupError("This feature is not implemented yet")
+          s = StringIO.StringIO ()
+          for i, pdb in enumerate ( self.pdbs ):
+            s.write ( 'MODEL    %5d\n' % i )
+            pdb._write_text (s,solvents=True)
+            s.write ( 'ENDMDL\n' )
+          s.write ( '\n\n' )
+          with open ( filenames, 'w' ) as f:
+            f.write ( s.getvalue() )
         else :
           raise SetupError("Invalid number of filenames given")        
   
