@@ -54,8 +54,8 @@ c     smaller than HardwallRadius the energy is very high (HardwallEnergy)
                 hardwallEnergy = hardwallEnergy + HardwallextraEnergy(i)
                 inrgb = hardwallEnergy
                 inrgf = hardwallEnergy
-c            call printLine(DEBUG,"Hardwall applied to some solvent atom, MC fails") 
-            goto 300
+c$$$                call printLine(INFO,"WARNING: Hardwall applied to some solvent atom, MC fails") 
+                goto 300
             endif 
 201      continue
 200     continue             
@@ -64,7 +64,8 @@ c            call printLine(DEBUG,"Hardwall applied to some solvent atom, MC fai
 
 c     Then the distance between each atom of the protein and the reference point is calculated and compared to the
 c     user defined radius.  
-          
+      
+      if (.not.HardwallAllowProtein(i)) then
         if (NProteins.gt.0) then
         do 210 j=1,NProteins
         do 220 k=1,NZAtoms(j)
@@ -74,13 +75,13 @@ c     user defined radius.
                 hardwallEnergy = hardwallEnergy + HardwallextraEnergy(i)
                 inrgb = hardwallEnergy
                 inrgf = hardwallEnergy
-c            call printLine(RESULTS,"Hardwall applied to some protein atom, MC fails")
-              goto 300
+c$$$                call printLine(INFO,"WARNING: Hardwall applied to some protein atom, MC fails")
+                goto 300
             endif
 220     continue
 210     continue  
         endif
-
+      endif
 c    This should work for any kind of solute
 c    Also, only the given atom of the solute should feel the hardwall within the residue
 
@@ -93,7 +94,8 @@ c    When the solute is the water of interest, the opposite must be verified.
                
 c        write(6,*) "HardwallMolecule",Hardwallmolecule(i)
 c   	write(6,*) "HardwallCenter",HardwallCenter(i,1),HardwallCenter(i,2),HardwallCenter(i,3)
-
+      
+c$$$      CCA - THIS BLOCK APPEARS TO ONLY KEEP HARDWALL SOLUTES IN, NOT OTHER SOLUTES OUT - 02-2016
         if (NSolutes.gt.0) then
           do 235 j=1,NSolutes
 c           for the molecule of interest, we check whether its geometry center is in the region of the hardwall
@@ -106,18 +108,21 @@ c              write(6,*) "Distance",(idist)**0.5
                 hardwallEnergy  = hardwallEnergy + HardwallextraEnergy(i)
                 inrgb = hardwallEnergy
                 inrgf = hardwallEnergy
+                
+c$$$                call printLine(INFO,"WARNING: Molecule outside hardwall, MC fails")
                 goto 300
               endif
             else
-              do 245 k=1,NSolAtoms(j)
-                if (.not.IgnoreSolute(j)) then
+               do 245 k=1,NSolAtoms(j)
+                 if (.not.IgnoreSolute(j)) then
                   idist = ((HardwallCenter(i,1)-ZSolCoords(j,k,1))**2 + (HardwallCenter(i,2)-ZSolCoords(j,k,2))**2 
-     .              + (HardwallCenter(i,3)-ZSolCoords(j,k,3))**2)
-                else
+     .                   + (HardwallCenter(i,3)-ZSolCoords(j,k,3))**2)
+               else
                   if (idist.le.RadiusSq) then
                     hardwallEnergy  = hardwallEnergy + HardwallextraEnergy(i)
                     inrgb = hardwallEnergy
                     inrgf = hardwallEnergy
+c$$$                    call printLine(INFO,"WARNING: Hardwall applied to some solute atom, MC fails")
                     goto 300
                   endif
                 endif  

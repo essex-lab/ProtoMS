@@ -207,6 +207,8 @@ c     the cutoff radius
 c     the energy added if within the radius
       double precision HardwallextraEnergy(MAXHARDWALLATOMS)
 
+c     whether the hardwall should allow proteins to enter
+      logical HardwallAllowProtein(MAXHARDWALLATOMS)
 
       double precision oldHardwallEnergy,avgHardwallEnergy,avgHardwallEnergy2,
      .                 oldHardwallEnergyB,avgHardwallEnergyB,avgHardwallEnergyB2,
@@ -221,6 +223,7 @@ c     the energy added if within the radius
      .                 oldHardwallEnergyPart,newHardwallEnergyPart,
      .                 oldHardwallEnergyPartB,newHardwallEnergyPartB,
      .                 oldHardwallEnergyPartF,newHardwallEnergyPartF,
-     .                 HardwallCenter,HardwallRadius,HardwallMolecule,HardwallextraEnergy,NHardwallPotential
+     .                 HardwallCenter,HardwallRadius,HardwallMolecule,HardwallextraEnergy,NHardwallPotential,
+     .                 HardwallAllowProtein
 
       
