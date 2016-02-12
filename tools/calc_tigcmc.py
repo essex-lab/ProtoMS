@@ -19,6 +19,7 @@ if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
   matplotlib.use('Agg') 
 import matplotlib.pyplot as pl
 import numpy as np
+from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 from scipy.stats import spearmanr
 
@@ -180,6 +181,17 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
         for i in range(np.shape(gradmat)[0]):
             print lambmat[i,1],"     ", gradmat[i,:]
         print "Adams values  ", adamsmat[1,:],"\n"
+	
+	
+	Z = gradmat
+	X = adamsmat
+	Y = lambmat	
+
+	fig = pl.figure()
+	ax = Axes3D(fig)
+	ax.plot_wireframe(X, Y, Z, rstride = 1 , cstride = 1)
+	pl.show()
+	
 
     return lambmat,gradmat,stdmat, watmat,adamsmat
 
