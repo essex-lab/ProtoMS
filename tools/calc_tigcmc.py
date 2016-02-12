@@ -238,12 +238,12 @@ def _calc_gcweights(lambmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg 
 
     # Check to make sure all B values are the same
     # MOVE THESE TO THE READ DATA FUNCTION
-    if adamsmat.std(axis=0).max() != 0.0:
+    if adamsmat.std(axis=0).max() > 1E-7:
         msg = "B values between lambda folders don't match!"
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
         return
-    if int(lambmat.std(axis=1).max()) != 0:
+    if lambmat.std(axis=1).max() > 1E-7:
         msg = "Unequal lambda values found between replicas!"
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
