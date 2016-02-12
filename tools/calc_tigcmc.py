@@ -118,7 +118,7 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
       std_grad = np.sqrt((gradsum2-av_grad*gradsum)/(n-1)/n)
     return lam,av_grad,std_grad,av_wats,snapshot.bvalue
 
-def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
+def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical,plotting):
     """ 
     Parse a number of ProtoMS result files and calculate the ensemble average of the gradient for each
     lambda-Adams value pair. 
@@ -174,6 +174,10 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
         j = 0                # Restarts the column index
         i = i + 1            # Moves to the next row 
     # THE MATRICES SHOULD BE ORDERED PROPERLY!!!
+    rightorder = adamsmat.argsort()
+    adamsmat = adamsmat[:,rightorder[0]]
+    gradmat = gradmat[:,rightorder[0]]
+
     # May be okay, as final collapsed matrices MAY be properly ordered.
     if verbose["gradient"] :
         print "\n Gradients for each lambda value and Adams value:"
@@ -181,17 +185,13 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical):
         for i in range(np.shape(gradmat)[0]):
             print lambmat[i,1],"     ", gradmat[i,:]
         print "Adams values  ", adamsmat[1,:],"\n"
-	
-	
-	Z = gradmat
-	X = adamsmat
-	Y = lambmat	
 
-	fig = pl.figure()
-	ax = Axes3D(fig)
-	ax.plot_wireframe(X, Y, Z, rstride = 1 , cstride = 1)
-	pl.show()
-	
+    if plotting == True :
+      fig = pl.figure()
+      ax = Axes3D(fig)
+      ax.plot_wireframe(adamsmat, lambmat ,gradmat, rstride = 1 , cstride = 1)
+      pl.ylabel('$\lambda$')
+      pl.xlabel('Adams Value')
 
     return lambmat,gradmat,stdmat, watmat,adamsmat
 
@@ -243,7 +243,7 @@ def _calc_gcweights(lambmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg 
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
         return
-    if lambmat.std(axis=1).max() != 0.0:
+    if int(lambmat.std(axis=1).max()) != 0:
         msg = "Unequal lambda values found between replicas!"
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
@@ -283,7 +283,6 @@ def _calc_gcweights(lambmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg 
       
     return gci_energy_mat, gci_weight_mat
 
-
 def _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose):
     """ 
     Calculates the average gradient over the Adams values for each lambda by using
@@ -320,8 +319,7 @@ def _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose):
 
     return lambmat[:,1],gradients,std
 
-
-def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,sizes) :
+def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,sizes,plotting) :
   """
   Do thermodynamic integration using data from GCMC-lambda replica exchange. Based on calc_ti.ti()
   
@@ -358,7 +356,9 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,si
   """
 
   # Calculate the gradient
-  (lambmat,gradmat,stdmat,watmat,adamsmat) = _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
+  (lambmat,gradmat,stdmat,watmat,adamsmat) = _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical,args.plot)
+
+
   (energy_mat,weightmat) = _calc_gcweights(lambmat,watmat,adamsmat,singlepath,sizes)
 
   if verbose["gradient"] :
@@ -413,6 +413,7 @@ if __name__ == '__main__' :
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   parser.add_argument('--singlepath',action='store_true',default=False, help="whether to integrate over the lowest GCMC free energy B value when doing TI, instead of performing a weighted average")
   parser.add_argument('--steps',nargs="+",default=None, help="list of number of steps for each titration at each lambda value")
+  parser.add_argument('--plot',nargs="+",default=True, help="3D Plots the gradient against the gradient against lambda and B values")
   args = parser.parse_args()
 
   # Setup the logger
@@ -425,11 +426,14 @@ if __name__ == '__main__' :
     args.skip = -1
   # Do thermodynamic integration
   verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam,"weights":args.printWeights}
-  lambdas,gradients,grad_std,pmf,pmf_std= tigcmc(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.singlepath,args.steps)
+  lambdas,gradients,grad_std,pmf,pmf_std= tigcmc(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.singlepath,args.steps,args.plot)
 
   # Do the fit
   if args.fitPMF :
     fitcoef = fit_pmf(lambdas,pmf)
+
+  pl.show()
+  pl.savefig('gradient_3dplot.png')
 
   # Plot the gradient
   if args.plotGrad :
@@ -438,4 +442,3 @@ if __name__ == '__main__' :
     pl.ylabel('$\Delta G / \Delta \lambda$ (kcal)')
     pl.savefig('gradients.png')
    
- 
