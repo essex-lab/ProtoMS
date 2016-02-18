@@ -17,6 +17,7 @@ import simulationobjects
 import calc_ti
 import calc_bar
 import pms2pymbar
+import calc_series
 
 import matplotlib.pyplot as plt
 
@@ -43,6 +44,7 @@ if __name__ == '__main__' :
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   parser.add_argument('-e','--estimator',nargs="+",choices=["ti","bar","mbar"],default=["ti","bar","mbar"],help="the type of estimator to use")
+  parser.add_argument('--autoeqb',dest='autoeqb',action='store_true',help="use automatic equilibration detection to determine how much data is included in free energy difference")
   args = parser.parse_args()
 
   # Setup the logger
