@@ -324,7 +324,7 @@ class PDBFile:
         
 
 
-    def write ( self, filename, renumber = False, header = None, solvents = True ):
+    def write ( self, filename, **kwargs ):
         """
         Write the PDB file to disc
 
@@ -1254,7 +1254,7 @@ class ResultsFile :
     self.series = copy.deepcopy(self.snapshots[0])
     for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","capenergy"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap))
-    for attr in ["datastep","lambdareplica","solventson","seed"] :
+    for attr in ["datastep","lambdareplica","globalreplica","solventson","seed"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap,dtype=int))
     if hasattr(self.snapshots[0],"total") :
       set_energyresults(self.series.total)  
@@ -1278,7 +1278,7 @@ class ResultsFile :
 
     # Then loop over all snapshots and fill the NumpyArrays with data
     for i,snapshot in enumerate(self.snapshots) :
-      for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","datastep","lambdareplica","solventson","seed","capenergy"] :
+      for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","datastep","lambdareplica","globalreplica","solventson","seed","capenergy"] :
         if hasattr(snapshot,attr) : getattr(self.series,attr)[i] = getattr(snapshot,attr)
       if hasattr(snapshot,"total") :
         put_energyresults(self.series.total,snapshot.total,i)

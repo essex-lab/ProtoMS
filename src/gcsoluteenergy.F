@@ -130,7 +130,6 @@ c            PRINT*, "OldIndGCSProC in gcsolnrg" ,OldIndGCSProC(i)
          
       
 c       This looks at solvent-solute energies
-
        if (NSolvents.gt.0) then
         do i=1,NSolvents
         GCSoluteEnergy = GCSoluteEnergy + GCsoluteSingleSolventEnergy(igcs,i,
@@ -214,7 +213,6 @@ c         this being a dual topology solute
             NewIndGCSSolLJF(i) = iljnrgf*sclf
             NewIndGCSSolCB(i) = icnrgb*sclb
             NewIndGCSSolLJB(i) = iljnrgb*sclb
-            NewGCSSvnDist(i) = imindist
           endif
         enddo
       endif

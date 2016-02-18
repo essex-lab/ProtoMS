@@ -306,6 +306,8 @@ c     now the solvent related averages
         AvgGCSSvnLJ2(i) = (AvgGCSSvnLJ2(i)*bigratio) + (OldGCSSvnLJ(i)**2*smallratio)
         AvgGCSSvnCF(i) = (AvgGCSSvnCF(i)*bigratio) + (OldGCSSvnCF(i)*smallratio)
         AvgGCSSvnCF2(i) = (AvgGCSSvnCF2(i)*bigratio) + (OldGCSSvnCF(i)**2*smallratio)
+        AvgGCSSvnLJF(i) = (AvgGCSSvnLJF(i)*bigratio) + (OldGCSSvnLJF(i)*smallratio)
+        AvgGCSSvnLJB(i) = (AvgGCSSvnLJB(i)*bigratio) + (OldGCSSvnLJB(i)*smallratio)
         AvgGCSSvnLJF2(i) = (AvgGCSSvnLJF2(i)*bigratio) + (OldGCSSvnLJF(i)**2*smallratio)
         AvgGCSSvnCB(i) = (AvgGCSSvnCB(i)*bigratio) + (OldGCSSvnCB(i)*smallratio)
         AvgGCSSvnCB2(i) = (AvgGCSSvnCB2(i)*bigratio) + (OldGCSSvnCB(i)**2*smallratio)

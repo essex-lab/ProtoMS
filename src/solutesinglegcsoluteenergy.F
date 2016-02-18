@@ -109,7 +109,11 @@ c       Break if both solute and gcsolute have softcore assigned
         thet = thetaparam(funcigcs2)
         thetf = thet
         thetb = thet
-      endif
+      else
+         thet = thetaparam(funcigcs2)
+         thetf = thet
+         thetb = thet
+      endif         
 c     Activate Distance Dependent Dielectric calculation
       if (QuickMove .and. DDDon) ddd = .true. 
       do i=1,nat1

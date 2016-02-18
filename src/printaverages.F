@@ -360,35 +360,35 @@ c            lj
          enddo
        endif
 
-cc      if (NGCSolutes.gt.0 .and. NSolvents.gt.0) then
-c         do i=1,NGCSolutes
-c           lgth = lineLength(GCSName(i))
-c           write(printstring,932) i,GCSName(i)(1:lgth)
-c932        format('Average GCS-solvent energy for ',i4,' ',a)      
-c           call prettyLine(RESULTS,printstring)
-c
-cc            coulomb
-cc             PRINT*, "en" ,AvgGCSSvnC
-c             std = stdDev(AvgGCSSvnC2(i),AvgGCSSvnC(i))
-c             stdf = stdDev(AvgGCSSvnCF2(i),AvgGCSSvnCF(i))
-c             stdb = stdDev(AvgGCSSvnCB2(i),AvgGCSSvnCB(i))
-c             write(printstring,20) 'COU',AvgGCSSvnC(i),std,AvgGCSSvnCF(i),stdf,
-c     .                                                      AvgGCSSvnCB(i),stdb
-c             call printLine(RESULTS,printstring)
-c             write(printstring,21) AvgGCSSvnCF(i)-AvgGCSSvnC(i),AvgGCSSvnCB(i)-AvgGCSSvnC(i)
-c             call printLine(RESULTS,printstring)
-c
-cc            lj
-c             std = stdDev(AvgGCSSvnLJ2(i),AvgGCSSvnLJ(i))
-c             stdf = stdDev(AvgGCSSvnLJF2(i),AvgGCSSvnLJF(i))
-c             stdb = stdDev(AvgGCSSvnLJB2(i),AvgGCSSvnLJB(i))
-c             write(printstring,20) 'LJ',AvgGCSSvnLJ(i),std,AvgGCSSvnLJF(i),stdf,
-c     .                                                    AvgGCSSvnLJB(i),stdb
-c             call printLine(RESULTS,printstring)
-c             write(printstring,21) AvgGCSSvnLJF(i)-AvgGCSSvnLJ(i),AvgGCSSvnLJB(i)-AvgGCSSvnLJ(i)
-c             call printLine(RESULTS,printstring)
-c         enddo
-c       endif
+       if (NGCSolutes.gt.0 .and. NSolvents.gt.0) then
+         do i=1,NGCSolutes
+           lgth = lineLength(GCSName(i))
+           write(printstring,932) i,GCSName(i)(1:lgth)
+932        format('Average GCS-solvent energy for ',i4,' ',a)      
+           call prettyLine(RESULTS,printstring)
+
+c            coulomb
+c             PRINT*, "en" ,AvgGCSSvnC
+             std = stdDev(AvgGCSSvnC2(i),AvgGCSSvnC(i))
+             stdf = stdDev(AvgGCSSvnCF2(i),AvgGCSSvnCF(i))
+             stdb = stdDev(AvgGCSSvnCB2(i),AvgGCSSvnCB(i))
+             write(printstring,20) 'COU',AvgGCSSvnC(i),std,AvgGCSSvnCF(i),stdf,
+     .                                                      AvgGCSSvnCB(i),stdb
+             call printLine(RESULTS,printstring)
+             write(printstring,21) AvgGCSSvnCF(i)-AvgGCSSvnC(i),AvgGCSSvnCB(i)-AvgGCSSvnC(i)
+             call printLine(RESULTS,printstring)
+
+c            lj
+             std = stdDev(AvgGCSSvnLJ2(i),AvgGCSSvnLJ(i))
+             stdf = stdDev(AvgGCSSvnLJF2(i),AvgGCSSvnLJF(i))
+             stdb = stdDev(AvgGCSSvnLJB2(i),AvgGCSSvnLJB(i))
+             write(printstring,20) 'LJ',AvgGCSSvnLJ(i),std,AvgGCSSvnLJF(i),stdf,
+     .                                                    AvgGCSSvnLJB(i),stdb
+             call printLine(RESULTS,printstring)
+             write(printstring,21) AvgGCSSvnLJF(i)-AvgGCSSvnLJ(i),AvgGCSSvnLJB(i)-AvgGCSSvnLJ(i)
+             call printLine(RESULTS,printstring)
+         enddo
+       endif
 
        
           
@@ -619,7 +619,7 @@ c           lj
            endif
          enddo
        endif
-       
+
 c      print out the averages of the extra energy terms
       call printAverageExtraEnergies
 

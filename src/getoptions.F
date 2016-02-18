@@ -16,6 +16,7 @@
       include 'gb.inc'
       include 'keyset.inc'
       include 'parallel.inc'
+      include 'stacks.inc'
 c#######################################################
 c
 c     This subroutine gets the values of most of the
@@ -907,6 +908,9 @@ c     get grid origins
         do i=1,NGCSolutes
          thetaparam(i) = GCtheta
         enddo
+        if (GCtheta.eq.1) then
+           GCSCavity = NGCSolutes
+        endif 
       endif
 
       if (getOption('jaws2')) then
