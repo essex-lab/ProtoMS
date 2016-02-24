@@ -86,12 +86,12 @@ c			GR: The Metropolis test is below. THIS IS THE IMPORTANT BIT!
 c           The main task already knows bidx and aidx, so no need to send that information in that case
 c            write(6,*)myid, mygcid,"GR gcmcre.F Sending GC swap info to other gcmc nodes"
             if (task1.ne.0) then 
-              call MPI_SSend(bidx,1,MPI_INT,task1,11,mygccom,ierr)
+              call MPI_SSend(bidx,1,MPI_INTEGER,task1,11,mygccom,ierr)
             else
               myadam = bidx
             endif
             if (task2.ne.0) then
-              call MPI_SSend(aidx,1,MPI_INT,task2,11,mygccom,ierr)
+              call MPI_SSend(aidx,1,MPI_INTEGER,task2,11,mygccom,ierr)
             else
               myadam = aidx
             endif
@@ -101,10 +101,10 @@ c            write(6,*)myid, mygcid,"GR gcmcre.F Sending GC swap info to other g
           endif
         enddo
         do i=2,nadams
-          if (.not.updated(i)) call MPI_SSend(task2adams(i),1,MPI_INT,i-1,11,mygccom,ierr)
+          if (.not.updated(i)) call MPI_SSend(task2adams(i),1,MPI_INTEGER,i-1,11,mygccom,ierr)
         enddo
       else    
-         call MPI_Recv(myadam,1,MPI_INT,0,11,mygccom,mpistat,ierr)
+         call MPI_Recv(myadam,1,MPI_INTEGER,0,11,mygccom,mpistat,ierr)
       endif
 
       call MPI_BCAST (ngcretry, 1, MPI_INTEGER, 0, mygccom, ierr)
