@@ -1018,6 +1018,7 @@ class SnapshotResults :
     cols = line.strip().split()
     if len(cols) == 5 :
       self.lam = float(cols[4])
+
     else :
       self.lamb = float(cols[3])
       self.lam = float(cols[5])
@@ -1029,6 +1030,7 @@ class SnapshotResults :
     while line[0] != "#" :
       if line.startswith("Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
       if line.startswith("Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
+      if line.startswith("GCMC replica") : self.gcmcreplica = int(line.split("=")[1].strip().split()[0])
       if line.startswith("Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
       if line.startswith("Global replica") : self.globalreplica = int(line.split("=")[1].strip())
       if line.startswith("Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
@@ -1254,7 +1256,7 @@ class ResultsFile :
     self.series = copy.deepcopy(self.snapshots[0])
     for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","capenergy"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap))
-    for attr in ["datastep","lambdareplica","globalreplica","solventson","seed"] :
+    for attr in ["datastep","lambdareplica","globalreplica","solventson","seed","gcmcreplica"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap,dtype=int))
     if hasattr(self.snapshots[0],"total") :
       set_energyresults(self.series.total)  
