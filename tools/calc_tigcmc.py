@@ -167,18 +167,13 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical,plo
         N = []
         B = []
         gcmcfolders = glob.glob(lamfldr+"/b_*")
-        gcmcfolders.sort(reverse=True)
+        gcmcfolders.sort( key = lambda x: float ( x.split ( '/b_' )[1] ) )
         for gcfldr in gcmcfolders:
             (lambmat[i,j],gradmat[i,j],stdmat[i,j], watmat[i,j],adamsmat[i,j]) = _parse_folder(gcfldr,res_tem,skip,maxread,numkind,useanalytical)
             j = j + 1        # Updating so the gradient at the next B value can be stored
         j = 0                # Restarts the column index
         i = i + 1            # Moves to the next row 
-    # THE MATRICES SHOULD BE ORDERED PROPERLY!!!
-    rightorder = adamsmat.argsort()
-    adamsmat = adamsmat[:,rightorder[0]]
-    gradmat = gradmat[:,rightorder[0]]
 
-    # May be okay, as final collapsed matrices MAY be properly ordered.
     if verbose["gradient"] :
         print "\n Gradients for each lambda value and Adams value:"
         print "Lambda    Gradients"
@@ -280,7 +275,7 @@ def _calc_gcweights(lambmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg 
         print adamsmat[0]
         for lam, line in zip ( lambmat[:,0], gci_weight_mat ):
           print lam, line
-      
+    
     return gci_energy_mat, gci_weight_mat
 
 def _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose):
@@ -354,16 +349,14 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,si
     standard deviation of the pmf at each lambda value
 
   """
-
   # Calculate the gradient
   (lambmat,gradmat,stdmat,watmat,adamsmat) = _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical,args.plot)
-
-
+  
   (energy_mat,weightmat) = _calc_gcweights(lambmat,watmat,adamsmat,singlepath,sizes)
 
   if verbose["gradient"] :
     calc_ti.print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
-
+  
   lambdas,gradients,stds = _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose)
   
   # Calculate and print the PMF 
@@ -387,6 +380,21 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,si
 
   if not verbose["pmf"] and verbose["total"] : 
     calc_ti.print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
+
+  if plotting == True :
+    surface_pmf = np.zeros ( lambmat.shape )
+    surface_pmf[0] = energy_mat[0] - energy_mat[0,0]
+    lift = 0
+    for i in xrange ( 1, lambmat.shape[0] ):
+      lift += ( gradmat[i-1].mean() + gradmat[i].mean() ) / 2.0 * ( lambdas[i] - lambdas[i-1] )
+      print gradmat[i-1].mean(), lambdas[i] - lambdas[i-1], lift
+      surface_pmf[i] = energy_mat[i] - energy_mat[i,0] + lift
+    
+    fig = pl.figure()
+    ax = Axes3D(fig)
+    ax.plot_wireframe(adamsmat, lambmat, surface_pmf, rstride = 1 , cstride = 1)
+    pl.ylabel('$\lambda$')
+    pl.xlabel('Adams Value')
 
   return lambdas,gradients,stds,pmf,np.sqrt(pmf_std)
 #
@@ -413,7 +421,7 @@ if __name__ == '__main__' :
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   parser.add_argument('--singlepath',action='store_true',default=False, help="whether to integrate over the lowest GCMC free energy B value when doing TI, instead of performing a weighted average")
   parser.add_argument('--steps',nargs="+",default=None, help="list of number of steps for each titration at each lambda value")
-  parser.add_argument('--plot',nargs="+",default=True, help="3D Plots the gradient against the gradient against lambda and B values")
+  parser.add_argument('--plot',nargs="+",default=True, help="3D Plots the gradient and free energy surface against lambda and B values")
   args = parser.parse_args()
 
   # Setup the logger
