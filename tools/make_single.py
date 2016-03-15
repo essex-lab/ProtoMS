@@ -402,14 +402,15 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
       if atom == atom2.bondedto or atom == atom2.angleto :
         variablemade[i] = True
         make_variable(atom2)
-    
+    global con
     # Next, modify the template connectivity
     for con in tem1.templates[0].connectivity : # Loop over all connectivities in the template
       if atom not in con.atoms : continue
       atomtypes0 = ["dum" if isinstance(catom.param0,int) else catom.param0.params[0] for catom in con.atoms]
       atomtypes1 = ["dum" if isinstance(catom.param1,int) else catom.param1.params[0] for catom in con.atoms]
       if isinstance(atom.param1,int) : # Check if we have inserted a dummy parameter
-        con.param0 = con.param1 = 0 # This connectivity should not be sampled                      
+        if con.type == 'bond':
+          con.param0 = con.param1 = 0 # This connectivity should not be sampled
       else : # Have parameters in cljparams...
         if "dum" in atomtypes0 or "dum" in atomtypes1 : continue # Take care of this if above
         con.param0,equil0 = find_param(atomtypes0,temsets[con.type],gaffsets[con.type]) # Find parameter index and equilibrium value

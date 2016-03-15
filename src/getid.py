@@ -56,5 +56,6 @@ else:
         writeLine("Mercurial information not available.")
     else:
         writeLine("Revision: %s" % identify)
-        writeLine("From: %s" % path[path.find("@")+1:])
+        if "@" in path:
+            writeLine("From: %s" % path[path.find("@")+1:])
     
