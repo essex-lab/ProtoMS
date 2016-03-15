@@ -85,6 +85,7 @@ elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
 # Set flags for IBM compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
     message("-- Using IBM compiler flags")
+    message("-- This compiler is not supported but has been tested in the past - proceed with caution")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed=132")
     if(CMAKE_BUILD_TYPE MATCHES "Release")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3")
@@ -92,6 +93,19 @@ elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
     endif()
+
+# Set flags for Portland compiler
+elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "PGI")
+    message("-- Using PGI compiler flags")
+    message("-- This compiler is not supported but has been tested in the past - proceed with caution")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Mextend")
+    if(CMAKE_BUILD_TYPE MATCHES "Release")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O2")
+    endif()
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
+    endif()
+    
 
 # Compiler not recognised
 else()
