@@ -36,8 +36,8 @@ bond  H02 ETH  C01 ETH param 1126 1123
 bond  H03 ETH  C01 ETH param 1126 1123
 angle  H04 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
 angle  H06 ETH  C05 ETH  C01 ETH flex 0.190 param 1326 3840
-#angle  H07 ETH  C05 ETH  C01 ETH flex 0.190 param 0 0
-#angle  H08 ETH  C05 ETH  C01 ETH flex 0.190 param 0 0
+angle  H07 ETH  C05 ETH  C01 ETH flex 0.190
+angle  H08 ETH  C05 ETH  C01 ETH flex 0.190
 angle  H02 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
 angle  H03 ETH  C01 ETH  C05 ETH flex 0.190 param 1326 1485
 dihedral  H06 ETH  C05 ETH  C01 ETH  H04 ETH flex 2.500 param 1606 1176
