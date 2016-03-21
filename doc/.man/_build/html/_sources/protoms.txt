@@ -1465,11 +1465,11 @@ where `id1` to `id4` designate up to four ids. `type1` designate the type of the
 
 ::
 
-  chunk restraint add id1 cartesian harmonic xrest yrest zrest krest
+  chunk restraint add id1 cartesian harmonic xrest yrest zrest krest [lambda]
         
-For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. ::
+For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. You may optionally give the keyword lambda at the end of the chunk to scale the energy of the restraint by the value of lambda. This means that when lambda=1 the restraint is on and when lambda=0 the restraint is off. This is useful to calculate the free energy change associated with the introduction of a restraint, although this procedure should not be carried out in the gas phase.::
 
-  chunk restraint add id1 cartesian flattbottom xrest yrest zrest krest wrest
+  chunk restraint add id1 cartesian flatbottom xrest yrest zrest krest wrest
   
 For a flatbottom restraint you must in addition specify the width of the flat region of the potential. 
 

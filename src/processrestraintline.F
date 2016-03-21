@@ -65,6 +65,7 @@ c#########################################
       character*4 nameid1,nameid2,nameid3,nameid4
       integer nids
       double precision deg2rad
+      logical getLogical, scale
 
       if (check) then
          write(printstring,*) "Processing restraint lines in checking mode is not supported."
@@ -176,12 +177,17 @@ c
             yrestr = getDouble(words(7),0)
             zrestr = getDouble(words(8),0)
             krestr = getDouble(words(9),0)
-            write(printstring,10) words(4),words(5),id1,xrestr,yrestr,zrestr,krestr
+            if ( words(10) .eq. 'lambda' ) then
+               scale = .true.
+            else
+               scale = .false.
+            endif
+            write(printstring,10) words(4),words(5),id1,xrestr,yrestr,zrestr,krestr,scale
             call printLine(INFO,printstring)
  10         Format("Adding ",A12," ",A8," restraint on ID ",I4,
-     .        " center ",3(F6.3,1X)," K ",F6.2)
+     .        " center ",3(F6.3,1X)," K ",F6.2," lambda scaling =",L)
             call addCartesianHarmonicRestraint(typeid1,molid1,zid1,
-     .        xrestr,yrestr,zrestr,krestr)
+     .        xrestr,yrestr,zrestr,krestr,scale)
           else if (words(5) .eq. 'flatbottom') then
             xrestr = getDouble(words(6),0)
             yrestr = getDouble(words(7),0)
