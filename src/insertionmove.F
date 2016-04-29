@@ -56,6 +56,13 @@ c     Get the old energy of the theta molecule - should be zero
       endif
 c     Change the theta value of the molecule to zero
       thetaparam(igcs) = 1
+      call pushBackGCSoluteCoords(igcs)
+
+
+
+      call scramblewater(igcs)
+
+
       GCSCavity = GCSCavity + 1
 c     See if the new configurational energy needs to be updated...
       if (updatenrg.eq.UPDATEENERGY) savenrg = NEW      
@@ -66,6 +73,7 @@ c     See if the new configurational energy needs to be updated...
         statstring = "PASS"          
         nrg = ienew  
         NInsAcp(igcs) = NInsAcp(igcs) + 1
+        
 c       update the energies
         if (updatenrg.eq.UPDATEENERGY) then
            call updateGCSoluteEnergies(igcs)
@@ -73,12 +81,17 @@ c       update the energies
 c        if (thetaparam(igcs).gt.0.95) then
 c           call savepoint(igcs,movnum)
 c        endif
+        call clearGCSoluteCoordStack
       else
         insertionMove = .false.
         statstring = "FAIL"
         nrg = ieold
         thetaparam(igcs) = thetaold
         GCSCavity = GCSCavity - 1
+        call popGCSoluteCoords
+        if (doGB) call popPDACont
+        call clearGCSoluteCoordStack
+        
       endif
 c       if (thetaparam(igcs).gt.0.950) then
 c           call savepoint(igcs,movnum)

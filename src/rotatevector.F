@@ -14,7 +14,7 @@ C*******and I will be happy to acknowledge you.
       double precision x1,y1,z1,x2,y2,z2
       double precision sintheta,costheta
 c##############################################
-
+      
       sintheta = dsin(theta)
       costheta = dcos(theta)
       
