@@ -40,6 +40,11 @@ c     randomly choose a solvent
       
       igcs = ranInt(1,NGCSolutes)
 
+      if (thetaparam(igcs).eq.0) then  
+      return
+      endif
+
+ 
 c     add this solute to the move list
       call setGCSoluteMoved(igcs)      
 c     see whether we are updating the energies
