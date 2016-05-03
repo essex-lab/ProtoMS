@@ -738,6 +738,17 @@ class ParameterSet:
                 pass
 
         if self.ptype == 'dihedral':
+            #these first two blocks are required for the opls force field
+            try:
+                return self.params[ ats[:3]  + ( 'X', ) ]
+            except KeyError:
+                pass
+
+            try:
+                return self.params[ ( 'X', ) + ats[1:] ]
+            except KeyError:
+                pass
+
             try:
                 return self.params[ ( 'X', ) + ats[1:3]  + ( 'X', ) ]
             except KeyError:
