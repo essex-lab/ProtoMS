@@ -24,7 +24,7 @@ c     (C) Michael Bodnarchuk   15th September 2011
 c
 c###############################################################
 
-      integer updatenrg,movnum,movtyp,igcs,ranInt,savenrg
+      integer updatenrg,movnum,movtyp,ind,i,count,igcs,ranInt,savenrg
       double precision GCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision ieold,ienew,thetaold,nrg
       character*4 statstring
@@ -33,14 +33,29 @@ c###############################################################
       
       insertionMove = .false.
 
-c     Select a test particle at random
-10    igcs = ranInt(1,NGCSolutes)
-c     Check to see that it's not already on
-      if (thetaparam(igcs).eq.1) then
-c      PRINT*, "oops",movnum
-      return
+      if (GCSCavity.eq.NGCSolutes) then
+         write(printstring,*) 'No spare gcsolutes to insert. This will bias your simulation results.'
+         call PrintLine(WARNING,printstring)
+         return
       endif
-      thetaold = thetaparam(igcs)
+
+c     Choose randomly from waters that are off
+      ind = ranInt(1,NGCSolutes-GCSCavity)
+      
+c     find the ind'th water that is off
+      igcs = 0
+      count = 0
+      do i=1,NGCSolutes
+         if (thetaparam(i).eq.0) then
+            count = count + 1
+         endif
+         if (count.eq.ind) then
+            igcs = i
+            goto 10
+         endif
+      enddo
+
+ 10   thetaold = thetaparam(igcs)
  
       if (updatenrg.eq.UPDATEENERGY) then
         savenrg = OLD

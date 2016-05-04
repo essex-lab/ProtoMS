@@ -24,7 +24,7 @@ c     (C) Michael Bodnarchuk   15th September 2011
 c
 c###############################################################
 
-      integer updatenrg,movnum,movtyp,igcs,ranInt,savenrg
+      integer updatenrg,movnum,movtyp,ind,count,i,igcs,ranInt,savenrg
       double precision GCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision ieold,ienew,thetaold,nrg
       character*4 statstring
@@ -32,14 +32,25 @@ c###############################################################
 
       
       deletionMove = .false.
-c     Select a test particle at random
-      igcs = ranInt(1,NGCSolutes)
-c     Check to see that it's not already off
-      if (thetaparam(igcs).eq.0) then
-      return
-      endif
+      if (GCSCavity.eq.0) return
 
-      thetaold = thetaparam(igcs)
+c     Select from inserted gcsolutes randomly
+      ind = ranInt(1,GCSCavity)
+
+c     Now find the ind'th on gcsolute
+      igcs = 0
+      count = 0
+      do i=1,NGCSolutes
+         if (thetaparam(i).eq.1) then
+            count = count + 1
+         endif
+         if (count.eq.ind) then
+            igcs = i
+            goto 10
+         endif
+      enddo
+      
+ 10   thetaold = thetaparam(igcs)
  
       if (updatenrg.eq.UPDATEENERGY) then
         savenrg = OLD

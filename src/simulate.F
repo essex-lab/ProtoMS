@@ -10,6 +10,8 @@
       include 'splitter.inc'
       include 'parallel.inc'
       include 'averages.inc'
+      include 'solvents.inc'
+      include 'constants.inc'
 #ifdef WITH_MPI_
       include 'mpif.h'
 #endif
@@ -69,25 +71,25 @@ c       4 in the line below stands for the lenght of 'dump'
         NTotalMoves = NTotalMoves + 1
 
 c       obtain the move type based on probabilities entered by the user
-        imov = getMoveType()
+ 10     imov = getMoveType()
         if (imov.eq.TRYPROTEIN) then
-          templ = residueMove(UPDATEENERGY,i,0)
+           templ = residueMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYSOLUTE) then
-          templ = soluteMove(UPDATEENERGY,i,0)
+           templ = soluteMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYTITRATE) then
-          templ = titrationMove(UPDATEENERGY,i,0)
+           templ = titrationMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYSOLVENT) then
-          templ = solventMove(UPDATEENERGY,i,0)
+           templ = solventMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYVOLUME) then
-          templ = volumeMove(UPDATEENERGY,i,0)
+           templ = volumeMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYROTAMER) then
-          templ = rotamerMove(UPDATEENERGY,i,0)
+           templ = rotamerMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYINSERTION) then
-          templ = insertionMove(UPDATEENERGY,i,0)
+           templ = insertionMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYDELETION) then
-          templ = deletionMove(UPDATEENERGY,i,0)
+           templ = deletionMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYGCSOLUTE) then
-          templ = gcsoluteMove(UPDATEENERGY,i,0)
+           templ = gcsoluteMove(UPDATEENERGY,i,0,0)
         else if (imov.eq.TRYSAMPLE) then
           templ = sampleMove(UPDATEENERGY,i,0)
         else if (imov.eq.TRYTHETA) then

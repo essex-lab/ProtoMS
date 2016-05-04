@@ -18,13 +18,13 @@ def make_ref ( index ):
     """
     ref_res = sim.Residue ( name = 'WA1', index = index )
     ref_res.addAtom ( sim.Atom ( index = 1, name = 'O00', resname = 'WA1', 
-                                 resindex = index, coords = [ 1000., 0., 0. ] ) )
+                                 resindex = index, coords = [ 1000. + index * 3, 0., 0. ] ) )
     ref_res.addAtom ( sim.Atom ( index = 1, name = 'H01', resname = 'WA1', 
-                                 resindex = index, coords = [ 1000., 1., 0. ] ) )
+                                 resindex = index, coords = [ 1000. + index * 3, 1., 0. ] ) )
     ref_res.addAtom ( sim.Atom ( index = 1, name = 'H02', resname = 'WA1', 
-                                 resindex = index, coords = [ 1000., 0., 1. ] ) )
+                                 resindex = index, coords = [ 1000. + index * 3, 0., 1. ] ) )
     ref_res.addAtom ( sim.Atom ( index = 1, name = 'M03', resname = 'WA1', 
-                                 resindex = index, coords = [ 1000., 0.1, 0.1 ] ) )
+                                 resindex = index, coords = [ 1000. + index * 3, 0.1, 0.1 ] ) )
     return ref_res
 
 s = sim.PDBSet ()
@@ -34,9 +34,12 @@ s.read ( args.in_file )
 for pdb in s.pdbs:
     count = len ( [ r for r in pdb.residues 
                     if pdb.residues[r].name == 'WA1' ] )
-
-    if count < args.nwat:
-        index = sorted ( pdb.residues.keys() )[-1] + 1
+    
+    for i in xrange ( args.nwat - count ):
+        try:
+            index = sorted ( pdb.residues.keys() )[-1] + 1
+        except IndexError:
+            index = 1
         pdb.residues[index] = make_ref ( index )
 
 
