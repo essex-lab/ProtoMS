@@ -39,17 +39,10 @@ c###############################################################
          return
       endif
 
-c     Choose randomly from waters that are off
-      ind = ranInt(1,NGCSolutes-GCSCavity)
-      
-c     find the ind'th water that is off
-      igcs = 0
-      count = 0
+c     for purposes of insertion all off GCS are interchangeable
+c     so just find the first one that is switched off
       do i=1,NGCSolutes
          if (thetaparam(i).eq.0) then
-            count = count + 1
-         endif
-         if (count.eq.ind) then
             igcs = i
             goto 10
          endif
@@ -73,10 +66,7 @@ c     Change the theta value of the molecule to zero
       thetaparam(igcs) = 1
       call pushBackGCSoluteCoords(igcs)
 
-
-
       call scramblewater(igcs)
-
 
       GCSCavity = GCSCavity + 1
 c     See if the new configurational energy needs to be updated...
