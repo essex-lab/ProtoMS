@@ -68,7 +68,6 @@ c     check to see whether we will test the energy routines
         if (testenergy) call printLine(INFO,"Testing energy routines!")
       endif
 
-
 #ifndef WITH_MPI_
 c     If compiled without MPI replica exchange is not available
       if (getOption('lambdare') .or. getOption('temperaturere')) then
@@ -808,7 +807,7 @@ c     Now we can complete the setup of REST temperatures
 
 c     get the B factor for GCMC simulations
       if ((.not.doMultiGCMC).and.getOption('potential')) then
-         B = getDouble(words(1),B)
+         B = getDouble(words(1),B) 
         write(printstring,"(a,f12.4,a)") "Simulation B value / Adams parameter = ",B," AU"
         call printLine(INFO,printstring)
       endif
@@ -847,6 +846,13 @@ c     Get the JAWS biasing term for JAWS-II simulations
       write(printstring,300) "Grid size in Z dimension",gridz
       call printLine(INFO,printstring)
       endif
+
+      if (getOption('vfree')) then
+      vavail= getDouble(words(1),vavail) 
+      write(printstring,300) "Free volume in GCMC box",vavail
+      call printLine(INFO,printstring)
+      endif
+
 
       if (getOption('spacing')) then
       space = getDouble(words(1),space)
