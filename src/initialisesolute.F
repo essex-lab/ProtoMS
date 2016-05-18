@@ -13,7 +13,7 @@ c     (C) Christopher Woods 28 January 2002
 c
 c####################################################
 
-      integer isol,i,j
+      integer isol,i,j,k
 
       SoluteName(isol) = " "
       NSolAtoms(isol) = 0
@@ -88,6 +88,16 @@ c####################################################
         SolNB(isol,i,1) = 0
         SolNB(isol,i,2) = 0
         SolNB14(isol,i) = .false.
+      enddo
+
+      do i=1,20
+         do j=1,MAXROTDIHS
+            do k=1,MAXSOLUTERESIDUES
+               DihMoveAttempts(isol,k,j,i) = 0
+               DihMoveSuccess(isol,k,j,i) = 0
+               NRotDihs(isol,k) = 0
+            enddo
+         enddo
       enddo
       
       end

@@ -229,3 +229,7 @@ c     Maximum allowed number of ladders lambdas/temperatures/adams/jaws2
 c     Maximum number of possible dump statements
       integer MAXDUMP
       parameter (MAXDUMP=25)
+
+c     Maximum number of rotatable dihedrals for collection of statistics
+      integer MAXROTDIHS
+      parameter (MAXROTDIHS=25)

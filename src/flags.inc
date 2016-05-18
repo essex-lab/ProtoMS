@@ -33,6 +33,8 @@ c     whether or not to calculate lambda-gradient and not energy
       logical doDerivative,doLowDerivative
 c     whether or not the MBAR, BAR and TI data needs to be re-calculated
       logical reCalculateFreeEnergies
+c     whether or not to perform a dihedral flexibilty tuning simulation
+      logical tuneDihedral
 
       common /LSIMFLAGS/ SolventBox,SolventCap,NeutraliseProtein,
      .          protodebug,
@@ -41,7 +43,8 @@ c     whether or not the MBAR, BAR and TI data needs to be re-calculated
      .          DifferentLambdas,LorentzBerthelot,PrefSample,
      .          doLambdaRE,doTemperatureRE,doREST,doMultiGCMC,doMultiJaws2,
      .          PdbParams,everyjaws2,
-     .          printFE,mbar,doDerivative,doLowDerivative,reCalculateFreeEnergies
+     .          printFE,mbar,doDerivative,doLowDerivative,reCalculateFreeEnergies,
+     .		tuneDihedral
 
       save /LSIMFLAGS/
 

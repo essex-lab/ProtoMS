@@ -6,6 +6,7 @@
       include 'solutes.inc'
       include 'simparams.inc'
       include 'enums.inc'
+      include 'flags.inc'
 c########################################################
 c
 c     This routine assigns the molecule template to 
@@ -333,6 +334,29 @@ c     bonds/angles/dihedrals
       endif
          
       call printLine(INFO,"Finished fitting template...")
-               
+      
+c     record the number of rotatable dihedrals for collecting statistics
+      do j=1,nres
+         NRotDihs(isol,j) = 0
+         do i=SolResidues(isol,j,1),SolResidues(isol,j,2)
+            if (ZSolMov(isol,i,3)) then
+               NRotDihs(isol,j) = NRotDihs(isol,j) + 1
+c     overwrite flexibilities if we are tuning dihedrals
+               if (tuneDihedral) then
+                  ZSolDelta(isol,i,3) = 20.0 / 180.0 * PI
+                  inam1 = getSolAtomName(isol,SolDihedral(isol,i,1))
+                  inam2 = getSolAtomName(isol,SolDihedral(isol,i,2))
+                  inam3 = getSolAtomName(isol,SolDihedral(isol,i,3))
+                  inam4 = getSolAtomName(isol,SolDihedral(isol,i,4))
+                  write(printstring,17) inam1,inam2,inam3,inam4
+                  call printLine(INFO,printstring)
+ 17               format('Overwriting flexibility for zmat dihedral ',a,'-',a,'-',a,'-',a)
+               endif
+            endif
+         enddo
+      enddo
+
+
+      
       return
       end
