@@ -1147,6 +1147,8 @@ if __name__ == "__main__":
   logger = simulationobjects.setup_logger("generate_input_py.log")
 
   free_cmd,bnd_cmd,gas_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args.ranseed,args) 
+
+  args.out = args.out.lower() #protoMS cannot handle cmd files containing upper case letters
   if free_cmd is not None : 
     free_cmd.writeCommandFile(args.out+"_free.cmd")
   if bnd_cmd is not None : 

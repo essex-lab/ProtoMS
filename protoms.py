@@ -1070,7 +1070,8 @@ if __name__ == "__main__":
       args.gcmcwater = "jaws2_wat%d.pdb"%idx
       jaws2wat = "jaws2_not%d.pdb"%idx
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,ranseed,args)
-    
+
+    args.cmdfile=args.cmdfile.lower() #protoMS cannot handle cmd files containing upper case letters
     if free_cmd is not None : 
       free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")
     if bnd_cmd is not None :
