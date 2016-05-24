@@ -851,6 +851,8 @@ c     Get the JAWS biasing term for JAWS-II simulations
       vavail= getDouble(words(1),vavail) 
       write(printstring,300) "Free volume in GCMC box",vavail
       call printLine(INFO,printstring)
+      else
+      vavail=gridx*gridy*gridz
       endif
 
 
