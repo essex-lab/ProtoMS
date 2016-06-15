@@ -12,6 +12,7 @@
       include 'pressure.inc'
       include 'extraenergies.inc'
       include 'printer.inc'
+      include 'stacks.inc'
 c#####################################################
 c
 c     This calculates averages of important
@@ -63,6 +64,8 @@ c       thus we also need to average the square of the values...
 c     average the volume
       AvgVolume = (AvgVolume*bigratio) + (smallratio*Volume)
       AvgVolume2 = (AvgVolume2*bigratio) + (smallratio*(Volume**2))
+
+      AvgGCSCavity = (AvgGCSCavity*bigratio) + (smallratio*GCSCavity)
          
 c     if we are doing FEP, then calculate the average forwards and backwards
 c     energies (see the zwanzig equation...

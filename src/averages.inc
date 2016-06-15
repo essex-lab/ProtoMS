@@ -130,7 +130,7 @@ c      double precision AvgGCSSvnCLJB(MAXSOLVENTS)
       double precision AvgGCSGCSLJB
       double precision AvgGCSGCSLJB2,AvgGCSCB2,AvgGCSLJF2,AvgGCSLJB2, AvgGCSLJ2
       
-      
+      real AvgGCSCavity      
       
       common /DAVGENERGY1/ AvgProProC,AvgProProC2,AvgProProLJ,AvgProProLJ2,
      .     AvgProBnd,AvgProBnd2,AvgProAng,AvgProAng2,AvgProDih,AvgProDih2,
@@ -192,7 +192,7 @@ c     average energies / free energies
                     
       common /FREEENERGIES/ AvgTotalEnergy,AvgBackEnergy,AvgForwardsEnergy,
      .            AvgTotalEnergy2,AvgBackEnergy2,AvgForwardsEnergy2,
-     .            AvgBackEnergy1,AvgForwardsEnergy1,NSteps
+     .            AvgBackEnergy1,AvgForwardsEnergy1,NSteps,AvgGCSCavity
 
       save /FREEENERGIES/
       

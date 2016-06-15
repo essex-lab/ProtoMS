@@ -81,7 +81,7 @@ c       call printLine(RESULTS,printstring)
        write(printstring,"('Simulation B value = ',f12.4)") B
        call printLine(RESULTS,printstring)
 
-       write(printstring,"('Molecules in grid  = ',i8)") GCSCavity
+       write(printstring,"('Molecules in grid  = ',f12.4)") AvgGCSCavity
        call printLine(RESULTS,printstring)
 
         if (SolventBox) then

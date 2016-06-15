@@ -1038,7 +1038,7 @@ class SnapshotResults :
       if line.startswith("Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
       if line.startswith("Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
       if line.startswith("Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
-      if line.startswith("Molecules in grid") : self.solventson = int(line.split("=")[1].strip())
+      if line.startswith("Molecules in grid") : self.solventson = float(line.split("=")[1].strip())
       if line.startswith("Pressure") : self.pressure = float(line.split("=")[1].strip().split()[0])
       if line.startswith("Volume") : self.volume = float(line.split("=")[1].strip().split()[0])
       if line.startswith("Random number seed") : self.seed = int(line.split("=")[1].strip())
@@ -1254,9 +1254,9 @@ class ResultsFile :
 
     # First replace all float/int in the SnapshotResults object with NumpyArrays
     self.series = copy.deepcopy(self.snapshots[0])
-    for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","capenergy"] :
+    for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","capenergy","solventson"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap))
-    for attr in ["datastep","lambdareplica","globalreplica","solventson","seed","gcmcreplica"] :
+    for attr in ["datastep","lambdareplica","globalreplica","seed","gcmcreplica"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap,dtype=int))
     if hasattr(self.snapshots[0],"total") :
       set_energyresults(self.series.total)  
