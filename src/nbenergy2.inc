@@ -212,7 +212,7 @@ c           Taken as the sigma value for this pair pair interaction
            if (lorentzberthelot) then 
              shift = HALF*(funcisig1+funcisig2)
            else
-             shift = funcisig1*funcisig2
+             shift = dsqrt ( funcisig1*funcisig2 )
            endif
           else
 c           ...Otherwise we have to get it by lookup
@@ -221,7 +221,7 @@ c           ...Otherwise we have to get it by lookup
             if (lorentzberthelot) then
               shift = HALF*(sigat1+sigat2)
             else
-              shift = ( sigat1*sigat2 )
+              shift = dsqrt ( sigat1*sigat2 ) 
             endif
           endif
           if (SoftType.eq.SOFT66) then
@@ -274,8 +274,8 @@ c       calculate the distances for variable geometry (if necessary)
                 shiftf = HALF*(funcisig1f+funcisig2f)
                 shiftb = HALF*(funcisig1b+funcisig2b)
               else
-                shiftf = funcisig1f*funcisig2f
-                shiftb = funcisig1b*funcisig2b
+                shiftf = dsqrt ( funcisig1f*funcisig2f )
+                shiftb = dsqrt ( funcisig1b*funcisig2b )
               endif
             else
 c             ...Otherwise we have to get it by lookup
@@ -283,7 +283,7 @@ c             ...Otherwise we have to get it by lookup
                 shiftf =  HALF*(sigat1+sigat2 )
                 shiftb =  shiftf
               else
-                shiftf = ( sigat1*sigat2 )
+                shiftf = sqrt ( ( sigat1*sigat2 ) )
                 shiftb = shiftf
               endif
             endif
@@ -331,8 +331,8 @@ c             ...Otherwise we have to get it by lookup
                 shiftf = HALF*(funcisig1f+funcisig2f)
                 shiftb = HALF*(funcisig1b+funcisig2b)
               else
-                shiftf = funcisig1f*funcisig2f
-                shiftb = funcisig1b*funcisig2b
+                shiftf = dsqrt ( funcisig1f*funcisig2f )
+                shiftb = dsqrt ( funcisig1b*funcisig2b )
               endif
             else
 c             ...Otherwise we have to get it by lookup
@@ -340,7 +340,7 @@ c             ...Otherwise we have to get it by lookup
                 shiftf =  HALF*(sigat1+sigat2 )
                 shiftb =  shiftf
               else
-                shiftf = ( sigat1*sigat2 )
+                shiftf = dsqrt ( sigat1*sigat2 )
                 shiftb = shiftf
               endif
             endif
