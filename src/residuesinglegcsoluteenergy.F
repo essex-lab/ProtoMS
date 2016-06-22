@@ -24,12 +24,17 @@ c####################################################################
       double precision cnrg,ljnrg,nrg
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision distx,disty,distz,dist2
-      integer i,j,nat,resstrt,resend
+      integer i,j,ui,uj,tmpi,tmpj,ind,par,nat,resstrt,resend
       double precision sclfac
       double precision mindist
       include 'nbenergyvar2.inc'
       double precision charge,sigma,epslon      
-c     temporary cheat
+      double precision invr2, tmp2, tmp3, tmp
+c     Size of these arrays imply an implicit limit on size of gcsolute
+c     which doesn't seem to be consistently handled. The practical
+c     limit is determined by the definition of ZGCSPar in solvents.inc at
+c     50 atoms.
+      double precision invrs((MAXSCATOMS+3)*50),invrs6((MAXSCATOMS+3)*50)
 
       residueSingleGCsoluteEnergy = ZERO
       cnrg = ZERO
@@ -85,29 +90,107 @@ c     assume residue runs concurrently from N to O
       funcigcs2 = igcs
       if (QuickMove .and. DDDon) ddd = .true.
       if (GCsoluteSoftCore(igcs)) softcore = .true.
-      do i=resstrt,resend
-        funcat1 = i
-              
-        do j=1,nat
-          funcat2 = j
+      
+      if (ddd.or.softcore.or.(boundary.eq.PERIODICBOUNDARIES)) then
+c     run unoptmised version of nbenergy as this can
+c     handle softcores, implicit solvent and periodicboundary conditions
+         do i=resstrt,resend
+            funcat1 = i
+            
+            do j=1,nat
+               funcat2 = j
 
-          include 'nbinitial.inc'
-          include 'nbprogcs.inc'
-          include 'nbenergy3.inc'
-          
-          nrg = nrg + funcnbnrg
-          cnrg = cnrg + funccnrg
-c          PRINT*, "cnrg" ,cnrg
-          ljnrg = ljnrg + funcljnrg
-c           PRINT*, "ljnrg" ,ljnrg
-          cnrgf = cnrgf + funccnrgf
-          cnrgb = cnrgb + funccnrgb
-          ljnrgf = ljnrgf + funcljnrgf
-          ljnrgb = ljnrgb + funcljnrgb
-          if (funcmindist.lt.mindist) mindist = funcmindist
-        enddo
-      enddo
+               include 'nbinitial.inc'
+               include 'nbprogcs.inc'
+               include 'nbenergy3.inc'
+               
+               nrg = nrg + funcnbnrg
+               cnrg = cnrg + funccnrg
+c     PRINT*, "cnrg" ,cnrg
+               ljnrg = ljnrg + funcljnrg
+c     PRINT*, "ljnrg" ,ljnrg
+               cnrgf = cnrgf + funccnrgf
+               cnrgb = cnrgb + funccnrgb
+               ljnrgf = ljnrgf + funcljnrgf
+               ljnrgb = ljnrgb + funcljnrgb
+               if (funcmindist.lt.mindist) mindist = funcmindist
+            enddo
+         enddo
+      else
+c     optimised version of nbenergy cannot handle
+c     softcores, implicit solvent or lambda scaling
 
+         thet = thetaparam (igcs)
+         ui=resend-resstrt+1
+         uj=nat
+
+         tmpi=resstrt
+         tmpj=1
+c        PERIODIC BOUNDARIES!!!!!!!!
+         ind=1
+         do i=1,ui
+            do j=1,uj
+               invrs(ind) = ((ZCoords(iprot,tmpi,1)-ZGCSCoords(igcs,tmpj,1))**2
+     .              + (ZCoords(iprot,tmpi,2)-ZGCSCoords(igcs,tmpj,2))**2
+     .              + (ZCoords(iprot,tmpi,3)-ZGCSCoords(igcs,tmpj,3))**2)
+               tmpj = tmpj + 1
+               ind=ind+1
+            enddo
+            tmpi = tmpi + 1
+            tmpj = 1
+         enddo
+
+         
+c     test cutoff criteria here before we do expensive operations
+c     invrs currently contains the squares of the interatomic distances
+         mindist = invrs(1)
+         if ((mindist.gt.feather2).and.(cuttype.eq.RESIDUEMOLECULE)) then
+c     as a heuristic check if invrs(1) is greater than the feather distance
+c     only need to check other distances if true
+            do ind=2,ui*uj
+               if (invrs(ind) < mindist) mindist = invrs(ind)
+               if (mindist.lt.feather2) goto 10
+c     if we ever see a distance less than the feather distance then no need
+c     to check more               
+            enddo
+            
+            if ((mindist.gt.cut2).and.(cuttype.eq.RESIDUEMOLECULE)) then
+c$$$  goto 20
+               return
+            endif
+         endif
+         
+c     now transform invrs to actually be inverse interatomic separations
+c     this is an expensive operation         
+ 10      do ind=1,ui*uj
+            invrs(ind) = ONE / dsqrt ( invrs(ind) )
+            invrs6(ind) = invrs(ind)**6
+         enddo
+         
+c     Calculate energies
+         ind = 1
+         do i=resstrt,resend
+            do j=1,nat
+               ipar1 = ZPar(iprot,i)
+               ipar2 = ZGCSPar(igcs,j)
+               par = CLJPair(ipar1,ipar2)
+c     Coulomb energy
+               cnrg = cnrg + invrs(ind) * ChgIJ(par)
+c     LJ energy               
+               ljnrg = ljnrg + invrs6(ind)*(AIJ(par)*invrs6(ind) - BIJ(par))
+               ind = ind + 1
+            enddo
+         enddo
+
+         cnrgf = cnrg
+         cnrgb = cnrg
+
+         ljnrgf = ljnrg
+         ljnrgb = ljnrg
+
+         nrg = cnrg + ljnrg
+      endif
+      
       if (cuttype.eq.RESIDUEMOLECULE) then
 c       doing protein-residue - GC-solute molecule cutting
         if (mindist.lt.cut2) then
@@ -135,13 +218,13 @@ c           must scale the interactions..
       endif
       
 c      Now scale the energies according to the value of theta...          
-            nrg = nrg * thetaparam(igcs)
-            cnrg = cnrg * thetaparam(igcs)
-            ljnrg = ljnrg * thetaparam(igcs)            
-            cnrgf = cnrgf * thetaparam(igcs)
-            ljnrgf = ljnrgf * thetaparam(igcs)
-            cnrgb = cnrgb * thetaparam(igcs)
-            ljnrgb = ljnrgb * thetaparam(igcs)      
+      nrg = nrg * thetaparam(igcs)
+      cnrg = cnrg * thetaparam(igcs)
+      ljnrg = ljnrg * thetaparam(igcs)            
+      cnrgf = cnrgf * thetaparam(igcs)
+      ljnrgf = ljnrgf * thetaparam(igcs)
+      cnrgb = cnrgb * thetaparam(igcs)
+      ljnrgb = ljnrgb * thetaparam(igcs)      
 c      PRINT*, "cnrg" ,cnrg
 
       if (doREST) then

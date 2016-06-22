@@ -26,6 +26,7 @@ c###############################################################
 
       integer updatenrg,movnum,movtyp,ind,i,count,igcs,ranInt,savenrg
       double precision GCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb
+      double precision zeroGCSoluteEnergy
       double precision ieold,ienew,thetaold,nrg
       character*4 statstring
       logical metropolis2
@@ -58,7 +59,12 @@ c     so just find the first one that is switched off
       
       NInsTry(igcs) = NInsTry(igcs) + 1
 c     Get the old energy of the theta molecule - should be zero 
-      ieold = GCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
+c      ieold = GCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
+c$$$      ieold = ZERO
+c$$$      cnrgf = ZERO
+c$$$      ljnrgf = ZERO
+c$$$      ljnrgb = ZERO
+      ieold = zeroGCSoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
       if (ieold.gt.0) then
       print*, "This isn't good!"
       endif
