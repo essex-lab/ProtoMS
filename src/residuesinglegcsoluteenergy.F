@@ -93,7 +93,7 @@ c     assume residue runs concurrently from N to O
       
       if (ddd.or.softcore.or.(boundary.eq.PERIODICBOUNDARIES)) then
 c     run unoptmised version of nbenergy as this can
-c     handle softcores, implicit solvent and periodicboundary conditions
+c     handle softcores, implicit solvent and periodic boundary conditions
          do i=resstrt,resend
             funcat1 = i
             
