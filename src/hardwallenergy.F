@@ -8,7 +8,7 @@
       include 'solvents.inc'
       include 'solutes.inc'
       include 'proteins.inc'
-      
+      include 'simparams.inc'
 c###############################################################################
 c
 c     This calculates the hardwall potential applied to each atom
@@ -27,7 +27,7 @@ c###############################################################################
       integer i,j,k,jj
       double precision inrgb,inrgf
       double precision RadiusSq,idist,idist2
-     
+      logical soluteout
       
       hardwallEnergy = ZERO
       inrgb = ZERO
@@ -42,7 +42,28 @@ c     defined point is user-defined (HardwallRadius).
 c     
 c     The distance between the solvent atoms and the defined point is calculated and if the distance is
 c     smaller than HardwallRadius the energy is very high (HardwallEnergy)
-        
+
+      if (cubichardwall) then
+        if (NSolutes.gt.0) then
+          soluteout=.false.
+          do 234 j=1,NSolutes
+c           for the molecule of interest, we check whether its geometry center is in the region of the hardwall
+            if (j.eq.HardwallMolecule(i)) then 
+                if (SolGeomCentre(j,1).lt.coordx .OR. SolGeomCentre(j,1).gt.coordx+gridx) soluteout = .true.
+                if (SolGeomCentre(j,2).lt.coordy .OR. SolGeomCentre(j,2).gt.coordy+gridy) soluteout = .true.
+                if (SolGeomCentre(j,3).lt.coordz .OR. SolGeomCentre(j,3).gt.coordz+gridz) soluteout = .true.  
+              if (soluteout) then
+                hardwallEnergy  = hardwallEnergy + HardwallextraEnergy(i)
+                inrgb = hardwallEnergy
+                inrgf = hardwallEnergy               
+                goto 300
+              endif
+            endif
+234       continue
+        endif
+        goto 300
+      endif
+
       RadiusSq = HardwallRadius(i)**2
           
       if (NSolvents.gt.0) then

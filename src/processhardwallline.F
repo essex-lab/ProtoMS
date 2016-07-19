@@ -96,7 +96,16 @@ c Set allowprotein to true if option is present
             allowprotein = .true.
          endif 
       endif
-c 
+
+
+c Set cubic hardwall to true if option is present
+      cubichardwall=.false.
+      if (nwords.eq.5) then
+         if (words(5).eq.'cubichardwall') then
+            cubichardwall = .true.
+         endif 
+      endif
+
 c       Make sure the IDs are valid
         if ( idnum .ne. 0 .and. LabelID(idnum) .eq. 0) then
           write(printstring,*)' No ID = ',idnum,' has been set ! ',
