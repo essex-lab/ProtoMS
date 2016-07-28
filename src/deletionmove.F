@@ -25,7 +25,7 @@ c
 c###############################################################
 
       integer updatenrg,movnum,movtyp,ind,count,i,igcs,ranInt,savenrg
-      double precision GCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb
+      double precision GCSoluteEnergy,zeroGCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision ieold,ienew,thetaold,nrg
       character*4 statstring
       logical metropolis3
@@ -72,7 +72,7 @@ c     Change the theta value of the molecule to zero
       thetaparam(igcs) = 0
 c     See if the new configurational energy needs to be updated...
       if (updatenrg.eq.UPDATEENERGY) savenrg = NEW      
-      ienew = GCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
+      ienew = zeroGCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
 
        if (metropolis3(ieold,ienew,movtyp)) then
         deletionMove = .true.
