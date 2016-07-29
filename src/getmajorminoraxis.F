@@ -65,7 +65,7 @@ c#########################################################
         call printLine(WARNING,"Trying to assign dummies to a molecule with no atoms!")
         call printLine(WARNING,"This looks like a problem with your template or coordinate files?")
         return
-      else if (nats.lt.2) then
+      else if (nats.lt.0) then
 c       assign basic dummies, since there are only 1 (or eventually 2) atoms
         if (nats.eq.1) then
           do 80 i=1,3
