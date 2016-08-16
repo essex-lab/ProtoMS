@@ -29,8 +29,7 @@ c###############################################################
       double precision zeroGCSoluteEnergy
       double precision ieold,ienew,thetaold,nrg
       character*4 statstring
-      logical metropolis2
-
+      logical metropolis2 
       
       insertionMove = .false.
 
@@ -56,6 +55,7 @@ c     so just find the first one that is switched off
       else
         savenrg = DONTCARE
       endif
+c      call scramblewater(igcs)
       
       NInsTry(igcs) = NInsTry(igcs) + 1
 c     Get the old energy of the theta molecule - should be zero 
@@ -70,8 +70,7 @@ c$$$      ljnrgb = ZERO
       endif
 c     Change the theta value of the molecule to zero
       thetaparam(igcs) = 1
-      call pushBackGCSoluteCoords(igcs)
-
+        
       call scramblewater(igcs)
 
       GCSCavity = GCSCavity + 1
@@ -92,16 +91,13 @@ c       update the energies
 c        if (thetaparam(igcs).gt.0.95) then
 c           call savepoint(igcs,movnum)
 c        endif
-        call clearGCSoluteCoordStack
       else
         insertionMove = .false.
         statstring = "FAIL"
         nrg = ieold
         thetaparam(igcs) = thetaold
         GCSCavity = GCSCavity - 1
-        call popGCSoluteCoords
         if (doGB) call popPDACont
-        call clearGCSoluteCoordStack
         
       endif
 c       if (thetaparam(igcs).gt.0.950) then
@@ -114,6 +110,5 @@ c        endif
         call printLine(MOVE,printstring)
         if (streamhandle(ENERGY).ge.0) call printEnergies(movnum)
       endif
-      
       return
       end
