@@ -39,17 +39,17 @@ c     Select from inserted gcsolutes randomly
 
 c     Now find the ind'th on gcsolute
 c     Insertion changed to insert in order, so ind will be an ON gcsolute
-c      igcs = 0
-c      count = 0
-c      do i=1,NGCSolutes
-c         if (thetaparam(i).eq.1) then
-c            count = count + 1
-c         endif
-c         if (count.eq.ind) then
-c            igcs = i
-c            goto 10
-c         endif
-c      enddo
+      igcs = 0
+      count = 0
+      do i=1,NGCSolutes
+         if (thetaparam(i).eq.1) then
+            count = count + 1
+         endif
+         if (count.eq.ind) then
+            igcs = i
+            goto 10
+         endif
+      enddo
       igcs = ind      
  10   thetaold = thetaparam(igcs)
  
