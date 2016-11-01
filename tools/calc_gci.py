@@ -279,7 +279,7 @@ class Slp(object):
         else:
             unit_max=None
         if monotonic==True:
-            fit = optimize.fmin_l_bfgs_b(residuals,x0=self.weights[unit],bounds=[(0.0,unit_max),(0.0,unit_max),(self.offset,unit_max)],approx_grad=True,pgtol=grad_tol,disp=0)
+            fit = optimize.fmin_l_bfgs_b(residuals,x0=self.weights[unit],bounds=[(-10.0,unit_max),(0.0,unit_max),(self.offset,unit_max)],approx_grad=True,pgtol=grad_tol,disp=0)
             self.weights[unit] = fit[0]
             self.error = fit[1]
         else:
@@ -441,7 +441,7 @@ def fit_boostrap(x,y,size,boot_samps=50,repeats=10,randstarts=1000,iterations=10
             print "...Bootstrap model %i fitted." % (boot+1)
     return bootstrap_models
 
-def insertion_pmf(N,gcmc_model,T=298.15):
+def insertion_pmf(N,gcmc_model,volume,T=298.15):
     """
     Calculates the free energy to insert water from ideal gas to the GCMC volume.
 
@@ -460,25 +460,29 @@ def insertion_pmf(N,gcmc_model,T=298.15):
       relative ideal gas transfer free energies for each water specified in N
     """
     kT = T*0.0019872								# Boltmann's constant (in kcal/mol/K) multiplied by temperature (in K).
+    Vstandard = 30.0
     def integral(gcmc_model,Bi,Bf):					# For numerical integration.
         logies = [integrated_logistic(params,Bi,Bf) for params in gcmc_model.weights]
         return np.sum(logies)								# Under the convention that 0*log(0) = 0. 
     def nonintegral(N,B):
-        return N*B - special.gammaln(N+1)
+        return N*B # - special.gammaln(N+1)
     dG = np.zeros(N.size)
+    correction = np.zeros(N.size)
     N_lower = N[0]
     B_lower = inverse_slp(gcmc_model,N_lower)
     for i in range(1,N.size):                         # Starting from the second element, as dG=0 at first N.
         B_upper = inverse_slp(gcmc_model,N[i])  
         #dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) + integral(gcmc_model,B_lower,B_upper))[0]							# This version uses analytical integration. Prone to instability.
         dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) - integrate.quad(gcmc_model.predict,a=B_lower,b=B_upper)[0])[0]		# This version numerical integration.
+        correction[i] = N[i]*np.log(volume/Vstandard)
+        dG[i] = dG[i] - correction[i]
     return dG*kT
 
 
 def ensemble_pmf(N,gcmc_models,T=298.15):
     energies = np.ones((len(gcmc_models),len(N)))
     for i in range(len(gcmc_models)):
-        energies[i] =  insertion_pmf(N,gcmc_models[i],T=T)
+        energies[i] =  insertion_pmf(N,gcmc_models[i],args.volume,T=T)
     return energies.mean(axis=0), energies.std(axis=0)
 
 def ensemble_FreeEnergies(N,gcmc_models,hydration=None,T=None):
@@ -501,11 +505,12 @@ def ensemble_FreeEnergies(N,gcmc_models,hydration=None,T=None):
     numpy array, numpy array
       matrix of relative ideal gas transfer free energies for each water specified in N, matrix of relative binding free energies for each water specified in N
     """
+
     if hydration == None: hydration = -6.2
     if T==None: T= 298.15
     dG_samples = np.zeros((len(N),len(gcmc_models)))
     for i in range(len(gcmc_models)):  
-        dG_samples[:,i] = insertion_pmf(N,gcmc_models[i])								# The free energy to transfer from the gas phase
+        dG_samples[:,i] = insertion_pmf(N,gcmc_models[i],args.volume)								# The free energy to transfer from the gas phase
     dG_binding_samples = dG_samples - hydration*np.tile(N,(dG_samples.shape[1],1)).T	# The free energy to transfer from solution (the binding free energy)
     return dG_samples, dG_binding_samples
 
@@ -715,6 +720,7 @@ def minimum_from_free_energy(models,N_range,dG_binding_samples,print_lines=True)
     median_B = np.percentile(best_Bs,50)
     upper_B = np.percentile(best_Bs,75)
     lower_B = np.percentile(best_Bs,25)
+    print N_range[min_inds]
     if print_lines:
         print "MINIMUM BINDING FREE ENERGY STATE:"
         print "Number of molecules:  Mean   Std. dev   25th Percentile    50th Percentile   75th Percentile"
@@ -744,6 +750,7 @@ def minimum_from_thermo_limit(models,B,dG_hyd,kT=0.592,print_lines=True):
     best_Ns = []
     mu_ex = []
     N_ex = []
+    print dG_hyd
     for model in models:
        model.x = np.linspace(start=B.min(),stop=B.max(),num=1000)   
        model.forward()
@@ -781,10 +788,19 @@ if __name__ == '__main__' :
   parser.add_argument('--range',nargs="+",help="range of water molecules to calculate free energy",default=None)
   parser.add_argument('--reverse',action='store_true',help="reverse the direction of integration, starting from the highest number of waters to the lowest number, default=False",default=False)
   parser.add_argument('--fit_options',help="additional options to be passed to the artificial neural network",default=None)
+  parser.add_argument('-v','--volume', type=float,help="volume of the GCMC insertion region",default=None)
   args = parser.parse_args()
 
   dG_hyd = -6.2
-
+  print "CALCULATING VOLUME CORRECTION:"
+  if args.volume is None:
+      print "No GCMC volume given. No volume correction will be applied.\n A correction of kBT ln(Vsystem/Vstandard) is required for GCMC calculations"
+      args.volume=30.0
+  else:
+      print "GCMC volume:", args.volume
+      print "Standard volume: 30.0"
+      print "Volume correction of kBT ln (Vsystem/Vstandard) will be applied" 
+	
   if args.directories is None:
       print "\nError. Please list the directories containing the GCMC simulation data. Exiting program.\n"
       sys.exit()
@@ -893,11 +909,11 @@ if __name__ == '__main__' :
   if args.calc is not None:
     if len(intersect(args.calc,["pmf","all"])) > 0:
       if args.reverse==False:
-          dG_single = insertion_pmf(N_range,single_model)
+          dG_single = insertion_pmf(N_range,single_model,args.volume)
           dG_samples, dG_binding_samples = ensemble_FreeEnergies(N_range,models)
       else: 
           N_range = N_range[::-1]
-          dG_single = insertion_pmf(N_range,single_model)
+          dG_single = insertion_pmf(N_range,single_model,args.volume)
           dG_samples, dG_binding_samples = ensemble_FreeEnergies(N_range,models)
 
     if len(intersect(args.calc,["pmf","all"])) > 0:
