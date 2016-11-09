@@ -153,8 +153,10 @@ install(TARGETS protoms3
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
                @only
               )
-include(CTest)
-include(CTestConfig.cmake)
+              
+# Uncomment below 2 lines for getting coverage information               
+## include(CTest)
+## include(CTestConfig.cmake)
 
 # Add testing
 # Needs actual unit/integration tests here
