@@ -3,3 +3,6 @@ numpy
 scipy
 matplotlib
 nose_parameterized
+coverage
+instrumental
+line_profiler
