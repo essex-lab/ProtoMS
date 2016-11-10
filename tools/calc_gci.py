@@ -876,8 +876,8 @@ if __name__ == '__main__' :
                   fit_dict[options[i]]= float(options[i+1])
               if type(fit_dict[options[i]]) == int:
                   fit_dict[options[i]]= int(options[i+1])
-              if type(fit_dict[options[i]]) == str:
-                  fit_dict[options[i]]= str(options[i+1])
+              if type(fit_dict[options[i]]) == bool:
+                  fit_dict[options[i]]= bool(options[i+1])
 
   # Fitting the artificial neural network, which is crucial for all other analysis.
   if args.calc is not None and ANNs is None:
