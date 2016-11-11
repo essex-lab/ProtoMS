@@ -883,12 +883,12 @@ if __name__ == '__main__' :
   if args.calc is not None and ANNs is None:
       print "FITTING TO TITRATION DATA:"
       if args.bootstraps is None:
-          single_model, models = fit_ensemble(x=B,y=N,size=args.steps,verbose=False,pin_min=fit_dict["pin_min"],pin_max=fit_dict["pin_max"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
+          single_model, models = fit_ensemble(x=B,y=N,size=args.steps,verbose=fit_dict["verbose"],pin_min=fit_dict["pin_min"],pin_max=fit_dict["pin_max"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
           print "......Neural network fitting complete."      
       else:
           samples = args.bootstraps
           models = fit_boostrap(x=B,y=N,size=args.steps,boot_samps=samples,pin_min=fit_dict["pin_min"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])              
-          single_model, rubbish = fit_ensemble(x=B,y=N,size=args.steps,verbose=False,pin_min=fit_dict["pin_min"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
+          single_model, rubbish = fit_ensemble(x=B,y=N,size=args.steps,verbose=fit_dict["verbose"],pin_min=fit_dict["pin_min"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
           print "......Neural network bootstrap fitting complete." 
       if args.out is not None:    
           ANNs = {"single":single_model,"collection":models}
