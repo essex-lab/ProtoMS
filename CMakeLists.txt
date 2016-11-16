@@ -150,9 +150,9 @@ install(TARGETS protoms3
         RUNTIME DESTINATION "./")
 
 #Enabling creation and submission of dashboard
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
-               @only
-              )
+##configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
+#               @only
+#              )
               
 # Uncomment below 2 lines for getting coverage information               
 ## include(CTest)
