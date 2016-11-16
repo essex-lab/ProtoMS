@@ -112,6 +112,10 @@ as below:
       1. Since we already defined a number of tests for our project in the `tests/` directory, we just have to run those tests and submit them to dashboard. We include CTest module in our toplevel `CMakeLists.txt` file. You just have to uncomment below code in `CMakeLists.txt`:
 
       ``
+      #Enabling creation and submission of dashboard
+      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
+               @only
+              )
       include(CTest)
       include(CTestConfig.cmake)
       ``
@@ -140,6 +144,11 @@ as below:
       1. Uncomment below lines in `CMakeLists.txt`:
 
       ``
+      #Enabling creation and submission of dashboard
+      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
+               @only
+              )
+              
       include(CTest)
       include(CTestConfig.cmake)
       ``
