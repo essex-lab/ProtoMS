@@ -38,23 +38,29 @@ c     clear the move list
 c     randomly choose a solvent
       gcsoluteMove = .false.
 
-      if (GCSCavity.eq.0) return
+c     different selection selection logic if we are doing jaws or gcmc
+      if (doJaws) then
+         igcs = ranInt(1,NGCSolutes)
+      else
+         if (GCSCavity.eq.0) return
 
-c     Select from inserted gcsolutes randomly
-      ind = ranInt(1,GCSCavity)
+c        Select from inserted gcsolutes randomly
+         ind = ranInt(1,GCSCavity)
 
-c     Now find the ind'th on gcsolute
-      igcs = 0
-      count = 0
-      do i=1,NGCSolutes
-         if (thetaparam(i).eq.1) then
-            count = count + 1
-         endif
-         if (count.eq.ind) then
-            igcs = i
-            goto 10
-         endif
-      enddo
+c        Now find the ind'th on gcsolute
+         igcs = 0
+         count = 0
+         do i=1,NGCSolutes
+            if (thetaparam(i).eq.1) then
+               count = count + 1
+            endif
+            if (count.eq.ind) then
+               igcs = i
+               goto 10
+            endif
+         enddo
+      endif
+
       
 c     add this solute to the move list
  10   call setGCSoluteMoved(igcs)      

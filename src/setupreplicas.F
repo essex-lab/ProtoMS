@@ -389,6 +389,7 @@ c       Read in all jbiases
           call closeProgram(100,"Number of bias parameters is not equal to the number of tasks!")
         endif             
         doMultiJaws2 = .true.
+        doJaws = .true.
 c       Read in template folder    
         if (getOption('outfolder')) then
           outfolder = words(1)

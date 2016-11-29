@@ -52,6 +52,8 @@ c     Set default REST values
       restlevel(6) = 2
       restlevel(7) = 2
       doREST = .false.
+
+      doJaws = .false.
              
       return
       end

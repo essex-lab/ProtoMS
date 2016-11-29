@@ -5,6 +5,8 @@ c     whether or not we have a solvent box or cap
       logical SolventBox,SolventCap
 c     whether we will use the parameters in the protein pdb
       logical PdbParams
+c     whether we are doing a jaws1 or jaws2 simulation
+      logical doJaws
 c     whether the jaws2 results for each move will be printed to results
       logical everyjaws2
 c     whether we will print the free energy data in results
@@ -40,7 +42,7 @@ c     whether or not the MBAR, BAR and TI data needs to be re-calculated
      .          SingleTopologyFreeNrg,DualTopologyFreeNrg,
      .          DifferentLambdas,LorentzBerthelot,PrefSample,
      .          doLambdaRE,doTemperatureRE,doREST,doMultiGCMC,doMultiJaws2,
-     .          PdbParams,everyjaws2,
+     .          PdbParams,doJaws,everyjaws2,
      .          printFE,mbar,doDerivative,doLowDerivative,reCalculateFreeEnergies
 
       save /LSIMFLAGS/
