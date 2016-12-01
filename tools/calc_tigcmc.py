@@ -22,6 +22,8 @@ import numpy as np
 from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 from scipy.stats import spearmanr
+from scipy.integrate import trapz
+from scipy import optimize
 
 import simulationobjects
 import calc_gci
@@ -178,15 +180,21 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical,plo
         print "\n Gradients for each lambda value and Adams value:"
         print "Lambda    Gradients"
         for i in range(np.shape(gradmat)[0]):
-            print lambmat[i,1],"     ", gradmat[i,:]
+            print lambmat[i,0],"     ", gradmat[i,:]
         print "Adams values  ", adamsmat[1,:],"\n"
 
     if plotting == True :
       fig = pl.figure()
-      ax = Axes3D(fig)
-      ax.plot_wireframe(adamsmat, lambmat ,gradmat, rstride = 1 , cstride = 1)
-      pl.ylabel('$\lambda$')
-      pl.xlabel('Adams Value')
+      x,y = adamsmat.shape
+      if y == 1:
+        pl.plot(lambmat, gradmat)
+        pl.xlabel('$\lambda$')
+        pl.ylabel('gradient')
+      else:
+        ax = Axes3D(fig)
+        ax.plot_wireframe(adamsmat, lambmat, gradmat, rstride = 1, cstride = 1)
+        pl.xlabel('Adams Value')
+        pl.ylabel('$\lambda$')
 
     return lambmat,gradmat,stdmat, watmat,adamsmat
 
@@ -310,11 +318,11 @@ def _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose):
 
     if verbose["gradient"] :   
         for i in range(len(gradients)):
-            calc_ti.print_ene(lambmat[i,1],gradients[i],std[i],verbose["uncert"],verbose["lambda"])
+            calc_ti.print_ene(lambmat[i,0],gradients[i],std[i],verbose["uncert"],verbose["lambda"])
+    return lambmat[:,0],gradients,std
 
-    return lambmat[:,1],gradients,std
-
-def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,sizes,plotting) :
+def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,
+           singlepath,sizes,plotting,quicksurf):
   """
   Do thermodynamic integration using data from GCMC-lambda replica exchange. Based on calc_ti.ti()
   
@@ -349,6 +357,7 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,si
     standard deviation of the pmf at each lambda value
 
   """
+
   # Calculate the gradient
   (lambmat,gradmat,stdmat,watmat,adamsmat) = _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical,args.plot)
   
@@ -358,7 +367,7 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,si
     calc_ti.print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
   
   lambdas,gradients,stds = _collapse_matrices(gradmat,weightmat,lambmat,stdmat,verbose)
-  
+
   # Calculate and print the PMF 
   pmf = np.zeros(gradients.shape)
   pmf_std = np.zeros(gradients.shape)
@@ -382,21 +391,68 @@ def tigcmc(path,res_tem,skip,maxread,verbose,numkind,useanalytical,singlepath,si
     calc_ti.print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
 
   if plotting == True :
-    surface_pmf = np.zeros ( lambmat.shape )
-    surface_pmf[0] = energy_mat[0] - energy_mat[0,0]
-    lift = 0
-    for i in xrange ( 1, lambmat.shape[0] ):
-      lift += ( gradmat[i-1].mean() + gradmat[i].mean() ) / 2.0 * ( lambdas[i] - lambdas[i-1] )
-      print gradmat[i-1].mean(), lambdas[i] - lambdas[i-1], lift
-      surface_pmf[i] = energy_mat[i] - energy_mat[i,0] + lift
-    
+    surf = np.zeros ( lambmat.shape )
+    pmfs = np.zeros ( lambmat.shape )
+
+    for i, col in enumerate ( gradmat.T ):
+        lams = lambmat[:,i]
+        pmfs[:,i] = np.array ( [ trapz ( col[:j], lams[:j] )
+                                 for j in range (1,len(lams)+1 ) ] )
+
+    if quicksurf:
+      surf[0] = energy_mat[0] - energy_mat[0,0]
+      lift = 0
+      for i in xrange ( 1, lambmat.shape[0] ):
+        lift += ( gradmat[i-1].mean() + gradmat[i].mean() ) / 2.0 * ( lambdas[i] - lambdas[i-1] )
+        surf[i] = energy_mat[i] - energy_mat[i,0] + lift
+    else:
+      surf, fopt, _, _, _, _, _  = optimize.fmin_bfgs ( _obj_func, np.zeros ( energy_mat.shape ),
+                                                        args = ( energy_mat, pmfs ), disp = 0,
+                                                        full_output = True )
+      print "Final value of objective function: %.4f" % fopt
+    surf = surf.reshape ( energy_mat.shape )
+    surf -= surf[0].min()
     fig = pl.figure()
-    ax = Axes3D(fig)
-    ax.plot_wireframe(adamsmat, lambmat, surface_pmf, rstride = 1 , cstride = 1)
-    pl.ylabel('$\lambda$')
-    pl.xlabel('Adams Value')
+    x,y = adamsmat.shape
+    if y == 1:
+      pl.plot(lambmat, surf)
+      pl.xlabel('$\lambda$')
+      pl.ylabel('surface')
+    else:
+      ax = Axes3D(fig)
+      ax.plot_wireframe(adamsmat, lambmat, surf, rstride = 1, cstride = 1)
+      pl.xlabel('Adams Value')
+      pl.ylabel('$\lambda$')
+
+    # pl.ylabel('$\lambda$')
+    # pl.xlabel('Adams Value')
+    print "\nFree energy surface minimum at highest lambda: %.4f" % surf[-1].min()
 
   return lambdas,gradients,stds,pmf,np.sqrt(pmf_std)
+
+def _obj_func ( x, y, z ):
+    """Objective function minimised to produce free energy surface
+    x is the trial surface, y is the free energy slices over B and z are
+    the free energy slices over lambda.
+    
+    The objective function compares relative heights of neighbouring points
+    on the trial surface with those of the input data free energy curves.
+    """
+    x = x.reshape ( y.shape )
+    tot = 0
+    for i in xrange ( x.shape[0] ):
+        for j in xrange ( x.shape[1] ):
+            if i == 0 and j == 0:
+                pass
+            elif i == 0:
+                tot += ( ( x[i,j] - x[i,j-1] ) - ( y[i,j] - y[i,j-1] ) )**2
+            elif j == 0:
+                tot += ( ( x[i,j] - x[i-1,j] ) - ( z[i,j] - z[i-1,j] ) )**2
+            else:
+                tot += ( ( ( x[i,j] - x[i-1,j] ) - ( z[i,j] - z[i-1,j] ) )**2 +
+                         ( ( x[i,j] - x[i,j-1] ) - ( y[i,j] - y[i,j-1] ) )**2 )
+    return tot
+
 #
 # If this is run from the command-line
 #
@@ -421,11 +477,14 @@ if __name__ == '__main__' :
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   parser.add_argument('--singlepath',action='store_true',default=False, help="whether to integrate over the lowest GCMC free energy B value when doing TI, instead of performing a weighted average")
   parser.add_argument('--steps',nargs="+",default=None, help="list of number of steps for each titration at each lambda value")
-  parser.add_argument('--plot',nargs="+",default=True, help="3D Plots the gradient and free energy surface against lambda and B values")
+  parser.add_argument('--plot',action='store_true',default=True, help="3D Plots the gradient and free energy surface against lambda and B values")
+  parser.add_argument('--quicksurf',action='store_true',default=False, help="Use a quick and dirty method to make free energy surfaces. This is faster but produces less quantitatively accurate surfaces.")
   args = parser.parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger()
+
+
 
   # Fix negative values of skip and max
   if args.max < 0 :
@@ -434,7 +493,7 @@ if __name__ == '__main__' :
     args.skip = -1
   # Do thermodynamic integration
   verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam,"weights":args.printWeights}
-  lambdas,gradients,grad_std,pmf,pmf_std= tigcmc(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.singlepath,args.steps,args.plot)
+  lambdas,gradients,grad_std,pmf,pmf_std= tigcmc(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.singlepath,args.steps,args.plot,args.quicksurf)
 
   # Do the fit
   if args.fitPMF :
