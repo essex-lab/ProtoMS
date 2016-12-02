@@ -830,7 +830,7 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyse and plot free energies from GCMC simulations")
   parser.add_argument('-d','--directories',nargs="+",help="the directories containing the GCMC simulation data, default=None",default=None)
   parser.add_argument('-f','--file',help="the name of the file to analyse. Default is results.",default="results")
-  parser.add_argument('-p','--plot',nargs="+",choices=["titration","fit","percentiles","pmf","excess","all"],help="whether to plot the GCMC simulation data or analysis, default=None",default=None)
+  parser.add_argument('-p','--plot',nargs="+",choices=["titration","fit","percentiles","pmf","all"],help="whether to plot the GCMC simulation data or analysis, default=None",default=None)
   parser.add_argument('-c','--calc',nargs="+",choices=["fit","pmf","minimum","excess","all"], help="fit an artificial neural network to the data, the potential of mean force to bind a specified number of waters, locate the minimum of the pmf",default=None)
   parser.add_argument('-s','--skip',help="the number of initial snapshots that will be discarded when fitting",type=int,default=0)
   parser.add_argument('-b','--bootstraps',help="the number of bootstrap samples to perform.",type=int,default=None)
@@ -1040,18 +1040,18 @@ if __name__ == '__main__' :
       currfig.savefig("Binding_Free_Energy.png")
       currfig.show(block=False)
 
-    if len(intersect(args.plot,["excess", "all"])) > 0 and len(intersect(args.calc,["minimum","excess","all",])) > 0:
-      mu_ex, N_ex, best_Ns = minimum_from_bequil(models,B,dG_hyd,kT=0.592,print_lines=False)
-      FigNum += 1 
-      plt.figure("Excess Chemical Potential")
-      for u in range(len(models)):
-        plt.plot(N_ex[u],mu_ex[u],alpha=0.1,color="blue",linewidth=3)
-      plt.axhline(y=dG_hyd,color="grey",linewidth=2)
-      plt.axvline(x=np.percentile(best_Ns,50),color="grey",linewidth=2)
-      plt.xlabel("Number of inserted waters",fontsize=15)
-      plt.savefig("Excess_Chem_Potential.png")
-      plt.ylabel("Excess chemical potential (kcal/mol)",fontsize=15)
-      plt.show(block=False)
+    # if len(intersect(args.plot,["excess", "all"])) > 0 and len(intersect(args.calc,["minimum","excess","all",])) > 0:
+    #   mu_ex, N_ex, best_Ns = minimum_from_bequil(models,B,dG_hyd,kT=0.592,print_lines=False)
+    #   FigNum += 1 
+    #   plt.figure("Excess Chemical Potential")
+    #   for u in range(len(models)):
+    #     plt.plot(N_ex[u],mu_ex[u],alpha=0.1,color="blue",linewidth=3)
+    #   plt.axhline(y=dG_hyd,color="grey",linewidth=2)
+    #   plt.axvline(x=np.percentile(best_Ns,50),color="grey",linewidth=2)
+    #   plt.xlabel("Number of inserted waters",fontsize=15)
+    #   plt.savefig("Excess_Chem_Potential.png")
+    #   plt.ylabel("Excess chemical potential (kcal/mol)",fontsize=15)
+    #   plt.show(block=False)
   
   
   
