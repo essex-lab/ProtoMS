@@ -32,7 +32,7 @@ if __name__ == '__main__' :
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to calculate free energy from TI/BAR/MBAR")
   parser.add_argument('-d','--directories',nargs="+",help="the root directory that contains all the output files of the simulation. Default is cwd.",default=["./"])
-  parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results_inst")
+  parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results")
   parser.add_argument('-s','--skip',type=int,help="the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0",default=0)
   parser.add_argument('-m','--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
   parser.add_argument('-t','--temperature',type=float,help="the simulation temperature in degrees. Default is 25.0",default=25.0)
