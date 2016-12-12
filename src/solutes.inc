@@ -130,12 +130,17 @@ c     Number of theta solute molecules
 c     Which kind of theta solute a solute is
       integer ThetaKind(MAXSOLUTES)
 
+c     Move success histograms
+      integer DihMoveAttempts(MAXSOLUTES,MAXSOLUTERESIDUES,MAXROTDIHS,20)
+      integer DihMoveSuccess(MAXSOLUTES,MAXSOLUTERESIDUES,MAXROTDIHS,20)
+      integer NRotDihs(MAXSOLUTES,MAXSOLUTERESIDUES)
+      
       common /DSOLDATA/ ZSolCoords,ZSolVal,SolBondLength,SolAngleSize,
      .                  SolDihedralSize,SolUreyBradleySize,SolBondDelta,SolAngleDelta,
      .                  SolDihedralDelta,ZSolDelta,SolDummy,
      .                  SolCentre,OldSolCentre,SolRadius,SolGeomCentre,
      .                  OldSolGeomCentre,SolADel,SolRDel,SolTDel,SolJCorr,SolJPmfOrd,SolJPmfCoeff,
-     .                  SolVariableVal,ZSolDihWell
+     .                  SolVariableVal,ZSolDihWell,DihMoveAttempts,DihMoveSuccess,NRotDihs
       common /ISOLDATA/ NSolutes,ZSolPar,ZSolMat,SolResidues,SolBond,SolAngle,
      .                  SolDihedral,SolUreyBradley,NSolBonds,NSolAngles,NSolDihedrals,
      .                  NSolUreyBradleys,NSolAtoms,NSolResidues,SolResidue,

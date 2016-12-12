@@ -874,6 +874,7 @@ if __name__ == "__main__":
   simgroup.add_argument('--dovacuum',action='store_true',help="turn on vacuum simulation for simulation types equilibration and sampling",default=False)
   simgroup.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
   simgroup.add_argument('--cleanup',action='store_true',help="Clean up extra files. Default=False",default=False)
+  simgroup.add_argument('--tune',action='store_true',help='Carry out dihedral tuning simulation',default=False)
   args = parser.parse_args()
  
   print r"""
@@ -1059,7 +1060,7 @@ if __name__ == "__main__":
   for repeat in repeats :
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
-    if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat : 
+    if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat :
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_vdw" in repeat :
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,ranseed,args)
@@ -1071,6 +1072,7 @@ if __name__ == "__main__":
       jaws2wat = "jaws2_not%d.pdb"%idx
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file+" "+jaws2wat,ligand_water,ranseed,args)
 
+    args.cmdfile=args.cmdfile.lower() #protoMS cannot handle cmd files containing upper case letters
     if free_cmd is not None : 
       free_cmd.writeCommandFile(args.cmdfile+repeat+"_free.cmd")
     if bnd_cmd is not None :

@@ -6,6 +6,7 @@
       include 'constants.inc'
       include 'enums.inc'
       include 'extraenergies.inc'
+      include 'simparams.inc'
 c###############################################################################
 c
 c     This function calculates the total harmonic restraint energy
@@ -37,9 +38,16 @@ c         calculate the distance to the restrained point
           distb = (icb(1)-HarmPoint(i,1))**2 + (icb(2)-HarmPoint(i,2))**2 + (icb(3)-HarmPoint(i,3))**2
           distf = (icf(1)-HarmPoint(i,1))**2 + (icf(2)-HarmPoint(i,2))**2 + (icf(3)-HarmPoint(i,3))**2
           
-          harmonicRestraintEnergy = harmonicRestraintEnergy + HarmConst(i)*dist
-          inrgb = inrgb + HarmConst(i)*distb
-          inrgf = inrgf + HarmConst(i)*distf
+
+          if ( HarmScale(i) ) then
+             harmonicRestraintEnergy = harmonicRestraintEnergy + HarmConst(i)*dist*Lambda
+             inrgb = inrgb + HarmConst(i)*distb*LambdaB
+             inrgf = inrgf + HarmConst(i)*distf*LambdaF
+          else
+             harmonicRestraintEnergy = harmonicRestraintEnergy + HarmConst(i)*dist
+             inrgb = inrgb + HarmConst(i)*distb
+             inrgf = inrgf + HarmConst(i)*distf
+          endif 
         enddo
       else
 c       loop through all of the restraints and see if they need updating
@@ -52,9 +60,16 @@ c           calculate the distance to the restrained point
             distb = (icb(1)-HarmPoint(i,1))**2 + (icb(2)-HarmPoint(i,2))**2 + (icb(3)-HarmPoint(i,3))**2
             distf = (icf(1)-HarmPoint(i,1))**2 + (icf(2)-HarmPoint(i,2))**2 + (icf(3)-HarmPoint(i,3))**2
           
-            harmonicRestraintEnergy = harmonicRestraintEnergy + HarmConst(i)*dist
-            inrgb = inrgb + HarmConst(i)*distb
-            inrgf = inrgf + HarmConst(i)*distf
+
+            if ( HarmScale(i) ) then
+               harmonicRestraintEnergy = harmonicRestraintEnergy + HarmConst(i)*dist*Lambda
+               inrgb = inrgb + HarmConst(i)*distb*LambdaB
+               inrgf = inrgf + HarmConst(i)*distf*LambdaF
+            else
+               harmonicRestraintEnergy = harmonicRestraintEnergy + HarmConst(i)*dist
+               inrgb = inrgb + HarmConst(i)*distb
+               inrgf = inrgf + HarmConst(i)*distf
+            endif 
           endif
         enddo
       endif      

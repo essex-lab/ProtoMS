@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2015.11.16)  18 DEC 2015 16:49
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2015.12.16)  21 MAR 2016 20:49
 entering extended mode
  %&-line parsing enabled.
 **ProtoMS.tex
@@ -666,10 +666,30 @@ Now handling font encoding PD1 ...
 (/usr/share/texmf/tex/latex/config/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
-(/usr/share/texmf/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2006/08/22 v2.4 Connects package keyval with LaTeX options (
-HO)
+(/home/cica1d14/texmf/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
+(/home/cica1d14/texmf/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
+(/home/cica1d14/texmf/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
+(/home/cica1d14/texmf/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(/home/cica1d14/texmf/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+
+(/home/cica1d14/texmf/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
 Package hyperref Info: Option `colorlinks' set `true' on input line 2238.
 Package hyperref Info: Option `breaklinks' set `true' on input line 2238.
 Package hyperref Info: Hyper figures OFF on input line 2288.
@@ -704,9 +724,12 @@ Package hyperref Info: Link coloring ON on input line 3120.
 File: hpdftex.def 2007/02/07 v6.75r Hyperref driver for pdfTeX
 \Fld@listcount=\count120
 )
-(/usr/share/texmf/tex/latex/oberdiek/hypcap.sty
-Package: hypcap 2006/02/20 v1.5 Adjusting anchors of captions (HO)
-)
+(/home/cica1d14/texmf/tex/latex/oberdiek/hypcap.sty
+Package: hypcap 2011/02/16 v1.11 Adjusting the anchors of captions (HO)
+
+(/home/cica1d14/texmf/tex/latex/oberdiek/letltxmacro.sty
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+))
 \DUlineblockindent=\skip74
 
 (/usr/share/texmf/tex/latex/float/float.sty
@@ -731,51 +754,51 @@ Writing index file ProtoMS.idx
 (./ProtoMS.aux)
 \openout1 = `ProtoMS.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 121.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 121.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 126.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 126.
 
  (/usr/share/texmf/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 121.
-LaTeX Font Info:    ... okay on input line 121.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 121.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 126.
+LaTeX Font Info:    ... okay on input line 126.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 126.
 
 (/usr/share/texmf/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
-Package hyperref Info: Link coloring ON on input line 121.
+Package hyperref Info: Link coloring ON on input line 126.
 
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
 
-(/usr/share/texmf/tex/latex/oberdiek/refcount.sty
-Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
+(/home/cica1d14/texmf/tex/latex/oberdiek/refcount.sty
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
 )
 \c@section@level=\count123
 )
-LaTeX Info: Redefining \ref on input line 121.
-LaTeX Info: Redefining \pageref on input line 121.
+LaTeX Info: Redefining \ref on input line 126.
+LaTeX Info: Redefining \pageref on input line 126.
  (./ProtoMS.out)
 (./ProtoMS.out)
 \@outlinefile=\write6
 \openout6 = `ProtoMS.out'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 124--124
+Underfull \hbox (badness 10000) in paragraph at lines 129--129
 
  []
 
@@ -784,21 +807,21 @@ File: logo.png Graphic file (type png)
  <use logo.png>
 File: logo.png Graphic file (type png)
  <use logo.png>
-LaTeX Font Info:    Try loading font information for T1+phv on input line 124.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 129.
 
 (/usr/share/texmf/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 129.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 124.
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 129.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 129.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 129.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 124.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 129.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./logo.png (PNG copy)>] [2
@@ -822,16 +845,16 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
 ]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 131.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 136.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 131.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 136.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 131.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 144.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 136.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 149.
 (/usr/share/texmf/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 156.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 161.
 
 
 (/usr/share/texmf/tex/latex/psnfss/ts1ptm.fd
@@ -861,405 +884,405 @@ File: alchemy.png Graphic file (type png)
 Chapter 4.
 [21] [22]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 1029.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 1033.
  [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35]
-[36] [37] [38] [39] [40]
+[36] [37] [38]
 Chapter 5.
-LaTeX Font Info:    Try loading font information for TS1+pcr on input line 2091
+LaTeX Font Info:    Try loading font information for TS1+pcr on input line 2095
 .
 (/usr/share/texmf/tex/latex/psnfss/ts1pcr.fd
 File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
-) [41
+) [39
 
-] [42] [43] [44] [45] [46]
-[47] [48] [49] [50] [51] [52] [53]
-Underfull \hbox (badness 10000) in paragraph at lines 2714--2715
+] [40] [41] [42] [43] [44]
+[45] [46] [47] [48] [49] [50]
+Underfull \hbox (badness 10000) in paragraph at lines 2718--2719
 []\T1/ptm/m/n/10 ProtoMS tries to fol-low the PDB for-mat when it reads in PDB 
 lines (see
  []
 
-[54] [55] [56] [57] [58
-
-]
+[51] [52] [53] [54]
 Chapter 6.
 
-Overfull \hbox (108.24506pt too wide) in paragraph at lines 2838--2839
+Overfull \hbox (108.24506pt too wide) in paragraph at lines 2842--2843
 []\T1/pcr/m/n/10 protoms.py [-s none|equilibration|sampling|dualtopology|single
 topology|gcmc|jaws1|jaws2]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 [-f folder1 folder2] [-p protein.pdb] [-sc scoop.pdb] [-l lig1.p
 db
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 lig2.pdb ...] [-t template1 template2 ...] [-w water.pdb] [-c
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 cmdfile] [-r nrepeats | prefix] [--outfolder folder] [--atomname
 s
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 namefile] [--watmodel tip4p|tip3p] [--waterbox watbox] [--charge
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 charge1 charge2] [--singlemap mapfile] [--center cent] [--innerc
 ut
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 icut] [--outercut ocut] [--flexin sidechain|flexible|rigid]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 [--flexout sidechain|flexible|rigid] [--scooplimit N] [--capradi
 us
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 radius] [--lambdas nlambdas | lambda1 lambda2 ...] [--adams B1 B
 2
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 ...] [--jawsbias bias] [--gcmcwater wat.pdb | N] [--gcmcbox box.
 pdb
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2838--2839
+Underfull \hbox (badness 10000) in paragraph at lines 2842--2843
 \T1/pcr/m/n/10 | X Y Z A B C] [--nequil N] [--nprod N] [--dumpfreq N] [--absolu
 te]
  []
 
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 2842.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 2846.
 
-Overfull \hbox (162.06357pt too wide) in paragraph at lines 2842--2844
+Overfull \hbox (162.06357pt too wide) in paragraph at lines 2846--2848
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2872--2874
+Underfull \hbox (badness 10000) in paragraph at lines 2876--2878
 []
  []
 
-[59]
-Underfull \hbox (badness 10000) in paragraph at lines 2954--2959
+[55
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 2958--2963
 []\T1/ptm/m/n/10 optional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2963--2968
+Underfull \hbox (badness 10000) in paragraph at lines 2967--2972
 []\T1/ptm/m/n/10 optional,
  []
 
 
-Overfull \hbox (22.97598pt too wide) in paragraph at lines 2984--2988
+Overfull \hbox (22.97598pt too wide) in paragraph at lines 2988--2992
 []
  []
 
 
-Overfull \hbox (59.71228pt too wide) in paragraph at lines 3004--3007
+Overfull \hbox (59.71228pt too wide) in paragraph at lines 3008--3011
 []
  []
 
 
-Overfull \hbox (164.80135pt too wide) in paragraph at lines 3011--3014
+Overfull \hbox (164.80135pt too wide) in paragraph at lines 3015--3018
 []
  []
 
 LaTeX Font Info:    Font shape `T1/ptm/bx/it' in size <10> not available
-(Font)              Font shape `T1/ptm/b/it' tried instead on input line 3036.
-[60]
-Underfull \hbox (badness 10000) in paragraph at lines 3115--3117
+(Font)              Font shape `T1/ptm/b/it' tried instead on input line 3040.
+[56]
+Underfull \hbox (badness 10000) in paragraph at lines 3119--3121
 []\T1/ptm/m/n/10 only cre-ated if the --
  []
 
-[61] [62]
+[57] [58]
 Chapter 7.
 
-Underfull \hbox (badness 10000) in paragraph at lines 3192--3193
+Underfull \hbox (badness 10000) in paragraph at lines 3196--3197
 []\T1/pcr/m/n/10 ambertools.py -f pdbfile [pdbfile2 ...] [-n name name2 ...] [-
 c charge
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3236--3237
+Underfull \hbox (badness 10000) in paragraph at lines 3240--3241
 []\T1/pcr/m/n/10 build_template.py -p prepifile [-f frcmodfile] [-z zmatfile] [
 -o outfile] [-n
  []
 
-[63
+[59
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 3303--3304
+Underfull \hbox (badness 10000) in paragraph at lines 3307--3308
 []\T1/pcr/m/n/10 calc_bar.py [-d directory] [-r results] [-s nskip] [-m nmax] [
 -t temperature]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3336--3338
+Underfull \hbox (badness 10000) in paragraph at lines 3340--3342
 []\T1/ptm/m/n/10 optional, de-
  []
 
-[64]
-Underfull \hbox (badness 10000) in paragraph at lines 3392--3393
+[60]
+Underfull \hbox (badness 10000) in paragraph at lines 3396--3397
 []\T1/pcr/m/n/10 calc_clusters.py -f file1 [file2 ...] [-o outfile] [-m molecul
 e] [-a atom]
  []
 
-[65]
-Underfull \hbox (badness 10000) in paragraph at lines 3467--3468
+[61]
+Underfull \hbox (badness 10000) in paragraph at lines 3471--3472
 []\T1/pcr/m/n/10 calc_density.py -f file1 [file2 ...] [-o outfile] [-r residue]
  [-a atom] [-p
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3467--3468
+Underfull \hbox (badness 10000) in paragraph at lines 3471--3472
 \T1/pcr/m/n/10 padding] [-s spacing] [-e extent] [-n norm] [-t sphere|gaussian]
  [--skip N]
  []
 
-[66]
-Underfull \hbox (badness 10000) in paragraph at lines 3569--3570
+[62]
+Underfull \hbox (badness 10000) in paragraph at lines 3573--3574
 []\T1/pcr/m/n/10 calc_dg.py [-d directory directory2 ...] [-r results] [-e ti|b
 ar|mbar]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3569--3570
+Underfull \hbox (badness 10000) in paragraph at lines 3573--3574
 \T1/pcr/m/n/10 [-s nskip] [-m nmax] [-t temperature] [-b nbootstraps] [-pe] [-p
 g] [-gr]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3610--3612
+Underfull \hbox (badness 10000) in paragraph at lines 3614--3616
 []\T1/ptm/m/n/10 optional, de-
  []
 
 
-Overfull \hbox (22.245pt too wide) in paragraph at lines 3670--3671
+Overfull \hbox (22.245pt too wide) in paragraph at lines 3674--3675
 []\T1/pcr/m/n/10 calc_gci.py -d directories [-f file] [-p titration|fit|percent
 iles|pmf|excess|all]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3670--3671
+Underfull \hbox (badness 10000) in paragraph at lines 3674--3675
 \T1/pcr/m/n/10 [-c fit|pmf|minimum|excess|all] [-s nskip] [-b nboots] [-i] [-o]
  [--steps
  []
 
-[67] [68]
-Underfull \hbox (badness 10000) in paragraph at lines 3774--3775
+[63] [64]
+Underfull \hbox (badness 10000) in paragraph at lines 3778--3779
 []\T1/pcr/m/n/10 calc_gcsingle.py -d directories [-f file] [-s nskip] [-c] [-p]
  [--guess
  []
 
-[69]
-Underfull \hbox (badness 10000) in paragraph at lines 3823--3824
+[65]
+Underfull \hbox (badness 10000) in paragraph at lines 3827--3828
 []\T1/pcr/m/n/10 calc_replicapath.py -f file1 [file2 ...] -p replica1 [replica2
  ...] -k
  []
 
-[70]
-Underfull \hbox (badness 10000) in paragraph at lines 3876--3877
+[66]
+Underfull \hbox (badness 10000) in paragraph at lines 3880--3881
 []\T1/pcr/m/n/10 calc_rmsd.py -i pdbfile -f file1 [file2 ...] -l ligand [-a ato
 m] [-t
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3918--3919
+Underfull \hbox (badness 10000) in paragraph at lines 3922--3923
 []\T1/pcr/m/n/10 calc_series.py -f file1 [file2 ...] [-o outprefix] [-s series 
 series2 ...]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3918--3919
+Underfull \hbox (badness 10000) in paragraph at lines 3922--3923
 \T1/pcr/m/n/10 [-p sep|sub|single|single_first0|single_last0] [--nperm N] [--th
 reshold N]
  []
 
 
-Overfull \hbox (7.99269pt too wide) in paragraph at lines 3939--3946
+Overfull \hbox (7.99269pt too wide) in paragraph at lines 3943--3950
 []
  []
 
-[71]
-Underfull \hbox (badness 10000) in paragraph at lines 3968--3970
+[67]
+Underfull \hbox (badness 10000) in paragraph at lines 3972--3974
 []\T1/ptm/m/n/10 optional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4005--4006
+Underfull \hbox (badness 10000) in paragraph at lines 4009--4010
 []\T1/pcr/m/n/10 calc_ti.py [-d directory] [-r results] [-s nskip] [-m nmax] [-
 pg] [-pp] [-pl]
  []
 
-[72] [73] [74]
-Underfull \hbox (badness 10000) in paragraph at lines 4233--4234
+[68] [69] [70]
+Underfull \hbox (badness 10000) in paragraph at lines 4237--4238
 []\T1/pcr/m/n/10 distribute_waters.py -b box -m molecules [-o outfile] [--model
  t3p|t4p ]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4242--4244
+Underfull \hbox (badness 10000) in paragraph at lines 4246--4248
 []\T1/ptm/m/n/10 optional, de-fault =
  []
 
 
-Overfull \hbox (21.09084pt too wide) in paragraph at lines 4256--4258
+Overfull \hbox (21.09084pt too wide) in paragraph at lines 4260--4262
 []
  []
 
 
-Overfull \hbox (201.46878pt too wide) in paragraph at lines 4262--4264
+Overfull \hbox (201.46878pt too wide) in paragraph at lines 4266--4268
 []
  []
 
-[75]
-Overfull \hbox (70.245pt too wide) in paragraph at lines 4327--4328
+[71]
+Overfull \hbox (70.245pt too wide) in paragraph at lines 4331--4332
 []\T1/pcr/m/n/10 generate_input.py [-s equilibration|sampling|dualtopology|sing
 letopology|gcmc|jaws1|jaws2]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4327--4328
+Underfull \hbox (badness 10000) in paragraph at lines 4331--4332
 \T1/pcr/m/n/10 [-p protein.pdb] [-l lig1.pdb lig2.pdb ...] [-t template1 templa
 te2
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4327--4328
+Underfull \hbox (badness 10000) in paragraph at lines 4331--4332
 \T1/pcr/m/n/10 ...] [-pw protwat.pdb] [-lw ligwat.pdb] [-o outfile] [--outfolde
 r folder]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4327--4328
+Underfull \hbox (badness 10000) in paragraph at lines 4331--4332
 \T1/pcr/m/n/10 [--lambdas nlambdas | lambda1 lambda2 ...] [--adams B1 B2 ...] [
 --jawsbias
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4327--4328
+Underfull \hbox (badness 10000) in paragraph at lines 4331--4332
 \T1/pcr/m/n/10 bias] [--gcmcwater wat.pdb] [--gcmcbox box.pdb] [--nequil N] [--
 nprod N]
  []
 
 
-Overfull \hbox (132.06357pt too wide) in paragraph at lines 4330--4332
+Overfull \hbox (132.06357pt too wide) in paragraph at lines 4334--4336
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4348--4350
+Underfull \hbox (badness 10000) in paragraph at lines 4352--4354
 []
  []
 
 
-Overfull \hbox (19.64603pt too wide) in paragraph at lines 4378--4382
+Overfull \hbox (19.64603pt too wide) in paragraph at lines 4382--4386
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4398--4400
+Underfull \hbox (badness 10000) in paragraph at lines 4402--4404
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4404--4406
+Underfull \hbox (badness 10000) in paragraph at lines 4408--4410
 []
  []
 
-[76] [77]
-Underfull \hbox (badness 10000) in paragraph at lines 4546--4547
+[72] [73]
+Underfull \hbox (badness 10000) in paragraph at lines 4550--4551
 []\T1/pcr/m/n/10 make_single.py -t0 template0 -t1 template1 -p0 pdbfile0 -p1 pd
 bfile1 [-m map]
  []
 
-[78]
-Underfull \hbox (badness 10000) in paragraph at lines 4679--4680
+[74]
+Underfull \hbox (badness 10000) in paragraph at lines 4683--4684
 []\T1/pcr/m/n/10 pms2pymbar.py [-d directory] [-r results] [-o outfile] [-s nsk
 ip] [-m nmax]
  []
 
-[79]
-Underfull \hbox (badness 10000) in paragraph at lines 4755--4756
+[75]
+Underfull \hbox (badness 10000) in paragraph at lines 4759--4760
 []\T1/pcr/m/n/10 scoop.py -p proteinfile [-l ligandfile] [-o outfile] [--center
  center]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4755--4756
+Underfull \hbox (badness 10000) in paragraph at lines 4759--4760
 \T1/pcr/m/n/10 [--innercut icut] [--outercut ocut] [--flexin sidechain|flexible
 |rigid]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4755--4756
+Underfull \hbox (badness 10000) in paragraph at lines 4759--4760
 \T1/pcr/m/n/10 [--flexout sidechain|flexible|rigid] [--terminal keep|doublekeep
 |neutralize]
  []
 
-[80]
-Underfull \hbox (badness 10000) in paragraph at lines 4791--4796
+
+Underfull \hbox (badness 10000) in paragraph at lines 4795--4800
 []\T1/ptm/m/n/10 optional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4800--4805
+Underfull \hbox (badness 10000) in paragraph at lines 4804--4809
 []\T1/ptm/m/n/10 optional, de-fault =
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4809--4814
+Underfull \hbox (badness 10000) in paragraph at lines 4813--4818
 []
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 4864--4865
+[76]
+Underfull \hbox (badness 10000) in paragraph at lines 4868--4869
 []\T1/pcr/m/n/10 solvate.py -b boxfile [-s solutefile] [-pr proteinfile] [-o ou
 tfile] [-g
  []
 
-[81]
-Underfull \hbox (badness 10000) in paragraph at lines 4915--4919
+
+Underfull \hbox (badness 10000) in paragraph at lines 4919--4923
 []\T1/ptm/m/n/10 optional, de-fault = Pro-toMS
  []
 
-[82] [83] [84
+[77] [78] [79] [80
 
 ]
 Chapter 8.
-[85] [86] [87] [88] [89] (./ProtoMS.ind [90] [91
+[81] [82] [83] [84] [85] (./ProtoMS.ind [86] [87
 
 
-] [92
+] [88
 
 ]) (./ProtoMS.aux) ) 
 Here is how much of TeX's memory you used:
- 6924 strings out of 256214
- 89478 string characters out of 1916999
- 163332 words of memory out of 1500000
- 9723 multiletter control sequences out of 10000+200000
+ 7235 strings out of 256214
+ 94464 string characters out of 1916999
+ 169473 words of memory out of 1500000
+ 10019 multiletter control sequences out of 10000+200000
  68804 words of font info for 73 fonts, out of 1200000 for 2000
  646 hyphenation exceptions out of 8191
- 38i,18n,51p,1869b,513s stack positions out of 5000i,500n,6000p,200000b,15000s
+ 43i,18n,51p,1869b,521s stack positions out of 5000i,500n,6000p,200000b,15000s
 {/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/t
 exmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm
 /cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi5.pfb></usr/share/texm
@@ -1274,9 +1297,9 @@ b></usr/share/texmf/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf/fonts
 /type1/urw/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmbi8a.pfb
 ></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on ProtoMS.pdf (96 pages, 730619 bytes).
+Output written on ProtoMS.pdf (92 pages, 710030 bytes).
 PDF statistics:
- 1152 PDF objects out of 1200 (max. 8388607)
- 274 named destinations out of 1000 (max. 131072)
+ 1135 PDF objects out of 1200 (max. 8388607)
+ 270 named destinations out of 1000 (max. 131072)
  516 words of extra memory for PDF output out of 10000 (max. 10000000)
 

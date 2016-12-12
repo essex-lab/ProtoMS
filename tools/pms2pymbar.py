@@ -209,7 +209,7 @@ if __name__ == '__main__' :
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to extract ProtoMS results for pymbar")
   parser.add_argument('-d','--directory',help="the root directory that contains all the output files of the simulation. Default is cwd.",default="./")
-  parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results_inst")
+  parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results")
   parser.add_argument('-o','--out',help="the name of the file to write. Default is pymbar_energy. ",default="pymbar_energy")
   parser.add_argument('-s','--skip',type=int,help="the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0",default=0)
   parser.add_argument('-m','--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)#
@@ -239,6 +239,6 @@ if __name__ == '__main__' :
     (Deltaf_ij, dDeltaf_ij) = (resp[0],resp[1])
     print "MBAR estimate: %-6.2f +- %-6.2f"%(Deltaf_ij[0,-1]*RT,dDeltaf_ij[0,-1]*RT)
     
-    if not args.nobar : 
+    if not args.nobar :
       DeltaF,dDeltaF = bar(energies,RT)
       print "BAR estimate: %-6.2f +- %-6.2f"%(DeltaF*RT,dDeltaF*RT)

@@ -63,12 +63,12 @@ execute_process(COMMAND python
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none -fprofile-arcs -ftest-coverage")
     if(CMAKE_BUILD_TYPE MATCHES "Release")
-        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -fgcse-lm -fgcse-sm -fgcse-las -fsched-spec-load")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -fgcse-lm -fgcse-sm -fgcse-las -fsched-spec-load -fprofile-arcs -ftest-coverage")
     endif()
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -fprofile-arcs -ftest-coverage")
     endif()
 
 # Set flags for Intel compiler
@@ -148,6 +148,15 @@ endif()
 # Optional 'make install' step
 install(TARGETS protoms3
         RUNTIME DESTINATION "./")
+
+#Enabling creation and submission of dashboard
+##configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
+#               @only
+#              )
+              
+# Uncomment below 2 lines for getting coverage information               
+## include(CTest)
+## include(CTestConfig.cmake)
 
 # Add testing
 # Needs actual unit/integration tests here

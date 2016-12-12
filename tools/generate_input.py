@@ -437,7 +437,8 @@ class Sampling(ProteinLigandSimulation) :
                     nequil=5E6,
                     nprod=40E6,
                     dumpfreq=1E5,
-                    outprefix="") :
+                    outprefix="",
+                    tune=False) :
     """
     Parameters
     ----------
@@ -459,8 +460,13 @@ class Sampling(ProteinLigandSimulation) :
       the dump frequency 
     outprefix  : string, optional
       the prefix for all output files
+    tune : boolean, optional
+      perform a dihedral tuning simulation, default False
     """                 
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
+
+    if tune:
+      self.setParameter ( 'tunedihedral', 'on' )
 
     self.setDump("results write results",dumpfreq)
     self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
@@ -999,7 +1005,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
                          templates=templates,solvent=protein_water,
                          outprefix="bnd_",
                          nequil=settings.nequil,outfolder=settings.outfolder+"_bnd",
-                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed,)
+                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed,tune=settings.tune)
     elif ligands is not None :      
       if settings.dovacuum : 
         solvent = None
@@ -1012,7 +1018,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
                          templates=templates,
                          solvent=solvent,outprefix=prestr+"_",
                          nequil=settings.nequil,outfolder=settings.outfolder+"_"+prestr,
-                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed)
+                         nprod=settings.nprod,dumpfreq=settings.dumpfreq,ranseed=ranseed,tune=settings.tune)
       if settings.dovacuum :
         gas_cmd = free_cmd
         free_cmd = None
@@ -1134,12 +1140,15 @@ if __name__ == "__main__":
   parser.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   parser.add_argument('--ranseed',help="the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None",default=None)
+  parser.add_argument('--tune',action='store_true',help='',default=False)
   args = parser.parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("generate_input_py.log")
 
   free_cmd,bnd_cmd,gas_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args.ranseed,args) 
+
+  args.out = args.out.lower() #protoMS cannot handle cmd files containing upper case letters
   if free_cmd is not None : 
     free_cmd.writeCommandFile(args.out+"_free.cmd")
   if bnd_cmd is not None : 

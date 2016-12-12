@@ -7,6 +7,7 @@
       include 'enums.inc'
       include 'moves.inc'
       include 'pressure.inc'
+      include 'flags.inc'
 c#############################################################
 c
 c     This prints out the attempted and accepted moves for
@@ -16,7 +17,7 @@ c     (C) Christopher Woods     19 August 2002
 c
 c#############################################################
 
-      integer i,j,itry,iacp,igcs,isol
+      integer i,j,k,l,itry,iacp,igcs,isol
       integer lineLength
       double precision iprcnt
 
@@ -80,7 +81,34 @@ c#############################################################
             endif
           endif
         enddo
+
+        if (tunedihedral) then
+           do i=1,NSolutes
+              do k=1,NSolResidues(i)
+                 write(printstring,"('Move histograms for solute ',i1, a)")
+     &                i
+                 call prettyLine(ACCPT,printstring)
+                 do l=1,NRotDihs(i,k)
+                    write(printstring,"('Dihedral ',i1, a)")
+     &                   l
+                    call prettyLine(ACCPT,printstring)
+                    do j=1,20
+                       if (DihMoveAttempts(i,k,l,j).gt.0) then
+                          write(printstring,22) ( float ( DihMoveSuccess(i,k,l,j) ) / float ( DihMoveAttempts(i,k,l,j) ) )
+                       else
+                          write(printstring,22) 0.0
+                       endif
+ 22                    format( f8.3 )
+                       call printLine(ACCPT,printstring)
+                       
+                    enddo
+                 enddo
+              enddo
+           enddo
+        endif
       endif
+
+      
       
       if (NSolvents.gt.0) then
         write(printstring,"('Attempt/accept/% moves for the solvent')")

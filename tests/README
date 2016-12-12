@@ -42,11 +42,162 @@ To run the tests using unittest, type:
 
         python -m unittest discover tests/<test_folder>/<test_script.py>
 
-
-To run all the tests using CTest, type in the build directory which has test configuration file:
+Once the project is built, to execute all the tests using CTest, type in the build directory which has test configuration file:
 
         ctest
 
         OR
 
         make test
+
+Code coverage analysis for ProtoMS codebase
+===========================================
+
+Code coverage data gives an important insight on how effective our test suite is, what parts of ProtoMS source code are thoroughly executed.
+Specific areas of code which are not exercised by the test suite can be found from the code coverage report.
+
+We are using CTest with CDash, and [coverage.py](http://nedbatchelder.com/code/coverage/) as tools for measuring ProtoMS code coverage to validate that the written tests check the code, to identify the
+modules that have been exercised by the developed test suite, and which haven't been.
+
+The data gathered using coverage analysis can be used to measure and improve the test process.
+
+Coverage Analysis with CTest and CDash (GNU Compilers):
+=======================================================
+CTest supports coverage information build types. CTest and CDash will show which parts of the code are run during the testing of ProtoMS. To use CDash and getting the coverage information:
+
+1. Add the following flags used to compile ProtoMS in CMakeLists.txt file before the project is configured with CMake:
+
+   -fprofile-arcs -ftest-coverage
+
+as below:
+
+``
+ # Set flags for GNU compiler
+ if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
+    message("-- Using GNU compiler flags")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none -fprofile-arcs -ftest-coverage")
+    if(CMAKE_BUILD_TYPE MATCHES "Release")
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -fgcse-lm -fgcse-sm -fgcse-las -fsched-spec-load -fprofile-arcs -ftest-coverage")
+    endif()
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -fprofile-arcs -ftest-coverage")
+    endif()
+``
+
+ 2. Create a file named "CTestConfig.cmake" in the top-level directory of the source, and set the dashboard preferences in case you want to submit to other server. If you're using CDash server, you can download a preconfigured file from the project page on that server ("Settings"/"Project", tab "Miscellaneous") (which you will be creating prior to testing). An example of a `CTestConfig.cmake` for project `protoms`:
+
+ ``
+ ## This file should be placed in the root directory of your project.
+ ## Then modify the CMakeLists.txt file in the root directory of your
+ ## project to incorporate the testing dashboard.
+ ##
+ ## # The following are required to submit to the CDash dashboard:
+ ##   ENABLE_TESTING()
+ ##   INCLUDE(CTest)
+
+ set(CTEST_PROJECT_NAME "protoms")
+ set(CTEST_NIGHTLY_START_TIME "01:00:00 EST")
+
+ set(CTEST_DROP_METHOD "http")
+ set(CTEST_DROP_SITE "open.cdash.org")
+ set(CTEST_DROP_LOCATION "/submit.php?project=protoms")
+ set(CTEST_DROP_SITE_CDASH TRUE)
+
+``
+ 
+ Here are the ways of doing so and getting the coverage information either locally or on CDash testing server:
+
+    * SUBMIT LOCALLY:
+
+      1. Since we already defined a number of tests for our project in the `tests/` directory, we just have to run those tests and submit them to dashboard. We include CTest module in our toplevel `CMakeLists.txt` file. You just have to uncomment below code in `CMakeLists.txt`:
+
+      ``
+      #Enabling creation and submission of dashboard
+      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
+               @only
+              )
+      include(CTest)
+      include(CTestConfig.cmake)
+      ``
+
+      2. Create file "CTestConfig.cmake" as mentioned above with the commands below to specify the name of the project for the dashboard:
+
+      ``
+      #where to submit CTest results
+      set(CTEST_PROJECT_NAME "protoms")
+
+      ``
+      CTest will read this file when it runs. To Create a simple dashboard following this, run below steps in the main project directory:
+
+      ``
+      mkdir build 
+      cd build
+      cmake ..
+      make install
+      ctest -D Experimental
+      ``
+
+      The coverage information can be found then in the `build` directory under the newly created `Testing` folder with the `date-timestamp` and `CoverageInfo` directories.
+
+    * SUBMIT to CDASH SERVER:
+
+      1. Uncomment below lines in `CMakeLists.txt`:
+
+      ``
+      #Enabling creation and submission of dashboard
+      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
+               @only
+              )
+              
+      include(CTest)
+      include(CTestConfig.cmake)
+      ``
+
+      2. Either download `CTestConfig.cmake` from the project `protoms` that you create in your CDash account as mentioned above or create the file with below content:
+
+      ``
+      ## This file should be placed in the root directory of your project.
+      ## Then modify the CMakeLists.txt file in the root directory of your
+      ## project to incorporate the testing dashboard.
+      ##
+      ## # The following are required to submit to the CDash dashboard:
+      ##   ENABLE_TESTING()
+      ##   INCLUDE(CTest)
+
+      #where to submit CTest results
+      set(CTEST_PROJECT_NAME "protoms")
+
+      set(CTEST_NIGHTLY_START_TIME "01:00:00 EST")
+      set(CTEST_DROP_METHOD "http")
+      set(CTEST_DROP_SITE "my.cdash.org")
+      set(CTEST_DROP_LOCATION "/submit.php?project=protoms")
+      set(CTEST_DROP_SITE_CDASH TRUE)
+      ``
+
+      Run below steps in the main project directory:
+
+      ``
+      mkdir build 
+      cd build
+      cmake ..
+      make install
+      ctest -D Experimental
+      ``
+
+      3. You can now check the coverage report online at below location:
+
+      ``
+      http://my.cdash.org/index.php?project=protoms
+      ``
+
+Coverage Analysis with Coverage.py:
+===================================
+
+Coverage.py package is included in the `requirements.txt` file and can be installed with other third-party modules as mentioned above.
+
+Or by using "pip install coverage" or "easy_install coverage".
+
+- A coverage report can be activated with the `--with-coverage` switch or `NOSE_WITH_COVERAGE` environment variable.
+- `--cover-package` switch or `NOSE_COVER_PACKAGE` environment variable can be used to restrict the coverage report to particular modules or modules from a particular package or packages.
+
+The "nosetests" package also has a plugin that makes generating code coverage information from Python packages easy.

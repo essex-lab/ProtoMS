@@ -1,6 +1,7 @@
 """Library of classes for dealing with Amber parameter files."""
 
 import os, sys
+from prmtop import chunks
 
 class AmbParameterAtm:
     def __init__ ( self, args ):
@@ -340,6 +341,8 @@ class AmbParameterSet:
             
     def write_protoms_ff ( self, fname ):
 
+        print "Assuming standard Amber scaling for 1-4 nonbonded interactions"
+
         s = """mode info
 ljcombine arithmetic
 scl14coul  0.833333
@@ -536,3 +539,151 @@ class ResiduesFile:
                         chain.rest.append ( line )
                     elif mode == 'res':
                         res.rest.append ( line )
+
+class TnkAtom ( object ):
+    def __init__ ( self, line ):
+        cols = line.split ()
+        self.typ_id = int ( cols[2] )
+        self.name = cols[3]
+
+class TnkBond ( object ):
+    def __init__ ( self, line, atms ):
+        cols = line.split ()
+        at_ids = map ( int, cols[1:3] )
+        self.at1, self.at2 = [ atms[i].name for i in at_ids ]
+        self.k, self.b0 = map ( float, cols[3:] )
+
+class TnkAngle ( object ):
+    def __init__ ( self, line, atms ):
+        cols = line.split ()
+        at_ids = map ( int, cols[1:4] )
+        self.at1, self.at2, self.at3 = [ atms[i].name for i in at_ids ]
+        self.k, self.b0 = map ( float, cols[4:] )
+
+class TnkDihTerm ( object ):
+    def __init__ ( self, chnk ):
+        self.height = float ( chnk[0] )
+        self.phi0 = float ( chnk[1] )
+        self.period = int ( chnk[2] )
+
+class TnkDih ( object ):
+    def __init__ ( self, line, atms ):
+        cols = line.split ()
+        at_ids = map ( int, cols[1:5] )
+        mod_ids = []
+        for i in at_ids:
+            try:
+                mod_ids.append ( atms[i].name )
+            except KeyError:
+                mod_ids.append ( 'X' )
+
+        self.at1, self.at2, self.at3, self.at4 = mod_ids
+        self.terms = {}
+
+        for chnk in chunks ( cols[5:], 3 ):
+            term = TnkDihTerm ( chnk )
+            self.terms[term.period] = term
+            
+
+class TnkParameterSet ( object ):
+    def __init__ ( self ):
+        self.atms = {}
+        self.angs = {}
+        self.bnds = {}
+        self.dihs = {}
+        self.pref_dihs = {}
+        self.cljs = cljs ()
+
+    def parse ( self, fname ):
+        with open ( fname ) as f:
+            for line in f:
+                if line.startswith ( 'atom' ):
+                    at = TnkAtom ( line )
+                    self.atms[at.typ_id] = at
+                    
+                if line.startswith ( 'bond' ):
+                    bnd = TnkBond ( line, self.atms )
+                    if 'DM' not in (bnd.at1,bnd.at2):
+                        self.bnds[(bnd.at1,bnd.at2)] = bnd
+                    
+                if line.startswith ( 'angle' ):
+                    ang = TnkAngle ( line, self.atms )
+                    if 'DM' not in (ang.at1,ang.at2,ang.at3):
+                        self.angs[(ang.at1,ang.at2,ang.at3)] = ang
+
+                if line.startswith ( 'torsion ' ):
+                    dih = TnkDih ( line, self.atms )
+                    self.dihs[(dih.at1,dih.at2,dih.at3,dih.at4)] = dih
+
+                if line.startswith ( '#torsion' ):
+                    dih = TnkDih ( line, self.atms )
+                    self.pref_dihs[(dih.at1,dih.at2,dih.at3,dih.at4)] = dih
+                
+                
+    def write_protoms_ff ( self, fname ):
+
+        print "Assuming standard OPLS scaling for 1-4 nonbonded interactions"
+
+        s = """mode info
+ljcombine geometric
+scl14coul  0.500
+scl14lj    0.500\n"""
+        
+        s += '\nmode bond\n'
+        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
+            bnd = self.bnds[j]
+            s += 'par  %4d%8.1f%15.10f  #%s-%s\n' % ( i, bnd.k, bnd.b0, 
+                                                      bnd.at1, bnd.at2 )
+
+        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
+            bnd = self.bnds[j]
+            s += 'atm  %4s  %4s  %4d #\n' % ( bnd.at1, bnd.at2, i )
+
+        s += 'mode angle\n'
+        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
+            ang = self.angs[j]
+            s += 'par  %4d%8.1f%8.3f  #%s-%s-%s\n' % ( i, ang.k, ang.b0, ang.at1, ang.at2, ang.at3 )
+
+        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
+            ang = self.angs[j]
+            s += 'atm  %4s  %4s  %4s  %4d\n' % ( ang.at1, ang.at2, ang.at3, i )
+
+
+        s += 'mode dihedral\n'
+        c = 6001
+        for i in sorted ( self.dihs ):
+            dih = self.dihs[i]
+            s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 0, 0, 0 )
+            c += 1
+            for j in xrange ( 1, 5 ):
+                try:
+                    term = dih.terms[ float ( j ) ]
+                    pre = -1 if j in (2,4) else 1
+                    s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, term.height, pre, j, term.phi0 )
+                except KeyError:
+                    s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 1, j, 0 )
+                c += 1
+                
+        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
+            dih = self.dihs[j]
+            terms = tuple ( range ( ( i - 6001 ) * 5 + 6001, ( (i - 6000) * 5 + 6001 ) ) )
+            s += 'par  %4d  %4d  %4d  %4d  %4d  %4d  # %s-%s-%s-%s\n' % ( ( i, ) + terms + ( dih.at1, dih.at2, dih.at3, dih.at4 ) )
+            
+        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
+            dih = self.dihs[j]
+            s += 'atm  %4s  %4s  %4s  %4s  %4d  #\n' % ( dih.at1, dih.at2, dih.at3, dih.at4, i )
+
+        prot_no = { 'H' : 1, 'C' : 6, 'N' : 7, 'O' : 8, 'S' : 16, 'D' : 0 }
+        s += 'mode clj\n'
+        for i, j in enumerate ( self.cljs, 6001 ):
+            element = j.type[0]
+            try:
+                float ( element )
+                element = j.type[1]
+            except ValueError:
+              pass
+
+            s += 'par  %4d  %4s   %02d  %8.4f  %8.4f  %8.4f  #\n' % ( ( i, j.type, prot_no[element], j.chg, j.sigma, j.epsilon ) )
+
+        with open ( fname, 'w' ) as f:
+            f.write ( s )

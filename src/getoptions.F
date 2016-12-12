@@ -490,6 +490,17 @@ c     SG, set hydration scaling variable
          call printLine(INFO,"Not using concentration correction")
       endif
 
+
+c     read tunedihedral flag
+      tuneDihedral = .false.
+      if (getOption('tunedihedral')) then
+        call lowercase(words(1))
+        if (words(1).eq.'on') then
+          tuneDihedral = .true.
+          call printLine(INFO,'Performing dihedral tuning simulation')
+        endif
+      endif 
+      
 c     get the names of all of the gc- solute files and read them in
       i = 0
  103  continue
@@ -1016,6 +1027,8 @@ c     of the cap, plus an additional radius of kT into the harmonic potential
             maxVolChange = ZERO
          endif
       endif
+                         
+
       
 c-----------------------------------------------------
 c     ####### SIMULATION CONTROL PARAMETERS ########

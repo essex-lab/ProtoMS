@@ -183,6 +183,7 @@ def _read_prepi(filename) :
 
   atomlist = "DUM DUM DUM".split()
   atoms = {}
+  impropers = []
 
   lines = open(filename,"r").readlines()
   i = 0
@@ -215,8 +216,18 @@ def _read_prepi(filename) :
       atoms[atom2].is_on_loop[atom1] = True
     atoms[cycle[0]].is_on_loop[cycle[-1]] = True
     atoms[cycle[-1]].is_on_loop[cycle[0]] = True
+
+  while lines[i].find("IMPROPER") == -1 : i += 1
+  while True:
+    i += 1
+    cols = lines[i].split ()
+    if len ( cols ) != 4:
+      break
+
+    impropers.append ( cols )
+
     
-  return atomlist,atoms
+  return atomlist,atoms,impropers
 
 #
 # Calculate closeness centrality of all atoms in the molecular graph
@@ -403,18 +414,18 @@ def make_zmat(prepifile):
   logger.debug("This will generate a ProtoMS compatible z-matrix for a solute")
 
   # Parse the prepi-file into a list of atom names and a dictionary of Atom objects
-  atomnames,atoms = _read_prepi(prepifile)	# MOD
+  atomnames,atoms, impropers = _read_prepi(prepifile) # MOD
   h,t = os.path.splitext(prepifile)	
 
   # Compute closeness of all atoms and sort their bonds based on this  
-  atomlist_closeness = _compute_closeness(atoms,verbose=False) 		# MOD
+  atomlist_closeness = _compute_closeness(atoms,verbose=False) # MOD
   # Traverse the molecular graph and define the z-matrix
   all_zmat = traverse_graph(atomlist_closeness,atoms,verbose=False)	# MOD
     
   #with open ( '%s.zmat' % h, 'w' ) as f:
   #  f.write ( '\n'.join ( all_zmat ) )
         
-  return atoms,all_zmat
+  return atoms,all_zmat,impropers
 
 def _readfrcmod(filename):
     """ Read an Amber frcmod file from disc
@@ -464,7 +475,7 @@ def _readfrcmod(filename):
 
 
 
-def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None, frcmodfile=None, resname="UNK" ) :
+def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None, frcmodfile=None, resname="UNK", alldihs = False ) :
     """ Build a ProtoMS template file 
   
     Parameters
@@ -483,6 +494,8 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
       the filename of an Amber frcmod file with additional parameters
     resname : string, optional
       the name of solute
+    alldihs : boolean, optional
+      set True to sample improper dihedrals
 
     Returns
     -------
@@ -501,11 +514,11 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     logger.debug("This will generate a ProtoMS template file for a solute")
     
     if zmatfile is None :
-        atoms,zmat = make_zmat(prepifile)
+        atoms,zmat,impropers = make_zmat(prepifile)
     else :
         with open ( zmatfile ) as f:
             zmat = f.readlines()
-        atoms = _read_prepi ( prepifile )[1]
+        atoms,impropers = _read_prepi ( prepifile )[1:]
 
     centralities = _compute_closeness ( atoms, verbose = False )
 
@@ -727,17 +740,37 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
                 logger.warning("To correct this consider manually adding a term to the frcmod file\n")
                 k = 10**10 #make k huge so max_move is zero
                 missing = True
-            
-        # Ensure improper dihedrals are removed by checking the last 
+
+        skip = False
+        # Ensure improper dihedrals are removed, if desired, by checking the last 
         # atom in the dihedral is bonded to the previous atom in the list.
-        if not dihedral[2] in atoms[dihedral[3]].bonds:
-            continue
+        if alldihs:
+          # even if we're sampling improper dihedrals we should not sample those that maintain
+          # in-plane geometries as ProtoMS does not evaluate these energies. These appear as impropers in the prepi file
+          # slightly crude but check all atom order combinations that correspond to the same improper
+          dih2 = dihedral[:2] + dihedral[2:][::-1] # swap last two elements
+          dih3 = dihedral[::-1]
+          dih4 = dih2[::-1]
+          # if dihedral in impropers or dih2 in impropers or dih3 in impropers or dih4 in impropers:
+          for imp in impropers:
+            if dihedral[0] in imp and dihedral[1] in imp and dihedral[2] in imp and dihedral[3] in imp:
+              skip = True
+              break
+
+        else:
+          if not dihedral[2] in atoms[dihedral[3]].bonds:
+            skip = True
+
+        if skip:
+#          print dihedral, impropers
+          continue
 
         # If central bond is part of a loop
         if atoms[dihedral[1]].is_on_loop[dihedral[2]]:
             # Ensure aromatic dihedrals are excluded
             if atypes[1] in aromatic_types and atypes[2] in aromatic_types:
                 continue
+              
             fmt = ( dihedral[0], resname, 
                     dihedral[1], resname, 
                     dihedral[2], resname, 
@@ -776,12 +809,14 @@ if __name__ == '__main__':
     parser.add_argument('-n','--name',help="the name of the solute",default='UNK')
     parser.add_argument('-t','--translate',help="maxmium size for translation moves in Angstroms", default=0.25, type=float)
     parser.add_argument('-r','--rotate',help="maxmium size for rotation moves in degrees", default=5.0, type=float)
+    parser.add_argument('--alldihs',help='sample improper dihedrals',default=False,action='store_true')
     args = parser.parse_args()
     
     # Setup the logger
     logger = sim.setup_logger("build_template_py.log")
     
-    tem = build_template ( temfile=args.out, prepifile=args.prepi, zmatfile=args.zmat, frcmodfile=args.frcmod, resname=args.name, translate=args.translate, rotate=args.rotate ) 
+    tem = build_template ( temfile=args.out, prepifile=args.prepi, zmatfile=args.zmat, frcmodfile=args.frcmod,
+                           resname=args.name, translate=args.translate, rotate=args.rotate, alldihs=args.alldihs ) 
     tem.write(args.out)
     if args.zmat is None :      
       tem.templates[0].write_zmat(os.path.splitext(args.out)[0]+".zmat")

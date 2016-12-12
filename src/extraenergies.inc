@@ -43,6 +43,9 @@ c     the point in space that the atom is restrained to
 c     the harmonic force constant
       double precision HarmConst(MAXHARMONICRESTRAINTS)      
       
+c     whether to scale a restraint by lambda
+      logical HarmScale(MAXHARMONICRESTRAINTS)
+
       double precision oldHarmEnergy,avgHarmEnergy,avgHarmEnergy2,
      .                 oldHarmEnergyB,avgHarmEnergyB,avgHarmEnergyB2,
      .                 oldHarmEnergyF,avgHarmEnergyF,avgHarmEnergyF2,
@@ -56,7 +59,8 @@ c     the harmonic force constant
      .                 oldHarmEnergyPart,newHarmEnergyPart,
      .                 oldHarmEnergyPartB,newHarmEnergyPartB,
      .                 oldHarmEnergyPartF,newHarmEnergyPartF,
-     .                 HarmPoint,HarmConst,HarmAtom,NHarmonicRestraints
+     .                 HarmPoint,HarmConst,HarmAtom,NHarmonicRestraints,
+     .                 HarmScale
 
 
 c    variables associated with bond harmonic restraints

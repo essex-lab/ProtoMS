@@ -33,8 +33,11 @@ c###############################################################
       integer ranInt
       integer i
 c     JM
-      integer jsol
+      integer jsol, idih
 
+      double precision tunesolute, dihmovesize
+      integer istrt,iend
+      
 c     clear the move list     
       call clearMoveList()      
       
@@ -84,8 +87,16 @@ c     copy the coordinates to storage
 c     JM Dual Topology consider saving coords of coupled solute
       if (jsol .ne. 0) call pushBackSoluteCoords(jsol)
       
+      if (tunedihedral) then
+c     pick a flexible dihedral  at random
+         iDih = ranInt ( 1, NRotDihs(isol,ires) )
 c     move the solute
-      call moveSolute(isol,ires)
+         dihmovesize = tuneSolute(isol,ires,iDih)
+      else
+         call moveSolute(isol,ires)
+         iDih = 0
+         dihmovesize = 0
+      endif
 
 c     if this is theta solute, it has to reside within a box
 c     check that solute is inside the given box
@@ -184,8 +195,20 @@ c       the forwards and backwards solutes - this restores the old coordinates
       
       endif
 
+c     if we are doing a dihedral tuning simulation then record statistics of
+c     move successes for individual dihedrals
+      if (tunedihedral) then
+         do i=1,20
+            if (abs(dihmovesize)/PI*180.0.lt.float(i)) then
+               DihMoveAttempts(isol,ires,iDih,i) = DihMoveAttempts(isol,ires,iDih,i) + 1
+               if (soluteMove) DihMoveSuccess(isol,ires,iDih,i) = DihMoveSuccess(isol,ires,iDih,i) + 1
+               goto 200
+            endif
+         enddo
+      endif
+      
 c     clear the move lists if not doing a quick move
-      if (.not. QuickMove) call clearMoveList()      
+ 200  if (.not. QuickMove) call clearMoveList()      
       
 c     calculate the total energy as a check
       if (testenergy) call testEnergies
