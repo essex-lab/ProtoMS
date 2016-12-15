@@ -527,10 +527,10 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     else :  
       frcbonds, frcangles, frcdihedrals = _readfrcmod ( frcmodfile )
 
-    angle_params = sim.ParameterSet ('angle', sim.standard_filename("gaff14.ff","parameter") )
-    dihedral_params = sim.ParameterSet ( 'dihedral', sim.standard_filename("gaff14.ff","parameter") )
+    angle_params = sim.ParameterSet ('angle', sim.standard_filename("gaff16.ff","parameter") )
+    dihedral_params = sim.ParameterSet ( 'dihedral', sim.standard_filename("gaff16.ff","parameter") )
 
-    with open ( sim.standard_filename("gaff.types","parameter") ) as f:
+    with open ( sim.standard_filename("gaff16.types","parameter") ) as f:
         at_params = [ line.split() for line in f ]
 
     kBT = 0.0019872041 * 300 #Boltzmann constant at 300 kelvin in kcal/mol
