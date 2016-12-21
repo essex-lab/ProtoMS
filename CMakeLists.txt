@@ -74,12 +74,12 @@ if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
     message("-- Using Intel compiler flags")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132 -prof-gen=srcpos")
     if(CMAKE_BUILD_TYPE MATCHES "Release")
-        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -prof-gen=srcpos")
     endif()
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -prof-gen=srcpos")
     endif()
 
 # Set flags for IBM compiler
