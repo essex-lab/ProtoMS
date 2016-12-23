@@ -248,7 +248,7 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
     # By this stage we should have all necessary files to make the template file
     files["tem"] = ligprefix+".tem"
     tem = tools.build_template(temfile=files["tem"],prepifile=files["prepi"],zmatfile=files["zmat"],
-                        frcmodfile=files["frcmod"],resname=resnam)
+                        frcmodfile=files["frcmod"],resname=resnam,gaffversion=settings.gaff)
     tem.write(files["tem"])
     if files["zmat"] is None :
       files["zmat"] = ligprefix+".zmat"
@@ -848,6 +848,7 @@ if __name__ == "__main__":
   liggroup = parser.add_argument_group("Ligand setup variables")
   liggroup.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
   liggroup.add_argument('--singlemap',help="the correspondance map for single-topology")
+  liggroup.add_argument('--gaff',help="the version of GAFF to use for ligand", default="gaff16")
   # Protein setup variables
   protgroup = parser.add_argument_group("Protein setup variables")
   protgroup.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)

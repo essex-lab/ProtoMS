@@ -338,7 +338,7 @@ class ProteinLigandSimulation(ProtoMSSimulation) :
     self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber14SB.ff"))
     self.setForceField(os.path.join("$PROTOMSHOME","parameter","solvents.ff"))
     self.setForceField(os.path.join("$PROTOMSHOME","parameter","amber14SB-residues.ff"))
-    self.setForceField(os.path.join("$PROTOMSHOME","parameter","gaff16.ff"))
+    self.setForceField(os.path.join("$PROTOMSHOME","parameter",ProteinLigandSimulation.gaffversion + ".ff"))
     if templates is not None and templates :
       for tem in templates :
         self.setForceField(tem)
@@ -976,6 +976,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
   
   free_cmd = bnd_cmd = gas_cmd = None
   ranseed=settings.ranseed
+  ProteinLigandSimulation.gaffversion = settings.gaff
 
   if settings.simulation == "equilibration" :
 
@@ -1128,6 +1129,7 @@ if __name__ == "__main__":
   parser.add_argument('-lw','--ligwater',help="the name of the solvent for ligand")
   parser.add_argument('-o','--out',help="the prefix of the name of the command file",default="run")
   parser.add_argument('--outfolder',help="the ProtoMS output folder",default="out")
+  parser.add_argument('--gaff',help="the version of GAFF to use for ligand",default="gaff16")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
   parser.add_argument('--adamsrange',nargs="+",type=int,help="the upper and lower Adam/B values for the GCMC, e.g. -1 -16 for all integers between and including -1 and -16",default=None)

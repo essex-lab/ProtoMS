@@ -39,7 +39,7 @@ class TestEquilibrationSetup(unittest.TestCase):
         """ Test for equilibration function."""
         comparetools = testtools.CompareTools(ref_dir, verbose=True)
 
-        if call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000", shell=True) == 0:
+        if call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000 --gaff gaff14", shell=True) == 0:
 
             # Checking whether the required output files have been setup for equilibration MC moves.
             for infile in input_files_setup:

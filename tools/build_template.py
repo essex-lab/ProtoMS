@@ -475,7 +475,7 @@ def _readfrcmod(filename):
 
 
 
-def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None, frcmodfile=None, resname="UNK", alldihs = False ) :
+def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None, frcmodfile=None, resname="UNK", alldihs = False, gaffversion="gaff16" ) :
     """ Build a ProtoMS template file 
   
     Parameters
@@ -496,6 +496,8 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
       the name of solute
     alldihs : boolean, optional
       set True to sample improper dihedrals
+    gaffversion : string, optional
+      the version of GAFF to use
 
     Returns
     -------
@@ -504,13 +506,14 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     """
     
     logger.debug("Running build_template with arguments: ")
-    logger.debug("\ttemfile    = %s"%temfile) 
-    logger.debug("\tprepifile  = %s"%prepifile) 
-    logger.debug("\ttranslate  = %f"%translate)
-    logger.debug("\trotate     = %f"%rotate)
-    logger.debug("\tzmatfile   = %s"%zmatfile)
-    logger.debug("\tfrcmodfile = %s"%frcmodfile)
-    logger.debug("\tresname    = %s"%resname)
+    logger.debug("\ttemfile     = %s"%temfile) 
+    logger.debug("\tprepifile   = %s"%prepifile) 
+    logger.debug("\ttranslate   = %f"%translate)
+    logger.debug("\trotate      = %f"%rotate)
+    logger.debug("\tzmatfile    = %s"%zmatfile)
+    logger.debug("\tfrcmodfile  = %s"%frcmodfile)
+    logger.debug("\tresname     = %s"%resname)
+    logger.debug("\tgaffversion = %s"%gaffversion)
     logger.debug("This will generate a ProtoMS template file for a solute")
     
     if zmatfile is None :
@@ -527,10 +530,11 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     else :  
       frcbonds, frcangles, frcdihedrals = _readfrcmod ( frcmodfile )
 
-    angle_params = sim.ParameterSet ('angle', sim.standard_filename("gaff16.ff","parameter") )
-    dihedral_params = sim.ParameterSet ( 'dihedral', sim.standard_filename("gaff16.ff","parameter") )
+    gaff_file = sim.standard_filename(gaffversion + ".ff", "parameter")
+    angle_params = sim.ParameterSet ('angle', gaff_file )
+    dihedral_params = sim.ParameterSet ( 'dihedral', gaff_file )
 
-    with open ( sim.standard_filename("gaff16.types","parameter") ) as f:
+    with open ( sim.standard_filename(gaffversion + ".types","parameter") ) as f:
         at_params = [ line.split() for line in f ]
 
     kBT = 0.0019872041 * 300 #Boltzmann constant at 300 kelvin in kcal/mol
