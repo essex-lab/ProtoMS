@@ -29,7 +29,8 @@ c####################################################################
        double precision std,stdf,stdb,totalEnergy,nrgb,nrgf
        integer lineLength,lgth,lgth2,igcs,savenrg,Molcount
        integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
-
+       double precision var, varf, varb, AllAvgGCSSvnC, AllAvgGCSSvnCF, AllAvgGCSSvnCB
+       double precision AllAvgGCSSvnLJ, AllAvgGCSSvnLJF, AllAvgGCSSvnLJB 
 
        if (DifferentLambdas) then
          write(printstring,10) lambdab,lambda,lambdaf
@@ -361,34 +362,90 @@ c            lj
        endif
 
        if (NGCSolutes.gt.0 .and. NSolvents.gt.0) then
-         do i=1,NGCSolutes
-           lgth = lineLength(GCSName(i))
-           write(printstring,932) i,GCSName(i)(1:lgth)
-932        format('Average GCS-solvent energy for ',i4,' ',a)      
-           call prettyLine(RESULTS,printstring)
 
-c            coulomb
-c             PRINT*, "en" ,AvgGCSSvnC
-             std = stdDev(AvgGCSSvnC2(i),AvgGCSSvnC(i))
-             stdf = stdDev(AvgGCSSvnCF2(i),AvgGCSSvnCF(i))
-             stdb = stdDev(AvgGCSSvnCB2(i),AvgGCSSvnCB(i))
-             write(printstring,20) 'COU',AvgGCSSvnC(i),std,AvgGCSSvnCF(i),stdf,
-     .                                                      AvgGCSSvnCB(i),stdb
-             call printLine(RESULTS,printstring)
-             write(printstring,21) AvgGCSSvnCF(i)-AvgGCSSvnC(i),AvgGCSSvnCB(i)-AvgGCSSvnC(i)
-             call printLine(RESULTS,printstring)
+          call prettyLine(RESULTS,'Average GCS-solvent energy')
 
-c            lj
-             std = stdDev(AvgGCSSvnLJ2(i),AvgGCSSvnLJ(i))
-             stdf = stdDev(AvgGCSSvnLJF2(i),AvgGCSSvnLJF(i))
-             stdb = stdDev(AvgGCSSvnLJB2(i),AvgGCSSvnLJB(i))
-             write(printstring,20) 'LJ',AvgGCSSvnLJ(i),std,AvgGCSSvnLJF(i),stdf,
-     .                                                    AvgGCSSvnLJB(i),stdb
-             call printLine(RESULTS,printstring)
-             write(printstring,21) AvgGCSSvnLJF(i)-AvgGCSSvnLJ(i),AvgGCSSvnLJB(i)-AvgGCSSvnLJ(i)
-             call printLine(RESULTS,printstring)
-         enddo
+c     coulomb
+          var = 0
+          varf = 0
+          varb = 0
+          AllAvgGCSSvnC = 0
+          AllAvgGCSSvnCF = 0
+          AllAvgGCSSvnCB = 0
+          do i=1,NGCSolutes
+             AllAvgGCSSvnC = AllAvgGCSSvnC + AvgGCSSvnC(i)
+             AllAvgGCSSvnCF = AllAvgGCSSvnCF + AvgGCSSvnCB(i)
+             AllAvgGCSSvnCB = AllAvgGCSSvnCB + AvgGCSSvnCB(i)
+             var = var + stdDev ( AvgGCSSvnC2(i), AvgGCSSvnC(i) )**2
+             varf = varf + stdDev ( AvgGCSSvnCF2(i), AvgGCSSvnCF(i) )**2
+             varb = varb + stdDev ( AvgGCSSvnCB2(i), AvgGCSSvnCB(i) )**2
+          enddo
+
+          write(printstring,20) 'COU',AllAvgGCSSvnC,sqrt(var),AllAvgGCSSvnCF,sqrt(varf),
+     .         AllAvgGCSSvnCB,sqrt(varb)
+          call printLine(RESULTS,printstring)
+          write(printstring,21) AllAvgGCSSvnCF-AllAvgGCSSvnC,AllAvgGCSSvnCB-AllAvgGCSSvnC
+          call printLine(RESULTS,printstring)
+
+c     lj
+          var = 0
+          varf = 0
+          varb = 0
+          AllAvgGCSSvnLJ = 0
+          AllAvgGCSSvnLJF = 0
+          AllAvgGCSSvnLJB = 0
+          do i=1,NGCSolutes
+             AllAvgGCSSvnLJ = AllAvgGCSSvnLJ + AvgGCSSvnLJ(i)
+             AllAvgGCSSvnLJF = AllAvgGCSSvnLJF + AvgGCSSvnLJB(i)
+             AllAvgGCSSvnLJB = AllAvgGCSSvnLJB + AvgGCSSvnLJB(i)
+             var = var + stdDev ( AvgGCSSvnLJ2(i), AvgGCSSvnLJ(i) )**2
+             varf = varf + stdDev ( AvgGCSSvnLJF2(i), AvgGCSSvnLJF(i) )**2
+             varb = varb + stdDev ( AvgGCSSvnLJB2(i), AvgGCSSvnLJB(i) )**2
+          enddo
+
+          write(printstring,20) 'LJ ',AllAvgGCSSvnLJ,sqrt(var),AllAvgGCSSvnLJF,sqrt(varf),
+     .         AllAvgGCSSvnCB,sqrt(varb)
+          call printLine(RESULTS,printstring)
+          write(printstring,21) AllAvgGCSSvnCF-AllAvgGCSSvnC,AllAvgGCSSvnCB-AllAvgGCSSvnC
+          call printLine(RESULTS,printstring)
+          
+c$$$c     lj
+c$$$          write(printstring,20) 'LJ',AvgGCSSvnLJ(i),std,AvgGCSSvnLJF(i),stdf,
+c$$$     .         AvgGCSSvnLJB(i),stdb
+c$$$          call printLine(RESULTS,printstring)
+c$$$          write(printstring,21) AvgGCSSvnLJF(i)-AvgGCSSvnLJ(i),AvgGCSSvnLJB(i)-AvgGCSSvnLJ(i)
+c$$$          call printLine(RESULTS,printstring)
+
        endif
+      
+c$$$          do i=1,NGCSolutes
+c$$$           lgth = lineLength(GCSName(i))
+c$$$           write(printstring,932) i,GCSName(i)(1:lgth)
+c$$$932        format('Average GCS-solvent energy for ',i4,' ',a)      
+c$$$           call prettyLine(RESULTS,printstring)
+c$$$
+c$$$c            coulomb
+c$$$c             PRINT*, "en" ,AvgGCSSvnC
+c$$$             std = stdDev(AvgGCSSvnC2(i),AvgGCSSvnC(i))
+c$$$             stdf = stdDev(AvgGCSSvnCF2(i),AvgGCSSvnCF(i))
+c$$$             stdb = stdDev(AvgGCSSvnCB2(i),AvgGCSSvnCB(i))
+c$$$             write(printstring,20) 'COU',AvgGCSSvnC(i),std,AvgGCSSvnCF(i),stdf,
+c$$$     .                                                      AvgGCSSvnCB(i),stdb
+c$$$             call printLine(RESULTS,printstring)
+c$$$             write(printstring,21) AvgGCSSvnCF(i)-AvgGCSSvnC(i),AvgGCSSvnCB(i)-AvgGCSSvnC(i)
+c$$$             call printLine(RESULTS,printstring)
+c$$$
+c$$$c            lj
+c$$$             std = stdDev(AvgGCSSvnLJ2(i),AvgGCSSvnLJ(i))
+c$$$             stdf = stdDev(AvgGCSSvnLJF2(i),AvgGCSSvnLJF(i))
+c$$$             stdb = stdDev(AvgGCSSvnLJB2(i),AvgGCSSvnLJB(i))
+c$$$             write(printstring,20) 'LJ',AvgGCSSvnLJ(i),std,AvgGCSSvnLJF(i),stdf,
+c$$$     .                                                    AvgGCSSvnLJB(i),stdb
+c$$$             call printLine(RESULTS,printstring)
+c$$$             write(printstring,21) AvgGCSSvnLJF(i)-AvgGCSSvnLJ(i),AvgGCSSvnLJB(i)-AvgGCSSvnLJ(i)
+c$$$             call printLine(RESULTS,printstring)
+c$$$         enddo
+c$$$       endif
 
        
           

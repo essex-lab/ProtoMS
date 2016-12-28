@@ -1105,7 +1105,13 @@ class SnapshotResults :
         elif cols[1] == "solute-solvent" :
           key = cols[5]+"-solvent"
         elif cols[1] == "solute-GCS" :
-          key = cols[5]+"-GCS"   
+          key = cols[5]+"-GCS"
+        elif cols[1] == "GCS-solvent":
+          key = "GCS-solvent"
+        elif cols[1] == "protein-GCS":
+          key = "protein"+cols[4]+"-GCS"
+        else:
+          continue
         self.interaction_energies[key] = []   
         line = fileobj.readline() # Dummy line
         self.interaction_energies[key].append(EnergyResults(line=fileobj.readline())) # Coul
