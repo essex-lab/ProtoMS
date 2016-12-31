@@ -1061,6 +1061,7 @@ if __name__ == "__main__":
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
     if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat :
+      
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_vdw" in repeat :
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,ranseed,args)
@@ -1082,8 +1083,12 @@ if __name__ == "__main__":
         bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_jaws.cmd") 
       else :
         bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_bnd.cmd")       
-    if gas_cmd is not None : 
-      gas_cmd.writeCommandFile(args.cmdfile+repeat+"_gas.cmd")   
+    if gas_cmd is not None :
+      if args.absolute:
+        # in this case, gas_cmd contains a cmd file to account for introduction of the harmonic restraint
+        gas_cmd.writeCommandFile(args.cmdfile+repeat+"_bnd_rstr.cmd")   
+      else:
+        gas_cmd.writeCommandFile(args.cmdfile+repeat+"_gas.cmd")   
       
     
   if args.cleanup :

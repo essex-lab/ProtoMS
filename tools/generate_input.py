@@ -634,6 +634,86 @@ class SingleTopology(ProteinLigandSimulation) :
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
 
+class RestraintRelease(ProteinLigandSimulation) :
+  """ 
+  Command file to calculate the free energy of introducing a harmonic restraint
+  during the bound leg of a simulation.
+  """
+  
+  def __init__(self,protein="protein.pdb",
+                    solutes=["solute1.pdb"],
+                    solvent="water.pdb",
+                    templates=["solute.tem"],
+                    nequil=5E6,
+                    nprod=40E6,
+                    dumpfreq=1E5,
+                    lambdaval=None,
+                    ranseed=None,
+                    outfolder="out",
+                    restrained=[]) :
+    """
+    Parameters
+    ----------
+    protein : string, optional
+      the filename of a protein pdb file
+    solutes : list of strings, optional
+      filenames of solute pdb files
+    solvent : string, optional
+      the filename of a solvent pdb file
+    templates : list of strings, optional
+      filenames of template files to be included
+    nequil : int, optional
+      number of equilibration moves
+    nprod : int, optional
+      number of production moves
+    dumfreq : int, optional
+      the dump frequency 
+    lambdaval : float or list of floats
+      the lambda values to perform the simulation at
+    outfolder  : string, optional
+      the folder for all output files
+    restrained : string, optional
+      the solutes on which restrains should be applied
+    
+    Raises
+    ------
+    SetupError
+      no lambda values given
+    """
+    if len(outfolder) == 0 : outfolder = "out"          
+    ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
+     
+    if lambdaval is None or len(lambdaval) < 2 :
+      raise simulationobjects.SetupError("Must give at least two lambda values")
+
+    self.setParameter("printfe","mbar")
+    self.setParameter("dlambda","0.001")
+    self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
+
+    self.setDump("results write results",dumpfreq)
+    self.setDump("results writeinst results_inst",dumpfreq)
+    self.setDump("pdb all solvent=all file=all.pdb standard",dumpfreq)
+    self.setDump("restart write restart",dumpfreq)
+    self.setDump("averages reset",dumpfreq)
+    
+    for restsol in restrained :
+      pdbobj = simulationobjects.PDBFile(filename=solutes[restsol])
+      for ind,tem in enumerate(templates) :
+        temobj = simulationobjects.TemplateFile(filename=templates[ind])
+        for mol_template in temobj.templates :
+          if mol_template.name in pdbobj.header :
+            resname = pdbobj.residues[1].name
+            resatom = str(mol_template.atoms[0]).strip().split()
+            for atom in pdbobj.residues[1].atoms :
+              if atom.name in resatom[1] : atmcoords = atom.coords
+      self.setChunk("id add %d solute %d %s %s"%(restsol+1,restsol+1,resatom[1],resname))
+      self.setChunk("restraint add %d cartesian harmonic %.3f %.3f %.3f %d lambda"%(restsol+1,atmcoords[0],atmcoords[1],atmcoords[2],FORCE_CONSTANT))
+    
+    moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
+    self.setChunk("equilibrate %d %s"%(nequil,moves))        
+    self.setChunk("simulate %d %s"%(nprod,moves))
+
+    
 #
 # Helper routine
 #
@@ -1055,6 +1135,11 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
                               templates=templates,solvent=None,
                               lambdaval=lambdavals,nequil=settings.nequil,ranseed=ranseed,
                               nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_gas",restrained=rest_solutes)
+    elif settings.simulation == "dualtopology" and settings.absolute:
+      #make use of the unused gas_cmd to produce a cmd file to calculate the effect of introducing a harmonic restraint
+      gas_cmd = RestraintRelease(protein=protein,solutes=ligands[:1],templates=templates[:1],solvent=protein_water,
+                                 lambdaval=(0.,1.),nequil=settings.nequil,ranseed=ranseed,
+                                 nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_bnd_rstr",restrained=rest_solutes[:1])
 
     free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
