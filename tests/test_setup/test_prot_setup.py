@@ -19,7 +19,7 @@ site.addsitedir(proto_env)
 from tools import simulationobjects
 
 ref_dir = proto_env + "/tests/setup/"
-output_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
+output_files_setup = ["dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
 
 
 class TestProtSetup(unittest.TestCase):

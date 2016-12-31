@@ -20,8 +20,7 @@ from tools import simulationobjects
 from tools import testtools
 
 ref_dir = proto_env + "/tests/equil/"
-input_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem",
-                     "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
+input_files_setup = ["dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
 output_files_setup = ["run_bnd.cmd"]
 out_sim_files = ["equil_bnd.pdb", "warning"]
 
