@@ -189,6 +189,134 @@ as below:
       ``
       http://my.cdash.org/index.php?project=protoms
       ``
+Intel Compiler Code Coverage
+=============================
+
+The Intel Compiler Code-coverage provides an easy way to automate the process of determining the code exercised. 
+
+Intel Compiler's code coverage tool provides overall code coverage report, coverage report by file, coverage report by subsystem and a 
+html report. 
+
+Please follow below steps to using the code coverage tool bundled with the Intel compiler. All the FORTRAN source files are present in 
+"src/" directory that will be analysed and the "protoms3" executable is present in both "build/" and protoms root directory. 
+
+1. Build ProtoMS:
+    
+   Below changes/ compilation option has already been added to "CMakeLists.txt". 
+   Build the protoms application with the compilation option "-prof-gen=srcpos" under section "# Set flags for Intel compiler":
+   
+   Go to ProtoMS root directory and follow below steps:
+   
+   ``
+   mkdir build
+   cd build
+   cmake ..
+   make install
+   ``
+   
+   After the build, in addition to the protoms executable, files "pgopti.spi" and "pgopti.spl" are also created. The file "pgopti.spi" 
+   will be used in next steps. 
+   
+2. Run the executable using commands from protoms examples or tutorials or [workshop here](https://sites.google.com/site/protomsworkshop/home):
+
+   For example:
+   ``
+   ./protoms3 <options> <file names>
+   ``
+
+   After this run, a file with extension ".dyn" is created. For example: "585abdd7_02492.dyn".      
+   
+3. Merge intermediate files:
+
+   Run the Intel Compiler's "profmerge" tool on the ".dyn" file to generate a file called "pgopti.dpi".
+   
+   ``
+   profmerge
+   ``
+   
+4. Generate coverage report:
+
+   Run the Intel Compiler's "codecov" tool that will create the "html" files with the coverage report "CODE_COVERAGE.HTML".
+   
+   ``
+   codecov
+   ``
+   
+   "codecov" looks for both "pgopti.spi" and "pgopti.dpi" to generate the report. The file "CODE_COVERAGE.HTML" has figure that presents 
+   a summary of how much of the code is covered with tests.
+   
+   
+Above steps can be run on individual FORTRAN files in "src/" directory to find coverage of FORTRAN code. 
+
+Individual files can be clicked from "CODE_COVERAGE.HTML" which further show the colour coded analysis showing the coverage. 
+
+White colour is for covered statements, yellow for uncovered ones and pink for uncovered code.
+
+      
+Intel Compiler Code Coverage
+=============================
+ 
+The Intel Compiler Code-coverage provides an easy way to automate the process of determining the code exercised. 
+
+Intel Compiler's code coverage tool provides overall code coverage report, coverage report by file, coverage report by subsystem and a 
+html report. 
+
+Please follow below steps to using the code coverage tool bundled with the Intel compiler. All the FORTRAN source files are present in 
+"src/" directory that will be analysed and the "protoms3" executable is present in both "build/" and protoms root directory. 
+
+1. Build ProtoMS:
+    
+   Below changes/ compilation option has already been added to "CMakeLists.txt". 
+   Build the protoms application with the compilation option "-prof-gen=srcpos" under section "# Set flags for Intel compiler":
+   
+   Go to ProtoMS root directory and follow below steps:
+   
+   ``
+   mkdir build
+   cd build
+   cmake ..
+   make install
+   ``
+   
+   After the build, in addition to the protoms executable, files "pgopti.spi" and "pgopti.spl" are also created. The file "pgopti.spi" 
+   will be used in next steps. 
+   
+2. Run the executable using commands from protoms examples or tutorials or [workshop here](https://sites.google.com/site/protomsworkshop/home):
+
+   For example:
+   ``
+   ./protoms3 <options> <file names>
+   ``
+
+   After this run, a file with extension ".dyn" is created. For example: "585abdd7_02492.dyn".      
+   
+3. Merge intermediate files:
+
+   Run the Intel Compiler's "profmerge" tool on the ".dyn" file to generate a file called "pgopti.dpi".
+   
+   ``
+   profmerge
+   ``
+   
+4. Generate coverage report:
+
+   Run the Intel Compiler's "codecov" tool that will create the "html" files with the coverage report "CODE_COVERAGE.HTML".
+   
+   ``
+   codecov
+   ``
+   
+   "codecov" looks for both "pgopti.spi" and "pgopti.dpi" to generate the report. The file "CODE_COVERAGE.HTML" has figure that presents 
+   a summary of how much of the code is covered with tests.
+   
+   
+Above steps can be run on individual FORTRAN files in "src/" directory to find coverage of FORTRAN code. 
+
+Individual files can be clicked from "CODE_COVERAGE.HTML" which further show the colour coded analysis showing the coverage. 
+
+White colour is for covered statements, yellow for uncovered ones and pink for uncovered code.
+
+            
 
 Coverage Analysis with Coverage.py:
 ===================================

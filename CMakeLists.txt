@@ -5,9 +5,9 @@ cmake_minimum_required(VERSION 2.8.7)
 # Project name and language - enables Fortran dependency checking
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Setting install dir to the src dir")
 project(ProtoMS Fortran)
-set(prog_name "protoms3")
+set(PROG_NAME "protoms3")
 set(ProtoMS_VERSION_MAJOR 3)
-set(ProtoMS_VERSION_MINOR 2)
+set(ProtoMS_VERSION_MINOR 3)
 
 # Check build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -18,10 +18,12 @@ endif()
 
 message("-- COMPILER: ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER_VERSION}")
 
-# Find Fortran MPI libraries
+# CMake options
 option(AVOID_MPI "Don't use MPI even if available" OFF)
-find_package(MPI)
+option(COVERAGE "Prepare for coverage tests" OFF)
 
+# Find Fortran MPI libraries
+find_package(MPI)
 if(NOT MPI_Fortran_FOUND AND NOT AVOID_MPI AND CMAKE_Fortran_COMPILER_ID STREQUAL "Intel" AND EXISTS "/local/software/openmpi/1.6.4/intel/lib/libmpi_f90.so")
     # Attempt fix for Southampton RedHat configuration
     message("-- Attempting fix for Southampton RedHat configuration")
@@ -53,32 +55,36 @@ endif()
 # Find Python and create dynamic include files
 find_package(PythonInterp 2.7 REQUIRED)
 message("-- Generating compilation info...")
-execute_process(COMMAND python
+execute_process(COMMAND ${PYTHON_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/getid.py
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/idme.inc)
-execute_process(COMMAND python
+execute_process(COMMAND ${PYTHON_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/getsep.py
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/sep.inc)
 
 # Set flags for GNU compiler
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none -fprofile-arcs -ftest-coverage")
-    if(CMAKE_BUILD_TYPE MATCHES "Release")
-        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -fgcse-lm -fgcse-sm -fgcse-las -fsched-spec-load -fprofile-arcs -ftest-coverage")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none")
+    if(COVERAGE)
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fprofile-arcs -ftest-coverage")
     endif()
-    if(CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g -fprofile-arcs -ftest-coverage")
+    if(CMAKE_BUILD_TYPE MATCHES "Release")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3 -fgcse-lm -fgcse-sm -fgcse-las -fsched-spec-load")
+    elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
     endif()
 
 # Set flags for Intel compiler
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
     message("-- Using Intel compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -132")
+    if(COVERAGE)
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -prof-gen=srcpos")
+    endif()
     if(CMAKE_BUILD_TYPE MATCHES "Release")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3")
-    endif()
-    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
     endif()
 
@@ -86,11 +92,13 @@ elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
     message("-- Using IBM compiler flags")
     message("-- This compiler is not supported but has been tested in the past - proceed with caution")
+    if(COVERAGE)
+        message("-- Coverage testing not supported using IBM compiler, please add coverage flags yourself")
+    endif()
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -qfixed=132")
     if(CMAKE_BUILD_TYPE MATCHES "Release")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O3")
-    endif()
-    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
     endif()
 
@@ -98,21 +106,20 @@ elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "XL")
 elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "PGI")
     message("-- Using PGI compiler flags")
     message("-- This compiler is not supported but has been tested in the past - proceed with caution")
+    if(COVERAGE)
+        message("-- Coverage testing not supported using Portland compiler, please add coverage flags yourself")
+    endif()
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Mextend")
     if(CMAKE_BUILD_TYPE MATCHES "Release")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -O2")
-    endif()
-    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    elseif(CMAKE_BUILD_TYPE MATCHES "Debug")
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -g")
     endif()
     
-
 # Compiler not recognised
 else()
-    message("-- Your compiler is not supported and has not been tested, please consider using
-             GNU gfortran or the Intel Fortran compiler.")
-    message("-- However, you may wish to attempt compilation by manually providing the correct
-             flag to enable a line length of 132 in the CMake variable CMAKE_Fortran_FLAGS.")
+    message("-- Your compiler is not supported and has not been tested, please consider using GNU gfortran or the Intel Fortran compiler.")
+    message("-- However, you may wish to attempt compilation by manually providing the correct flag to enable a line length of 132 in the CMake variable CMAKE_Fortran_FLAGS.")
 endif()
 
 message("    ${CMAKE_Fortran_FLAGS}")
@@ -139,32 +146,32 @@ if(NOT MPI_Fortran_FOUND OR AVOID_MPI)
 endif()
 
 # Create target from source files and link to MPI library if found
-add_executable(${prog_name} ${SOURCE_FILES})
+add_executable(${PROG_NAME} ${SOURCE_FILES})
 if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
-    target_link_libraries(${prog_name} ${MPI_Fortran_LIBRARIES})
+    target_link_libraries(${PROG_NAME} ${MPI_Fortran_LIBRARIES})
 endif()
 
 # Setup install directory
 # Optional 'make install' step
 install(TARGETS protoms3
         RUNTIME DESTINATION "./")
-
-#Enabling creation and submission of dashboard
-##configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
-#               @only
-#              )
               
-# Uncomment below 2 lines for getting coverage information               
-## include(CTest)
-## include(CTestConfig.cmake)
+if(COVERAGE)
+    #Enabling creation and submission of dashboard
+    ##configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
+    #               @only
+    #              )
 
-# Add testing
-# Needs actual unit/integration tests here
-add_test(TestPrintVersion protoms3 -v)
+    include(CTest)
+    include(CTestConfig.cmake)
+    message("-- Doing coverage testing")
+endif()
 
 ###################################
 # Python Unit tests
 ###################################
+add_test(TestPrintVersion protoms3 -v)
+
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B})
 
 add_test(test_install_dependencies ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
@@ -219,3 +226,11 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
                   DEPENDS protoms3)
 
 add_custom_target(clean-test COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/clean-test.cmake)
+
+if(COVERAGE)
+    if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
+        add_custom_target(coverage COMMAND ${CMAKE_CTEST_COMMAND} -D Experimental)
+    elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "Intel")
+        message("-- Coverage not yet automated with Intel compiler, see testing readme.")
+    endif()
+endif()

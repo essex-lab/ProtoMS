@@ -125,16 +125,19 @@ class AmbParameterSet:
     .dat
     .frcmod
     .in
+
+    Takes a starting integer for parameter indices as an optional argument. Default = 6001.
     """
 
   
-    def __init__ ( self ):
+    def __init__ ( self, num=6001 ):
 
         self.atms = {}
         self.angs = {}
         self.bnds = {}
         self.dihs = {}
         self.cljs = cljs ()
+        self.start = num
 
         self.atm_fmt = str, float, float
         self.bnd_fmt = str, str, float, float
@@ -338,6 +341,13 @@ class AmbParameterSet:
             self.cljs.reses['HIE'+suff]['HD1'] = self.cljs.dum
             self.cljs.reses['ASP'+suff]['HD2'] = self.cljs.dum
         
+    def fix_gaff_diffs ( self ):
+        """Special fix to remove Amber fast water routine bonds from ProtoMS parameter file"""
+
+        #remove entry for fast water hw-ow, keep ow-hw (equivalent to TIP3P) 
+        for i in self.bnds.keys():
+            if i[0] == 'hw':
+                self.bnds.pop ( i )
             
     def write_protoms_ff ( self, fname ):
 
@@ -349,26 +359,26 @@ scl14coul  0.833333
 scl14lj    0.500\n"""
         
         s += '\nmode bond\n'
-        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
+        for i, j in enumerate ( sorted ( self.bnds ), self.start ):
             bnd = self.bnds[j]
             s += 'par  %4d%8.1f%15.10f  #%s-%s\n' % ( i, bnd.k, bnd.b0, bnd.at1, bnd.at2 )
 
-        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
+        for i, j in enumerate ( sorted ( self.bnds ), self.start ):
             bnd = self.bnds[j]
             s += 'atm  %4s  %4s  %4d #\n' % ( bnd.at1, bnd.at2, i )
 
         s += 'mode angle\n'
-        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.angs ), self.start ):
             ang = self.angs[j]
             s += 'par  %4d%8.1f%8.3f  #%s-%s-%s\n' % ( i, ang.k, ang.b0, ang.at1, ang.at2, ang.at3 )
 
-        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.angs ), self.start ):
             ang = self.angs[j]
             s += 'atm  %4s  %4s  %4s  %4d\n' % ( ang.at1, ang.at2, ang.at3, i )
 
 
         s += 'mode dihedral\n'
-        c = 6001
+        c = self.start
         for i in sorted ( self.dihs ):
             dih = self.dihs[i]
             s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 0, 0, 0 )
@@ -381,18 +391,18 @@ scl14lj    0.500\n"""
                     s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 1, j, 0 )
                 c += 1
                 
-        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.dihs ), self.start ):
             dih = self.dihs[j]
-            terms = tuple ( range ( ( i - 6001 ) * 5 + 6001, ( (i - 6000) * 5 + 6001 ) ) )
+            terms = tuple ( range ( ( i - self.start ) * 5 + self.start, ( (i - (self.start - 1)) * 5 + self.start ) ) )
             s += 'par  %4d  %4d  %4d  %4d  %4d  %4d  # %s-%s-%s-%s\n' % ( ( i, ) + terms + ( dih.at1, dih.at2, dih.at3, dih.at4 ) )
             
-        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.dihs ), self.start ):
             dih = self.dihs[j]
             s += 'atm  %4s  %4s  %4s  %4s  %4d  #\n' % ( dih.at1, dih.at2, dih.at3, dih.at4, i )
 
         prot_no = { 'H' : 1, 'C' : 6, 'N' : 7, 'O' : 8, 'S' : 16, 'D' : 0 }
         s += 'mode clj\n'
-        for i, j in enumerate ( self.cljs, 6001 ):
+        for i, j in enumerate ( self.cljs, self.start ):
             element = j.type[0]
             try:
                 float ( element )
@@ -432,13 +442,13 @@ scl14lj    0.500\n"""
                     cols = line.strip().split()
                     at = cols[2]
                     s += ' '.join ( cols[:3] )
-                    s += ' {0} {0}\n'.format( self.cljs.cljbyres ( res, at ).id + 6000 )
+                    s += ' {0} {0}\n'.format( self.cljs.cljbyres ( res, at ).id + (self.start - 1) )
 
                 elif line.startswith ( 'atom' ):
                     cols = line.strip().split()
                     at = cols[1]
                     s += ' '.join ( cols[:2] )
-                    s += ' {0} {0} '.format( self.cljs.cljbyres ( res, conv['backbone'][at] ).id + 6000 )
+                    s += ' {0} {0} '.format( self.cljs.cljbyres ( res, conv['backbone'][at] ).id + (self.start - 1) )
                     s += ' '.join ( cols[4:] ) + '\n'
 
                 else:
@@ -452,12 +462,31 @@ scl14lj    0.500\n"""
                     cols = line.strip().split()
                     at = cols[1]
                     s += ' '.join ( cols[:2] )
-                    s += ' {0} {0} {1} {1} {2} {2} '.format ( self.cljs.cljbyres ( res, conv[res][at] ).id + 6000,
-                                                              self.cljs.cljbyres ( res+'nt', conv[res][at] ).id + 6000,
-                                                              self.cljs.cljbyres ( res+'ct', conv[res][at] ).id + 6000)                                                             
+                    s += ' {0} {0} {1} {1} {2} {2} '.format ( self.cljs.cljbyres ( res, conv[res][at] ).id + (self.start - 1),
+                                                              self.cljs.cljbyres ( res+'nt', conv[res][at] ).id + (self.start - 1),
+                                                              self.cljs.cljbyres ( res+'ct', conv[res][at] ).id + (self.start - 1))                                                             
                     s += ' '.join ( cols[-3:] ) + '\n'
                 else:
                     s += line
+        with open ( fname, 'w' ) as f:
+            f.write ( s )
+
+    def write_protoms_types ( self, fname ):
+
+        print "Writing types file with LJ parameters"
+
+        s = ""
+        # GAFF lower case element definitions
+        prot_no = { 'h' : 1, 'c' : 6, 'n' : 7, 'o' : 8, 'f' : 9, 'p' : 15,
+                    's' : 16, 'cl' : 17, 'br' : 35, 'i' : 53, 'D' : 0 }
+        for i,j in self.atms.items():
+            if i in ['cl','br']:   
+               element = i
+            else:
+               element = i[0]
+            # Types format requires rmin/2 -> sigma conversion 
+            s += '%2s sig %8.5f eps %8.5f proton %02d\n' % ( ( i, j.sigma * 1.7818, j.epsilon, prot_no[element]) )
+
         with open ( fname, 'w' ) as f:
             f.write ( s )
 
@@ -630,27 +659,27 @@ scl14coul  0.500
 scl14lj    0.500\n"""
         
         s += '\nmode bond\n'
-        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
+        for i, j in enumerate ( sorted ( self.bnds ), self.start ):
             bnd = self.bnds[j]
             s += 'par  %4d%8.1f%15.10f  #%s-%s\n' % ( i, bnd.k, bnd.b0, 
                                                       bnd.at1, bnd.at2 )
 
-        for i, j in enumerate ( sorted ( self.bnds ), 6001 ):
+        for i, j in enumerate ( sorted ( self.bnds ), self.start ):
             bnd = self.bnds[j]
             s += 'atm  %4s  %4s  %4d #\n' % ( bnd.at1, bnd.at2, i )
 
         s += 'mode angle\n'
-        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.angs ), self.start ):
             ang = self.angs[j]
             s += 'par  %4d%8.1f%8.3f  #%s-%s-%s\n' % ( i, ang.k, ang.b0, ang.at1, ang.at2, ang.at3 )
 
-        for i, j in enumerate ( sorted ( self.angs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.angs ), self.start ):
             ang = self.angs[j]
             s += 'atm  %4s  %4s  %4s  %4d\n' % ( ang.at1, ang.at2, ang.at3, i )
 
 
         s += 'mode dihedral\n'
-        c = 6001
+        c = self.start
         for i in sorted ( self.dihs ):
             dih = self.dihs[i]
             s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 0, 0, 0 )
@@ -664,18 +693,18 @@ scl14lj    0.500\n"""
                     s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 1, j, 0 )
                 c += 1
                 
-        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.dihs ), self.start ):
             dih = self.dihs[j]
-            terms = tuple ( range ( ( i - 6001 ) * 5 + 6001, ( (i - 6000) * 5 + 6001 ) ) )
+            terms = tuple ( range ( ( i - self.start ) * 5 + self.start, ( (i - self.start -1) * 5 + self.start ) ) )
             s += 'par  %4d  %4d  %4d  %4d  %4d  %4d  # %s-%s-%s-%s\n' % ( ( i, ) + terms + ( dih.at1, dih.at2, dih.at3, dih.at4 ) )
             
-        for i, j in enumerate ( sorted ( self.dihs ), 6001 ):
+        for i, j in enumerate ( sorted ( self.dihs ), self.start ):
             dih = self.dihs[j]
             s += 'atm  %4s  %4s  %4s  %4s  %4d  #\n' % ( dih.at1, dih.at2, dih.at3, dih.at4, i )
 
         prot_no = { 'H' : 1, 'C' : 6, 'N' : 7, 'O' : 8, 'S' : 16, 'D' : 0 }
         s += 'mode clj\n'
-        for i, j in enumerate ( self.cljs, 6001 ):
+        for i, j in enumerate ( self.cljs, self.start ):
             element = j.type[0]
             try:
                 float ( element )
@@ -684,6 +713,25 @@ scl14lj    0.500\n"""
               pass
 
             s += 'par  %4d  %4s   %02d  %8.4f  %8.4f  %8.4f  #\n' % ( ( i, j.type, prot_no[element], j.chg, j.sigma, j.epsilon ) )
+
+        with open ( fname, 'w' ) as f:
+            f.write ( s )
+
+    def write_protoms_types ( self, fname ):
+
+        print "Writing types file with LJ parameters"
+
+        s = ""
+        # GAFF lower case element definitions
+        prot_no = { 'h' : 1, 'c' : 6, 'n' : 7, 'o' : 8, 'f' : 9, 'p' : 15,
+                    's' : 16, 'cl' : 17, 'br' : 35, 'i' : 53, 'D' : 0 }
+        for i,j in self.atms.items():
+            if i in ['cl','br']:   
+               element = i
+            else:
+               element = i[0]
+            # Types format requires rmin/2 -> sigma conversion 
+            s += '%2s sig %8.5f eps %8.5f proton %02d\n' % ( ( i, j.sigma * 1.7818, j.epsilon, prot_no[element]) )
 
         with open ( fname, 'w' ) as f:
             f.write ( s )

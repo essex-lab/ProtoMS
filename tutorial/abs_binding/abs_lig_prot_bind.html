@@ -82,14 +82,21 @@ inter/protein1-bnz/sum
 and when asked for the type of plot, simply select option <code>5</code>. The plot should look something like this.<br>
 <img src="results_total_bnd.png" width="33%" height="33%" alt="" /><br>
  You will notice that the interaction energy between the ligand and its surrounding equilibrates very quickly. The computed free energy should be between 9.0 and 10.0 kcal/mol (depending on estimator and equilibration removed). </p>
-<p>
-In a double-decoupling simulation you need to calculate the free energy of adding the harmonic restraint as well as taking into account the symmetry of benzene, &sigma; (which is 12). Therefore, we need to evaluate the following: &Delta;<em>G</em><sub>rest</sub> = <em>RT</em> ln &sigma;<em>V</em><sub>sim</sub> / <em>V</em><sub>0</sub>, where <em>RT</em> is the gas constant multiplied by the absolute temperature and <em>V</em><sub>0</sub>=1660 A<sup>3</sup>. The simulation volume of benzene <em>V</em><sub>sim</sub> can be estimated from (<i>2&pi;RT / k</i>)<sup>3/2</sup> where <i>k</i> is the harmonic spring constant. With a spring constant of 2 kcal / mol, this free energy evaluates to -2.34 kcal/mol. (Note that ProtoMS defines the harmonic restraint using <em>k</em>, rather than 0.5 <em>k</em>, the above formula for the simulation volume is correct for a restraint with 0.5 <em>k</em>)
-<p>The standard binding free energy of benzene can the be estimated from:
+<p>As we have decoupled the ligand whilst using a restraint there are two additional correction terms that must be calculated. These are the free energy to introduce the restraint whilst the ligand is in the protein (&Delta;<em>G</em><sub>rest1</sub>) and the free energy to release the restraint in the gas phase (&Delta;<em>G</em><sub>rest2</sub>). As the second term is for the gas phase it has a simple analytical form that also incorporates a standard state correction. This is evaluated as the following: &Delta;<em>G</em><sub>rest2</sub> = <em>RT</em> ln ( <em>V</em><sub>sim</sub> / <em>V</em><sub>0</sub> ), where <em>RT</em> is the gas constant multiplied by the absolute temperature and <em>V</em><sub>0</sub>=1660 A<sup>3</sup>. The simulation volume of benzene <em>V</em><sub>sim</sub> can be estimated from (<i>2&pi;RT / k</i>)<sup>3/2</sup> where <i>k</i> is the harmonic spring constant. With a spring constant of 2 kcal / mol. &Delta;<em>G</em><sub>rest2</sub> should evaluate to -3.84 kcal/mol. (Note that ProtoMS defines the harmonic restraint using <em>k</em>, rather than 0.5 <em>k</em>, the above formula for the simulation volume is correct for a restraint with 0.5 <em>k</em>).</p>
+
+<p>Unfortunately, the bound phase restraint term, &Delta;<em>G</em><sub>rest1</sub>, has no simple solution and must be calculated from an additional simulation. The file run_bnd_rstr.cmd was also created by the setup tools. It performs a replica exchange free simulation for the bound phase system with and without the restraint. This can be executed with:
+  <pre>mpirun -np 2 $PROTOMSHOME/protoms3 run_bnd_rstr.cmd</pre>
+  and will create the output folder out_bnd_rstr. The free energy to introduce the restraint is then calculated similarly to before:
+  <pre>python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_bnd_rstr/ -s 150 -e bar</pre>
+  where the amount of skipped data is chosen as above. Only the free energy difference calculated using BAR is requested as the trapezium rule used to evaluate TI cannot be considered accurate with only 2 &lambda; values as here. This should evaluate to ~1 kcal/mol.
+</p>
+
+<p>The standard binding free energy of benzene can then be estimated from:
 </p>
 <p>
-&Delta;<em>G</em><sub>bind</sub> = &Delta;<em>G</em><sub>free</sub> &ndash; &Delta;<em>G</em><sub>bound</sub> &ndash; &Delta;<em>G</em><sub>rest</sub> 
+&Delta;<em>G</em><sub>bind</sub> = &Delta;<em>G</em><sub>free</sub> &ndash; &Delta;<em>G</em><sub>bound</sub> &ndash; &Delta;<em>G</em><sub>rest1</sub> &ndash; &Delta;<em>G</em><sub>rest2</sub> 
 </p>
-<p>and it should evaluate to between -6.0 and -6.5 kcal /mol. The experimental value is -5.2 kcal/mol, so we are a little bit off.</p>
+<p>and it should evaluate to between -5.4 and -5.9 kcal/mol. The experimental value is -5.2 kcal/mol, so the computational prediction is pretty good!</p>
 <p>  
 <hr align="center"/>
 <p> 
