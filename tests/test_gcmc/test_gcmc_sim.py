@@ -22,6 +22,7 @@ from tools import testtools
 
 out_gcmc_tools = ["gcmc_box.pdb"]
 output_files_setup = ["gcmc_wat.pdb", "run_gcmc.cmd"]
+output_subdirs = ["b_+19.000","b_+20.000"]
 out_sim_files = ["results", "accept", "all.pdb", "restart", "warning"]
 
 
@@ -52,7 +53,7 @@ class TestGCMC(unittest.TestCase):
         else:
             raise simulationobjects.SetupError("Creation of GCMC simulation box was not successful!")
 
-        if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 19 20 --nequil 0 --nprod 1000 --ranseed 100000 --dumpfreq 100 --capradius 26 -w water.pdb", shell=True)) == 0):
             # Checking whether the required output files have been setup for GCMC simulation.
 
             for outfile in output_files_setup:
@@ -69,18 +70,18 @@ class TestGCMC(unittest.TestCase):
             raise simulationobjects.SetupError("ProtoMS setup and command files generation is not successful.")
 
         # Test for ProtoMS simulation.
-        if((call("$PROTOMSHOME/build/protoms3 run_gcmc.cmd", shell=True)) == 0):
+        if((call("mpirun -np 2 $PROTOMSHOME/build/protoms3 run_gcmc.cmd", shell=True)) == 0):
             # Checking whether the simulation output files have been created successfully.
             comparetools = testtools.CompareTools(ref_dir, verbose=True)
+            for subdir in output_subdirs:
+                for outfile in out_sim_files:
+                    outfile_rel = os.path.join("out_gcmc", subdir, outfile)
+                    self.assertTrue(os.path.exists(outfile_rel),
+                                    "GCMC simulation file {0} is missing.".format(outfile_rel))
 
-            for outfile in out_sim_files:
-                outfile_rel = os.path.join("out_gcmc", outfile)
-                self.assertTrue(os.path.exists(outfile_rel),
-                                "GCMC simulation file {0} is missing.".format(outfile_rel))
-
-                # Checking content of GCMC simulation output files with reference data in files.
-                self.assertTrue(comparetools.compare((outfile_rel, outfile)),
-                                "Content mismatch between output and reference for file {0}".format(outfile_rel))
+                    # Checking content of GCMC simulation output files with reference data in files.
+                    self.assertTrue(comparetools.compare((outfile_rel, outfile)),
+                                    "Content mismatch between output and reference for file {0}".format(outfile_rel))
 
         else:
             raise simulationobjects.SetupError("GCMC simulation was not successful.")

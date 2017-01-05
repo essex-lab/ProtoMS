@@ -1,6 +1,6 @@
-DEBUG : Running protoms.py at 16/07/2015 - 16:46:23
-DEBUG : Command line arguments = -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb
-DEBUG : Settings = Namespace(absolute=False, adams=[20.0], atomnames=None, capradius=26.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=['gcmc_box.pdb'], gcmcwater='wat.pdb', innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=None, nequil=0.0, nprod=100.0, outercut=20.0, outfolder='', protein=None, ranseed='100000', repeats='', scoop='protein.pdb', scooplimit=10, simulation='gcmc', singlemap=None, template=None, testrun=False, water='water.pdb', waterbox=None, watmodel='tip4p')
+DEBUG : Running protoms.py at 05/01/2017 - 15:02:46
+DEBUG : Command line arguments = -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 19 20 --nequil 0 --nprod 1000 --ranseed 100000 --dumpfreq 100 --capradius 26 -w water.pdb
+DEBUG : Settings = Namespace(absolute=False, adams=[19.0, 20.0], adamsrange=None, atomnames=None, capradius=26.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=['gcmc_box.pdb'], gcmcwater='wat.pdb', innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=None, nequil=0.0, nprod=1000.0, outercut=20.0, outfolder='', protein=None, ranseed='100000', repeats='', scoop='protein.pdb', scooplimit=10, setupseed=None, simulation='gcmc', singlemap=None, template=None, testrun=False, tune=False, water='water.pdb', waterbox=None, watmodel='tip4p')
 INFO : 
 INFO : Setting up protein: protein.pdb...
 INFO : 
@@ -17,5 +17,5 @@ DEBUG : 	ligand        = None
 DEBUG : 	templates     = None
 DEBUG : 	protein_water = water.pdb
 DEBUG : 	ligand_water  = None
-DEBUG : 	settings      = Namespace(absolute=False, adams=[20.0], atomnames=None, capradius=26.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=10.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox='gcmc_box.pdb', gcmcwater='gcmc_wat.pdb', innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=None, nequil=0.0, nprod=100.0, outercut=20.0, outfolder='out', protein=None, ranseed='100000', repeats=[''], scoop='protein.pdb', scooplimit=10, simulation='gcmc', singlemap=None, template=None, testrun=False, water='water.pdb', waterbox='/home/aicm1f12/ProtoMS3/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : 	settings      = Namespace(absolute=False, adams=[19.0, 20.0], adamsrange=None, atomnames=None, capradius=26.0, center=None, charge=None, cleanup=False, cmdfile='run', dovacuum=False, dumpfreq=100.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox='gcmc_box.pdb', gcmcwater='gcmc_wat.pdb', innercut=16.0, jawsbias=[6.5], lambdas=[16], ligand=None, nequil=0.0, nprod=1000.0, outercut=20.0, outfolder='out_gcmc', protein=None, ranseed='100000', repeats=[''], scoop='protein.pdb', scooplimit=10, setupseed=None, simulation='gcmc', singlemap=None, template=None, testrun=False, tune=False, water='water.pdb', waterbox='/home/cica1d14/scratch/protoms-dev/data/wbox_tip4p.pdb', watmodel='tip4p')
 DEBUG : This will make an input file for ProtoMS
