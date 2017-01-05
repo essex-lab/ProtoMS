@@ -38,7 +38,7 @@ class TestSampling(unittest.TestCase):
         """ Test for Sampling function."""
         comparetools = testtools.CompareTools(ref_dir, verbose=True)
 
-        if call("python2.7 $PROTOMSHOME/protoms.py -s sampling -l dcb.pdb -p protein.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10", shell=True) == 0:
+        if call("python2.7 $PROTOMSHOME/protoms.py -s sampling -l dcb.pdb -p protein.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --gaff gaff14", shell=True) == 0:
 
             # Checking whether the required output files have been setup for Sampling MC moves.
             for outfile in output_files_setup:

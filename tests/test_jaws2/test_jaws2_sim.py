@@ -20,7 +20,7 @@ site.addsitedir(proto_env)
 from tools import simulationobjects
 from tools import testtools
 
-output_files_setup = ["fragment.tem", "fragment.frcmod", "fragment.prepi", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb"]
+output_files_setup = ["fragment.tem", "fragment.zmat", "fragment_box.pdb", "protein_scoop.pdb"]
 outfiles_setup = ["jaws2_wat1.pdb", "jaws2_wat2.pdb", "jaws2_wat3.pdb", "jaws2_not1.pdb", "jaws2_not2.pdb", "jaws2_not3.pdb", "run_jaws2-w1_jaws.cmd", "run_jaws2-w2_jaws.cmd", "run_jaws2-w3_jaws.cmd"]
 output_subdirs = ["j_+8.000", "j_+10.000", "j_+12.000", "j_+14.000"]
 out_sim_files = ["accept", "all.pdb", "restart", "restart.prev", "results", "warning"]

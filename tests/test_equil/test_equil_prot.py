@@ -20,8 +20,7 @@ from tools import simulationobjects
 from tools import testtools
 
 ref_dir = proto_env + "/tests/equil/"
-input_files_setup = ["dcb.prepi", "dcb.frcmod", "dcb.zmat", "dcb.tem",
-                     "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
+input_files_setup = ["dcb.zmat", "dcb.tem", "dcb_box.pdb", "protein_scoop.pdb", "water.pdb"]
 output_files_setup = ["run_bnd.cmd"]
 out_sim_files = ["equil_bnd.pdb", "warning"]
 
@@ -39,7 +38,7 @@ class TestEquilibrationSetup(unittest.TestCase):
         """ Test for equilibration function."""
         comparetools = testtools.CompareTools(ref_dir, verbose=True)
 
-        if call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000", shell=True) == 0:
+        if call("python2.7 $PROTOMSHOME/protoms.py -s equilibration -l dcb.pdb -p protein.pdb --nequil 100 --ranseed 100000 --gaff gaff14", shell=True) == 0:
 
             # Checking whether the required output files have been setup for equilibration MC moves.
             for infile in input_files_setup:

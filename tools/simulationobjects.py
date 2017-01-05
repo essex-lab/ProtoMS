@@ -1059,6 +1059,8 @@ class SnapshotResults :
         self.extraenergy = EnergyResults(line=fileobj.readline())
       elif line.startswith("Average solvent cap energy") :
         self.capenergy = float(line.strip().split()[4])
+      elif line.startswith("HARMONIC"):
+        self.harmonic = EnergyResults(line=line)
       elif line.startswith("Average ") :
         cols = line.strip().split()
         if cols[1] in ["solvent-solvent","GCS-GCS"] :
@@ -1257,6 +1259,8 @@ class ResultsFile :
         self.series.feenergies[elabel] = np.zeros(nsnap)
     if hasattr(self.snapshots[0],"thetavals") :
       self.series.thetavals = [np.zeros(nsnap) for i in self.snapshots[0].thetavals]
+    if hasattr(self.snapshots[0],"harmonic") :
+      set_energyresults ( self.series.harmonic )
       #for elabel in self.series.thetavals :
       #  self.series.thetavals[elabel] = np.zeros(nsnap)
 
@@ -1288,7 +1292,8 @@ class ResultsFile :
         for j in range(len(self.series.thetavals)) :
 #          self.series.thetavals[elabel][i] = snapshot.thetavals[elabel]
           self.series.thetavals[j][i] = snapshot.thetavals[j]
-
+      if hasattr(snapshot,"harmonic") :
+        put_energyresults ( self.series.harmonic, snapshot.harmonic, i)
     return self.series
 
 #---------------------------------------------------------

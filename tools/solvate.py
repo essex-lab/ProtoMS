@@ -74,7 +74,7 @@ def solvate(box, ligand=None, protein=None, geometry="box",
   """
 
   #
-  # Lennard-Jones parameters of GAFF atom-types from gaff14.types
+  # Lennard-Jones parameters of GAFF atom-types from gaff16.types
   # H and O parameters are averaged over all atom-types
   #
   # This is used to calculate the van der Waals interaction with water oxygen

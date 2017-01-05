@@ -52,7 +52,7 @@ class TestGCMC(unittest.TestCase):
         else:
             raise simulationobjects.SetupError("Creation of GCMC simulation box was not successful!")
 
-        if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb", shell=True)) == 0):
+        if((call("python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26 -w water.pdb --gaff gaff14", shell=True)) == 0):
             # Checking whether the required output files have been setup for GCMC simulation.
 
             for outfile in output_files_setup:

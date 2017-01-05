@@ -19,3 +19,4 @@ tests/test_setup/.coverage
 tests/test_setup/.DS_Store
 .DS_Store
 .idea
+env*/

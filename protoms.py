@@ -248,7 +248,7 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
     # By this stage we should have all necessary files to make the template file
     files["tem"] = ligprefix+".tem"
     tem = tools.build_template(temfile=files["tem"],prepifile=files["prepi"],zmatfile=files["zmat"],
-                        frcmodfile=files["frcmod"],resname=resnam)
+                        frcmodfile=files["frcmod"],resname=resnam,gaffversion=settings.gaff)
     tem.write(files["tem"])
     if files["zmat"] is None :
       files["zmat"] = ligprefix+".zmat"
@@ -848,6 +848,7 @@ if __name__ == "__main__":
   liggroup = parser.add_argument_group("Ligand setup variables")
   liggroup.add_argument('--charge',nargs="+",type=float,help="the net charge of each ligand")
   liggroup.add_argument('--singlemap',help="the correspondance map for single-topology")
+  liggroup.add_argument('--gaff',help="the version of GAFF to use for ligand", default="gaff16")
   # Protein setup variables
   protgroup = parser.add_argument_group("Protein setup variables")
   protgroup.add_argument('--center',help="the center of the scoop, if ligand is not available, either a string or a file with the coordinates",default=None)
@@ -1060,6 +1061,7 @@ if __name__ == "__main__":
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
     if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat :
+      
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_vdw" in repeat :
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,ranseed,args)
@@ -1081,8 +1083,12 @@ if __name__ == "__main__":
         bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_jaws.cmd") 
       else :
         bnd_cmd.writeCommandFile(args.cmdfile+repeat+"_bnd.cmd")       
-    if gas_cmd is not None : 
-      gas_cmd.writeCommandFile(args.cmdfile+repeat+"_gas.cmd")   
+    if gas_cmd is not None :
+      if args.absolute:
+        # in this case, gas_cmd contains a cmd file to account for introduction of the harmonic restraint
+        gas_cmd.writeCommandFile(args.cmdfile+repeat+"_bnd_rstr.cmd")   
+      else:
+        gas_cmd.writeCommandFile(args.cmdfile+repeat+"_gas.cmd")   
       
     
   if args.cleanup :
