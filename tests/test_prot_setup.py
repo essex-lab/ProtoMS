@@ -15,7 +15,8 @@ class ProtSetupTest(framework.BaseTest):
         "-s", "none",
         "-l", "dcb.pdb",
         "-p", "protein.pdb",
-        "--setupseed", "100000"
+        "--setupseed", "100000",
+        "--gaff", "gaff14"
     ]
 
     setup_output_files = [

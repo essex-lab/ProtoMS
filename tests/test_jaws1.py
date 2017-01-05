@@ -3,7 +3,7 @@ import unittest
 import framework
 
 
-class Jaws1Test(framework.BaseTest):
+class Jaws1SetupTest(framework.BaseTest):
     ref_dir = "tests/jaws1/"
 
     copy_files = [
@@ -21,14 +21,35 @@ class Jaws1Test(framework.BaseTest):
         "--ranseed", "100001",
         "--setupseed", "100000",
         "--dumpfreq", "10",
-        "-w water.pdb"
+        "-w", "water.pdb",
+        "--gaff", "gaff14"
     ]
 
     setup_output_files = [
         "water_clr.pdb",
         "jaws1_box.pdb",
         "jaws1_wat.pdb",
-        "run_jaws.cmd"
+        "run_jaws.cmd",
+        "fragment_box.pdb",
+        "fragment.frcmod",
+        "fragment.prepi",
+        "fragment.tem",
+        "fragment.zmat",
+        "protein_scoop.pdb"
+    ]
+
+
+class Jaws1SimulationTest(framework.BaseTest):
+    ref_dir = "tests/jaws1/"
+
+    copy_files = [
+        "fragment.pdb",
+        "water_clr.pdb",
+        "jaws1_box.pdb",
+        "jaws1_wat.pdb",
+        "run_jaws.cmd",
+        "fragment.tem",
+        "protein_scoop.pdb"
     ]
 
     simulation_args = [
@@ -38,10 +59,12 @@ class Jaws1Test(framework.BaseTest):
     simulation_output_directory = "out_jaws"
 
     simulation_output_files = [
-        "results",
         "accept",
         "all.pdb",
+        "info",
         "restart",
+        "restart.prev",
+        "results",
         "warning"
     ]
 

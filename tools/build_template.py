@@ -534,6 +534,8 @@ def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None
     angle_params = sim.ParameterSet ('angle', gaff_file )
     dihedral_params = sim.ParameterSet ( 'dihedral', gaff_file )
 
+    if gaffversion == "gaff14":
+        gaffversion = "gaff"
     with open ( sim.standard_filename(gaffversion + ".types","parameter") ) as f:
         at_params = [ line.split() for line in f ]
 

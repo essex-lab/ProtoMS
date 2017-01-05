@@ -171,23 +171,30 @@ endif()
 ###################################
 # Python Unit tests
 ###################################
-add_test(TestPrintVersion protoms3 -v)
+add_test(NAME TestPrintVersion COMMAND protoms3 -v)
 
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B})
 
-add_test(test_install_dependencies ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
-add_test(test_ligand_setup ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_ligand_setup.py)
-add_test(test_parameters_ff ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parameters_ff.py)
-add_test(test_path ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.py)
-add_test(test_tools_protoms ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
+add_test(NAME test_install_dependencies 
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_install_dependencies.py)
+
+add_test(NAME test_ligand_setup 
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_ligand_setup.py)
+
+add_test(NAME test_parameters_ff 
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_parameters_ff.py)
+
+add_test(NAME test_path 
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.py)
+
+add_test(NAME test_tools_protoms 
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
 
 add_test(NAME test_prot_setup
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_setup/test_prot_setup.py)
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_prot_setup.py)
 
-add_test(NAME test_equil_setup
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil/test_equil_prot.py)
+add_test(NAME test_equil
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil.py)
 
 add_test(NAME test_system_energies
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies
@@ -201,13 +208,13 @@ add_test(NAME test_gcmc_sim
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc/test_gcmc_sim.py)
 
-add_test(NAME test_jaws1_sim
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1/test_jaws1_sim.py)
+add_test(NAME test_jaws1
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1.py)
 
 # Skip MPI tests is not using MPI
 if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
-    add_test(test_mpi ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
+    add_test(NAME test_mpi
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
 
     add_test(NAME test_jaws2_sim
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2

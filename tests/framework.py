@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import unittest
 import subprocess
 import os
@@ -25,15 +27,13 @@ class BaseTest(unittest.TestCase):
         # cls.test_dir = tempfile.mkdtemp(prefix=".")
         # os.chdir(cls.test_dir)
 
+        cls.all_files = []
+
         try:
             cls.ref_dir
             cls.copy_files
 
-            for filename in cls.copy_files:
-                try:
-                    os.remove(filename)
-                except OSError:
-                    pass
+            cls.all_files.extend(cls.copy_files)
         except AttributeError:
             raise AttributeError("You must provide all required data when defining a test case. Check framework.py")
 
@@ -42,13 +42,8 @@ class BaseTest(unittest.TestCase):
             cls.setup_output_files
             cls.do_test_setup = True
 
-            for filename in cls.setup_output_files:
-                try:
-                    os.remove(filename)
-                except OSError:
-                    pass
+            cls.all_files.extend(cls.setup_output_files)
         except AttributeError:
-            print("Simulation-only test, not performing setup.")
             cls.do_test_setup = False
 
         try:
@@ -57,17 +52,15 @@ class BaseTest(unittest.TestCase):
             cls.simulation_output_files
             cls.do_test_simulation = True
 
-            for filename in cls.simulation_output_files:
-                try:
-                    os.remove(filename)
-                except OSError:
-                    pass
+            output_files = [os.path.join(cls.simulation_output_directory, f) for f in cls.simulation_output_files]
+            cls.all_files.extend(output_files)
         except AttributeError:
-            print("Setup-only test, not running simulation.")
             cls.do_test_simulation = False
 
         if not cls.do_test_setup and not cls.do_test_simulation:
             raise Exception("Test case runs neither setup nor simulation, it is defined incorrectly.")
+
+        cls.helper_clean_files()
 
         cls.full_ref_dir = os.path.join(protoms_env, cls.ref_dir)
         print(cls.full_ref_dir)
@@ -75,6 +68,26 @@ class BaseTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         super(BaseTest, cls).tearDownClass()
+        cls.helper_clean_files()
+
+    @classmethod
+    def helper_clean_files(cls):
+        for filename in cls.all_files:
+            try:
+                os.remove(filename)
+            except OSError:
+                pass
+        try:
+            if os.path.isdir(cls.simulation_output_directory) and not os.listdir(cls.simulation_output_directory):
+                os.rmdir(cls.simulation_output_directory)
+        except AttributeError:
+            pass
+
+    def helper_subprocess_call(self, args):
+        return_code = subprocess.call(args)
+        self.assertEqual(0, return_code)
+        if return_code == 0:
+            print("ProtoMS call successful")
 
     def helper_check_output(self, stage, output_files):
         compare_tools = CompareTools(self.full_ref_dir, verbose=True)
@@ -84,17 +97,22 @@ class BaseTest(unittest.TestCase):
                             "Expected {0} output file {1} is missing".format(stage, filename))
 
         for filename in output_files:
-            self.assertTrue(compare_tools.compare(filename),
-                            "Content mismatch between {0} output and reference for file {1}".format(stage, filename))
+            file_match = compare_tools.compare(filename)
+            if not file_match:
+                print(output_files)
+                self.all_files.remove(filename)
+            self.assertTrue(file_match, "Content mismatch between {0} output and reference for file {1}".format(stage, filename))
 
     def test(self):
+        # os.chdir(self.test_dir)
+
         for filename in self.copy_files:
             shutil.copy(os.path.join(self.full_ref_dir, filename), ".")
 
         if self.do_test_setup:
             print("\nTEST_SETUP_RUN\n")
             args = [self.setup_executable] + self.setup_args
-            self.assertEqual(0, subprocess.call(args))
+            self.helper_subprocess_call(args)
 
             print("\nTEST_SETUP_OUTPUT\n")
             self.helper_check_output("setup", self.setup_output_files)
@@ -102,7 +120,7 @@ class BaseTest(unittest.TestCase):
         if self.do_test_simulation:
             print("\nTEST_SIMULATION_RUN\n")
             args = [self.simulation_executable] + self.simulation_args
-            self.assertEqual(0, subprocess.call(args))
+            self.helper_subprocess_call(args)
 
             print("\nTEST_SIMULATION_OUTPUT\n")
             sim_out_files = [os.path.join(self.simulation_output_directory, filename) for filename in self.simulation_output_files]
@@ -128,9 +146,9 @@ class CompareTools:
 
         # Which comparison tool to use for each file format
         self.comparetools = {
-            "accept"      : self.diff_filecmp,
-            "warning"     : self.diff_filecmp,
-            ".cmd"        : self.diff_filecmp,  # Use ign_starts_with if paths vary on different systems
+            "accept"      : self.diff_text_try_number,
+            "warning"     : self.diff_text_try_number,
+            ".cmd"        : self.diff_text,  # Use ign_starts_with if paths vary on different systems
             "info"        : self.diff_text_ign_starts_with,
             ".pdb"        : self.diff_text_try_number,
             "restart"     : self.diff_text_try_number,
@@ -151,6 +169,33 @@ class CompareTools:
                      "These moves took"}
         }
 
+    def determine_file_type(self, filename):
+        """
+        Determine the type of the tested file from the dictionary self.comparetools
+
+        Parameters
+        ----------
+        filename : name of file for which to determine type
+
+        Returns
+        -------
+        str
+            Type of file, from dictionary self.comparetools
+        """
+        filetype = os.path.basename(filename)
+
+        if filetype not in self.comparetools:
+            filetype = os.path.splitext(filename)[1]
+            if not filetype:
+                filetype = os.path.basename(filename)
+
+        if filetype not in self.comparetools:
+            if self.verbose:
+                print("Unrecognised type for file {0}, using default filecmp.".format(filename))
+            filetype = None
+
+        return filetype
+
     def compare(self, filename):
         """
         Check whether file contents match using appropriate method
@@ -166,13 +211,7 @@ class CompareTools:
         """
         reffile = os.path.join(self.refdir, filename)
 
-        filetype = os.path.splitext(filename)[1]
-        if not filetype:
-            filetype = os.path.basename(filename)
-
-        if filetype not in self.comparetools:
-            print("Unrecognised type for file {0}, using default filecmp.".format(filename))
-            filetype = None
+        filetype = self.determine_file_type(filename)
 
         if self.comparetools[filetype](filename, reffile, filetype):
             if self.verbose:
