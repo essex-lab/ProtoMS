@@ -15,13 +15,23 @@ class BaseTest(unittest.TestCase):
     def setUpClass(cls):
         super(BaseTest, cls).setUpClass()
 
+        # Please excuse the following mess of attribute tests...
+
         try:
             protoms_env = os.environ["PROTOMSHOME"]
         except KeyError:
             raise Exception("PROTOMSHOME environment variable is not set.")
 
-        cls.setup_executable = os.path.join(protoms_env, "protoms.py")
-        cls.simulation_executable = os.path.join(protoms_env, "build", "protoms3")
+        try:
+            cls.setup_executable
+        except AttributeError:
+            cls.setup_executable = os.path.join(protoms_env, "protoms.py")
+
+        try:
+            cls.simulation_executable
+        except AttributeError:
+            cls.simulation_executable = os.path.join(protoms_env, "build", "protoms3")
+        print(cls.simulation_executable)
 
         # Temporary directory - files will be deleted after test
         # cls.test_dir = tempfile.mkdtemp(prefix=".")
@@ -35,7 +45,7 @@ class BaseTest(unittest.TestCase):
 
             cls.all_files.extend(cls.copy_files)
         except AttributeError:
-            raise AttributeError("You must provide all required data when defining a test case. Check framework.py")
+            raise AttributeError("You must provide ref_dir and copy_files when defining a test case. Check framework.py")
 
         try:
             cls.setup_args
@@ -48,11 +58,20 @@ class BaseTest(unittest.TestCase):
 
         try:
             cls.simulation_args
-            cls.simulation_output_directory
             cls.simulation_output_files
+            try:
+                cls.simulation_mpi_processes
+            except AttributeError:
+                cls.simulation_mpi_processes = 0
+
+            try:
+                if type(cls.simulation_output_directories) is str:
+                    cls.simulation_output_directories = [cls.simulation_output_directories]
+            except AttributeError:
+                cls.simulation_output_directories = [cls.simulation_output_directory]
             cls.do_test_simulation = True
 
-            output_files = [os.path.join(cls.simulation_output_directory, f) for f in cls.simulation_output_files]
+            output_files = [os.path.join(d, f) for f in cls.simulation_output_files for d in cls.simulation_output_directories]
             cls.all_files.extend(output_files)
         except AttributeError:
             cls.do_test_simulation = False
@@ -95,11 +114,12 @@ class BaseTest(unittest.TestCase):
         for filename in output_files:
             self.assertTrue(os.path.exists(filename),
                             "Expected {0} output file {1} is missing".format(stage, filename))
+            self.assertTrue(os.path.exists(os.path.join(self.full_ref_dir, filename)),
+                            "Reference {0} output file {1} is missing".format(stage, filename))
 
         for filename in output_files:
             file_match = compare_tools.compare(filename)
             if not file_match:
-                print(output_files)
                 self.all_files.remove(filename)
             self.assertTrue(file_match, "Content mismatch between {0} output and reference for file {1}".format(stage, filename))
 
@@ -107,7 +127,10 @@ class BaseTest(unittest.TestCase):
         # os.chdir(self.test_dir)
 
         for filename in self.copy_files:
-            shutil.copy(os.path.join(self.full_ref_dir, filename), ".")
+            try:
+                shutil.copy(os.path.join(self.full_ref_dir, filename), ".")
+            except IOError:
+                raise IOError("The required reference input file {0} could not be copied".format(filename))
 
         if self.do_test_setup:
             print("\nTEST_SETUP_RUN\n")
@@ -120,10 +143,12 @@ class BaseTest(unittest.TestCase):
         if self.do_test_simulation:
             print("\nTEST_SIMULATION_RUN\n")
             args = [self.simulation_executable] + self.simulation_args
+            if self.simulation_mpi_processes > 0:
+                args = ["mpirun", "-np", str(self.simulation_mpi_processes)] + args
             self.helper_subprocess_call(args)
 
             print("\nTEST_SIMULATION_OUTPUT\n")
-            sim_out_files = [os.path.join(self.simulation_output_directory, filename) for filename in self.simulation_output_files]
+            sim_out_files = [os.path.join(d, f) for f in self.simulation_output_files for d in self.simulation_output_directories]
             self.helper_check_output("simulation", sim_out_files)
 
 
