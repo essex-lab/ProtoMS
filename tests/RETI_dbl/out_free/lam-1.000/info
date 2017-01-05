@@ -23,7 +23,8 @@ Reading parameter file /home/james/projects/protoms-dev/parameter/solvents.ff
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
-Loaded   15 templates,    0 override templates,   21 clj parameters
+Found solvent template with TIP3p optimization
+Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
 #######################################################################################
