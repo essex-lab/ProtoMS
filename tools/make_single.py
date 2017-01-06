@@ -244,7 +244,7 @@ def _make_ele_tem(tem1,tem2,cmap) :
 
   return tem1
   
-def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
+def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True,gaffversion="gaff16") :
   """
   Make new single topology template file for van der Waals leg
   
@@ -262,6 +262,8 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
     map of correspondance
   usepdb : boolean, optional
     flag indicating if using variable geometries from pdb-file
+  gaffversion : str, optional
+    version of gaff to use, defaults to gaff16
 
   Returns
   -------
@@ -384,7 +386,7 @@ def _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,usepdb=True) :
   #print "\nThe following atoms change type: %s"%" ".join("%s"%atom.name for atom in atomlist)
 
   # Setup parameter sets to search
-  gaffname = sim.standard_filename("gaff16.ff","parameter")
+  gaffname = sim.standard_filename(gaffversion+".ff","parameter")
   gaffsets = {ptype:sim.ParameterSet(ptype,gaffname) for ptype in ["bond","angle","dihedral"]}
   temsets = {"bond" : tem1.bondatoms,"angle" : tem1.angleatoms,"dihedral" : tem1.dihedralatoms}
 
@@ -459,7 +461,7 @@ def _make_comb_tem(eletem,vdwtem) :
 
   return combtem
   
-def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
+def make_single(tem1,tem2,pdb1,pdb2,mapfile=None,gaffversion="gaff16") :
   """
   Make single topology templates
   
@@ -475,6 +477,8 @@ def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
     structure template for tem2 or its filename
   mapfile : string, optional
     filename of map of correspondance
+  gaffversion : str, optional
+    version of gaff to use, defaults to gaff16
 
   Returns
   -------
@@ -535,7 +539,7 @@ def make_single(tem1,tem2,pdb1,pdb2,mapfile=None) :
 
   _make_map(tem1,tem2,pdb1,pdb2,cmap)
   eletem = _make_ele_tem(tem1,tem2,cmap)
-  vdwtem = _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap)
+  vdwtem = _make_vdw_tem(tem1,tem2,pdb1,pdb2,cmap,gaffversion=gaffversion)
   combtem = _make_comb_tem(eletem,vdwtem)
   
   return eletem,vdwtem,combtem,cmap
@@ -620,6 +624,7 @@ if __name__ == '__main__' :
   parser.add_argument('-p1','--pdb1',help="PDB-file for V1")
   parser.add_argument('-m','--map',help="the correspondance map from V0 to V1")
   parser.add_argument('-o','--out',help="prefix of the output file",default="single")
+  parser.add_argument('--gaff',help="the version of GAFF to use for ligand", default="gaff16")
   args = parser.parse_args()
   
   # Setup the logger
@@ -628,7 +633,7 @@ if __name__ == '__main__' :
   if args.tem0 is None or args.tem1 is None or args.pdb0 is None or args.pdb1 is None :
     sim.SetupError("Not all four necessary input files given. Cannot setup single-topology")
 
-  eletem,vdwtem,combtem,cmap = make_single(args.tem0,args.tem1,args.pdb0,args.pdb1,args.map)
+  eletem,vdwtem,combtem,cmap = make_single(args.tem0,args.tem1,args.pdb0,args.pdb1,args.map,gaffversion=args.gaff)
   eletem.write(args.out+"_ele.tem")
   vdwtem.write(args.out+"_vdw.tem")
   combtem.write(args.out+"_comb.tem")
