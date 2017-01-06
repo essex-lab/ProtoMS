@@ -23,12 +23,12 @@ class BaseTest(unittest.TestCase):
             raise Exception("PROTOMSHOME environment variable is not set.")
 
         try:
-            cls.setup_executable
+            cls.setup_executable = os.path.join(protoms_env, "tools", cls.setup_executable)
         except AttributeError:
             cls.setup_executable = os.path.join(protoms_env, "protoms.py")
 
         try:
-            cls.simulation_executable
+            cls.simulation_executable = os.path.join(protoms_env, "build", cls.simulation_executable)
         except AttributeError:
             cls.simulation_executable = os.path.join(protoms_env, "build", "protoms3")
         print(cls.simulation_executable)

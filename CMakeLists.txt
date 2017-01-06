@@ -203,9 +203,8 @@ add_test(NAME test_system_energies
 add_test(NAME test_sampling
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling.py)
 
-add_test(NAME test_gcmc_sim
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc/test_gcmc_sim.py)
+add_test(NAME test_gcmc
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py)
 
 add_test(NAME test_jaws1
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1.py)
