@@ -7,13 +7,24 @@ import shutil
 import itertools
 import string
 import filecmp
-# import tempfile
+import errno
 
 
 class BaseTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super(BaseTest, cls).setUpClass()
+
+        # Create a directory for each test to hold test files
+        # Allows you to check them if the test fails
+        cls.test_dir = os.path.join("test_files", cls.__name__)
+        try:
+            os.makedirs(cls.test_dir)
+        except OSError as e:
+            if errno.EEXIST != e.errno:
+                raise e
+        cls._start_dir = os.getcwd()
+        os.chdir(cls.test_dir)
 
         # Please excuse the following mess of attribute tests...
 
@@ -31,14 +42,10 @@ class BaseTest(unittest.TestCase):
             cls.simulation_executable = os.path.join(protoms_env, "build", cls.simulation_executable)
         except AttributeError:
             cls.simulation_executable = os.path.join(protoms_env, "build", "protoms3")
-        print(cls.simulation_executable)
-
-        # Temporary directory - files will be deleted after test
-        # cls.test_dir = tempfile.mkdtemp(prefix=".")
-        # os.chdir(cls.test_dir)
 
         cls.all_files = []
 
+        # These are required for every test
         try:
             cls.ref_dir
             cls.copy_files
@@ -46,19 +53,23 @@ class BaseTest(unittest.TestCase):
             cls.all_files.extend(cls.copy_files)
         except AttributeError:
             raise AttributeError("You must provide ref_dir and copy_files when defining a test case. Check framework.py")
+        cls.full_ref_dir = os.path.join(protoms_env, cls.ref_dir)
 
+        # For tests of setup functionality these are required
         try:
             cls.setup_args
             cls.setup_output_files
-            cls.do_test_setup = True
 
+            cls.do_test_setup = True
             cls.all_files.extend(cls.setup_output_files)
         except AttributeError:
             cls.do_test_setup = False
 
+        # For tests of simulation functionality these are required
         try:
             cls.simulation_args
             cls.simulation_output_files
+
             try:
                 cls.simulation_mpi_processes
             except AttributeError:
@@ -79,15 +90,14 @@ class BaseTest(unittest.TestCase):
         if not cls.do_test_setup and not cls.do_test_simulation:
             raise Exception("Test case runs neither setup nor simulation, it is defined incorrectly.")
 
+        # Delete files left over from previous test runs
         cls.helper_clean_files()
-
-        cls.full_ref_dir = os.path.join(protoms_env, cls.ref_dir)
-        print(cls.full_ref_dir)
 
     @classmethod
     def tearDownClass(cls):
         super(BaseTest, cls).tearDownClass()
-        cls.helper_clean_files()
+        # cls.helper_clean_files()
+        os.chdir(cls._start_dir)
 
     @classmethod
     def helper_clean_files(cls):
@@ -124,8 +134,6 @@ class BaseTest(unittest.TestCase):
             self.assertTrue(file_match, "Content mismatch between {0} output and reference for file {1}".format(stage, filename))
 
     def test(self):
-        # os.chdir(self.test_dir)
-
         for filename in self.copy_files:
             try:
                 shutil.copy(os.path.join(self.full_ref_dir, filename), ".")
@@ -285,6 +293,9 @@ class CompareTools:
             for l1, l2 in itertools.izip(f1, f2):
                 skip = False
 
+                if l1 == l2:
+                    continue
+
                 if ign_starts_with is not None:
                     for start in ign_starts_with:
                         if l1.startswith(start):
@@ -363,6 +374,9 @@ class CompareTools:
 
         with open(file1) as f1, open(file2) as f2:
             for l1, l2 in itertools.izip(f1, f2):
+                if l1 == l2:
+                    continue
+
                 tok1 = convert_line(l1)
                 tok2 = convert_line(l2)
                 sentinel = object()
