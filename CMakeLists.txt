@@ -220,9 +220,6 @@ if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2.py)
 
     add_test(NAME test_reti_sngl
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_RETI_sngl/test_reti_sngl.py)
-    add_test(NAME test_reti_sngl_new
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_sngl.py)
 
     add_test(NAME test_reti_dbl
