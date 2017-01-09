@@ -720,7 +720,6 @@ def minimum_from_free_energy(models,N_range,dG_binding_samples,print_lines=True)
     median_B = np.percentile(best_Bs,50)
     upper_B = np.percentile(best_Bs,75)
     lower_B = np.percentile(best_Bs,25)
-    print N_range[min_inds]
     if print_lines:
         print "MINIMUM BINDING FREE ENERGY STATE:"
         print "Number of molecules:  Mean   Std. dev   25th Percentile    50th Percentile   75th Percentile"
