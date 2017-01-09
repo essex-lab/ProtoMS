@@ -35,6 +35,7 @@ c     setup replica exchange
 
 c     set the default locations of any streams
       call openStreamFiles
+
 c     initialise the program
       call initialise
       
@@ -48,6 +49,7 @@ c     shut everything down / print out restart/info
       call shutdown
 
 #ifdef WITH_MPI_
+      call MPI_Barrier(MPI_COMM_WORLD,ierr)
       call MPI_FINALIZE(ierr)
 #endif
 

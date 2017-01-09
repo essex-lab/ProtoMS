@@ -23,9 +23,9 @@ c#######################################################
             
 c     try to print out results and restart information
       call shutdown()
-      flush(FATAL)
 
 #ifdef WITH_MPI_
+      call MPI_Barrier(MPI_COMM_WORLD,ierr)
       call MPI_FINALIZE(ierr)
 #endif
       call exit(stat)
