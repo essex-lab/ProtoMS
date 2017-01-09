@@ -12,6 +12,7 @@
       include 'pressure.inc'
       include 'extraenergies.inc'
       include 'printer.inc'
+      include 'stacks.inc'
 c#####################################################
 c
 c     This calculates averages of important
@@ -63,6 +64,8 @@ c       thus we also need to average the square of the values...
 c     average the volume
       AvgVolume = (AvgVolume*bigratio) + (smallratio*Volume)
       AvgVolume2 = (AvgVolume2*bigratio) + (smallratio*(Volume**2))
+
+      AvgGCSCavity = (AvgGCSCavity*bigratio) + (smallratio*GCSCavity)
          
 c     if we are doing FEP, then calculate the average forwards and backwards
 c     energies (see the zwanzig equation...
@@ -306,6 +309,8 @@ c     now the solvent related averages
         AvgGCSSvnLJ2(i) = (AvgGCSSvnLJ2(i)*bigratio) + (OldGCSSvnLJ(i)**2*smallratio)
         AvgGCSSvnCF(i) = (AvgGCSSvnCF(i)*bigratio) + (OldGCSSvnCF(i)*smallratio)
         AvgGCSSvnCF2(i) = (AvgGCSSvnCF2(i)*bigratio) + (OldGCSSvnCF(i)**2*smallratio)
+        AvgGCSSvnLJF(i) = (AvgGCSSvnLJF(i)*bigratio) + (OldGCSSvnLJF(i)*smallratio)
+        AvgGCSSvnLJB(i) = (AvgGCSSvnLJB(i)*bigratio) + (OldGCSSvnLJB(i)*smallratio)
         AvgGCSSvnLJF2(i) = (AvgGCSSvnLJF2(i)*bigratio) + (OldGCSSvnLJF(i)**2*smallratio)
         AvgGCSSvnCB(i) = (AvgGCSSvnCB(i)*bigratio) + (OldGCSSvnCB(i)*smallratio)
         AvgGCSSvnCB2(i) = (AvgGCSSvnCB2(i)*bigratio) + (OldGCSSvnCB(i)**2*smallratio)

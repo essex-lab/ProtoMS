@@ -35,7 +35,6 @@ c     setup replica exchange
 
 c     set the default locations of any streams
       call openStreamFiles
-
 c     initialise the program
       call initialise
       

@@ -49,7 +49,7 @@ c       is assigned to ixcen iycen izcen
 c
 c
 c#########################################
-      logical check
+      logical check,allowprotein
       integer idnum
       integer getInt
       double precision getDouble
@@ -61,29 +61,51 @@ c#########################################
       integer resnumid1
       character*4 nameid1
       
-      if (nwords.ne.7.and.nwords.ne.4) then
+      if (nwords.ne.7.and.nwords.ne.8.and.nwords.ne.4.and.nwords.ne.5) then
         call printLine(WARNING,"Hardwall line not correctly implemented.")
         call join(1,nwords,printstring)
-      call printLine(WARNING,"Correct useage: hardwall idnum ixcen iycen izcen irad ibigeng",
-     .                       " or hardwall idnum irad ibigeng")
+      call printLine(WARNING,"Correct useage: hardwall idnum ixcen iycen izcen irad ibigeng (allowprotein)",
+     .                       " or hardwall idnum irad ibigeng (allowprotein)")
         call printLine(WARNING,printstring)
         return
       endif
 c         
 c Get all the paramters that are always present  
-      if (nwords.eq.7) then
+      if (nwords.ge.7) then
         idnum = getInt(words(2),0)
         ixcen = getDouble(words(3),0)
         iycen = getDouble(words(4),0)
         izcen = getDouble(words(5),0)
         irad = getDouble(words(6),0)
         ibigeng = getDouble(words(7),0)
-      else if (nwords.eq.4) then
+      elseif (nwords.ge.4) then
+
         idnum = getInt(words(2),0)
         irad = getDouble(words(3),0)
         ibigeng = getDouble(words(4),0)
       endif
-c 
+
+c Set allowprotein to true if option is present
+      allowprotein = .false.
+      if (nwords.eq.8) then
+         if (words(8).eq.'allowprotein') then
+            allowprotein = .true.
+         endif 
+      else if (nwords.eq.5) then
+         if (words(5).eq.'allowprotein') then
+            allowprotein = .true.
+         endif 
+      endif
+
+
+c Set cubic hardwall to true if option is present
+      cubichardwall=.false.
+      if (nwords.eq.5) then
+         if (words(5).eq.'cubichardwall') then
+            cubichardwall = .true.
+         endif 
+      endif
+
 c       Make sure the IDs are valid
         if ( idnum .ne. 0 .and. LabelID(idnum) .eq. 0) then
           write(printstring,*)' No ID = ',idnum,' has been set ! ',
@@ -102,7 +124,13 @@ c       Make sure the IDs are valid
           resnumid1 = LabelResidueNumber(idnum)
           nameid1 = LabelName(idnum)
         endif
-c
+
+      if (nwords.eq.4.or.nwords.eq.5) then
+        ixcen = SolGeomCentre(molid1,1)
+        iycen = SolGeomCentre(molid1,2)
+        izcen = SolGeomCentre(molid1,3)
+      endif
+
       if (typeid1 .eq. PROTEIN) then
         call printLine(WARNING,"Hardwall potentials can not be applied to proteins at this time")
         return
@@ -115,19 +143,15 @@ c
             call printLine(INFO,printstring)
       endif
 c          
-      if (nwords.eq.4) then
-        ixcen = SolGeomCentre(molid1,1)
-        iycen = SolGeomCentre(molid1,2)
-        izcen = SolGeomCentre(molid1,3)
-      endif
 
       nHardwallPotential = nHardwallPotential + 1
-            HardwallCenter(nHardwallPotential,1) = ixcen
-            HardwallCenter(nHardwallPotential,2) = iycen
-            HardwallCenter(nHardwallPotential,3) = izcen
-            HardwallRadius(nHardwallPotential) = irad
-            HardwallMolecule(nHardwallPotential) = molid1
-        HardwallextraEnergy(nHardwallPotential) = ibigeng
+      HardwallCenter(nHardwallPotential,1) = ixcen
+      HardwallCenter(nHardwallPotential,2) = iycen
+      HardwallCenter(nHardwallPotential,3) = izcen
+      HardwallRadius(nHardwallPotential) = irad
+      HardwallMolecule(nHardwallPotential) = molid1
+      HardwallextraEnergy(nHardwallPotential) = ibigeng
+      HardwallAllowProtein(nHardwallPotential) = allowprotein
       
            return
             end

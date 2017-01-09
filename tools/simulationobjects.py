@@ -22,6 +22,7 @@ import logging
 import copy
 import gettext
 import argparse
+import StringIO
 
 import numpy as np
 
@@ -280,7 +281,50 @@ class PDBFile:
           # Read next line
           line = f.readline()
         self.residues,self.solvents = residues,solvents
-    def write ( self, filename, renumber = False, header = None, solvents = True ):
+    
+    def _write_text ( self, f, renumber = False, header = None, solvents = True ):
+        """
+        Function to write text output. 
+        Parameters
+        ----------
+        f : open file
+          the name of the file
+        renumber : boolean, optional
+          indicate if residues should be renumbered
+        header : string, optional
+          additional lines to print before the atom records
+        solvents : boolean, optional
+          if to write the solvents """
+        if header is None :
+            f.write ( self.header)
+        else :
+            f.write ( header )
+        for i, res in enumerate ( sorted ( self.residues.keys() ), 1 ):
+            for atom in self.residues[res].atoms:
+                if renumber:
+                    atom.resindex = i
+                s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                f.write ( s )
+            if i < len(self.residues.keys()) and not self.residues[self.residues.keys()[i]].isAminoacid() : f.write ( "TER \n" )     
+        if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
+        if solvents :
+            l = sorted ( self.solvents.keys() )
+            for i, sol in enumerate (l , 1 ):
+                for atom in self.solvents[sol].atoms:
+                    if renumber:
+                        atom.resindex = i
+                    if atom.resindex < 10000:
+                        s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                    elif atom.resindex >= 10000 and atom.resindex < 100000:
+                        s = "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                    else:
+                        s = "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
+                    f.write ( s )
+                if i < len(l) : f.write ( "TER \n" )     
+        
+
+
+    def write ( self, filename, **kwargs ):
         """
         Write the PDB file to disc
 
@@ -296,32 +340,8 @@ class PDBFile:
           if to write the solvents
         """
         with open ( filename, 'w' ) as f:
-            if header is None :
-                f.write ( self.header)
-            else :
-                f.write ( header )
-            for i, res in enumerate ( sorted ( self.residues.keys() ), 1 ):
-                for atom in self.residues[res].atoms:
-                    if renumber:
-                        atom.resindex = i
-                    s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                    f.write ( s )
-                if i < len(self.residues.keys()) and not self.residues[self.residues.keys()[i]].isAminoacid() : f.write ( "TER \n" )     
-            if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 and solvents : f.write ( "TER \n" )
-            if solvents :
-                l = sorted ( self.solvents.keys() )
-                for i, sol in enumerate (l , 1 ):
-                    for atom in self.solvents[sol].atoms:
-                        if renumber:
-                            atom.resindex = i
-                        if atom.resindex < 10000:
-                            s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                        elif atom.resindex >= 10000 and atom.resindex < 100000:
-                            s = "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                        else:
-                            s = "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f        \n" % (atom.index+1,atom.name,atom.resname,atom.resindex,atom.coords[0],atom.coords[1],atom.coords[2])
-                        f.write ( s )
-                    if i < len(l) : f.write ( "TER \n" )     
+            self._write_text ( f, **kwargs )
+
     def getCenter(self):
         """
         Calculate the center of geometry  
@@ -446,7 +466,14 @@ class  PDBSet :
           for pdb,filename in zip(self.pdbs,filenames) :
             pdb.write(filename,solvents=solvents)
         elif isinstance(filenames,basestring) or len(filenames) == 1 :
-          raise SetupError("This feature is not implemented yet")
+          s = StringIO.StringIO ()
+          for i, pdb in enumerate ( self.pdbs ):
+            s.write ( 'MODEL    %5d\n' % i )
+            pdb._write_text (s,solvents=True)
+            s.write ( 'ENDMDL\n' )
+          s.write ( '\n\n' )
+          with open ( filenames, 'w' ) as f:
+            f.write ( s.getvalue() )
         else :
           raise SetupError("Invalid number of filenames given")        
   
@@ -1002,6 +1029,7 @@ class SnapshotResults :
     cols = line.strip().split()
     if len(cols) == 5 :
       self.lam = float(cols[4])
+
     else :
       self.lamb = float(cols[3])
       self.lam = float(cols[5])
@@ -1013,6 +1041,7 @@ class SnapshotResults :
     while line[0] != "#" :
       if line.startswith("Number of data steps") : self.datastep = int(line.split("=")[1].strip()) 
       if line.startswith("Lambda replica") : self.lambdareplica = int(line.split("=")[1].strip())
+      if line.startswith("GCMC replica") : self.gcmcreplica = int(line.split("=")[1].strip().split()[0])
       if line.startswith("Temperature replica") : self.temperaturereplica = int(line.split("=")[1].strip())
       if line.startswith("Global replica") : self.globalreplica = int(line.split("=")[1].strip())
       if line.startswith("Temperature") : self.temperature = float(line.split("=")[1].strip().split()[0])
@@ -1020,7 +1049,7 @@ class SnapshotResults :
       if line.startswith("Solvents,Proteins,GC-solutes") : self.ngcsolutes =  int(line.split("=")[1].strip().split()[2])
       if line.startswith("Simulation B factor") : self.bvalue = float(line.split("=")[1].strip())
       if line.startswith("Simulation B value") : self.bvalue = float(line.split("=")[1].strip())
-      if line.startswith("Molecules in grid") : self.solventson = int(line.split("=")[1].strip())
+      if line.startswith("Molecules in grid") : self.solventson = float(line.split("=")[1].strip())
       if line.startswith("Pressure") : self.pressure = float(line.split("=")[1].strip().split()[0])
       if line.startswith("Volume") : self.volume = float(line.split("=")[1].strip().split()[0])
       if line.startswith("Random number seed") : self.seed = int(line.split("=")[1].strip())
@@ -1076,7 +1105,13 @@ class SnapshotResults :
         elif cols[1] == "solute-solvent" :
           key = cols[5]+"-solvent"
         elif cols[1] == "solute-GCS" :
-          key = cols[5]+"-GCS"   
+          key = cols[5]+"-GCS"
+        elif cols[1] == "GCS-solvent":
+          key = "GCS-solvent"
+        elif cols[1] == "protein-GCS":
+          key = "protein"+cols[4]+"-GCS"
+        else:
+          continue
         self.interaction_energies[key] = []   
         line = fileobj.readline() # Dummy line
         self.interaction_energies[key].append(EnergyResults(line=fileobj.readline())) # Coul
@@ -1238,9 +1273,9 @@ class ResultsFile :
 
     # First replace all float/int in the SnapshotResults object with NumpyArrays
     self.series = copy.deepcopy(self.snapshots[0])
-    for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","capenergy"] :
+    for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","capenergy","solventson"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap))
-    for attr in ["datastep","lambdareplica","solventson","seed"] :
+    for attr in ["datastep","lambdareplica","globalreplica","seed","gcmcreplica"] :
       if hasattr(self.snapshots[0],attr) : setattr(self.series,attr,np.zeros(nsnap,dtype=int))
     if hasattr(self.snapshots[0],"total") :
       set_energyresults(self.series.total)  
@@ -1266,7 +1301,7 @@ class ResultsFile :
 
     # Then loop over all snapshots and fill the NumpyArrays with data
     for i,snapshot in enumerate(self.snapshots) :
-      for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","datastep","lambdareplica","solventson","seed","capenergy"] :
+      for attr in ["lam","lamb","lamf","temperature","bvalues","pressure","volume","backfe","forwfe","gradient","agradient","datastep","lambdareplica","globalreplica","solventson","seed","capenergy"] :
         if hasattr(snapshot,attr) : getattr(self.series,attr)[i] = getattr(snapshot,attr)
       if hasattr(snapshot,"total") :
         put_energyresults(self.series.total,snapshot.total,i)

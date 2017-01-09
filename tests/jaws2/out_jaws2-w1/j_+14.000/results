@@ -8,7 +8,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -63,6 +63,13 @@ Average protein-GCS energy for    1 scoop
 COU         -9.2354 (    0.276 ) |         -9.2354 (    0.276 )         -9.2354 (    0.276 )
 DIFF                                        0.0000                       0.0000
  LJ         -3.2482 (    0.097 ) |         -3.2482 (    0.097 )         -3.2482 (    0.097 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -124,7 +131,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -179,6 +186,13 @@ Average protein-GCS energy for    1 scoop
 COU         -8.5581 (    0.356 ) |         -8.5581 (    0.356 )         -8.5581 (    0.356 )
 DIFF                                        0.0000                       0.0000
  LJ         -3.0092 (    0.125 ) |         -3.0092 (    0.125 )         -3.0092 (    0.125 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -240,7 +254,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -295,6 +309,13 @@ Average protein-GCS energy for    1 scoop
 COU         -8.8257 (    0.811 ) |         -8.8257 (    0.811 )         -8.8257 (    0.811 )
 DIFF                                        0.0000                       0.0000
  LJ         -2.7072 (    0.112 ) |         -2.7072 (    0.112 )         -2.7072 (    0.112 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -356,7 +377,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -411,6 +432,13 @@ Average protein-GCS energy for    1 scoop
 COU         -9.0499 (    1.365 ) |         -9.0499 (    1.365 )         -9.0499 (    1.365 )
 DIFF                                        0.0000                       0.0000
  LJ         -2.5666 (    0.444 ) |         -2.5666 (    0.444 )         -2.5666 (    0.444 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -472,7 +500,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -527,6 +555,13 @@ Average protein-GCS energy for    1 scoop
 COU         -6.0294 (    0.839 ) |         -6.0294 (    0.839 )         -6.0294 (    0.839 )
 DIFF                                        0.0000                       0.0000
  LJ         -1.6555 (    0.230 ) |         -1.6555 (    0.230 )         -1.6555 (    0.230 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -588,7 +623,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -643,6 +678,13 @@ Average protein-GCS energy for    1 scoop
 COU         -7.2381 (    1.601 ) |         -7.2381 (    1.601 )         -7.2381 (    1.601 )
 DIFF                                        0.0000                       0.0000
  LJ         -1.9874 (    0.440 ) |         -1.9874 (    0.440 )         -1.9874 (    0.440 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -704,7 +746,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -759,6 +801,13 @@ Average protein-GCS energy for    1 scoop
 COU         -9.1205 (    0.224 ) |         -9.1205 (    0.224 )         -9.1205 (    0.224 )
 DIFF                                        0.0000                       0.0000
  LJ         -2.5466 (    0.062 ) |         -2.5466 (    0.062 )         -2.5466 (    0.062 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -820,7 +869,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -875,6 +924,13 @@ Average protein-GCS energy for    1 scoop
 COU         -9.2094 (    0.219 ) |         -9.2094 (    0.219 )         -9.2094 (    0.219 )
 DIFF                                        0.0000                       0.0000
  LJ         -2.5207 (    0.074 ) |         -2.5207 (    0.074 )         -2.5207 (    0.074 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -936,7 +992,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -991,6 +1047,13 @@ Average protein-GCS energy for    1 scoop
 COU         -9.5732 (    0.624 ) |         -9.5732 (    0.624 )         -9.5732 (    0.624 )
 DIFF                                        0.0000                       0.0000
  LJ         -2.6141 (    0.170 ) |         -2.6141 (    0.170 )         -2.6141 (    0.170 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk
@@ -1052,7 +1115,7 @@ Number of data steps =       10
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =     2747       1       1
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Random number seed =       209999
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
@@ -1107,6 +1170,13 @@ Average protein-GCS energy for    1 scoop
 COU        -10.4353 (    0.622 ) |        -10.4353 (    0.622 )        -10.4353 (    0.622 )
 DIFF                                        0.0000                       0.0000
  LJ         -2.8495 (    0.170 ) |         -2.8495 (    0.170 )         -2.8495 (    0.170 )
+DIFF                                        0.0000                       0.0000
+##########################
+Average GCS-solvent energy
+##########################
+COU         -0.0645 (    0.000 ) |         -0.0645 (    0.000 )         -0.0645 (    0.000 )
+DIFF                                        0.0000                       0.0000
+LJ           1.5780 (    0.000 ) |          1.5780 (    0.000 )         -0.0645 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #######################################################
 Average solute-protein energy for    1 scoop -    1 xdk

@@ -24,22 +24,34 @@ c     (C) Michael Bodnarchuk   15th September 2011
 c
 c###############################################################
 
-      integer updatenrg,movnum,movtyp,igcs,ranInt,savenrg
-      double precision GCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb
+      integer updatenrg,movnum,movtyp,ind,count,i,igcs,ranInt,savenrg
+      double precision GCSoluteEnergy,zeroGCSoluteEnergy,cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision ieold,ienew,thetaold,nrg
       character*4 statstring
       logical metropolis3
 
       
       deletionMove = .false.
-c     Select a test particle at random
-      igcs = ranInt(1,NGCSolutes)
-c     Check to see that it's not already off
-      if (thetaparam(igcs).eq.0) then
-      return
-      endif
+      if (GCSCavity.eq.0) return
 
-      thetaold = thetaparam(igcs)
+c     Select from inserted gcsolutes randomly
+      ind = ranInt(1,GCSCavity)
+
+c     Now find the ind'th on gcsolute
+c     Insertion changed to insert in order, so ind will be an ON gcsolute
+      igcs = 0
+      count = 0
+      do i=1,NGCSolutes
+         if (thetaparam(i).eq.1) then
+            count = count + 1
+         endif
+         if (count.eq.ind) then
+            igcs = i
+            goto 10
+         endif
+      enddo
+      igcs = ind      
+ 10   thetaold = thetaparam(igcs)
  
       if (updatenrg.eq.UPDATEENERGY) then
         savenrg = OLD
@@ -61,7 +73,7 @@ c     Change the theta value of the molecule to zero
       thetaparam(igcs) = 0
 c     See if the new configurational energy needs to be updated...
       if (updatenrg.eq.UPDATEENERGY) savenrg = NEW      
-      ienew = GCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
+      ienew = zeroGCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
 
        if (metropolis3(ieold,ienew,movtyp)) then
         deletionMove = .true.

@@ -34,7 +34,7 @@ c     JM mod
       double precision funcaij,funcaijf,funcaijb
       double precision funcbij,funcbijf,funcbijb
       double precision softdist,softdist2,softdist3,softdistf,softdistb
-      double precision sigat1,sigat2,thet
+      double precision sigat1,sigat2,thet,thetf,thetb
       logical boundx,boundy,boundz,funcdogeom,funcsigsclf,funcsigsclb
       logical softcore,ddd,pertchg                                
       double precision fac,facf,facb
@@ -51,7 +51,7 @@ c     SG mod for derivatives
      .                  funcdistb2,funcdistf6,funcdistb6,funcdx,funcdy,funcdz,funcsqrteps,funcsig3,
      .                  funcsqrtepsf,funcsig3f,qiqj,qiqjf,qiqjb,softdist,softdist2,softdist3,
      .                  softdistf,softdistb,sigat1,sigat2,
-     .                      fac,facf,facb,shift,shiftf,shiftb,thet,
+     .                      fac,facf,facb,shift,shiftf,shiftb,thet,thetf,thetb,
      .                  funcaij,funcaijf,funcaijb,funcbij,funcbijf,funcbijb,
      .                  funcsqrtepsb,funcsig3b,funcitmp,funcitmp1,funcitmp2,
      .                  funciprot1,funciprot2,funcisol1,funcisol2,funcisvn1,funcisvn2,funcigcs1,funcigcs2,

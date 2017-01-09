@@ -821,7 +821,7 @@ class GCMC(ProteinLigandSimulation) :
       self.setParameter("potential","%.3f"%adamval[0])
       #self.setParameter("outfolder",outfolder)
     else :
-      self.setParameter("multigcmc"," ".join("%.3f"%a for a in adamval))
+      self.setParameter("multigcmc","%d %s " % (2*dumpfreq," ".join("%.3f"%a for a in adamval) ))
       #self.setParameter("refolder",outfolder)
     _setbox(self,gcmcwater,gcmcbox)
     self.setParameter("#"," End of GCMC specific parameters")

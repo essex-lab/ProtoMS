@@ -22,6 +22,7 @@ if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
   matplotlib.use('Agg') 
 import matplotlib.pyplot as pl
 import numpy as np
+import calc_series
 
 from scipy.stats import spearmanr
 
@@ -29,7 +30,7 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
-def _print_ene(lam,ene,std,print_uncert,print_lam) :
+def print_ene(lam,ene,std,print_uncert,print_lam) :
   """ 
   Print energy row to standard output
   
@@ -51,7 +52,7 @@ def _print_ene(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8.4f"%std,
   print ""
 
-def _print_head(lam,ene,std,print_uncert,print_lam) :
+def print_head(lam,ene,std,print_uncert,print_lam) :
   """ 
   Print energy header to standard output
 
@@ -74,7 +75,7 @@ def _print_head(lam,ene,std,print_uncert,print_lam) :
   if print_uncert : print " %8s"%std,
   print ""
 
-def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
+def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical,auto=False) :
   """ 
   Parse a number of ProtoMS result files and calculate the ensemble average of the gradient
   
@@ -106,10 +107,8 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
   # List all results files and sort them
   filenames = glob.glob(os.path.join(path,"%s*"%res_tem))
   if len(filenames) > 1 : filenames.sort()
-
-  gradsum = 0.0
-  gradsum2 = 0.0
-  n = 0
+  
+  gradients = []
   lam = None
 
   for f in filenames:
@@ -145,17 +144,15 @@ def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
         else :
           gradient = (dGF - dGB) / (2*deltalam)      
       if gradient != None :
-        gradsum = gradsum + gradient
-        gradsum2 = gradsum2 + gradient*gradient
-        n = n + 1
-    # Computes ensemble average and standard error
-    av = gradsum / n
-    std = 0.0
-    if n > 2 :
-      std = np.sqrt((gradsum2-av*gradsum)/(n-1)/n)
-    return lam,av,std
+        gradients.append ( gradient )
 
-def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
+    if auto:
+      gradients = gradients[calc_series.find_equilibration(gradients,np.arange(1,len(gradients)+1)):]
+
+    # Computes ensemble average and standard error
+    return lam,np.mean(gradients),np.std(gradients,ddof=1)/len(gradients)**0.5
+
+def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical,subd,auto=False) :
   """
   Calculate gradients for a number of folders
   
@@ -175,6 +172,8 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
+  subd : string
+    optional subdirectory to check for each lambda
     
   Returns
   -------
@@ -187,7 +186,7 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   """
 
   # List all lambda folders and sort them
-  paths = glob.glob(os.path.join(path,"lam-*"))
+  paths = glob.glob(os.path.join(path,"lam-*",subd))
   paths.sort()
 
   # Process all lambda folders
@@ -195,8 +194,8 @@ def _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
   stds = []
   lambdas = []
   for path in paths :
-    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical)
-    if verbose["gradient"] : _print_ene(lam,grad,std,verbose["uncert"],verbose["lambda"])
+    (lam,grad,std) = _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical,auto)
+    if verbose["gradient"] : print_ene(lam,grad,std,verbose["uncert"],verbose["lambda"])
     gradients.append(grad)
     lambdas.append(lam)
     stds.append(std)
@@ -246,7 +245,7 @@ def fit_pmf(lambdas,pmf,orderfit=4,upperfit=5,plotfile="fit.png"):
   return None
     
 
-def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
+def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical,subd='',auto=False) :
   """
   Do thermodynamic integration
   
@@ -266,6 +265,8 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     the kind of numerical gradient, should be either both, forw, or back
   useanalytical : boolean
     if to use analytical gradients
+  subd : string
+    optional subdirectory to check for each lambda value
 
   Returns
   -------
@@ -284,18 +285,18 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
 
   # Calculate the gradient
   if verbose["gradient"] :
-    _print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
-  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical)
+    print_head("lambda","gradient","std",verbose["uncert"],verbose["lambda"])
+  lambdas,gradients,stds = _calc_gradients(path,res_tem,skip,maxread,verbose,numkind,useanalytical,subd,auto)
 
   
   # Calculate and print the PMF 
   pmf = np.zeros(gradients.shape)
   pmf_std = np.zeros(gradients.shape)
-  if verbose["pmf"] : _print_head("lambda","PMF","std",verbose["uncert"],verbose["lambda"])
+  if verbose["pmf"] : print_head("lambda","PMF","std",verbose["uncert"],verbose["lambda"])
   pmf[0] = 0.0
   w = 0.5*(lambdas[0]+lambdas[1])
   pmf_std[0] = w**2*stds[0]**2
-  if verbose["pmf"] : _print_ene(lambdas[0],pmf[0],np.sqrt(pmf_std[0]),verbose["uncert"],verbose["lambda"])
+  if verbose["pmf"] : print_ene(lambdas[0],pmf[0],np.sqrt(pmf_std[0]),verbose["uncert"],verbose["lambda"])
   # Trapezium integration
   for i in range(1,len(lambdas)) :
     h = lambdas[i]-lambdas[i-1]
@@ -305,10 +306,10 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical) :
     else :
       w = 0.5*(lambdas[i+1]-lambdas[i-1])      
     pmf_std[i] = pmf_std[i-1] + w**2*stds[i]**2
-    if verbose["pmf"] : _print_ene(lambdas[i],pmf[i],np.sqrt(pmf_std[i]),verbose["uncert"],verbose["lambda"])
+    if verbose["pmf"] : print_ene(lambdas[i],pmf[i],np.sqrt(pmf_std[i]),verbose["uncert"],verbose["lambda"])
 
   if not verbose["pmf"] and verbose["total"] : 
-    _print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
+    print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
 
   return lambdas,gradients,stds,pmf,np.sqrt(pmf_std)
 #
@@ -321,6 +322,7 @@ if __name__ == '__main__' :
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to calculate free energy from thermodynamic integration")
   parser.add_argument('-d','--directory',help="the root directory that contains all the output files of the simulation. Default is cwd.",default="./")
+  parser.add_argument('--subdir',help='optional subdirectory to check for each lamda value',default='')
   parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results")
   parser.add_argument('-s','--skip',type=int,help="the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0",default=0)
   parser.add_argument('-m','--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
@@ -332,6 +334,7 @@ if __name__ == '__main__' :
   parser.add_argument('-pf','--print-fit',dest='fitPMF',action='store_true',help="turns on fitting the pmf to a polynomial",default=False)
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
+  parser.add_argument('--autoeqb',dest='autoeqb',action='store_true',help="use automatic equilibration detection to determine how much data is included in free energy difference")
   args = parser.parse_args()
 
   # Setup the logger
@@ -344,7 +347,7 @@ if __name__ == '__main__' :
     args.skip = -1
   # Do thermodynamic integration
   verbose = {"total":True,"gradient":args.printGrad,"pmf":args.printPMF,"uncert":args.printUncert,"lambda":args.printLam}
-  lambdas,gradients,grad_std,pmf,pmf_std= ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
+  lambdas,gradients,grad_std,pmf,pmf_std= ti(args.directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,args.subdir,args.autoeqb)
 
   # Do the fit
   if args.fitPMF :

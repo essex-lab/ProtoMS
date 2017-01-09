@@ -13,6 +13,7 @@
       include 'moves.inc'
       include 'energies.inc'
       include 'stacks.inc'
+
 c##########################################################
 c
 c     This function implements the standard metropolis
@@ -39,7 +40,7 @@ c
 c##########################################################
 
       double precision ienew,delta,expval
-      double precision ranval,grnd,olde
+      double precision ranval,grnd,olde  
       integer movtyp
 
       metropolis2 = .false.
@@ -48,11 +49,12 @@ c##########################################################
 c#########################################################
 c######## NVT metropolis MC acceptance test ##############
         delta = ienew - olde
- 
+        
+
 c       get the random number
         ranval = grnd()
 
-        expval = ((dexp(B))/GCSCavity)*dexp((olde-ienew)*mt_beta_T)
+        expval = ((gridx*gridy*gridz/vavail)*(dexp(B))/GCSCavity)*dexp((olde-ienew)*mt_beta_T)
 
         if (expval.lt.ranval) then
 c         move failed

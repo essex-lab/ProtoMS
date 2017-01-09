@@ -279,7 +279,7 @@ class Slp(object):
         else:
             unit_max=None
         if monotonic==True:
-            fit = optimize.fmin_l_bfgs_b(residuals,x0=self.weights[unit],bounds=[(0.0,unit_max),(0.0,unit_max),(self.offset,unit_max)],approx_grad=True,pgtol=grad_tol,disp=0)
+            fit = optimize.fmin_l_bfgs_b(residuals,x0=self.weights[unit],bounds=[(-10.0,unit_max),(0.0,unit_max),(self.offset,unit_max)],approx_grad=True,pgtol=grad_tol,disp=0)
             self.weights[unit] = fit[0]
             self.error = fit[1]
         else:
@@ -441,7 +441,7 @@ def fit_boostrap(x,y,size,boot_samps=50,repeats=10,randstarts=1000,iterations=10
             print "...Bootstrap model %i fitted." % (boot+1)
     return bootstrap_models
 
-def insertion_pmf(N,gcmc_model,T=298.15):
+def insertion_pmf(N,gcmc_model,volume=30.0,T=298.15):
     """
     Calculates the free energy to insert water from ideal gas to the GCMC volume.
 
@@ -460,25 +460,29 @@ def insertion_pmf(N,gcmc_model,T=298.15):
       relative ideal gas transfer free energies for each water specified in N
     """
     kT = T*0.0019872								# Boltmann's constant (in kcal/mol/K) multiplied by temperature (in K).
+    Vstandard = 30.0
     def integral(gcmc_model,Bi,Bf):					# For numerical integration.
         logies = [integrated_logistic(params,Bi,Bf) for params in gcmc_model.weights]
         return np.sum(logies)								# Under the convention that 0*log(0) = 0. 
     def nonintegral(N,B):
-        return N*B - special.gammaln(N+1)
+        return N*B # - special.gammaln(N+1)
     dG = np.zeros(N.size)
+    correction = np.zeros(N.size)
     N_lower = N[0]
     B_lower = inverse_slp(gcmc_model,N_lower)
     for i in range(1,N.size):                         # Starting from the second element, as dG=0 at first N.
         B_upper = inverse_slp(gcmc_model,N[i])  
         #dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) + integral(gcmc_model,B_lower,B_upper))[0]							# This version uses analytical integration. Prone to instability.
         dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) - integrate.quad(gcmc_model.predict,a=B_lower,b=B_upper)[0])[0]		# This version numerical integration.
+        correction[i] = N[i]*np.log(volume/Vstandard)
+        dG[i] = dG[i] - correction[i]
     return dG*kT
 
 
 def ensemble_pmf(N,gcmc_models,T=298.15):
     energies = np.ones((len(gcmc_models),len(N)))
     for i in range(len(gcmc_models)):
-        energies[i] =  insertion_pmf(N,gcmc_models[i],T=T)
+        energies[i] =  insertion_pmf(N,gcmc_models[i],args.volume,T=T)
     return energies.mean(axis=0), energies.std(axis=0)
 
 def ensemble_FreeEnergies(N,gcmc_models,hydration=None,T=None):
@@ -501,11 +505,12 @@ def ensemble_FreeEnergies(N,gcmc_models,hydration=None,T=None):
     numpy array, numpy array
       matrix of relative ideal gas transfer free energies for each water specified in N, matrix of relative binding free energies for each water specified in N
     """
+
     if hydration == None: hydration = -6.2
     if T==None: T= 298.15
     dG_samples = np.zeros((len(N),len(gcmc_models)))
     for i in range(len(gcmc_models)):  
-        dG_samples[:,i] = insertion_pmf(N,gcmc_models[i])								# The free energy to transfer from the gas phase
+        dG_samples[:,i] = insertion_pmf(N,gcmc_models[i],args.volume)								# The free energy to transfer from the gas phase
     dG_binding_samples = dG_samples - hydration*np.tile(N,(dG_samples.shape[1],1)).T	# The free energy to transfer from solution (the binding free energy)
     return dG_samples, dG_binding_samples
 
@@ -715,6 +720,7 @@ def minimum_from_free_energy(models,N_range,dG_binding_samples,print_lines=True)
     median_B = np.percentile(best_Bs,50)
     upper_B = np.percentile(best_Bs,75)
     lower_B = np.percentile(best_Bs,25)
+    print N_range[min_inds]
     if print_lines:
         print "MINIMUM BINDING FREE ENERGY STATE:"
         print "Number of molecules:  Mean   Std. dev   25th Percentile    50th Percentile   75th Percentile"
@@ -744,6 +750,7 @@ def minimum_from_thermo_limit(models,B,dG_hyd,kT=0.592,print_lines=True):
     best_Ns = []
     mu_ex = []
     N_ex = []
+    print dG_hyd
     for model in models:
        model.x = np.linspace(start=B.min(),stop=B.max(),num=1000)   
        model.forward()
@@ -763,6 +770,58 @@ def minimum_from_thermo_limit(models,B,dG_hyd,kT=0.592,print_lines=True):
         print "                      %3.1f %8.1f %14.1f %16.1f %18.1f" %(np.mean(best_Bs),best_Bs.std(),np.percentile(best_Bs,25),np.percentile(best_Bs,50),np.percentile(best_Bs,75))
     return mu_ex, N_ex, best_Ns
 
+def minimum_from_bequil(models,B,N,dG_hyd,kT=0.592,print_lines=True):
+    """
+    Calculates N* from Bequil.
+
+    Parameters
+    ----------
+    models : list of Slp objects
+      multiple fitted ANNs
+    B : numpy array
+      vector of the Adams values
+    dG_hyd : float
+      hydration free energy of water in kcal/mol
+    kT : float
+      temperature multiplied by Boltzmann's constant, ie thermal energy, in kcal/mol
+    print_lines : boolean
+      whether to print the minimum free energy state with errors
+   """
+    Bequil = dG_hyd*(1.0/0.592) + np.log(args.volume/30.0)
+    closestBfit = (np.abs(single_model.x - Bequil)).argmin() 
+    Nstarfit = []
+    Nstarcalc = []
+
+    if Bequil < B.min() or Bequil > B.max():
+        print 'Equilibrium B value is not within range sampled in simulation, so an estimation of N* cannot be made.'
+        return Bequil, Nstarcalc, Nstarfit
+    else:
+        for model in models:
+            model.x = np.linspace(start=B.min(),stop=B.max(),num=len(model.predicted))
+            Nstarfit.append(model.predicted[closestBfit])
+        Nstarfit = np.array(Nstarfit)
+        if print_lines:
+            print "B EQUILIBRIUM CONDITION FROM FITTED MODELS:"
+            print "Bequil:",np.round(Bequil,1)
+            print "Number of molecules:  Mean   Std. dev   25th Percentile    50th Percentile   75th Percentile"
+            print "                      %3.1f %8.1f %14.1f %16.1f %18.1f" %(np.mean(Nstarfit),Nstarfit.std(),np.percentile(Nstarfit,25),np.percentile(Nstarfit,50),np.percentile(Nstarfit,75))
+        
+        Bclose = []
+        nearBvalues = np.abs(B - Bequil)
+        for index,each in enumerate(nearBvalues):
+            if each <=nearBvalues.min():                    # this works if Bequil is exactly between two B values, it will find an average of both
+                Bclose.append(B[index])
+                Nstarcalc.append(N[index])
+        Bclose = np.array(Bclose)
+        Nstarcalc = np.array(Nstarcalc)
+        print "B EQUILIBRIUM CONDITION FROM SIMULATED B VALUE:"
+        print "Bequil:",np.round(Bequil,1)
+        print "Similar simulated B values:", np.unique(Bclose) 
+        print "Average N* at simululated at B values:",np.unique(Bclose),"is", np.round(Nstarcalc.mean(),1)
+
+    return Bequil, Nstarcalc, Nstarfit
+
+
 if __name__ == '__main__' :
 
   import argparse
@@ -771,7 +830,7 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyse and plot free energies from GCMC simulations")
   parser.add_argument('-d','--directories',nargs="+",help="the directories containing the GCMC simulation data, default=None",default=None)
   parser.add_argument('-f','--file',help="the name of the file to analyse. Default is results.",default="results")
-  parser.add_argument('-p','--plot',nargs="+",choices=["titration","fit","percentiles","pmf","excess","all"],help="whether to plot the GCMC simulation data or analysis, default=None",default=None)
+  parser.add_argument('-p','--plot',nargs="+",choices=["titration","fit","percentiles","pmf","all"],help="whether to plot the GCMC simulation data or analysis, default=None",default=None)
   parser.add_argument('-c','--calc',nargs="+",choices=["fit","pmf","minimum","excess","all"], help="fit an artificial neural network to the data, the potential of mean force to bind a specified number of waters, locate the minimum of the pmf",default=None)
   parser.add_argument('-s','--skip',help="the number of initial snapshots that will be discarded when fitting",type=int,default=0)
   parser.add_argument('-b','--bootstraps',help="the number of bootstrap samples to perform.",type=int,default=None)
@@ -781,9 +840,18 @@ if __name__ == '__main__' :
   parser.add_argument('--range',nargs="+",help="range of water molecules to calculate free energy",default=None)
   parser.add_argument('--reverse',action='store_true',help="reverse the direction of integration, starting from the highest number of waters to the lowest number, default=False",default=False)
   parser.add_argument('--fit_options',help="additional options to be passed to the artificial neural network",default=None)
+  parser.add_argument('-v','--volume', type=float,help="volume of the GCMC insertion region",default=None)
   args = parser.parse_args()
 
   dG_hyd = -6.2
+  print "CALCULATING VOLUME CORRECTION:"
+  if args.volume is None:
+      print "No GCMC volume given. No volume correction will be applied.\n A correction of kBT ln(Vsystem/Vstandard) is required for GCMC calculations"
+      args.volume=30.0
+  else:
+      print "GCMC volume:", args.volume
+      print "Standard volume: 30.0"
+      print "Volume correction of kBT ln (Vsystem/Vstandard) will be applied" 
 
   if args.directories is None:
       print "\nError. Please list the directories containing the GCMC simulation data. Exiting program.\n"
@@ -820,10 +888,13 @@ if __name__ == '__main__' :
         sys.exit()
     for folder in folders:
         results = ResultsFile()
-        resultsfiles = glob.glob(folder+ "/"+args.file+"*")
-        if len(resultsfiles) > 1:				# It is assumed the results are from ProtoMS 2.
+        fpath = os.path.join ( folder, args.file )
+        resultsfiles = [ fpath ] if os.path.exists ( fpath ) else []
+        resultsfiles += glob.glob(fpath+"-*")
+        
+        if len(resultsfiles) > 1: # It is assumed the results are from ProtoMS 2.
             results.read([folder,args.file])
-        elif len(resultsfiles)==1:				# It is assumed the results are from ProtoMS 3.
+        elif len(resultsfiles)==1:# It is assumed the results are from ProtoMS 3.
             results.read(folder+ "/"+args.file)
         else:
            print "\nError. No results file matching %s. Exiting program\n" % folder+"/"+args.file 
@@ -857,19 +928,19 @@ if __name__ == '__main__' :
                   fit_dict[options[i]]= float(options[i+1])
               if type(fit_dict[options[i]]) == int:
                   fit_dict[options[i]]= int(options[i+1])
-              if type(fit_dict[options[i]]) == str:
-                  fit_dict[options[i]]= str(options[i+1])
+              if type(fit_dict[options[i]]) == bool:
+                  fit_dict[options[i]]= bool(options[i+1])
 
   # Fitting the artificial neural network, which is crucial for all other analysis.
   if args.calc is not None and ANNs is None:
       print "FITTING TO TITRATION DATA:"
       if args.bootstraps is None:
-          single_model, models = fit_ensemble(x=B,y=N,size=args.steps,verbose=False,pin_min=fit_dict["pin_min"],pin_max=fit_dict["pin_max"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
+          single_model, models = fit_ensemble(x=B,y=N,size=args.steps,verbose=fit_dict["verbose"],pin_min=fit_dict["pin_min"],pin_max=fit_dict["pin_max"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
           print "......Neural network fitting complete."      
       else:
           samples = args.bootstraps
           models = fit_boostrap(x=B,y=N,size=args.steps,boot_samps=samples,pin_min=fit_dict["pin_min"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])              
-          single_model, rubbish = fit_ensemble(x=B,y=N,size=args.steps,verbose=False,pin_min=fit_dict["pin_min"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
+          single_model, rubbish = fit_ensemble(x=B,y=N,size=args.steps,verbose=fit_dict["verbose"],pin_min=fit_dict["pin_min"],cost=fit_dict["cost"],c=fit_dict["c"],randstarts=fit_dict["randstarts"],repeats=fit_dict["repeats"],iterations=fit_dict["iterations"])
           print "......Neural network bootstrap fitting complete." 
       if args.out is not None:    
           ANNs = {"single":single_model,"collection":models}
@@ -890,11 +961,11 @@ if __name__ == '__main__' :
   if args.calc is not None:
     if len(intersect(args.calc,["pmf","all"])) > 0:
       if args.reverse==False:
-          dG_single = insertion_pmf(N_range,single_model)
+          dG_single = insertion_pmf(N_range,single_model,args.volume)
           dG_samples, dG_binding_samples = ensemble_FreeEnergies(N_range,models)
       else: 
           N_range = N_range[::-1]
-          dG_single = insertion_pmf(N_range,single_model)
+          dG_single = insertion_pmf(N_range,single_model,args.volume)
           dG_samples, dG_binding_samples = ensemble_FreeEnergies(N_range,models)
 
     if len(intersect(args.calc,["pmf","all"])) > 0:
@@ -922,11 +993,11 @@ if __name__ == '__main__' :
         print "\n"
         minimum_from_free_energy(models,N_range,dG_binding_samples) 
         print "\n"
-        mu_ex, N_ex, best_Ns = minimum_from_thermo_limit(models,B,dG_hyd,kT=0.592)
+        Bequil, Nstarcalc, Nstarfit = minimum_from_bequil(models,B,N,dG_hyd,kT=0.592)
       else:
         print "\n"
-        mu_ex, N_ex, best_Ns = minimum_from_thermo_limit(models,B,dG_hyd,kT=0.592)
-
+        Bequil, Nstarcalc, Nstarfit = minimum_from_bequil(models,B,N,dG_hyd,kT=0.592)
+ 
 
   # Plotting the requested results.
   FigNum = 0
@@ -969,18 +1040,18 @@ if __name__ == '__main__' :
       currfig.savefig("Binding_Free_Energy.png")
       currfig.show(block=False)
 
-    if len(intersect(args.plot,["excess", "all"])) > 0 and len(intersect(args.calc,["minimum","excess","all",])) > 0:
-      mu_ex, N_ex, best_Ns = minimum_from_thermo_limit(models,B,dG_hyd,kT=0.592,print_lines=False)
-      FigNum += 1 
-      plt.figure("Excess Chemical Potential")
-      for u in range(len(models)):
-        plt.plot(N_ex[u],mu_ex[u],alpha=0.1,color="blue",linewidth=3)
-      plt.axhline(y=dG_hyd,color="grey",linewidth=2)
-      plt.axvline(x=np.percentile(best_Ns,50),color="grey",linewidth=2)
-      plt.xlabel("Number of inserted waters",fontsize=15)
-      plt.savefig("Excess_Chem_Potential.png")
-      plt.ylabel("Excess chemical potential (kcal/mol)",fontsize=15)
-      plt.show(block=False)
+    # if len(intersect(args.plot,["excess", "all"])) > 0 and len(intersect(args.calc,["minimum","excess","all",])) > 0:
+    #   mu_ex, N_ex, best_Ns = minimum_from_bequil(models,B,dG_hyd,kT=0.592,print_lines=False)
+    #   FigNum += 1 
+    #   plt.figure("Excess Chemical Potential")
+    #   for u in range(len(models)):
+    #     plt.plot(N_ex[u],mu_ex[u],alpha=0.1,color="blue",linewidth=3)
+    #   plt.axhline(y=dG_hyd,color="grey",linewidth=2)
+    #   plt.axvline(x=np.percentile(best_Ns,50),color="grey",linewidth=2)
+    #   plt.xlabel("Number of inserted waters",fontsize=15)
+    #   plt.savefig("Excess_Chem_Potential.png")
+    #   plt.ylabel("Excess chemical potential (kcal/mol)",fontsize=15)
+    #   plt.show(block=False)
   
   
   

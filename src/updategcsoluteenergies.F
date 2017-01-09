@@ -75,7 +75,7 @@ c       now update the GCS-solute bulk energy
           OldSolGCSCF(i) = OldSolGCSCF(i) + newIndGCSSolCF(i) - oldIndGCSSolCF(i)
           OldSolGCSLJF(i) = OldSolGCSLJF(i) + newIndGCSSolLJF(i) - oldIndGCSSolLJF(i)      
           OldSolGCSCB(i) = OldSolGCSCB(i) + newIndGCSSolCB(i) - oldIndGCSSolCB(i)
-          OldSolGCSLJB(i) = OldSolGCSLJB(i) + newIndGCSSolLJB(i) - oldIndGCSSolLJB(i)      
+          OldSolGCSLJB(i) = OldSolGCSLJB(i) + newIndGCSSolLJB(i) - oldIndGCSSolLJB(i)    
 300     continue
       endif
 

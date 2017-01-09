@@ -7,6 +7,7 @@
       include 'solutes.inc'
       include 'constants.inc'
       include 'flags.inc'
+
 c################################################################
 c
 c     This function calculates the total interaction energy

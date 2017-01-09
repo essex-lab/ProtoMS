@@ -37,8 +37,8 @@ c############################################
       gridx = 0
       gridy = 0
       gridz = 0      
-
-
+      vavail = gridx*gridy*gridz
+      
       boundary = AGREESOLVENT
       solventBox = .false.
       solventCap = .false.
@@ -52,6 +52,8 @@ c     Set default REST values
       restlevel(6) = 2
       restlevel(7) = 2
       doREST = .false.
+
+      doJaws = .false.
              
       return
       end

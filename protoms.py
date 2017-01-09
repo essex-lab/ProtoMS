@@ -256,7 +256,7 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
       logger.info("Created zmatrix (%s) for ligand. Please check the output carefully"%files["zmat"])
       tarlist.append(files["zmat"])
     logger.info("Created ProtoMS template-file (%s) for ligand. Please check the output carefully"%files["tem"])
-                          
+    
   # Check to see if we have solvated the ligand
   if files["wat"] is None :
 
@@ -270,6 +270,7 @@ def _prep_ligand(files,first,charge,ligobj12,folders,tarlist,settings) :
     boxpdb = tools.solvate(settings.waterbox, ligand=solute, protein=None,
                            geometry="box",padding=10.0, radius=30.0, center="cent",
                            namescheme="ProtoMS")
+    
     boxpdb.write(files["wat"])
     logger.info("Created waterbox-file: %s"%(files["wat"]))
     if (settings.simulation in ["dualtopology","singletopology"] and not first) or (settings.simulation in ["gcmc","jaws1","jaws2"]) :
@@ -972,7 +973,7 @@ if __name__ == "__main__":
       ligobjs = simulationobjects.merge_pdbs(ligand_files[l]["obj"] for l in ligands)
     else :
       ligobjs = ligand_files[ligands[0]]["obj"]
- 
+    print ligand_files
     # Now do the preparations
     for i,l in enumerate(args.ligand) :
       if l[0] == "*" : continue # Skip ligands created in the script, i.e. the dummy

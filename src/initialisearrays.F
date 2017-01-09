@@ -802,6 +802,8 @@ c      GCSCavity = 0
       AvgVolume = ZERO
       AvgVolume2 = ZERO
 
+      AvgGCSCavity = ZERO
+
 c     initialise everything to do with the extra energies
       call initialiseExtraEnergies(.false.)
             

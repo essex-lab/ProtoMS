@@ -130,7 +130,6 @@ c            PRINT*, "OldIndGCSProC in gcsolnrg" ,OldIndGCSProC(i)
          
       
 c       This looks at solvent-solute energies
-
        if (NSolvents.gt.0) then
         do i=1,NSolvents
         GCSoluteEnergy = GCSoluteEnergy + GCsoluteSingleSolventEnergy(igcs,i,
@@ -188,9 +187,9 @@ c         this being a dual topology solute
      .        scl,sclf,sclb)
 
           if (Solutesoftcore(i)) then
-            cnrg = cnrg * (scl)**CoulSoftPower
-            cnrgf = cnrgf * (sclf)**CoulSoftPower
-            cnrgb = cnrgb * (sclb)**CoulSoftPower
+            icnrg = icnrg * (scl)**CoulSoftPower
+            icnrgf = icnrgf * (sclf)**CoulSoftPower
+            icnrgb = icnrgb * (sclb)**CoulSoftPower
           endif
   
           cnrg = cnrg + icnrg*scl
@@ -207,16 +206,15 @@ c         this being a dual topology solute
             OldIndGCSSolLJF(i) = iljnrgf*sclf
             OldIndGCSSolCB(i) = icnrgb*sclb
             OldIndGCSSolLJB(i) = iljnrgb*sclb
-        else if (savenrg.eq.NEW) then
-          NewIndGCSSolC(i) = icnrg*scl
-          NewIndGCSSolLJ(i) = iljnrg*scl
-          NewIndGCSSolCF(i) = icnrgf*sclf
-          NewIndGCSSolLJF(i) = iljnrgf*sclf
-          NewIndGCSSolCB(i) = icnrgb*sclb
-          NewIndGCSSolLJB(i) = iljnrgb*sclb
-          NewGCSSvnDist(i) = imindist
-        endif
-       enddo
+          else if (savenrg.eq.NEW) then
+            NewIndGCSSolC(i) = icnrg*scl
+            NewIndGCSSolLJ(i) = iljnrg*scl
+            NewIndGCSSolCF(i) = icnrgf*sclf
+            NewIndGCSSolLJF(i) = iljnrgf*sclf
+            NewIndGCSSolCB(i) = icnrgb*sclb
+            NewIndGCSSolLJB(i) = iljnrgb*sclb
+          endif
+        enddo
       endif
 
       if (savenrg.eq.NEW) then

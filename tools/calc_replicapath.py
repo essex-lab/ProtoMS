@@ -56,6 +56,9 @@ def replica_path(filenames,replicakind="lambda") :
   elif replicakind == "global" :
     replica_attr = "globalreplica"
     label_attr = None
+  elif replicakind == "B" :
+    replica_attr = "gcmcreplica"
+    label_attr = "bvalue"
   else :
     raise simulationobjects.SetupError("Have not implemented replica path analysis for %s"%replicakind)
 
@@ -67,7 +70,7 @@ def replica_path(filenames,replicakind="lambda") :
     results_file = simulationobjects.ResultsFile()
     results_file.read(filename=filename)
     if hasattr(results_file.snapshots[0],replica_attr) :
-      path = np.zeros(len(results_file.snapshots),int)-1
+      path = np.zeros(len(results_file.snapshots),int)-1    
       label = ind+1
       if label_attr : label = getattr(results_file.snapshots[0],label_attr)
       for i,snap in enumerate(results_file.snapshots) :
@@ -84,7 +87,7 @@ def replica_path(filenames,replicakind="lambda") :
     while len(labeled_paths[i]) < rawpaths.shape[1] :
       k = len(labeled_paths[i]) # This is the current point in time we will be looking for replica with id = i 
       # Look in the list of each output file as built above
-      for j,path in enumerate(rawpaths) :       
+      for j,path in enumerate(rawpaths) :     
         # If the replica id at the current time, k is equal to the label id we are on (i),
         # add the label of file j to the list and break
         if path[k] == i + 1 : 
@@ -103,7 +106,7 @@ if __name__ == '__main__' :
   parser = argparse.ArgumentParser(description="Program to analyze and plot a replica paths")
   parser.add_argument('-f','--files',nargs="+",help="the name of the files to analyse")
   parser.add_argument('-p','--plot',type=float,nargs="+",help="the replica values to plot")
-  parser.add_argument('-k','--kind',choices=["lambda","temperature","rest","global"],help="the kind of replica to analyze",default="lambda")
+  parser.add_argument('-k','--kind',choices=["lambda","temperature","rest","global", "B"],help="the kind of replica to analyze",default="lambda")
   parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path.png")
   args = parser.parse_args()
 
@@ -114,7 +117,6 @@ if __name__ == '__main__' :
   x = np.arange(1,paths.shape[1]+1)
   for i,(path,label) in enumerate(zip(paths,labels)) :
     if label in args.plot :
-      print label
       plt.plot(x,path,color=simulationobjects.color(i))
   psorted = sorted(args.plot)
   prange = max(psorted) - min(psorted)

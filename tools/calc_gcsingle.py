@@ -91,9 +91,18 @@ if __name__ == '__main__' :
   parser.add_argument('-p','--plot',action='store_true',help="whether to plot the titration data and fitted curve, default is no plotting",default=False)
   parser.add_argument('--guess',help="initial guess of the coupling free energy. Use to refine logisitic fitting, default=-6.2 kcal/mol",type=float,default=-6.2)
   parser.add_argument('--excess',action='store_true',help="calculate the average excess chemical potential between 2 Adams values, default=False",default=False)
+  parser.add_argument('-v','--volume', type=float,help="volume of the GCMC insertion region",default=None)
   args = parser.parse_args()
 
   dG_hyd = -6.2
+  print "CALCULATING VOLUME CORRECTION:"
+  if args.volume is None:
+      print "No GCMC volume given. No volume correction will be applied.\n A correction of kBT ln(Vsystem/Vstandard) is required for GCMC calculations"
+      args.volume=30.0
+  else:
+      print "GCMC volume:", args.volume
+      print "Standard volume: 30.0"
+      print "Volume correction of kBT ln (Vsystem/Vstandard) will be applied"
 
   # Read in the GCMC results data from multiple GCMC output folders and calculating the mean number of "on" waters, after skipping a specified number of frames.
   directories = args.directories
@@ -107,11 +116,14 @@ if __name__ == '__main__' :
         sys.exit()
     for folder in folders:
         results = ResultsFile()
-        resultsfiles = glob.glob(folder+ "/"+args.file+"*")
+        fpath = os.path.join ( folder, args.file )
+        resultsfiles = [ fpath ] if os.path.exists ( fpath ) else []
+        resultsfiles += glob.glob(fpath+"-*")
+
         if len(resultsfiles) > 1: # It is assumed the results are from ProtoMS 2.
             results.read([folder,args.file])
         elif len(resultsfiles)==1: # It is assumed the results are from ProtoMS 3.
-            results.read(folder+ "/"+args.file)
+            results.read(fpath)
         else:
            print "\nError. No results file matching %s. Exiting program\n" % folder+"/"+args.file 
            sys.exit()
@@ -149,8 +161,12 @@ if __name__ == '__main__' :
       B_sample = B_sorted[sample_inds]
       N_sample = N_sorted[sample_inds]
       dF_boots[boot] = fit_single(B_sample,N_sample,dF)
-    print "\nFREE ENERGY ESTIMATES:"
-    print "  Least squares estimate = %.2f kcal/mol" % dF
+    Vstandard = 30.0
+    correction = 0.592*np.log(args.volume/Vstandard)
+    dF -= correction
+    dF_boots -= correction
+    print "\nFREE ENERGY ESTIMATES WITH VOLUME CORRECTION:"
+    print "  Least squares estimate = %.2f kcal/mol" % dF #- correction
     print "  Bootstrap estimate     = %.2f +/- %.2f kcal/mol\n" % (np.mean(dF_boots),np.std(dF_boots))  
     print "The free energy stated is the free energy to transfer from ideal gas to the GCMC region. The binding free energy is the difference between this value and the hydration free energy of the molecule."
 

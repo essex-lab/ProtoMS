@@ -9,6 +9,7 @@
       include 'simparams.inc'
       include 'enums.inc'
       include 'energies.inc'
+
 c##############################################################
 c
 c     This function returns the total energy of solvent isvn,

@@ -37,11 +37,11 @@ class GcmcSetupTest(framework.BaseTest):
         "-w", "water.pdb",
         "--gcmcwater", "wat.pdb",
         "--gcmcbox", "gcmc_box.pdb",
-        "--adams", "20",
+        "--adams", "19", "20",
         "--nequil", "0",
-        "--nprod", "100",
+        "--nprod", "1000",
         "--ranseed", "100000",
-        "--dumpfreq", "10",
+        "--dumpfreq", "100",
         "--capradius", "26",
         "--gaff", "gaff14"
     ]
@@ -62,11 +62,16 @@ class GcmcSimulationTest(framework.BaseTest):
         "water.pdb"
     ]
 
+    simulation_mpi_processes = 2
+
     simulation_args = [
         "run_gcmc.cmd"
     ]
 
-    simulation_output_directory = "out_gcmc"
+    simulation_output_directories = [
+        "out_gcmc/b_+19.000",
+        "out_gcmc/b_+20.000"
+    ]
 
     simulation_output_files = [
         "accept",

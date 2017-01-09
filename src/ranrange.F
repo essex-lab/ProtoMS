@@ -13,6 +13,8 @@ c#####################################################
       double precision strtval,endval
       double precision grnd
       
+     
+      
       if (strtval.gt.endval) then
         temp1 = endval
         temp2 = strtval

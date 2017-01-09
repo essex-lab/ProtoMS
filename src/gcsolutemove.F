@@ -23,8 +23,8 @@ cdsasa
 c##################################################################
 
       integer updatenrg,movnum,movtyp,savenrg
-      integer igcs
-      double precision ieold,blah,cnrgf,cnrgb,ljnrgf,ljnrgb
+      integer ind,count,i,igcs
+      double precision ieold,blah,cnrgf,cnrgb,ljnrgf,ljnrgb,autofail
       double precision GCSoluteEnergy
       double precision ienew
       double precision nrg
@@ -37,11 +37,33 @@ c     clear the move list
       
 c     randomly choose a solvent
       gcsoluteMove = .false.
-      
-      igcs = ranInt(1,NGCSolutes)
 
+c     different selection selection logic if we are doing jaws or gcmc
+      if (doJaws) then
+         igcs = ranInt(1,NGCSolutes)
+      else
+         if (GCSCavity.eq.0) return
+
+c        Select from inserted gcsolutes randomly
+         ind = ranInt(1,GCSCavity)
+
+c        Now find the ind'th on gcsolute
+         igcs = 0
+         count = 0
+         do i=1,NGCSolutes
+            if (thetaparam(i).eq.1) then
+               count = count + 1
+            endif
+            if (count.eq.ind) then
+               igcs = i
+               goto 10
+            endif
+         enddo
+      endif
+
+      
 c     add this solute to the move list
-      call setGCSoluteMoved(igcs)      
+ 10   call setGCSoluteMoved(igcs)      
 c     see whether we are updating the energies
       if (updatenrg.eq.UPDATEENERGY) then
         savenrg = OLD
@@ -70,7 +92,7 @@ c     change to NEW energy if necessary
 c     get the new energy
         blah = GCsoluteEnergy(savenrg,igcs,cnrgf,cnrgb,ljnrgf,ljnrgb)
 c        PRINT*, "blah2" ,blah
-        blah = ienew + blah
+        blah = ienew + blah + autofail
      
       if (metropolis(ieold,blah,movtyp)) then
         gcsoluteMove = .true.

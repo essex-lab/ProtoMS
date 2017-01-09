@@ -164,6 +164,6 @@ c       Now scale these energies according to theta...
       endif
       
       GCsoluteSingleSolventEnergy = nrg
-c      PRINT*, "mindist-nrg" ,mindist,GCsoluteSingleSolventEnergy
+
       return
       end

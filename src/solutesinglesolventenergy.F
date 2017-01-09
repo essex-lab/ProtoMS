@@ -11,6 +11,7 @@
       include 'printer.inc'
       include 'parameters.inc'
       include 'quickpot.inc'
+
 c##########################################################
 c
 c     This function calculates the interaction energy
@@ -106,14 +107,13 @@ c     Activate Distance Dependent Dielectric calculation
         funcat1 = i
 
         if ((SvnOptimization(isvn).eq.OPTTIP3P.or.SvnOptimization(isvn).eq.OPTTIP4P).and..not.doDerivative) then
-c          if (isvn.eq.1) write(6,*)"Using optimized routines..."
 c         Optimized for TIP4P-TIP4P interactions
 
 c         LJ on oxygens only
           funcat2 = 1
           include 'nbinitial.inc'
           include 'nbsolsvn.inc'
-          include 'nbenergy_lj.inc'         
+          include 'nbenergy_lj.inc'   
         
           nrg = nrg + funcnbnrg
           ljnrg = ljnrg + funcljnrg
@@ -201,6 +201,6 @@ c           however, outside into feather region
       endif
       
       soluteSingleSolventEnergy = nrg
-      
+
       return
       end

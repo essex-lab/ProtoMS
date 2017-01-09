@@ -11,6 +11,7 @@
       include 'enums.inc'
       include 'energies.inc'
       include 'quickpot.inc'
+
 c###########################################################
 c
 c     This function returns the total energy of the 
@@ -372,8 +373,6 @@ c                totalEnergy = totalEnergy + nrg
         endif
       endif
 
-c      write(6,*)totalEnergy,nrgf,nrgb
-
 
 c########################################### 
 c     now do the same for the GCS
@@ -428,8 +427,6 @@ c        add the total GCS-protein energy for protein i
           enddo
         endif
 
-c       write(6,*)totalEnergy,nrgf,nrgb
-
 c       now the protein-GCS energy
         if (NProteins.gt.0) then
           do i=1,NProteins
@@ -456,8 +453,6 @@ c           add the total GCS-protein energy for protein i
             endif
           enddo
         endif
-
-c      write(6,*)totalEnergy,nrgf,nrgb
         
 c       now the solute-solvent energy
         if (NSolutes.gt.0) then
@@ -488,7 +483,6 @@ c             SG theta scaling for fragments
      .              cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf,mindist,
      .              scl,sclf,sclb)
 
-c      write(6,*)"H",nrg,cnrg,ljnrg,cnrgb,ljnrgb,cnrgf,ljnrgf
 
 c             scale the energies
               nrg = nrg*scl
@@ -498,7 +492,7 @@ c             scale the energies
               ljnrgf = ljnrgf*sclf
               cnrgb = cnrgb*sclb
               ljnrgb = ljnrgb*sclb
-c      write(6,*)ljnrg,ljnrgf,ljnrgb,nrg,cnrg+ljnrg
+
 c             If the soft-core is on, the coulombic is scaled further here
               if (Solutesoftcore(i)) then
                 cnrg = cnrg * (scl)**CoulSoftPower
@@ -509,7 +503,6 @@ c             If the soft-core is on, the coulombic is scaled further here
               nrgb = nrgb + cnrgb + ljnrgb
 c             totalEnergy = totalEnergy + nrg
               totalEnergy = totalEnergy + cnrg + ljnrg
-              
               if (savenrg.eq.OLD) then
                 OldSolGCSC(i) = cnrg
                 OldSolGCSLJ(i) = ljnrg
@@ -591,7 +584,6 @@ c           add the total solvent-protein energy for protein i
         endif
       
       
-        
 c       now the solute-solvent energy
         if (NSolutes.gt.0) then
           do i=1,NSolutes
@@ -679,7 +671,6 @@ c                 save the solvent probabilities...
         NewTotalEnergyB = nrgb
       endif
 
-c      write(6,*)totalEnergy,nrgf,nrgb
 
       if (.not.DifferentLambdas) then
 c       if lambdas are all the same then reference and perturbed energies should be the same!      
@@ -693,6 +684,7 @@ c       if lambdas are all the same then reference and perturbed energies should
           call printLine(WARNING,"or try to submit a bug report.")
         endif
       endif
+
           
       return
 

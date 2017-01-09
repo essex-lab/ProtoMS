@@ -33,6 +33,9 @@ c####################################################################
        double precision std,stdf,stdb,totalEnergy,nrgb,nrgf
        integer lineLength,lgth,lgth2,igcs,savenrg,Molcount
        integer i,j,isvn,itry,iacp,iprcnt,ires,X,Y,Z,s,t,initial
+       double precision AllOldGCSSvnC, AllOldGCSSvnCF, AllOldGCSSvnCB
+       double precision AllOldGCSSvnLJ, AllOldGCSSvnLJF, AllOldGCSSvnLJB 
+
 
 
        if (DifferentLambdas) then
@@ -58,7 +61,12 @@ c####################################################################
          call printLine(RESULTS,printstring)
        endif
        
-       if (doTemperatureRE.and.doLambdaRE) then
+       if (doMultiGCMC) then
+         write(printstring,"('GCMC replica = ',i8)") mygcid+1
+         call printLine(RESULTS,printstring)
+       endif
+
+       if (doTemperatureRE.and.doLambdaRE .or. doMultiGCMC.and.doLambdaRE) then
          write(printstring,"('Global replica = ',i8)") myid+1
          call printLine(RESULTS,printstring)
        endif
@@ -285,6 +293,45 @@ c            lj
          enddo
        endif
 
+       if (NGCSolutes.gt.0 .and. NSolvents.gt.0) then
+
+          call prettyLine(RESULTS,'Average GCS-solvent energy')
+
+c     coulomb
+          AllOldGCSSvnC = 0
+          AllOldGCSSvnCF = 0
+          AllOldGCSSvnCB = 0
+          do i=1,NGCSolutes
+             AllOldGCSSvnC = AllOldGCSSvnC + OldGCSSvnC(i)
+             AllOldGCSSvnCF = AllOldGCSSvnCF + OldGCSSvnCB(i)
+             AllOldGCSSvnCB = AllOldGCSSvnCB + OldGCSSvnCB(i)
+          enddo
+
+          write(printstring,20) 'COU',AllOldGCSSvnC,ZERO,AllOldGCSSvnCF,ZERO,
+     .         AllOldGCSSvnCB,ZERO
+          call printLine(RESULTS,printstring)
+          write(printstring,21) AllOldGCSSvnCF-AllOldGCSSvnC,AllOldGCSSvnCB-AllOldGCSSvnC
+          call printLine(RESULTS,printstring)
+
+c     lj
+          AllOldGCSSvnLJ = 0
+          AllOldGCSSvnLJF = 0
+          AllOldGCSSvnLJB = 0
+          do i=1,NGCSolutes
+             AllOldGCSSvnLJ = AllOldGCSSvnLJ + OldGCSSvnLJ(i)
+             AllOldGCSSvnLJF = AllOldGCSSvnLJF + OldGCSSvnLJB(i)
+             AllOldGCSSvnLJB = AllOldGCSSvnLJB + OldGCSSvnLJB(i)
+          enddo
+
+          write(printstring,20) 'LJ ',AllOldGCSSvnLJ,ZERO,AllOldGCSSvnLJF,ZERO,
+     .         AllOldGCSSvnCB,ZERO
+          call printLine(RESULTS,printstring)
+          write(printstring,21) AllOldGCSSvnCF-AllOldGCSSvnC,AllOldGCSSvnCB-AllOldGCSSvnC
+          call printLine(RESULTS,printstring)
+          
+       endif
+       
+       
 cc      if (NGCSolutes.gt.0 .and. NSolvents.gt.0) then
 c         do i=1,NGCSolutes
 c           lgth = lineLength(GCSName(i))

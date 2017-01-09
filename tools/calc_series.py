@@ -289,6 +289,7 @@ def parse_series(series,results) :
   special_units = {}
   special_units["solventson"] = ""
   special_units["lambdareplica"] = ""
+  special_units["globalreplica"] = ""
 
   ys = []
   labels = []
@@ -575,7 +576,7 @@ def _select_series(results) :
   print "Select one or several of the following series:"
   print "----------------------------------------------"
   singles = []
-  for attr in ["backfe","forwfe","gradient","agradient","lambdareplica","solventson"] :
+  for attr in ["backfe","forwfe","gradient","agradient","lambdareplica","solventson","globalreplica"] :
     if hasattr(results,attr) : singles.append(attr)
   for attr in ["total","capenergy","extraenergy"] :
     if hasattr(results,attr) : singles.append(attr+"[b|f]")
@@ -668,7 +669,7 @@ if __name__ == '__main__' :
   results_file = simulationobjects.ResultsFile()
   results_file.read(filename=filename)
   results = results_file.make_series() # This puts all data into Numpy arrays
-  
+
   # Select which series to plot
   if args.series is None :
     args.series = _select_series(results)
