@@ -6,12 +6,14 @@ import framework
 class ProtSetupTest(framework.BaseTest):
     ref_dir = "tests/setup/"
 
-    copy_files = [
+    input_files = [
         "dcb.pdb",
         "protein.pdb"
     ]
 
-    setup_args = [
+    executable = "protoms.py"
+
+    args = [
         "-s", "none",
         "-l", "dcb.pdb",
         "-p", "protein.pdb",
@@ -19,7 +21,7 @@ class ProtSetupTest(framework.BaseTest):
         "--gaff", "gaff14"
     ]
 
-    setup_output_files = [
+    output_files = [
         "dcb.prepi",
         "dcb.frcmod",
         "dcb.zmat",

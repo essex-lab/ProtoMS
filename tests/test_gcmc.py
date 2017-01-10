@@ -6,17 +6,17 @@ import framework
 class GcmcSetupBoxTest(framework.BaseTest):
     ref_dir = "tests/gcmc/"
 
-    copy_files = [
+    input_files = [
         "wat.pdb"
     ]
 
-    setup_executable = "/home/james/projects/protoms-dev/tools/make_gcmcbox.py"
+    executable = "tools/make_gcmcbox.py"
 
-    setup_args = [
+    args = [
         "-s", "wat.pdb",
     ]
 
-    setup_output_files = [
+    output_files = [
         "gcmc_box.pdb",
     ]
 
@@ -24,14 +24,16 @@ class GcmcSetupBoxTest(framework.BaseTest):
 class GcmcSetupTest(framework.BaseTest):
     ref_dir = "tests/gcmc/"
 
-    copy_files = [
+    input_files = [
         "protein.pdb",
         "water.pdb",
         "wat.pdb",
         "gcmc_box.pdb"
     ]
 
-    setup_args = [
+    executable = "protoms.py"
+
+    args = [
         "-s", "gcmc",
         "-sc", "protein.pdb",
         "-w", "water.pdb",
@@ -46,7 +48,7 @@ class GcmcSetupTest(framework.BaseTest):
         "--gaff", "gaff14"
     ]
 
-    setup_output_files = [
+    output_files = [
         "gcmc_wat.pdb",
         "run_gcmc.cmd"
     ]
@@ -55,25 +57,27 @@ class GcmcSetupTest(framework.BaseTest):
 class GcmcSimulationTest(framework.BaseTest):
     ref_dir = "tests/gcmc/"
 
-    copy_files = [
+    input_files = [
         "run_gcmc.cmd",
         "protein.pdb",
         "gcmc_wat.pdb",
         "water.pdb"
     ]
 
-    simulation_mpi_processes = 2
+    mpi_processes = 2
 
-    simulation_args = [
+    executable = "build/protoms3"
+
+    args = [
         "run_gcmc.cmd"
     ]
 
-    simulation_output_directories = [
+    output_directories = [
         "out_gcmc/b_+19.000",
         "out_gcmc/b_+20.000"
     ]
 
-    simulation_output_files = [
+    output_files = [
         "accept",
         "all.pdb",
         "info",

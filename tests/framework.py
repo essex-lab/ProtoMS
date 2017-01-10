@@ -15,37 +15,36 @@ class TestDefinitionError(BaseException):
 
 
 class BaseTest(unittest.TestCase):
-    # Class attributes used to define a new test
+    """
+    Base class for ProtoMS functional tests.
 
-    setup_executable = os.path.join("tools", "protoms.py")
-    """ProtoMS executable to be run during setup phase"""
-    simulation_executable = os.path.join("build", "protoms3")
-    """ProtoMS executable to be run during simulation phase"""
+    The test workflow consists of 3 stages:
+        1. Input files are copied from a reference directory
+        2. A ProtoMS executable is called using a provided set of arguments
+        3. Output files are compared against the output files provided in the reference directory
 
+    A new ProtoMS functional(1) test should inherit from
+
+    1) https://en.wikipedia.org/wiki/Functional_testing
+    """
+
+    # Required class attributes used to define a new test
+    executable = None
+    """ProtoMS executable to be run during simulation phase - location relative to PROTOMSHOME"""
     ref_dir = None
     """Directory containing the test reference files"""
-    copy_files = None
+    input_files = None
     """Files to copy to the test's working directory at the beginning of the test"""
+    args = None
+    """List of arguments provided to the executable during the test"""
+    output_files = None
+    """Output files to check against reference at the end of the test"""
 
-    setup_args = None
-    """List of arguments provided to the executable during the setup phase"""
-    setup_output_files = None
-    """Output files to check against reference at the end of the setup phase"""
-
-    simulation_args = None
-    """List of arguments provided to the executable during the simulation phase"""
-    simulation_output_directory = None
-    """Name of the simulation output directory if there is only one"""
-    simulation_output_directories = None
-    """List of names of the simulation output directories if there is multiple"""
-    simulation_output_files = None
-    """Output files to check against reference at the end of the simulation phase"""
-
-    simulation_mpi_processes = 0
-    """Number of MPI processes to use during the simulation stage - default is no MPI"""
-
-    _do_test_setup = False
-    _do_test_simulation = False
+    # Optional class attributes used to define a new test
+    output_directories = ["."]
+    """List of names of the output directories - default is the test's working directory"""
+    mpi_processes = 0
+    """Number of MPI processes to use - default is no MPI"""
 
     @classmethod
     def setUpClass(cls):
@@ -53,56 +52,34 @@ class BaseTest(unittest.TestCase):
 
         # Create a directory for each test to hold test files
         # Allows you to check them if the test fails
-        cls.test_dir = os.path.join("test_files", cls.__name__)
+        cls._test_dir = os.path.join("test_files", cls.__name__)
         try:
-            os.makedirs(cls.test_dir)
+            os.makedirs(cls._test_dir)
         except OSError as e:
             if errno.EEXIST != e.errno:
                 raise e
         cls._start_dir = os.getcwd()
-        os.chdir(cls.test_dir)
-
-        # Please excuse the following mess of attribute tests...
+        os.chdir(cls._test_dir)
 
         try:
             protoms_env = os.environ["PROTOMSHOME"]
         except KeyError:
             raise EnvironmentError("PROTOMSHOME environment variable is not set.")
 
-        cls.setup_executable = os.path.join(protoms_env, cls.setup_executable)
-        cls.simulation_executable = os.path.join(protoms_env, cls.simulation_executable)
-
-        cls.all_files = []
-
         # These are required for every test
-        if cls.ref_dir is None or cls.copy_files is None:
-            raise TestDefinitionError("You must provide ref_dir and copy_files when defining a test case. Check framework.py")
+        if None in (cls.ref_dir, cls.input_files, cls.executable, cls.args, cls.output_files):
+            raise TestDefinitionError("Missing required test attributes in definition of test '{0}'. Check framework.py".format(cls.__name__))
 
-        cls.all_files.extend(cls.copy_files)
-        cls.full_ref_dir = os.path.join(protoms_env, cls.ref_dir)
+        cls.executable = os.path.join(protoms_env, cls.executable)
 
-        # For tests of setup functionality these are required
-        if cls.setup_args is not None and cls.setup_output_files is not None:
-            cls._do_test_setup = True
-            cls.all_files.extend(cls.setup_output_files)
+        cls._all_files = cls.input_files[:]
+        cls._full_ref_dir = os.path.join(protoms_env, cls.ref_dir)
 
-        # For tests of simulation functionality these are required
-        if cls.simulation_args is not None and cls.simulation_output_files is not None:
-            if cls.simulation_output_directories is None:
-                cls.simulation_output_directories = [cls.simulation_output_directory]
-            elif type(cls.simulation_output_directories) is str:
-                cls.simulation_output_directories = [cls.simulation_output_directories]
-
-            cls._do_test_simulation = True
-
-            output_files = [os.path.join(d, f) for f in cls.simulation_output_files for d in cls.simulation_output_directories]
-            cls.all_files.extend(output_files)
-
-        if not cls._do_test_setup and not cls._do_test_simulation:
-            raise TestDefinitionError("Test case runs neither setup nor simulation, it is defined incorrectly.")
+        output_files = [os.path.join(d, f) for f in cls.output_files for d in cls.output_directories]
+        cls._all_files.extend(output_files)
 
         # Delete files left over from previous test runs
-        cls.helper_clean_files()
+        cls._helper_clean_files()
 
     @classmethod
     def tearDownClass(cls):
@@ -111,66 +88,57 @@ class BaseTest(unittest.TestCase):
         os.chdir(cls._start_dir)
 
     @classmethod
-    def helper_clean_files(cls):
-        for filename in cls.all_files:
+    def _helper_clean_files(cls):
+        for filename in cls._all_files:
             try:
                 os.remove(filename)
             except OSError:
                 pass
 
         try:
-            for dir in cls.simulation_output_directories:
-                if os.path.isdir(dir) and not os.listdir(dir):
+            for dir in cls.output_directories:
+                if dir != "." and os.path.isdir(dir) and not os.listdir(dir):
                     os.rmdir(dir)
         except TypeError:
             pass
 
-    def helper_subprocess_call(self, args):
+    def _helper_subprocess_call(self, args):
         return_code = subprocess.call(args)
         self.assertEqual(0, return_code)
         if return_code == 0:
             print("ProtoMS call successful")
 
-    def helper_check_output(self, stage, output_files):
-        compare_tools = CompareTools(self.full_ref_dir, verbose=True)
+    def _helper_check_output(self, output_files):
+        compare_tools = CompareTools(self._full_ref_dir, verbose=True)
 
         for filename in output_files:
             self.assertTrue(os.path.exists(filename),
-                            "Expected {0} output file {1} is missing".format(stage, filename))
-            self.assertTrue(os.path.exists(os.path.join(self.full_ref_dir, filename)),
-                            "Reference {0} output file {1} is missing".format(stage, filename))
+                            "Expected output file {0} is missing".format(filename))
+            self.assertTrue(os.path.exists(os.path.join(self._full_ref_dir, filename)),
+                            "Reference output file {0} is missing".format(filename))
 
         for filename in output_files:
             file_match = compare_tools.compare(filename)
             if not file_match:
-                self.all_files.remove(filename)
-            self.assertTrue(file_match, "Content mismatch between {0} output and reference for file {1}".format(stage, filename))
+                self._all_files.remove(filename)
+            self.assertTrue(file_match, "Content mismatch between output and reference for file {0}".format(filename))
 
     def test(self):
-        for filename in self.copy_files:
+        for filename in self.input_files:
             try:
-                shutil.copy(os.path.join(self.full_ref_dir, filename), ".")
+                shutil.copy(os.path.join(self._full_ref_dir, filename), ".")
             except IOError:
                 raise IOError("The required reference input file {0} could not be copied".format(filename))
 
-        if self._do_test_setup:
-            print("\nTEST_SETUP_RUN\n")
-            args = [self.setup_executable] + self.setup_args
-            self.helper_subprocess_call(args)
+        print("\nTEST_RUN\n")
+        args = [self.executable] + self.args
+        if self.mpi_processes > 0:
+            args = ["mpirun", "-np", str(self.mpi_processes)] + args
+        self._helper_subprocess_call(args)
 
-            print("\nTEST_SETUP_OUTPUT\n")
-            self.helper_check_output("setup", self.setup_output_files)
-
-        if self._do_test_simulation:
-            print("\nTEST_SIMULATION_RUN\n")
-            args = [self.simulation_executable] + self.simulation_args
-            if self.simulation_mpi_processes > 0:
-                args = ["mpirun", "-np", str(self.simulation_mpi_processes)] + args
-            self.helper_subprocess_call(args)
-
-            print("\nTEST_SIMULATION_OUTPUT\n")
-            sim_out_files = [os.path.join(d, f) for f in self.simulation_output_files for d in self.simulation_output_directories]
-            self.helper_check_output("simulation", sim_out_files)
+        print("\nTEST_OUTPUT\n")
+        out_files = [os.path.join(d, f) for f in self.output_files for d in self.output_directories]
+        self._helper_check_output(out_files)
 
 
 class CompareTools:

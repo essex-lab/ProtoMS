@@ -189,42 +189,63 @@ add_test(NAME test_path
 add_test(NAME test_tools_protoms 
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_tools_protoms.py)
 
-add_test(NAME test_prot_setup
+add_test(NAME ProtSetupTest
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_prot_setup.py)
 
-add_test(NAME test_equil
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil.py)
+add_test(NAME EquilSetupTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil.py EquilSetupTest)
+add_test(NAME EquilSimulationTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_equil.py EquilSimulationTest)
 
-add_test(NAME test_energies
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies.py)
+add_test(NAME EnergiesSimulationTip3pTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies.py EnergiesSimulationTip3pTest)
+add_test(NAME EnergiesSimulationTip4pTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies.py EnergiesSimulationTip4pTest)
 
-add_test(NAME test_sampling
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling.py)
+add_test(NAME SamplingSetupTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling.py SamplingSetupTest)
+add_test(NAME SamplingSimulationTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling.py SamplingSimulationTest)
 
-add_test(NAME test_gcmc
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py)
+add_test(NAME GcmcSetupBoxTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSetupBoxTest)
+add_test(NAME GcmcSetupTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSetupTest)
+add_test(NAME GcmcSimulationTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSimulationTest)
 
-add_test(NAME test_jaws1
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1.py)
+add_test(NAME Jaws1SetupTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1.py Jaws1SetupTest)
+add_test(NAME Jaws1SimulationTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1.py Jaws1SimulationTest)
 
 # Skip MPI tests is not using MPI
 if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
     add_test(NAME test_mpi
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
 
-    add_test(NAME test_jaws2
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2.py)
+    add_test(NAME Jaws2SetupTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2.py Jaws2SetupTest)
+    add_test(NAME Jaws2SimulationTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2.py Jaws2SimulationTest)
 
-    add_test(NAME test_reti_sngl
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_sngl.py)
+    add_test(NAME RetiSnglSetupTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_sngl.py RetiSnglSetupTest)
+    add_test(NAME RetiSnglSimulationFreeTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_sngl.py RetiSnglSimulationFreeTest)
+    add_test(NAME RetiSnglSimulationGasTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_sngl.py RetiSnglSimulationGasTest)
 
-    add_test(NAME test_reti_dbl
-        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_dbl.py)
+    add_test(NAME RetiDblSetupTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_dbl.py RetiDblSetupTest)
+    add_test(NAME RetiDblSimulationTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_reti_dbl.py RetiDblSimulationTest)
 endif()
 
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
                   DEPENDS protoms3)
+              add_custom_target(pytest COMMAND "py.test ${CMAKE_CURRENT_SOURCE_DIR}/tests/")
 
 add_custom_target(clean-test COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/clean-test.cmake)
 

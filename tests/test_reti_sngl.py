@@ -6,13 +6,15 @@ import framework
 class RetiSnglSetupTest(framework.BaseTest):
     ref_dir = "tests/RETI_sngl/"
 
-    copy_files = [
+    input_files = [
         "ethane.pdb",
         "methanol.pdb",
         "single_cmap.dat"
     ]
 
-    setup_args = [
+    executable = "protoms.py"
+
+    args = [
         "-s", "singletopology",
         "-l", "ethane.pdb", "methanol.pdb",
         "--lambdas", "0.00", "0.33", "0.67", "1.00",
@@ -25,7 +27,7 @@ class RetiSnglSetupTest(framework.BaseTest):
         "--gaff", "gaff14"
     ]
 
-    setup_output_files = [
+    output_files = [
         "ethane_box.pdb",
         "ethtmeo_comb.tem",
         "ethtmeo_ele.tem",
@@ -42,27 +44,29 @@ class RetiSnglSetupTest(framework.BaseTest):
 class RetiSnglSimulationFreeTest(framework.BaseTest):
     ref_dir = "tests/RETI_sngl/"
 
-    copy_files = [
+    input_files = [
         "run_comb_free.cmd",
         "ethane.pdb",
         "ethtmeo_comb.tem",
         "ethane_box.pdb"
     ]
 
-    simulation_mpi_processes = 4
+    mpi_processes = 4
 
-    simulation_args = [
+    executable = "build/protoms3"
+
+    args = [
         "run_comb_free.cmd"
     ]
 
-    simulation_output_directories = [
+    output_directories = [
         "out_comb_free/lam-0.000",
         "out_comb_free/lam-0.330",
         "out_comb_free/lam-0.670",
         "out_comb_free/lam-1.000"
     ]
 
-    simulation_output_files = [
+    output_files = [
         "accept",
         "all.pdb",
         "info",
@@ -77,26 +81,28 @@ class RetiSnglSimulationFreeTest(framework.BaseTest):
 class RetiSnglSimulationGasTest(framework.BaseTest):
     ref_dir = "tests/RETI_sngl/"
 
-    copy_files = [
+    input_files = [
         "run_comb_gas.cmd",
         "ethane.pdb",
         "ethtmeo_comb.tem"
     ]
 
-    simulation_mpi_processes = 4
+    mpi_processes = 4
 
-    simulation_args = [
+    executable = "build/protoms3"
+
+    args = [
         "run_comb_gas.cmd"
     ]
 
-    simulation_output_directories = [
+    output_directories = [
         "out_comb_gas/lam-0.000",
         "out_comb_gas/lam-0.330",
         "out_comb_gas/lam-0.670",
         "out_comb_gas/lam-1.000"
     ]
 
-    simulation_output_files = [
+    output_files = [
         "accept",
         "all.pdb",
         "info",

@@ -6,7 +6,7 @@ import framework
 class EquilSetupTest(framework.BaseTest):
     ref_dir = "tests/equil/"
 
-    copy_files = [
+    input_files = [
         "dcb.frcmod",
         "dcb.pdb",
         "dcb.prepi",
@@ -18,7 +18,9 @@ class EquilSetupTest(framework.BaseTest):
         "water.pdb"
     ]
 
-    setup_args = [
+    executable = "protoms.py"
+
+    args = [
         "-s", "equilibration",
         "-l", "dcb.pdb",
         "-p", "protein.pdb",
@@ -27,7 +29,7 @@ class EquilSetupTest(framework.BaseTest):
         "--gaff", "gaff14"
     ]
 
-    setup_output_files = [
+    output_files = [
         "run_bnd.cmd"
     ]
 
@@ -35,7 +37,7 @@ class EquilSetupTest(framework.BaseTest):
 class EquilSimulationTest(framework.BaseTest):
     ref_dir = "tests/equil/"
 
-    copy_files = [
+    input_files = [
         "dcb.frcmod",
         "dcb.pdb",
         "dcb.prepi",
@@ -48,13 +50,17 @@ class EquilSimulationTest(framework.BaseTest):
         "run_bnd.cmd"
     ]
 
-    simulation_args = [
+    executable = "build/protoms3"
+
+    args = [
         "run_bnd.cmd"
     ]
 
-    simulation_output_directory = "out_bnd"
+    output_directories = [
+        "out_bnd"
+    ]
 
-    simulation_output_files = [
+    output_files = [
         "equil_bnd.pdb",
         "warning"
     ]

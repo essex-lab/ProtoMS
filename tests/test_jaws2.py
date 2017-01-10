@@ -6,14 +6,16 @@ import framework
 class Jaws2SetupTest(framework.BaseTest):
     ref_dir = "tests/jaws2/"
 
-    copy_files = [
+    input_files = [
         "fragment.pdb",
         "protein.pdb",
         "jaws2_waters.pdb",
         "water.pdb"
     ]
 
-    setup_args = [
+    executable = "protoms.py"
+
+    args = [
         "-s", "jaws2",
         "-l", "fragment.pdb",
         "-p", "protein.pdb",
@@ -27,7 +29,7 @@ class Jaws2SetupTest(framework.BaseTest):
         "--gaff", "gaff14"
     ]
 
-    setup_output_files = [
+    output_files = [
         "fragment.tem",
         "fragment.zmat",
         "fragment_box.pdb",
@@ -47,7 +49,7 @@ class Jaws2SetupTest(framework.BaseTest):
 class Jaws2SimulationTest(framework.BaseTest):
     ref_dir = "tests/jaws2/"
 
-    copy_files = [
+    input_files = [
         "run_jaws2-w1_jaws.cmd",
         "jaws2_wat1.pdb",
         "fragment.pdb",
@@ -57,20 +59,22 @@ class Jaws2SimulationTest(framework.BaseTest):
         "protein_scoop.pdb"
     ]
 
-    simulation_mpi_processes = 4
+    mpi_processes = 4
 
-    simulation_args = [
+    executable = "build/protoms3"
+
+    args = [
         "run_jaws2-w1_jaws.cmd"
     ]
 
-    simulation_output_directories = [
+    output_directories = [
         "out_jaws2-w1/j_+8.000",
         "out_jaws2-w1/j_+10.000",
         "out_jaws2-w1/j_+12.000",
         "out_jaws2-w1/j_+14.000"
     ]
 
-    simulation_output_files = [
+    output_files = [
         "accept",
         "all.pdb",
         "info",

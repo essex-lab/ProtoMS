@@ -6,12 +6,14 @@ import framework
 class RetiDblSetupTest(framework.BaseTest):
     ref_dir = "tests/RETI_dbl/"
 
-    copy_files = [
+    input_files = [
         "ethane.pdb",
         "methanol.pdb"
     ]
 
-    setup_args = [
+    executable = "protoms.py"
+
+    args = [
         "-s", "dualtopology",
         "-l", "ethane.pdb", "methanol.pdb",
         "--lambdas", "0.00", "0.33", "0.67", "1.00",
@@ -23,7 +25,7 @@ class RetiDblSetupTest(framework.BaseTest):
         "--gaff", "gaff14"
     ]
 
-    setup_output_files = [
+    output_files = [
         "ethane_box.pdb",
         "eth-meo.tem",
         "run_free.cmd"
@@ -33,7 +35,7 @@ class RetiDblSetupTest(framework.BaseTest):
 class RetiDblSimulationTest(framework.BaseTest):
     ref_dir = "tests/RETI_dbl/"
 
-    copy_files = [
+    input_files = [
         "run_free.cmd",
         "eth-meo.tem",
         "ethane.pdb",
@@ -41,20 +43,22 @@ class RetiDblSimulationTest(framework.BaseTest):
         "ethane_box.pdb"
     ]
 
-    simulation_mpi_processes = 4
+    mpi_processes = 4
 
-    simulation_args = [
+    executable = "build/protoms3"
+
+    args = [
         "run_free.cmd"
     ]
 
-    simulation_output_directories = [
+    output_directories = [
         "out_free/lam-0.000",
         "out_free/lam-0.330",
         "out_free/lam-0.670",
         "out_free/lam-1.000"
     ]
 
-    simulation_output_files = [
+    output_files = [
         "accept",
         "all.pdb",
         "info",
