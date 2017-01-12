@@ -1,4 +1,4 @@
-protoms3 started at 14:48:52 on the 11/12/2015
+protoms3 started at 15:14:25 on the 12/ 1/2017
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
@@ -19,7 +19,8 @@ Reading parameter file /home/james/projects/protoms-dev/parameter/solvents.ff
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
-Loaded   15 templates,    0 override templates,   21 clj parameters
+Found solvent template with TIP3p optimization
+Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
 #######################################################################################
@@ -72,7 +73,7 @@ Got initial random number seed       100000
 ###########################################
 Sanitised random number seed =       209999
 ###########################################
-Starting simulation at 14:48:52 on the 11/12/2015
+Starting simulation at 15:14:25 on the 12/ 1/2017
 ######################################################################
 Running simulation in lambda window    0.999 <--    1.000 -->    1.000
 ######################################################################
@@ -104,7 +105,7 @@ Redirecting PDB to all.pdb
 Writing restart file
 ####################
 Resetting free energy average to zero.
-Data collection complete. Attempted/accepted moves           10           9
+Data collection complete. Attempted/accepted moves           10          10
 Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
 Simulation shutting down...
-protoms3 completed at 14:48:52 on the 11/12/2015
+protoms3 completed at 15:14:25 on the 12/ 1/2017
