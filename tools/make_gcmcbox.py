@@ -46,9 +46,18 @@ def make_gcmcbox(pdb,filename,padding=2.0) :
   box = pdb.getBox()
   box["origin"] = box["origin"] - padding
   box["len"] = box["len"] + 2.0*padding
-  
+
+  print_bequil(box["len"])
+
   # Save it to disc
   simulationobjects.write_box(filename,box)
+
+def print_bequil(boxlen):
+  betamu = -10.47
+  boxvolume = boxlen[0]*boxlen[1]*boxlen[2]
+  bequil = betamu+np.log(boxvolume/30.0)
+  print "Volume of GCMC box:", np.round(boxvolume,2)
+  print "Bequil:", np.round(bequil,2)
 
 if __name__ == "__main__":
 
@@ -75,9 +84,12 @@ if __name__ == "__main__":
     make_gcmcbox(pdbobj,args.out,args.padding)
   elif len(args.box) == 3:
     box = {"center":np.array([float(args.box[0]),float(args.box[1]),float(args.box[2])]),"len":np.array([args.padding*2]*3)}
+    print_bequil(box["len"]) 
     simulationobjects.write_box(args.out,box)
   elif len(args.box) == 6:
     box = {"center":np.array([float(args.box[0]),float(args.box[1]),float(args.box[2])]),"len":np.array([float(args.box[3]),float(args.box[4]),float(args.box[5])])}
+    print_bequil(box["len"]) 
     simulationobjects.write_box(args.out,box)
   else : 
     print "\nError with 'box' arguement. Please specify either three arguements for the centre of the box, or six arguements for the centre of the box AND the lengths of the sides.\n"
+

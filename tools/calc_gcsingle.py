@@ -176,14 +176,14 @@ if __name__ == '__main__' :
     plt.scatter(B_sorted, N_sorted,color="k",s=40)
     if args.calc==True: 
       Bx = np.linspace(start=B.min(),stop=B.max(),num=500)
-      plt.plot(Bx,logistic_single(Bx,dF),color="red",linewidth=3)
+      plt.plot(Bx,logistic_single(Bx,dF+correction),color="red",linewidth=3) # need to add correction back to shift fitted curve
     plt.xlabel("Adams parameter (B)",fontsize=15)
     plt.ylabel("Average amount of water",fontsize=15)
     plt.suptitle("Fitted free energy and logistic curve",fontweight="bold")
     plt.show(block=False)
 
     plt.figure("Bootstrap Samples")
-    currfig = plot_FitPercentiles(B,N,dF_boots,level1=0.50,level2=0.90,smoothness=0.01)
+    currfig = plot_FitPercentiles(B,N,dF_boots+correction,level1=0.50,level2=0.90,smoothness=0.01) # need to add correction back to shift fitted curve
     currfig.xlabel("Adams parameter (B)",fontsize=15)
     currfig.ylabel("Average amount of water",fontsize=15)
     currfig.suptitle("Median and percentiles of fitted free energy",fontweight="bold")
