@@ -474,7 +474,7 @@ def insertion_pmf(N,gcmc_model,volume=30.0,T=298.15):
         B_upper = inverse_slp(gcmc_model,N[i])  
         #dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) + integral(gcmc_model,B_lower,B_upper))[0]							# This version uses analytical integration. Prone to instability.
         dG[i] = (nonintegral(N[i],B_upper) - nonintegral(N_lower,B_lower) - integrate.quad(gcmc_model.predict,a=B_lower,b=B_upper)[0])[0]		# This version numerical integration.
-        correction[i] = N[i]*np.log(volume/Vstandard)
+        correction[i] = (N[i]-N_lower)*np.log(volume/Vstandard)
         dG[i] = dG[i] - correction[i]
     return dG*kT
 
