@@ -14,9 +14,9 @@ This tutorial will cover the basics behind setting-up, running and analysing GCM
 	<li><code>protein_pms.pdb</code> - the structure of the BPTI in PDB format</li>
 </ul>
 <p>
-The protein has already been protonated and had it's atoms in the ProtoMS naming scheme. Note that there are 3 disulfied bonds in the protein, which are labelled as CYX. The water molecule is the Tip4p model, and is already located in the BPTI cavity. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
+The protein has already been protonated and had it's atoms in the ProtoMS naming scheme. Note that there are 3 disulfide bonds in the protein, which are labelled as CYX. The water molecule is the Tip4p model, and is already located in the BPTI cavity. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
 <p>
-We will be performing GCMC on the single water molecule, wat.pdb, at a range of different chemical potentials. During these GCMC simulations, the water will be instantaneously switched "on" and "off", and from the average occupancy of the water as a function of chemical potential, we will estimate it's binding free energy. As you'll see below, we actually use something called the "Adams" value rather than the chemical potential. This is for technical reasons, and the two are related to each other by multiplicativen and additive constants.
+We will be performing GCMC on the single water molecule, wat.pdb, at a range of different chemical potentials. During these GCMC simulations, the water will be instantaneously switched "on" and "off", and from the average occupancy of the water as a function of chemical potential, we will estimate it's binding free energy. As you'll see below, we actually use something called the "Adams" value rather than the chemical potential. This is for technical reasons, and the two are related to each other by multiplicative and additive constants.
 <p>
 <hr align="center"/>
 <h3>Simple setup</h3>
@@ -27,9 +27,9 @@ First, let's create a box around our water of interest. This will constrain the 
 <p>
 This has created a file called gcmc_box.pdb. You should see output of the box volume and the equilibrium B value. The box volume is used in the analysis, so keep note of it, and <em>B<sub>equil</sub></em> is used to set up the simulation. Next, we'll use the automatic capabilities of protoms.py to do the rest of the set-up.
 <p>
-<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein_pms.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams -9.110 -10.110 -11.110 -12.110 -13.110 -14.110 -15.110 -16.110 -17.110 -18.110 -19.110 -20.110 -21.110 -22.110 -23.110 -24.110 --capradius 26</pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -sc protein_pms.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adamsrange -9.110 -24.110 --capradius 26</pre>
 <p>
-We've input which Adams values (i.e. chemical potentials) we will use with <code>--adams</code>. Notice that we have chosen the <em>B<sub>equil</sub></em>, -9.110 as the highest B value for the simulation. As the protein was already in the ProtoMS format, we gave it the flag <code>-sc</code> (for scoop). We also specified the radius of the water droplet with <code>--capradius</code>; the default radius in protoms.py is 30 Angstroms, which is unnecessary for such a small protein.
+We've input which Adams values (i.e. chemical potentials) we will use with <code>--adamsrange</code>. As specified, this will provide an input file to run 16 concurrent gcmc simulations. You may want to adjust the number according to the computational resources you have available. This can be done by providing a third value above eg. <code>--adamsrange -9.110 -24.110 12</code> will setup simulations at 12 Adams values. If you do this you'll see some differences in the rest of the tutorial.  Notice that we have chosen the <em>B<sub>equil</sub></em>, -9.110 as the highest B value for the simulation. This is inspired by the fact that we know the water is present in the BPTI crystal structure and hence is certain to have a favourable binding free energy. Binding events for favourable waters occur at values below <em>B<sub>equil</sub></em>.  As the protein was already in the ProtoMS format, we gave it the flag <code>-sc</code> (for scoop). We also specified the radius of the water droplet with <code>--capradius</code>; the default radius in protoms.py is 30 Angstroms, which is unnecessary for such a small protein.
 <p>
 Have a look at the simulation system we've created with your favourite molecular viewer. For instance, with vmd:
 <p>
@@ -51,7 +51,7 @@ Notice that in the command file <code>run_gcmc.cmd</code> file there is the line
 
 <pre>multigcmc 200000 -9.110 -10.110 -11.110 -12.110 -13.110 -14.110 -15.110 -16.110 -17.110 -18.110 -19.110 -20.110 -21.110 -22.110 -23.110 -24.110</pre>
 
-Where replica exchange between neighbouring B values will be attempted every 200000 steps. These sixteen Adams values mean that sixteen cores will be needed to run these simulations. ProtoMS is designed to run mpi, so to execute, enter
+An individual simulation will be run at each of these B values with replica exchange moves attempted between neighbours every 200000 MC moves. These sixteen Adams values mean that sixteen cores will be needed to run these simulations. ProtoMS is designed to run mpi, so to execute, enter
 <pre>
 mpirun -np 16 $PROTOMSHOME/protoms3 run_gcmc.cmd
 </pre>
@@ -59,21 +59,21 @@ This will take approximately five to six hours to run. The length of time and nu
 
 <p>
 <h5>Analysis</h5>
-Visually inspect your simulations in VMD or your favourite viewer and make sure nothing untoward has happened. Unlike the viewer Pymol, VMD has a problem with simulations that change the total number of molecules. To view a movie of the simulation, we must remove the water molecules from the simulation. In one of the folders within <code>out</code>, try
+Visually inspect your simulations in VMD or your favourite viewer and make sure nothing untoward has happened. Unlike the viewer Pymol, VMD has a problem with simulations that change the total number of molecules. To view a movie of the simulation, a script is provided that modifies the pdb file output by ProtoMS. Pick an middling B value from the folders in <code>out_gcmc</code> and within it, run:
 
-<pre>grep -v WA1 all.pdb > all_nowat.pdb
-vmd all_nowat.pdb</pre>
+<pre>python2.7 $PROTOMSHOME/tools/make_gcmc_traj.pdb -i all.pdb -o mod.pdb -n 1
+vmd mod.pdb</pre>
 
-and make sure the simulation looks okay.
+and make sure the simulation looks okay. If you chose an appropriate B value you should see a water appearing and disappearing within the binding site.
 <p>
-We can look at the occupancy of the water molecule in each of the simulations. At less negative Adams values, the water has a greater probability to be inserted for the majority of the simulation. In simulations with low Adams values, the water may completely vacant from the cavity. Intermediate Adams values will produce a large number of insertions and deletions. Lets have a look at one such intermediate value. For instance, type
+We can look at the occupancy of the water molecule in each of the simulations. At less negative Adams values, the water has a greater probability to be inserted for the majority of the simulation. In simulations with low Adams values, the water may completely vacate the cavity. Intermediate Adams values will produce a large number of insertions and deletions. Lets have a look at one such intermediate value. For instance, type
 
 <pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f out_gcmc/b_-19.110/results -s solventson</pre>
 
 You may see something like this<br>
 <img src="B-19_solventson.png" width="%" height="50%" alt="" /><br>
 <p>
-Have a look at the corresponding plots for the other simulations.
+The above shows averages over blocks of the simulation, so non-integer occupancies are expected. Have a look at the corresponding plots for the other simulations.
 <p>
 
 As demonstrated in <em>G. A. Ross et. al, Journal of the American Chemical Society, 2015</em>, the relationship between the Adams value and the average occupancy of the GCMC region can be used to calculate the free energy to transfer the water molecule from ideal gas to the GCMC region via 
@@ -198,7 +198,7 @@ If there were any molecules from water.pdb that were within the GCMC box, they w
 <hr align="center"/>
 <p> 
 <h3><a name="tools">Setting up the simulation with individual tools</a></h3>
-Here, we'll go through through the set-up of the ProtoMS files step by step, we'll also d without the help of the automatisation  in <code>protoms.py</code>. Doing so will grant us some extra flexiblity.
+Here, we'll go through through the set-up of the ProtoMS files step by step, we'll also do without the help of the automatisation in <code>protoms.py</code>. Doing so will grant us some extra flexiblity.
 
 <h5>Setting up the GCMC box</h5>
 Before running GCMC, you have to be very clear what region you want to allow GCMC moves. In the example BPTI example at the top of the page, we used <code>make_gcmcbox.py</code> to delineate the volume around the structure <code>wat.pdb</code>. If you don't have such a structure to draw a box around, you can also specify the size and centre of the box instead. For instance,
@@ -244,11 +244,11 @@ In the BPTI test case, no water molcules in <code>water.pdb</code> are within th
 The make the input file for the Monte Carlo simulation, we reference the files created thus far
 
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s gcmc -p protein_pms.pdb -pw water.pdb --gcmcwater gcmc_wat.pdb --gcmcbox gcmc_box.pdb --adams -9.110 -10.110 -11.110 -12.110 -13.110 -14.110 -15.110 -16.110 -17.110 -18.110 -19.110 -20.110 -21.110 -22.110 -23.110 -24.110 -o run</pre>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s gcmc -p protein_pms.pdb -pw water.pdb --gcmcwater gcmc_wat.pdb --gcmcbox gcmc_box.pdb --adamsrange -9.110 -24.110 -o run</pre>
 <p>
 
 creating <code>run_gcmc.cmd</code>. 
 
-<h4>Written by Gregory A. Ross, 2015.</h4>
+<h4>Written by Gregory A. Ross, 2015. Revised by Hannah Bruce-Macdonald, Jan 2017</h4>
 </BODY>
 </HTML>

@@ -1161,17 +1161,21 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
         outfolder = "out_gcmc"
 
       if settings.adamsrange is not None:
-        if len(settings.adamsrange) != 2:
-          msg = "If using --adamsrange, please specify exactly two Adams values from which to form a range of integers"
+        if len(settings.adamsrange) not in ( 2, 3 ):
+          msg = "If using --adamsrange, please specify exactly two Adams values and optionally the number of desired values "
           logger.error(msg)
           raise simulationobjects.SetupError(msg)
         else:
-          adams1 = int(settings.adamsrange[0])
-          adams2 = int(settings.adamsrange[1])
+          adams1 = settings.adamsrange[0]
+          adams2 = settings.adamsrange[1]
+          try:
+            nadams = settings.adamsrange[2]
+          except IndexError:
+            nadams = int ( abs ( adams1 - adams2 ) ) + 1
           if adams2-adams1 > 0 : 
-            settings.adams = range(adams1,adams2+1)
+            settings.adams = np.linspace(adams2,adams1,nadams)
           else: 
-            settings.adams = range(adams1,adams2-1,-1)
+            settings.adams = np.linspace(adams1,adams2,nadams)
 
       bnd_cmd = GCMC(protein=protein,solutes=ligands, 
                      templates=templates,solvent=protein_water,gcmcwater=settings.gcmcwater,
@@ -1217,7 +1221,7 @@ if __name__ == "__main__":
   parser.add_argument('--gaff',help="the version of GAFF to use for ligand",default="gaff16")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
-  parser.add_argument('--adamsrange',nargs="+",type=int,help="the upper and lower Adam/B values for the GCMC, e.g. -1 -16 for all integers between and including -1 and -16",default=None)
+  parser.add_argument('--adamsrange',nargs="+",float=int,help="the upper and lower Adam/B values for the GCMC and, optionally, the number of values desired (default value every 1.0), e.g. -1 -16 gives all integers between and including -1 and -16",default=None)
   parser.add_argument('--jawsbias',nargs="+",type=float,help="the bias for the JAWS-2",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")

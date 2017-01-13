@@ -863,7 +863,7 @@ if __name__ == "__main__":
   simgroup = parser.add_argument_group("Simulatiom parameters")
   simgroup.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   simgroup.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
-  simgroup.add_argument('--adamsrange',nargs="+",type=int,help="the upper and lower Adam/B values for the GCMC, e.g. -1 -16 for all integers between and including -1 and -16",default=None)
+  simgroup.add_argument('--adamsrange',nargs="+",type=float,help="the upper and lower Adam/B values for the GCMC and, optionally, the number of values desired (default value every 1.0), e.g. -1 -16 gives all integers between and including -1 and -16",default=None)
   simgroup.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on or an integer corresponding to the number of water molecules to add")
   simgroup.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box, or a list of origin(x,y,z) and length(x,y,z) coordinates")
   simgroup.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])

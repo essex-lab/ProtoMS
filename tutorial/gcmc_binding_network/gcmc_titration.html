@@ -46,7 +46,7 @@ The figure shows a slice through the surface of the protein, and <code>gcmc_box.
 As we wish to completely bind water to the volume specified by <code>gcmc_box.pdb</code>, we must run a series of GCMC simulations at different chemical potentials (Adams value in ProtoMS), within which the average number of inserted waters ranges from 0 to the equilibrium number of waters for the system. As we know <em>B<sub>equil</sub></em> is -8.8, we want to chose a range of waters which encompasses this value towards its higher end. We will chose a range of -6.8 to -29.8, which will generate 24 B values. 
 <p>
 
-<pre>python2.7 $PROTOMSHOME/protoms.py -s gcmc -sc protein_pms.pdb --gcmcbox gcmc_box.pdb --adams -29.8 -28.8 -27.8 -26.8 -25.8 -24.8 -23.8 -22.8 -21.8 -20.8 -19.8 -18.8 -17.8 -16.8 -15.8 -14.8 -13.8 -12.8 -11.8 -10.8 -9.8 -8.8 -7.8 -6.8</pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s gcmc -sc protein_pms.pdb --gcmcbox gcmc_box.pdb --adamsrange -29.8 -6.8</pre>
 
 This has automatically solvated our protein in a droplet of water (<code>water.pdb</code>) by randomly placing waters up to bulk density. Any solvent water that was placed inside <code>gcmc_box.pdb</code> has been removed to create <code>water_clr.pdb</code>.
 
@@ -81,7 +81,7 @@ Depending on what you found with <code>calc_series.py</code>, you can discard th
 <p>
 The plot shows that the average number of waters at each Adams value occurs in 'steps', which is characteristic of all GCMC titration plots. Unlike the case when GCMC is performed on a cavity that can only bind a single water molecule (like <a href="../gcmc_single/gcmc_binding_calc.html">here</a>), the points of inflection of these steps do no necessarily correspond to free energies. As demonstrated in  <em>G. A. Ross et. al, Journal of the American Chemical Society, 2015</em>, it's actually the area under the titration curve that is related to the free energy to transfer water from ideal gas to the simulated system. 
 <p>
-To calculate the area under the titration curve, it is prudent to smooth over the data. The script <code>calc_gci.py</code> can fit a curve by modelling the titration data as sum of logistic functions, which is equivalent to a very simple type of artificial neural network (ANN). As the titration data shows what looks like 2 steps, we can input that into the model. To calculate the fit with 2 steps and plot it, type
+To calculate the area under the titration curve, it is prudent to smooth over the data. The script <code>calc_gci.py</code> can fit a curve by modelling the titration data as a sum of logistic functions, which is equivalent to a very simple type of artificial neural network (ANN). As the titration data shows what looks like 2 steps, we can input that into the model. To calculate the fit with 2 steps and plot it, type
 
 <pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p fit -c fit --steps 2 -v 160</pre>
 
@@ -171,6 +171,6 @@ FREE ENERGIES:
 </pre>
 Note how the uncertainty has signicantly decreased. This is because we need only evaluate a smaller area for the relative calculation. The above tables shows that the free energy to bind the third and last water is -4.45 +/- 0.11 kcal/mol. 
 
-<h4>Written by Gregory A. Ross, 2015.</h4>
+<h4>Written by Gregory A. Ross, 2015. Revised by Hannah Bruce-Macdonald, Jan 2017</h4>
 </BODY>
 </HTML>
