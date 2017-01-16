@@ -16,14 +16,35 @@ class TestDefinitionError(BaseException):
 
 class BaseTest(unittest.TestCase):
     """
-    Base class for ProtoMS functional tests.
+    Base class for ProtoMS functional(1) tests.
 
     The test workflow consists of 3 stages:
         1. Input files are copied from a reference directory
         2. A ProtoMS executable is called using a provided set of arguments
         3. Output files are compared against the output files provided in the reference directory
 
-    A new ProtoMS functional(1) test should inherit from
+    A new ProtoMS functional test should inherit from this class and set
+    the following attributes:
+        executable : string
+            ProtoMS executable to be run during the test - relative to PROTOMSHOME
+        ref_dir : string
+            The directory containing the test input and reference files - relative to PROTOMSHOME/tests
+        input_files : list of string
+            List of files to be copied from 'ref_dir' before running 'executable'
+        args : list of string
+            The arguments to be provided to 'executable'
+        output_files : list of string
+            Files to compare against reference at end of test - differences will fail test
+
+    Additionally, the test may set the following attributes:
+        output_directories : list of string
+            List of directories in which to check output files - relative to working directory
+            Used f.e. when running the Fortran executable which stores output in an output directory
+            Multiple directories are listed f.e. in the case of replica exchange simulations
+            Default value is ["."], i.e. only the test working directory
+        mpi_processes : int
+            Number of MPI processes to use when calling 'executable'
+            Providing a value <= 0 disables MPI, default value is 0 (no MPI)
 
     1) https://en.wikipedia.org/wiki/Functional_testing
     """
