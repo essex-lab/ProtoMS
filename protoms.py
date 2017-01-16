@@ -973,7 +973,7 @@ if __name__ == "__main__":
       ligobjs = simulationobjects.merge_pdbs(ligand_files[l]["obj"] for l in ligands)
     else :
       ligobjs = ligand_files[ligands[0]]["obj"]
-    print ligand_files
+    
     # Now do the preparations
     for i,l in enumerate(args.ligand) :
       if l[0] == "*" : continue # Skip ligands created in the script, i.e. the dummy
