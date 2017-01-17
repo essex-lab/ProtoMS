@@ -1,23 +1,24 @@
 syntax: glob
 
 protoms3
-src/*.o
-tools/*.pyc
-src/makefile.*
 src/idme.inc
 src/sep.inc
 build/
-*.pyc
+
+src/*.o
+tools/*.pyc
+tests/*.pyc
+parameter/dev/*.pyc
+protoms.pyc
+*.figleaf
+*.coverage
+*.cache/
+*.DS_Store
+
 ProtoMS_code_coverage_report
 ProtoMS_coverage_current
 htmlcov/
-tests/*.pyc
 html/
-.figleaf
-.coverage
-tests/test_setup/.coverage
-tests/test_setup/.DS_Store
-.DS_Store
+
 .idea
 env*/
-.cache/

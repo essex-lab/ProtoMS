@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python2.7
 
 """
 Tests for ProtoMS Tools (protoms.py): Setup tests
