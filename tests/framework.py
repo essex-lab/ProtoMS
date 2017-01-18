@@ -8,6 +8,10 @@ import itertools
 import string
 import filecmp
 import errno
+import functools
+
+import decimal
+from decimal import Decimal
 
 
 class TestDefinitionError(BaseException):
@@ -167,7 +171,7 @@ class CompareTools:
     Compare files to reference data
     """
 
-    def __init__(self, refdir, verbose=False):
+    def __init__(self, refdir, verbose=True):
         """
         Create file comparator
 
@@ -179,22 +183,8 @@ class CompareTools:
         self.refdir = refdir
         self.verbose = verbose
 
-        # Which comparison tool to use for each file format
-        self.comparetools = {
-            "accept"      : self.diff_text_try_number,
-            "warning"     : self.diff_text_try_number,
-            ".cmd"        : self.diff_text,  # Use ign_starts_with if paths vary on different systems
-            "info"        : self.diff_text_ign_starts_with,
-            ".pdb"        : self.diff_text_try_number,
-            "restart"     : self.diff_text_try_number,
-            "restart.prev": self.diff_text_try_number,
-            "results"     : self.diff_text_try_number,
-            "results_inst": self.diff_text_try_number,
-            None          : self.diff_filecmp
-        }
-
         # Lines beginning with these strings will be ignored when using diff_text_ign_starts_with
-        self.ign_starts_with = {
+        ignore_starts = {
             "cmd" : {"parfile"},
             "info": {"#",
                      "protoms3 started at",
@@ -204,32 +194,49 @@ class CompareTools:
                      "These moves took"}
         }
 
-    def determine_file_type(self, filename):
+        # Which comparison tool to use for each file format
+        self._comparetools = {
+            "accept"      : CompareTools.diff_text_try_number,
+            "warning"     : CompareTools.diff_text_try_number,
+            ".cmd"        : CompareTools.diff_text,  # Use ign_starts_with if paths vary on different systems
+            "info"        : functools.partial(CompareTools.diff_text,
+                                              ign_starts_with=ignore_starts["info"]),
+            ".pdb"        : CompareTools.diff_text_try_number,
+            "restart"     : CompareTools.diff_text_try_number,
+            "restart.prev": CompareTools.diff_text_try_number,
+            "results"     : functools.partial(CompareTools.diff_text_try_number,
+                                              relative_error=0.01),
+            "results_inst": CompareTools.diff_text_try_number,
+            None          : CompareTools.diff_filecmp
+        }
+
+    def _get_comparison_function(self, filename, verbose=True):
         """
-        Determine the type of the tested file from the dictionary self.comparetools
+        Return the correct comparison function for the type
+        of the tested file from the dictionary self.comparetools
 
         Parameters
         ----------
-        filename : name of file for which to determine type
+        filename : name of file for which to determine type and get comparison function
 
         Returns
         -------
-        str
-            Type of file, from dictionary self.comparetools
+        func
+            Comparison function for file, from dictionary self.comparetools
         """
         filetype = os.path.basename(filename)
 
-        if filetype not in self.comparetools:
+        if filetype not in self._comparetools:
             filetype = os.path.splitext(filename)[1]
             if not filetype:
                 filetype = os.path.basename(filename)
 
-        if filetype not in self.comparetools:
-            if self.verbose:
+        if filetype not in self._comparetools:
+            if verbose:
                 print("Unrecognised type for file {0}, using default filecmp.".format(filename))
             filetype = None
 
-        return filetype
+        return self._comparetools[filetype]
 
     def compare(self, filename):
         """
@@ -246,9 +253,9 @@ class CompareTools:
         """
         reffile = os.path.join(self.refdir, filename)
 
-        filetype = self.determine_file_type(filename)
+        comparison = self._get_comparison_function(filename)
 
-        if self.comparetools[filetype](filename, reffile, filetype):
+        if comparison(filename, reffile, verbose=self.verbose):
             if self.verbose:
                 print("File matched reference: {0}".format(filename))
             return True
@@ -256,7 +263,8 @@ class CompareTools:
             print("File did not match reference: {0}".format(filename))
             return False
 
-    def diff_filecmp(self, file1, file2, filetype):
+    @staticmethod
+    def diff_filecmp(file1, file2, **kwargs):
         """
         Check whether file contents match using filecmp.cmp()
 
@@ -264,7 +272,6 @@ class CompareTools:
         ----------
         file1 : path to first file to compare
         file2 : path to second file to compare
-        filetype : file type being compared
 
         Returns
         -------
@@ -273,7 +280,8 @@ class CompareTools:
         """
         return filecmp.cmp(file1, file2)
 
-    def diff_text(self, file1, file2, filetype, ign_white=False, ign_time_path=False, ign_starts_with=None):
+    @staticmethod
+    def diff_text(file1, file2, verbose=True, ign_white=False, ign_starts_with=None):
         """
         Check whether text file contents match line by line
 
@@ -281,24 +289,21 @@ class CompareTools:
         ----------
         file1 : path to first file to compare
         file2 : path to second file to compare
-        filetype : file type being compared
+        ign_white : ignore whitespace difference
+        ign_starts_with : ignore lines starting with any string in this iterable
 
         Returns
         -------
         boolean
             Whether files match
         """
-        if ign_time_path:
-            raise NotImplementedError("Text diff with time and path exceptions is not yet implemented.")
-
         with open(file1) as f1, open(file2) as f2:
             for l1, l2 in itertools.izip(f1, f2):
-                skip = False
-
                 if l1 == l2:
                     continue
 
                 if ign_starts_with is not None:
+                    skip = False
                     for start in ign_starts_with:
                         if l1.startswith(start):
                             skip = True
@@ -310,49 +315,16 @@ class CompareTools:
                     l1 = l1.translate(None, string.whitespace)
                     l2 = l2.translate(None, string.whitespace)
 
-                if not l1 == l2:
-                    if self.verbose:
+                if l1 != l2:
+                    if verbose:
                         print(l1)
                         print(l2)
                     return False
 
         return True
 
-    def diff_text_ign_white(self, file1, file2, filetype):
-        """
-        Check whether text file contents match line by line after stripping all whitespace
-
-        Parameters
-        ----------
-        file1 : path to first file to compare
-        file2 : path to second file to compare
-        filetype : file type being compared
-
-        Returns
-        -------
-        boolean
-            Whether files match
-        """
-        return self.diff_text(file1, file2, filetype, ign_white=True)
-
-    def diff_text_ign_starts_with(self, file1, file2, filetype):
-        """
-        Check whether text file contents match ignoring lines starting with a set of strings
-
-        Parameters
-        ----------
-        file1 : path to first file to compare
-        file2 : path to second file to compare
-        filetype : file type being compared
-
-        Returns
-        -------
-        boolean
-            Whether files match
-        """
-        return self.diff_text(file1, file2, filetype, ign_starts_with=self.ign_starts_with[filetype])
-
-    def diff_text_try_number(self, file1, file2, filetype):
+    @staticmethod
+    def diff_text_try_number(file1, file2, verbose=True, relative_error=0):
         """
         Check whether text file contents match after trying to convert tokens to float
 
@@ -360,48 +332,32 @@ class CompareTools:
         ----------
         file1 : path to first file to compare
         file2 : path to second file to compare
-        filetype : file type being compared
+        relative_error : acceptable relative error - default 0
 
         Returns
         -------
         boolean
             Whether files match
         """
-        def convert_line(line):
-            for tok in line.split():
-                try:
-                    yield float(tok)
-                except ValueError:
-                    yield tok
-
         with open(file1) as f1, open(file2) as f2:
             for l1, l2 in itertools.izip(f1, f2):
                 if l1 == l2:
                     continue
 
-                tok1 = convert_line(l1)
-                tok2 = convert_line(l2)
-                sentinel = object()
-                if not all(a == b for a, b in itertools.izip_longest(tok1, tok2, fillvalue=sentinel)):
-                    if self.verbose:
-                        print(l1)
-                        print(l2)
-                    return False
-        return True
-
-    def diff_null(self, file1, file2, filetype):
-        """
-        Null file checker, always return True
-
-        Parameters
-        ----------
-        file1 : path to first file to compare
-        file2 : path to second file to compare
-        filetype : file type being compared
-
-        Returns
-        -------
-        boolean
-            Always return True
-        """
+                for a, b in itertools.izip_longest(l1.split(), l2.split()):
+                    if a == b:
+                        continue
+                    try:
+                        a = Decimal(a)
+                        b = Decimal(b)
+                        if abs(a - b) > abs(a * Decimal(relative_error)):
+                            if verbose:
+                                print(l1)
+                                print(l2)
+                            return False
+                    except decimal.InvalidOperation:
+                        if verbose:
+                            print(l1)
+                            print(l2)
+                        return False
         return True

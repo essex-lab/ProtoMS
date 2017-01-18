@@ -10,10 +10,11 @@ tools/*.pyc
 tests/*.pyc
 parameter/dev/*.pyc
 protoms.pyc
-*.figleaf
-*.coverage
-*.cache/
-*.DS_Store
+__pycache__/
+.figleaf
+.coverage
+.cache/
+.DS_Store
 
 ProtoMS_code_coverage_report
 ProtoMS_coverage_current
