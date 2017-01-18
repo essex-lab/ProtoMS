@@ -136,9 +136,11 @@ if(NOT MPI_Fortran_FOUND OR AVOID_MPI)
     message("-- Replica exchange will not be available")
     set(FILES_REQUIRING_MPI
         "setupreplicas.F"
-        "lambdare.F"
         "assignlambdare.F"
         "assigntemperaturere.F"
+        "assignadamre.F"
+        "lambdare.F"
+        "gcmcre.F"
         "temperaturere.F")
     foreach(MPI_FILE IN ITEMS ${FILES_REQUIRING_MPI})
         list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/${MPI_FILE}")
@@ -207,13 +209,6 @@ add_test(NAME SamplingSetupTest
 add_test(NAME SamplingSimulationTest
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling.py SamplingSimulationTest)
 
-add_test(NAME GcmcSetupBoxTest
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSetupBoxTest)
-add_test(NAME GcmcSetupTest
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSetupTest)
-add_test(NAME GcmcSimulationTest
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSimulationTest)
-
 add_test(NAME Jaws1SetupTest
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1.py Jaws1SetupTest)
 add_test(NAME Jaws1SimulationTest
@@ -223,6 +218,13 @@ add_test(NAME Jaws1SimulationTest
 if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
     add_test(NAME test_mpi
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mpi_install.py)
+
+    add_test(NAME GcmcSetupBoxTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSetupBoxTest)
+    add_test(NAME GcmcSetupTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSetupTest)
+    add_test(NAME GcmcSimulationTest
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_gcmc.py GcmcSimulationTest)
 
     add_test(NAME Jaws2SetupTest
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws2.py Jaws2SetupTest)
