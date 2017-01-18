@@ -441,7 +441,7 @@ def fit_boostrap(x,y,size,boot_samps=50,repeats=10,randstarts=1000,iterations=10
             print "...Bootstrap model %i fitted." % (boot+1)
     return bootstrap_models
 
-def insertion_pmf(N,gcmc_model,volume=30.0,T=298.15):
+def insertion_pmf(N,gcmc_model,volume,T=298.15):
     """
     Calculates the free energy to insert water from ideal gas to the GCMC volume.
 
@@ -461,6 +461,8 @@ def insertion_pmf(N,gcmc_model,volume=30.0,T=298.15):
     """
     kT = T*0.0019872								# Boltmann's constant (in kcal/mol/K) multiplied by temperature (in K).
     Vstandard = 30.0
+    if volume is None:
+	volume = 30.0
     def integral(gcmc_model,Bi,Bf):					# For numerical integration.
         logies = [integrated_logistic(params,Bi,Bf) for params in gcmc_model.weights]
         return np.sum(logies)								# Under the convention that 0*log(0) = 0. 
@@ -786,39 +788,44 @@ def minimum_from_bequil(models,B,N,dG_hyd,kT=0.592,print_lines=True):
     print_lines : boolean
       whether to print the minimum free energy state with errors
    """
-    Bequil = dG_hyd*(1.0/0.592) + np.log(args.volume/30.0)
-    closestBfit = (np.abs(single_model.x - Bequil)).argmin() 
-    Nstarfit = []
-    Nstarcalc = []
-
-    if Bequil < B.min() or Bequil > B.max():
-        print 'Equilibrium B value is not within range sampled in simulation, so an estimation of N* cannot be made.'
-        return Bequil, Nstarcalc, Nstarfit
+    if args.volume is None:
+	print 'B EQUILIBRIUM CONDITION CANNOT BE CALCULATED WITHOUT THE GCMC VOLUME'
+	print 'please use -v flag to calculate the optimum water occupancy'
+	return None, None, None
     else:
-        for model in models:
-            model.x = np.linspace(start=B.min(),stop=B.max(),num=len(model.predicted))
-            Nstarfit.append(model.predicted[closestBfit])
-        Nstarfit = np.array(Nstarfit)
-        if print_lines:
-            print "B EQUILIBRIUM CONDITION FROM FITTED MODELS:"
-            print "Bequil:",np.round(Bequil,1)
-            print "Number of molecules:  Mean   Std. dev   25th Percentile    50th Percentile   75th Percentile"
-            print "                      %3.1f %8.1f %14.1f %16.1f %18.1f" %(np.mean(Nstarfit),Nstarfit.std(),np.percentile(Nstarfit,25),np.percentile(Nstarfit,50),np.percentile(Nstarfit,75))
-        
-        Bclose = []
-        nearBvalues = np.abs(B - Bequil)
-        for index,each in enumerate(nearBvalues):
-            if each <=nearBvalues.min():                    # this works if Bequil is exactly between two B values, it will find an average of both
-                Bclose.append(B[index])
-                Nstarcalc.append(N[index])
-        Bclose = np.array(Bclose)
-        Nstarcalc = np.array(Nstarcalc)
-        print "B EQUILIBRIUM CONDITION FROM SIMULATED B VALUE:"
-        print "Bequil:",np.round(Bequil,1)
-        print "Similar simulated B values:", np.unique(Bclose) 
-        print "Average N* at simululated at B values:",np.unique(Bclose),"is", np.round(Nstarcalc.mean(),1)
-
-    return Bequil, Nstarcalc, Nstarfit
+	Bequil = dG_hyd*(1.0/0.592) + np.log(args.volume/30.0)
+	closestBfit = (np.abs(single_model.x - Bequil)).argmin() 
+	Nstarfit = []
+	Nstarcalc = []
+	
+	if Bequil < B.min() or Bequil > B.max():
+	    	print 'Equilibrium B value is not within range sampled in simulation, so an estimation of N* cannot be made.'
+		return Bequil, Nstarcalc, Nstarfit
+	else:
+	    for model in models:
+	        model.x = np.linspace(start=B.min(),stop=B.max(),num=len(model.predicted))
+	        Nstarfit.append(model.predicted[closestBfit])
+	    Nstarfit = np.array(Nstarfit)
+	    if print_lines:
+	        print "B EQUILIBRIUM CONDITION FROM FITTED MODELS:"
+	        print "Bequil:",np.round(Bequil,1)
+	        print "Number of molecules:  Mean   Std. dev   25th Percentile    50th Percentile   75th Percentile"
+	        print "                      %3.1f %8.1f %14.1f %16.1f %18.1f" %(np.mean(Nstarfit),Nstarfit.std(),np.percentile(Nstarfit,25),np.percentile(Nstarfit,50),np.percentile(Nstarfit,75))
+	    
+	    Bclose = []
+	    nearBvalues = np.abs(B - Bequil)
+	    for index,each in enumerate(nearBvalues):
+	        if each <=nearBvalues.min():                    # this works if Bequil is exactly between two B values, it will find an average of both
+	            Bclose.append(B[index])
+	            Nstarcalc.append(N[index])
+	    Bclose = np.array(Bclose)
+	    Nstarcalc = np.array(Nstarcalc)
+	    print "B EQUILIBRIUM CONDITION FROM SIMULATED B VALUE:"
+	    print "Bequil:",np.round(Bequil,1)
+	    print "Similar simulated B values:", np.unique(Bclose) 
+	    print "Average N* at simululated at B values:",np.unique(Bclose),"is", np.round(Nstarcalc.mean(),1)
+	
+	return Bequil, Nstarcalc, Nstarfit
 
 
 if __name__ == '__main__' :
@@ -846,7 +853,6 @@ if __name__ == '__main__' :
   print "CALCULATING VOLUME CORRECTION:"
   if args.volume is None:
       print "No GCMC volume given. No volume correction will be applied.\n A correction of kBT ln(Vsystem/Vstandard) is required for GCMC calculations"
-      args.volume=30.0
   else:
       print "GCMC volume:", args.volume
       print "Standard volume: 30.0"
