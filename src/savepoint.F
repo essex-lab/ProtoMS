@@ -19,26 +19,35 @@ c      one which is closest, then places a marker on that point
        include 'energies.inc'
        include 'stacks.inc'
        
-       double precision X,Y,Z,dist,dist2
-       integer igcs,movnum
+       double precision X,Y,Z,dist,dist2x,dist2y,dist2z
+       integer igcs,movnum,nx,ny,nz,ix,iy,iz
 
-       do 70  X = (coordx),(gridx+coordx),space
-       do 80  Y = (coordy),(gridy+coordy),space
-       do 90  Z = (coordz),(gridz+coordz),space
+       nx = ceiling(gridx / space)
+       ny = ceiling(gridy / space)
+       nz = ceiling(gridz / space)
 
-       dist2 = ( (X-GCSCentre(igcs,1))**2 + (Y-GCSCentre(igcs,2))**2 + (Z-GCSCentre(igcs,3))**2 )
-       dist = sqrt(dist2)
+       do 70  ix = 0, nx-1
+         X = coordx + ix * space
+         dist2x = (X - GCSCentre(igcs, 1))**2
 
-       if (dist.lt.0.6) then
+         do 80  iy = 0, ny-1
+           Y = coordy + iy * space
+           dist2y = (Y - GCSCentre(igcs, 2))**2
 
-       cavCoordDepth = cavCoordDepth + 1
-       stackGridX(cavCoordDepth,1) = X 
-       stackGridY(cavCoordDepth,2) = Y
-       stackGridZ(cavCoordDepth,3) = Z
-       endif
-      
-90     continue
-80     continue
+           do 90  iz = 0, nz-1
+             Z = coordz + iz * space
+             dist2z = (Z - GCSCentre(igcs, 3))**2
+
+             dist = sqrt(dist2x + dist2y + dist2z)
+             if (dist.lt.0.6) then
+               cavCoordDepth = cavCoordDepth + 1
+               stackGridX(cavCoordDepth,1) = X 
+               stackGridY(cavCoordDepth,2) = Y
+               stackGridZ(cavCoordDepth,3) = Z
+             endif
+
+90         continue
+80       continue
 70     continue
        return
        end
