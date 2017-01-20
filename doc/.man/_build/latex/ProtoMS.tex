@@ -12,7 +12,6 @@
 \usepackage{sphinx}
 \usepackage{multirow}
 
-
 \addto\captionsenglish{\renewcommand{\figurename}{Fig. }}
 \addto\captionsenglish{\renewcommand{\tablename}{Table }}
 \floatname{literal-block}{Listing }
@@ -20,7 +19,7 @@
 
 
 \title{ProtoMS Documentation}
-\date{March 21, 2016}
+\date{January 20, 2017}
 \release{3.2}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and James Graham}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
@@ -45,7 +44,7 @@
 \expandafter\def\csname PYG@tok@gr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
 \expandafter\def\csname PYG@tok@cm\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@vg\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@mh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@cs\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}
 \expandafter\def\csname PYG@tok@ge\endcsname{\let\PYG@it=\textit}
@@ -67,16 +66,18 @@
 \expandafter\def\csname PYG@tok@nf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
 \expandafter\def\csname PYG@tok@si\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
 \expandafter\def\csname PYG@tok@s2\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@nt\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
 \expandafter\def\csname PYG@tok@nv\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
 \expandafter\def\csname PYG@tok@s1\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@ch\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@gp\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
 \expandafter\def\csname PYG@tok@sh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 \expandafter\def\csname PYG@tok@ow\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@sx\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
 \expandafter\def\csname PYG@tok@bp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@c1\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
 \expandafter\def\csname PYG@tok@kc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@c\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@mf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
@@ -88,7 +89,7 @@
 \expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@mi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
 \expandafter\def\csname PYG@tok@kn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PYG@tok@cpf\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
 \expandafter\def\csname PYG@tok@kr\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
 \expandafter\def\csname PYG@tok@s\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 \expandafter\def\csname PYG@tok@kp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
@@ -349,22 +350,22 @@ ProtoMS divides all of the molecules loaded within a system into solvents, GCsol
 \index{Solvents}
 \textbf{Solvents}
 
-Solvents are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solventpdb]{\emph{Solvent File}}}). Each solvent molecule is identified by its residue name (the fourth column in the PDB file), e.g. ProtoMS identifies the TIP4P solvent with the residue name ‘T4P’. ProtoMS loads the coordinates of the solvent from the PDB file, and then assigns the parameters for the solvent from a solvent template (see section {\hyperref[protoms:temref]{\emph{Templates}}}). The solvent template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Note that this version of ProtoMS uses the coordinates of the solvent molecule that are present in the PDB file. ProtoMS does not yet have the capability to modify these coordinates to ensure that the internal geometry of the solvent is correct for the solvent model. This means that as solvents are only translated and rotated, the internal geometry of
+Solvents are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solventpdb]{\emph{\DUspan{}{Solvent File}}}}). Each solvent molecule is identified by its residue name (the fourth column in the PDB file), e.g. ProtoMS identifies the TIP4P solvent with the residue name ‘T4P’. ProtoMS loads the coordinates of the solvent from the PDB file, and then assigns the parameters for the solvent from a solvent template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). The solvent template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Note that this version of ProtoMS uses the coordinates of the solvent molecule that are present in the PDB file. ProtoMS does not yet have the capability to modify these coordinates to ensure that the internal geometry of the solvent is correct for the solvent model. This means that as solvents are only translated and rotated, the internal geometry of
 the solvent molecule loaded at the start of the simulation will be identical to that at the end of the simulation.
 
 \index{GCSolutes}
 \textbf{GCSolutes}
 
-Like solvents, GCsolutes are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:gcpdb]{\emph{GCsolute File}}}). Each GCsolute molecule is identified by its residue name (the fourth column in the PDB file). ProtoMS loads the coordinates of the GCsolute from the PDB file, and then assigns the parameters for the GCsolute from a GCsolute template (see section {\hyperref[protoms:temref]{\emph{Templates}}}). This template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Alongside translational and rotational moves, the intermolecular energy between the GCsolute and the system can be sampled.
+Like solvents, GCsolutes are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:gcpdb]{\emph{\DUspan{}{GCsolute File}}}}). Each GCsolute molecule is identified by its residue name (the fourth column in the PDB file). ProtoMS loads the coordinates of the GCsolute from the PDB file, and then assigns the parameters for the GCsolute from a GCsolute template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). This template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Alongside translational and rotational moves, the intermolecular energy between the GCsolute and the system can be sampled.
 
 \index{Solutes}
 \textbf{Solutes}
 
-Solutes are also loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solpdb]{\emph{Solute File}}}). Each solute molecule is identified by its solute name, which is given in the HEADER record of the PDB file. ProtoMS obtains the coordinates of the solute from the PDB file, and will then find a solute template that matches this solute name (see {\hyperref[protoms:temref]{\emph{Templates}}}). The solute template is used to build the z-matrix for the solute, and to assign all of the forcefield parameters. The solute template is also used to assign the connectivity of the solute and to define the flexible internal coordinates. The solute molecule is constructed using the z-matrix, with the reference being three automatically added dummy atoms, called ‘DM1’, ‘DM2’ and ‘DM3’, all part of residue ‘DUM’. These dummy atoms are automatically added by ProtoMS at the geometric center of the solute, as a right angled set of atoms pointing along the major and minor axes of the solute.
+Solutes are also loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solpdb]{\emph{\DUspan{}{Solute File}}}}). Each solute molecule is identified by its solute name, which is given in the HEADER record of the PDB file. ProtoMS obtains the coordinates of the solute from the PDB file, and will then find a solute template that matches this solute name (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). The solute template is used to build the z-matrix for the solute, and to assign all of the forcefield parameters. The solute template is also used to assign the connectivity of the solute and to define the flexible internal coordinates. The solute molecule is constructed using the z-matrix, with the reference being three automatically added dummy atoms, called ‘DM1’, ‘DM2’ and ‘DM3’, all part of residue ‘DUM’. These dummy atoms are automatically added by ProtoMS at the geometric center of the solute, as a right angled set of atoms pointing along the major and minor axes of the solute.
 
 \index{Proteins}
 \textbf{Proteins}
-Proteins are loaded into ProtoMS via PDB files (see section {\hyperref[protoms:protpdb]{\emph{Protein File}}}). Each PDB file may only contain a single protein chain. ProtoMS constructs the linear chain of molecules based on the order of residues that it reads from the PDB file, and will ignore the residue number read from the PDB file. This means that you must ensure that you have the residues ordered correctly within the PDB file. ProtoMS assigns to each residue both a chain template (see section {\hyperref[protoms:temref]{\emph{Templates}}}), that describes the backbone of the residue, and a residue template (see section {\hyperref[protoms:temref]{\emph{Templates}}}), that describes the sidechain. The residue template is located based on the name of the residue given in the fourth column in the PDB file (e.g. ‘ASP’ or ‘HIS’). The chain template is located based on the chain template associated with the residue template for the position of the residue within the chain. For example, residue ‘ASP’ has a standard amino acid backbone chain template if this residue was in the middle of the chain, an NH+ capped backbone chain template 3 if this was the first residue of the chain (and thus at the n-terminus), and a CO-- capped backbone chain template 2 if this were the last residue of the chain (and thus at the c-terminus). If the protein consisted of only one residue, then the zwitterionic amino acid chain template would be used for ‘ASP’.
+Proteins are loaded into ProtoMS via PDB files (see section {\hyperref[protoms:protpdb]{\emph{\DUspan{}{Protein File}}}}). Each PDB file may only contain a single protein chain. ProtoMS constructs the linear chain of molecules based on the order of residues that it reads from the PDB file, and will ignore the residue number read from the PDB file. This means that you must ensure that you have the residues ordered correctly within the PDB file. ProtoMS assigns to each residue both a chain template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}), that describes the backbone of the residue, and a residue template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}), that describes the sidechain. The residue template is located based on the name of the residue given in the fourth column in the PDB file (e.g. ‘ASP’ or ‘HIS’). The chain template is located based on the chain template associated with the residue template for the position of the residue within the chain. For example, residue ‘ASP’ has a standard amino acid backbone chain template if this residue was in the middle of the chain, an NH+ capped backbone chain template 3 if this was the first residue of the chain (and thus at the n-terminus), and a CO-- capped backbone chain template 2 if this were the last residue of the chain (and thus at the c-terminus). If the protein consisted of only one residue, then the zwitterionic amino acid chain template would be used for ‘ASP’.
 
 ProtoMS obtains the coordinates of each residue from the PDB file, and will then use the residue and chain templates to build the z-matrix for each residue, and to assign all of the forcefield parameters.
 \phantomsection\label{protoms:bbatoms}
@@ -382,7 +383,8 @@ Once the coordinates and z-matrices of each residue have been assigned, interres
 
 
 \begin{threeparttable}
-\capstart\caption{Table 1.0 The default value of the maximum number of proteins, GCsolutes, solutes and solvents that may be loaded simultaneously by ProtoMS. These values may be changed by editing the \texttt{dimensions.inc} file located in the src directory, and recompiling ProtoMS.}\label{protoms:id3}
+\capstart\caption{Table 1.0 The default value of the maximum number of proteins, GCsolutes, solutes and solvents that may be loaded simultaneously by ProtoMS. These values may be changed by editing the dimensions.inc file located in the src directory, and recompiling ProtoMS.}
+\label{protoms:id3}
 \begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
 \textsf{\relax 
@@ -462,7 +464,7 @@ Maximum number of atoms per solvent
 
 \textbf{Limits}
 
-ProtoMS is written using slightly extended Fortran 77 (see {\hyperref[compilation:fortran77]{\emph{Programming Language}}}). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 1.0 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.
+ProtoMS is written using slightly extended Fortran 77 (see {\hyperref[compilation:fortran77]{\emph{\DUspan{}{Programming Language}}}}). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 1.0 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.
 
 \index{Forcefields}
 
@@ -729,7 +731,7 @@ If the move is accepted, then the new configuration of the residue is saved. If 
 
 \end{enumerate}
 
-You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section {\hyperref[protoms:misccmd]{\emph{Miscellaneous}}}. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see {\hyperref[protoms:temref]{\emph{Templates}}}). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was \(5.0^\circ\) , then the angle will be changed by a random value generated evenly between \(-5.0^\circ\) and \(+5.0^\circ\).
+You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section {\hyperref[protoms:misccmd]{\emph{\DUspan{}{Miscellaneous}}}}. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was \(5.0^\circ\) , then the angle will be changed by a random value generated evenly between \(-5.0^\circ\) and \(+5.0^\circ\).
 
 \index{Solute Moves}
 \textbf{Solute Moves}
@@ -748,7 +750,7 @@ All of the flexible internals of this residue are changed, and the whole solute 
 The change in energy associated with this move is evaluated and then tested via the Metropolis criterion to decide whether or not to accept the move.
 
 \item {} 
-If the move is accepted then the new configuration of the solute is saved. If the move was rejected then the original configuration is restored. You can control the maximum amounts that the solute moves via the solute template (see {\hyperref[protoms:temref]{\emph{Templates}}}).
+If the move is accepted then the new configuration of the solute is saved. If the move was rejected then the original configuration is restored. You can control the maximum amounts that the solute moves via the solute template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}).
 
 \end{enumerate}
 
@@ -758,7 +760,7 @@ If the move is accepted then the new configuration of the solute is saved. If th
 A solvent move is a Monte Carlo move on a single solvent molecule. Obviously, for a solvent move to be performed, at least one solvent molecule must be loaded. Each solvent move comprises the following steps
 \begin{enumerate}
 \item {} 
-A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see {\hyperref[protoms:parameters]{\emph{Simulation parameters}}}), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
+A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
 
 \item {} 
 The solvent molecule is randomly translated and rotated around its center of geometry.
@@ -771,7 +773,7 @@ If the move was accepted then the new solvent configuration is saved, otherwise 
 
 \end{enumerate}
 
-You can control the maximum amounts that the solvent is translated and rotated by by editing its solvent template (see {\hyperref[protoms:temref]{\emph{Templates}}}).
+You can control the maximum amounts that the solvent is translated and rotated by by editing its solvent template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}).
 
 \index{Volume Moves}
 \textbf{Volume Moves}
@@ -779,13 +781,13 @@ You can control the maximum amounts that the solvent is translated and rotated b
 A volume move is a Monte Carlo move that changes the volume of the system. This is needed to be able to perform Monte Carlo simulations at constant pressure (i.e. using the NPT ensemble). For a volume move to be performed you need to have loaded a box of solvent molecules, and be running using periodic boundary conditions. A volume move is comprised of the following steps
 \begin{enumerate}
 \item {} 
-A random change in volume is chosen within the range set via the maxvolchange command (see {\hyperref[protoms:parameters]{\emph{Simulation parameters}}}).
+A random change in volume is chosen within the range set via the maxvolchange command (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}).
 
 \item {} 
 The volume of the system is changed by this amount by scaling all of the coordinates evenly from the center of the simulation box.
 
 \item {} 
-The change in energy associated with this change in volume is evaluated and used to decide whether or not to accept this move via the constant pressure Monte Carlo test, for the system pressure set via the pressure command (see {\hyperref[protoms:parameters]{\emph{Simulation parameters}}}).
+The change in energy associated with this change in volume is evaluated and used to decide whether or not to accept this move via the constant pressure Monte Carlo test, for the system pressure set via the pressure command (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}).
 
 \item {} 
 If the move is accepted then the new system configuration is saved, otherwise the original system configuration is restored.
@@ -811,7 +813,7 @@ If the move was accepted then the new GCsolute configuration is saved, otherwise
 
 \end{enumerate}
 
-You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see {\hyperref[protoms:temref]{\emph{Templates}}}).
+You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}).
 
 \index{Insertion Moves}
 \textbf{Insertion Moves}
@@ -898,7 +900,7 @@ If the move was accepted then the new value of \(\theta\) for that GCsolute mole
 \index{Move Probabilities}
 \textbf{Relative Move Probabilities}
 
-You can specify which moves should be run by passing arguments to the simulate and equilibrate commands (see {\hyperref[protoms:runcmd]{\emph{Running a Simulation}}}). You can use these commands to assign a weight to each type of move, e.g. 100 for solvent moves, 10 for protein moves, 1 for solute moves and 0 for volume move. The type of move chosen for each step of the simulation is generated randomly based on these set relative weights. These weights mean that on average, in 111 moves, 100 of these moves will be solvent moves, 10 of these moves will be protein moves, 1 of these moves will be solute moves and none of the moves will be volume moves (e.g. no volume moves will be performed). Note that you need to perform some volume moves if you wish to sample from the NPT ensemble!
+You can specify which moves should be run by passing arguments to the simulate and equilibrate commands (see {\hyperref[protoms:runcmd]{\emph{\DUspan{}{Running a Simulation}}}}). You can use these commands to assign a weight to each type of move, e.g. 100 for solvent moves, 10 for protein moves, 1 for solute moves and 0 for volume move. The type of move chosen for each step of the simulation is generated randomly based on these set relative weights. These weights mean that on average, in 111 moves, 100 of these moves will be solvent moves, 10 of these moves will be protein moves, 1 of these moves will be solute moves and none of the moves will be volume moves (e.g. no volume moves will be performed). Note that you need to perform some volume moves if you wish to sample from the NPT ensemble!
 
 
 \chapter{Executing ProtoMS}
@@ -998,7 +1000,7 @@ streams, these two cannot be turned off. These two streams will be directed to S
 
 By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, the WARNING and FATAL streams are directed to STDERR, and the remaining streams are switched off. Bear this in mind if you think that you should be getting output and you are not - make sure that the stream that contains your output is directed to something!
 
-The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section {\hyperref[protoms:misccmd]{\emph{Miscellaneous}}}.
+The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section {\hyperref[protoms:misccmd]{\emph{\DUspan{}{Miscellaneous}}}}.
 
 By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option
 
@@ -1116,7 +1118,7 @@ where \code{string} is either \emph{residue} or \emph{molecule}. This specifies 
 pressure float
 \end{Verbatim}
 
-This command sets the pressure of the system in atmospheres. By setting the pressure to a non-zero value you will be able to perform a simulation in the NPT isothermal-isobaric ensemble. Note that you need to perform volume moves (see {\hyperref[protoms:moves]{\emph{Generic Moves}}}) to be able to run in the NPT ensemble. By default the pressure is equal to zero, and thus a NPT simulation is not performed.
+This command sets the pressure of the system in atmospheres. By setting the pressure to a non-zero value you will be able to perform a simulation in the NPT isothermal-isobaric ensemble. Note that you need to perform volume moves (see {\hyperref[protoms:moves]{\emph{\DUspan{}{Generic Moves}}}}) to be able to run in the NPT ensemble. By default the pressure is equal to zero, and thus a NPT simulation is not performed.
 
 \index{maxvolchange}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1173,7 +1175,7 @@ This turns on solvent cap boundary conditions. Protein and solute molecules will
 boundary solvent
 \end{Verbatim}
 
-This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{Solvent File}}}
+This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{\DUspan{}{Solvent File}}}}
 
 
 \subsection{GBSA parameters}
@@ -1504,34 +1506,34 @@ Specifies the name of the Nth protein file, e.g.
 protein1 protein.pdb
 \end{Verbatim}
 
-specifies that protein 1 should be loaded from the file protein.pdb. Note that proteins must be numbered sequentially from 1 to MAXPROTEINS. The format of a protein file is described in {\hyperref[protoms:protpdb]{\emph{Protein File}}}.
+specifies that protein 1 should be loaded from the file protein.pdb. Note that proteins must be numbered sequentially from 1 to MAXPROTEINS. The format of a protein file is described in {\hyperref[protoms:protpdb]{\emph{\DUspan{}{Protein File}}}}.
 
 \index{solute, command}
 \begin{Verbatim}[commandchars=\\\{\}]
 soluteN filename
 \end{Verbatim}
 
-specifies the name of the Nth solute file. Note that the solutes must be numbered sequentially from 1 to MAXSOLUTES. The format of a solute file is described in section {\hyperref[protoms:solpdb]{\emph{Solute File}}}.
+specifies the name of the Nth solute file. Note that the solutes must be numbered sequentially from 1 to MAXSOLUTES. The format of a solute file is described in section {\hyperref[protoms:solpdb]{\emph{\DUspan{}{Solute File}}}}.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 solventN filename
 \end{Verbatim}
 
-specifies the name of the Nth solvent file. Unlike the protein and solute files, the solvent file may contain multiple solvent molecules, though the total number of solvent molecules cannot exceed MAXSOLVENTS. The format of a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{Solvent File}}}.
+specifies the name of the Nth solvent file. Unlike the protein and solute files, the solvent file may contain multiple solvent molecules, though the total number of solvent molecules cannot exceed MAXSOLVENTS. The format of a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{\DUspan{}{Solvent File}}}}.
 
 \index{grand}
 \begin{Verbatim}[commandchars=\\\{\}]
 grandN filename
 \end{Verbatim}
 
-specifies the name of the Nth GCsolute file. Unlike the protein and solute files, the GCsolute file may contain multiple GCsolute molecules, though the total number of GCsolute molecules cannot exceed MAXSOLVENTS. The format of a GCsolute file is described in section {\hyperref[protoms:gcpdb]{\emph{GCsolute File}}}.
+specifies the name of the Nth GCsolute file. Unlike the protein and solute files, the GCsolute file may contain multiple GCsolute molecules, though the total number of GCsolute molecules cannot exceed MAXSOLVENTS. The format of a GCsolute file is described in section {\hyperref[protoms:gcpdb]{\emph{\DUspan{}{GCsolute File}}}}.
 
 \index{parfile}
 \begin{Verbatim}[commandchars=\\\{\}]
 parfile filename
 \end{Verbatim}
 
-Specify the name of a forcefield parameter file. You can specify as many parameter files as you wish. The list of parameter files is read from top to bottom, such that if any paramater files contain contradictory information, the last parameters read by ProtoMS are used. The format of the parameter file is described in section {\hyperref[protoms:parfil]{\emph{Parameter / Forcefield Files}}} .
+Specify the name of a forcefield parameter file. You can specify as many parameter files as you wish. The list of parameter files is read from top to bottom, such that if any paramater files contain contradictory information, the last parameters read by ProtoMS are used. The format of the parameter file is described in section {\hyperref[protoms:parfil]{\emph{\DUspan{}{Parameter / Forcefield Files}}}} .
 
 
 \section{Running a Simulation}
@@ -2707,7 +2709,7 @@ Using an unsupported protein forcefield with ProtoMS requires the creation of a 
 
 \section{Protein File}
 \label{protoms:protein-file}\label{protoms:protpdb}
-Proteins are loaded from protein files. The names of the protein files are specified using the proteinN command described in section {\hyperref[protoms:incmd]{\emph{Specifying input files}}}. The protein file is just a standard PDB format file. The name of the protein contained within this file is taken from the HEADER line of the PDB. e.g.:
+Proteins are loaded from protein files. The names of the protein files are specified using the proteinN command described in section {\hyperref[protoms:incmd]{\emph{\DUspan{}{Specifying input files}}}}. The protein file is just a standard PDB format file. The name of the protein contained within this file is taken from the HEADER line of the PDB. e.g.:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 HEADER p38 kinase
@@ -3191,29 +3193,24 @@ In the \code{\$PROTOMSHOME/tools} folder we have collect a range of useful scrip
 
 \section{ambertools.py}
 \label{tools:ambertools-py}
-\textbf{Syntax:}
 
-\code{ambertools.py -f pdbfile {[}pdbfile2 ...{]} {[}-n name name2 ...{]} {[}-c charge charge2 ...{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-f pdbfile pdbfile2 ...} = the name of one or more structures in PDB format}] \leavevmode
-at least one filename needs to be given
+Program to run antechamber and parmchk for a series of PDB-files
 
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-n name name2 ...} = the name of the molecule(s) in the PDB file(s)}] \leavevmode
-optional, default = UNK
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-c charge charge2 ...} = the net charge of the molecule(s) in the PDB file(s)}] \leavevmode
-optional, default=0
+\begin{alltt}
+usage: ambertools.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-n NAME{]}
+                     {[}-c CHARGE {[}CHARGE ...{]}{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the name of the PDB-files
+\item [-n=UNK, -{-}name=UNK]  
+the name of the solute
+\item [-c, -{-}charge]  
+the net charge of each PDB-file
+\end{optionlist}
 
 \end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -3230,55 +3227,42 @@ This tool encapsulate the program \code{antechamber} and \code{parmchk} from the
 
 It will produce an Amber prepi-file, containing the z-matrix and atom types of the given solutes, parametrized with the general Amber force field and AM1-BCC charges. It will also produce an Amber frcmod-file with additional parameters not found in the GAFF definition. These files be named after the input \code{pdbfile}, replacing the extension \code{.pdb} with \code{.prepi} and \code{.frcmod}
 
-The AmberTools program should exist in the system path.
+The \code{antechamber} and \code{parmchk} program should exist in the system path or the AMBERHOME environment variable should be set correctly.
 
 
 \section{build\_template.py}
 \label{tools:build-template-py}
-\textbf{Syntax:}
 
-\code{build\_template.py -p prepifile {[}-f frcmodfile{]} {[}-z zmatfile{]} {[}-o outfile{]} {[}-n name{]} {[}-t trans{]} {[}-r rot{]}}
-\begin{itemize}
-\item {} 
-\code{-p prepifile} = the name of an Amber prepi file containing the z-matrix and atom types of a solute
+Program to build a ProtoMS template file
 
-\item {} \begin{description}
-\item[{\code{-f frcmodfile} = the name of an Amber frcmod file}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-z zmatfile} = the name of a file containing the ProtoMS z-matrix of a solute}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of a ProtoMS template file}] \leavevmode
-optional, default = lig.tem
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-n name} = the name of the solute}] \leavevmode
-optional, default = UNK
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-t trans} = the maximum translational displacement}] \leavevmode
-optional, default = 0.25 A
+\begin{alltt}
+usage: build\_template.py {[}-h{]} {[}-p PREPI{]} {[}-o OUT{]} {[}-z ZMAT{]} {[}-f FRCMOD{]}
+                         {[}-n NAME{]} {[}-t TRANSLATE{]} {[}-r ROTATE{]} {[}--alldihs{]}
+                         {[}--gaff GAFF{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-p, -{-}prepi]  
+the name of the leap prepi-file
+\item [-o=lig.tem, -{-}out=lig.tem]  
+the name of the template file
+\item [-z, -{-}zmat]  
+the name of the zmatrix-file, if it exists
+\item [-f, -{-}frcmod]  
+the name of the frcmod-file, if it exists
+\item [-n=UNK, -{-}name=UNK]  
+the name of the solute
+\item [-t=0.25, -{-}translate=0.25]  
+maxmium size for translation moves in Angstroms
+\item [-r=5.0, -{-}rotate=5.0]  
+maxmium size for rotation moves in degrees
+\item [-{-}alldihs=False]  
+sample improper dihedrals
+\item [-{-}gaff=gaff16]  
+gaff version to use, gaff14 or gafff16
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-r rot} = the maximum rotational displacement}] \leavevmode
-optional, default = 5 degrees
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -3293,7 +3277,7 @@ build\PYGZus{}template.py \PYGZhy{}p benzene.prepi \PYGZhy{}f benzene.frcmod \PY
 
 This tool builds a ProtoMS template file for a solute given an Amber prepi file.
 
-If the solute needs parameter not in the GAFF release, they should be supplied with the \code{frcmodfile}.
+If the solute needs parameters not in the specified GAFF release, they should be supplied with the \code{frcmodfile}.
 
 The tool will automatically make an appropriate z-matrix for Monte Carlo sampling. This works in most situations. However, if something is not working properly with the generated z-matrix, one can be supplied in the \code{zmatfile}
 
@@ -3302,65 +3286,36 @@ The default translational and rotational displacements are based on experience a
 
 \section{calc\_bar.py}
 \label{tools:calc-bar-py}
-\textbf{Syntax:}
 
-\code{calc\_bar.py {[}-d directory{]} {[}-r results{]} {[}-s nskip{]} {[}-m nmax{]} {[}-t temperature{]}  {[}-b nbootstraps{]} {[}-pw{]} {[}-pu{]} {[}-pl{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-d directory} = name of output directory of the simulation}] \leavevmode
-optional, default = current working directory (.)
+Program to calculate free energy from Bennett Acceptance Ratio
 
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-r results} = the beginning of the name of the file to analyse}] \leavevmode
-optional, default = results\_inst
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-s nskip} = the number of snapshots to skip at the beginning of the simulation}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-m nmax} = the maximum number of snapshots to process}] \leavevmode
-optional, default = the total number of snapshot in the results file, excluding nskip
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-t temperature} = the simulation temperature in degree Celsius}] \leavevmode
-optional, default = 25 degrees
+\begin{alltt}
+usage: calc\_bar.py {[}-h{]} {[}-d DIRECTORY{]} {[}-r RESULTS{]} {[}-s SKIP{]} {[}-m MAX{]}
+                   {[}-t TEMPERATURE{]} {[}-pw{]} {[}-pu{]} {[}-pl{]} {[}-b NBOOTS{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-d=./, -{-}directory=./]  
+the root directory that contains all the output files of the simulation. Default is cwd.
+\item [-r=results, -{-}results=results]  
+the beginning of the name of the file to analyse. Default is results. 
+\item [-s=0, -{-}skip=0]  
+the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
+\item [-m=99999, -{-}max=99999]  
+the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0
+\item [-t=25.0, -{-}temperature=25.0]  
+the simulation temperature in degrees. Default is 25.0
+\item [-pw=True, -{-}print-win=True]  
+turns off printing of individual windows
+\item [-pu=True, -{-}print-uncert=True]  
+turns off printing of uncertainties
+\item [-pl=True, -{-}print-lam=True]  
+turns off printing of lambda-values
+\item [-b=100, -{-}nboots=100]  
+the number of bootstrap samples
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-b nbootstraps} = the number of bootstraps samples to use in uncertainty estimation}] \leavevmode
-optional, default = 100
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pw}  = flag that turns \emph{off} the printing of individual free energies between windows}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pu}  = flag that turns \emph{off} the printing of uncertainties}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pl}  = flag that turns \emph{off} the printing of \(\lambda\)-values}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -3391,62 +3346,38 @@ done
 
 \section{calc\_clusters.py}
 \label{tools:calc-clusters-py}
-\textbf{Syntax:}
 
-\code{calc\_clusters.py -f file1 {[}file2 ...{]}  {[}-o outfile{]} {[}-m molecule{]} {[}-a atom{]} {[}-t type{]} {[}-c cutoff{]} {[}-{-}skip N{]} {[}-{-}max N{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-f file1 file2} ... = name(s) of PDB-file(s) containing simulation snapshots}] \leavevmode
-at least one file needs to be specified
-can read a PDB trajectory
+Program to cluster molecules
 
-\end{description}
+\begin{alltt}
+usage: calc\_clusters.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]} {[}-m MOLECULE{]}
+                        {[}-a ATOM{]}
+                        {[}-t \{average,single,complete,weighted,centroid\}{]}
+                        {[}-c CUTOFF{]} {[}--skip SKIP{]} {[}--max MAX{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the input PDB-files
+\item [-o=clusters.pdb, -{-}out=clusters.pdb]  
+the name of the output pdb that contains the cluster representatives, default='clusters.pdb'
+\item [-m=wa1, -{-}molecule=wa1]  
+the name of the molecule to extract, default='wa1'
+\item [-a, -{-}atom]  
+the name of the atom to extract. If left blank, the entire molecule will be clustered, default=None
+\item [-t=average, -{-}type=average]  
+the type of hierarchical clustering method, default='average'
 
-\item {} \begin{description}
-\item[{\code{-o outfile} = the produced clusters in PDB format}] \leavevmode
-optional, clusters.pdb
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-m molecuke} = the name of the molecule to cluster}] \leavevmode
-optional, default = wat
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-a atom} = the name of the atom in the residue to cluster}] \leavevmode
-optional, no default
-if not specified, the entire molecule will be clustered
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-t type} = the clustering algorith}] \leavevmode
-optional, default = average
-can be any of average, single, complete, weighted and centroid
+Possible choices: average, single, complete, weighted, centroid
+\item [-c=2.0, -{-}cutoff=2.0]  
+the distance cutoff that defines whether conformations belong to a cluster, default=2.0
+\item [-{-}skip=0]  
+the number of blocks to skip to calculate the clusters. default is 0. Skip must be greater or equal to 0
+\item [-{-}max=99999]  
+the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-c cutoff} = the cluster cut-off}] \leavevmode
-optional, default = 2.0 A
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}skip N} = skip N snapshots at the beginning of the simulation}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}max N} = read and process a maximum of N snapshots}] \leavevmode
-optional, default = 99999
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -3466,80 +3397,44 @@ It will extract the coordinates of all atoms with name equal to \code{atom} in r
 
 \section{calc\_density.py}
 \label{tools:calc-density-py}
-\textbf{Syntax:}
 
-\code{calc\_density.py -f file1 {[}file2 ...{]}  {[}-o outfile{]} {[}-r residue{]} {[}-a atom{]} {[}-p padding{]} {[}-s spacing{]} {[}-e extent{]} {[}-n norm{]} {[}-t sphere\textbar{}gaussian{]} {[}-{-}skip N{]} {[}-{-}max N{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-f file1 file2} ... = name(s) of PDB-file(s) containing simulation snapshots}] \leavevmode
-at least one file needs to be specified
-can read a PDB trajectory
+Program to discretize atoms on a 3D grid
 
-\end{description}
+\begin{alltt}
+usage: calc\_density.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]} {[}-r RESIDUE{]}
+                       {[}-a ATOM{]} {[}-p PADDING{]} {[}-s SPACING{]} {[}-e EXTENT{]}
+                       {[}-n NORM{]} {[}-t \{sphere,gaussian\}{]} {[}--skip SKIP{]}
+                       {[}--max MAX{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the input PDB-files
+\item [-o=grid.dx, -{-}out=grid.dx]  
+the name of the output grid-file in DX-format, default='grid.dx'
+\item [-r=wa1, -{-}residue=wa1]  
+the name of the residue to extract, default='wa1'
+\item [-a=o00, -{-}atom=o00]  
+the name of the atom to extract, default='o00'
+\item [-p=2.0, -{-}padding=2.0]  
+the amount to increase the minimum box in each direction, default=2 A
+\item [-s=0.5, -{-}spacing=0.5]  
+the grid resolution, default=0.5 A
+\item [-e=1.0, -{-}extent=1.0]  
+the size of the smoothing, i.e. the extent of an atom, default=1A
+\item [-n, -{-}norm]  
+number used to normalize the grid, if not specified the number of input files is used
+\item [-t=sphere, -{-}type=sphere]  
+the type  of coordinate smoothing, should be either `sphere', `gaussian'
 
-\item {} \begin{description}
-\item[{\code{-o outfile} = the produced density in DX-format}] \leavevmode
-optional, default = grid.dx
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-r residue} = the name of the residue to make a grid on}] \leavevmode
-optional, default = wat
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-a atom} = the name of the atom in the residue to make a grid on}] \leavevmode
-optional, default = o00
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-p padding} = the amount to increase the minimum box in each dimension}] \leavevmode
-optional, default = 2.0 A
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-s spacing} = the grid resolution}] \leavevmode
-optional, default = 0.5 A
+Possible choices: sphere, gaussian
+\item [-{-}skip=0]  
+the number of blocks to skip to calculate the density. default is 0. Skip must be greater or equal to 0
+\item [-{-}max=99999]  
+the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-e extent} = the size of the smoothing}] \leavevmode
-optional, default =  1.0 A
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-n norm} = the normalisation constant}] \leavevmode
-optional, default = the number of snapshot processed
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-t sphere\textbar{}gaussian} = the type of coordinate smoothing}] \leavevmode
-optional, default = sphere
-\code{sphere} = spherical smoothing with extent radius
-\code{gaussian} = smoothing with Gaussian with standard deviation = extent
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}skip N} = skip N snapshots at the beginning of the simulation}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}max N} = read and process a maximum of N snapshots}] \leavevmode
-optional, default = 99999
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -3568,84 +3463,50 @@ vmd \PYGZhy{}m all.pdb grid.dx
 
 \section{calc\_dg.py}
 \label{tools:calc-dg-py}
-\textbf{Syntax:}
 
-\code{calc\_dg.py {[}-d directory directory2 ...{]} {[}-r results{]} {[}-e ti\textbar{}bar\textbar{}mbar{]} {[}-s nskip{]} {[}-m nmax{]} {[}-t temperature{]}  {[}-b nbootstraps{]}  {[}-pe{]} {[}-pg{]} {[}-gr{]} {[}-{-}analytical{]} {[}-{-}numerical both\textbar{}back\textbar{}forw {]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-d directory directory2} ... = name of output directories of simulations}] \leavevmode
-optional, default = current working directory (.)
-one or more directories can be specified
+Program to calculate free energy from TI/BAR/MBAR
 
-\end{description}
+\begin{alltt}
+usage: calc\_dg.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-r RESULTS{]}
+                  {[}-s SKIP{]} {[}-m MAX{]} {[}-t TEMPERATURE{]} {[}-b NBOOTS{]} {[}-gr{]} {[}-pg{]}
+                  {[}-pe{]} {[}--analytical{]} {[}--numerical \{both,back,forw\}{]}
+                  {[}-e \{ti,bar,mbar\} {[}\{ti,bar,mbar\} ...{]}{]} {[}--autoeqb{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-d={[}'./'{]}, -{-}directories={[}'./'{]}]  
+the root directory that contains all the output files of the simulation. Default is cwd.
+\item [-r=results, -{-}results=results]  
+the name of the file to analyse. Default is results. 
+\item [-s=0, -{-}skip=0]  
+the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
+\item [-m=99999, -{-}max=99999]  
+the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0
+\item [-t=25.0, -{-}temperature=25.0]  
+the simulation temperature in degrees. Default is 25.0
+\item [-b=100, -{-}nboots=100]  
+the number of bootstrap samples
+\item [-gr=False, -{-}plot-grads=False]  
+turns on producing plot of gradients
+\item [-pg=True, -{-}print-grad=True]  
+turns off printing of gradient
+\item [-pe=True, -{-}print-each=True]  
+turns off printing of each free energy
+\item [-{-}analytical=False]  
+turns on use of analytical gradients
+\item [-{-}numerical=both]  
+the kind of numerical gradient estimator
 
-\item {} \begin{description}
-\item[{\code{-r results} = the beginning of the name of the file to analyse}] \leavevmode
-optional, default = results\_inst
+Possible choices: both, back, forw
+\item [-e={[}'ti', `bar', `mbar'{]}, -{-}estimator={[}'ti', `bar', `mbar'{]}]  
+the type of estimator to use
 
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-e ti\textbar{}bar\textbar{}mbar} = the free energy estimator}] \leavevmode
-optional, default = ti bar mbar
-one or more estimators can be specified
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-s nskip} = the number of snapshots to skip at the beginning of the simulation}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-m nmax} = the maximum number of snapshots to process}] \leavevmode
-optional, default = the total number of snapshot in the results file, excluding nskip
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-t temperature} = the simulation temperature in degree Celsius}] \leavevmode
-optional, default = 25 degrees
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-b nbootstraps} = the number of bootstraps samples to use in uncertainty estimation}] \leavevmode
-optional, default = 100
+Possible choices: ti, bar, mbar
+\item [-{-}autoeqb=False]  
+use automatic equilibration detection to determine how much data is included in free energy difference
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-pe}  = flag that turns \emph{off} the printing of free energy for each directory}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pg}  = flag that turns \emph{off} the printing of the gradient}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-gr}  = flag that turns \emph{on} the plotting of the gradient}] \leavevmode
-optional, default = off
-
-\end{description}
-
-\item {} 
-\code{-{-}analytical} = turns \emph{on} the use of analytical gradients
-optional, default = off
-
-\item {} 
-\code{-{-}numerical} = turns \emph{on} the use of numerical gradients and selects the kind
-optional, default = both
-\code{both} = uses the free energy in both backward and forward direction to compute the free energy gradient
-\code{back} = uses the free energy in the backward direction to compute the free energy gradient
-\code{forw} = uses the free energy in the forward direction to compute the free energy gradient
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -3658,7 +3519,7 @@ calc\PYGZus{}dg.py \PYGZhy{}d out\PYGZus{}free1/ out\PYGZus{}free2/ out\PYGZus{}
 
 \textbf{Description:}
 
-This tool calculates free energies using the method of thermodynamic integration (TI), Bennet's Acceptance Ratio (BAR) and Multi BAR (MBAR).
+This tool calculates free energies using the method of thermodynamic integration (TI), Bennet's Acceptance Ratio (BAR) and multi state BAR (MBAR).
 
 The program expects that in the \code{directory}, \code{directory2} etc. there exist an output folder for each \(\lambda\)-value, eg. \code{lam-0.000} and \code{lam-1.000}
 
@@ -3669,75 +3530,52 @@ The MBAR estimator only works if PyMBAR is properly installed and can be loaded 
 
 \section{calc\_gci.py}
 \label{tools:calc-gci-py}
-\textbf{Syntax:}
 
-\code{calc\_gci.py -d directories {[}-f file{]} {[}-p titration\textbar{}fit\textbar{}percentiles\textbar{}pmf\textbar{}excess\textbar{}all{]} {[}-c fit\textbar{}pmf\textbar{}minimum\textbar{}excess\textbar{}all{]} {[}-s nskip{]} {[}-b nboots{]} {[}-i{]} {[}-o{]} {[}-{-}steps nsteps{]} {[}-{-}range A B{]} {[}-{-}reverse{]} {[}-{-}fit\_options{]}}
-\begin{itemize}
-\item {} 
-\code{-d directories} = the output directories from GCMC
+Program to analyse and plot free energies from GCMC simulations
 
-\item {} 
-\code{-f file} = the name of ProtoMS results file
-optional, default =results
+\begin{alltt}
+usage: calc\_gci.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-f FILE{]}
+                   {[}-p \{titration,fit,percentiles,pmf,all\} {[}\{titration,fit,percentiles,pmf,all\} ...{]}{]}
+                   {[}-c \{fit,pmf,minimum,excess,all\} {[}\{fit,pmf,minimum,excess,all\} ...{]}{]}
+                   {[}-s SKIP{]} {[}-b BOOTSTRAPS{]} {[}-i INPUT{]} {[}-o OUT{]}
+                   {[}--steps STEPS{]} {[}--range RANGE {[}RANGE ...{]}{]} {[}--reverse{]}
+                   {[}--fit\_options FIT\_OPTIONS{]} {[}-v VOLUME{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-d, -{-}directories]  
+the directories containing the GCMC simulation data, default=None
+\item [-f=results, -{-}file=results]  
+the name of the file to analyse. Default is results.
+\item [-p, -{-}plot]  
+whether to plot the GCMC simulation data or analysis, default=None
 
-\item {} 
-\code{-p} = the selections for ploting data,
-optional, default = none
-\begin{quote}
+Possible choices: titration, fit, percentiles, pmf, all
+\item [-c, -{-}calc]  
+fit an artificial neural network to the data, the potential of mean force to bind a specified number of waters, locate the minimum of the pmf
 
-\code{titration} = the average number of GCMC waters at each B value
-\code{fit} = titration plot with line of best fit
-\code{percentiles} = titration plot with median fit (red line), 50\% confidense region of fit (orange), and 90\% confidense region of fit (gray)
-\code{pmf} = relative binding free energy of a given number of waters, median (blue line), 50\% confidense region of fit (light blue), and 90\% confidense region of fit (gray)
-\code{excess} = excess chemical potential of cavity as a function of water occupancy and equilibrium point with bulk water
-\code{all} = calculate everything
-\end{quote}
+Possible choices: fit, pmf, minimum, excess, all
+\item [-s=0, -{-}skip=0]  
+the number of initial snapshots that will be discarded when fitting
+\item [-b, -{-}bootstraps]  
+the number of bootstrap samples to perform.
+\item [-i, -{-}input]  
+the pickled neural networks that will be read, bypassing the fitting procedure, default=ANNs.pickle
+\item [-o, -{-}out]  
+the pickled file name where the fitted neural networks will be output, default=ANNs.pickle
+\item [-{-}steps=1]  
+the number of steps observed in the titration data that will be fitted to
+\item [-{-}range]  
+range of water molecules to calculate free energy
+\item [-{-}reverse=False]  
+reverse the direction of integration, starting from the highest number of waters to the lowest number, default=False
+\item [-{-}fit\_options]  
+additional options to be passed to the artificial neural network
+\item [-v, -{-}volume]  
+volume of the GCMC insertion region
+\end{optionlist}
 
-\item {} 
-\code{-c} = selection for one or several calculations,
-optional, default = none
-\begin{quote}
-
-\code{fit} = whether to fit and artficial neural network to smooth GCMC titration data
-\code{pmf} = potential of mean force: free energies for inserting or deleting waters calculated with grand canonical integration
-\code{minimum} = whether to calculate the occupancy that minimises binding free energy
-\code{excess} = excess chemical potential of cavity as a function of water
-\code{all} = calculate everything
-\end{quote}
-
-\item {} 
-\code{-s nskip} = the number of initial snapshots to discard
-optional, default = 0
-
-\item {} 
-\code{-b} = the number of bootstrap samples
-optional, default = none
-
-\item {} 
-\code{-i} = python pickle of fitted artificial neural network you wish to use
-optional, default = none
-
-\item {} 
-\code{-o} = name of the python pickle of fitted artificial neural network you wish to save
-optional, default = none
-
-\item {} 
-\code{-{-}steps nsteps} = the number of units that will comprise the artificial neural network, recommended to be set to equal the number of steps observed in the titration data
-optional, default = 1
-
-\item {} 
-\code{-{-}range A B} = the minimum and maximum number of waters you wish to consider
-optional, default = the range spanned by the titration data
-
-\item {} 
-\code{-{-}reverse} = whether to peform grand canonical integration in the reverse direction: from the high to low water occupancy, instead of low to high
-optional, default = False
-
-\item {} 
-\code{-{-}fit\_options} = set of fitting options to parse to the artificial neural network optimisation.
-optional, default = None
-
-\end{itemize}
+\end{description}
 
 \textbf{Examples:}
 
@@ -3759,53 +3597,48 @@ All the other functions contained in this tool require the fitting of a monotoni
 
 Error estimates of free energies and optimal number of waters are based on either (a) automatic repeated fitting of the ANN from different random initial parameters or (b) bootstrap sampling of the titration data, which samples B-values with replacement. The latter is selected with \code{-b nboots}, where \code{nboots} is the number of bootstrap samples. When running a large number of bootstrap samples (eg 1000), its recommended to save to bootstrap ANNs with \code{-o}.
 
-The flag \code{-c pmf} calculates the free energy to transfer water molecules from ideal gas, and from bulk water, where the abbreviation stands for “potential of mean force”. A table will be printed
-that contains the free energy to transfer water from ideal gas to the simulated volume (with the heading \code{IDEAL GAS TRANSFER FREE ENERGIES}), and the free energy to transfer from bulk water at a temperature of 298.15 K (with the heading \code{BINDING FREE ENERGIES}). From the multiple ANN fits (either automatic repeated fits or bootstrap sampling), various statistics have been calculated. The \code{Mean} and \code{Median} are different averages of the calculated free energies, with the median being more robust to bad fits of the ANN than the mean. The standard deviation (\code{Std.  Dev.}) as well as the range between the 25th and 75th percentiles serve as error estimates.
+The flag \code{-c pmf} calculates the free energy to transfer water molecules from ideal gas, and from bulk water, where the abbreviation stands for “potential of mean force”. A table will be printed that contains the free energy to transfer water from ideal gas to the simulated volume (with the heading \code{IDEAL GAS TRANSFER FREE ENERGIES}), and the free energy to transfer from bulk water at a temperature of 298.15 K (with the heading \code{BINDING FREE ENERGIES}). From the multiple ANN fits (either automatic repeated fits or bootstrap sampling), various statistics have been calculated. The \code{Mean} and \code{Median} are different averages of the calculated free energies, with the median being more robust to bad fits of the ANN than the mean. The standard deviation (\code{Std.  Dev.}) as well as the range between the 25th and 75th percentiles serve as error estimates. It is important that standard state correction is applied to binding free energies. This is handled automatically when the volume of the gcmc region is passed to the script with the \code{-v} flag.
 
 Due to the accumulation of error when performing integration, the estimated error of the calculated free energies increases with the number of water molecules. To emphasise this, one can also perform GCI in the reverse direction and calculate the free energy to decouple water from the simulated volume with the flag \code{-{-}reverse}.
 
 One can calculate the free energy to add and remove a specific number of waters with the \code{-{-}range} flag, which requires and upper and a lower number of waters as input. Particularly, the estimated error for the relative free energy between two occupancies is improved as accumulated integration error is reduced.
 
-If this flag is specified along with `minimum', eg \code{-c pmf minimum}, then the number of water molecules that minimises the explicitly calculated binding free energy (the optimal number) is printed under the heading \code{MINIMUM BINDING FREE ENERGY STATE}. The B-value that produces an average number of waters equal to the optimal number is also estimated. If only \code{-c minimum} is specified, the B-value that replicates equilibrium with bulk water at a temperature of 298.15 K is estimated using an analytical formula, without calculating binding free energies with GCI. This B-value, and the average number of waters that appear at this B-value are printed under \code{THERMODYNAMIC EQUILIBRIUM STATE}.
+If this flag is specified along with `minimum', eg \code{-c pmf minimum}, then the number of water molecules that minimises the explicitly calculated binding free energy (the optimal number) is printed under the heading \code{MINIMUM BINDING FREE ENERGY STATE}. The B-value that produces an average number of waters equal to the optimal number is also estimated. If only \code{-c minimum} is specified, the B-value that replicates equilibrium with bulk water at a temperature of 298.15 K is estimated using an analytical formula, without calculating binding free energies with GCI. This B-value, and the average number of waters that appear at this B-value are printed under \code{THERMODYNAMIC EQUILIBRIUM STATE}. If the volume of the gcmc region is specified, it is also possible to exactly determine the correct equilibrium B-value and the corresponding water occupancy is determined from the fitted titration curve and nearest simulated B-values.
 
 The flag \code{-{-}fit\_options} allows one to pass commands into the ANN fitting tool. The default options for the ANN may need tweaking to accurately reproduce the GCMC titration data. The most important options for the user are “repeats'' - number of times the entire process of fitting an ANN is repeated, all fits are retained to estimate the fitting error, default=20; “pin\_min” - value to constrain the intercept to, useful when a titration goes to zero waters; “cost” - the type of cost/loss function that is minimised when fitting, the three choices are `msd' (mean squared deviation), `absolute' (absolute error), and `huber' (pseudo Huber loss), default=msd; “c” - the parameter in the pseudo Huber loss function, default=2. Both the `absolute' and `huber' loss functions are suited to very noisy titration data, as they are more robust to outliers than `msd', although using  the fitting algorithm may produce unstable fits with `absolute'.
 
 
 \section{calc\_gcsingle.py}
 \label{tools:calc-gcsingle-py}
-\textbf{Syntax:}
 
-\code{calc\_gcsingle.py -d directories {[}-f file{]} {[}-s nskip{]} {[}-c{]} {[}-p{]} {[}-{-}guess number{]} {[}-{-}excess{]}}
-\begin{itemize}
-\item {} 
-\code{-d directories} = the output directories from GCMC
+Program to calculate coupling free energy GCMC simulations of a single water molecule using the logistic fitting method by G. A. Ross et al.
 
-\item {} 
-\code{-f file} = the name of ProtoMS results file
-optional, default =results
+\begin{alltt}
+usage: calc\_gcsingle.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-f FILE{]}
+                        {[}-s SKIP{]} {[}-c CALC{]} {[}-p{]} {[}--guess GUESS{]} {[}--excess{]}
+                        {[}-v VOLUME{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-d, -{-}directories]  
+the directories containing the GCMC simulation data, default=None
+\item [-f=results, -{-}file=results]  
+the name of the file to analyse, default=results
+\item [-s=0, -{-}skip=0]  
+the number of initial snapshots that will be discarded, default=0
+\item [-c=True, -{-}calc=True]  
+whether to calculate the coupling free energy by fitting a logistic curve to titration data, default=True
+\item [-p=False, -{-}plot=False]  
+whether to plot the titration data and fitted curve, default is no plotting
+\item [-{-}guess=-6.2]  
+initial guess of the coupling free energy. Use to refine logisitic fitting, default=-6.2 kcal/mol
+\item [-{-}excess=False]  
+calculate the average excess chemical potential between 2 Adams values, default=False
+\item [-v, -{-}volume]  
+volume of the GCMC insertion region
+\end{optionlist}
 
-\item {} 
-\code{-s nskip} = the number of initial snapshots to discard
-optional, default = 0
-
-\item {} 
-\code{-c} = whether to calculate the ideal gas transfer free energy,
-optional, default = True
-if not set the program will use all data
-
-\item {} 
-\code{-p} = whether to plot the titration data with least squares fit and bootstrap fit
-optional
-
-\item {} 
-\code{-{-}guess number} = the initial estimate of the transfer free energy used as the initial value in least squares fitting
-optional, default = -6.2
-
-\item {} 
-\code{-{-}excess} = whether to view and calculate the excess chemical potential
-optional
-
-\end{itemize}
+\end{description}
 
 \textbf{Examples:}
 
@@ -3817,44 +3650,33 @@ calc\PYGZus{}gcsingle.py \PYGZhy{}d out\PYGZus{}gcmc/b\PYGZus{}* \PYGZhy{}\PYGZh
 
 \textbf{Description:}
 
-This tool analyses and plots free energies from GCMC simulations on sites that can bind only a single water molecule as described in Ross et al., J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943. The tool fits a logistic function to GCMC titration data, where the point of inflection/point of half maximum is equals the free energy to transfer a water molecule from ideal gas to the GCMC volume, divided by kT. This tool should only be applied to GCMC titration data where the maximum occupancy equals 1.
+This tool analyses and plots free energies from GCMC simulations on sites that can bind only a single water molecule as described in Ross et al., J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943. The tool fits a logistic function to GCMC titration data, where the point of inflection/point of half maximum is equals the free energy to transfer a water molecule from ideal gas to the GCMC volume, divided by kT. This tool should only be applied to GCMC titration data where the maximum occupancy equals 1. To calculate standard state binding free energies the gcmc region volume should be specified with the \code{-v{}`} flag and the relevant correction will be applied to the free energies.
 
 
 \section{calc\_replicapath.py}
 \label{tools:calc-replicapath-py}
-\textbf{Syntax:}
 
-\code{calc\_replicapath.py -f file1 {[}file2 ...{]} -p replica1 {[}replica2 ...{]} -k lambda\textbar{}temperature\textbar{}rest\textbar{}global {[}-o outfile{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-f file1 file2} ... = the name(s) of ProtoMS results file(s)}] \leavevmode
-at least one file needs to be given
+Program to analyze and plot a replica paths
 
-\end{description}
+\begin{alltt}
+usage: calc\_replicapath.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-p PLOT {[}PLOT ...{]}{]}
+                           {[}-k \{lambda,temperature,rest,global,B\}{]} {[}-o OUT{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the name of the files to analyse
+\item [-p, -{-}plot]  
+the replica values to plot
+\item [-k=lambda, -{-}kind=lambda]  
+the kind of replica to analyze
 
-\item {} \begin{description}
-\item[{\code{-p replica1 replica2} ... = the replica values to plot}] \leavevmode
-at least one replica value needs to be given
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-k lambda\textbar{}temperature\textbar{}rest\textbar{}global} = the kind of replicas}] \leavevmode
-optional, default = lambda
-\code{lambda} = \(\lambda\) replica exchange replicas
-\code{temperature} = temperature replica exchange replicas
-\code{rest} = solute tempering replica exchange replicas
-\code{global} = global replica exchange replicas, if combining \(\lambda\) and temperature replica exchange
+Possible choices: lambda, temperature, rest, global, B
+\item [-o=replica\_path.png, -{-}out=replica\_path.png]  
+the prefix of the output figure. Default is replica\_path. 
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of a PNG file to write the replica paths}] \leavevmode
-optional, default = replica\_path.png
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -3875,29 +3697,28 @@ If the kind of replicas is from REST or temperature replica exchange the \code{r
 
 \section{calc\_rmsd.py}
 \label{tools:calc-rmsd-py}
-\textbf{Syntax:}
 
-\code{calc\_rmsd.py -i pdbfile -f file1 {[}file2 ...{]} -l ligand {[}-a atom{]} {[}-t temperature{]}}
-\begin{itemize}
-\item {} 
-\code{-i pdbfile} = the reference, initial PDB file
+Program to calculate RMSD of ligand centre
 
-\item {} 
-\code{-f file1 file2} ... = the name(s) of ProtoMS results file(s)
-at least one file needs to be given
+\begin{alltt}
+usage: calc\_rmsd.py {[}-h{]} {[}-i INITIAL{]} {[}-f FILES {[}FILES ...{]}{]} {[}-l LIGAND{]}
+                    {[}-a ATOM{]} {[}-t TEMPERATURE{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-i, -{-}initial]  
+the initial PDB-file of the ligand
+\item [-f, -{-}files]  
+the input PDB-files
+\item [-l, -{-}ligand]  
+the name of the ligand to extract
+\item [-a, -{-}atom]  
+the name of the atom to analyze
+\item [-t=298.0, -{-}temperature=298.0]  
+the temperature in the simulation
+\end{optionlist}
 
-\item {} 
-\code{-l ligand} = the residue name of the ligand
-
-\item {} 
-\code{-a atom} = the atom to calculate the RMSD of
-optional, if not set the program will calculate the RMSD of the geometric center
-
-\item {} 
-\code{-t temperature} = the simulation temperature in K
-optional, default = 298 K
-
-\end{itemize}
+\end{description}
 
 \textbf{Examples:}
 
@@ -3912,90 +3733,46 @@ This tool calculate the RMSD of a ligand in a simulation.
 
 If the \code{atom} name is given, the tool will calculate the RMSD of that atom with respect to its position in \code{pdbfile}. Otherwise, the program will calculate the RMSD of the geometric centre with respect to \code{pdbfile}.
 
-A force constant to keep the ligand constrained is estimated from the RMSD using the equipartition theorem.
+A force constant to keep the ligand restrained for free energy calculations is estimated from the RMSD using the equipartition theorem.
 
 
 \section{calc\_series.py}
 \label{tools:calc-series-py}
-\textbf{Syntax:}
 
-\code{calc\_series.py -f file1 {[}file2 ...{]} {[}-o outprefix{]} {[}-s series series2 ...{]} {[}-p sep\textbar{}sub\textbar{}single\textbar{}single\_first0\textbar{}single\_last0{]} {[}-{-}nperm N{]} {[}-{-}threshold N{]} {[}-{-}average{]} {[}-{-}moving windowsize{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-f file1 file2} ... = the name(s) of ProtoMS result file(s)}] \leavevmode
-at least one name needs to be given
+Program to analyze and plot a time series
 
-\end{description}
+\begin{alltt}
+usage: calc\_series.py {[}-h{]} {[}-f FILE {[}FILE ...{]}{]} {[}-o OUT{]}
+                      {[}-s SERIES {[}SERIES ...{]}{]}
+                      {[}-p \{sep,sub,single,single\_first0,single\_last0\}{]}
+                      {[}--nperm NPERM{]} {[}--threshold THRESHOLD{]} {[}--average{]}
+                      {[}--moving MOVING{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-f={[}'results'{]}, -{-}file={[}'results'{]}]  
+the name of the file to analyse. Default is results. 
+\item [-o=series, -{-}out=series]  
+the prefix of the output figure. Default is series. 
+\item [-s, -{-}series]  
+the series to analyze
+\item [-p, -{-}plot]  
+the type of plot to generate for several series
 
-\item {} \begin{description}
-\item[{\code{-o outprefix} = the prefix of the created PNG-files}] \leavevmode
-optional, default = results
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-s serie series2} ... = the name of the series to plot}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-p sep\textbar{}sub\textbar{}single\textbar{}single\_first0\textbar{}single\_last0} = the type of plot if plotting multiple series}] \leavevmode
-optional, no default
-\code{sep} = separate plots
-\code{sub} = sub plots
-\code{single} = all series in one plot
-\code{single\_first0} = all series in one plot, but make the first value zero
-\code{single\_last0} = all series in one plot, but make the last value zero
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}nperm N} = the number of permutation tests to determine equilibration}] \leavevmode
-optional, default = 0 (use analytical test)
+Possible choices: sep, sub, single, single\_first0, single\_last0
+\item [-{-}nperm=0]  
+if larger than zero, perform a permutation test to determine equilibration, default=0
+\item [-{-}threshold=0.05]  
+the significant level of the equilibration test, default=0.05
+\item [-{-}average=False]  
+turns on use of running averaging of series
+\item [-{-}moving]  
+turns on use of moving averaging of series, default=None
+\end{optionlist}
 
 \end{description}
 
-\item {} \begin{description}
-\item[{\code{-{-}threshold N} = the signficance level for testing equilibration}] \leavevmode
-optional, default = 0.05
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}average} = flag that turns \emph{on} plotting running averages of the series}] \leavevmode
-optional, default = off (plot raw series)
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}moving windowsize} = turns \emph{on} plotting of moving averages with a specific window size}] \leavevmode
-optional, default = off (plot raw series)
-
-\end{description}
-
-\end{itemize}
-
-\textbf{Examples:}
-
-\begin{Verbatim}[commandchars=\\\{\}]
-calc\PYGZus{}series.py \PYGZhy{}f results
-calc\PYGZus{}series.py \PYGZhy{}f results \PYGZhy{}s total gradient
-calc\PYGZus{}series.py \PYGZhy{}f results \PYGZhy{}s total gradient \PYGZhy{}p sub
-calc\PYGZus{}series.py \PYGZhy{}f lam\PYGZhy{}*/results \PYGZhy{}s gradient
-\end{Verbatim}
-
-\textbf{Description:}
-
-This tools plots and analyses time series.
-
-The series to plot is selected by the \code{-s} flag. Basically any property written to the ProtoMS results file can be plotted, e.g. energies, volume, gradients etc. If the \code{-s} flag is not specified, a wizard will display all available series that can be plotted. This can be useful if one is unsure what the name of the series is.
-
-The tool can plot multiple series and there is five choices how produce these plots, set by the \code{-p} flag. If the \code{sep} multiple PNG files will be created, one for each series. With all other choices, one PNG file is created. If the \code{-p} flag is not specified on the command line, a wizard will prompt the user for the different options.
-
-All plotted data series will also be written to disc. If \code{sep} is used, separate files will be written as well.
-
-For each time series, the tool will estimate the equilibration time. It will do this by performing a statistical test based on the rank order of the series. If the series is equilibrated it will have a slope close to zero and the Kendall's \&tau; will be zero. When the equilibration time has been determined, the tool will estimate the number of independent samples in the production part using the method of statistical inefficiency. The equilibration time will also be estimated from a method that maximizes the number uncorrelated samples as suggested on alchemistry.org.
+on time has been determined, the tool will estimate the number of independent samples in the production part using the method of statistical inefficiency. The equilibration time will also be estimated from a method that maximizes the number uncorrelated samples as suggested on alchemistry.org.
 
 Apart from the raw series, the tool can also plot the running average if the \code{-{-}average} flag is set or the moving average if the \code{-{-}moving} flag is used.
 
@@ -4004,76 +3781,49 @@ Typically only a single ProtoMS results file will be analysed and plotted. Howev
 
 \section{calc\_ti.py}
 \label{tools:calc-ti-py}
-\textbf{Syntax:}
 
-\code{calc\_ti.py {[}-d directory{]} {[}-r results{]} {[}-s nskip{]} {[}-m nmax{]}  {[}-pg{]} {[}-pp{]} {[}-pl{]} {[}-pu{]} {[}-gr{]} {[}-{-}analytical{]} {[}-{-}numerical both\textbar{}back\textbar{}forw {]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-d directory} = name of output directory of the simulation}] \leavevmode
-optional, default = current working directory (.)
+Program to calculate free energy from thermodynamic integration
 
-\end{description}
+\begin{alltt}
+usage: calc\_ti.py {[}-h{]} {[}-d DIRECTORY{]} {[}--subdir SUBDIR{]} {[}-r RESULTS{]} {[}-s SKIP{]}
+                  {[}-m MAX{]} {[}-pg{]} {[}-pp{]} {[}-pu{]} {[}-pl{]} {[}-gr{]} {[}-pf{]} {[}--analytical{]}
+                  {[}--numerical \{both,back,forw\}{]} {[}--autoeqb{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-d=./, -{-}directory=./]  
+the root directory that contains all the output files of the simulation. Default is cwd.
+\item [-{-}subdir=]  
+optional subdirectory to check for each lamda value
+\item [-r=results, -{-}results=results]  
+the name of the file to analyse. Default is results. 
+\item [-s=0, -{-}skip=0]  
+the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
+\item [-m=99999, -{-}max=99999]  
+the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0
+\item [-pg=True, -{-}print-grad=True]  
+turns off printing of gradient
+\item [-pp=True, -{-}print-pmf=True]  
+turns off printing of PMF
+\item [-pu=True, -{-}print-uncert=True]  
+turns off printing of uncertainties
+\item [-pl=True, -{-}print-lam=True]  
+turns off printing of lambda-values
+\item [-gr=False, -{-}plot-grads=False]  
+turns on producing plot of gradients
+\item [-pf=False, -{-}print-fit=False]  
+turns on fitting the pmf to a polynomial
+\item [-{-}analytical=False]  
+turns on use of analytical gradients
+\item [-{-}numerical=both]  
+the kind of numerical gradient estimator
 
-\item {} \begin{description}
-\item[{\code{-r results} = the beginning of the name of the file to analyse}] \leavevmode
-optional, default = results\_inst
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-s nskip} = the number of snapshots to skip at the beginning of the simulation}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-m nmax} = the maximum number of snapshots to process}] \leavevmode
-optional, default = the total number of snapshot in the results file, excluding nskip
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pg}  = flag that turns \emph{off} the printing of the gradient}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pp}  = flag that turns \emph{off} the printing of the PMF}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pl}  = flag that turns \emph{off} the printing of \(\lambda\)-values}] \leavevmode
-optional, default = on
+Possible choices: both, back, forw
+\item [-{-}autoeqb=False]  
+use automatic equilibration detection to determine how much data is included in free energy difference
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-pu}  = flag that turns \emph{off} the printing of uncertainties}] \leavevmode
-optional, default = on
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-gr}  = flag that turns \emph{on} the plotting of the gradient}] \leavevmode
-optional, default = off
-
-\end{description}
-
-\item {} 
-\code{-{-}analytical} = turns \emph{on} the use of analytical gradients
-optional, default = off
-
-\item {} 
-\code{-{-}numerical} = turns \emph{on} the use of numerical gradients and selects the kind
-optional, default = both
-\code{both} = uses the free energy in both backward and forward direction to compute the free energy gradient
-\code{back} = uses the free energy in the backward direction to compute the free energy gradient
-\code{forw} = uses the free energy in the forward direction to compute the free energy gradient
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4101,26 +3851,28 @@ calc\PYGZus{}bar.py \PYGZhy{}d out\PYGZus{}free \PYGZhy{}nskip \PYGZdl{}X \PYGZh
 done
 \end{Verbatim}
 
+Rather than manually specifying snapshots to skip with \code{nskip} you can also simply give the \code{autoeqb} option that uses the automatic equilibration detection functionality of calc\_series to decide how much data to include in the ensemble averages. This should be used with caution and checked.
+
 
 \section{clear\_gcmcbox.py}
 \label{tools:clear-gcmcbox-py}
-\textbf{Syntax:}
 
-\code{clear\_gcmcbox.py -b boxfile -s waterfile {[}-o outfile{]}}
-\begin{itemize}
-\item {} 
-\code{-b boxfile} = the name of a PDB file containing a GCMC or JAWS1 box
+Program to remove water molecules from a GCMC/JAWS-1 box
 
-\item {} 
-\code{-w waterfile} = the name of a PDB file containing the bulk water
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the created PDB file containing cleaned bulk water}] \leavevmode
-optional, default = cleared\_box.pdb
+\begin{alltt}
+usage: clear\_gcmcbox.py {[}-h{]} {[}-b BOX{]} {[}-s SOLVATION{]} {[}-o OUT{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-b, -{-}box]  
+the name of the PDB-file containing the box.
+\item [-s, -{-}solvation]  
+the name of the PDB-file containing the solvation waters
+\item [-o=cleared\_box.pdb, -{-}out=cleared\_box.pdb]  
+the name of the output PDB-file
+\end{optionlist}
 
 \end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4135,37 +3887,31 @@ This tool clears a GCMC or JAWS-1 simulation box from any bulk water placed ther
 
 In a GCMC and JAWS-1 simulation the bulk water is prevented to enter or exit a GCMC or JAWS-1 simulation box. Therefore, bulk water that are within this box needs to be removed prior to the GCMC or JAWS-1 simulation.
 
-The \code{boxfile} is typically created by \code{make\_gcmcbox.py} and the \code{waterfile} is typically created by \code{solvate.py} and can be either a droplet or a box
+The \code{boxfile} is typically created by \code{make\_gcmcbox.py} and the \code{waterfile} is typically created by \code{solvate.py} and can be either a droplet or a box.
 
 
 \section{convertatomnames.py}
 \label{tools:convertatomnames-py}
-\textbf{Syntax:}
 
-\code{convertatomnames.py -p pdbfile {[}-o outfile{]} {[}-s style{]} {[}-c conversionfile{]}}
-\begin{itemize}
-\item {} 
-\code{-p pdbfile} = the name of a PDB file that should be modified
+Program convert atom names in a protein pdb-file to ProtoMS style
 
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of the modified PDB file}] \leavevmode
-optional, default = protein\_pms.pdb
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-s style} = the naming convention in pdbfile}] \leavevmode
-optional, default = amber
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-c conversionfile} = the name of file containing conversion instructions}] \leavevmode
-optional, default = atomnamesmap.dat
+\begin{alltt}
+usage: convertatomnames.py {[}-h{]} {[}-p PROTEIN{]} {[}-o OUT{]} {[}-s STYLE{]}
+                           {[}-c CONVERSIONFILE{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-p, -{-}protein]  
+the protein PDB-file
+\item [-o=protein\_pms.pdb, -{-}out=protein\_pms.pdb]  
+the output PDB-file
+\item [-s=amber, -{-}style=amber]  
+the style of the input PDB-file
+\item [-c=atomnamesmap.dat, -{-}conversionfile=atomnamesmap.dat]  
+the name of the file with conversion rules
+\end{optionlist}
 
 \end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4186,32 +3932,30 @@ A file containing conversion instructions for amber and charmm is available in t
 
 \section{convertwater.py}
 \label{tools:convertwater-py}
-\textbf{Syntax:}
 
-\code{convertwater.py -p pdbfile {[}-o outfile{]} {[}-m model{]} {[}-{-}ignoreh{]}}
-\begin{itemize}
-\item {} 
-\code{-p pdbfile} = the name of a PDB containing waters to be modified
+Program to convert water molecules - with or without hydrogens - in a pdb file to simulation models, such as tip4p. Currently ignores original hydrogen positions.
 
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of the modified PDB file}] \leavevmode
-optional, default = convertedwater.pdb
+\begin{alltt}
+usage: convertwater.py {[}-h{]} {[}-p PDB{]} {[}-o OUT{]} {[}-m MODEL{]} {[}-i{]} {[}-n RESNAME{]}
+                       {[}--setupseed SETUPSEED{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-p, -{-}pdb]  
+the PDF-file containing the waters to be transformed
+\item [-o=convertedwater.pdb, -{-}out=convertedwater.pdb]  
+the output PDB-file
+\item [-m=tip4p, -{-}model=tip4p]  
+the water model,default=tip4p
+\item [-i=False, -{-}ignoreh=False]  
+whether to ignore hydrogens in input water. If no hydrogens are present, waters are randomly orientated. default=No
+\item [-n, -{-}resname]  
+the residue name that will be applied to the water molecules. When it is not specified, it is chosen based on the water model
+\item [-{-}setupseed]  
+optional random number seed for generation of water coordinates.
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-m model} = the name of the target water model}] \leavevmode
-optional, default = tip4p
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}ignoreh} = flag that turns \emph{on} the ignoring of hydrogen atoms}] \leavevmode
-optional, default = off
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4232,43 +3976,33 @@ If the \code{-{-}ignoreh} flag is given, the script will discard the hydrogen at
 
 \section{distribute\_waters.py}
 \label{tools:distribute-waters-py}
-\textbf{Syntax:}
 
-\code{distribute\_waters.py -b box -m molecules {[}-o outfile{]} {[}-{-}model t3p\textbar{}t4p {]} {[}-{-}resname resname{]} {[}-{-}number number{]}}
-\begin{itemize}
-\item {} 
-\code{-b box} = the dimensions of the box where the (water) molecules will be distributed. Six arguments expected: origin (x,y,z) \& length (x,y,z)
+Randomly distribute n molecules within box dimensions
 
-\item {} 
-\code{-m molecules} = either the file containing the molecules to distribute, or the number of water molecules to distribute in the box
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of the file where the distributed molecules will be saved}] \leavevmode
-optional, default = ghostmolecules.pdb
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}model t3p\textbar{}t4p} = the water model used when a number is especified in `-m molecules'}] \leavevmode
-optional, default =  t4p
-\code{t4p} = tip4p water model
-\code{t3p} = tip3p water model
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}resname resname} = the residue name used in the outfile when a number is especified in `-m molecules'}] \leavevmode
-optional, default = WAT
+\begin{alltt}
+usage: distribute\_waters.py {[}-h{]} {[}-b BOX BOX BOX BOX BOX BOX{]} {[}-m MOLECULES{]}
+                            {[}-o OUTFILE{]} {[}--model MODEL{]} {[}--resname RESNAME{]}
+                            {[}--number NUMBER{]} {[}--setupseed SETUPSEED{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-b, -{-}box]  
+Dimensions of the box. Six arguments expected: origin (x,y,z) \& length (x,y,z)
+\item [-m, -{-}molecules]  
+Molecules to distribute in the box. Either the number of waters or a pdb file containing all of them
+\item [-o=ghostmolecules.pdb, -{-}outfile=ghostmolecules.pdb]  
+Name of the pdb file to write the molecules to. Default='ghostmolecules.pdb'
+\item [-{-}model=t4p]  
+Water model. Used when only the amount of waters is specified. Options: `t4p','t3p'. Default='t4p'
+\item [-{-}resname=WAT]  
+Residue name of the molecules writen to output. Default='WAT'
+\item [-{-}number]  
+Required number of molecules when it differs from the number of residues in the file.
+\item [-{-}setupseed]  
+Optional random number seed for generation of water coordinates.
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}number number} = the required number of molecules in the box when it differs from the number of molecules in the file specified in `-m molecules'}] \leavevmode
-optional, default = None (only the molecules in the file will be distributed in the box)
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4287,29 +4021,23 @@ It can place molecules in random positions and orientations with their geometry 
 
 \section{divide\_pdb.py}
 \label{tools:divide-pdb-py}
-\textbf{Syntax:}
 
-\code{divide\_pdb.py {[}-i input{]} {[}-o output{]} {[}-p path{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-i input} = the name of your multi-pdb file}] \leavevmode
-optional, default = all.pdb
+Split your multi pdb file into individual files
 
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-o output} = the beginning of the name of your individual pdb files}] \leavevmode
-optional, default = snapshot\_
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-p path} = the directory where the input should be found and the output printed}] \leavevmode
-optional, default = ./
+\begin{alltt}
+usage: divide\_pdb.py {[}-h{]} {[}-i INPUT{]} {[}-o OUTPUT{]} {[}-p PATH{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-i=all.pdb, -{-}input=all.pdb]  
+The name of your multi pdb file. Default = all.pdb
+\item [-o=snapshot\_, -{-}output=snapshot\_]  
+The basename of your individual pdb files. Default = snapshot\_
+\item [-p=./, -{-}path=./]  
+Where the input should be found and the output printed. Default = ./
+\end{optionlist}
 
 \end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 \begin{description}
@@ -4326,121 +4054,77 @@ This tool splits up a PDB file with multiple models (the keyword END defines the
 
 \section{generate\_input.py}
 \label{tools:generate-input-py}
-\textbf{Syntax:}
 
-\code{generate\_input.py {[}-s equilibration\textbar{}sampling\textbar{}dualtopology\textbar{}singletopology\textbar{}gcmc\textbar{}jaws1\textbar{}jaws2{]} {[}-p protein.pdb{]} {[}-l lig1.pdb lig2.pdb ...{]} {[}-t template1 template2 ...{]} {[}-pw protwat.pdb{]} {[}-lw ligwat.pdb{]} {[}-o outfile{]} {[}-{-}outfolder folder{]} {[}-{-}lambdas nlambdas \textbar{} lambda1 lambda2 ...{]} {[}-{-}adams B1 B2 ...{]} {[}-{-}jawsbias bias{]} {[}-{-}gcmcwater wat.pdb{]} {[}-{-}gcmcbox box.pdb{]} {[}-{-}nequil N{]} {[}-{-}nprod N{]} {[}-{-}dumpfreq N{]} {[}-{-}absolute{]} {[}-{-}dovacuum{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-s equilibration\textbar{}sampling\textbar{}dualtopology\textbar{}singletopology\textbar{}gcmc\textbar{}jaws1\textbar{}jaws2} = the type of simulation to perform}] \leavevmode
-optional, default = equilibration
+Program to create a ProtoMS command file
 
-\end{description}
+\begin{alltt}
+usage: generate\_input.py {[}-h{]}
+                         {[}-s \{sampling,equilibration,dualtopology,singletopology,gcmc,jaws1,jaws2\}{]}
+                         {[}--dovacuum{]} {[}-p PROTEIN{]} {[}-l LIGANDS {[}LIGANDS ...{]}{]}
+                         {[}-t TEMPLATES {[}TEMPLATES ...{]}{]} {[}-pw PROTWATER{]}
+                         {[}-lw LIGWATER{]} {[}-o OUT{]} {[}--outfolder OUTFOLDER{]}
+                         {[}--gaff GAFF{]} {[}--lambdas LAMBDAS {[}LAMBDAS ...{]}{]}
+                         {[}--adams ADAMS {[}ADAMS ...{]}{]}
+                         {[}--adamsrange ADAMSRANGE {[}ADAMSRANGE ...{]}{]}
+                         {[}--jawsbias JAWSBIAS {[}JAWSBIAS ...{]}{]}
+                         {[}--gcmcwater GCMCWATER{]} {[}--gcmcbox GCMCBOX{]}
+                         {[}--watmodel \{tip3p,tip4p\}{]} {[}--nequil NEQUIL{]}
+                         {[}--nprod NPROD{]} {[}--dumpfreq DUMPFREQ{]} {[}--absolute{]}
+                         {[}--ranseed RANSEED{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-s=equilibration, -{-}simulation=equilibration]  
+the kind of simulation to setup
 
-\item {} \begin{description}
-\item[{\code{-p protein.pdb} = the name of the protein PDB file}] \leavevmode
-optional, no default
+Possible choices: sampling, equilibration, dualtopology, singletopology, gcmc, jaws1, jaws2
+\item [-{-}dovacuum=False]  
+turn on vacuum simulation for simulation types equilibration and sampling
+\item [-p, -{-}protein]  
+the name of the protein file
+\item [-l, -{-}ligands]  
+the name of the ligand pdb files
+\item [-t, -{-}templates]  
+the name of ProtoMS template files
+\item [-pw, -{-}protwater]  
+the name of the solvent for protein
+\item [-lw, -{-}ligwater]  
+the name of the solvent for ligand
+\item [-o=run, -{-}out=run]  
+the prefix of the name of the command file
+\item [-{-}outfolder=out]  
+the ProtoMS output folder
+\item [-{-}gaff=gaff16]  
+the version of GAFF to use for ligand
+\item [-{-}lambdas={[}16{]}]  
+the lambda values or the number of lambdas
+\item [-{-}adams=0]  
+the Adam/B values for the GCMC
+\item [-{-}adamsrange]  
+the upper and lower Adam/B values for the GCMC and, optionally, the number of values desired (default value every 1.0), e.g. -1 -16 gives all integers between and including -1 and -16
+\item [-{-}jawsbias=0]  
+the bias for the JAWS-2
+\item [-{-}gcmcwater]  
+a pdb file with a box of water to do GCMC on
+\item [-{-}gcmcbox]  
+a pdb file with box dimensions for the GCMC box
+\item [-{-}watmodel=tip4p]  
+the name of the water model. Default = tip4p
 
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-l lig1.pdb lig2.pdb ...} = the name(s) of PDB file(s) containing ligand(s)}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-t template1 template2 ...} = the name(s) of ProtoMS template file(s) that needs to be loaded}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-pw protwat.pdb} = the name of a PDB file with bulk water for the protein}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-lw ligwat.pdb} = the name of a PDB file with bulk water for the ligand(s)}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the prefix for the created ProtoMS command file}] \leavevmode
-optional, default = run
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}outfolder folder} = the ProtoMS output folder}] \leavevmode
-optional, default = ``'' (empty string)
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}lambdas nlambdas \textbar{} lambda1 lambada2} ... = specification of \(\lambda\) space for free energy calculations}] \leavevmode
-optional, default = 16
-if a single value is given, this number of \(\lambda\)-values is created uniformly from 0 to 1
-if a list of values are given, this is the \(\lambda\)-values to use
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}adams B1 B2 ...} = the Adams parameter for GCMC}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}jawsbias bias} = the bias to apply in JAWS-2 simulations}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}gcmcwater wat.pdb} = the name of a PDB file with reservoir waters for GCMC and JAWS-1}] \leavevmode
-optional, no default
+Possible choices: tip3p, tip4p
+\item [-{-}nequil=5000000.0]  
+the number of equilibration steps
+\item [-{-}nprod=40000000.0]  
+the number of production steps
+\item [-{-}dumpfreq=100000.0]  
+the output dump frequency
+\item [-{-}absolute=False]  
+whether an absolute free energy calculation is to be run. Default=False
+\item [-{-}ranseed]  
+the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}gcmcbox box.pdb} = the name of a PDB file with GCMC or JAWS-1 simulation box dimension}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}nequil N} = the number of equilibration moves}] \leavevmode
-optional, default = 5E6
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}nprod N} = the number of production moves}] \leavevmode
-optional, default = 40E6
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}dumpfreq N} = the frequency with which output is written to disc}] \leavevmode
-optional, default = 1E5
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}absolute} = turns \emph{on} the setup of absolute free energies}] \leavevmode
-optional, default = off
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}dovacuum} = turns \emph{on} the setup of vacuum simulation}] \leavevmode
-optional, default = off
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4466,20 +4150,21 @@ The tool will create at most two ProtoMS command files, one for the protein simu
 
 \section{make\_dummy.py}
 \label{tools:make-dummy-py}
-\textbf{Syntax:}
 
-\code{make\_dummy.py -f pdbfile {[}-o outfile{]}}
-\begin{itemize}
-\item {} 
-\code{-f pdbfile} = the name of PDB file containing the solute
+Program make a dummy corresponding to a molecule
 
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of the created dummy PDB file}] \leavevmode
-optional, default = dummy.pdb
+\begin{alltt}
+usage: make\_dummy.py {[}-h{]} {[}-f FILE{]} {[}-o OUT{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-f, -{-}file]  
+the name of a PDB file
+\item [-o=dummy.pdb, -{-}out=dummy.pdb]  
+the name of the dummy PDB file
+\end{optionlist}
 
 \end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4497,26 +4182,26 @@ The dummy particle will be placed at the centre of the solute.
 
 \section{make\_gcmcbox.py}
 \label{tools:make-gcmcbox-py}
-\textbf{Syntax:}
 
-\code{make\_gcmcbox.py -s pdbfile {[}-o outfile{]} {[}-p padding{]}}
-\begin{itemize}
-\item {} 
-\code{-s pdbfile} = the name of a PDB file containing a solute molecule
+Program to make a PDB-file with box coordinates covering a solute molecules
 
-\item {} \begin{description}
-\item[{\code{-o outfile} = a PDB file with the created box}] \leavevmode
-optional, default = gcmc\_box.pdb
+\begin{alltt}
+usage: make\_gcmcbox.py {[}-h{]} {[}-s SOLUTE{]} {[}-p PADDING{]} {[}-o OUT{]}
+                       {[}-b BOX {[}BOX ...{]}{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-s, -{-}solute]  
+the name of the PDB-file containing the solute.
+\item [-p=2.0, -{-}padding=2.0]  
+the padding in A,default=2
+\item [-o=gcmc\_box.pdb, -{-}out=gcmc\_box.pdb]  
+the name of the box PDB-file
+\item [-b, -{-}box]  
+Either the centre of the box (x,y,z), or the centre of box AND length (x,y,z,x,y,z). If the centre is specified and the length isn't, twice the `padding' will be the lengths of a cubic box.
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-p padding} = the extra space to add to the box in each dimension}] \leavevmode
-optional, default = 2.0 A
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4545,35 +4230,32 @@ When an appropriate box has been made, it can be used by \code{solvate.py} to fi
 
 \section{make\_single.py}
 \label{tools:make-single-py}
-\textbf{Syntax:}
 
-\code{make\_single.py -t0 template0 -t1 template1 -p0 pdbfile0 -p1 pdbfile1 {[}-m map{]} {[}-o outfile{]}}
-\begin{itemize}
-\item {} 
-\code{-t0 template0} = the name of a ProtoMS template file of solute at \(\lambda=0.0\)
+Program to setup template files for single-toplogy perturbations semi-automatically
 
-\item {} 
-\code{-t1 template1} = the name of a ProtoMS template file of solute at \(\lambda`=1.0\)
-
-\item {} 
-\code{-p0 pdbfile0} = the name of a PDB file of the solute at \(\lambda=0.0\)
-
-\item {} 
-\code{-p1 pdbfile1} = the name of a PDB file of the solute at \(\lambda=1.0\)
-
-\item {} \begin{description}
-\item[{\code{-m map} = the name of a correspondence map}] \leavevmode
-optional, no default
+\begin{alltt}
+usage: make\_single.py {[}-h{]} {[}-t0 TEM0{]} {[}-t1 TEM1{]} {[}-p0 PDB0{]} {[}-p1 PDB1{]}
+                      {[}-m MAP{]} {[}-o OUT{]} {[}--gaff GAFF{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-t0, -{-}tem0]  
+Template file for V0
+\item [-t1, -{-}tem1]  
+Template file for V1
+\item [-p0, -{-}pdb0]  
+PDB-file for V0
+\item [-p1, -{-}pdb1]  
+PDB-file for V1
+\item [-m, -{-}map]  
+the correspondance map from V0 to V1
+\item [-o=single, -{-}out=single]  
+prefix of the output file
+\item [-{-}gaff=gaff16]  
+the version of GAFF to use for ligand
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the start of the name of the created single-topology templates}] \leavevmode
-optional, default = single
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4600,17 +4282,21 @@ A summary of the charges and van der Waals parameters in the four states will be
 
 \section{merge\_templates.py}
 \label{tools:merge-templates-py}
-\textbf{Syntax:}
 
-\code{merge\_templates.py -f file1 file2 {[}file3 ...{]} -o outfile}
-\begin{itemize}
-\item {} 
-\code{-f file1 file2 file3} ... = the ProtoMS template files that should be merged
+Program merge a series of ProtoMS template files
 
-\item {} 
-\code{-o outfile} = the name of the merged ProtoMS templatefile
+\begin{alltt}
+usage: make\_templates.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the name of the template files
+\item [-o, -{-}out]  
+the name of the merged template file
+\end{optionlist}
 
-\end{itemize}
+\end{description}
 
 \textbf{Examples:}
 
@@ -4627,40 +4313,28 @@ The force field parameters in \code{file2} will be re-numbered so that they do n
 
 \section{plot\_theta.py}
 \label{tools:plot-theta-py}
-\textbf{Syntax:}
-\code{plot\_theta.py {[}-h{]} {[}-r results{]} {[}-s restart{]} {[}-m molecule{]} {[}-p plotname{]} {[}-{-}skip{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-r results} = the name of the results file}] \leavevmode
-optional, deafult = `results'
+
+Program to plot the theta distribution of a given molecule, result from a JAWS simulation
+
+\begin{alltt}
+usage: plot\_theta.py {[}-h{]} {[}-r RESULTS{]} {[}-s RESTART{]} {[}-m MOLECULE{]}
+                     {[}-p PLOTNAME{]} {[}--skip SKIP{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-r=results, -{-}results=results]  
+the name of the results file. Deafult='results'
+\item [-s=restart, -{-}restart=restart]  
+the replica values to plot. Default='restart'
+\item [-m=WAT, -{-}molecule=WAT]  
+the residue name of the JAWS molecule. Default='WAT'
+\item [-p=theta\_dist, -{-}plotname=theta\_dist]  
+the start of the filename for the plots generated. Default='theta\_dist'
+\item [-{-}skip=0]  
+the number of results snapshots to skip, Default = 0
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-s restart} = the replica values to plot}] \leavevmode
-optional, default = `restart'
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-m molecule} = the residue name of the JAWS molecule}] \leavevmode
-optional, default = `WAT'
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-p plotname} = the start of the filename for the plots generated}] \leavevmode
-optional, default = `theta\_dist'
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}skip} = the number of results snapshots to skip}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4678,59 +4352,34 @@ Two different histograms will be generated. One in which all different copies of
 
 \section{pms2pymbar.py}
 \label{tools:pms2pymbar-py}
-\textbf{Syntax:}
 
-\code{pms2pymbar.py {[}-d directory{]} {[}-r results{]} {[}-o outfile{]} {[}-s nskip{]} {[}-m nmax{]} {[}-t temperature{]} {[}-{-}run{]} {[}-{-}nobar{]}}
-\begin{itemize}
-\item {} \begin{description}
-\item[{\code{-d directory} = name of output directory of the simulation}] \leavevmode
-optional, default = current working directory (.)
+Program to extract ProtoMS results for pymbar
 
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-r results} = the beginning of the name of the file to analyse}] \leavevmode
-optional, default = results
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of file with all energy values}] \leavevmode
-optional, default = pymbar\_energy
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-s nskip} = the number of snapshots to skip at the beginning of the simulation}] \leavevmode
-optional, default = 0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-m nmax} = the maximum number of snapshots to process}] \leavevmode
-optional, default = the total number of snapshot in the results file, excluding nskip
+\begin{alltt}
+usage: pms2pymbar.py {[}-h{]} {[}-d DIRECTORY{]} {[}-r RESULTS{]} {[}-o OUT{]} {[}-s SKIP{]}
+                     {[}-m MAX{]} {[}-t TEMPERATURE{]} {[}--run{]} {[}--nobar{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-d=./, -{-}directory=./]  
+the root directory that contains all the output files of the simulation. Default is cwd.
+\item [-r=results, -{-}results=results]  
+the name of the file to analyse. Default is results. 
+\item [-o=pymbar\_energy, -{-}out=pymbar\_energy]  
+the name of the file to write. Default is pymbar\_energy. 
+\item [-s=0, -{-}skip=0]  
+the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
+\item [-m=99999, -{-}max=99999]  
+the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0
+\item [-t=25.0, -{-}temperature=25.0]  
+the simulation temperature in degrees. Default is 25.0
+\item [-{-}run=False]  
+whether to run pymbar
+\item [-{-}nobar=False]  
+whether to run bar
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-t temperature} = the simulation temperature in degree Celsius}] \leavevmode
-optional, default = 25 degrees
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}run} = flag indicating if to run pymbar}] \leavevmode
-optional, default = No
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}nobar} = flag indicating if to estimate BAR}] \leavevmode
-optional, default = No
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4754,85 +4403,53 @@ Alternatively, if PyMBAR is properly installed and can be loaded as a python lib
 
 \section{scoop.py}
 \label{tools:scoop-py}
-\textbf{Syntax:}
 
-\code{scoop.py -p proteinfile {[}-l ligandfile{]} {[}-o outfile{]} {[}-{-}center center{]} {[}-{-}innercut icut{]} {[}-{-}outercut ocut{]} {[}-{-}flexin sidechain\textbar{}flexible\textbar{}rigid{]} {[}-{-}flexout sidechain\textbar{}flexible\textbar{}rigid{]} {[}-{-}terminal keep\textbar{}doublekeep\textbar{}neutralize{]} {[}-{-}excluded res1 res2 ...{]} {[}-{-}added res1 res2 ...{]}}
-\begin{itemize}
-\item {} 
-\code{-p proteinfile} = the name of a PDB file containing the protein
+Program scoop a protein pdb-file
 
-\item {} \begin{description}
-\item[{\code{-l ligandfile} = the name of a PDB file containing a ligand}] \leavevmode
-optional, no default
+\begin{alltt}
+usage: scoop.py {[}-h{]} {[}-p PROTEIN{]} {[}-l LIGAND{]} {[}-o OUT{]} {[}--center CENTER{]}
+                {[}--innercut INNERCUT{]} {[}--outercut OUTERCUT{]}
+                {[}--flexin \{sidechain,flexible,rigid\}{]}
+                {[}--flexout \{sidechain,flexible,rigid\}{]}
+                {[}--terminal \{keep,doublekeep,neutralize\}{]}
+                {[}--excluded EXCLUDED {[}EXCLUDED ...{]}{]}
+                {[}--added ADDED {[}ADDED ...{]}{]} {[}--scooplimit SCOOPLIMIT{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-p, -{-}protein]  
+the protein PDB-file
+\item [-l, -{-}ligand]  
+the ligand PDB-file
+\item [-o=scoop.pdb, -{-}out=scoop.pdb]  
+the output PDB-file
+\item [-{-}center=0.0 0.0 0.0]  
+the center of the scoop, if ligand is not available, either a string or a file with the coordinates
+\item [-{-}innercut=16.0]  
+maximum distance from ligand defining inner region of the scoop
+\item [-{-}outercut=20.0]  
+maximum distance from ligand defining outer region of the scoop
+\item [-{-}flexin=flexible]  
+the flexibility of the inner region
 
-\end{description}
+Possible choices: sidechain, flexible, rigid
+\item [-{-}flexout=sidechain]  
+the flexibility of the inner region
 
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of the truncated PDB file}] \leavevmode
-optional, default = scoop.pdb
+Possible choices: sidechain, flexible, rigid
+\item [-{-}terminal=neutralize]  
+controls of to deal with charged terminal
 
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}center center} = the centre of the scoop}] \leavevmode
-optional, default = 0.0,0.0,0.0
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}innercut icut} == the inner region cut-off in Angstroms}] \leavevmode
-optional, default = 16.0 A
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}outercut ocut} == the outer region cut-off in Angstroms}] \leavevmode
-optional, default = 20.0 A
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}flexin sidechain\textbar{}flexible\textbar{}rigid} = determine the flexibility of the inner region}] \leavevmode
-optional, default = flexible
-\code{sidechain} = only the sidechains will be sampled in the simulation
-\code{flexible} = both sidechain and backbone will be sampled in the simulation
-\code{rigid} = no residues will be sampled
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}flexout} sidechain\textbar{}flexible\textbar{}rigid = determine the flexibility of the outer region}] \leavevmode
-optional, default = sidechain
-\code{sidechain} = only the sidechains will be sampled in the simulation
-\code{flexible} = both sidechain and backbone will be sampled in the simulation
-\code{rigid} = no residues will be sampled
+Possible choices: keep, doublekeep, neutralize
+\item [-{-}excluded={[}{]}]  
+a list of indices for residues to be excluded from scoops
+\item [-{-}added={[}{]}]  
+a list of indices for residues to be included in outer scoops
+\item [-{-}scooplimit=10]  
+the minimum difference between number of residues in protein and scoop for scoop to be retained
+\end{optionlist}
 
 \end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}terminal} keep\textbar{}doublekeep\textbar{}neutralize = determines the treatment of charged terminal residues}] \leavevmode
-optional, default = neutralize
-\code{keep} = keep any charged terminal
-\code{doublekeep} = keep charged terminal but only if both are in the scoop
-\code{neutralize} = neutralize any charged terminal within the scoop
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}excluded res1 res2} ...}] \leavevmode
-one or more reside numbers
-optional, default = none
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-{-}added res1 res2} ...}] \leavevmode
-one or more reside numbers
-optional, default = none
-
-\end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4863,67 +4480,69 @@ The PDB file will contain specific instructions for ProtoMS to automatically enf
 
 \section{solvate.py}
 \label{tools:solvate-py}
-\textbf{Syntax:}
 
-\code{solvate.py -b boxfile {[}-s solutefile{]} {[}-pr proteinfile{]} {[}-o outfile{]} {[}-g box\textbar{}droplet\textbar{}flood{]} {[}-p padding{]} {[}-r radius{]} {[}-center{]} {[}-n Amber\textbar{}ProtoMS{]}}
-\begin{itemize}
-\item {} 
-\code{-b boxfile} = the name of a PDB file with pre-equilibrated waters
+Program to solvate a solute molecule in either a box or a droplet
 
-\item {} \begin{description}
-\item[{\code{-s solutefile} = the name of a PDB file with a solute molecule}] \leavevmode
-optional, no default
+\begin{alltt}
+usage: solvate.py {[}-h{]} {[}-b BOX{]} {[}-s SOLUTE{]} {[}-pr PROTEIN{]} {[}-o OUT{]}
+                  {[}-g \{box,droplet,flood\}{]} {[}-p PADDING{]} {[}-r RADIUS{]}
+                  {[}-c CENTER{]} {[}-n \{Amber,ProtoMS\}{]} {[}--offset OFFSET{]}
+                  {[}--setupseed SETUPSEED{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-b=, -{-}box=]  
+a PDB-file containing a pre-equilibrated box of water molcules
+\item [-s, -{-}solute]  
+a PDB-file containing the solute molecule
+\item [-pr, -{-}protein]  
+a PDB-file containing the protein molecule
+\item [-o=solvent\_box.pdb, -{-}out=solvent\_box.pdb]  
+the name of the output PDB-file containing the added water, default solvent\_box.pdb
+\item [-g=box, -{-}geometry=box]  
+the geometry of the added water, should be either `box', `droplet' or `flood'
 
-\end{description}
+Possible choices: box, droplet, flood
+\item [-p=10.0, -{-}padding=10.0]  
+the minimum distance between the solute and the box edge, default=10 A
+\item [-r=30.0, -{-}radius=30.0]  
+the radius of the droplet, default=30A
+\item [-c=cent, -{-}center=cent]  
+definition of center, default='cent'
+\item [-n=ProtoMS, -{-}names=ProtoMS]  
+the naming convention, should be either Amber or ProtoMS
 
-\item {} \begin{description}
-\item[{\code{-pr proteinfile} = the name of a PDB file with a protein}] \leavevmode
-optional, no default
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-o outfile} = the name of the created water box}] \leavevmode
-optional, default = solvent\_box.pdb
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-g box\textbar{}droplet\textbar{}flood}}] \leavevmode
-optional, default = box
-\code{box} = a box of water molecules will be created
-\code{droplet} = a droplet of water molecules will be created
-\code{flood} = a box will be flooded with water molecules
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-p padding} = the minimum distance between solute and the box edge}] \leavevmode
-optional, default = 10.0 A
-
-\end{description}
-
-\item {} \begin{description}
-\item[{\code{-r radius} = the radius of the water droplet}] \leavevmode
-optional, default = 30.0 A
+Possible choices: Amber, ProtoMS
+\item [-{-}offset=0.89]  
+the offset to be added to vdW radii of the atoms to avoid overfilling cavities with water.
+\item [-{-}setupseed]  
+optional random number seed for generation of water coordinates..
+\end{optionlist}
 
 \end{description}
 
-\item {} \begin{description}
-\item[{\code{-c center} = the center of the droplet}] \leavevmode
-optional, default = ``cent''
+\begin{quote}
+
+if -b or -s are not supplied on the command-line, the program will ask for them.
+
+-c can be either `cent' or a string containing 1, 2 or 3 numbers. If 1 number is
+given it will be used as center of the droplet in x, y, and z. If 2 numbers are 
+given this is interpreted as an atom range, such that the droplet will be centered 
+on the indicated atoms, and if 3 numbers are given this is directly taken as the
+center of droplet
+\begin{description}
+\item[{Example usages:}] \leavevmode\begin{description}
+\item[{solvate.py -b \$\{PROTOMSHOME\}/tools/sbox1.pdb -s solute.pdb}] \leavevmode
+(will solvate `solute.pdb' in a box that extends at least 10 A from the solute)
+
+\item[{solvate.py -b \$\{PROTOMSHOME\}/tools/sbox1.pdb -s protein.pdb -g droplet -r 25.0}] \leavevmode
+(will solvate `protein.pdb' in a 25 A droplet centered on all coordinates)
 
 \end{description}
 
-\item {} \begin{description}
-\item[{\code{-n Amber\textbar{}ProtoMS} = the name style of the created water molecules}] \leavevmode
-optional, default = ProtoMS
-\code{Amber} = Amber naming convention
-\code{ProtoMS} = ProtoMS naming convention
-
 \end{description}
+\end{quote}
 
-\end{itemize}
 
 \textbf{Examples:}
 
@@ -4953,20 +4572,23 @@ The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulati
 
 \section{split\_jawswater.py}
 \label{tools:split-jawswater-py}
-\textbf{Syntax:}
 
-\code{split\_jawswater.py -w pdbfile {[}-o outprefix{]}}
-\begin{itemize}
-\item {} 
-\code{-w pdbfile} = the name of PDB file with water molecules
+Program to split JAWS-1 waters to a number of PDB-files for JAWS-2
 
-\item {} \begin{description}
-\item[{\code{-o outprefix} = the prefix appended to all output files}] \leavevmode
-optional, default = ``'' (empty string)
+\begin{alltt}
+usage: split\_jawswater.py {[}-h{]} {[}-w WATERS{]} {[}-o OUT{]} {[}--jaws2box{]}
+\end{alltt}
+\begin{description}
+\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item [-w, -{-}waters]  
+the name of the PDB-file containing the waters.
+\item [-o=, -{-}out=]  
+the prefix of the output PDB-files
+\item [-{-}jaws2box=False]  
+whether to apply a header box for jaws2 to the pdb files of individual waters
+\end{optionlist}
 
 \end{description}
-
-\end{itemize}
 
 \textbf{Examples:}
 

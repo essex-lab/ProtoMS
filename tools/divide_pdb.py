@@ -63,10 +63,7 @@ def divide_print(common,prefix) :
 
   return
 
-
-
-if __name__ == '__main__' :
-
+def get_arg_parser ():
   import argparse
 
   
@@ -75,7 +72,12 @@ if __name__ == '__main__' :
   parser.add_argument('-i','--input',help="The name of your multi pdb file. Default = all.pdb",default="all.pdb")
   parser.add_argument('-o','--output',help="The basename of your individual pdb files. Default = snapshot_",default="snapshot_")
   parser.add_argument('-p','--path',help="Where the input should be found and the output printed. Default = ./",default="./")
-  args = parser.parse_args()
+  return parser
+
+
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   # Make sure that the input file exists and get the prefix
   commonprefix = _get_prefix(args.input)

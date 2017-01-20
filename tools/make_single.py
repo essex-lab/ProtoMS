@@ -608,14 +608,8 @@ def summarize(eletem,vdwtem,loggfunc) :
   for comment,var in zip(vdwtem.templates[0].variables[:-1:2],vdwtem.templates[0].variables[1::2]) :
     loggfunc("%s %s"%(var,comment))
 
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
-  import copy
-
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to setup template files for single-toplogy perturbations semi-automatically")
   parser.add_argument('-t0','--tem0',help="Template file for V0")
@@ -625,7 +619,15 @@ if __name__ == '__main__' :
   parser.add_argument('-m','--map',help="the correspondance map from V0 to V1")
   parser.add_argument('-o','--out',help="prefix of the output file",default="single")
   parser.add_argument('--gaff',help="the version of GAFF to use for ligand", default="gaff16")
-  args = parser.parse_args()
+  return parser
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  import copy
+
+  args = get_arg_parser().parse_args()
   
   # Setup the logger
   logger = sim.setup_logger("make_single_py.log")

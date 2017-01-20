@@ -181,10 +181,7 @@ def _printpdb(coords,molpdb,resid,theta,filename):
 			template[56:60]='{:<4}'.format(round(theta,2))	# Printing the molecules theta value in the occupancy column.
 		print >> filename, template
 
-
-
-if __name__ == "__main__":
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -197,7 +194,11 @@ if __name__ == "__main__":
   parser.add_argument('-c','--cutoff',type=float,help="the distance cutoff that defines whether conformations belong to a cluster, default=2.0",default=2.0)
   parser.add_argument('--skip',type=int,help="the number of blocks to skip to calculate the clusters. default is 0. Skip must be greater or equal to 0",default=0)
   parser.add_argument('--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
-  args = parser.parse_args()
+  return parser
+
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   if not args.files :
     print "No input files! Nothing to do, so exit."

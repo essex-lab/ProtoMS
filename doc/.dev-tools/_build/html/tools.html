@@ -131,6 +131,11 @@ run_antechamber
 run_parmchk</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
+<dt id="tools.ambertools.get_cmd_args">
+<code class="descclassname">tools.ambertools.</code><code class="descname">get_cmd_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.ambertools.get_cmd_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="tools.ambertools.run_antechamber">
 <code class="descclassname">tools.ambertools.</code><code class="descname">run_antechamber</code><span class="sig-paren">(</span><em>lig</em>, <em>charge</em>, <em>resnam=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.ambertools.run_antechamber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for antechamber with default parameters and AM1-BCC charges</p>
@@ -309,7 +314,7 @@ has not been defined and where the bond has not been traversed</p>
 
 <dl class="function">
 <dt id="tools.build_template.build_template">
-<code class="descclassname">tools.build_template.</code><code class="descname">build_template</code><span class="sig-paren">(</span><em>temfile</em>, <em>prepifile</em>, <em>translate=0.25</em>, <em>rotate=5</em>, <em>zmatfile=None</em>, <em>frcmodfile=None</em>, <em>resname='UNK'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.build_template.build_template" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.build_template.</code><code class="descname">build_template</code><span class="sig-paren">(</span><em>temfile</em>, <em>prepifile</em>, <em>translate=0.25</em>, <em>rotate=5</em>, <em>zmatfile=None</em>, <em>frcmodfile=None</em>, <em>resname='UNK'</em>, <em>alldihs=False</em>, <em>gaffversion='gaff16'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.build_template.build_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build a ProtoMS template file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -342,6 +347,14 @@ has not been defined and where the bond has not been traversed</p>
 <p><strong>resname</strong> : string, optional</p>
 <blockquote>
 <div><p>the name of solute</p>
+</div></blockquote>
+<p><strong>alldihs</strong> : boolean, optional</p>
+<blockquote>
+<div><p>set True to sample improper dihedrals</p>
+</div></blockquote>
+<p><strong>gaffversion</strong> : string, optional</p>
+<blockquote>
+<div><p>the version of GAFF to use</p>
 </div></blockquote>
 </td>
 </tr>
@@ -629,6 +642,26 @@ writeDX</p>
 <div class="section" id="module-tools.calc_gcsingle">
 <span id="tools-calc-gcsingle-module"></span><h2>tools.calc_gcsingle module<a class="headerlink" href="#module-tools.calc_gcsingle" title="Permalink to this headline">¶</a></h2>
 <p>Program to analyze GCMC simulations</p>
+<dl class="function">
+<dt id="tools.calc_gcsingle.fit_single">
+<code class="descclassname">tools.calc_gcsingle.</code><code class="descname">fit_single</code><span class="sig-paren">(</span><em>B</em>, <em>N</em>, <em>initial</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_gcsingle.fit_single" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_gcsingle.gaussian_smooth">
+<code class="descclassname">tools.calc_gcsingle.</code><code class="descname">gaussian_smooth</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>sigma=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_gcsingle.gaussian_smooth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_gcsingle.logistic_single">
+<code class="descclassname">tools.calc_gcsingle.</code><code class="descname">logistic_single</code><span class="sig-paren">(</span><em>B</em>, <em>dF</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_gcsingle.logistic_single" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_gcsingle.plot_FitPercentiles">
+<code class="descclassname">tools.calc_gcsingle.</code><code class="descname">plot_FitPercentiles</code><span class="sig-paren">(</span><em>B</em>, <em>N</em>, <em>dF_samples</em>, <em>resolution=None</em>, <em>level1=None</em>, <em>level1_colour=None</em>, <em>level2=None</em>, <em>level2_colour=None</em>, <em>median_colour=None</em>, <em>smoothness=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_gcsingle.plot_FitPercentiles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.calc_replicapath">
 <span id="tools-calc-replicapath-module"></span><h2>tools.calc_replicapath module<a class="headerlink" href="#module-tools.calc_replicapath" title="Permalink to this headline">¶</a></h2>
@@ -1084,8 +1117,76 @@ lambdas : list</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.calc_ti.print_ene">
+<code class="descclassname">tools.calc_ti.</code><code class="descname">print_ene</code><span class="sig-paren">(</span><em>lam</em>, <em>ene</em>, <em>std</em>, <em>print_uncert</em>, <em>print_lam</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_ti.print_ene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print energy row to standard output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lam</strong> : float</p>
+<blockquote>
+<div><p>the lambda value</p>
+</div></blockquote>
+<p><strong>ene</strong> : float</p>
+<blockquote>
+<div><p>the energy value</p>
+</div></blockquote>
+<p><strong>std</strong> : float</p>
+<blockquote>
+<div><p>the uncertainty</p>
+</div></blockquote>
+<p><strong>print_uncert</strong> : boolean</p>
+<blockquote>
+<div><p>if to print the uncertainty</p>
+</div></blockquote>
+<p><strong>print_lam</strong> : boolean</p>
+<blockquote class="last">
+<div><p>if to print the lambda value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_ti.print_head">
+<code class="descclassname">tools.calc_ti.</code><code class="descname">print_head</code><span class="sig-paren">(</span><em>lam</em>, <em>ene</em>, <em>std</em>, <em>print_uncert</em>, <em>print_lam</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_ti.print_head" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print energy header to standard output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lam</strong> : string</p>
+<blockquote>
+<div><p>the header of the lambda value</p>
+</div></blockquote>
+<p><strong>ene</strong> : string</p>
+<blockquote>
+<div><p>the header of the energy value</p>
+</div></blockquote>
+<p><strong>std</strong> : string</p>
+<blockquote>
+<div><p>the header of the uncertainty</p>
+</div></blockquote>
+<p><strong>print_uncert</strong> : boolean</p>
+<blockquote>
+<div><p>if to print the uncertainty</p>
+</div></blockquote>
+<p><strong>print_lam</strong> : boolean</p>
+<blockquote class="last">
+<div><p>if to print the lambda value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.calc_ti.ti">
-<code class="descclassname">tools.calc_ti.</code><code class="descname">ti</code><span class="sig-paren">(</span><em>path</em>, <em>res_tem</em>, <em>skip</em>, <em>maxread</em>, <em>verbose</em>, <em>numkind</em>, <em>useanalytical</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_ti.ti" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.calc_ti.</code><code class="descname">ti</code><span class="sig-paren">(</span><em>path</em>, <em>res_tem</em>, <em>skip</em>, <em>maxread</em>, <em>verbose</em>, <em>numkind</em>, <em>useanalytical</em>, <em>subd=''</em>, <em>auto=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_ti.ti" title="Permalink to this definition">¶</a></dt>
 <dd><p>Do thermodynamic integration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1118,6 +1219,10 @@ lambdas : list</p>
 <p><strong>useanalytical</strong> : boolean</p>
 <blockquote>
 <div><p>if to use analytical gradients</p>
+</div></blockquote>
+<p><strong>subd</strong> : string</p>
+<blockquote>
+<div><p>optional subdirectory to check for each lambda value</p>
 </div></blockquote>
 </td>
 </tr>
@@ -1487,7 +1592,7 @@ in the following order :</p>
 <div>origin in x | origin in y | origin in z | length in x | length in y | length in z</div></blockquote>
 <p>And either the number of molecules as a string convertible to integer,
 or the pdb, which can be provided as a string with the name of the file, or an object.</p>
-<p>It produces a pdb file with the randomly distributed molecules with their oxigen atoms
+<p>It produces a pdb file with the randomly distributed molecules with their oxygen atoms
 within the box limits.</p>
 <p>Initially thought to generate JAWS or GCMC molecules</p>
 <p>Can be executed from the command line as a stand-alone program</p>
@@ -1527,7 +1632,7 @@ the atoms in the residue</p>
 
 <dl class="function">
 <dt id="tools.distribute_waters.distribute_particles">
-<code class="descclassname">tools.distribute_waters.</code><code class="descname">distribute_particles</code><span class="sig-paren">(</span><em>box</em>, <em>particles</em>, <em>watermodel='t4p'</em>, <em>resname='WAT'</em>, <em>partnumb=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.distribute_waters.distribute_particles" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.distribute_waters.</code><code class="descname">distribute_particles</code><span class="sig-paren">(</span><em>box</em>, <em>particles</em>, <em>watermodel='t4p'</em>, <em>resname='WA1'</em>, <em>partnumb=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.distribute_waters.distribute_particles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomly distribute molecules in a box</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1535,7 +1640,7 @@ the atoms in the residue</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>box</strong> : a list or dictionary</p>
 <blockquote>
-<div><p>the origin and lenght of the box
+<div><p>the origin and length of the box
 where the molecules will be placed</p>
 </div></blockquote>
 <p><strong>particles</strong> : string or PDB object</p>
@@ -1547,7 +1652,7 @@ to include in the box</p>
 <p><strong>watermodel</strong> : string, optional</p>
 <blockquote>
 <div><p>(only used when particles is a number)
-either &#8220;t4p&#8221; or &#8220;t3p&#8221;
+for instance, &#8220;t4p&#8221;, &#8220;tip4p&#8221;, &#8220;t3p&#8221; &#8220;tip3p&#8221;,
 the water model for the generated waters</p>
 </div></blockquote>
 <p><strong>partnumb</strong> : string,optional</p>
@@ -1617,7 +1722,7 @@ DualTopology</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="class">
 <dt id="tools.generate_input.DualTopology">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">DualTopology</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute1.pdb', 'solute2.pdb'], solvent='water.pdb', templates=['solute1.tem', 'solute2.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, outfolder='out', restrained=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.DualTopology" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">DualTopology</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute1.pdb', 'solute2.pdb'], solvent='water.pdb', templates=['solute1.tem', 'solute2.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, ranseed=None, lambdaval=None, outfolder='out', restrained=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.DualTopology" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for a dual-topology protein-ligand simulation
 Generates input for proteins, solutes and solvent
@@ -1673,7 +1778,7 @@ equilibrate and production run</p>
 
 <dl class="class">
 <dt id="tools.generate_input.Equilibration">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Equilibration</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder='', nsteps=100000.0, pdbfile='equilibrated.pdb'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Equilibration" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Equilibration</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder='', ranseed=None, nsteps=100000.0, pdbfile='equilibrated.pdb'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Equilibration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for equilibration of a protein-ligand system
 Generates input for proteins, solutes and solvent and write an equilibration and a pdb chunk</p>
@@ -1726,7 +1831,7 @@ Generates input for proteins, solutes and solvent and write an equilibration and
 
 <dl class="class">
 <dt id="tools.generate_input.GCMC">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">GCMC</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>gcmcwater='gcmc_water.pdb'</em>, <em>gcmcbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em>, <em>adamval=None</em>, <em>outfolder='out_gcmc'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.GCMC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">GCMC</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>gcmcwater='gcmc_water.pdb'</em>, <em>gcmcbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em>, <em>adamval=None</em>, <em>ranseed=None</em>, <em>watmodel='tip4p'</em>, <em>outfolder='out_gcmc'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.GCMC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for a GCMC simulation
 Generates input for proteins, solutes and solvent
@@ -1782,7 +1887,7 @@ equilibrate and production run</p>
 
 <dl class="class">
 <dt id="tools.generate_input.Jaws1">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Jaws1</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>outfolder=''</em>, <em>jawswater='jaws_water.pdb'</em>, <em>jawsbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Jaws1" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Jaws1</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>outfolder=''</em>, <em>ranseed=None</em>, <em>jawswater='jaws_water.pdb'</em>, <em>jawsbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>watmodel='tip4p'</em>, <em>dumpfreq=100000.0</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Jaws1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for a JAWS-1 simulation
 Generates input for proteins, solutes and solvent
@@ -1838,7 +1943,7 @@ equilibrate and production run</p>
 
 <dl class="class">
 <dt id="tools.generate_input.Jaws2">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Jaws2</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>outfolder=''</em>, <em>jawswater='jaws_water.pdb'</em>, <em>jbias=6.5</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Jaws2" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Jaws2</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>outfolder=''</em>, <em>ranseed=None</em>, <em>jawswater='jaws_water.pdb'</em>, <em>jbias=6.5</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>watmodel='tip4p'</em>, <em>dumpfreq=100000.0</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Jaws2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for a JAWS-2 simulation
 Generates input for proteins, solutes and solvent
@@ -1894,7 +1999,7 @@ equilibrate and production run</p>
 
 <dl class="class">
 <dt id="tools.generate_input.ProteinLigandSimulation">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">ProteinLigandSimulation</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.ProteinLigandSimulation" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">ProteinLigandSimulation</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder=None, ranseed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.ProteinLigandSimulation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProtoMSSimulation" title="tools.generate_input.ProtoMSSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProtoMSSimulation</span></code></a></p>
 <p>This a generic command file for a protein-ligand simulation
 Generates input for proteins, solutes and solvent but does not write any chunks</p>
@@ -2261,8 +2366,61 @@ information, or can write this information to a command file.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="tools.generate_input.RestraintRelease">
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">RestraintRelease</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute1.pdb'], solvent='water.pdb', templates=['solute.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, ranseed=None, outfolder='out', restrained=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.RestraintRelease" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
+<p>Command file to calculate the free energy of introducing a harmonic restraint
+during the bound leg of a simulation.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">clear</span></code>()</td>
+<td>Clear the simulation description</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">readCommandFile</span></code>(filename)</td>
+<td>Read in a simulation from a command file</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">run</span></code>(exe[,&nbsp;cmdfile])</td>
+<td>Run this simulation</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">setChunk</span></code>(chunk)</td>
+<td>This adds the simulation chunk to &#8216;chunk&#8217;.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">setDump</span></code>(dump,&nbsp;freq)</td>
+<td>This adds the simulation dump to &#8216;dump&#8217; with frequnecy freq</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">setForceField</span></code>(filename)</td>
+<td>Set the filename for parfile</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">setParameter</span></code>(parameter,&nbsp;value)</td>
+<td>Set the parameter to value</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">setProtein</span></code>(n,&nbsp;filename)</td>
+<td>Set the filename for proteinN.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">setSolute</span></code>(n,&nbsp;filename)</td>
+<td>Set the filename for soluteN.</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">setSolvent</span></code>(n,&nbsp;filename)</td>
+<td>Set the filename for solventN.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">setStream</span></code>(stream,&nbsp;filename)</td>
+<td>Set the direction of the output stream to a filename</td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">writeCommandFile</span></code>(filename)</td>
+<td>Write the contents of this simulation object to disc</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
 <dt id="tools.generate_input.Sampling">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Sampling</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder='', nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, outprefix=''</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Sampling" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">Sampling</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute.pdb'], solvent='water.pdb', templates=['solute.tem'], outfolder='', ranseed=None, nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, outprefix='', tune=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.Sampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for MC sampling of a protein-ligand system
 Generates input for proteins, solutes and solvent and write 
@@ -2316,7 +2474,7 @@ chunks for equilibration and simulation, as well as dumps</p>
 
 <dl class="class">
 <dt id="tools.generate_input.SingleTopology">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">SingleTopology</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute1.pdb'], solvent='water.pdb', templates=['solute.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, outfolder='out', restrained=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.SingleTopology" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">SingleTopology</code><span class="sig-paren">(</span><em>protein='protein.pdb', solutes=['solute1.pdb'], solvent='water.pdb', templates=['solute.tem'], nequil=5000000.0, nprod=40000000.0, dumpfreq=100000.0, lambdaval=None, ranseed=None, outfolder='out', restrained=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.SingleTopology" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for a single-topology protein-ligand simulation
 Generates input for proteins, solutes and solvent
@@ -2372,7 +2530,7 @@ equilibrate and production run</p>
 
 <dl class="function">
 <dt id="tools.generate_input.generate_input">
-<code class="descclassname">tools.generate_input.</code><code class="descname">generate_input</code><span class="sig-paren">(</span><em>protein</em>, <em>ligands</em>, <em>templates</em>, <em>protein_water</em>, <em>ligand_water</em>, <em>settings</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.generate_input" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.generate_input.</code><code class="descname">generate_input</code><span class="sig-paren">(</span><em>protein</em>, <em>ligands</em>, <em>templates</em>, <em>protein_water</em>, <em>ligand_water</em>, <em>ranseed</em>, <em>settings</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.generate_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates ProtoMS command files</p>
 <p>If protein is a valid filename a protein(-ligand) simulation is setup, and if
 ligands contains at least one valid filename a ligand simulation is setup.</p>
@@ -2489,6 +2647,11 @@ make_gcmcbox</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.make_gcmcbox.print_bequil">
+<code class="descclassname">tools.make_gcmcbox.</code><code class="descname">print_bequil</code><span class="sig-paren">(</span><em>boxlen</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_gcmcbox.print_bequil" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.make_single">
 <span id="tools-make-single-module"></span><h2>tools.make_single module<a class="headerlink" href="#module-tools.make_single" title="Permalink to this headline">¶</a></h2>
@@ -2500,7 +2663,7 @@ summarize</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.make_single.make_single">
-<code class="descclassname">tools.make_single.</code><code class="descname">make_single</code><span class="sig-paren">(</span><em>tem1</em>, <em>tem2</em>, <em>pdb1</em>, <em>pdb2</em>, <em>mapfile=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_single.make_single" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.make_single.</code><code class="descname">make_single</code><span class="sig-paren">(</span><em>tem1</em>, <em>tem2</em>, <em>pdb1</em>, <em>pdb2</em>, <em>mapfile=None</em>, <em>gaffversion='gaff16'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_single.make_single" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make single topology templates</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2525,6 +2688,10 @@ summarize</p>
 <p><strong>mapfile</strong> : string, optional</p>
 <blockquote>
 <div><p>filename of map of correspondance</p>
+</div></blockquote>
+<p><strong>gaffversion</strong> : str, optional</p>
+<blockquote>
+<div><p>version of gaff to use, defaults to gaff16</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2626,8 +2793,13 @@ merge_templates</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">TemplateFile</p>
-<blockquote class="last">
+<blockquote>
 <div><p>the merged template file</p>
+</div></blockquote>
+<p>or</p>
+<p>string</p>
+<blockquote class="last">
+<div><p>the filename of the single unique template</p>
 </div></blockquote>
 </td>
 </tr>
@@ -2768,7 +2940,7 @@ scoop</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
 <dt id="tools.scoop.scoop">
-<code class="descclassname">tools.scoop.</code><code class="descname">scoop</code><span class="sig-paren">(</span><em>protein</em>, <em>ligand</em>, <em>innercut=16</em>, <em>outercut=20</em>, <em>flexin='full'</em>, <em>flexout='sidechain'</em>, <em>terminal='neutralize'</em>, <em>excluded=[]</em>, <em>added=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.scoop.scoop" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.scoop.</code><code class="descname">scoop</code><span class="sig-paren">(</span><em>protein</em>, <em>ligand</em>, <em>innercut=16</em>, <em>outercut=20</em>, <em>flexin='full'</em>, <em>flexout='sidechain'</em>, <em>terminal='neutralize'</em>, <em>excluded=[]</em>, <em>added=[]</em>, <em>scooplimit=10</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.scoop.scoop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a scoop from protein structure</p>
 <p>The protein object is not modified by this routine.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -2944,6 +3116,62 @@ Contain classes to</p>
 </table>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.simulationobjects.DihParameter">
+<em class="property">class </em><code class="descclassname">tools.simulationobjects.</code><code class="descname">DihParameter</code><span class="sig-paren">(</span><em>index</em>, <em>ats</em>, <em>terms</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.DihParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to hold a dihedral parameter from a ProtoMS template file</p>
+<p>A separate class is needed to handle dihedral parameters due to their
+composition of multiple terms.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="93%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>index</td>
+<td>(integer) the serial number of the parameter</td>
+</tr>
+<tr class="row-even"><td>ats</td>
+<td>(list of string) the name of the atoms associated with the parameter</td>
+</tr>
+<tr class="row-odd"><td>b0</td>
+<td>(list of DihTerm) the terms that make up this dihedral parameter</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.simulationobjects.DihTerm">
+<em class="property">class </em><code class="descclassname">tools.simulationobjects.</code><code class="descname">DihTerm</code><span class="sig-paren">(</span><em>index</em>, <em>k1</em>, <em>k2</em>, <em>k3</em>, <em>k4</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.DihTerm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to hold individual terms making up a Dihedral</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>index</td>
+<td>(integer) the serial number of the parameter</td>
+</tr>
+<tr class="row-even"><td>k1</td>
+<td>(float) The term barrier height</td>
+</tr>
+<tr class="row-odd"><td>k2</td>
+<td>(float) OPLS inversion constant (should be either 0.0 or 1.0 for AMBER ffs)</td>
+</tr>
+<tr class="row-even"><td>k3</td>
+<td>(float) The term periodicity</td>
+</tr>
+<tr class="row-odd"><td>k4</td>
+<td>(float) The term phase</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -3261,7 +3489,7 @@ help for most common options and full help that list all arguments</p>
 <tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.read_from" title="tools.simulationobjects.PDBFile.read_from"><code class="xref py py-obj docutils literal"><span class="pre">read_from</span></code></a>(f[,&nbsp;resname])</td>
 <td>Read a pdb structure from a fileobject</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><code class="xref py py-obj docutils literal"><span class="pre">write</span></code></a>(filename[,&nbsp;renumber,&nbsp;header,&nbsp;solvents])</td>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.PDBFile.write" title="tools.simulationobjects.PDBFile.write"><code class="xref py py-obj docutils literal"><span class="pre">write</span></code></a>(filename,&nbsp;**kwargs)</td>
 <td>Write the PDB file to disc</td>
 </tr>
 </tbody>
@@ -3375,7 +3603,7 @@ not the Residue and Atom objects themselves</p>
 
 <dl class="method">
 <dt id="tools.simulationobjects.PDBFile.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>filename</em>, <em>renumber=False</em>, <em>header=None</em>, <em>solvents=True</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.PDBFile.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>filename</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.PDBFile.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the PDB file to disc</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3543,7 +3771,7 @@ information to check that a parameter exists</p>
 
 <dl class="class">
 <dt id="tools.simulationobjects.ParameterSet">
-<em class="property">class </em><code class="descclassname">tools.simulationobjects.</code><code class="descname">ParameterSet</code><span class="sig-paren">(</span><em>param_file</em>, <em>ptype</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.ParameterSet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.simulationobjects.</code><code class="descname">ParameterSet</code><span class="sig-paren">(</span><em>ptype</em>, <em>param_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.ParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to hold a collection of parameters</p>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
@@ -3567,20 +3795,37 @@ information to check that a parameter exists</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.ParameterSet.get_params" title="tools.simulationobjects.ParameterSet.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>(ats)</td>
-<td>Find parameters for specific atoms</td>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.ParameterSet.get_par_by_index" title="tools.simulationobjects.ParameterSet.get_par_by_index"><code class="xref py py-obj docutils literal"><span class="pre">get_par_by_index</span></code></a>(ind)</td>
+<td>For an atm line index find matching the par line</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.simulationobjects.ParameterSet.get_params" title="tools.simulationobjects.ParameterSet.get_params"><code class="xref py py-obj docutils literal"><span class="pre">get_params</span></code></a>(ats)</td>
+<td>Find parameter sets for specific atoms.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.simulationobjects.ParameterSet.read" title="tools.simulationobjects.ParameterSet.read"><code class="xref py py-obj docutils literal"><span class="pre">read</span></code></a>(param_file)</td>
+<td></td>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="tools.simulationobjects.ParameterSet.formats">
+<code class="descname">formats</code><em class="property"> = {'angle': {'par': (&lt;type 'str'&gt;, &lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'float'&gt;), 'atm': (&lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'int'&gt;)}, 'dihedral': {'par': (&lt;type 'str'&gt;, &lt;type 'int'&gt;, &lt;type 'int'&gt;, &lt;type 'int'&gt;, &lt;type 'int'&gt;, &lt;type 'int'&gt;, &lt;type 'int'&gt;), 'atm': (&lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'int'&gt;), 'term': (&lt;type 'str'&gt;, &lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'float'&gt;, &lt;type 'float'&gt;, &lt;type 'float'&gt;)}, 'clj': {'par': (&lt;type 'str'&gt;, &lt;type 'int'&gt;, &lt;type 'str'&gt;, &lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'float'&gt;, &lt;type 'float'&gt;)}, 'bond': {'par': (&lt;type 'str'&gt;, &lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'float'&gt;), 'atm': (&lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'str'&gt;, &lt;type 'int'&gt;)}}</em><a class="headerlink" href="#tools.simulationobjects.ParameterSet.formats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.simulationobjects.ParameterSet.get_par_by_index">
+<code class="descname">get_par_by_index</code><span class="sig-paren">(</span><em>ind</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.ParameterSet.get_par_by_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>For an atm line index find matching the par line</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="tools.simulationobjects.ParameterSet.get_params">
 <code class="descname">get_params</code><span class="sig-paren">(</span><em>ats</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.ParameterSet.get_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find parameters for specific atoms</p>
+<dd><p>Find parameter sets for specific atoms.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ats</strong> : list of string</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ats</strong> : sequence of strings</p>
 <blockquote>
 <div><p>the query atoms</p>
 </div></blockquote>
@@ -3595,6 +3840,11 @@ information to check that a parameter exists</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="tools.simulationobjects.ParameterSet.read">
+<code class="descname">read</code><span class="sig-paren">(</span><em>param_file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.simulationobjects.ParameterSet.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -4649,11 +4899,10 @@ split_water</p>
 <dt id="tools.split_jawswater.set_jaws2_box">
 <code class="descclassname">tools.split_jawswater.</code><code class="descname">set_jaws2_box</code><span class="sig-paren">(</span><em>water_files</em>, <em>length=3</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.split_jawswater.set_jaws2_box" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the header of the pdbs containing one single
-solvent molecule to define a box around the first atom</p>
+molecule to define a box around the first atom</p>
 <dl class="docutils">
 <dt>water_files <span class="classifier-delimiter">:</span> <span class="classifier">PDBSet</span></dt>
-<dd>a pdb set containing the pdb files with one molecule
-of solvent</dd>
+<dd>a pdb set containing the pdb files with one molecule</dd>
 <dt>length <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
 <dd>the dimensions of the box around the molecule</dd>
 </dl>
@@ -4715,7 +4964,7 @@ of solvent</dd>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2014, Richard Bradshaw, Ana Cabedo Martinez, Chris Cave-Ayland, Samuel Genheden, Gregory Ross.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4a0+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

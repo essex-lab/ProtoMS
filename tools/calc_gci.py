@@ -827,9 +827,7 @@ def minimum_from_bequil(models,B,N,dG_hyd,kT=0.592,print_lines=True):
 	
 	return Bequil, Nstarcalc, Nstarfit
 
-
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -847,7 +845,11 @@ if __name__ == '__main__' :
   parser.add_argument('--reverse',action='store_true',help="reverse the direction of integration, starting from the highest number of waters to the lowest number, default=False",default=False)
   parser.add_argument('--fit_options',help="additional options to be passed to the artificial neural network",default=None)
   parser.add_argument('-v','--volume', type=float,help="volume of the GCMC insertion region",default=None)
-  args = parser.parse_args()
+  return parser
+  
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   dG_hyd = -6.2
   print "CALCULATING VOLUME CORRECTION:"

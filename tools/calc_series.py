@@ -632,11 +632,7 @@ def _select_plot() :
   elif instr == "5" : return "single_last0"
   else : return "sep"
 
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -649,7 +645,14 @@ if __name__ == '__main__' :
   parser.add_argument('--threshold',type=float,help="the significant level of the equilibration test, default=0.05",default=0.05)
   parser.add_argument('--average',action='store_true',help="turns on use of running averaging of series",default=False)
   parser.add_argument('--moving',type=int,help="turns on use of moving averaging of series, default=None")
-  args = parser.parse_args()
+  return parser
+  
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   # Mutually exclusive options
   if args.average : 

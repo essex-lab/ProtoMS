@@ -95,11 +95,7 @@ def replica_path(filenames,replicakind="lambda") :
           break
   return np.asarray(labeled_paths),labels
 
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -108,7 +104,14 @@ if __name__ == '__main__' :
   parser.add_argument('-p','--plot',type=float,nargs="+",help="the replica values to plot")
   parser.add_argument('-k','--kind',choices=["lambda","temperature","rest","global", "B"],help="the kind of replica to analyze",default="lambda")
   parser.add_argument('-o','--out',help="the prefix of the output figure. Default is replica_path. ",default="replica_path.png")
-  args = parser.parse_args()
+  return parser
+
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   # Extract paths and labels from the input files
   paths,labels = replica_path(args.files,args.kind)

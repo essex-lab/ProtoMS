@@ -802,8 +802,7 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
     #template.write(temfile)
     return template
 
-if __name__ == '__main__':
-
+def get_arg_parser ():
     import argparse
 
     # Setup a parser of the command-line arguments
@@ -816,13 +815,19 @@ if __name__ == '__main__':
     parser.add_argument('-t','--translate',help="maxmium size for translation moves in Angstroms", default=0.25, type=float)
     parser.add_argument('-r','--rotate',help="maxmium size for rotation moves in degrees", default=5.0, type=float)
     parser.add_argument('--alldihs',help='sample improper dihedrals',default=False,action='store_true')
-    args = parser.parse_args()
+    parser.add_argument('--gaff',help='gaff version to use, gaff14 or gafff16',default='gaff16')
+    return parser
+  
+if __name__ == '__main__':
+
+    args = get_arg_parser().parse_args()
     
     # Setup the logger
     logger = sim.setup_logger("build_template_py.log")
     
     tem = build_template ( temfile=args.out, prepifile=args.prepi, zmatfile=args.zmat, frcmodfile=args.frcmod,
-                           resname=args.name, translate=args.translate, rotate=args.rotate, alldihs=args.alldihs ) 
+                           resname=args.name, translate=args.translate, rotate=args.rotate, alldihs=args.alldihs,
+                           gaffversion=args.gaff) 
     tem.write(args.out)
     if args.zmat is None :      
       tem.templates[0].write_zmat(os.path.splitext(args.out)[0]+".zmat")

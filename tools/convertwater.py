@@ -274,14 +274,7 @@ def convertwater(pdb_in,watermodel,ignorH=False,watresname=None):
       print "Error in convertwater.py: water model name not recognised. Please check spelling matches known list or add new water model to function." 
   return pdb_out
 
-#
-# -------------------------------------
-# If this is run from the command-line
-# -------------------------------------
-#
-
-if __name__ == "__main__":
-
+def get_arg_parser():
     import argparse
     
     # Setup a parser of the command-line arguments
@@ -292,7 +285,17 @@ if __name__ == "__main__":
     parser.add_argument('-i','--ignoreh',action='store_true',help="whether to ignore hydrogens in input water. If no hydrogens are present, waters are randomly orientated. default=No",default=False)
     parser.add_argument('-n','--resname',help="the residue name that will be applied to the water molecules. When it is not specified, it is chosen based on the water model",default=None)
     parser.add_argument('--setupseed',help="optional random number seed for generation of water coordinates.",default=None,type=int)
-    args = parser.parse_args()
+    return parser
+
+#
+# -------------------------------------
+# If this is run from the command-line
+# -------------------------------------
+#
+
+if __name__ == "__main__":
+
+    args = get_arg_parser().parse_args()
 
     # Setup the logger
     logger = simulationobjects.setup_logger("convertwater_py.log")

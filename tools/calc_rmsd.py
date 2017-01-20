@@ -69,9 +69,7 @@ def calc_rmsd(ref,structures,resname,atomname=None) :
   diff2 = np.sum((centers-refcent)**2,axis=1)
   return np.sqrt(diff2.mean())
       
-
-if __name__ == "__main__":
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -81,7 +79,11 @@ if __name__ == "__main__":
   parser.add_argument('-l','--ligand',help="the name of the ligand to extract")
   parser.add_argument('-a','--atom',help="the name of the atom to analyze")
   parser.add_argument('-t','--temperature',type=float,help="the temperature in the simulation",default=298.0)
-  args = parser.parse_args()
+  return parser
+
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   if not args.files or not args.initial:
     print "No input files! Nothing to do, so exit."

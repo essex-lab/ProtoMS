@@ -173,11 +173,9 @@ def pdb2pms(pdb_in,forcefield,conversion_file):
             pdb_out.residues[resnum].atoms[atomnum].resname = resname 
     return pdb_out
 
-
-if __name__ == "__main__":
-
+def get_arg_parser():
+    
     import argparse
-    import simulationobjects
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(description="Program convert atom names in a protein pdb-file to ProtoMS style")
@@ -185,7 +183,13 @@ if __name__ == "__main__":
     parser.add_argument('-o','--out',help="the output PDB-file",default="protein_pms.pdb")
     parser.add_argument('-s','--style',help="the style of the input PDB-file",default="amber")
     parser.add_argument('-c','--conversionfile',help="the name of the file with conversion rules",default="atomnamesmap.dat")
-    args = parser.parse_args()
+    return parser
+
+if __name__ == "__main__":
+
+    import simulationobjects
+
+    args = get_arg_parser().parse_args()
 
     # Setup the logger
     logger = simulationobjects.setup_logger("convertatomnames_py.log")

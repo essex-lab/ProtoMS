@@ -1203,8 +1203,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
                      
   return free_cmd,bnd_cmd,gas_cmd  
 
-if __name__ == "__main__":
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -1221,7 +1220,7 @@ if __name__ == "__main__":
   parser.add_argument('--gaff',help="the version of GAFF to use for ligand",default="gaff16")
   parser.add_argument('--lambdas',nargs="+",type=float,help="the lambda values or the number of lambdas",default=[16])
   parser.add_argument('--adams',nargs="+",type=float,help="the Adam/B values for the GCMC",default=0)
-  parser.add_argument('--adamsrange',nargs="+",float=int,help="the upper and lower Adam/B values for the GCMC and, optionally, the number of values desired (default value every 1.0), e.g. -1 -16 gives all integers between and including -1 and -16",default=None)
+  parser.add_argument('--adamsrange',nargs="+",type=float,help="the upper and lower Adam/B values for the GCMC and, optionally, the number of values desired (default value every 1.0), e.g. -1 -16 gives all integers between and including -1 and -16",default=None)
   parser.add_argument('--jawsbias',nargs="+",type=float,help="the bias for the JAWS-2",default=0)
   parser.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on")
   parser.add_argument('--gcmcbox',help="a pdb file with box dimensions for the GCMC box")
@@ -1231,8 +1230,12 @@ if __name__ == "__main__":
   parser.add_argument('--dumpfreq',type=float,help="the output dump frequency",default=1E5)
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   parser.add_argument('--ranseed',help="the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None",default=None)
-  parser.add_argument('--tune',action='store_true',help='',default=False)
-  args = parser.parse_args()
+  parser.add_argument('--tune',action='store_true',help=argparse.SUPPRESS,default=False)
+  return parser
+
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("generate_input_py.log")

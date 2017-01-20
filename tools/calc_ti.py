@@ -312,11 +312,8 @@ def ti(path,res_tem,skip,maxread,verbose,numkind,useanalytical,subd='',auto=Fals
     print_ene(lambdas[-1],pmf[-1],np.sqrt(pmf_std[-1]),verbose["uncert"],verbose["lambda"])  
 
   return lambdas,gradients,stds,pmf,np.sqrt(pmf_std)
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
 
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -335,7 +332,13 @@ if __name__ == '__main__' :
   parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
   parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
   parser.add_argument('--autoeqb',dest='autoeqb',action='store_true',help="use automatic equilibration detection to determine how much data is included in free energy difference")
-  args = parser.parse_args()
+  return parser
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger()
