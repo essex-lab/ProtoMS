@@ -460,16 +460,16 @@ A solute move is a Monte Carlo move on a single solute molecule. Obviously, for 
 <div class="section" id="executing-protoms">
 <h1>Executing ProtoMS<a class="headerlink" href="#executing-protoms" title="Permalink to this headline">¶</a></h1>
 <p>ProtoMS is a simple program that may be used from the command line. Once you have compiled it you should find it in the top directory (it is called simply protoms3). If you run the program you should see that it prints out some information about the program and license, then it complains that nothing has been loaded so it closes down. The interface to ProtoMS has been designed to allow easy integration of ProtoMS with scripts, and to enable simple use from a command file. A ProtoMS input consists of a set of commands and values, e.g. the command <code class="docutils literal"><span class="pre">temperature</span></code> could have the value <em>25.0</em> . This would set the simulation temperature to <img class="math" src="_images/math/cf71352329f841b593bc14c21b21c4d796deda4d.png" alt="25^\circ"/> C. The input is passed to ProtoMS via a command file. The above command could thus be input by setting by placing the line</p>
-<div class="highlight-python"><div class="highlight"><pre>temperature 25.0
+<div class="highlight-python"><div class="highlight"><pre><span></span>temperature 25.0
 </pre></div>
 </div>
 <p>into a file and have ProtoMS read commands from that file. You specify the command file by passing it to ProtoMS on the command line, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>protoms3 mycmdfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>protoms3 mycmdfile.txt
 </pre></div>
 </div>
 <p>Note that ProtoMS is insensitive to whether commands, variables or contents of files are uppercase or lowercase, so you are free to mix and match capitals and small case wherever you want. The only exception to this is in the specification of filenames, where your operating system may care about case. As an example, depending on your operating system, ProtoMS may fail when the file containing the commands is named in upper case letters.</p>
 <p>For replica exchange or ensemble type calculations, you have to execeute ProtoMS through the OpenMPI program, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>mpirun -np 16 protoms3 mycmdfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>mpirun -np 16 protoms3 mycmdfile.txt
 </pre></div>
 </div>
 <div class="section" id="file-output">
@@ -492,7 +492,7 @@ A solute move is a Monte Carlo move on a single solute molecule. Obviously, for 
 <li><strong>DEBUG</strong> The DEBUG stream is used by the developers to report debugging information during a ProtoMS run. This stream is only active if ‘debug’ is set to true.</li>
 </ul>
 <p>These streams may be switched on or off, directed to STDOUT, directed to STDERR or directed to a file. You can do this by using the commands</p>
-<div class="highlight-python"><div class="highlight"><pre>streamSTREAM STDOUT
+<div class="highlight-python"><div class="highlight"><pre><span></span>streamSTREAM STDOUT
 
 streamSTREAM STDERR
 
@@ -502,7 +502,7 @@ streamSTREAM /path/to/file.txt
 </pre></div>
 </div>
 <p>where <cite>STREAM</cite> is the name of the stream that you wish to direct (e.g. streamINFO). ProtoMS is insensitive to case, so you could use the command</p>
-<div class="highlight-python"><div class="highlight"><pre>streaminfo stdout
+<div class="highlight-python"><div class="highlight"><pre><span></span>streaminfo stdout
 </pre></div>
 </div>
 <p>However, your operating system may be sensitive to case so you should ensure that you use the correct case for filenames.</p>
@@ -511,7 +511,7 @@ streams, these two cannot be turned off. These two streams will be directed to S
 <p>By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, the WARNING and FATAL streams are directed to STDERR, and the remaining streams are switched off. Bear this in mind if you think that you should be getting output and you are not - make sure that the stream that contains your output is directed to something!</p>
 <p>The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section <a class="reference internal" href="#misccmd"><span>Miscellaneous</span></a>.</p>
 <p>By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option</p>
-<div class="highlight-python"><div class="highlight"><pre>appendstreams on
+<div class="highlight-python"><div class="highlight"><pre><span></span>appendstreams on
 </pre></div>
 </div>
 <p>This option will turn on append mode for all streams, except the <strong>RESTART</strong> stream that never will be appended.</p>
@@ -528,101 +528,101 @@ streams, these two cannot be turned off. These two streams will be directed to S
 </ul>
 <div class="section" id="parameters-for-developers">
 <h3>Parameters for developers<a class="headerlink" href="#parameters-for-developers" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python" id="index-28"><div class="highlight"><pre>debug logical
+<div class="highlight-python" id="index-28"><div class="highlight"><pre><span></span>debug logical
 </pre></div>
 </div>
 <p>This turns on or off debugging output that may be useful for ProtoMS developers. By default <code class="docutils literal"><span class="pre">debug</span></code> is <em>off</em>.</p>
-<div class="highlight-python" id="index-29"><div class="highlight"><pre>testenergy logical
+<div class="highlight-python" id="index-29"><div class="highlight"><pre><span></span>testenergy logical
 </pre></div>
 </div>
 <p>This is used to set whether or not to turn on testing of energies. This is useful if you are developing ProtoMS. By default <code class="docutils literal"><span class="pre">testenergy</span></code> is <em>off</em>.</p>
 </div>
 <div class="section" id="general-parameters">
 <h3>General parameters<a class="headerlink" href="#general-parameters" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python" id="index-30"><div class="highlight"><pre>prettyprint logical
+<div class="highlight-python" id="index-30"><div class="highlight"><pre><span></span>prettyprint logical
 </pre></div>
 </div>
 <p>Turn on or off pretty printing. With pretty printing turned on, you will see nice starry boxes drawn highlighting certain parts of the output. By default, <code class="docutils literal"><span class="pre">prettyprint</span></code> is <em>on</em>.</p>
-<div class="highlight-python" id="index-31"><div class="highlight"><pre>dryrun logical
+<div class="highlight-python" id="index-31"><div class="highlight"><pre><span></span>dryrun logical
 </pre></div>
 </div>
 <p>Whether or not to perform a dry run of the simulation. If this is true then all of the files will be loaded up and your commands parsed. If there are any problems then these will be reported in the WARNING stream. No actual simulation will be run, though any files that would be created may be created. While this option is very useful for testing your commands, it is not perfect and cannot check everything. I thus recommend that you also perform a short version of your simulation before you commit yourself to full production. By default <code class="docutils literal"><span class="pre">dryrun</span></code> is off.</p>
-<div class="highlight-python" id="index-32"><div class="highlight"><pre>ranseed integer
+<div class="highlight-python" id="index-32"><div class="highlight"><pre><span></span>ranseed integer
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">integer</span></code> is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducable simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started.</p>
-<div class="highlight-python" id="index-33"><div class="highlight"><pre>temperature float
+<div class="highlight-python" id="index-33"><div class="highlight"><pre><span></span>temperature float
 </pre></div>
 </div>
 <p>Use this command to specify the simulation temperature in <em>Celsius</em>. By default temperature is 25.0 C.</p>
-<div class="highlight-python" id="index-34"><div class="highlight"><pre>pdbparam logical
+<div class="highlight-python" id="index-34"><div class="highlight"><pre><span></span>pdbparam logical
 </pre></div>
 </div>
 <p>Whether or not to automatically detect and use, in the simulation, any chunks which might be included in the input PDB files after REMARK. It is most commonly used to include the fixresidues and fixbackbone commands often found at the beginning of a protein scoop. Any chunks included in pdb files will be applied before any other chunk. By default <cite>pdbparam</cite> is on.</p>
-<div class="highlight-python" id="index-35"><div class="highlight"><pre>cutoff float
+<div class="highlight-python" id="index-35"><div class="highlight"><pre><span></span>cutoff float
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">float</span></code> is any positive number. This command is used to set the size of the non-bonded cutoff, in Angstroms, used to truncate the intermolecular non-bonded potentials (see eq <a href="#equation-intermol1">(1)</a>). By default the non-bonded cutoff is 15A.</p>
-<div class="highlight-python" id="index-36"><div class="highlight"><pre>feather float
+<div class="highlight-python" id="index-36"><div class="highlight"><pre><span></span>feather float
 </pre></div>
 </div>
 <p>To prevent an abrupt cutoff, the non-bonded energy is scaled quadratically down to zero over the last part of the cutoff (see eq <a href="#equation-intermol1">(1)</a>). The feather command sets the distance over which this scaling occurs, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>feather 1.3
+<div class="highlight-python"><div class="highlight"><pre><span></span>feather 1.3
 </pre></div>
 </div>
 <p>sets this feathering to occur over the last 1.3A. The default value of the feather is 0.5A.</p>
-<div class="highlight-python" id="index-37"><div class="highlight"><pre>cuttype string
+<div class="highlight-python" id="index-37"><div class="highlight"><pre><span></span>cuttype string
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">string</span></code> is either <em>residue</em> or <em>molecule</em>. This specifies the type of non-bonded cutting to use; either residue, where the cutoff is between protein residues, solute molecules and solvent molecules, or molecule, where the cutoff is between protein molecules, solutes molecules and solvent molecules. By default the <code class="docutils literal"><span class="pre">cuttype</span></code> is <em>residue</em>.</p>
-<div class="highlight-python" id="index-38"><div class="highlight"><pre>pressure float
+<div class="highlight-python" id="index-38"><div class="highlight"><pre><span></span>pressure float
 </pre></div>
 </div>
 <p>This command sets the pressure of the system in atmospheres. By setting the pressure to a non-zero value you will be able to perform a simulation in the NPT isothermal-isobaric ensemble. Note that you need to perform volume moves (see <a class="reference internal" href="#moves"><span>Generic Moves</span></a>) to be able to run in the NPT ensemble. By default the pressure is equal to zero, and thus a NPT simulation is not performed.</p>
-<div class="highlight-python" id="index-39"><div class="highlight"><pre>maxvolchange float
+<div class="highlight-python" id="index-39"><div class="highlight"><pre><span></span>maxvolchange float
 </pre></div>
 </div>
 <p>This command sets the maximum change in volume for a volume move in cubic Angstroms. This command only has meaning if an NPT simulation is being performed. By default <code class="docutils literal"><span class="pre">maxvolchange</span></code> is equal to the number of solvent molecules divided by ten.</p>
-<div class="highlight-python"><div class="highlight"><pre>prefsampling integer
+<div class="highlight-python"><div class="highlight"><pre><span></span>prefsampling integer
 </pre></div>
 </div>
 <p>This command is used to turn on preferential sampling of the solvent, and to specify which solute is used to define the center of the preferential sampling sphere. The command</p>
-<div class="highlight-python" id="index-40"><div class="highlight"><pre>prefsampling 1
+<div class="highlight-python" id="index-40"><div class="highlight"><pre><span></span>prefsampling 1
 </pre></div>
 </div>
 <p>means that the solvents closest to solute 1 will be moved more frequently than those furthest from solute 1. An optional parameter may be used to change the influence of the sphere, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>prefsampling 1 100.0
+<div class="highlight-python"><div class="highlight"><pre><span></span>prefsampling 1 100.0
 </pre></div>
 </div>
 <p>will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focussed the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off.</p>
-<div class="highlight-python" id="index-41"><div class="highlight"><pre>boundary none
+<div class="highlight-python" id="index-41"><div class="highlight"><pre><span></span>boundary none
 </pre></div>
 </div>
 <p>This turns off any boundary conditions, i.e. the simulation will be performed in vacuum.</p>
-<div class="highlight-python"><div class="highlight"><pre>boundary periodic dimx dimy dimz
+<div class="highlight-python"><div class="highlight"><pre><span></span>boundary periodic dimx dimy dimz
 </pre></div>
 </div>
 <p>This turns on periodic boundaries, using a orthorhombic box centered on the origin, with dimensions <code class="docutils literal"><span class="pre">dimx</span></code> A by <code class="docutils literal"><span class="pre">dimy</span></code> A by <code class="docutils literal"><span class="pre">dimz</span></code> A. Note that these dimensions may be modified by any loaded solvent file</p>
-<div class="highlight-python"><div class="highlight"><pre>boundary periodic ox oy oz tx ty tz
+<div class="highlight-python"><div class="highlight"><pre><span></span>boundary periodic ox oy oz tx ty tz
 </pre></div>
 </div>
 <p>This turns on periodic boundaries using an orthorhombic box with the bottom-left-back corner at coordinates (<code class="docutils literal"><span class="pre">ox</span></code> , <code class="docutils literal"><span class="pre">oy</span></code> , <code class="docutils literal"><span class="pre">oz</span></code>) A and the top-right-front corner at (<code class="docutils literal"><span class="pre">tx</span></code> , <code class="docutils literal"><span class="pre">ty</span></code> , <code class="docutils literal"><span class="pre">tz</span></code>) A. Note that these dimensions may be modified by any loaded solvent file.</p>
-<div class="highlight-python"><div class="highlight"><pre>boundary cap ox oy oz rad k
+<div class="highlight-python"><div class="highlight"><pre><span></span>boundary cap ox oy oz rad k
 </pre></div>
 </div>
 <p>This turns on solvent cap boundary conditions. Protein and solute molecules will experience no boundary conditions, while solvent molecules will be restrained within a spherical region of radius rad A, centered at coordinates (<code class="docutils literal"><span class="pre">ox</span></code> , <code class="docutils literal"><span class="pre">oy</span></code> , <code class="docutils literal"><span class="pre">oz</span></code>) A. A half-harmonic restraint with force constant <code class="docutils literal"><span class="pre">k</span></code> kcal.mol-1.A-2 is added to the solvent energy if it moves outside of this sphere.</p>
-<div class="highlight-python"><div class="highlight"><pre>boundary solvent
+<div class="highlight-python"><div class="highlight"><pre><span></span>boundary solvent
 </pre></div>
 </div>
 <p>This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section <a class="reference internal" href="#solventpdb"><span>Solvent File</span></a></p>
 </div>
 <div class="section" id="gbsa-parameters">
 <h3>GBSA parameters<a class="headerlink" href="#gbsa-parameters" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python" id="index-42"><div class="highlight"><pre>surface quality 3 probe 1.4
+<div class="highlight-python" id="index-42"><div class="highlight"><pre><span></span>surface quality 3 probe 1.4
 </pre></div>
 </div>
 <p>This command will cause surface area calculations to be performed during the simulation. <code class="docutils literal"><span class="pre">quality</span></code> can be set to 1,2,3,4 and will result in increasingly precise surface area calculations. For typical simulations, 3 should be fine and 2 will not give a huge error. <code class="docutils literal"><span class="pre">probe</span></code> is the radius of the probe and should be set to 1.4 if you want to calculate the solvent accessible surface area of water, but can be set to 0 if you want to calculate the van der waals surface area of a molecule.</p>
-<div class="highlight-python" id="index-43"><div class="highlight"><pre>born cut 20 threshold 0.005 proteins
+<div class="highlight-python" id="index-43"><div class="highlight"><pre><span></span>born cut 20 threshold 0.005 proteins
 </pre></div>
 </div>
 <p>This command will enable Generalised Born energy calculations. Thus to run a full GBSA simulation you should use both the surface and born keywords. cut controls the cutoff distance for the computation of the Born radii. If you work with a medium sized protein scoop of circa 100-150 residues, 20 should be fine but you may want a larger value for simulations of large proteins. threshold controls the number of pairwise terms that are not updated when the effective Born radii must be calculated by the Pairwise descreening approximation. The default value
@@ -633,17 +633,17 @@ convincingly demonstrated.</p>
 <div class="section" id="temperature-replica-exchange-parameters">
 <h3>Temperature replica-exchange parameters<a class="headerlink" href="#temperature-replica-exchange-parameters" title="Permalink to this headline">¶</a></h3>
 <p>ProtoMS can perform temperature replica-exchange simulations.</p>
-<div class="highlight-python" id="index-44"><div class="highlight"><pre>temperaturere integer float float float
+<div class="highlight-python" id="index-44"><div class="highlight"><pre><span></span>temperaturere integer float float float
 </pre></div>
 </div>
 <p>is the command to set a replica exchange simulation between the different temperatures given as floats, where <code class="docutils literal"><span class="pre">float</span></code> is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see <a class="reference internal" href="#frequent-output-generation">Frequent output generation</a>). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.</p>
 <p>As an example:</p>
-<div class="highlight-python"><div class="highlight"><pre>temperaturere 20 25.0 30.0 35.0
+<div class="highlight-python"><div class="highlight"><pre><span></span>temperaturere 20 25.0 30.0 35.0
 </pre></div>
 </div>
 <p>corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.</p>
 <p>The temperature replica-exchange command can be used in conjuction with the <code class="docutils literal"><span class="pre">lambdare</span></code> command, see below, to add temperature ladders to different values of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>.</p>
-<div class="highlight-python" id="index-45"><div class="highlight"><pre>solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
+<div class="highlight-python" id="index-45"><div class="highlight"><pre><span></span>solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
 </pre></div>
 </div>
 <p>Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see <a class="reference internal" href="#temperature-replica-exchange-parameters">Temperature replica-exchange parameters</a>). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the <code class="docutils literal"><span class="pre">temperaturere</span></code> command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; <code class="docutils literal"><span class="pre">bndang</span></code> controls the internal bond-angle energy terms, <code class="docutils literal"><span class="pre">dih</span></code> the internal dihedral energy term, <code class="docutils literal"><span class="pre">lj</span></code> the internal van der Waals energy, <code class="docutils literal"><span class="pre">coul</span></code> the internal Coulomb energy, <code class="docutils literal"><span class="pre">solu</span></code> the interaction with other solutes, <code class="docutils literal"><span class="pre">prot</span></code> the interaction with the protein and <code class="docutils literal"><span class="pre">solv</span></code> the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with <img class="math" src="_images/math/6757eba9fce0316545ec8cb52a33899aeef371e4.png" alt="\beta_i/\beta_0"/>, where <img class="math" src="_images/math/af98ebbbe7174c893ed8f4c7fc046767210ce3a6.png" alt="\beta_i"/> is the effective inverse temperature of the replica (set with the <code class="docutils literal"><span class="pre">temperaturre</span></code> command) and <img class="math" src="_images/math/90acdaf850915294d7ef3bdc540005ee22197903.png" alt="\beta_0"/> is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with <img class="math" src="_images/math/ab167846e454d9e5d6a1452434989ec2eaaa17bb.png" alt="(\beta_i+\beta_0)/2\beta_0"/> and if the argument 3 the energy is unscaled.</p>
@@ -651,45 +651,45 @@ convincingly demonstrated.</p>
 <div class="section" id="free-energy-calculation-parameters">
 <h3>Free energy calculation parameters<a class="headerlink" href="#free-energy-calculation-parameters" title="Permalink to this headline">¶</a></h3>
 <p>To be able to run a single simulation for a given lambda value, you will need to use the following parameters:</p>
-<div class="highlight-python" id="index-46"><div class="highlight"><pre>lambda float
+<div class="highlight-python" id="index-46"><div class="highlight"><pre><span></span>lambda float
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">float</span></code> is a number between 0.0 and 1.0. Specify the value of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>. If a single value is given then that is used for <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>. If three values are given then these are used for <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>, and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> in the forwards and backwards windows, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>lambda 0.5 0.6 0.4
+<div class="highlight-python"><div class="highlight"><pre><span></span>lambda 0.5 0.6 0.4
 </pre></div>
 </div>
 <p>would set <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> for the reference state to 0.5, <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> for the forwards perturbed state to 0.6, and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> for the backwards perturbed state to 0.4. By default all values of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> are 0.0.</p>
 <p>To run several at several values of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>  in parallel and hence perform your full perturbation at once with ProtoMS, you will need the commands shown below. Running your free energy calculation in this manner, you will be able to attempt exchanges between the configurations of your system at the different lambdas, increasing the probability of convergence.</p>
-<div class="highlight-python" id="index-47"><div class="highlight"><pre>lambdare integer float float float
+<div class="highlight-python" id="index-47"><div class="highlight"><pre><span></span>lambdare integer float float float
 </pre></div>
 </div>
 <p>is the command to set a replica exchange calculation between the different <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> given as floats, where <code class="docutils literal"><span class="pre">float</span></code> is a number between 0.0 and 1.0. In principle, any desired number of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> values can be used, and the simulation will require to be runned in as many cores as <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> values are provided. The integer value stands for the frequency at which the exchange between the different <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see <a class="reference internal" href="#frequent-output-generation">Frequent output generation</a>). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.</p>
 <p>As an example:</p>
-<div class="highlight-python"><div class="highlight"><pre>lambdare 20 0.000 0.333 0.667 1.000
+<div class="highlight-python"><div class="highlight"><pre><span></span>lambdare 20 0.000 0.333 0.667 1.000
 </pre></div>
 </div>
 <p>corresponds to a simulation which will run at four different <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows in parallel, and will attempt swaps between the conformations of different <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows each 20 moves.</p>
 <p><strong>With temperature replica-exchange</strong></p>
-<div class="highlight-python" id="index-48"><div class="highlight"><pre>temperatureladder lambda float float
+<div class="highlight-python" id="index-48"><div class="highlight"><pre><span></span>temperatureladder lambda float float
 </pre></div>
 </div>
 <p>is one of the commands required to proceed with a simulation including both temperature and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange, where <code class="docutils literal"><span class="pre">float</span></code> is each of the <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> values where a temperature ladder is desired. All <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> values must be among those included after the <code class="docutils literal"><span class="pre">lambdare</span></code> keyword. In principle, the number of temperature ladders can be as high as the number of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows.</p>
 <p>As an example:</p>
-<div class="highlight-python"><div class="highlight"><pre>temperatureladder lambda 0.00 1.00
+<div class="highlight-python"><div class="highlight"><pre><span></span>temperatureladder lambda 0.00 1.00
 </pre></div>
 </div>
 <p>corresponds to a simulation which runs the <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windowns 0.00 and 1.00 at all temperatures included after the <code class="docutils literal"><span class="pre">temperaturere</span></code> keyword, as far as the corresponding <code class="docutils literal"><span class="pre">lambdaladder</span></code> command line is set accordingly.</p>
-<div class="highlight-python" id="index-49"><div class="highlight"><pre>lambdaladder temperature float float
+<div class="highlight-python" id="index-49"><div class="highlight"><pre><span></span>lambdaladder temperature float float
 </pre></div>
 </div>
 <p>is one of the commands required to proceed with a simulation including both temperature and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange, where <code class="docutils literal"><span class="pre">float</span></code> is each of the temperature values where a <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladder is to be placed. All temperature values must be among those included after the <code class="docutils literal"><span class="pre">temperaturere</span></code> keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladders and temperature ladders, as well as <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> and temperature values per ladder, takind into account the cores shared by each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladder with each temperature ladder.</p>
 <p>As an example:</p>
-<div class="highlight-python"><div class="highlight"><pre>lambdaladder temperature 25.0 35.0
+<div class="highlight-python"><div class="highlight"><pre><span></span>lambdaladder temperature 25.0 35.0
 </pre></div>
 </div>
 <p>corresponds to a simulation which runs all <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windowns at temperatures 25.0 and 35.0, as far as the corresponding <code class="docutils literal"><span class="pre">temperatureladder</span></code> command line is set accordingly.</p>
 <p>All replica-exchange commands together:</p>
-<div class="highlight-python"><div class="highlight"><pre>lambdare 20 0.000 0.333 0.667 1.000
+<div class="highlight-python"><div class="highlight"><pre><span></span>lambdare 20 0.000 0.333 0.667 1.000
 temperaturere 20 25.0 30.0 35.0
 temperatureladder lambda 0.00 1.00
 lambdaladder temperature 25.0 35.0
@@ -697,117 +697,117 @@ lambdaladder temperature 25.0 35.0
 </div>
 <p>correspond to a simulation where <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows 0.000 0.333 0.667 1.000 are simulated at 25.0 and 35.0 Celsius, while at temperature 30.0, only <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows 0.000 and 1.000 will be simulated.</p>
 <p><strong>Other free energy commands</strong></p>
-<div class="highlight-python" id="index-50"><div class="highlight"><pre>dlambda float
+<div class="highlight-python" id="index-50"><div class="highlight"><pre><span></span>dlambda float
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">float</span></code> is a number between 0.0 and 1.0 (often of the order of 0.001). This command sets the gradient for a free energy calculation. It is required for thermodynamic integration (TI) to be applied on the simulation results.</p>
-<div class="highlight-python" id="index-51"><div class="highlight"><pre>printfe string
+<div class="highlight-python" id="index-51"><div class="highlight"><pre><span></span>printfe string
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">string</span></code> should be either <code class="docutils literal"><span class="pre">off</span></code>, <code class="docutils literal"><span class="pre">bar</span></code> or <code class="docutils literal"><span class="pre">mbar</span></code>. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into acount that this estimates will take some time. Your simulations may run faster when this option is set to off (default).</p>
 <p>In case dual topology is desired, whether it is for a single or multiple <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> simulation, the following parameters must be used:</p>
-<div class="highlight-python"><div class="highlight"><pre>dualtopologyint integer1 integer2 synctrans syncrot
+<div class="highlight-python"><div class="highlight"><pre><span></span>dualtopologyint integer1 integer2 synctrans syncrot
 </pre></div>
 </div>
 <p>This turns on the dual topology method of calculating relative free energies, where <cite>int1</cite> is the perturbed solute at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 0.0 and <cite>in2</cite> is the solute at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 1.0 . If <code class="docutils literal"><span class="pre">synctrans</span></code> is set, the rigid body translations of the two solutes will be synchronised. If <code class="docutils literal"><span class="pre">syncrot</span></code> is set, the rigid body rotations of the two solutes will also be synchronised.</p>
-<div class="highlight-python" id="index-52"><div class="highlight"><pre>softcoreint solute integer
+<div class="highlight-python" id="index-52"><div class="highlight"><pre><span></span>softcoreint solute integer
 </pre></div>
 </div>
 <p>This causes the intermolecular energy of solute integer to be softened. Alternatively, you can write <code class="docutils literal"><span class="pre">all</span></code> instead of the solute index and all solutes will have their non bonded energy softened. The softcore is only supported for solutes.</p>
-<div class="highlight-python" id="index-53"><div class="highlight"><pre>softcoreparams coul 1 delta 1.5 gb 0 old
+<div class="highlight-python" id="index-53"><div class="highlight"><pre><span></span>softcoreparams coul 1 delta 1.5 gb 0 old
 </pre></div>
 </div>
 <p>This causes the solutes non bonded energy to be softened with a parameter <em>n</em> set to 1 and <img class="math" src="_images/math/b35a9439ad8c8657b1b1d792ad5c2d77a52c0aef.png" alt="\delta"/> set to 1.5. (see eq <a href="#equation-uljsoftmod">(17)</a>). The old keyword selects the original soft-core implementation and can be omitted. If conducting a GBSA simulation, this also causes the GB energy to be softened as well. It is recommended to use the same parameter for the Coulombic and Generalised Born energy. The values listed here, seem to work well for a number of relative binding free energy calculations but actual optimum values of these parameters will depend on your system.</p>
-<div class="highlight-python"><div class="highlight"><pre>softcoreparams coul 1 delta 0.2 deltacoul 2.0 soft66
+<div class="highlight-python"><div class="highlight"><pre><span></span>softcoreparams coul 1 delta 0.2 deltacoul 2.0 soft66
 </pre></div>
 </div>
 <p>This causes the solutes non bonded energy to be softened with a parameter <em>n</em> set to 1, <img class="math" src="_images/math/b35a9439ad8c8657b1b1d792ad5c2d77a52c0aef.png" alt="\delta"/> set to 0.2 and <img class="math" src="_images/math/8001e0acbd693bb58531cd502d7b9a26da45d834.png" alt="\delta_c"/> set to 2.0. (see eq <a href="#equation-uljsoftmod2">(18)</a>). The soft66 keyword selects the second soft-core implementation, eq <a href="#equation-uljsoftmod2">(18)</a> .</p>
-<div class="highlight-python"><div class="highlight"><pre>softcoreparams coul 1 delta 0.5 deltacoul 12.0 amber
+<div class="highlight-python"><div class="highlight"><pre><span></span>softcoreparams coul 1 delta 0.5 deltacoul 12.0 amber
 </pre></div>
 </div>
 <p>This causes the solutes non bonded energy to be softened with a parameter <em>n</em> set to 1, <img class="math" src="_images/math/b35a9439ad8c8657b1b1d792ad5c2d77a52c0aef.png" alt="\delta"/> set to 0.5 and <img class="math" src="_images/math/8001e0acbd693bb58531cd502d7b9a26da45d834.png" alt="\delta_c"/>  set to 12.0. (see eq <a href="#equation-uljsoftmod3">(19)</a> ). The amber keyword selects the third soft-core implementation, eq <a href="#equation-uljsoftmod3">(19)</a>. The values listed here are the default values in the Amber package.</p>
 </div>
 <div class="section" id="gcmc-and-jaws-parameters">
 <h3>GCMC and JAWS parameters<a class="headerlink" href="#gcmc-and-jaws-parameters" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-python" id="index-54"><div class="highlight"><pre>gcmc 0
+<div class="highlight-python" id="index-54"><div class="highlight"><pre><span></span>gcmc 0
 </pre></div>
 </div>
 <p>This command tells ProtoMS that it is to perform a GCMC simulation, and that the starting value of <img class="math" src="_images/math/fceda967c28efebb37a218d8ce3183e0a01158a4.png" alt="\Theta"/> all of the GCsolutes is 0.</p>
-<div class="highlight-python" id="index-55"><div class="highlight"><pre>potential float
+<div class="highlight-python" id="index-55"><div class="highlight"><pre><span></span>potential float
 </pre></div>
 </div>
 <p>This command will set a <em>B</em>-value of <code class="docutils literal"><span class="pre">float</span></code> (i.e. -8) for moves in the Grand Canonical Ensemble. The value of <em>B</em> can be related to the excess chemical by the following equation:</p>
 <div class="math" id="equation-bval">
 <p><span class="eqno">(20)</span><img src="_images/math/9f0471c23dca7d9817e8cf005f2fdeb60230a41f.png" alt="B = \frac{\mu'}{k_{B}T}+\ln \bar{n}"/></p>
 </div><p>In the equation, <img class="math" src="_images/math/faf263f5ddc347118dfe1a4e3def0c08ab90169b.png" alt="\bar{n}"/> is the number density of the GCsolute multiplied by the simulation subvolume.</p>
-<div class="highlight-python" id="index-56"><div class="highlight"><pre>multigcmc float float float
+<div class="highlight-python" id="index-56"><div class="highlight"><pre><span></span>multigcmc float float float
 </pre></div>
 </div>
 <p>is the right command to several gcmc simulations running in parallel for different B values. Each <code class="docutils literal"><span class="pre">float</span></code> is the B value for each independent calculation. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel in as many cores as B values.</p>
-<div class="highlight-python" id="index-57"><div class="highlight"><pre>originx float
+<div class="highlight-python" id="index-57"><div class="highlight"><pre><span></span>originx float
 </pre></div>
 </div>
 <p>This command will set the X origin of the defined GCsolute sampling subvolume to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>originy float
+<div class="highlight-python"><div class="highlight"><pre><span></span>originy float
 </pre></div>
 </div>
 <p>This command will set the Y origin of the defined GCsolute sampling subvolume to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>originz float
+<div class="highlight-python"><div class="highlight"><pre><span></span>originz float
 </pre></div>
 </div>
 <p>This command will set the Z origin of the defined GCsolute sampling subvolume to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>x float
+<div class="highlight-python"><div class="highlight"><pre><span></span>x float
 </pre></div>
 </div>
 <p>This command will set the distance along the X coordinate from originx to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>y float
+<div class="highlight-python"><div class="highlight"><pre><span></span>y float
 </pre></div>
 </div>
 <p>This command will set the distance along the Y coordinate from originy to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>z float
+<div class="highlight-python"><div class="highlight"><pre><span></span>z float
 </pre></div>
 </div>
 <p>This command will set the distance along the Z coordinate from originz to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
 <p>Alternatively to the origin, the position of the box may be set using its center:</p>
-<div class="highlight-python"><div class="highlight"><pre>centerx float
+<div class="highlight-python"><div class="highlight"><pre><span></span>centerx float
 </pre></div>
 </div>
 <p>This command will set the X center of the defined GCsolute sampling subvolume to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>centery float
+<div class="highlight-python"><div class="highlight"><pre><span></span>centery float
 </pre></div>
 </div>
 <p>This command will set the Y center of the defined GCsolute sampling subvolume to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>centerz float
+<div class="highlight-python"><div class="highlight"><pre><span></span>centerz float
 </pre></div>
 </div>
 <p>This command will set the Z center of the defined GCsolute sampling subvolume to be 9</p>
 <p>A different, equally valid expression for the distance or length of the box is the keyword <cite>len?</cite>:</p>
-<div class="highlight-python"><div class="highlight"><pre>lenx float
+<div class="highlight-python"><div class="highlight"><pre><span></span>lenx float
 </pre></div>
 </div>
 <p>This command will set the distance along the X coordinate from originx to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>leny float
+<div class="highlight-python"><div class="highlight"><pre><span></span>leny float
 </pre></div>
 </div>
 <p>This command will set the distance along the Y coordinate from originy to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre>lenz float
+<div class="highlight-python"><div class="highlight"><pre><span></span>lenz float
 </pre></div>
 </div>
 <p>This command will set the distance along the Z coordinate from originz to be the specified <code class="docutils literal"><span class="pre">float</span></code></p>
-<div class="highlight-python" id="index-58"><div class="highlight"><pre>jaws1 0
+<div class="highlight-python" id="index-58"><div class="highlight"><pre><span></span>jaws1 0
 </pre></div>
 </div>
 <p>This command tells ProtoMS that it is to perform a JAWS stage one simulation, and that the starting value of <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/> all of the GCsolutes is 0.</p>
-<div class="highlight-python" id="index-59"><div class="highlight"><pre>thres 0.95
+<div class="highlight-python" id="index-59"><div class="highlight"><pre><span></span>thres 0.95
 </pre></div>
 </div>
 <p>This command will set the <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/> threshold for defining whether a molecule is <em>on</em> in the first stage of the JAWS method to be 0.95 (default)</p>
 <p>Note here that, in order to run a JAWS stage 1 calculation, you will also need to include softcores. The parameters to do this can be found among the <a class="reference internal" href="#free-energy-calculation-parameters">Free energy calculation parameters</a>.</p>
-<div class="highlight-python" id="index-60"><div class="highlight"><pre>jaws2 1
+<div class="highlight-python" id="index-60"><div class="highlight"><pre><span></span>jaws2 1
 </pre></div>
 </div>
 <p>This command tells ProtoMS that it is to perform a JAWS stage two simulation, and that the starting value of <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/> all of the GCsolutes is 1.</p>
-<div class="highlight-python" id="index-61"><div class="highlight"><pre>jbias float
+<div class="highlight-python" id="index-61"><div class="highlight"><pre><span></span>jbias float
 </pre></div>
 </div>
 <p>This command will set the value of the biasing potential in the second stage of the JAWS algorithm to be <code class="docutils literal"><span class="pre">float</span></code>, in kcal/mol (i.e. 14).</p>
@@ -816,27 +816,27 @@ lambdaladder temperature 25.0 35.0
 <div class="section" id="specifying-input-files">
 <span id="incmd"></span><h2>Specifying input files<a class="headerlink" href="#specifying-input-files" title="Permalink to this headline">¶</a></h2>
 <p>As well as controlling the simulation, commands are also used to specify the names of the input files that describe the system and forcefield for the simulation. These input files are specified using the following commands</p>
-<div class="highlight-python" id="index-62"><div class="highlight"><pre>proteinN filename
+<div class="highlight-python" id="index-62"><div class="highlight"><pre><span></span>proteinN filename
 </pre></div>
 </div>
 <p>Specifies the name of the Nth protein file, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>protein1 protein.pdb
+<div class="highlight-python"><div class="highlight"><pre><span></span>protein1 protein.pdb
 </pre></div>
 </div>
 <p>specifies that protein 1 should be loaded from the file protein.pdb. Note that proteins must be numbered sequentially from 1 to MAXPROTEINS. The format of a protein file is described in <a class="reference internal" href="#protpdb"><span>Protein File</span></a>.</p>
-<div class="highlight-python" id="index-63"><div class="highlight"><pre>soluteN filename
+<div class="highlight-python" id="index-63"><div class="highlight"><pre><span></span>soluteN filename
 </pre></div>
 </div>
 <p>specifies the name of the Nth solute file. Note that the solutes must be numbered sequentially from 1 to MAXSOLUTES. The format of a solute file is described in section <a class="reference internal" href="#solpdb"><span>Solute File</span></a>.</p>
-<div class="highlight-python"><div class="highlight"><pre>solventN filename
+<div class="highlight-python"><div class="highlight"><pre><span></span>solventN filename
 </pre></div>
 </div>
 <p>specifies the name of the Nth solvent file. Unlike the protein and solute files, the solvent file may contain multiple solvent molecules, though the total number of solvent molecules cannot exceed MAXSOLVENTS. The format of a solvent file is described in section <a class="reference internal" href="#solventpdb"><span>Solvent File</span></a>.</p>
-<div class="highlight-python" id="index-64"><div class="highlight"><pre>grandN filename
+<div class="highlight-python" id="index-64"><div class="highlight"><pre><span></span>grandN filename
 </pre></div>
 </div>
 <p>specifies the name of the Nth GCsolute file. Unlike the protein and solute files, the GCsolute file may contain multiple GCsolute molecules, though the total number of GCsolute molecules cannot exceed MAXSOLVENTS. The format of a GCsolute file is described in section <a class="reference internal" href="#gcpdb"><span>GCsolute File</span></a>.</p>
-<div class="highlight-python" id="index-65"><div class="highlight"><pre>parfile filename
+<div class="highlight-python" id="index-65"><div class="highlight"><pre><span></span>parfile filename
 </pre></div>
 </div>
 <p>Specify the name of a forcefield parameter file. You can specify as many parameter files as you wish. The list of parameter files is read from top to bottom, such that if any paramater files contain contradictory information, the last parameters read by ProtoMS are used. The format of the parameter file is described in section <a class="reference internal" href="#parfil"><span>Parameter / Forcefield Files</span></a> .</p>
@@ -845,87 +845,87 @@ lambdaladder temperature 25.0 35.0
 <span id="runcmd"></span><h2>Running a Simulation<a class="headerlink" href="#running-a-simulation" title="Permalink to this headline">¶</a></h2>
 <p id="index-66">There are two main keywords related to running a simulation. These are <cite>chunk</cite> and <cite>dump</cite>. All individual actions (commands which ProtoMS should perform only as it is prompted to do so) are handled with <cite>chunk</cite> lines. Actions which ProtoMS should perform with a certain frequency <em>while</em> the simulation is running, are handled with <cite>dump</cite> lines. We can start by talking about chunks.</p>
 <p>A simulation can be run as a sequence of chunks. Different things may be accomplished in each chunk, e.g. running some steps of equilibration, printing the protein coordinates to a PDB or redirecting a stream to a new file. Chunks may be mixed and matched, and you can run as many chunks as you desire within a single simulation. You specify a chunk using the command</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk chunk command
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk chunk command
 </pre></div>
 </div>
 <p>Chunks are executed in the order they appear in the command file.</p>
 <div class="section" id="equilibration-and-production">
 <h3>Equilibration and Production<a class="headerlink" href="#equilibration-and-production" title="Permalink to this headline">¶</a></h3>
 <p>The meat of a simulation is equilibration and production. In ProtoMS equilibration is defined as sampling without the collection of free energy or energy averages, while production is sampling with the collection of free energy and energy averages. Equilibration and production are specified using the equilibrate and simulate chunks, e.g.</p>
-<div class="highlight-python" id="index-67"><div class="highlight"><pre>chunk equilibrate 50
+<div class="highlight-python" id="index-67"><div class="highlight"><pre><span></span>chunk equilibrate 50
 </pre></div>
 </div>
 <p>performs 50 steps of equilibration.</p>
-<div class="highlight-python" id="index-68"><div class="highlight"><pre>chunk simulate 1000
+<div class="highlight-python" id="index-68"><div class="highlight"><pre><span></span>chunk simulate 1000
 </pre></div>
 </div>
 <p>performs 1000 steps of production.</p>
 <p>Additional options may be passed to these two chunks to control the probability of different types of move and the frequency of printing out move and energy details to the MOVE and ENERGY streams. These options are</p>
-<div class="highlight-python" id="index-69"><div class="highlight"><pre><span class="n">printmove</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python" id="index-69"><div class="highlight"><pre><span></span><span class="n">printmove</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Print move and energy information every N moves.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">protein</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">protein</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of protein moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">solute</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">solute</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of solute moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">solvent</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">solvent</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of solvent moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">gcsolute</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">gcsolute</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of gcsolute moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">insertion</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">insertion</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of insertion moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">deletion</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">deletion</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of deletion moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">theta</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">theta</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of GCsolute theta moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">sample</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sample</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of GCsolute sample moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">volume</span><span class="o">=</span><span class="n">N</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">volume</span><span class="o">=</span><span class="n">N</span>
 </pre></div>
 </div>
 <p>Set the relative probability of volume moves to N.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">newprob</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">newprob</span>
 </pre></div>
 </div>
 <p>Reset relative move probabilities to zero.</p>
 <p>Note that succeeding equilibration or production chunks inherit the move probabilities and printing frequency of preceeding simulation or equilibration chunks. I thus recommend that you use the newprob option to reset the move probabilities for each equilibration or production chunk you run.</p>
 <p>The following examples illustrate the use of these options;</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk newprob equilibrate 500 printmove=10 protein=1 solvent=1000
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk newprob equilibrate 500 printmove=10 protein=1 solvent=1000
 </pre></div>
 </div>
 <p>Perform 500 steps of equilibration, printing move and energy information every 10 moves, making on average 1 protein move for every 1000 solvent moves (and performing no other types of move).</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk equilibrate 100 solute=500
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk equilibrate 100 solute=500
 </pre></div>
 </div>
 <p>Perform 100 steps of equilibration. Because this chunk will inherit from the previous chunk, the move and energy information will still be printed every 10 moves, and still, on average 1 protein move will be made every 1000 solvent moves. However this line has added that on average 500 solute moves should be made for every 1000 solvent moves, thus the probability of a protein move is now 1 in 1501, the probablity of a solute move is 500 in 1501, and the probability of a solvent move is 1000 in 1501.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk simulate 500 printmove=1 newprob volume=1 solvent=300
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk simulate 500 printmove=1 newprob volume=1 solvent=300
 </pre></div>
 </div>
 <p>Now perform 500 steps of production, printing move and energy information every move, performing no protein moves, and 1 volume move for every 300 solvent moves.</p>
 <p>A couple of <em>simulate-like</em> commands are specifically related to GBSA simulations.</p>
-<div class="highlight-python" id="index-70"><div class="highlight"><pre>chunk splitgbsasimulate 100 10 solute=1 protein=9
+<div class="highlight-python" id="index-70"><div class="highlight"><pre><span></span>chunk splitgbsasimulate 100 10 solute=1 protein=9
 </pre></div>
 </div>
 <p>The above command should only be used if you are doing an implicit solvent simulation (e.g, you turned on the surface and born keywords). This will cause to run 10 moves with a crude GBSA potential and then perform an acceptance test based on the difference of energies between the crude GBSA potential and the GBSA potential you set with the cutoff, born and surface keywords. This will be repeated 100 times. Here the move probabilities were set to 1 and 9 for solute and protein, but could be other figures. After this keyword has been used it is advised to use the following keyword.</p>
 <p><em>WARNING: this command is deprecated.</em> For instance, it does not support the dump commands</p>
-<div class="highlight-python" id="index-71"><div class="highlight"><pre>chunk resetgb
+<div class="highlight-python" id="index-71"><div class="highlight"><pre><span></span>chunk resetgb
 </pre></div>
 </div>
 <p>This will cause the total energy of the system to be calculated fully and the Born radii to be correctly updated. Periodic usage of this command, along with the previous one, avoids drifts in the total energy of the system.</p>
@@ -933,84 +933,84 @@ lambdaladder temperature 25.0 35.0
 <div class="section" id="results-and-restarts">
 <h3>Results and Restarts<a class="headerlink" href="#results-and-restarts" title="Permalink to this headline">¶</a></h3>
 <p>As well as controlling the sampling, you can also control the collection and output of results using simulation chunks, and the reading and writing of restart files.</p>
-<div class="highlight-python" id="index-72"><div class="highlight"><pre>chunk results reset
+<div class="highlight-python" id="index-72"><div class="highlight"><pre><span></span>chunk results reset
 </pre></div>
 </div>
 <p>Reset all averages to zero and start collection of results from scratch.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk results write
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk results write
 </pre></div>
 </div>
 <p>Write out the energy and free energy averages to the RESULTS stream. It is probably a good idea to do this a some point before the end of the simulation.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk results write myfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk results write myfile.txt
 </pre></div>
 </div>
 <p>Does the same as above, but redirects the RESULTS stream to myfile.txt before the results are written.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk results writeinst myfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk results writeinst myfile.txt
 </pre></div>
 </div>
 <p>Does the same av <cite>write</cite> but instead write instantaneous energies (the energies of the current snapshot) rather than average energies. This can be useful for some analyses.</p>
-<div class="highlight-python" id="index-73"><div class="highlight"><pre>chunk restart write
+<div class="highlight-python" id="index-73"><div class="highlight"><pre><span></span>chunk restart write
 </pre></div>
 </div>
 <p>Write a restart file for the current configuration to the RESTART stream.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk restart write myfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk restart write myfile.txt
 </pre></div>
 </div>
 <p>Does the same as above, but redirects the RESTART stream to myfile.txt before the restart file is written.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk restart read myfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk restart read myfile.txt
 </pre></div>
 </div>
 <p>Read in a restart file from the file myfile.txt.</p>
 <p>Note that all the <cite>chunk averages</cite> lines above are equally valid, if <cite>results</cite> is written instead of <cite>averages</cite>:</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk results write myfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk results write myfile.txt
 </pre></div>
 </div>
 </div>
 <div class="section" id="pdb-output">
 <h3>PDB Output<a class="headerlink" href="#pdb-output" title="Permalink to this headline">¶</a></h3>
 <p id="index-74">You can use a simulation chunk to output a PDB of the current configuration. The output can be tailored to include only the parts of the system that you are interested in. This is useful if you are trying to conserve disk usage. You can output PDBs using the ‘pdb’ chunk</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb all
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb all
 </pre></div>
 </div>
 <p>Output a PDB of all proteins and solutes to the PDB stream</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb protein=all
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb protein=all
 </pre></div>
 </div>
 <p>Output a PDB of all proteins to the PDB stream</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb protein=2
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb protein=2
 </pre></div>
 </div>
 <p>Output a PDB of protein 2 to the PDB stream</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb solute=all
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb solute=all
 </pre></div>
 </div>
 <p>Output a PDB of all solutes to the PDB stream</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb solute=1
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb solute=1
 </pre></div>
 </div>
 <p>Output a PDB of solute 1 to the PDB stream</p>
 <p>The output PDB can be controlled via additional commands added to the above lines, e.g.:</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb all solvent=all
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb all solvent=all
 </pre></div>
 </div>
 <p>Output the PDB including all solvent molecules.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb solute=1 solvent=5.0
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb solute=1 solvent=5.0
 </pre></div>
 </div>
 <p>Output a PDB including all solvent molecules within 5.0A of whatever else is printed - in this case solute 1.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb protein=1 showdummies
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb protein=1 showdummies
 </pre></div>
 </div>
 <p>Output a PDB that also includes dummy atoms.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb solute=all showhidden
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb solute=all showhidden
 </pre></div>
 </div>
 <p>Output a PDB that also includes hidden solute molecules (solutes that are used to perform geometry perturbations).</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb all file=myfile.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb all file=myfile.txt
 </pre></div>
 </div>
 <p>Redirect the PDB stream to myfile.txt then print the PDB.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk pdb all solvent=all standard
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk pdb all solvent=all standard
 </pre></div>
 </div>
 <p>Output a PDB that have a more standard format than normal, such that it can be viewed and interpreted correctly in most programs.</p>
@@ -1018,55 +1018,55 @@ lambdaladder temperature 25.0 35.0
 <div class="section" id="restraints">
 <span id="index-75"></span><h3>Restraints<a class="headerlink" href="#restraints" title="Permalink to this headline">¶</a></h3>
 <p>ProtoMS supports a number of restraining potentials which can be used to modify the potential energy function and bias the simulation towards particular configurations. To use a restraint in ProtoMS you must first assign an id number to a particular atom or set of atoms, using the following command</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk id add int1 type int2 atname resname|resnumber
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk id add int1 type int2 atname resname|resnumber
 </pre></div>
 </div>
 <p>where <cite>int1</cite> is the index numberr for this id. So if this if the first id you create you may want to use the number 1. type can be SOLUTE or SOLVENT or PROTEIN depending on where the atom you want to tagg is. <cite>atname</cite> is the name of the atom (e.g CA), <cite>resname</cite> is the name of the residue the atom is in if you are dealing with a SOLUTE or SOLVENT. However if it the atom is in a protein, then you must use the PDB residue number.
 Once you have specified a few ids, you can create restraints using these ids and the following command</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk restraint add id1[-id2-id3-id4] type1 type2 [other parameters]
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk restraint add id1[-id2-id3-id4] type1 type2 [other parameters]
 </pre></div>
 </div>
 <p>where <cite>id1</cite> to <cite>id4</cite> designate up to four ids. <cite>type1</cite> designate the type of the restraint. It can be either <cite>cartesian</cite>,`bond` or <cite>dihedral</cite>. In the first case the restraint is applied in cartesian coordinates and will apply to only one atom (<cite>id1</cite>). In the second case, it is applied in internal coordinates, and will apply to only two atoms (<cite>id1</cite>-<cite>id2</cite>). In the last case it is applied to four atoms (<cite>id1</cite>-<cite>id2</cite>-<cite>id3</cite>-<cite>id4</cite>) and in internal coordinates. <cite>type2</cite> designate the functional form of the restraint. It can be <cite>harmonic</cite> or <cite>flatbottom</cite>. Each functional form requires additional parameters. The following options are currently possible:</p>
-<div class="highlight-python" id="index-76"><div class="highlight"><pre>chunk restraint add id1 cartesian harmonic xrest yrest zrest krest [lambda]
+<div class="highlight-python" id="index-76"><div class="highlight"><pre><span></span>chunk restraint add id1 cartesian harmonic xrest yrest zrest krest [lambda]
 </pre></div>
 </div>
 <p>For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. You may optionally give the keyword lambda at the end of the chunk to scale the energy of the restraint by the value of lambda. This means that when lambda=1 the restraint is on and when lambda=0 the restraint is off. This is useful to calculate the free energy change associated with the introduction of a restraint, although this procedure should not be carried out in the gas phase.:</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk restraint add id1 cartesian flatbottom xrest yrest zrest krest wrest
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk restraint add id1 cartesian flatbottom xrest yrest zrest krest wrest
 </pre></div>
 </div>
 <p>For a flatbottom restraint you must in addition specify the width of the flat region of the potential.</p>
-<div class="highlight-python" id="index-77"><div class="highlight"><pre>chunk restraint add id1-id2 bond harmonic krest
+<div class="highlight-python" id="index-77"><div class="highlight"><pre><span></span>chunk restraint add id1-id2 bond harmonic krest
 </pre></div>
 </div>
 <p>For a bond restraint you must specify only the force constant</p>
-<div class="highlight-python" id="index-78"><div class="highlight"><pre>chunk restraint add id1-id2-id3-id4 dihedral harmonic theta krest
+<div class="highlight-python" id="index-78"><div class="highlight"><pre><span></span>chunk restraint add id1-id2-id3-id4 dihedral harmonic theta krest
 </pre></div>
 </div>
 <p>For a dihedral harmonic restraint you must specify the target equilibrium angle and the force constant. This restraint does not work on solvent molecules and on protein backbone atoms.</p>
 <p>The following example shows how to add a harmonic potential restraint between a ligand atom and a protein atom.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk id add 1 SOLUTE 1 N2 LI8
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk id add 1 SOLUTE 1 N2 LI8
 </pre></div>
 </div>
 <p>This chunk will create id number 1 which will point to solute atom 1 (the first atom in the solute pdb file), named c00, from residue L10.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk id add 2 PROTEIN 1 O 318
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk id add 2 PROTEIN 1 O 318
 </pre></div>
 </div>
 <p>This chunk will create id number 2 which will point to protein pdb loaded as protein1 by ProtoMS. The atom named O in residue 318 will be selected. Note that 318 is the residue number that appear in the PDB file. It is not necessarily the 318th residue to be loaded by ProtoMS in this protein.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk restraint add 1-2 bond harmonic 5.0 3.33
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk restraint add 1-2 bond harmonic 5.0 3.33
 </pre></div>
 </div>
 <p>This chunk will cause a restraint to be added between the atoms id 1 and 2 points to. The functional form of this restraint will be a harmonic potential that is function of the distance between these two atoms. The force constant will be 5 kcal mol - 1. A - 2 and the equilibrium distance 3.33 angstrom.</p>
 <p id="index-79">Applying a hardwall restraint is slightly different</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk id add 1 SOLUTE 2 O00 WAT
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk id add 1 SOLUTE 2 O00 WAT
 </pre></div>
 </div>
 <p>This chunk will create id number 1 which will point to solute number 2, looking at the O00 atom of resname WAT</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk hardwall 1 25.890 16.895 59.083 1.8 1000000000
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk hardwall 1 25.890 16.895 59.083 1.8 1000000000
 </pre></div>
 </div>
 <p>This chunk will apply a hardwall restraint to the center of geometry of the solute number 2. The form of this restraint is spherical, with a radius of 1.8 and will be centered at the point defined by the coordinates 25.890 16.895 59.083. If the center of geometry of the molecule attempts to leave this radius then a huge penalty is applied, preventing the move. Equally, if any atom from another molecule tries to occupy the hardwall region then the penalty is applied.</p>
 <p>A hardwall restraint can also be applied on the initial position of the center of geometry of a ligand. In this case, no coordinates need to be specified, and the lines results:</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk hardwall 1 1.8 1000000000
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk hardwall 1 1.8 1000000000
 </pre></div>
 </div>
 <p>This option should be quite useful when the ligand simply wants to be kept in its initial position.</p>
@@ -1075,17 +1075,17 @@ Once you have specified a few ids, you can create restraints using these ids and
 <h3>Frequent output generation<a class="headerlink" href="#frequent-output-generation" title="Permalink to this headline">¶</a></h3>
 <p>Incidental generation of output files might not be convenient either for the production of results and restart files nor for PDB outputs. Consistently, there is an alternative option which allows for the generation of these files <em>while</em> the <cite>simulate</cite> chunk is running.</p>
 <p id="index-80">This is controlled with the alternative key word dump:</p>
-<div class="highlight-python"><div class="highlight"><pre>dump frequency command
+<div class="highlight-python"><div class="highlight"><pre><span></span>dump frequency command
 </pre></div>
 </div>
 <p>This manner of output generation can be applied to all commands included in <a class="reference internal" href="#results-and-restarts">Results and Restarts</a> secction, as well as <a class="reference internal" href="#pdb-output">PDB output</a> section.</p>
 <p>An example of a dump line would be:</p>
-<div class="highlight-python"><div class="highlight"><pre>dump 100000 results write results
+<div class="highlight-python"><div class="highlight"><pre><span></span>dump 100000 results write results
 </pre></div>
 </div>
 <p>This line, given as input for ProtoMS, will append results information to the <cite>results</cite> file every 100000 moves, thoughout the <cite>simulate</cite> part of your simulation.</p>
 <p>It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently these imput lines:</p>
-<div class="highlight-python"><div class="highlight"><pre>dump 100 results write results
+<div class="highlight-python"><div class="highlight"><pre><span></span>dump 100 results write results
 dump 100 pdb all file=all.pdb
 dump 100 restart write restart
 dump 100 averages reset
@@ -1098,75 +1098,75 @@ chunk simulate 400 solvent=10 solute=5 volume=1
 <div class="section" id="miscellaneous">
 <span id="misccmd"></span><h3>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h3>
 <p>As well as running the simulation, there are also a collection of other things that you can do in a simulation chunk. These are</p>
-<div class="highlight-python" id="index-81"><div class="highlight"><pre>chunk singlepoint
+<div class="highlight-python" id="index-81"><div class="highlight"><pre><span></span>chunk singlepoint
 </pre></div>
 </div>
 <p>Calculate the energy of the current system and output it to the SPENERGY stream. This is useful if you just want to use ProtoMS to evaluate a forcefield energy. You can set up the input files, turn off all streams, direct stream SPENERGY to STDOUT and run a simulation that only consists of this ‘singlepoint’ chunk.</p>
-<div class="highlight-python" id="index-82"><div class="highlight"><pre>chunk soluteenergy N
+<div class="highlight-python" id="index-82"><div class="highlight"><pre><span></span>chunk soluteenergy N
 </pre></div>
 </div>
 <p>Calculate the energy of solute N. This calculates the energy of solute N and outputs the components of this energy in great detail. This is useful for debugging a forcefield or for collecting average energy components that are more finely divided than those normally collected.</p>
-<div class="highlight-python" id="index-83"><div class="highlight"><pre>chunk fakesim
+<div class="highlight-python" id="index-83"><div class="highlight"><pre><span></span>chunk fakesim
 </pre></div>
 </div>
 <p>Performs one step of simulation, without doing anything other than adding the energies to the averages. This can be useful for debugging purposes.</p>
-<div class="highlight-python" id="index-84"><div class="highlight"><pre>chunk retienergy 0.2
+<div class="highlight-python" id="index-84"><div class="highlight"><pre><span></span>chunk retienergy 0.2
 </pre></div>
 </div>
 <p>The RETI free energy method requires the calculation of the energy at the neighbouring two <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows at the end of the simulation. This chunk will calculate the energy at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows 0.2 above and below the reference state, and will output the results to the RETI stream.</p>
-<div class="highlight-python" id="index-85"><div class="highlight"><pre>chunk lambda 0.5
+<div class="highlight-python" id="index-85"><div class="highlight"><pre><span></span>chunk lambda 0.5
 </pre></div>
 </div>
 <p>Sets <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> to 0.5. Will calculate and return the change in energy associated with this change in <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>. This is useful if you wish to perform a slow growth or fast growth free energy simulation. You could also use this in conjunction with the ‘averages print’ and ‘averages reset’ chunks to calculate the free energy of all windows across <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> within a single simulation. This is because the window widths are preserved by the change in <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>, thus if the <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> windows were 0.1 0.2 0.4 before the change, then they would be 0.4 0.5 0.7 after the change. Note that the values of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> are clamped between 0.0 and 1.0.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk lambda 0.5 0.6 0.4
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk lambda 0.5 0.6 0.4
 </pre></div>
 </div>
 <p>As above, except set the <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> values of the forwards and backwards windows to 0.6 and 0.4 respectively.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk lambda delta 0.1
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk lambda delta 0.1
 </pre></div>
 </div>
 <p>As above except instead of directly setting <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>, change <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> by 0.1. This will also increase the value of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> for the for- wards and backwards windows by 0.1.</p>
-<div class="highlight-python" id="index-86"><div class="highlight"><pre>chunk freeenergy 0.3 0.5
+<div class="highlight-python" id="index-86"><div class="highlight"><pre><span></span>chunk freeenergy 0.3 0.5
 </pre></div>
 </div>
 <p>Calculate quantities need for free energy estimators. This will calculate the derivative of the potential with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> as needed for thermodynamic integration, and energies at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> =0.3 and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> =0.5 as needed for Bennett Acceptance Ratio method. All of these energies will be printed to the INFO and ENERGY streams.</p>
-<div class="highlight-python" id="index-87"><div class="highlight"><pre>chunk fixresidues 1 all
+<div class="highlight-python" id="index-87"><div class="highlight"><pre><span></span>chunk fixresidues 1 all
 </pre></div>
 </div>
 <p>Fix all of the residues of protein 1.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk fixresidues 1 1-10 12 14 16-20
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk fixresidues 1 1-10 12 14 16-20
 </pre></div>
 </div>
 <p>Fix the residues of protein 1. Only fix residues 1 to 10, 12, 14 and 16 to 20.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk fixresidues 1 none
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk fixresidues 1 none
 </pre></div>
 </div>
 <p>Unfix all of the residues of protein 1.</p>
-<div class="highlight-python" id="index-88"><div class="highlight"><pre>chunk fixbackbone 1 all
+<div class="highlight-python" id="index-88"><div class="highlight"><pre><span></span>chunk fixbackbone 1 all
 </pre></div>
 </div>
 <p>Fix the backbone of all residues of protein 1. This chunk has the same syntax as the fixresidues chunk.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk fixbackbone 1 none 20-35
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk fixbackbone 1 none 20-35
 </pre></div>
 </div>
 <p>Unfix all of the residues of protein 1, then fix the backbone of residues 20-35. This ensures that only the backbone of residues 20-35 is fixed.</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk12 transrot 1 0.0 0.0
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk12 transrot 1 0.0 0.0
 </pre></div>
 </div>
 <p>Set the translation and rotation displacements for solute 1 to zero. This overrides the values read in the template file. The first floating point number is the translation displacement and the second one is the rotation displacement and is optional. Can be useful for pure solvent and gas-phase calculations.</p>
-<div class="highlight-python" id="index-89"><div class="highlight"><pre>setstream info=stdout move=off
+<div class="highlight-python" id="index-89"><div class="highlight"><pre><span></span>setstream info=stdout move=off
 </pre></div>
 </div>
 <p>Direct the INFO stream to STDOUT and turn the MOVE stream off.</p>
-<div class="highlight-python"><div class="highlight"><pre>setstream restart=myfile.txt warning=stderr
+<div class="highlight-python"><div class="highlight"><pre><span></span>setstream restart=myfile.txt warning=stderr
 </pre></div>
 </div>
 <p>Direct the RESTART stream to myfile.txt and the WARNING stream to STDERR. solvate]</p>
-<div class="highlight-python" id="index-90"><div class="highlight"><pre>chunk solvent box xdim ydim zdim [xorig yorig zorig xmax ymax zmax]
+<div class="highlight-python" id="index-90"><div class="highlight"><pre><span></span>chunk solvent box xdim ydim zdim [xorig yorig zorig xmax ymax zmax]
 </pre></div>
 </div>
 <p>This command can be used to replicate a solvent file loaded as solvent1 such that the final solvent occupies a box of dimensions xdim ydim zdim with origin (0,0,0). Alternatively the origin can be specified along with the maximum coordinates of the cubix box. solvate2]</p>
-<div class="highlight-python"><div class="highlight"><pre>chunk solvent cap xorig yorig zorig rad
+<div class="highlight-python"><div class="highlight"><pre><span></span>chunk solvent cap xorig yorig zorig rad
 </pre></div>
 </div>
 <p>As before but the output will be a spherical cap of solvent centered at the specified origin and with a radius rad. The last two commands can be used to create large solvent boxes when needed. Once this chunk has been performed, you should save a pdb of the system using the chunk pdb and then edit the output file such that it can load as ProtoMS solvent pdb. The process of replicating the solvent molecules can be quite memory consuming and you may find you have to recompile ProtoMS so that it can handle a large number of solvent molecules, particularly if the coordinates of the system you want to solvate are far away from the coordinates of the solvent molecules in the input solvent box.</p>
@@ -1194,7 +1194,7 @@ they are read.</p>
 <span id="parfil"></span><h2>Parameter / Forcefield Files<a class="headerlink" href="#parameter-forcefield-files" title="Permalink to this headline">¶</a></h2>
 <p>The parameter file is the most powerful, and hence the most complicated of all of the input files read by ProtoMS. The parameter file provides all of the forcefield parameters that are used in a simulation, and it also provides all of the templates that provide the connectivity and z-matrices of all of the loaded molecules. The parameter file uses a word based format, meaning that you can leave as many spaces between words on a line as you like, and you do not have to worry about lining up data into particular columns.</p>
 <p>The general format of a parameter file is shown below:</p>
-<div class="highlight-python"><div class="highlight"><pre># comment lines start with a &#39;#&#39;
+<div class="highlight-python"><div class="highlight"><pre><span></span># comment lines start with a &#39;#&#39;
 
 mode clj
 #.... charge / Lennard Jones forcefield parameters
@@ -1230,63 +1230,63 @@ correctly loaded by ProtoMS.</p>
 <p>ProtoMS can be asked to load as many forcefield files as you desire. Each parameter or template within the forcefield files has either a numerical or name based ID. If two forcefield files have parameters or templates that share the same ID, then ProtoMS will use the value that was read last. ProtoMS will of course warn you that it has overwritten an earlier parameter (by outputting a message to the WARNING stream) but this behaviour could still trip you up! To help you, all of the parameters that use numerical IDs in the forcefield files supplied with ProtoMS use IDs that are between 1 and 2999. You can thus use numerical IDs that are greater than or equal to 3000 without worrying about a clash.</p>
 <p id="index-91"><strong>mode info</strong></p>
 <p>This mode is used to read in control information for the forcefield. This information is used to set parameters that affect which functions are used to evaluate the forcefield, and to set the values of forcefield-global parameters. The following lines are valid within this mode</p>
-<div class="highlight-python"><div class="highlight"><pre>ljcombine type
+<div class="highlight-python"><div class="highlight"><pre><span></span>ljcombine type
 </pre></div>
 </div>
 <p>where <em>type</em> can be <cite>arithmetic</cite> or <cite>geometric</cite>. This sets the combining rules used for the Lennard Jones <img class="math" src="_images/math/2298cf1485084afe72757a9c8483af49a138d81f.png" alt="\sigma"/> parameter to either the arithmetic mean (as used by AMBER), or the geometric mean (as used by OPLS). See equations <a href="#equation-arithmetriccomb">(3)</a> and <a href="#equation-geometriccomb">(4)</a> for the functional forms of these combining rules.</p>
-<div class="highlight-python"><div class="highlight"><pre>scl14coul float
+<div class="highlight-python"><div class="highlight"><pre><span></span>scl14coul float
 </pre></div>
 </div>
 <p>This sets the 1-4 coulombic scaling factor, e.g. for OPLS the value should be 0.5 (see eq <a href="#equation-intrapot1">(9)</a>).</p>
-<div class="highlight-python"><div class="highlight"><pre>scl14lj float
+<div class="highlight-python"><div class="highlight"><pre><span></span>scl14lj float
 </pre></div>
 </div>
 <p>This sets the 1-4 Lennard Jones scaling factor, e.g. for OPLS the value should be 0.5 (see eq <a href="#equation-intrapot1">(9)</a>).</p>
 <p id="index-92"><strong>mode clj</strong></p>
 <p>This mode is used to read in the charge and Lennard Jones (clj) parameters used by the simulation (see equations <a href="#equation-intermol1">(1)</a> and <a href="#equation-intrapot3">(11)</a>). Only one type of line is valid within this mode</p>
-<div class="highlight-python"><div class="highlight"><pre>par id amber proton-number charge sigma epsilon
+<div class="highlight-python"><div class="highlight"><pre><span></span>par id amber proton-number charge sigma epsilon
 </pre></div>
 </div>
 <p><em>id</em> is the unique identifying number for this clj parameter. This can be any number from 1 to MAXCLJ (by default this is 10000). If this ID is the same as an already read CLJ parameter, then ProtoMS will write a warning to the WARNING stream, and will overwrite the old CLJ parameter with the new parameter. To help prevent unintentional ID clashes, then the forcefields supplied with ProtoMS only use parameter IDs from 1 to 2000, and the solvent models supplied with ProtoMS use parameter IDs 2001 to 2999. You are thus free to use parameter IDs from 3000 in your own parameter files.</p>
 <p><em>amber</em> is the AMBER atom type associated with this clj parameter. The AMBER atom type is a two letter code that is used to identify the atom for the purposes of assigning bond, angle, dihedral or Urey-Bradley parameters. If this is a parameter for a dummy or non-chemical parameter, then the AMBER atom type should be ‘??’. Note that the AMBER type is case sensitive. This is different to other parts of ProtoMS, and is required as the GAFF forcefield uses case to distinguish between different AMBER types.</p>
 <p><em>proton-number</em> is the number of protons in the atom associated with this clj parameter, e.g. 1 for hydrogen, 6 for carbon or 8 for oxygen.</p>
 <p><em>charge</em>, <em>sigma</em> and <em>epsilon</em> are the partial charge (in |e|), and Lennard Jones <img class="math" src="_images/math/2298cf1485084afe72757a9c8483af49a138d81f.png" alt="\sigma"/> (A) and <img class="math" src="_images/math/19bc0073dde1bcd1a8e6a32b251e80cced668f04.png" alt="\epsilon"/> (kcal mol-1 ) parameters associated with this clj parameter, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>par 2001 OW 8 -0.834 3.15061 0.1521 # TIP3P oxygen
+<div class="highlight-python"><div class="highlight"><pre><span></span>par 2001 OW 8 -0.834 3.15061 0.1521 # TIP3P oxygen
 </pre></div>
 </div>
 <p>specifies the clj parameter for oxygen in TIP3P water, with parameter number 2001, AMBER atom type ‘OW’ proton number 8, a partial charge of -0.834 |e|, σ = 3.15061 A and ε = 0.1521 kcal mol-1 .</p>
 <p>Parameter ID 0 is a special clj parameter used to represent a null atom. This null atom has charge, <img class="math" src="_images/math/2298cf1485084afe72757a9c8483af49a138d81f.png" alt="\sigma"/> and <img class="math" src="_images/math/19bc0073dde1bcd1a8e6a32b251e80cced668f04.png" alt="\epsilon"/> values of 0.0, an AMBER atom type of ‘DM’ and a proton number of 0.</p>
 <p id="index-93"><strong>mode bond</strong></p>
 <p>This mode is used to read in the bond parameters used by the simulation. Two types of line are valid within this mode</p>
-<div class="highlight-python"><div class="highlight"><pre>par id force-constant bond-length
+<div class="highlight-python"><div class="highlight"><pre><span></span>par id force-constant bond-length
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">id</span></code> is an identifying number from 1 to MAXBNDPARAM (default 5000) that is used to uniquely identify a bond. As in the case of the clj parameters, new parameters with the same ID number will overwrite old parameters with that ID number, and the parameter files supplied with ProtoMS will only use IDs from 1 to 2999, so you can safely use parameters 3000 and up.</p>
 <p><code class="docutils literal"><span class="pre">force-constant</span></code> is the force constant (<img class="math" src="_images/math/f9640a7ae485c085b269e68d0da4d71c2e029ebb.png" alt="k_{bond}"/>, see eq <a href="#equation-bondpot">(5)</a>) for the bond parameter. The units of <img class="math" src="_images/math/f9640a7ae485c085b269e68d0da4d71c2e029ebb.png" alt="k_{bond}"/> are kcal mol-1 A-2 . <code class="docutils literal"><span class="pre">bond-length</span></code> is the equilibrium bond length (<img class="math" src="_images/math/b0153babd6c8369f8469e7f7ed416c511e3a825a.png" alt="r_0"/> ), in units of A.</p>
 <p>The second type of line valid in this mode is used to associate a pair of AMBER atom types with a bond parameter</p>
-<div class="highlight-python"><div class="highlight"><pre>atm amb1 amb2 id
+<div class="highlight-python"><div class="highlight"><pre><span></span>atm amb1 amb2 id
 </pre></div>
 </div>
 <p>This line specifies the bond between atoms with AMBER atom types <code class="docutils literal"><span class="pre">amb1</span></code> and <code class="docutils literal"><span class="pre">amb2</span></code> is assigned the parameters from bond ID <code class="docutils literal"><span class="pre">id</span></code>. Note that this bond parameter does not need to have been loaded when this line of the parameter file is being read, as bond parameters are not assigned until after all parameter files have been read. If none of the bond parameter files provide this bond ID, then ProtoMS will print a message to the WARNING stream and will set the bond ID to 0. As in the case of the clj parameters, 0 is a special parameter used to specify a null bond, whose bond parameters, and thus energy, are all 0.0. In addition, any bond involving an AMBER atom with a null clj parameter (i.e. having AMBER atom type ‘DM’) will be automatically set to use bond parameter 0. It is not possible to have a non-null bond parameter for bonds that involve dummy atoms.</p>
 <p>These bond atm lines are indexed by the AMBER pair amber1-amber2. If this AMBER pair has already been loaded then its parameter is overwritten with the new parameter. Note that bonds are symmetrical, thus bond index amb1-amb2 is equal to amb2-amb1.</p>
 <p id="index-94"><strong>mode angle</strong></p>
 <p>This mode is used to read in the angle parameters used in the simulation and its format and behaviour is almost identical to that used in the bond mode. Again, only two types of line are valid within the angle mode</p>
-<div class="highlight-python"><div class="highlight"><pre>par id force-constant angle-size
+<div class="highlight-python"><div class="highlight"><pre><span></span>par id force-constant angle-size
 </pre></div>
 </div>
 <p>and</p>
-<div class="highlight-python"><div class="highlight"><pre>atm amb1 amb2 amb3 id
+<div class="highlight-python"><div class="highlight"><pre><span></span>atm amb1 amb2 amb3 id
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">id</span></code> is an indentifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. <code class="docutils literal"><span class="pre">force-constant</span></code> is the force constant (<img class="math" src="_images/math/e3bb9085c194dcafbe2a2083c40bb55448882529.png" alt="k_{angle}"/> , see eq <a href="#equation-angpot">(6)</a>) for the angle parameter, in units of kcal mol-1 degree-2 . <code class="docutils literal"><span class="pre">angle-size</span></code> is the equilibrium angle size (<img class="math" src="_images/math/8c669a3486252783fe9a20e3b080f7ae97749928.png" alt="\theta_0"/>) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999.</p>
 <p>The atm line is again very similar to that in the bond mode, with in this case the angle between atoms with AMBER types <code class="docutils literal"><span class="pre">amb1-amb2-amb3</span></code> being assigned angle parameter id. Angles are also symmetric, so <code class="docutils literal"><span class="pre">amb1-amb2-amb3</span></code> is equivalent to <code class="docutils literal"><span class="pre">amb3-amb2-amb1</span></code>. Like the bond mode, any angle involving dummy atoms (AMBER type ‘DM’) will automatically be set to use the angle parameter 0. It is not possible to use a non-null angle parameter over an angle involving dummy atoms.</p>
 <p id="index-95"><strong>mode ureybradley</strong></p>
 <p>This mode is used to read in Urey-Bradley parameters (see eq <a href="#equation-ubpot">(7)</a>), and its format is identical to that of the angle mode. There are only two valid lines in this mode</p>
-<div class="highlight-python"><div class="highlight"><pre>par id force-constant uby-size
+<div class="highlight-python"><div class="highlight"><pre><span></span>par id force-constant uby-size
 </pre></div>
 </div>
 <p>and</p>
-<div class="highlight-python"><div class="highlight"><pre>atm amb1 amb2 amb3 id
+<div class="highlight-python"><div class="highlight"><pre><span></span>atm amb1 amb2 amb3 id
 </pre></div>
 </div>
 <p>In this case force-constant refers to the Urey-Bradley force constant (<img class="math" src="_images/math/9fe2054685913cd108daae01a8dcac792fbec5d1.png" alt="k_{uby}"/> ), in units of kcal mol-1 A -2 and <code class="docutils literal"><span class="pre">uby-size</span></code> refers to the equilibrium Urey-Bradley length (<img class="math" src="_images/math/c3c08496f07567285212e468b173bea9ca153fab.png" alt="x_0"/> ) in units of A. Everything else about this mode is identical to that of the bond mode.</p>
@@ -1296,24 +1296,24 @@ correctly loaded by ProtoMS.</p>
 <div>term term-id k1 k2 k3 k4</div></blockquote>
 <p><code class="docutils literal"><span class="pre">term-id</span></code> is an ID number from 1 to MAXDIHTERMS (default 5000) that uniquely identifies this dihedral cosine term. <code class="docutils literal"><span class="pre">k1</span></code> to <code class="docutils literal"><span class="pre">k4</span></code> are the values of the four constants (<img class="math" src="_images/math/69965ec632d0ca4c242091e4f087155682829b65.png" alt="k_1"/> to <img class="math" src="_images/math/9cf0fa8cd1457eeca0219ec275dbf609b64918fe.png" alt="k_4"/> ) that control the dihedral cosine term (see eq <a href="#equation-dihepot">(8)</a>). <code class="docutils literal"><span class="pre">k1</span></code> has units of kcal mol-1 , <code class="docutils literal"><span class="pre">k2</span></code> and <code class="docutils literal"><span class="pre">k3</span></code> are dimensionless, and <code class="docutils literal"><span class="pre">k4</span></code> is in units of degrees.</p>
 <p>A full dihedral parameter is composed from the sum of individual dihedral cosine terms. The second valid line in the dihedral mode specifies which terms are associated with which parameters, e.g</p>
-<div class="highlight-python"><div class="highlight"><pre>par id 3 10 32
+<div class="highlight-python"><div class="highlight"><pre><span></span>par id 3 10 32
 </pre></div>
 </div>
 <p>specifies that dihedral parameter <code class="docutils literal"><span class="pre">id</span></code> is formed as the sum of dihedral cosine terms 3, 10 and 32. You may specify as many dihedral cosine terms on this line as you wish from 1 to MAXDIHTERMSPERDIHEDRAL (default 6). As in the bond, angle and ureybradley modes, <code class="docutils literal"><span class="pre">id</span></code> is a uniquely identifying number, in this case from 1 to MAXDIHPARAM (default 5000), with ID 0 referring to the special, null dihedral.</p>
 <p>As in the case of the bond, angle and ureybradley modes, the AMBER atom set is used to associate dihedral parameters with actual dihedrals in a molecule. The final valid line associates the AMBER atom types of the four  atoms in the dihedral with the dihedral parameter ID, e.g</p>
-<div class="highlight-python"><div class="highlight"><pre>atm amb1 amb2 amb3 amb4 id
+<div class="highlight-python"><div class="highlight"><pre><span></span>atm amb1 amb2 amb3 amb4 id
 </pre></div>
 </div>
 <p>Because dihedrals are symmetrical, <code class="docutils literal"><span class="pre">amb1-amb2-amb3-amb4</span></code> is equivalent to <code class="docutils literal"><span class="pre">amb4-amb3-amb2-amb1</span></code>.</p>
 <p id="index-97"><strong>mode born</strong></p>
 <p>This mode is used to read the Generalised Born parameters that are used in the simulation. A valid line is</p>
-<div class="highlight-python"><div class="highlight"><pre>par id atype iborn scalefac
+<div class="highlight-python"><div class="highlight"><pre><span></span>par id atype iborn scalefac
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">atype</span></code> is an AMBER/GAFF atom type, <code class="docutils literal"><span class="pre">iborn</span></code> is an intrinsic born radius and scalefac a scaling factor for Pairwise Descreening Approximation calculations. These parameters have been optimised to be used with the AMBER or GAFF force fields.</p>
 <p id="index-98"><strong>mode surface</strong></p>
 <p>This mode is used to read surface area parameters that are used in the simulation. A valid line is</p>
-<div class="highlight-python"><div class="highlight"><pre>par id atype radius surftens
+<div class="highlight-python"><div class="highlight"><pre><span></span>par id atype radius surftens
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">atype</span></code> is an AMBER/GAFF atom type, <code class="docutils literal"><span class="pre">radius</span></code> is the radius of the atom and <code class="docutils literal"><span class="pre">surftens</span></code> the surface tension of this atom type, which relates the solvent accessible surface area of this atom to a non polar energy. These parameters have been optimised to be used with the AMBER or GAFF force fields.</p>
@@ -1329,60 +1329,60 @@ correctly loaded by ProtoMS.</p>
 </ul>
 <p><strong>Chain Templates</strong></p>
 <p>Chain templates are used to assign the z-matrix and parameters of the backbone of protein residues. The start of a new chain template is indicated by the line</p>
-<div class="highlight-python"><div class="highlight"><pre>chain name
+<div class="highlight-python"><div class="highlight"><pre><span></span>chain name
 </pre></div>
 </div>
 <p>where name is the name of the chain template. This name uniquely identifies this chain template. If another chain template has been loaded with this name, then this chain template will overwrite it and a message will be output to the WARNING stream.</p>
 <p>The valid lines that comprise a chain template are</p>
-<div class="highlight-python"><div class="highlight"><pre>bbatom id nam par0 par1
+<div class="highlight-python"><div class="highlight"><pre><span></span>bbatom id nam par0 par1
 </pre></div>
 </div>
 <p>This line identifies which are the four bbatoms of the residue. <code class="docutils literal"><span class="pre">id</span></code> identifies which bbatom this atom is (from 1 to 4), <code class="docutils literal"><span class="pre">nam</span></code> gives the name of the atom (maximum of four characters), and <code class="docutils literal"><span class="pre">par0</span></code> and <code class="docutils literal"><span class="pre">par1</span></code> are the CLJ parameters for this atom at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 0.0 and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 1.0, and these must refer to a valid CLJ parameter (from 0 to MAXCLJ, default 10000). Note that CLJ parameter 0 is used to assign a dummy atom. The name of the atom is the same as that given in the PDB file for the protein, and is limited to a maximum of four characters. The atom name must uniquely identify the atom within the residue, so this name must not be used elsewhere within this chain template, or in any residue templates that connect to this chain template</p>
-<div class="highlight-python"><div class="highlight"><pre>atom nam par0 par1 bndnam angnam dihnam
+<div class="highlight-python"><div class="highlight"><pre><span></span>atom nam par0 par1 bndnam angnam dihnam
 </pre></div>
 </div>
 <p>This line identifies any extra atoms that are part of the backbone. <code class="docutils literal"><span class="pre">nam</span></code>, <code class="docutils literal"><span class="pre">par0</span></code> and <code class="docutils literal"><span class="pre">par1</span></code> have the same meanings as for the bbatom line. This is a z-matrix line, and <code class="docutils literal"><span class="pre">bndnam</span></code>, <code class="docutils literal"><span class="pre">angnam</span></code> and <code class="docutils literal"><span class="pre">dihnam</span></code> are the names of the atoms that are the reference from which the coordinates of this atom are generated (bond, angle and dihedral atoms). Note that this line does not state that there is a bond, angle or dihedral with these atoms. This line only says that these three atoms are used to construct this extra atom. Note that the atoms in a residue are built in sequence, so the bond, angle and dihedral atoms in this line must refer to atoms that were previously listed in the chain template.</p>
-<div class="highlight-python"><div class="highlight"><pre>zmat nam bndval angval dihval
+<div class="highlight-python"><div class="highlight"><pre><span></span>zmat nam bndval angval dihval
 </pre></div>
 </div>
 <p>This line provides the default values of the internal z-matrix coordinates for the atom called <code class="docutils literal"><span class="pre">nam</span></code>. <code class="docutils literal"><span class="pre">bndval</span></code>, <code class="docutils literal"><span class="pre">angval</span></code> and <code class="docutils literal"><span class="pre">dihval</span></code> are the default values of the bond length, angle size and dihedral size. This line is optional, and is only required if you either want ProtoMS to construct this atom if it is missing from the PDB file, or if you want ProtoMS to reset bond and angles to default values.</p>
-<div class="highlight-python"><div class="highlight"><pre>bond nam1 nam2
+<div class="highlight-python"><div class="highlight"><pre><span></span>bond nam1 nam2
 </pre></div>
 </div>
 <p>This line adds a bond between atoms name <code class="docutils literal"><span class="pre">nam1</span></code> and <code class="docutils literal"><span class="pre">nam2</span></code>. These two atom names must be present in the chain template. ProtoMS will not automatically add any bonds between atoms (except inter-residue bonds), so you must add all bonds that are present in the chain template. ProtoMS will use all of these explicitly added non-dummy bonds between atoms to generate all of the implicit angles and dihedrals within the backbone. Additional arguments may be present on this line to control the type of bond that is added, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>bond nam1 nam2 dummy
+<div class="highlight-python"><div class="highlight"><pre><span></span>bond nam1 nam2 dummy
 </pre></div>
 </div>
 <p>adds a dummy bond between atoms <code class="docutils literal"><span class="pre">nam1</span></code> and <code class="docutils literal"><span class="pre">nam2</span></code>. A dummy bond is really a non-bond, as it has no energy, and its presence forces ProtoMS to treat atoms nam1 and nam2 as though they were not bonded together. You can make this bond flexible by adding the flex argument to the bond line, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>bond nam1 nam2 flex delta
+<div class="highlight-python"><div class="highlight"><pre><span></span>bond nam1 nam2 flex delta
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">delta</span></code> is the maximum change in the bond length attempted in a Monte Carlo move in A. Note that you can only make degrees of freedom flexible if they are used in the construction of the z-matrix, i.e. atom <code class="docutils literal"><span class="pre">nam1</span></code> must be constructed via a bond with <code class="docutils literal"><span class="pre">nam2</span></code>, or <code class="docutils literal"><span class="pre">nam2</span></code> constructed from <code class="docutils literal"><span class="pre">nam1</span></code>.</p>
 <p>The forcefield parameters for this bond will normally be assigned via the AMBER atom types of the constituent atoms. It is possible to override this assignment by explicitly assigning bond parameters, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>bond nam1 nam2 param par0 par1
+<div class="highlight-python"><div class="highlight"><pre><span></span>bond nam1 nam2 param par0 par1
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">par0</span></code> and <code class="docutils literal"><span class="pre">par1</span></code> are the bond parameter IDs for this bond at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 0.0 and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 1.0. The bond parameter IDs must refer to valid bond parameters (0 to MAXBNDPARAM, default 5000), where parameter 0 is used to refer to a null bond. You can use parameter 0 to state that two atoms are bonded, but that the energy of the bond should not be evaluated, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>bond nam1 nam2 param 0 0
+<div class="highlight-python"><div class="highlight"><pre><span></span>bond nam1 nam2 param 0 0
 </pre></div>
 </div>
 <p>Angles and Urey-Bradley terms and dihedrals in the chain template are specified almost identically as for the bond line, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>angle nam1 nam2 nam3
+<div class="highlight-python"><div class="highlight"><pre><span></span>angle nam1 nam2 nam3
 </pre></div>
 </div>
 <p>adds an angle between atoms named <code class="docutils literal"><span class="pre">nam1-nam2-nam3</span></code>,</p>
-<div class="highlight-python"><div class="highlight"><pre>ureybradley nam1 nam2 nam3
+<div class="highlight-python"><div class="highlight"><pre><span></span>ureybradley nam1 nam2 nam3
 </pre></div>
 </div>
 <p>adds a Urey-Bradley term between atoms named <code class="docutils literal"><span class="pre">nam1-nam2-nam3</span></code>, and</p>
-<div class="highlight-python"><div class="highlight"><pre>dihedral nam1 nam2 nam3 nam4
+<div class="highlight-python"><div class="highlight"><pre><span></span>dihedral nam1 nam2 nam3 nam4
 </pre></div>
 </div>
 <p>adds a dihedral between atoms named <code class="docutils literal"><span class="pre">nam1-nam2-nam3-nam4</span></code>. <code class="docutils literal"><span class="pre">dummy</span></code> and <code class="docutils literal"><span class="pre">param</span></code> options may be added to all of these lines, and <code class="docutils literal"><span class="pre">flex</span></code> may be added to the angle and dihedral lines (where delta is given in units of degrees).</p>
 <p>ProtoMS uses the bonds specified in the template to work out where all of the implicit angles and dihedrals are in the backbone. You do not need to include implicit (additional) angles or dihedrals in the template file, and you can just the template to just the flexible angles and dihedrals. However there are some cases where you would not wish an implicit angle or dihedral to be evaluated, for example the dihedral energy may only need to be evaluated via one of the dihedrals around a bond, and not via any additional dihedrals. If this is the case then you will need to add those additional dihedrals to the template and use the dummy keyword to specify that these are dummy dihedrals and that their energy should not be evaluated.</p>
 <p>It is not possible to add multiple bonds between the same pair of atoms, or multiple angles to the same triplet of atoms etc. ProtoMS will only use the first definition of a bond, angle, dihedral or Urey-Bradley term and will ignore any further attempts to set them.</p>
 <p>As an example, the chain template for an amino acid backbone in the middle of a chain is as follows</p>
-<div class="highlight-python"><div class="highlight"><pre>#
+<div class="highlight-python"><div class="highlight"><pre><span></span>#
 #       --  HN      O  --
 #        |   |      |  |
 #   res-1| --N--CA--C--|res+1
@@ -1416,7 +1416,7 @@ par 4 H  1  0.370 0.000 0.000 # HN, amide hydrogen
 <p><strong>Residue Templates</strong></p>
 <p>Residue templates are used to assign the z-matrix and forcefield parameters for the sidechains of protein residues. The format of a residue templates is almost identical to that of a chain template.</p>
 <p>As an example, here is the residue template for OPLS united atom alanine</p>
-<div class="highlight-python"><div class="highlight"><pre># ALANINE
+<div class="highlight-python"><div class="highlight"><pre><span></span># ALANINE
 #
 #     N-CA-C
 #        |
@@ -1436,26 +1436,26 @@ par 7 C3 6  0.000 3.910 0.160 # CB, sp3 with 3 H
 </pre></div>
 </div>
 <p>The start of a new residue template is signalled by the line</p>
-<div class="highlight-python"><div class="highlight"><pre>residue name
+<div class="highlight-python"><div class="highlight"><pre><span></span>residue name
 </pre></div>
 </div>
 <p>where name is the name of the residue template. This name uniquely identifies the template and because residues locate templates via the residue name, the residue template name is limited to a maximum of four characters. The lines that comprise a residue template are</p>
-<div class="highlight-python"><div class="highlight"><pre>info rotate rotdel translate trandel
+<div class="highlight-python"><div class="highlight"><pre><span></span>info rotate rotdel translate trandel
 </pre></div>
 </div>
 <p>This line provides information about the residue template. The option <code class="docutils literal"><span class="pre">rotate</span></code> <code class="docutils literal"><span class="pre">rotdel</span></code> specifies that the backbone rotation move would rotate the backbone by a maximum of <code class="docutils literal"><span class="pre">rotdel</span></code> degrees. The option translate <code class="docutils literal"><span class="pre">trandel</span></code> specifies that the backbone translation move would translate the backbone by a maximum of <code class="docutils literal"><span class="pre">trandel</span></code> A. Both of these options are optional, and may appear in any order on this line. If these options are not given, then the default translation and rotation values are both 0.0.</p>
-<div class="highlight-python"><div class="highlight"><pre>backbone position chain
+<div class="highlight-python"><div class="highlight"><pre><span></span>backbone position chain
 </pre></div>
 </div>
 <p>This line states which chain templates are associated with this residue template for different positions of the residue within the protein, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>backbone first aanterm middle aacenter last aacterm single aasingle
+<div class="highlight-python"><div class="highlight"><pre><span></span>backbone first aanterm middle aacenter last aacterm single aasingle
 </pre></div>
 </div>
 <p>states that this residue template uses the chain template called <code class="docutils literal"><span class="pre">aanterm</span></code> if this was the first residue in the protein, <code class="docutils literal"><span class="pre">aacenter</span></code> if this residue was in the middle of the protein, <code class="docutils literal"><span class="pre">aacterm</span></code> if this was the last residue in the protein, and <code class="docutils literal"><span class="pre">aasingle</span></code> if this was the only residue in the protein. You can place as many positions on this line as you wish, with possible positions being first, middle, last and single. You do not need to specify a chain template for every one of these positions, but ProtoMS will print a message to the WARNING stream if it needs a position that has not been specified.</p>
 <p>The remaining lines in the residue template are the <code class="docutils literal"><span class="pre">atom</span></code>, <code class="docutils literal"><span class="pre">zmat</span></code>, <code class="docutils literal"><span class="pre">bond</span></code>, <code class="docutils literal"><span class="pre">angle</span></code>, <code class="docutils literal"><span class="pre">ureybradley</span></code> and <code class="docutils literal"><span class="pre">dihedral</span></code> lines, which have exactly the same meaning and formats as those in the chain template lines. Note that the names of atoms in the residue template must be different to those in any of its associated chain templates. Also note that you can (and indeed will have to!) refer to atoms that are present in the associated chain templates. In the example in above you can see that the only atom in the residue template is the united-atom ‘CB’, and that this is built from the ‘CA’, ‘N’ and ‘C’ atoms of its associated chain templates. This means that all of the chain templates associated with this residue template must include atoms named ‘CA’, ‘N’ and ‘C’. If these atoms don’t exist then ProtoMS will print many messages to the WARNING stream, and the simulation will fail.</p>
 <p>ProtoMS will use the non-dummy bonds present in the residue template to find all of the implicit (additional) angles and dihedrals. If one of the bonds connect the sidechain to the backbone (one of the bonds should!), then the implicit angles and dihedrals between the sidechain and backbone will also be found. If you do not want the energy of these implicit angles and dihedrals to be evaluated then you need to specify them in the residue template with the <code class="docutils literal"><span class="pre">dummy</span></code> option set.</p>
 <p>It is possible for a residue template to contain no atoms! While this may sound strange, it is necessary for residues such as glycine in united atom forcefields, or for some terminating residues (e.g. methylamine). The following example is the residue template for OPLS united atom glycine</p>
-<div class="highlight-python"><div class="highlight"><pre># GLYCINE - this consists only of the glycine backbones
+<div class="highlight-python"><div class="highlight"><pre><span></span># GLYCINE - this consists only of the glycine backbones
 #
 #    --C--CA--N--
 #
@@ -1468,7 +1468,7 @@ backbone first glynterm middle glycenter last glycterm single glysingle
 </div>
 <p><strong>Solute templates</strong></p>
 <p>Solute templates are used to assign the z-matrix and forcefield parameters to solute molecules. An example solute template for a united atom biphenyl is shown blelow</p>
-<div class="highlight-python"><div class="highlight"><pre>mode template   # make sure that the parameter file is being read in
+<div class="highlight-python"><div class="highlight"><pre><span></span>mode template   # make sure that the parameter file is being read in
                 # in template mode
 
 #                 |
@@ -1522,28 +1522,28 @@ dihedral CH2 PH2  CH1 PH2  CH1 PH1  CH2 PH1  flex 5.0
 </div>
 <p>The format for a solute template is very similar to that of a residue template. The main difference is that while residue atoms are uniquely identified by thier atom name, solute atoms are uniquely identified by the combined atom name and residue name, e.g. the biphenyl atom CH2 PH2 is a different atom to CH2 PH1.</p>
 <p>A new solute template is started with the line</p>
-<div class="highlight-python"><div class="highlight"><pre>solute name
+<div class="highlight-python"><div class="highlight"><pre><span></span>solute name
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">name</span></code> is the uniquely identifying name of the solute template. As with the other templates, if a solute template with this name already exists, then it is overwritten by the new template. The name of the solute template can be any length up to 300 characters that can include spaces. Valid solute names thus include ‘biphenyl’ and ‘test ligand 132B’ Note that ProtoMS is insensitive to case, so it doesn’t matter how you capitalise the solute name as ProtoMS will ignore it. The solute names ‘biphenyl’, ‘BIPHENYL’ and ‘BiPhenyl’ are all equivalent. ProtoMS will also strip the spaces before and after the solute name, and will replace multiple spaces within the name with single spaces, e.g. ‘ test ligand 132B ’ is equivalent to ‘test ligand 132B’.</p>
 <p>The format and meaning of the valid lines in a solute template file are very similar to those of a residue and chain template. The line</p>
-<div class="highlight-python"><div class="highlight"><pre>info rotate rotdel translate trandel
+<div class="highlight-python"><div class="highlight"><pre><span></span>info rotate rotdel translate trandel
 </pre></div>
 </div>
 <p>has exactly the same format for a solute template as it does for a residue template, and the meaning is very similar. In this case this line sets the maximum amounts that the solute molecule as a whole will be rotated and translated by, in units of A and degrees respectively. This line is optional, and it is not present then the default maximum rotation and translation amounts are both zero. Note that translation and rotation of a solute is about the location of the first automatically added dummy atom at the center of geometry of the solute.</p>
-<div class="highlight-python"><div class="highlight"><pre>atom nam res par0 par1 bnd bndres ang angres dih dihres
+<div class="highlight-python"><div class="highlight"><pre><span></span>atom nam res par0 par1 bnd bndres ang angres dih dihres
 </pre></div>
 </div>
 <p>This line has a very similar meaning to the atom line of the residue and chain templates. In this case, this line identifies the solute atom called <code class="docutils literal"><span class="pre">nam</span></code>, in residue named <code class="docutils literal"><span class="pre">res</span></code>, and assigns it the CLJ parameters <code class="docutils literal"><span class="pre">par0</span></code> at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 0.0 and <code class="docutils literal"><span class="pre">par1</span></code> at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 1.0. The bond, angle and dihedral z-matrix atoms that are used to build this atom are the atom named <code class="docutils literal"><span class="pre">bnd</span></code> in residue <code class="docutils literal"><span class="pre">bndres</span></code>, the atom named <code class="docutils literal"><span class="pre">ang</span></code> in residue <code class="docutils literal"><span class="pre">angres</span></code> and the atom named <code class="docutils literal"><span class="pre">dih</span></code> in residue <code class="docutils literal"><span class="pre">dihres</span></code>. These z-matrix atoms must have appeared in the solute template before this atom. Note that this line does not add a bond, angle or dihedral between any of these atoms. The atom lines only specify how to move and construct the solute, not how to evaluate its energy.</p>
-<div class="highlight-python"><div class="highlight"><pre>bond nam1 res1 nam2 res2
+<div class="highlight-python"><div class="highlight"><pre><span></span>bond nam1 res1 nam2 res2
 </pre></div>
 </div>
 <p>This line adds a bond between solute atoms <code class="docutils literal"><span class="pre">nam1</span></code> in residue <code class="docutils literal"><span class="pre">res1</span></code> and <code class="docutils literal"><span class="pre">nam2</span></code> in residue <code class="docutils literal"><span class="pre">res2</span></code>. You can make this bond flexible by using the <code class="docutils literal"><span class="pre">flex</span></code> keyword in the same way as described for the chain and residue templates (as long as this bond is used in one of the atom z-matrix lines to construct one of the atoms). You can also use the same <code class="docutils literal"><span class="pre">dummy</span></code> keyword as the chain and residue templates to turn this into a dummy bond. As in those cases, a dummy bond is a non-bond, and has the effect of stating that the two atoms are not bonded together. The forcefield parameters for this bond are obtained via the AMBER types of the two solute atoms. However these parameters may be overridden through the use of the param keyword as used in the chain and residue templates, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre>bond nam1 res1 nam2 res2 param par0 par1
+<div class="highlight-python"><div class="highlight"><pre><span></span>bond nam1 res1 nam2 res2 param par0 par1
 </pre></div>
 </div>
 <p>This line states that this bond uses bond parameter <code class="docutils literal"><span class="pre">par0</span></code> at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 0.0 and bond parameter <code class="docutils literal"><span class="pre">par1</span></code> at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 1.0. The angles, Urey Bradley terms and dihedrals in the solute are specified in a very similar manner</p>
-<div class="highlight-python"><div class="highlight"><pre>angle nam1 res1 nam2 res2 nam3 res3
+<div class="highlight-python"><div class="highlight"><pre><span></span>angle nam1 res1 nam2 res2 nam3 res3
 
 ureybradley nam1 res1 nam2 res2 nam3 res3
 
@@ -1553,7 +1553,7 @@ dihedral nam1 res1 nam2 res2 nam3 res3 nam4 res4
 <p>the <code class="docutils literal"><span class="pre">dummy</span></code>, <code class="docutils literal"><span class="pre">flex</span></code> and <code class="docutils literal"><span class="pre">param</span></code> options may be used with these lines, with the exception of the <code class="docutils literal"><span class="pre">ureybradley</span></code> line, which cannot use the <code class="docutils literal"><span class="pre">flex</span></code> option. ProtoMS only uses the bonds listed in the solute template to work out which atoms are bonded together. ProtoMS does not try to guess which atoms are bonded together, so you will need to add all bonds that exist in the solute to the template file to ensure that the intramolecular energy is calculated correctly. ProtoMS will use these explicitly added, non-dummy bonds to work out all of the implicit (additional) angles and dihedrals in the solute. You do not need to include any additional angles or dihedrals in the solute template as they are added automatically by ProtoMS. If you do not want the energy of an additional angle or dihedral to be evaluated then you will need to add it to the template with the dummy option set. This is the same behaviour as in the chain and
 residue templates.</p>
 <p>Solute templates have one extra type of valid line compared to chain or residue templates. This line is used to describe how the geometry of the solute changes with <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/></p>
-<div class="highlight-python"><div class="highlight"><pre>variable nam res type val0 val1
+<div class="highlight-python"><div class="highlight"><pre><span></span>variable nam res type val0 val1
 </pre></div>
 </div>
 <p><code class="docutils literal"><span class="pre">nam</span></code> and <code class="docutils literal"><span class="pre">res</span></code> are the name and residue of the atom that changes geometry with <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>. <code class="docutils literal"><span class="pre">typ</span></code> can be either <em>bond</em>, <em>angle</em> or <em>dihedral</em> and describes whether the bond, angle or dihedral changes with <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>, with <code class="docutils literal"><span class="pre">val0</span></code> giving its value at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 0.0 and <code class="docutils literal"><span class="pre">val1</span></code> giving its value at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 1.0. These variable geometry lines are very useful for free energy calculations where an atom is being ‘switched off’ by turning it into a dummy atom. You can use the variable geometry line to shrink the bond length to its z-matrix bonded atom, thus having the effect of pulling it within the van der waals sphere of the bonded atom. This prevents instabilities that may arise when the atom is close to being fully switched off.</p>
@@ -1562,7 +1562,7 @@ residue templates.</p>
 <p>While <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> may be used to change the forcefield parameters of any atom of any molecule in the entire system, only solutes may have their geometry changed with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>. This is because geometry variations are implemented by making two copies of the solute and using these to shadow the original, reference solute. While you will not see these shadow solutes, they will reduce the number of solutes that you can load by two for every solute of variable geometry that you load. This means that while you can load a maximum of 50 solutes, you can only load a maximum of 16 solutes that have variable geometry.</p>
 <p><strong>Solvent Templates</strong></p>
 <p>Solvent molecules are implemented as rigid molecules in ProtoMS, so they do not require a z-matrix, nor do they have any internal degrees of freedom or energy terms. Solvent templates are thus much more simple than chain, residue and solute templates as they are only used to assign the forcefield parameters of the solvent molecules. An example solvent template for TIP4P water is shown in below</p>
-<div class="highlight-python"><div class="highlight"><pre>#
+<div class="highlight-python"><div class="highlight"><pre><span></span>#
 # TIP4P (T4P)
 #
 #     O00       dist(OH) = 0.9572 A
@@ -1585,17 +1585,17 @@ atom M03 2006 2006
 </pre></div>
 </div>
 <p>A new solvent template is signified by the line</p>
-<div class="highlight-python"><div class="highlight"><pre>solvent name
+<div class="highlight-python"><div class="highlight"><pre><span></span>solvent name
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">name</span></code> is the uniquely identifying name of the solvent template. As in the cases of the other templates, if a solvent template with this name has been previously loaded, then it is overwritten. Solvent molecules are named using the residue name column from the PDB file, so the solvent name is limited to four characters. There are only two types of line that are valid within a solvent template. These are an info line, that has the same meaning as that in the solute templates, and</p>
-<div class="highlight-python"><div class="highlight"><pre>atom nam par0 par1
+<div class="highlight-python"><div class="highlight"><pre><span></span>atom nam par0 par1
 </pre></div>
 </div>
 <p>which states that the solvent atom called <code class="docutils literal"><span class="pre">nam</span></code> has CLJ parameters <code class="docutils literal"><span class="pre">par0</span></code> at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 0.0 and <code class="docutils literal"><span class="pre">par1</span></code> at <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> = 1.0. The file <em>solvents.ff</em> in the <em>parameter</em> directory contains the solvent templates for a large number of standard solvents. All of the CLJ parameters used in this file range from 2001 to 2999.</p>
 <p><strong>GCsolute Templates</strong></p>
 <p>GCsolute molecules are implemented as rigid molecules in ProtoMS, like solvents, so they do not require a z-matrix, nor do they have any internal degrees of freedom or energy terms. GCsolutes templates are thus much more simple than chain, residue and solute templates as they are only used to assign the forcefield parameters of the GCsolute molecules. An example GCsolute template for TIP4Pg water is shown below</p>
-<div class="highlight-python"><div class="highlight"><pre>mode template
+<div class="highlight-python"><div class="highlight"><pre><span></span>mode template
 grand WAT
 info translate 0.15 rotate 15
 atom   O00  8003 8003
@@ -1610,7 +1610,7 @@ par  8005   ??    0   -1.040      0.0        0.0
 </pre></div>
 </div>
 <p>A new GCsolute template is signified by the line</p>
-<div class="highlight-python"><div class="highlight"><pre>grand name
+<div class="highlight-python"><div class="highlight"><pre><span></span>grand name
 </pre></div>
 </div>
 <p>where <code class="docutils literal"><span class="pre">name</span></code> is the uniquely identifying name of the GCsolute template. As in the cases of the other templates, if a GCsolute template with this name has been previously loaded, then it is overwritten. GCsolute molecules are named using the residue name column from the PDB file, so the name is limited to four characters. There are only two types of line that are valid within a GCsolute template. These are an info line, that has the same meaning as that in the solute templates, and :</p>
@@ -1625,7 +1625,7 @@ par  8005   ??    0   -1.040      0.0        0.0
 <div class="section" id="protein-file">
 <span id="protpdb"></span><h2>Protein File<a class="headerlink" href="#protein-file" title="Permalink to this headline">¶</a></h2>
 <p>Proteins are loaded from protein files. The names of the protein files are specified using the proteinN command described in section <a class="reference internal" href="#incmd"><span>Specifying input files</span></a>. The protein file is just a standard PDB format file. The name of the protein contained within this file is taken from the HEADER line of the PDB. e.g.:</p>
-<div class="highlight-python"><div class="highlight"><pre>HEADER p38 kinase
+<div class="highlight-python"><div class="highlight"><pre><span></span>HEADER p38 kinase
 </pre></div>
 </div>
 <p>The protein name may contain spaces, though ProtoMS will strip any spaces before or after the name, and will collapse multiple spaces into a single space (much like it does with the solute name).</p>
@@ -1636,7 +1636,7 @@ par  8005   ??    0   -1.040      0.0        0.0
 <div class="section" id="solute-file">
 <span id="solpdb"></span><h2>Solute File<a class="headerlink" href="#solute-file" title="Permalink to this headline">¶</a></h2>
 <p>Solute input files are very similar to protein input files. Solute files are standard PDB format coordinate files. The name of the solute is read from the HEADER line in an identical manner to the name of a protein, e.g.:</p>
-<div class="highlight-python"><div class="highlight"><pre>header biphenyl
+<div class="highlight-python"><div class="highlight"><pre><span></span>header biphenyl
 </pre></div>
 </div>
 <p>The solute name is used to locate the solute template, which is used to assign the z-matrix and forcefield parameters of the solute.</p>
@@ -1655,15 +1655,15 @@ TIP4P water has an O-H bond length of 0.9572 A).</p>
 <p>If multiple solvent files are loaded, then the solvents from the newer files are appended onto the list of solvents loaded from the previous file. If solvent file 1 contains 340 solvent molecules, and solvent file 2 contains 10 solvent molecules, then the solvents from file 1 will be loaded as solvent molecules 1-340, and those from solvent file 2 will be loaded as solvent molecules 341-350.</p>
 <p><strong>Boundary conditions</strong></p>
 <p>As well as containing the coordinates of the solvent molecules, the solvent file may be used to specify the parameters needed for the boundary conditions. To do this, the solvent file must include a HEADER line that has one of the following formats</p>
-<div class="highlight-python"><div class="highlight"><pre>HEADER box dimx dimy dimz
+<div class="highlight-python"><div class="highlight"><pre><span></span>HEADER box dimx dimy dimz
 </pre></div>
 </div>
 <p>This states that the solvent file contains a box of solvent of dimensions <cite>dimx</cite> A by <cite>dimy</cite> A by <cite>dimz</cite> A, with the box centered on the origin. Note that ProtoMS will not check to see if this information is correct, so you will need to ensure that that no solvent molecules lie outside of this box.</p>
-<div class="highlight-python"><div class="highlight"><pre>HEADER box ox oy oz tx ty tz
+<div class="highlight-python"><div class="highlight"><pre><span></span>HEADER box ox oy oz tx ty tz
 </pre></div>
 </div>
 <p>This states that the solvent file contains a box of solvent with the bottom-left-back corner located at coordinates (<cite>ox</cite>,`oy`,`oz`) A and the top-right-front corner located at coordinates (<cite>tx</cite>,`ty`,`tz`) A. Again ProtoMS will not check that this information is accurate!</p>
-<div class="highlight-python"><div class="highlight"><pre>HEADER cap ox oy oz rad k
+<div class="highlight-python"><div class="highlight"><pre><span></span>HEADER cap ox oy oz rad k
 </pre></div>
 </div>
 <p>This states that the solvent file contains solvent molecules restrained to be within a spherical cap of <cite>radius</cite> rad A, centered at coordinates (<cite>ox</cite>,`oy`,`oz`) A, using a half-harmonic force constant of k kcal mol-1 A -2 . ProtoMS will not check to see whether or not this information is accurate.</p>
@@ -1714,7 +1714,7 @@ restart file is human-readable and editable, I recommend that you do not attempt
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, J. Graham.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

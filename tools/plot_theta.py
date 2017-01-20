@@ -139,13 +139,7 @@ def plot_dist(dict_th,plotname="theta_dist",xlab="theta") :
   set_axes()
   plt.savefig(plotname+"_each.png")
   
-  
-
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -155,7 +149,14 @@ if __name__ == '__main__' :
   parser.add_argument('-m','--molecule',help="the residue name of the JAWS molecule. Default='WAT'",default="WAT")
   parser.add_argument('-p','--plotname',help="the start of the filename for the plots generated. Default='theta_dist'",default="theta_dist")
   parser.add_argument('--skip',help="the number of results snapshots to skip, Default = 0",default="0")
-  args = parser.parse_args()
+  return parser
+
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   try :
     skip_steps = int (args.skip)

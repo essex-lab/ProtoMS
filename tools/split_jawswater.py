@@ -93,8 +93,7 @@ def set_jaws2_box(water_files,length=3) :
     watobj.header = watobj.header + "\n"
   return water_files
 
-if __name__ == "__main__":
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -102,7 +101,11 @@ if __name__ == "__main__":
   parser.add_argument('-w','--waters',help="the name of the PDB-file containing the waters.")
   parser.add_argument('-o','--out',help="the prefix of the output PDB-files",default="")
   parser.add_argument('--jaws2box',action='store_true',help="whether to apply a header box for jaws2 to the pdb files of individual waters",default=False)
-  args = parser.parse_args()
+  return parser
+
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("split_jawswater_py.log")

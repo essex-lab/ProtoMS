@@ -4,20 +4,17 @@ Tools
 
 In the ``$PROTOMSHOME/tools`` folder we have collect a range of useful scripts to setup and analyse ProtoMS simulations. Many of them are used by the ``protoms.py`` setup script. In this page we have collected the documentation for these tools with the user as a focus. Developers might be interested in looking at the Python code manual in the ``.doc`` folder.
 
+
+
+	  
+	  
 ----------------------------
 ambertools.py
 ----------------------------
-
-**Syntax:**
- 
-``ambertools.py -f pdbfile [pdbfile2 ...] [-n name name2 ...] [-c charge charge2 ...]``
-
-* ``-f pdbfile pdbfile2 ...`` = the name of one or more structures in PDB format
-    at least one filename needs to be given
-* ``-n name name2 ...`` = the name of the molecule(s) in the PDB file(s)
-    optional, default = UNK
-* ``-c charge charge2 ...`` = the net charge of the molecule(s) in the PDB file(s)
-    optional, default=0
+.. argparse::
+   :module: tools.ambertools
+   :func: get_arg_parser
+   :prog: ambertools.py
 
 **Examples:**
 
@@ -31,38 +28,20 @@ ambertools.py
 
 **Description:**
 
-
 This tool encapsulate the program ``antechamber`` and ``parmchk`` from the AmberTools suite of programs.
 
 It will produce an Amber prepi-file, containing the z-matrix and atom types of the given solutes, parametrized with the general Amber force field and AM1-BCC charges. It will also produce an Amber frcmod-file with additional parameters not found in the GAFF definition. These files be named after the input ``pdbfile``, replacing the extension ``.pdb`` with ``.prepi`` and ``.frcmod``
 
-The AmberTools program should exist in the system path.
+The ``antechamber`` and ``parmchk`` program should exist in the system path or the AMBERHOME environment variable should be set correctly.
 
 
 -----------------------
 build_template.py
 -----------------------
-
-**Syntax:**
- 
-``build_template.py -p prepifile [-f frcmodfile] [-z zmatfile] [-o outfile] [-n name] [-t trans] [-r rot]``
-
-* ``-p prepifile`` = the name of an Amber prepi file containing the z-matrix and atom types of a solute
-
-* ``-f frcmodfile`` = the name of an Amber frcmod file
-    optional, no default
-
-* ``-z zmatfile`` = the name of a file containing the ProtoMS z-matrix of a solute
-    optional, no default
-* ``-o outfile`` = the name of a ProtoMS template file
-    optional, default = lig.tem
-* ``-n name`` = the name of the solute
-    optional, default = UNK    
-* ``-t trans`` = the maximum translational displacement
-    optional, default = 0.25 A
-* ``-r rot`` = the maximum rotational displacement
-    optional, default = 5 degrees
-
+.. argparse::
+   :module: tools.build_template
+   :func: get_arg_parser
+   :prog: build_template.py
 
 **Examples:**
 
@@ -73,12 +52,11 @@ build_template.py
   build_template.py -p benzene.prepi -f benzene.frcmod -o benzene.template -n BNZ
   build_template.py -p benzene.prepi -f benzene.frcmod -t 1.0 -r 10
  
-
 **Description:**
 
 This tool builds a ProtoMS template file for a solute given an Amber prepi file.
 
-If the solute needs parameter not in the GAFF release, they should be supplied with the ``frcmodfile``. 
+If the solute needs parameters not in the specified GAFF release, they should be supplied with the ``frcmodfile``. 
 
 The tool will automatically make an appropriate z-matrix for Monte Carlo sampling. This works in most situations. However, if something is not working properly with the generated z-matrix, one can be supplied in the ``zmatfile``
 
@@ -87,30 +65,10 @@ The default translational and rotational displacements are based on experience a
 -----------------------
 calc_bar.py
 -----------------------
-
-**Syntax:**
- 
-``calc_bar.py [-d directory] [-r results] [-s nskip] [-m nmax] [-t temperature]  [-b nbootstraps] [-pw] [-pu] [-pl]``
-
-* ``-d directory`` = name of output directory of the simulation
-    optional, default = current working directory (.)
-* ``-r results`` = the beginning of the name of the file to analyse
-    optional, default = results_inst
-* ``-s nskip`` = the number of snapshots to skip at the beginning of the simulation
-    optional, default = 0
-* ``-m nmax`` = the maximum number of snapshots to process
-    optional, default = the total number of snapshot in the results file, excluding nskip
-* ``-t temperature`` = the simulation temperature in degree Celsius 
-    optional, default = 25 degrees
-* ``-b nbootstraps`` = the number of bootstraps samples to use in uncertainty estimation 
-    optional, default = 100
-* ``-pw``  = flag that turns *off* the printing of individual free energies between windows
-    optional, default = on
-* ``-pu``  = flag that turns *off* the printing of uncertainties 
-    optional, default = on
-* ``-pl``  = flag that turns *off* the printing of :math:`\lambda`-values
-    optional, default = on         
-
+.. argparse::
+   :module: tools.calc_bar
+   :func: get_arg_parser
+   :prog: calc_bar.py
 
 **Examples:**
 
@@ -120,7 +78,6 @@ calc_bar.py
   calc_bar.py -s 200
   calc_bar.py -m 200
   calc_bar.py -d out_free/ -pw
-
 
 **Description:**
 
@@ -142,30 +99,10 @@ Block estimates can be constructed by combining ``nskip`` and ``nmax``. For inst
 -----------------------
 calc_clusters.py
 -----------------------
-
-**Syntax:**
-
-``calc_clusters.py -f file1 [file2 ...]  [-o outfile] [-m molecule] [-a atom] [-t type] [-c cutoff] [--skip N] [--max N]``
-
-* ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
-    at least one file needs to be specified
-    can read a PDB trajectory
-* ``-o outfile`` = the produced clusters in PDB format
-    optional, clusters.pdb
-* ``-m molecuke`` = the name of the molecule to cluster
-    optional, default = wat
-* ``-a atom`` = the name of the atom in the residue to cluster
-    optional, no default
-    if not specified, the entire molecule will be clustered
-* ``-t type`` = the clustering algorith
-    optional, default = average
-    can be any of average, single, complete, weighted and centroid
-* ``-c cutoff`` = the cluster cut-off
-    optional, default = 2.0 A
-* ``--skip N`` = skip N snapshots at the beginning of the simulation
-    optional, default = 0
-* ``--max N`` = read and process a maximum of N snapshots
-    optional, default = 99999
+.. argparse::
+   :module: tools.calc_clusters
+   :func: get_arg_parser
+   :prog: calc_clusters.py
 
 **Examples:**
 
@@ -185,36 +122,10 @@ It will extract the coordinates of all atoms with name equal to ``atom`` in resi
 -----------------------
 calc_density.py
 -----------------------
-
-**Syntax:**
-
-``calc_density.py -f file1 [file2 ...]  [-o outfile] [-r residue] [-a atom] [-p padding] [-s spacing] [-e extent] [-n norm] [-t sphere|gaussian] [--skip N] [--max N]``
-
-* ``-f file1 file2`` ... = name(s) of PDB-file(s) containing simulation snapshots
-    at least one file needs to be specified
-    can read a PDB trajectory
-* ``-o outfile`` = the produced density in DX-format
-    optional, default = grid.dx
-* ``-r residue`` = the name of the residue to make a grid on
-    optional, default = wat
-* ``-a atom`` = the name of the atom in the residue to make a grid on
-    optional, default = o00
-* ``-p padding`` = the amount to increase the minimum box in each dimension
-    optional, default = 2.0 A
-* ``-s spacing`` = the grid resolution
-    optional, default = 0.5 A
-* ``-e extent`` = the size of the smoothing
-    optional, default =  1.0 A
-* ``-n norm`` = the normalisation constant
-    optional, default = the number of snapshot processed
-* ``-t sphere|gaussian`` = the type of coordinate smoothing
-    optional, default = sphere
-    ``sphere`` = spherical smoothing with extent radius
-    ``gaussian`` = smoothing with Gaussian with standard deviation = extent 
-* ``--skip N`` = skip N snapshots at the beginning of the simulation
-    optional, default = 0
-* ``--max N`` = read and process a maximum of N snapshots
-    optional, default = 99999
+.. argparse::
+   :module: tools.calc_density
+   :func: get_arg_parser
+   :prog: calc_density.py
 
 **Examples:**
 
@@ -242,41 +153,10 @@ The produced density can be visualized with most programs, e.g. ::
 -----------------------
 calc_dg.py
 -----------------------
-
-**Syntax:**
-
-``calc_dg.py [-d directory directory2 ...] [-r results] [-e ti|bar|mbar] [-s nskip] [-m nmax] [-t temperature]  [-b nbootstraps]  [-pe] [-pg] [-gr] [--analytical] [--numerical both|back|forw ]``
-
-* ``-d directory directory2`` ... = name of output directories of simulations
-    optional, default = current working directory (.)
-    one or more directories can be specified
-* ``-r results`` = the beginning of the name of the file to analyse
-    optional, default = results_inst
-* ``-e ti|bar|mbar`` = the free energy estimator
-    optional, default = ti bar mbar
-    one or more estimators can be specified
-* ``-s nskip`` = the number of snapshots to skip at the beginning of the simulation
-    optional, default = 0
-* ``-m nmax`` = the maximum number of snapshots to process
-    optional, default = the total number of snapshot in the results file, excluding nskip
-* ``-t temperature`` = the simulation temperature in degree Celsius 
-    optional, default = 25 degrees
-* ``-b nbootstraps`` = the number of bootstraps samples to use in uncertainty estimation 
-    optional, default = 100    
-* ``-pe``  = flag that turns *off* the printing of free energy for each directory
-    optional, default = on    
-* ``-pg``  = flag that turns *off* the printing of the gradient
-    optional, default = on
-* ``-gr``  = flag that turns *on* the plotting of the gradient
-    optional, default = off        
-* ``--analytical`` = turns *on* the use of analytical gradients
-  optional, default = off
-* ``--numerical`` = turns *on* the use of numerical gradients and selects the kind
-  optional, default = both
-  ``both`` = uses the free energy in both backward and forward direction to compute the free energy gradient
-  ``back`` = uses the free energy in the backward direction to compute the free energy gradient
-  ``forw`` = uses the free energy in the forward direction to compute the free energy gradient
-
+.. argparse::
+   :module: tools.calc_dg
+   :func: get_arg_parser
+   :prog: calc_dg.py
 
 **Examples:**
 
@@ -290,7 +170,7 @@ calc_dg.py
 
 **Description:**
 
-This tool calculates free energies using the method of thermodynamic integration (TI), Bennet's Acceptance Ratio (BAR) and Multi BAR (MBAR).
+This tool calculates free energies using the method of thermodynamic integration (TI), Bennet's Acceptance Ratio (BAR) and multi state BAR (MBAR).
 
 The program expects that in the ``directory``, ``directory2`` etc. there exist an output folder for each :math:`\lambda`-value, eg. ``lam-0.000`` and ``lam-1.000``
 
@@ -298,51 +178,13 @@ If the ``-gr`` flag is set the gradient with respect to :math:`\lambda` is plott
 
 The MBAR estimator only works if PyMBAR is properly installed and can be loaded as a python library. 
 
-
-
 -----------------------
 calc_gci.py
 -----------------------
-
-**Syntax:**
- 
-``calc_gci.py -d directories [-f file] [-p titration|fit|percentiles|pmf|excess|all] [-c fit|pmf|minimum|excess|all] [-s nskip] [-b nboots] [-i] [-o] [--steps nsteps] [--range A B] [--reverse] [--fit_options]``
-
-* ``-d directories`` = the output directories from GCMC
-* ``-f file`` = the name of ProtoMS results file
-  optional, default =results
-* ``-p`` = the selections for ploting data, 
-  optional, default = none
-    ``titration`` = the average number of GCMC waters at each B value
-    ``fit`` = titration plot with line of best fit
-    ``percentiles`` = titration plot with median fit (red line), 50% confidense region of fit (orange), and 90% confidense region of fit (gray)
-    ``pmf`` = relative binding free energy of a given number of waters, median (blue line), 50% confidense region of fit (light blue), and 90% confidense region of fit (gray)
-    ``excess`` = excess chemical potential of cavity as a function of water occupancy and equilibrium point with bulk water
-    ``all`` = calculate everything
-* ``-c`` = selection for one or several calculations, 
-  optional, default = none
-    ``fit`` = whether to fit and artficial neural network to smooth GCMC titration data
-    ``pmf`` = potential of mean force: free energies for inserting or deleting waters calculated with grand canonical integration
-    ``minimum`` = whether to calculate the occupancy that minimises binding free energy 
-    ``excess`` = excess chemical potential of cavity as a function of water
-    ``all`` = calculate everything
-* ``-s nskip`` = the number of initial snapshots to discard
-  optional, default = 0 
-* ``-b`` = the number of bootstrap samples
-  optional, default = none
-* ``-i`` = python pickle of fitted artificial neural network you wish to use
-  optional, default = none
-* ``-o`` = name of the python pickle of fitted artificial neural network you wish to save
-  optional, default = none
-* ``--steps nsteps`` = the number of units that will comprise the artificial neural network, recommended to be set to equal the number of steps observed in the titration data
-  optional, default = 1
-* ``--range A B`` = the minimum and maximum number of waters you wish to consider
-  optional, default = the range spanned by the titration data
-* ``--reverse`` = whether to peform grand canonical integration in the reverse direction: from the high to low water occupancy, instead of low to high
-  optional, default = False
-* ``--fit_options`` = set of fitting options to parse to the artificial neural network optimisation.
-  optional, default = None
-
+.. argparse::
+   :module: tools.calc_gci
+   :func: get_arg_parser
+   :prog: calc_gci.py
 
 **Examples:**
 
@@ -365,14 +207,13 @@ All the other functions contained in this tool require the fitting of a monotoni
 
 Error estimates of free energies and optimal number of waters are based on either (a) automatic repeated fitting of the ANN from different random initial parameters or (b) bootstrap sampling of the titration data, which samples B-values with replacement. The latter is selected with ``-b nboots``, where ``nboots`` is the number of bootstrap samples. When running a large number of bootstrap samples (eg 1000), its recommended to save to bootstrap ANNs with ``-o``.
 
-The flag ``-c pmf`` calculates the free energy to transfer water molecules from ideal gas, and from bulk water, where the abbreviation stands for “potential of mean force”. A table will be printed
-that contains the free energy to transfer water from ideal gas to the simulated volume (with the heading ``IDEAL GAS TRANSFER FREE ENERGIES``), and the free energy to transfer from bulk water at a temperature of 298.15 K (with the heading ``BINDING FREE ENERGIES``). From the multiple ANN fits (either automatic repeated fits or bootstrap sampling), various statistics have been calculated. The ``Mean`` and ``Median`` are different averages of the calculated free energies, with the median being more robust to bad fits of the ANN than the mean. The standard deviation (``Std.  Dev.``) as well as the range between the 25th and 75th percentiles serve as error estimates.
+The flag ``-c pmf`` calculates the free energy to transfer water molecules from ideal gas, and from bulk water, where the abbreviation stands for “potential of mean force”. A table will be printed that contains the free energy to transfer water from ideal gas to the simulated volume (with the heading ``IDEAL GAS TRANSFER FREE ENERGIES``), and the free energy to transfer from bulk water at a temperature of 298.15 K (with the heading ``BINDING FREE ENERGIES``). From the multiple ANN fits (either automatic repeated fits or bootstrap sampling), various statistics have been calculated. The ``Mean`` and ``Median`` are different averages of the calculated free energies, with the median being more robust to bad fits of the ANN than the mean. The standard deviation (``Std.  Dev.``) as well as the range between the 25th and 75th percentiles serve as error estimates. It is important that standard state correction is applied to binding free energies. This is handled automatically when the volume of the gcmc region is passed to the script with the ``-v`` flag.
 
 Due to the accumulation of error when performing integration, the estimated error of the calculated free energies increases with the number of water molecules. To emphasise this, one can also perform GCI in the reverse direction and calculate the free energy to decouple water from the simulated volume with the flag ``--reverse``.  
 
 One can calculate the free energy to add and remove a specific number of waters with the ``--range`` flag, which requires and upper and a lower number of waters as input. Particularly, the estimated error for the relative free energy between two occupancies is improved as accumulated integration error is reduced.
 
-If this flag is specified along with 'minimum', eg ``-c pmf minimum``, then the number of water molecules that minimises the explicitly calculated binding free energy (the optimal number) is printed under the heading ``MINIMUM BINDING FREE ENERGY STATE``. The B-value that produces an average number of waters equal to the optimal number is also estimated. If only ``-c minimum`` is specified, the B-value that replicates equilibrium with bulk water at a temperature of 298.15 K is estimated using an analytical formula, without calculating binding free energies with GCI. This B-value, and the average number of waters that appear at this B-value are printed under ``THERMODYNAMIC EQUILIBRIUM STATE``.
+If this flag is specified along with 'minimum', eg ``-c pmf minimum``, then the number of water molecules that minimises the explicitly calculated binding free energy (the optimal number) is printed under the heading ``MINIMUM BINDING FREE ENERGY STATE``. The B-value that produces an average number of waters equal to the optimal number is also estimated. If only ``-c minimum`` is specified, the B-value that replicates equilibrium with bulk water at a temperature of 298.15 K is estimated using an analytical formula, without calculating binding free energies with GCI. This B-value, and the average number of waters that appear at this B-value are printed under ``THERMODYNAMIC EQUILIBRIUM STATE``. If the volume of the gcmc region is specified, it is also possible to exactly determine the correct equilibrium B-value and the corresponding water occupancy is determined from the fitted titration curve and nearest simulated B-values.
 
 The flag ``--fit_options`` allows one to pass commands into the ANN fitting tool. The default options for the ANN may need tweaking to accurately reproduce the GCMC titration data. The most important options for the user are “repeats" - number of times the entire process of fitting an ANN is repeated, all fits are retained to estimate the fitting error, default=20; “pin_min” - value to constrain the intercept to, useful when a titration goes to zero waters; “cost” - the type of cost/loss function that is minimised when fitting, the three choices are 'msd' (mean squared deviation), 'absolute' (absolute error), and 'huber' (pseudo Huber loss), default=msd; “c” - the parameter in the pseudo Huber loss function, default=2. Both the 'absolute' and 'huber' loss functions are suited to very noisy titration data, as they are more robust to outliers than 'msd', although using  the fitting algorithm may produce unstable fits with 'absolute'.
 
@@ -380,26 +221,10 @@ The flag ``--fit_options`` allows one to pass commands into the ANN fitting tool
 -----------------------
 calc_gcsingle.py
 -----------------------
-
-**Syntax:**
- 
-``calc_gcsingle.py -d directories [-f file] [-s nskip] [-c] [-p] [--guess number] [--excess]``
-
-* ``-d directories`` = the output directories from GCMC
-* ``-f file`` = the name of ProtoMS results file
-  optional, default =results
-* ``-s nskip`` = the number of initial snapshots to discard
-  optional, default = 0 
-* ``-c`` = whether to calculate the ideal gas transfer free energy, 
-  optional, default = True
-  if not set the program will use all data
-* ``-p`` = whether to plot the titration data with least squares fit and bootstrap fit
-  optional
-* ``--guess number`` = the initial estimate of the transfer free energy used as the initial value in least squares fitting
-  optional, default = -6.2
-* ``--excess`` = whether to view and calculate the excess chemical potential
-  optional
-
+.. argparse::
+   :module: tools.calc_gcsingle
+   :func: get_arg_parser
+   :prog: calc_gcsingle.py
 
 **Examples:**
 
@@ -412,30 +237,15 @@ calc_gcsingle.py
 
 **Description:**
 
-This tool analyses and plots free energies from GCMC simulations on sites that can bind only a single water molecule as described in Ross et al., J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943. The tool fits a logistic function to GCMC titration data, where the point of inflection/point of half maximum is equals the free energy to transfer a water molecule from ideal gas to the GCMC volume, divided by kT. This tool should only be applied to GCMC titration data where the maximum occupancy equals 1.
+This tool analyses and plots free energies from GCMC simulations on sites that can bind only a single water molecule as described in Ross et al., J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943. The tool fits a logistic function to GCMC titration data, where the point of inflection/point of half maximum is equals the free energy to transfer a water molecule from ideal gas to the GCMC volume, divided by kT. This tool should only be applied to GCMC titration data where the maximum occupancy equals 1. To calculate standard state binding free energies the gcmc region volume should be specified with the ``-v``` flag and the relevant correction will be applied to the free energies.
 
 -----------------------
 calc_replicapath.py
 -----------------------
-
-**Syntax:**
- 
-``calc_replicapath.py -f file1 [file2 ...] -p replica1 [replica2 ...] -k lambda|temperature|rest|global [-o outfile]``
-
-
-* ``-f file1 file2`` ... = the name(s) of ProtoMS results file(s)
-    at least one file needs to be given
-* ``-p replica1 replica2`` ... = the replica values to plot
-    at least one replica value needs to be given
-* ``-k lambda|temperature|rest|global`` = the kind of replicas
-    optional, default = lambda
-    ``lambda`` = :math:`\lambda` replica exchange replicas
-    ``temperature`` = temperature replica exchange replicas
-    ``rest`` = solute tempering replica exchange replicas
-    ``global`` = global replica exchange replicas, if combining :math:`\lambda` and temperature replica exchange
-* ``-o outfile`` = the name of a PNG file to write the replica paths 
-    optional, default = replica_path.png
-
+.. argparse::
+   :module: tools.calc_replicapath
+   :func: get_arg_parser
+   :prog: calc_replicapath.py
 
 **Examples:**
 
@@ -444,9 +254,6 @@ calc_replicapath.py
   calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 1.000
   calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 0.500 1.000 -o replica_paths.png
   calc_replicapath.py -f out_free/t-*/lam-0.000/results -p 25.0 35.0 45.0 -k temperature
-
-
-
 
 **Description:**
 
@@ -459,19 +266,10 @@ If the kind of replicas is from REST or temperature replica exchange the ``repli
 -----------------------
 calc_rmsd.py
 -----------------------
-
-**Syntax:**
- 
-``calc_rmsd.py -i pdbfile -f file1 [file2 ...] -l ligand [-a atom] [-t temperature]``
-
-* ``-i pdbfile`` = the reference, initial PDB file
-* ``-f file1 file2`` ... = the name(s) of ProtoMS results file(s)
-  at least one file needs to be given
-* ``-l ligand`` = the residue name of the ligand
-* ``-a atom`` = the atom to calculate the RMSD of
-  optional, if not set the program will calculate the RMSD of the geometric center
-* ``-t temperature`` = the simulation temperature in K
-  optional, default = 298 K
+.. argparse::
+   :module: tools.calc_rmsd
+   :func: get_arg_parser
+   :prog: calc_rmsd.py
 
 **Examples:**
 
@@ -480,66 +278,23 @@ calc_rmsd.py
   calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz
   calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz -a c4
 
-
 **Description:**
 
 This tool calculate the RMSD of a ligand in a simulation.
 
 If the ``atom`` name is given, the tool will calculate the RMSD of that atom with respect to its position in ``pdbfile``. Otherwise, the program will calculate the RMSD of the geometric centre with respect to ``pdbfile``.
 
-A force constant to keep the ligand constrained is estimated from the RMSD using the equipartition theorem.
-
+A force constant to keep the ligand restrained for free energy calculations is estimated from the RMSD using the equipartition theorem.
 
 -----------------------
 calc_series.py
 -----------------------
+.. argparse::
+   :module: tools.calc_series
+   :func: get_arg_parser
+   :prog: calc_series.py
 
-**Syntax:**
-
-``calc_series.py -f file1 [file2 ...] [-o outprefix] [-s series series2 ...] [-p sep|sub|single|single_first0|single_last0] [--nperm N] [--threshold N] [--average] [--moving windowsize]``
-
-* ``-f file1 file2`` ... = the name(s) of ProtoMS result file(s)
-    at least one name needs to be given
-* ``-o outprefix`` = the prefix of the created PNG-files
-    optional, default = results
-* ``-s serie series2`` ... = the name of the series to plot
-    optional, no default
-* ``-p sep|sub|single|single_first0|single_last0`` = the type of plot if plotting multiple series
-    optional, no default
-    ``sep`` = separate plots
-    ``sub`` = sub plots
-    ``single`` = all series in one plot
-    ``single_first0`` = all series in one plot, but make the first value zero
-    ``single_last0`` = all series in one plot, but make the last value zero
-* ``--nperm N`` = the number of permutation tests to determine equilibration
-    optional, default = 0 (use analytical test)
-* ``--threshold N`` = the signficance level for testing equilibration
-    optional, default = 0.05
-* ``--average`` = flag that turns *on* plotting running averages of the series
-    optional, default = off (plot raw series)
-* ``--moving windowsize`` = turns *on* plotting of moving averages with a specific window size
-    optional, default = off (plot raw series)
-
-**Examples:**
-
-:: 
-
-  calc_series.py -f results
-  calc_series.py -f results -s total gradient
-  calc_series.py -f results -s total gradient -p sub
-  calc_series.py -f lam-*/results -s gradient
-
-**Description:**
-
-This tools plots and analyses time series.
-
-The series to plot is selected by the ``-s`` flag. Basically any property written to the ProtoMS results file can be plotted, e.g. energies, volume, gradients etc. If the ``-s`` flag is not specified, a wizard will display all available series that can be plotted. This can be useful if one is unsure what the name of the series is. 
-
-The tool can plot multiple series and there is five choices how produce these plots, set by the ``-p`` flag. If the ``sep`` multiple PNG files will be created, one for each series. With all other choices, one PNG file is created. If the ``-p`` flag is not specified on the command line, a wizard will prompt the user for the different options.
-
-All plotted data series will also be written to disc. If ``sep`` is used, separate files will be written as well. 
-
-For each time series, the tool will estimate the equilibration time. It will do this by performing a statistical test based on the rank order of the series. If the series is equilibrated it will have a slope close to zero and the Kendall's &tau; will be zero. When the equilibration time has been determined, the tool will estimate the number of independent samples in the production part using the method of statistical inefficiency. The equilibration time will also be estimated from a method that maximizes the number uncorrelated samples as suggested on alchemistry.org.
+on time has been determined, the tool will estimate the number of independent samples in the production part using the method of statistical inefficiency. The equilibration time will also be estimated from a method that maximizes the number uncorrelated samples as suggested on alchemistry.org.
 
 Apart from the raw series, the tool can also plot the running average if the ``--average`` flag is set or the moving average if the ``--moving`` flag is used.
 
@@ -549,38 +304,10 @@ Typically only a single ProtoMS results file will be analysed and plotted. Howev
 -----------------------
 calc_ti.py
 -----------------------
-
-**Syntax:**
-
-``calc_ti.py [-d directory] [-r results] [-s nskip] [-m nmax]  [-pg] [-pp] [-pl] [-pu] [-gr] [--analytical] [--numerical both|back|forw ]``
-
-
-* ``-d directory`` = name of output directory of the simulation
-    optional, default = current working directory (.)
-* ``-r results`` = the beginning of the name of the file to analyse
-    optional, default = results_inst
-* ``-s nskip`` = the number of snapshots to skip at the beginning of the simulation
-    optional, default = 0
-* ``-m nmax`` = the maximum number of snapshots to process
-    optional, default = the total number of snapshot in the results file, excluding nskip
-* ``-pg``  = flag that turns *off* the printing of the gradient
-    optional, default = on
-* ``-pp``  = flag that turns *off* the printing of the PMF
-    optional, default = on
-* ``-pl``  = flag that turns *off* the printing of :math:`\lambda`-values
-    optional, default = on
-* ``-pu``  = flag that turns *off* the printing of uncertainties 
-    optional, default = on
-* ``-gr``  = flag that turns *on* the plotting of the gradient
-    optional, default = off        
-* ``--analytical`` = turns *on* the use of analytical gradients
-  optional, default = off
-* ``--numerical`` = turns *on* the use of numerical gradients and selects the kind
-  optional, default = both
-  ``both`` = uses the free energy in both backward and forward direction to compute the free energy gradient
-  ``back`` = uses the free energy in the backward direction to compute the free energy gradient
-  ``forw`` = uses the free energy in the forward direction to compute the free energy gradient
-
+.. argparse::
+   :module: tools.calc_ti
+   :func: get_arg_parser
+   :prog: calc_ti.py
 
 **Examples:**
 
@@ -607,20 +334,15 @@ Block estimates can be constructed by combining ``nskip`` and ``nmax``. For inst
   calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
   done
 
+Rather than manually specifying snapshots to skip with ``nskip`` you can also simply give the ``autoeqb`` option that uses the automatic equilibration detection functionality of calc_series to decide how much data to include in the ensemble averages. This should be used with caution and checked.
 
 -----------------------
 clear_gcmcbox.py
 -----------------------
-
-**Syntax:**
-
-``clear_gcmcbox.py -b boxfile -s waterfile [-o outfile]``
-
-* ``-b boxfile`` = the name of a PDB file containing a GCMC or JAWS1 box
-* ``-w waterfile`` = the name of a PDB file containing the bulk water
-* ``-o outfile`` = the created PDB file containing cleaned bulk water
-    optional, default = cleared_box.pdb 
-
+.. argparse::
+   :module: tools.clear_gcmcbox
+   :func: get_arg_parser
+   :prog: clear_gcmcbox.py
 
 **Examples:**
 
@@ -635,23 +357,15 @@ This tool clears a GCMC or JAWS-1 simulation box from any bulk water placed ther
 
 In a GCMC and JAWS-1 simulation the bulk water is prevented to enter or exit a GCMC or JAWS-1 simulation box. Therefore, bulk water that are within this box needs to be removed prior to the GCMC or JAWS-1 simulation. 
 
-The ``boxfile`` is typically created by ``make_gcmcbox.py`` and the ``waterfile`` is typically created by ``solvate.py`` and can be either a droplet or a box
+The ``boxfile`` is typically created by ``make_gcmcbox.py`` and the ``waterfile`` is typically created by ``solvate.py`` and can be either a droplet or a box.
 
 -----------------------
 convertatomnames.py
 -----------------------
-
-**Syntax:**
-
-``convertatomnames.py -p pdbfile [-o outfile] [-s style] [-c conversionfile]``
-
-* ``-p pdbfile`` = the name of a PDB file that should be modified
-* ``-o outfile`` = the name of the modified PDB file
-    optional, default = protein_pms.pdb
-* ``-s style`` = the naming convention in pdbfile
-    optional, default = amber
-* ``-c conversionfile`` = the name of file containing conversion instructions
-    optional, default = atomnamesmap.dat  
+.. argparse::
+   :module: tools.convertatomnames
+   :func: get_arg_parser
+   :prog: convertatomnames.py
 
 **Examples:**
 
@@ -673,18 +387,10 @@ A file containing conversion instructions for amber and charmm is available in t
 -----------------------
 convertwater.py
 -----------------------
-
-**Syntax:**
- 
-``convertwater.py -p pdbfile [-o outfile] [-m model] [--ignoreh]``
-
-* ``-p pdbfile`` = the name of a PDB containing waters to be modified
-* ``-o outfile`` = the name of the modified PDB file
-    optional, default = convertedwater.pdb
-* ``-m model`` = the name of the target water model
-    optional, default = tip4p
-* ``--ignoreh`` = flag that turns *on* the ignoring of hydrogen atoms
-    optional, default = off 
+.. argparse::
+   :module: tools.convertwater
+   :func: get_arg_parser
+   :prog: convertwater.py
 
 **Examples:**
 
@@ -706,23 +412,10 @@ If the ``--ignoreh`` flag is given, the script will discard the hydrogen atoms f
 -----------------------
 distribute_waters.py
 -----------------------
-
-**Syntax:**
-
-``distribute_waters.py -b box -m molecules [-o outfile] [--model t3p|t4p ] [--resname resname] [--number number]``
-
-* ``-b box`` = the dimensions of the box where the (water) molecules will be distributed. Six arguments expected: origin (x,y,z) & length (x,y,z)
-* ``-m molecules`` = either the file containing the molecules to distribute, or the number of water molecules to distribute in the box
-* ``-o outfile`` = the name of the file where the distributed molecules will be saved
-    optional, default = ghostmolecules.pdb
-* ``--model t3p|t4p`` = the water model used when a number is especified in '-m molecules'
-    optional, default =  t4p
-    ``t4p`` = tip4p water model
-    ``t3p`` = tip3p water model
-* ``--resname resname`` = the residue name used in the outfile when a number is especified in '-m molecules'
-    optional, default = WAT
-* ``--number number`` = the required number of molecules in the box when it differs from the number of molecules in the file specified in '-m molecules'
-    optional, default = None (only the molecules in the file will be distributed in the box)
+.. argparse::
+   :module: tools.distribute_waters
+   :func: get_arg_parser
+   :prog: distribute_waters.py
 
 **Examples:**
 
@@ -743,18 +436,10 @@ It can place molecules in random positions and orientations with their geometry 
 -----------------------
 divide_pdb.py
 -----------------------
-
-**Syntax:**
-
-``divide_pdb.py [-i input] [-o output] [-p path]``
-
-* ``-i input`` = the name of your multi-pdb file
-    optional, default = all.pdb
-* ``-o output`` = the beginning of the name of your individual pdb files
-    optional, default = snapshot\_
-* ``-p path`` = the directory where the input should be found and the output printed
-    optional, default = ./
-
+.. argparse::
+   :module: tools.divide_pdb
+   :func: get_arg_parser
+   :prog: divide_pdb.py
 
 **Examples:**
 
@@ -771,49 +456,10 @@ This tool splits up a PDB file with multiple models (the keyword END defines the
 -----------------------
 generate_input.py
 -----------------------
-
-**Syntax:**
- 
-``generate_input.py [-s equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2] [-p protein.pdb] [-l lig1.pdb lig2.pdb ...] [-t template1 template2 ...] [-pw protwat.pdb] [-lw ligwat.pdb] [-o outfile] [--outfolder folder] [--lambdas nlambdas | lambda1 lambda2 ...] [--adams B1 B2 ...] [--jawsbias bias] [--gcmcwater wat.pdb] [--gcmcbox box.pdb] [--nequil N] [--nprod N] [--dumpfreq N] [--absolute] [--dovacuum]``
-
-* ``-s equilibration|sampling|dualtopology|singletopology|gcmc|jaws1|jaws2`` = the type of simulation to perform
-    optional, default = equilibration
-* ``-p protein.pdb`` = the name of the protein PDB file
-    optional, no default
-* ``-l lig1.pdb lig2.pdb ...`` = the name(s) of PDB file(s) containing ligand(s)
-    optional, no default
-* ``-t template1 template2 ...`` = the name(s) of ProtoMS template file(s) that needs to be loaded
-    optional, no default
-* ``-pw protwat.pdb`` = the name of a PDB file with bulk water for the protein
-    optional, no default
-* ``-lw ligwat.pdb`` = the name of a PDB file with bulk water for the ligand(s)
-    optional, no default
-* ``-o outfile`` = the prefix for the created ProtoMS command file
-    optional, default = run
-* ``--outfolder folder`` = the ProtoMS output folder
-    optional, default = "" (empty string)
-* ``--lambdas nlambdas | lambda1 lambada2`` ... = specification of :math:`\lambda` space for free energy calculations
-    optional, default = 16
-    if a single value is given, this number of :math:`\lambda`-values is created uniformly from 0 to 1
-    if a list of values are given, this is the :math:`\lambda`-values to use
-* ``--adams B1 B2 ...`` = the Adams parameter for GCMC
-    optional, default = 0
-* ``--jawsbias bias`` = the bias to apply in JAWS-2 simulations
-    optional, default = 0
-* ``--gcmcwater wat.pdb`` = the name of a PDB file with reservoir waters for GCMC and JAWS-1
-    optional, no default
-* ``--gcmcbox box.pdb`` = the name of a PDB file with GCMC or JAWS-1 simulation box dimension
-    optional, no default
-* ``--nequil N`` = the number of equilibration moves
-    optional, default = 5E6
-* ``--nprod N`` = the number of production moves
-    optional, default = 40E6
-* ``--dumpfreq N`` = the frequency with which output is written to disc
-    optional, default = 1E5
-* ``--absolute`` = turns *on* the setup of absolute free energies
-    optional, default = off          
-* ``--dovacuum`` = turns *on* the setup of vacuum simulation
-    optional, default = off
+.. argparse::
+   :module: tools.generate_input
+   :func: get_arg_parser
+   :prog: generate_input.py
 
 **Examples:**
 
@@ -837,15 +483,10 @@ The tool will create at most two ProtoMS command files, one for the protein simu
 -----------------------
 make_dummy.py
 -----------------------
-
-**Syntax:**
-
-``make_dummy.py -f pdbfile [-o outfile]``
-
-* ``-f pdbfile`` = the name of PDB file containing the solute
-* ``-o outfile`` = the name of the created dummy PDB file
-    optional, default = dummy.pdb
-
+.. argparse::
+   :module: tools.make_dummy
+   :func: get_arg_parser
+   :prog: make_dummy.py
 
 **Examples:**
 
@@ -864,16 +505,10 @@ The dummy particle will be placed at the centre of the solute.
 -----------------------
 make_gcmcbox.py
 -----------------------
-
-**Syntax:**
- 
-``make_gcmcbox.py -s pdbfile [-o outfile] [-p padding]``
-
-* ``-s pdbfile`` = the name of a PDB file containing a solute molecule
-* ``-o outfile`` = a PDB file with the created box
-    optional, default = gcmc_box.pdb
-* ``-p padding`` = the extra space to add to the box in each dimension
-    optional, default = 2.0 A
+.. argparse::
+   :module: tools.make_gcmcbox
+   :func: get_arg_parser
+   :prog: make_gcmcbox.py
 
 **Examples:**
 
@@ -900,19 +535,10 @@ When an appropriate box has been made, it can be used by ``solvate.py`` to fill 
 -----------------------
 make_single.py
 -----------------------
-
-**Syntax:**
- 
-``make_single.py -t0 template0 -t1 template1 -p0 pdbfile0 -p1 pdbfile1 [-m map] [-o outfile]``
-
-* ``-t0 template0`` = the name of a ProtoMS template file of solute at :math:`\lambda=0.0`
-* ``-t1 template1`` = the name of a ProtoMS template file of solute at :math:`\lambda`=1.0`
-* ``-p0 pdbfile0`` = the name of a PDB file of the solute at :math:`\lambda=0.0`
-* ``-p1 pdbfile1`` = the name of a PDB file of the solute at :math:`\lambda=1.0`
-* ``-m map`` = the name of a correspondence map
-    optional, no default
-* ``-o outfile`` = the start of the name of the created single-topology templates
-    optional, default = single
+.. argparse::
+   :module: tools.make_single
+   :func: get_arg_parser
+   :prog: make_single.py
 
 **Examples:**
 
@@ -941,13 +567,10 @@ A summary of the charges and van der Waals parameters in the four states will be
 -----------------------
 merge_templates.py
 -----------------------
-
-**Syntax:**
- 
-``merge_templates.py -f file1 file2 [file3 ...] -o outfile``
-
-* ``-f file1 file2 file3`` ... = the ProtoMS template files that should be merged
-* ``-o outfile`` = the name of the merged ProtoMS templatefile
+.. argparse::
+   :module: tools.merge_templates
+   :func: get_arg_parser
+   :prog: make_templates.py
 
 **Examples:**
 
@@ -965,21 +588,11 @@ The force field parameters in ``file2`` will be re-numbered so that they do not 
 -----------------------
 plot_theta.py
 -----------------------
-
-**Syntax:**
-``plot_theta.py [-h] [-r results] [-s restart] [-m molecule] [-p plotname] [--skip]``
-
-* ``-r results`` = the name of the results file
-    optional, deafult = 'results'
-* ``-s restart`` = the replica values to plot
-    optional, default = 'restart'
-* ``-m molecule`` = the residue name of the JAWS molecule
-    optional, default = 'WAT'
-* ``-p plotname`` = the start of the filename for the plots generated
-    optional, default = 'theta_dist'
-* ``--skip`` = the number of results snapshots to skip
-    optional, default = 0
-
+.. argparse::
+   :module: tools.plot_theta
+   :func: get_arg_parser
+   :prog: plot_theta.py
+	  
 
 **Examples:**
 
@@ -999,27 +612,10 @@ Two different histograms will be generated. One in which all different copies of
 -----------------------
 pms2pymbar.py
 -----------------------
-
-**Syntax:**
-
-``pms2pymbar.py [-d directory] [-r results] [-o outfile] [-s nskip] [-m nmax] [-t temperature] [--run] [--nobar]``
-
-* ``-d directory`` = name of output directory of the simulation
-    optional, default = current working directory (.)
-* ``-r results`` = the beginning of the name of the file to analyse
-    optional, default = results
-* ``-o outfile`` = the name of file with all energy values
-    optional, default = pymbar_energy
-* ``-s nskip`` = the number of snapshots to skip at the beginning of the simulation
-    optional, default = 0
-* ``-m nmax`` = the maximum number of snapshots to process
-    optional, default = the total number of snapshot in the results file, excluding nskip
-* ``-t temperature`` = the simulation temperature in degree Celsius 
-    optional, default = 25 degrees 
-* ``--run`` = flag indicating if to run pymbar
-    optional, default = No
-* ``--nobar`` = flag indicating if to estimate BAR
-    optional, default = No
+.. argparse::
+   :module: tools.pms2pymbar
+   :func: get_arg_parser
+   :prog: pms2pymbar.py
 
 **Examples:**
 
@@ -1045,43 +641,10 @@ Alternatively, if PyMBAR is properly installed and can be loaded as a python lib
 -----------------------
 scoop.py
 -----------------------
-
-**Syntax:**
- 
-``scoop.py -p proteinfile [-l ligandfile] [-o outfile] [--center center] [--innercut icut] [--outercut ocut] [--flexin sidechain|flexible|rigid] [--flexout sidechain|flexible|rigid] [--terminal keep|doublekeep|neutralize] [--excluded res1 res2 ...] [--added res1 res2 ...]``
-
-* ``-p proteinfile`` = the name of a PDB file containing the protein
-* ``-l ligandfile`` = the name of a PDB file containing a ligand
-    optional, no default
-* ``-o outfile`` = the name of the truncated PDB file
-    optional, default = scoop.pdb
-* ``--center center`` = the centre of the scoop
-    optional, default = 0.0,0.0,0.0
-* ``--innercut icut`` == the inner region cut-off in Angstroms
-    optional, default = 16.0 A
-* ``--outercut ocut`` == the outer region cut-off in Angstroms
-    optional, default = 20.0 A
-* ``--flexin sidechain|flexible|rigid`` = determine the flexibility of the inner region
-    optional, default = flexible
-    ``sidechain`` = only the sidechains will be sampled in the simulation
-    ``flexible`` = both sidechain and backbone will be sampled in the simulation
-    ``rigid`` = no residues will be sampled
-* ``--flexout`` sidechain|flexible|rigid = determine the flexibility of the outer region
-    optional, default = sidechain
-    ``sidechain`` = only the sidechains will be sampled in the simulation
-    ``flexible`` = both sidechain and backbone will be sampled in the simulation
-    ``rigid`` = no residues will be sampled
-* ``--terminal`` keep|doublekeep|neutralize = determines the treatment of charged terminal residues
-    optional, default = neutralize
-    ``keep`` = keep any charged terminal
-    ``doublekeep`` = keep charged terminal but only if both are in the scoop
-    ``neutralize`` = neutralize any charged terminal within the scoop
-* ``--excluded res1 res2`` ...    
-    one or more reside numbers
-    optional, default = none
-* ``--added res1 res2`` ...    
-    one or more reside numbers
-    optional, default = none    
+.. argparse::
+   :module: tools.scoop
+   :func: get_arg_parser
+   :prog: scoop.py
 
 **Examples:**
 
@@ -1115,34 +678,10 @@ The PDB file will contain specific instructions for ProtoMS to automatically enf
 -----------------------
 solvate.py
 -----------------------
-
-**Syntax:**
-
-``solvate.py -b boxfile [-s solutefile] [-pr proteinfile] [-o outfile] [-g box|droplet|flood] [-p padding] [-r radius] [-center] [-n Amber|ProtoMS]``
-
-* ``-b boxfile`` = the name of a PDB file with pre-equilibrated waters
-* ``-s solutefile`` = the name of a PDB file with a solute molecule
-    optional, no default
-* ``-pr proteinfile`` = the name of a PDB file with a protein
-    optional, no default   
-* ``-o outfile`` = the name of the created water box
-    optional, default = solvent_box.pdb
-* ``-g box|droplet|flood``
-    optional, default = box
-    ``box`` = a box of water molecules will be created
-    ``droplet`` = a droplet of water molecules will be created
-    ``flood`` = a box will be flooded with water molecules
-* ``-p padding`` = the minimum distance between solute and the box edge
-    optional, default = 10.0 A
-* ``-r radius`` = the radius of the water droplet
-    optional, default = 30.0 A
-* ``-c center`` = the center of the droplet
-    optional, default = "cent"
-* ``-n Amber|ProtoMS`` = the name style of the created water molecules 
-    optional, default = ProtoMS
-    ``Amber`` = Amber naming convention
-    ``ProtoMS`` = ProtoMS naming convention
-
+.. argparse::
+   :module: tools.solvate
+   :func: get_arg_parser
+   :prog: solvate.py
 
 **Examples:**
 
@@ -1174,14 +713,10 @@ The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulati
 -----------------------
 split_jawswater.py
 -----------------------
-
-**Syntax:**
- 
-``split_jawswater.py -w pdbfile [-o outprefix]``
-
-* ``-w pdbfile`` = the name of PDB file with water molecules
-* ``-o outprefix`` = the prefix appended to all output files
-    optional, default = "" (empty string)
+.. argparse::
+   :module: tools.split_jawswater
+   :func: get_arg_parser
+   :prog: split_jawswater.py
 
 **Examples:**
 

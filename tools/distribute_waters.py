@@ -168,9 +168,7 @@ def distribute_particles(box, particles, watermodel="t4p",resname="WA1",partnumb
   particles.header = "HEADER box %s\n"%particles.header
   return particles
     
-
-if __name__ == "__main__":
-
+def get_arg_parser():
   import argparse
   
   parser = argparse.ArgumentParser(description="Randomly distribute n molecules within box dimensions")
@@ -181,7 +179,11 @@ if __name__ == "__main__":
   parser.add_argument('--resname',help="Residue name of the molecules writen to output. Default='WAT'",default='WAT')
   parser.add_argument('--number',help="Required number of molecules when it differs from the number of residues in the file.",default=None)
   parser.add_argument('--setupseed',help="Optional random number seed for generation of water coordinates.",default=None,type=int)
-  args = parser.parse_args()
+  return parser
+
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   logger = simulationobjects.setup_logger("distribute_waters_py.log")
   if args.setupseed is not None:

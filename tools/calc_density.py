@@ -258,12 +258,7 @@ def calc_density(pdbfiles,molname,atomname,padding=2.0,extent=1.0,spacing=0.5,no
   prop["max"] = [e[-1] for e in edges]
   return np.array(nfound),grid,prop
 
-
-#
-# If this is run from the command-line
-#      
-if __name__ == "__main__":
-
+def get_arg_parser ():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -279,7 +274,13 @@ if __name__ == "__main__":
   parser.add_argument('-t','--type',choices=["sphere","gaussian"],help="the type  of coordinate smoothing, should be either 'sphere', 'gaussian'",default="sphere")
   parser.add_argument('--skip',type=int,help="the number of blocks to skip to calculate the density. default is 0. Skip must be greater or equal to 0",default=0)
   parser.add_argument('--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
-  args = parser.parse_args()
+  return parser
+#
+# If this is run from the command-line
+#      
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   if not args.files :
     print "No input files! Nothing to do, so exit."

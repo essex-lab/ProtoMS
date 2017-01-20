@@ -76,15 +76,18 @@ def clear_gcmcbox(gcmcbox,waters) :
   
   return nrem,waters 
 
-if __name__ == "__main__":
-
+def get_arg_parser():
   import argparse
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to remove water molecules from a GCMC/JAWS-1 box")
   parser.add_argument('-b','--box',help="the name of the PDB-file containing the box.")
   parser.add_argument('-s','--solvation',help="the name of the PDB-file containing the solvation waters")
   parser.add_argument('-o','--out',help="the name of the output PDB-file",default="cleared_box.pdb")
-  args = parser.parse_args()
+  return parser
+
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("clear_gcmcbox_py.log")

@@ -331,11 +331,7 @@ def bar(path,res_tem,skip,maxread,RT,verbose,nboots=10) :
 
   return lambdas,windg,stds
 
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
  
   # Setup a parser of the command-line arguments
@@ -349,7 +345,14 @@ if __name__ == '__main__' :
   parser.add_argument('-pu','--print-uncert',dest='printUncert',action='store_false',help="turns off printing of uncertainties",default=True)
   parser.add_argument('-pl','--print-lam',dest='printLam',action='store_false',help="turns off printing of lambda-values",default=True)
   parser.add_argument('-b','--nboots',type=int,help="the number of bootstrap samples",default=100)
-  args = parser.parse_args()
+  return parser
+
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
   
   # Setup the logger
   logger = simulationobjects.setup_logger()

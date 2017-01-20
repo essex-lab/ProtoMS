@@ -59,8 +59,7 @@ def print_bequil(boxlen):
   print "Volume of GCMC box:", np.round(boxvolume,2)
   print "Bequil:", np.round(bequil,2)
 
-if __name__ == "__main__":
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -69,7 +68,11 @@ if __name__ == "__main__":
   parser.add_argument('-p','--padding',type=float,help="the padding in A,default=2",default=2.0)
   parser.add_argument('-o','--out',help="the name of the box PDB-file",default="gcmc_box.pdb")
   parser.add_argument('-b','--box',nargs='+',help="Either the centre of the box (x,y,z), or the centre of box AND length (x,y,z,x,y,z). If the centre is specified and the length isn't, twice the 'padding' will be the lengths of a cubic box.",default=None)
-  args = parser.parse_args()
+  return parser
+  
+if __name__ == "__main__":
+
+  args = get_arg_parser().parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("make_gcmcbox_py.log")

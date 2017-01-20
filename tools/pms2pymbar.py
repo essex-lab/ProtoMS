@@ -199,11 +199,7 @@ def bar(energies,RT) :
      DeltaF[k],dDeltaF[k] = pymbar.BAR(w_F, w_R)
   return DeltaF.sum(),(dDeltaF*dDeltaF).sum()   
 
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -216,7 +212,14 @@ if __name__ == '__main__' :
   parser.add_argument('-t','--temperature',type=float,help="the simulation temperature in degrees. Default is 25.0",default=25.0)
   parser.add_argument('--run',action='store_true',help="whether to run pymbar",default=False)
   parser.add_argument('--nobar',action='store_true',help="whether to run bar",default=False)
-  args = parser.parse_args()  
+  return parser
+
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()  
 
   # Setup the logger
   logger = simulationobjects.setup_logger()

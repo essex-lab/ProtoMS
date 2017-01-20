@@ -92,7 +92,7 @@ def _get_executable_path ( name ):
             raise KeyError
         return exe_path
     except KeyError:
-        logger.debug("Unable to find executable in $AMBERHOME/path. Looking in PATH.")
+        logger.debug("Unable to find executable in $AMBERHOME/bin. Looking in PATH.")
 
     exe_path = distutils.spawn.find_executable ( name )
     if exe_path == None:
@@ -180,7 +180,7 @@ def run_parmchk ( lig ):
     _run_program ( 'parmchk', cmd )
     return "%s.frcmod"%out_name
 
-if __name__ == "__main__":
+def get_arg_parser ():
 
     import argparse
 
@@ -189,8 +189,11 @@ if __name__ == "__main__":
     parser.add_argument('-f','--files',nargs="+",help="the name of the PDB-files")
     parser.add_argument('-n','--name',help="the name of the solute",default="UNK")
     parser.add_argument('-c','--charge',nargs="+",type=float,help="the net charge of each PDB-file")
-    args = parser.parse_args()
+    return parser
 
+if __name__ == "__main__":
+
+    args = get_arg_parser().parse_args()
     # Setup the logger
     logger = simulationobjects.setup_logger("ambertools_py.log")
 

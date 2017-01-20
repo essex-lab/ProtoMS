@@ -569,13 +569,7 @@ def solvate(box, ligand=None, protein=None, geometry="box",
  
   return new_watbox
 
-#
-# -------------------------------------
-# If this is run from the command-line
-# -------------------------------------
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -604,7 +598,15 @@ if __name__ == '__main__' :
   parser.add_argument('-n','--names',choices=["Amber","ProtoMS"],help="the naming convention, should be either Amber or ProtoMS",default="ProtoMS")
   parser.add_argument('--offset',type=float,help="the offset to be added to vdW radii of the atoms to avoid overfilling cavities with water.",default=0.89)
   parser.add_argument('--setupseed',type=int,help="optional random number seed for generation of water coordinates..",default=None)
-  args = parser.parse_args()
+  return parser
+#
+# -------------------------------------
+# If this is run from the command-line
+# -------------------------------------
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   # Setup the logger
   logger = simulationobjects.setup_logger("solvate_py.log")

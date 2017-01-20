@@ -276,11 +276,8 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
 
     return pdb_out
 
-if __name__ == "__main__":
-
+def get_arg_parser():
     import argparse
-
-    import simulationobjects
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(description="Program scoop a protein pdb-file")
@@ -296,7 +293,13 @@ if __name__ == "__main__":
     parser.add_argument('--excluded',nargs="+",type=int,help="a list of indices for residues to be excluded from scoops",default=[])
     parser.add_argument('--added',nargs="+",type=int,help="a list of indices for residues to be included in outer scoops",default=[])
     parser.add_argument('--scooplimit',help="the minimum difference between number of residues in protein and scoop for scoop to be retained",default=10)
-    args = parser.parse_args()
+    return parser
+
+if __name__ == "__main__":
+
+
+    import simulationobjects
+    args = get_arg_parser().parse_args()
 
     # Setup the logger
     logger = simulationobjects.setup_logger("scoop_py.log")

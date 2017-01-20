@@ -75,11 +75,7 @@ def plot_FitPercentiles(B,N,dF_samples,resolution=None,level1=None,level1_colour
     plt.plot(x, smooth_median,color=median_colour,linewidth=3)
     return plt
 
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
-
+def get_arg_parser():
   import argparse
 
   # Setup a parser of the command-line arguments
@@ -92,7 +88,14 @@ if __name__ == '__main__' :
   parser.add_argument('--guess',help="initial guess of the coupling free energy. Use to refine logisitic fitting, default=-6.2 kcal/mol",type=float,default=-6.2)
   parser.add_argument('--excess',action='store_true',help="calculate the average excess chemical potential between 2 Adams values, default=False",default=False)
   parser.add_argument('-v','--volume', type=float,help="volume of the GCMC insertion region",default=None)
-  args = parser.parse_args()
+  return parser
+  
+#
+# If this is run from the command-line
+#
+if __name__ == '__main__' :
+
+  args = get_arg_parser().parse_args()
 
   dG_hyd = -6.2
   print "CALCULATING VOLUME CORRECTION:"
