@@ -16,6 +16,8 @@ Test created with ProtoMS 3.1.2 release
 (changeset 328:6daeecd68181 - 01-Jul-15 )
 Compiled with GCC gfortran 4.4.7, openmpi 1.6.4
 
+Reference files have been modified to keep up with changes to the code since this version.
+
 ### Input files ###
 ethane.pdb
 methanol.pdb
@@ -35,5 +37,5 @@ out_free/lam*/all.pdb
 out_free/lam*/restart.prev
 out_free/lam-0.000/warning
 out_free/lam-0.000/info
-# Note that dates/times in reference file out_free/lam-0.000/info will differ!
+# Note that dates/times in reference info files will differ!
 

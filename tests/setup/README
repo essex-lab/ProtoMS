@@ -18,6 +18,8 @@ Test created with ProtoMS 3.1.2 release
 (changeset 328:6daeecd68181 - 01-Jul-15 )
 Compiled with gcc 4.4.7 20120313, openmpi 1.6.4 gcc
 
+Reference files have been modified to keep up with changes to the code since this version.
+
 ### Input files ###
 dcb.pdb
 protein.pdb
@@ -34,5 +36,4 @@ dcb.tem
 dcb_box.pdb
 protein_scoop.pdb
 water.pdb
-# Note that only the first line (starting with "HEADER") of water.pdb must be identical. The rest of the file is expected to differ!
 

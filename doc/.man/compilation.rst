@@ -53,7 +53,7 @@ Building ProtoMS
 
 ProtoMS has been written using the GNU Fortran compilers (https://gcc.gnu.org/), on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.
 
-You also need an MPI package to perform simulations that require multiple processes, e.g. replica exchange. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77. ProtoMS has been compiled with both OpenMPI (http://www.open-mpi.org/) and MPICH (https://www.mpich.org/). However, note that this is *not* a requirement any more. ProtoMS will compile without OpenMPI, but you want be able to run for instance replica exchange.
+You also need an MPI package to perform simulations that require multiple processes, e.g. replica exchange. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77. ProtoMS has been compiled with both OpenMPI (http://www.open-mpi.org/) and MPICH (https://www.mpich.org/). However, note that this is *not* a requirement any more. ProtoMS will compile without OpenMPI, but you won't be able to run for instance replica exchange.
 
 Building ProtoMS is done with *cmake* (http://www.cmake.org/), thus you need this package installed on your machine. To build ProtoMS type the following in a terminal::
 

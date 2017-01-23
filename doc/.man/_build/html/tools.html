@@ -123,10 +123,10 @@
 <div class="section" id="ambertools-py">
 <h2>ambertools.py<a class="headerlink" href="#ambertools-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to run antechamber and parmchk for a series of PDB-files</p>
-<pre class="literal-block">
-usage: ambertools.py [-h] [-f FILES [FILES ...]] [-n NAME]
+<div class="highlight-python"><div class="highlight"><pre>usage: ambertools.py [-h] [-f FILES [FILES ...]] [-n NAME]
                      [-c CHARGE [CHARGE ...]]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -148,7 +148,7 @@ usage: ambertools.py [-h] [-f FILES [FILES ...]] [-n NAME]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>ambertools.py -f benzene.pdb
+<div class="highlight-python"><div class="highlight"><pre>ambertools.py -f benzene.pdb
 ambertools.py -f benzene.pdb -n BNZ
 ambertools.py -f benzenamide.pdb -c 0
 ambertools.py -f benzene.pdb toluene.pdb -n BNZ TOL
@@ -162,11 +162,11 @@ ambertools.py -f benzene.pdb toluene.pdb -n BNZ TOL
 <div class="section" id="build-template-py">
 <h2>build_template.py<a class="headerlink" href="#build-template-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to build a ProtoMS template file</p>
-<pre class="literal-block">
-usage: build_template.py [-h] [-p PREPI] [-o OUT] [-z ZMAT] [-f FRCMOD]
+<div class="highlight-python"><div class="highlight"><pre>usage: build_template.py [-h] [-p PREPI] [-o OUT] [-z ZMAT] [-f FRCMOD]
                          [-n NAME] [-t TRANSLATE] [-r ROTATE] [--alldihs]
                          [--gaff GAFF]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -210,7 +210,7 @@ usage: build_template.py [-h] [-p PREPI] [-o OUT] [-z ZMAT] [-f FRCMOD]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>build_template.py -p benzene.prepi
+<div class="highlight-python"><div class="highlight"><pre>build_template.py -p benzene.prepi
 build_template.py -p benzene.prepi -f benzene.frcmod
 build_template.py -p benzene.prepi -f benzene.frcmod -o benzene.template -n BNZ
 build_template.py -p benzene.prepi -f benzene.frcmod -t 1.0 -r 10
@@ -225,10 +225,10 @@ build_template.py -p benzene.prepi -f benzene.frcmod -t 1.0 -r 10
 <div class="section" id="calc-bar-py">
 <h2>calc_bar.py<a class="headerlink" href="#calc-bar-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate free energy from Bennett Acceptance Ratio</p>
-<pre class="literal-block">
-usage: calc_bar.py [-h] [-d DIRECTORY] [-r RESULTS] [-s SKIP] [-m MAX]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_bar.py [-h] [-d DIRECTORY] [-r RESULTS] [-s SKIP] [-m MAX]
                    [-t TEMPERATURE] [-pw] [-pu] [-pl] [-b NBOOTS]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -275,7 +275,7 @@ usage: calc_bar.py [-h] [-d DIRECTORY] [-r RESULTS] [-s SKIP] [-m MAX]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_bar.py -d out_free/
+<div class="highlight-python"><div class="highlight"><pre>calc_bar.py -d out_free/
 calc_bar.py -s 200
 calc_bar.py -m 200
 calc_bar.py -d out_free/ -pw
@@ -286,7 +286,7 @@ calc_bar.py -d out_free/ -pw
 <p>The program expects that in the <code class="docutils literal"><span class="pre">directory</span></code> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <code class="docutils literal"><span class="pre">lam-0.000</span></code> and <code class="docutils literal"><span class="pre">lam-1.000</span></code></p>
 <p>The uncertainty of the free energies is estimated by boostrapping the energy differnces. The number of bootstrap samples is set by the <code class="docutils literal"><span class="pre">nbootstraps</span></code> argument. The procedure is rather slow, so in order to obtain a quick estimate of the free energy, lower this value.</p>
 <p>Block estimates can be constructed by combining <code class="docutils literal"><span class="pre">nskip</span></code> and <code class="docutils literal"><span class="pre">nmax</span></code>. For instance, these commands calculates block estimates with a block size of 5 m snapshots</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>for X in 0 50 100 150 200 250 300 350
+<div class="highlight-python"><div class="highlight"><pre>for X in 0 50 100 150 200 250 300 350
 do
 calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
 done
@@ -296,12 +296,12 @@ done
 <div class="section" id="calc-clusters-py">
 <h2>calc_clusters.py<a class="headerlink" href="#calc-clusters-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to cluster molecules</p>
-<pre class="literal-block">
-usage: calc_clusters.py [-h] [-f FILES [FILES ...]] [-o OUT] [-m MOLECULE]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_clusters.py [-h] [-f FILES [FILES ...]] [-o OUT] [-m MOLECULE]
                         [-a ATOM]
                         [-t {average,single,complete,weighted,centroid}]
                         [-c CUTOFF] [--skip SKIP] [--max MAX]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -343,7 +343,7 @@ usage: calc_clusters.py [-h] [-f FILES [FILES ...]] [-o OUT] [-m MOLECULE]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_clusters.py -f all.pdb
+<div class="highlight-python"><div class="highlight"><pre>calc_clusters.py -f all.pdb
 calc_clusters.py -f all.pdb all2.pdb
 calc_clusters.py -f all.pdb -o all_clusters.pdb
 calc_clusters.py -f all.pdb -t complete
@@ -356,12 +356,12 @@ calc_clusters.py -f all.pdb -t complete
 <div class="section" id="calc-density-py">
 <h2>calc_density.py<a class="headerlink" href="#calc-density-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to discretize atoms on a 3D grid</p>
-<pre class="literal-block">
-usage: calc_density.py [-h] [-f FILES [FILES ...]] [-o OUT] [-r RESIDUE]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_density.py [-h] [-f FILES [FILES ...]] [-o OUT] [-r RESIDUE]
                        [-a ATOM] [-p PADDING] [-s SPACING] [-e EXTENT]
                        [-n NORM] [-t {sphere,gaussian}] [--skip SKIP]
                        [--max MAX]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -415,7 +415,7 @@ usage: calc_density.py [-h] [-f FILES [FILES ...]] [-o OUT] [-r RESIDUE]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_density.py -f all.pdb
+<div class="highlight-python"><div class="highlight"><pre>calc_density.py -f all.pdb
 calc_density.py -f all.pdb all2.pdb
 calc_density.py -f all.pdb -o gcmc_density.dx
 calc_density.py -f all.pdb -r t4p -n o00
@@ -428,19 +428,19 @@ calc_density.py -f all.pdb -n 100
 <p>This tool discretises atoms on a grid, thereby representing a simulation output as a density.</p>
 <p>It will extract the coordinates of all atoms with name equal to <code class="docutils literal"><span class="pre">atom</span></code> in residues with name equal to <code class="docutils literal"><span class="pre">residue</span></code> in all input files and discretise them on a grid. By default this atom and residue name is set to match GCMC / JAWS output with the standard water template.</p>
 <p>The produced density can be visualized with most programs, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>vmd -m all.pdb grid.dx
+<div class="highlight-python"><div class="highlight"><pre>vmd -m all.pdb grid.dx
 </pre></div>
 </div>
 </div>
 <div class="section" id="calc-dg-py">
 <h2>calc_dg.py<a class="headerlink" href="#calc-dg-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate free energy from TI/BAR/MBAR</p>
-<pre class="literal-block">
-usage: calc_dg.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-r RESULTS]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_dg.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-r RESULTS]
                   [-s SKIP] [-m MAX] [-t TEMPERATURE] [-b NBOOTS] [-gr] [-pg]
                   [-pe] [--analytical] [--numerical {both,back,forw}]
                   [-e {ti,bar,mbar} [{ti,bar,mbar} ...]] [--autoeqb]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -507,7 +507,7 @@ usage: calc_dg.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-r RESULTS]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_dg.py -d out_free/
+<div class="highlight-python"><div class="highlight"><pre>calc_dg.py -d out_free/
 calc_dg.py -d out_free1/ out_free2/ out_free3/ -s 200
 calc_dg.py -d out_free1/ out_free2/ out_free3/ -m 200
 calc_dg.py -d out_free1/ out_free2/ out_free3/ -e ti bar
@@ -522,14 +522,14 @@ calc_dg.py -d out_free1/ out_free2/ out_free3/ -e ti bar
 <div class="section" id="calc-gci-py">
 <h2>calc_gci.py<a class="headerlink" href="#calc-gci-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to analyse and plot free energies from GCMC simulations</p>
-<pre class="literal-block">
-usage: calc_gci.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-f FILE]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_gci.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-f FILE]
                    [-p {titration,fit,percentiles,pmf,all} [{titration,fit,percentiles,pmf,all} ...]]
                    [-c {fit,pmf,minimum,excess,all} [{fit,pmf,minimum,excess,all} ...]]
                    [-s SKIP] [-b BOOTSTRAPS] [-i INPUT] [-o OUT]
                    [--steps STEPS] [--range RANGE [RANGE ...]] [--reverse]
                    [--fit_options FIT_OPTIONS] [-v VOLUME]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -588,7 +588,7 @@ usage: calc_gci.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-f FILE]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_gci.py -d out_gcmc/b_* -p titration
+<div class="highlight-python"><div class="highlight"><pre>calc_gci.py -d out_gcmc/b_* -p titration
 calc_gci.py -d out_gcmc/b_* -p all -c all --steps 3
 calc_gci.py -d out_gcmc/b_* -p percentiles -c fit --steps 3 -b 1000 --fit_options &quot;repeats 1 pin_min 0.0 cost huber c 1&quot; -o ANN.pickle
 calc_gci.py -d out_gcmc/b_* -i ANN.pickle -p pmf -c pmf minimum
@@ -609,11 +609,11 @@ calc_gci.py -d out_gcmc/b_* -i ANN.pickle -c pmf --range 3 4
 <div class="section" id="calc-gcsingle-py">
 <h2>calc_gcsingle.py<a class="headerlink" href="#calc-gcsingle-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate coupling free energy GCMC simulations of a single water molecule using the logistic fitting method by G. A. Ross et al.</p>
-<pre class="literal-block">
-usage: calc_gcsingle.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-f FILE]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_gcsingle.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-f FILE]
                         [-s SKIP] [-c CALC] [-p] [--guess GUESS] [--excess]
                         [-v VOLUME]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -653,7 +653,7 @@ usage: calc_gcsingle.py [-h] [-d DIRECTORIES [DIRECTORIES ...]] [-f FILE]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_gcsingle.py -d out_gcmc/b_* -p
+<div class="highlight-python"><div class="highlight"><pre>calc_gcsingle.py -d out_gcmc/b_* -p
 calc_gcsingle.py -d out_gcmc/b_* -p --guess -10
 calc_gcsingle.py -d out_gcmc/b_* --excess
 </pre></div>
@@ -664,10 +664,10 @@ calc_gcsingle.py -d out_gcmc/b_* --excess
 <div class="section" id="calc-replicapath-py">
 <h2>calc_replicapath.py<a class="headerlink" href="#calc-replicapath-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to analyze and plot a replica paths</p>
-<pre class="literal-block">
-usage: calc_replicapath.py [-h] [-f FILES [FILES ...]] [-p PLOT [PLOT ...]]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_replicapath.py [-h] [-f FILES [FILES ...]] [-p PLOT [PLOT ...]]
                            [-k {lambda,temperature,rest,global,B}] [-o OUT]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -695,7 +695,7 @@ usage: calc_replicapath.py [-h] [-f FILES [FILES ...]] [-p PLOT [PLOT ...]]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 1.000
+<div class="highlight-python"><div class="highlight"><pre>calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 1.000
 calc_replicapath.py -f out_free/lam-0.*/results -p 0.000 0.500 1.000 -o replica_paths.png
 calc_replicapath.py -f out_free/t-*/lam-0.000/results -p 25.0 35.0 45.0 -k temperature
 </pre></div>
@@ -708,10 +708,10 @@ calc_replicapath.py -f out_free/t-*/lam-0.000/results -p 25.0 35.0 45.0 -k tempe
 <div class="section" id="calc-rmsd-py">
 <h2>calc_rmsd.py<a class="headerlink" href="#calc-rmsd-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate RMSD of ligand centre</p>
-<pre class="literal-block">
-usage: calc_rmsd.py [-h] [-i INITIAL] [-f FILES [FILES ...]] [-l LIGAND]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_rmsd.py [-h] [-i INITIAL] [-f FILES [FILES ...]] [-l LIGAND]
                     [-a ATOM] [-t TEMPERATURE]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -739,7 +739,7 @@ usage: calc_rmsd.py [-h] [-i INITIAL] [-f FILES [FILES ...]] [-l LIGAND]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz
+<div class="highlight-python"><div class="highlight"><pre>calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz
 calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz -a c4
 </pre></div>
 </div>
@@ -751,13 +751,13 @@ calc_rmsd.py -i benzene.pdb -f out_bnd/all.pdb -r bnz -a c4
 <div class="section" id="calc-series-py">
 <h2>calc_series.py<a class="headerlink" href="#calc-series-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to analyze and plot a time series</p>
-<pre class="literal-block">
-usage: calc_series.py [-h] [-f FILE [FILE ...]] [-o OUT]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_series.py [-h] [-f FILE [FILE ...]] [-o OUT]
                       [-s SERIES [SERIES ...]]
                       [-p {sep,sub,single,single_first0,single_last0}]
                       [--nperm NPERM] [--threshold THRESHOLD] [--average]
                       [--moving MOVING]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -805,11 +805,11 @@ usage: calc_series.py [-h] [-f FILE [FILE ...]] [-o OUT]
 <div class="section" id="calc-ti-py">
 <h2>calc_ti.py<a class="headerlink" href="#calc-ti-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate free energy from thermodynamic integration</p>
-<pre class="literal-block">
-usage: calc_ti.py [-h] [-d DIRECTORY] [--subdir SUBDIR] [-r RESULTS] [-s SKIP]
+<div class="highlight-python"><div class="highlight"><pre>usage: calc_ti.py [-h] [-d DIRECTORY] [--subdir SUBDIR] [-r RESULTS] [-s SKIP]
                   [-m MAX] [-pg] [-pp] [-pu] [-pl] [-gr] [-pf] [--analytical]
                   [--numerical {both,back,forw}] [--autoeqb]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -877,7 +877,7 @@ usage: calc_ti.py [-h] [-d DIRECTORY] [--subdir SUBDIR] [-r RESULTS] [-s SKIP]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>calc_ti.py -d out_free/
+<div class="highlight-python"><div class="highlight"><pre>calc_ti.py -d out_free/
 calc_ti.py -s 200
 calc_ti.py -m 200
 calc_ti.py -d out_free/ --analytical
@@ -888,7 +888,7 @@ calc_ti.py -d out_free/ --analytical
 <p>The program expects that in the <code class="docutils literal"><span class="pre">directory</span></code> there exist an output folder for each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>-value, eg. <code class="docutils literal"><span class="pre">lam-0.000</span></code> and <code class="docutils literal"><span class="pre">lam-1.000</span></code></p>
 <p>If the <code class="docutils literal"><span class="pre">-gr</span></code> flag is set the gradient with respect to <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> is plotted and saved to a file called <code class="docutils literal"><span class="pre">gradient.png</span></code></p>
 <p>Block estimates can be constructed by combining <code class="docutils literal"><span class="pre">nskip</span></code> and <code class="docutils literal"><span class="pre">nmax</span></code>. For instance, these commands calculates block estimates with a block size of 5 m snapshots</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>for X in 0 50 100 150 200 250 300 350
+<div class="highlight-python"><div class="highlight"><pre>for X in 0 50 100 150 200 250 300 350
 do
 calc_bar.py -d out_free -nskip $X -nmax 50 -b 5 -pw -pu
 done
@@ -899,9 +899,9 @@ done
 <div class="section" id="clear-gcmcbox-py">
 <h2>clear_gcmcbox.py<a class="headerlink" href="#clear-gcmcbox-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to remove water molecules from a GCMC/JAWS-1 box</p>
-<pre class="literal-block">
-usage: clear_gcmcbox.py [-h] [-b BOX] [-s SOLVATION] [-o OUT]
-</pre>
+<div class="highlight-python"><div class="highlight"><pre>usage: clear_gcmcbox.py [-h] [-b BOX] [-s SOLVATION] [-o OUT]
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -924,7 +924,7 @@ usage: clear_gcmcbox.py [-h] [-b BOX] [-s SOLVATION] [-o OUT]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>clear_gcmcbox.py -b gcmc_box.pdb -w water.pdb
+<div class="highlight-python"><div class="highlight"><pre>clear_gcmcbox.py -b gcmc_box.pdb -w water.pdb
 clear_gcmcbox.py -b gcmc_box.pdb -w water.pdb -o water_cleared.pdb
 </pre></div>
 </div>
@@ -936,10 +936,10 @@ clear_gcmcbox.py -b gcmc_box.pdb -w water.pdb -o water_cleared.pdb
 <div class="section" id="convertatomnames-py">
 <h2>convertatomnames.py<a class="headerlink" href="#convertatomnames-py" title="Permalink to this headline">¶</a></h2>
 <p>Program convert atom names in a protein pdb-file to ProtoMS style</p>
-<pre class="literal-block">
-usage: convertatomnames.py [-h] [-p PROTEIN] [-o OUT] [-s STYLE]
+<div class="highlight-python"><div class="highlight"><pre>usage: convertatomnames.py [-h] [-p PROTEIN] [-o OUT] [-s STYLE]
                            [-c CONVERSIONFILE]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -966,7 +966,7 @@ usage: convertatomnames.py [-h] [-p PROTEIN] [-o OUT] [-s STYLE]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>convertatomnames.py -p protein.pdb
+<div class="highlight-python"><div class="highlight"><pre>convertatomnames.py -p protein.pdb
 convertatomnames.py -p protein.pdb -c $PROTOMSHOME/data/atomnamesmap.dat
 convertatomnames.py -p protein.pdb -s charmm
 </pre></div>
@@ -979,10 +979,10 @@ convertatomnames.py -p protein.pdb -s charmm
 <div class="section" id="convertwater-py">
 <h2>convertwater.py<a class="headerlink" href="#convertwater-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to convert water molecules - with or without hydrogens - in a pdb file to simulation models, such as tip4p. Currently ignores original hydrogen positions.</p>
-<pre class="literal-block">
-usage: convertwater.py [-h] [-p PDB] [-o OUT] [-m MODEL] [-i] [-n RESNAME]
+<div class="highlight-python"><div class="highlight"><pre>usage: convertwater.py [-h] [-p PDB] [-o OUT] [-m MODEL] [-i] [-n RESNAME]
                        [--setupseed SETUPSEED]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1015,7 +1015,7 @@ usage: convertwater.py [-h] [-p PDB] [-o OUT] [-m MODEL] [-i] [-n RESNAME]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>convertwater.py -p protein.pdb
+<div class="highlight-python"><div class="highlight"><pre>convertwater.py -p protein.pdb
 convertwater.py -p protein.pdb -m tip3p
 convertwater.py -p protein.pdb --ignoreh
 </pre></div>
@@ -1028,11 +1028,11 @@ convertwater.py -p protein.pdb --ignoreh
 <div class="section" id="distribute-waters-py">
 <h2>distribute_waters.py<a class="headerlink" href="#distribute-waters-py" title="Permalink to this headline">¶</a></h2>
 <p>Randomly distribute n molecules within box dimensions</p>
-<pre class="literal-block">
-usage: distribute_waters.py [-h] [-b BOX BOX BOX BOX BOX BOX] [-m MOLECULES]
+<div class="highlight-python"><div class="highlight"><pre>usage: distribute_waters.py [-h] [-b BOX BOX BOX BOX BOX BOX] [-m MOLECULES]
                             [-o OUTFILE] [--model MODEL] [--resname RESNAME]
                             [--number NUMBER] [--setupseed SETUPSEED]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1067,7 +1067,7 @@ usage: distribute_waters.py [-h] [-b BOX BOX BOX BOX BOX BOX] [-m MOLECULES]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m 12
+<div class="highlight-python"><div class="highlight"><pre>distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m 12
 distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m 12 --model t3p --resname T3P
 distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m myonewater.pdb --number 12 -o mywatersinbox.pdb
 </pre></div>
@@ -1079,9 +1079,9 @@ distribute_waters.py -b 53.4 56.28 13.23 10 10 10 -m myonewater.pdb --number 12 
 <div class="section" id="divide-pdb-py">
 <h2>divide_pdb.py<a class="headerlink" href="#divide-pdb-py" title="Permalink to this headline">¶</a></h2>
 <p>Split your multi pdb file into individual files</p>
-<pre class="literal-block">
-usage: divide_pdb.py [-h] [-i INPUT] [-o OUTPUT] [-p PATH]
-</pre>
+<div class="highlight-python"><div class="highlight"><pre>usage: divide_pdb.py [-h] [-i INPUT] [-o OUTPUT] [-p PATH]
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1116,8 +1116,7 @@ divide_pdb.py -i mypmsout.pdb -o individual -p outfolder/</dd>
 <div class="section" id="generate-input-py">
 <h2>generate_input.py<a class="headerlink" href="#generate-input-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to create a ProtoMS command file</p>
-<pre class="literal-block">
-usage: generate_input.py [-h]
+<div class="highlight-python"><div class="highlight"><pre>usage: generate_input.py [-h]
                          [-s {sampling,equilibration,dualtopology,singletopology,gcmc,jaws1,jaws2}]
                          [--dovacuum] [-p PROTEIN] [-l LIGANDS [LIGANDS ...]]
                          [-t TEMPLATES [TEMPLATES ...]] [-pw PROTWATER]
@@ -1130,7 +1129,8 @@ usage: generate_input.py [-h]
                          [--watmodel {tip3p,tip4p}] [--nequil NEQUIL]
                          [--nprod NPROD] [--dumpfreq DUMPFREQ] [--absolute]
                          [--ranseed RANSEED]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1224,7 +1224,7 @@ usage: generate_input.py [-h]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>generate_input.py -s dualtopology -l lig1.pdb lig2.pdb -p protein.pdb -t li1-li2.tem -pw droplet.pdb -lw lig1_wat.pdb --lambas 8
+<div class="highlight-python"><div class="highlight"><pre>generate_input.py -s dualtopology -l lig1.pdb lig2.pdb -p protein.pdb -t li1-li2.tem -pw droplet.pdb -lw lig1_wat.pdb --lambas 8
 generate_input.py -s dualtopology -l lig1.pdb dummy.pdb -t li1-dummy.tem -lw lig1_wat.pdb --absolute
 generate_input.py -s gcmc -p protein.pdb -pw droplet.pdb --adams -4 -2 0 2 4 6 --gcmcwater gcmc_water.pdb --gcmcbox gcmc_box.pdb
 generate_input.py -s sampling -l lig1.pdb -t lig1.tem --dovacuum
@@ -1234,16 +1234,16 @@ generate_input.py -s sampling -l lig1.pdb -t lig1.tem --dovacuum
 <p>This tool generates input files with commands for ProtoMS.</p>
 <p>The settings generate are made according to experience and should work in most situations.</p>
 <p>The tool will create at most two ProtoMS command files, one for the protein simulation and one for the ligand simulation. These can be used to run ProtoMS, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$PROTOMS/protoms3 run_free.cmd
+<div class="highlight-python"><div class="highlight"><pre>$PROTOMS/protoms3 run_free.cmd
 </pre></div>
 </div>
 </div>
 <div class="section" id="make-dummy-py">
 <h2>make_dummy.py<a class="headerlink" href="#make-dummy-py" title="Permalink to this headline">¶</a></h2>
 <p>Program make a dummy corresponding to a molecule</p>
-<pre class="literal-block">
-usage: make_dummy.py [-h] [-f FILE] [-o OUT]
-</pre>
+<div class="highlight-python"><div class="highlight"><pre>usage: make_dummy.py [-h] [-f FILE] [-o OUT]
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1262,7 +1262,7 @@ usage: make_dummy.py [-h] [-f FILE] [-o OUT]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>make_dummy.py -f benzene.pdb
+<div class="highlight-python"><div class="highlight"><pre>make_dummy.py -f benzene.pdb
 make_dummy.py -f benzene.pdb -o benzene_dummy.pdb
 </pre></div>
 </div>
@@ -1273,10 +1273,10 @@ make_dummy.py -f benzene.pdb -o benzene_dummy.pdb
 <div class="section" id="make-gcmcbox-py">
 <h2>make_gcmcbox.py<a class="headerlink" href="#make-gcmcbox-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to make a PDB-file with box coordinates covering a solute molecules</p>
-<pre class="literal-block">
-usage: make_gcmcbox.py [-h] [-s SOLUTE] [-p PADDING] [-o OUT]
+<div class="highlight-python"><div class="highlight"><pre>usage: make_gcmcbox.py [-h] [-s SOLUTE] [-p PADDING] [-o OUT]
                        [-b BOX [BOX ...]]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1302,7 +1302,7 @@ usage: make_gcmcbox.py [-h] [-s SOLUTE] [-p PADDING] [-o OUT]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>make_gcmcbox.py -s benzene.pdb
+<div class="highlight-python"><div class="highlight"><pre>make_gcmcbox.py -s benzene.pdb
 make_gcmcbox.py -s benzene.pdb -p 0.0
 make_gcmcbox.py -s benzene.pdb -o benzene_gcmc_box.pdb
 </pre></div>
@@ -1311,7 +1311,7 @@ make_gcmcbox.py -s benzene.pdb -o benzene_gcmc_box.pdb
 <p>This tool makes a GCMC or JAWS-1 simulation box to fit on top of a solute.</p>
 <p>The box will be created so that it has the extreme dimensions of the solute and then <code class="docutils literal"><span class="pre">padding</span></code> will be added in each dimension</p>
 <p>The box can be visualised with most common programs, e.g.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>vmd -m benzene.pdb benzene_gcmc_box.pdb
+<div class="highlight-python"><div class="highlight"><pre>vmd -m benzene.pdb benzene_gcmc_box.pdb
 </pre></div>
 </div>
 <p>this is a good way to see that the box is of appropriate dimensions.</p>
@@ -1320,10 +1320,10 @@ make_gcmcbox.py -s benzene.pdb -o benzene_gcmc_box.pdb
 <div class="section" id="make-single-py">
 <h2>make_single.py<a class="headerlink" href="#make-single-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to setup template files for single-toplogy perturbations semi-automatically</p>
-<pre class="literal-block">
-usage: make_single.py [-h] [-t0 TEM0] [-t1 TEM1] [-p0 PDB0] [-p1 PDB1]
+<div class="highlight-python"><div class="highlight"><pre>usage: make_single.py [-h] [-t0 TEM0] [-t1 TEM1] [-p0 PDB0] [-p1 PDB1]
                       [-m MAP] [-o OUT] [--gaff GAFF]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1357,7 +1357,7 @@ usage: make_single.py [-h] [-t0 TEM0] [-t1 TEM1] [-p0 PDB0] [-p1 PDB1]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb
+<div class="highlight-python"><div class="highlight"><pre>make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb
 make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -m bnz2tol.dat
 make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -o bnz-tol
 </pre></div>
@@ -1373,9 +1373,9 @@ make_single.py -t0 benzene.tem -t1 toluene.tem -p0 benzene.pdb -p1 toluene.pdb -
 <div class="section" id="merge-templates-py">
 <h2>merge_templates.py<a class="headerlink" href="#merge-templates-py" title="Permalink to this headline">¶</a></h2>
 <p>Program merge a series of ProtoMS template files</p>
-<pre class="literal-block">
-usage: make_templates.py [-h] [-f FILES [FILES ...]] [-o OUT]
-</pre>
+<div class="highlight-python"><div class="highlight"><pre>usage: make_templates.py [-h] [-f FILES [FILES ...]] [-o OUT]
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1393,7 +1393,7 @@ usage: make_templates.py [-h] [-f FILES [FILES ...]] [-o OUT]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>merge_templates.py -f benzene.tem dummy.tem -o bnz-dummy.tem
+<div class="highlight-python"><div class="highlight"><pre>merge_templates.py -f benzene.tem dummy.tem -o bnz-dummy.tem
 </pre></div>
 </div>
 <p><strong>Description:</strong></p>
@@ -1403,10 +1403,10 @@ usage: make_templates.py [-h] [-f FILES [FILES ...]] [-o OUT]
 <div class="section" id="plot-theta-py">
 <h2>plot_theta.py<a class="headerlink" href="#plot-theta-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to plot the theta distribution of a given molecule, result from a JAWS simulation</p>
-<pre class="literal-block">
-usage: plot_theta.py [-h] [-r RESULTS] [-s RESTART] [-m MOLECULE]
+<div class="highlight-python"><div class="highlight"><pre>usage: plot_theta.py [-h] [-r RESULTS] [-s RESTART] [-m MOLECULE]
                      [-p PLOTNAME] [--skip SKIP]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1437,7 +1437,7 @@ usage: plot_theta.py [-h] [-r RESULTS] [-s RESTART] [-m MOLECULE]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>plot_theta.py -m WA1 --skip 50
+<div class="highlight-python"><div class="highlight"><pre>plot_theta.py -m WA1 --skip 50
 plot_theta.py -m WA1 -p theta_wa1
 </pre></div>
 </div>
@@ -1448,10 +1448,10 @@ plot_theta.py -m WA1 -p theta_wa1
 <div class="section" id="pms2pymbar-py">
 <h2>pms2pymbar.py<a class="headerlink" href="#pms2pymbar-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to extract ProtoMS results for pymbar</p>
-<pre class="literal-block">
-usage: pms2pymbar.py [-h] [-d DIRECTORY] [-r RESULTS] [-o OUT] [-s SKIP]
+<div class="highlight-python"><div class="highlight"><pre>usage: pms2pymbar.py [-h] [-d DIRECTORY] [-r RESULTS] [-o OUT] [-s SKIP]
                      [-m MAX] [-t TEMPERATURE] [--run] [--nobar]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1492,7 +1492,7 @@ usage: pms2pymbar.py [-h] [-d DIRECTORY] [-r RESULTS] [-o OUT] [-s SKIP]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>pms2pymbar.py -d out_free/
+<div class="highlight-python"><div class="highlight"><pre>pms2pymbar.py -d out_free/
 pms2pymbar.py -s 200
 pms2pymbar.py -m 200
 pms2pymbar.py -d out_free/ --run
@@ -1507,15 +1507,15 @@ pms2pymbar.py -d out_free/ --run
 <div class="section" id="scoop-py">
 <h2>scoop.py<a class="headerlink" href="#scoop-py" title="Permalink to this headline">¶</a></h2>
 <p>Program scoop a protein pdb-file</p>
-<pre class="literal-block">
-usage: scoop.py [-h] [-p PROTEIN] [-l LIGAND] [-o OUT] [--center CENTER]
+<div class="highlight-python"><div class="highlight"><pre>usage: scoop.py [-h] [-p PROTEIN] [-l LIGAND] [-o OUT] [--center CENTER]
                 [--innercut INNERCUT] [--outercut OUTERCUT]
                 [--flexin {sidechain,flexible,rigid}]
                 [--flexout {sidechain,flexible,rigid}]
                 [--terminal {keep,doublekeep,neutralize}]
                 [--excluded EXCLUDED [EXCLUDED ...]]
                 [--added ADDED [ADDED ...]] [--scooplimit SCOOPLIMIT]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1577,7 +1577,7 @@ usage: scoop.py [-h] [-p PROTEIN] [-l LIGAND] [-o OUT] [--center CENTER]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>scoop.py -p protein.pdb
+<div class="highlight-python"><div class="highlight"><pre>scoop.py -p protein.pdb
 scoop.py -p protein.pdb  -l benzene.pdb
 scoop.py -p protein.pdb  --center &quot;0.0 0.0 0.0&quot;
 scoop.py -p protein.pdb  --center origin.dat
@@ -1597,12 +1597,12 @@ scoop.py -p protein.pdb  --added 57 58 59
 <div class="section" id="solvate-py">
 <h2>solvate.py<a class="headerlink" href="#solvate-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to solvate a solute molecule in either a box or a droplet</p>
-<pre class="literal-block">
-usage: solvate.py [-h] [-b BOX] [-s SOLUTE] [-pr PROTEIN] [-o OUT]
+<div class="highlight-python"><div class="highlight"><pre>usage: solvate.py [-h] [-b BOX] [-s SOLUTE] [-pr PROTEIN] [-o OUT]
                   [-g {box,droplet,flood}] [-p PADDING] [-r RADIUS]
                   [-c CENTER] [-n {Amber,ProtoMS}] [--offset OFFSET]
                   [--setupseed SETUPSEED]
-</pre>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1676,7 +1676,7 @@ center of droplet</p>
 </div></blockquote>
 </p>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb
+<div class="highlight-python"><div class="highlight"><pre>solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb
 solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -p 12.0
 solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -pr protein.pdb -g droplet
 solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s benzene.pdb -pr protein.pdb -g droplet -r 24.0
@@ -1696,9 +1696,9 @@ solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s gcmc_box.pdb -g flood
 <div class="section" id="split-jawswater-py">
 <h2>split_jawswater.py<a class="headerlink" href="#split-jawswater-py" title="Permalink to this headline">¶</a></h2>
 <p>Program to split JAWS-1 waters to a number of PDB-files for JAWS-2</p>
-<pre class="literal-block">
-usage: split_jawswater.py [-h] [-w WATERS] [-o OUT] [--jaws2box]
-</pre>
+<div class="highlight-python"><div class="highlight"><pre>usage: split_jawswater.py [-h] [-w WATERS] [-o OUT] [--jaws2box]
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>Options:</dt>
 <dd><table class="first last docutils option-list" frame="void" rules="none">
@@ -1720,7 +1720,7 @@ usage: split_jawswater.py [-h] [-w WATERS] [-o OUT] [--jaws2box]
 </dd>
 </dl>
 <p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>split_jawswater.py -w waters.pdb
+<div class="highlight-python"><div class="highlight"><pre>split_jawswater.py -w waters.pdb
 split_jawswater.py -w waters.pdb -o jaws2_
 </pre></div>
 </div>
@@ -1728,7 +1728,7 @@ split_jawswater.py -w waters.pdb -o jaws2_
 <p>This tool splits a PDB file containing multiple water molecules into PDB files appropriate for JAWS-2.</p>
 <p>For each water molecule in <code class="docutils literal"><span class="pre">pdbfile</span></code> the tool will write a PDB file with individual water molecules named <code class="docutils literal"><span class="pre">outprefix+watN.pdb</span></code> where N is the serial number of the water molecule. Furthermore, the tool will write a PDB file with all the other molecules and name if <code class="docutils literal"><span class="pre">outprefix+notN.pdb</span></code> where again N is the serial number of the water molecule. In these latter PDB-files, the water residue name is changed to that of the bulk water, e.g., <code class="docutils literal"><span class="pre">t3p</span></code> or <code class="docutils literal"><span class="pre">t4p</span></code>.</p>
 <p>For instance, if <code class="docutils literal"><span class="pre">waters.pdb</span></code> in the second example above contains 3 water molecule, this tool will create the following files:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">jaws2_wat1</span><span class="o">.</span><span class="n">pdb</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">jaws2_wat1</span><span class="o">.</span><span class="n">pdb</span>
 <span class="n">jaws2_wat2</span><span class="o">.</span><span class="n">pdb</span>
 <span class="n">jaws2_wat3</span><span class="o">.</span><span class="n">pdb</span>
 
@@ -1765,7 +1765,7 @@ split_jawswater.py -w waters.pdb -o jaws2_
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, J. Graham.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
   </body>
 </html>
