@@ -19,56 +19,64 @@ The protein has already been protonated and the atoms names have translated to t
 <h5>Setup</h5>
 Before running GCMC, you must carefully select the region where you'd like to perform GCMC. During the simulations, waters will be inserted and deleted within that region, and the free energy to add or remove waters can be calculated using grand canonical integration. Therefore, you should make sure the GCMC region covers the volume you're interested in. 
 <p>
-In <code>protein_pms.pdb</code>, a box centred at (31.5, 7.0, 2.0) whose sides have lengths (5.0, 4.0, 8.0) encompasses a small cavity. The aim is to use GCMC to calculate the total affinity of water for that site. We can create a box to these specifications by typing
+In <code>protein_pms.pdb</code>, a box centred at (32.0, 7.0, 2.0) whose sides have lengths (3.5, 4.0, 8.0) encompasses a small cavity. The aim is to use GCMC to calculate the total affinity of water for that site. We can create a box to these specifications by typing
 
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -b 31.5 7.0 2.0 5.0 4.0 8.0 -o gcmc_box.pdb</pre>
+<pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -b 32.0 7.0 2.0 3.5 4.0 8.0 -o gcmc_box.pdb</pre>
 <p>
 
 This creates a file called <code>gcmc_box.pdb</code> while outputting:
 <p>
 <pre>
-Volume of GCMC box: 160.0
-Bequil: -8.8
+Volume of GCMC box: 112.0
+Bequil: -9.15
 </pre>
 <p>
 We need to know the volume of the GCMC box later for analysis, but will use <em>B<sub>equil</sub></em> to set up the simulation. <em>B<sub>equil</sub></em> is calculated using:
 <p>
      <em>B<sub>equil</sub></em> = <em>&beta;&mu;'</em><sub>hyd</sub> + <em>ln(V/V<sup>o</sup>)</em>,
 <p>
-where <em>B<sub>equil</sub></em> is the Adams value that produces the equilibrium number of waters for the system. <em>&mu;'</em><sub>hyd</sub> is the excess chemical potential of bulk water, which is the hydration free energy of a single water molecule. In ProtoMS, previous analysis has found that <em>&mu;'</em><sub>hyd</sub> equals -6.2 kcal/mol. As the region specified by <code>gcmc_box.pdb</code> has a volume of 160 <span>&#8491;</span><sup>3</sup>, the above equation gives <em>B<sub>equil</sub></em> to be -8.8.
+where <em>B<sub>equil</sub></em> is the Adams value that produces the equilibrium number of waters for the system. <em>&mu;'</em><sub>hyd</sub> is the excess chemical potential of bulk water, which is the hydration free energy of a single water molecule. In ProtoMS, previous analysis has found that <em>&mu;'</em><sub>hyd</sub> equals -6.2 kcal/mol. As the region specified by <code>gcmc_box.pdb</code> has a volume of 112 <span>&#8491;</span><sup>3</sup>, the above equation gives <em>B<sub>equil</sub></em> to be -9.15.
 <p>
-The box we've just created and the small cavity in the protein look like:<br>
+The box we've just created and the small cavity in the protein look like: XXX replace<br>
 <img src="box.png" width="%" height="40%" alt="" /><br>
 <p>
 The figure shows a slice through the surface of the protein, and <code>gcmc_box.pdb</code> encompassing the small, sock-like cavity we're interested in.
 <p>
-As we wish to completely bind water to the volume specified by <code>gcmc_box.pdb</code>, we must run a series of GCMC simulations at different chemical potentials (Adams value in ProtoMS), within which the average number of inserted waters ranges from 0 to the equilibrium number of waters for the system. As we know <em>B<sub>equil</sub></em> is -8.8, we want to chose a range of waters which encompasses this value towards its higher end. We will chose a range of -6.8 to -29.8, which will generate 24 B values. 
+As we wish to completely bind water to the volume specified by <code>gcmc_box.pdb</code>, we must run a series of GCMC simulations at different chemical potentials (Adams value in ProtoMS), within which the average number of inserted waters ranges from 0 to the equilibrium number of waters for the system. As we know <em>B<sub>equil</sub></em> is -9.15, we want to chose a range of waters which encompasses this value towards its higher end. We will chose a range of -6.8 to -29.8. As we would like this to run on a single, 16 processor node, we will run 16 B values between these two points. If you would like to set this simulation up for a different machine, change the value to 12 or 24, or any appropriate value.
 <p>
 
-<pre>python2.7 $PROTOMSHOME/protoms.py -s gcmc -sc protein_pms.pdb --gcmcbox gcmc_box.pdb --adamsrange -29.8 -6.8</pre>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s gcmc -sc protein_pms.pdb --gcmcbox gcmc_box.pdb --adamsrange -29.8 -6.8 16</pre>
 
 This has automatically solvated our protein in a droplet of water (<code>water.pdb</code>) by randomly placing waters up to bulk density. Any solvent water that was placed inside <code>gcmc_box.pdb</code> has been removed to create <code>water_clr.pdb</code>.
+<p>
+
+For this system, convergence can sometimes be difficult. For this reason, open the run_gcmc.
+cmd file in a text editor. The last line should start with "chunk simulate 40000000". Change
+ this to say "chunk simulate 80000000", which will double the number of production steps. Sa
+ve the changes before starting the simulation.
 
 <h5>Execution</h5>
-To run the simulation, you need 24 cores and MPI. Execute by typing
+To run the simulation, you need 16 cores (or whatever number of B values you have chosen) and MPI. Execute by typing
 
-<pre>mpirun -np 24 $PROTOMSHOME/protoms3 run_gcmc.cmd</pre>
+<pre>mpirun -np 16 $PROTOMSHOME/protoms3 run_gcmc.cmd</pre>
 
 <p>
 <h5>Analysis</h5>
 It is vital that you check the simulations by eye. If you have Pymol, you can check the output structures from one of the GCMC simulations by typing
 
-<pre> pymol out_gcmc/b_-8.800/all.pdb </pre>
+<pre> pymol out_gcmc/b_-8.333/all.pdb </pre>
 
 Check your <code>warning</code> files as well to make sure nothing untoward has happened.
 <p>
 
 Before calculating occupancies and free energies with grand canonical integration, we should check to see if the simulations are approximately equilibrated. For one simulation, we can see the average number of inserted GCMC waters for each snapshot by typing
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f out_gcmc/b_-8.800/results -s solventson </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f out_gcmc/b_-8.333/results -s solventson </pre> 
 
-This would have produced an estimate for the start of the equilibrated period. Check to see if that value matches what you see in the graph that gets automatically plotted.
+<img src="solventson.png" width="%" height="50%" alt="" /><br>
+
+This shows the average number of waters in the simulation at B = -8.333. The system is well equilibrated at 3 waters in this simulation. This would have produced an estimate for the start of the equilibrated period. Check to see if that value matches what you see in the graph that gets automatically plotted. This plot looks well equilibrated from the beginning, but this may vary between repeats and different B values. Look at a few other B values and check if they are equilibrated around a similar point. 
 <p>
 For the rest of this analysis, we'll focus on the script <code>calc_gci.py</code> which contains a lot of functionality. To see how the average number of waters varies with the applied chemical potential - in other words, a titration - type
 
@@ -81,9 +89,9 @@ Depending on what you found with <code>calc_series.py</code>, you can discard th
 <p>
 The plot shows that the average number of waters at each Adams value occurs in 'steps', which is characteristic of all GCMC titration plots. Unlike the case when GCMC is performed on a cavity that can only bind a single water molecule (like <a href="../gcmc_single/gcmc_binding_calc.html">here</a>), the points of inflection of these steps do no necessarily correspond to free energies. As demonstrated in  <em>G. A. Ross et. al, Journal of the American Chemical Society, 2015</em>, it's actually the area under the titration curve that is related to the free energy to transfer water from ideal gas to the simulated system. 
 <p>
-To calculate the area under the titration curve, it is prudent to smooth over the data. The script <code>calc_gci.py</code> can fit a curve by modelling the titration data as a sum of logistic functions, which is equivalent to a very simple type of artificial neural network (ANN). As the titration data shows what looks like 2 steps, we can input that into the model. To calculate the fit with 2 steps and plot it, type
+To calculate the area under the titration curve, it is prudent to smooth over the data. The script <code>calc_gci.py</code> can fit a curve by modelling the titration data as a sum of logistic functions, which is equivalent to a very simple type of artificial neural network (ANN). As the titration data shows what looks like 2 steps, we can input that into the model. To calculate the fit with 3 steps and plot it, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p fit -c fit --steps 2 -v 160</pre>
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p fit -c fit --steps 3 -v 112</pre>
 
 Where <code>-v</code> is the volume of the GCMC region given by the <code>make_gcmcbox.py</code> script. This can also be calculated by looking at the <code>gcmc_box.pdb</code> file and determining the volume from the length of the x, y and z dimension. 
 <p>
@@ -95,7 +103,7 @@ The line of best fit is shown in red. The fit correctly captures the shape of th
 
 To calculate the binding free energies of adding water to the cavity, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -c pmf --steps 2 -v 160</pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -c pmf --steps 3 -v 112</pre> 
 
 where <code>-c pmf</code> indicates that the 'potential of mean force', i.e. the free energy, will be calculated. This will bring up a table like this one:
 
@@ -105,24 +113,24 @@ FREE ENERGIES:
           |----------------------IDEAL GAS TRANSFER FREE ENERGIES--------------------|   |-BINDING FREE ENERGIES-|
 '# Waters' 'Mean'  'Std. dev.'  '25th Percentile'       'Median'      '75th Percentile'    'Mean'        'Median'
   0.00      0.00      0.00            0.00                0.00               0.00            0.00           0.00
-  1.00    -16.24      0.01          -16.24              -16.24             -16.23          -10.04         -10.04
-  2.00    -31.33      0.01          -31.33              -31.33             -31.32          -18.93         -18.93
-  3.00    -40.01      0.01          -40.01              -40.01             -40.00          -21.41         -21.41
+  1.00    -16.54      0.00          -16.54              -16.54             -16.54          -10.34         -10.34
+  2.00    -29.63      0.01          -29.63              -29.63             -29.62          -17.23         -17.23
+  3.00    -36.39      0.00          -36.39              -36.39             -36.39          -17.79         -17.79
 </pre>
 <p>
-The table shows the free energy (in kcal/mol) to transfer water from ideal gas (<code>IDEAL GAS TRANSFER FREE ENERGIES</code>) and from bulk water (<code>BINDING FREE ENERGIES</code>) to the GCMC box. The script <code>calc_gci.py</code> actually fits the ANN several times from different initial parameter values. The free energies are calculated for each fit, and from the ensemble of the calculated free energies the mean, standard deviation (<code>Std. dev</code>), and the 25th, 50th (<code>Median</code>), and 75th percentiles are calculated. When the titration data is particularly noisy, the median free energy is a more robust measure of the average free energy than the mean. The table indicates that the free energy to bind three waters from bulk water is -21.4 +/- 0.01 kcal/mol. 
+The table shows the free energy (in kcal/mol) to transfer water from ideal gas (<code>IDEAL GAS TRANSFER FREE ENERGIES</code>) and from bulk water (<code>BINDING FREE ENERGIES</code>) to the GCMC box. The script <code>calc_gci.py</code> actually fits the ANN several times from different initial parameter values. The free energies are calculated for each fit, and from the ensemble of the calculated free energies the mean, standard deviation (<code>Std. dev</code>), and the 25th, 50th (<code>Median</code>), and 75th percentiles are calculated. When the titration data is particularly noisy, the median free energy is a more robust measure of the average free energy than the mean. The table indicates that the free energy to bind three waters from bulk water is -17.79 +/- 0.01 kcal/mol. 
 <p>
 A way to estimate the sensitivity of the free energy on the titration is to use bootstrap sampling. In each bootstrap sample, the titration data is randomly sampled with replacement, the ANN re-fit, and the free energy calculated. 
 <p>
 You should do as many bootstrap samples as possible, but this can take some time using the default fitting parameters. To speed up the bootstrapping, you can run just 1 random seed for each fit by typing <code>fit_options 'repeats 1'</code>. Also, you can save the ensemble of fitted ANNs using the <code>-o</code> flag. To do 1000 bootstrap samples, plot the fits with error bars, and save the ANNs, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p percentiles pmf -c pmf --steps 2 -v 160 -b 1000 -o ANNs.pickle </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -p percentiles pmf -c pmf --steps 3 -v 112 -b 1000 -o ANNs.pickle </pre> 
 
 The output, <code>ANNs.pickle</code>, can be read in by <code>calc_gci.py</code> when you want to use the same fitted models again. The ensemble of titration fits looks like<br>
 
 <img src="fitted_ann_percentiles_1000boots.png" width="%" height="50%" alt="" /><br>
 
-The orange and grey areas indicate where 50% and 90%, respectively, of the bootstrapped fits lay. Here however, the titration data sits close to the fit, so only a small region of grey is visible around the red line. This analysis is helpful for systems that are less converged. The error can be reduced by running more GCMC simulations, particularly with Adams values around the points of inflections. The table of free energies that corresponds to the boostrap sampling looks like
+The orange and grey areas indicate where 50% and 90%, respectively, of the bootstrapped fits lay. It can be seen that the incorrect fits are where the grey region is widest, which is for the titration of the third water molecule. The error can be reduced by running more GCMC simulations, particularly with Adams values around the points of inflections. The table of free energies that corresponds to the boostrap sampling looks like
 
 <pre>
 FREE ENERGIES:
@@ -130,45 +138,47 @@ FREE ENERGIES:
           |----------------------IDEAL GAS TRANSFER FREE ENERGIES--------------------|   |-BINDING FREE ENERGIES-|
 '# Waters' 'Mean'  'Std. dev.'  '25th Percentile'       'Median'      '75th Percentile'    'Mean'        'Median'
   0.00      0.00      0.00            0.00                0.00               0.00            0.00           0.00
-  1.00    -16.26      0.45          -16.31              -16.26             -16.20          -10.06         -10.06
-  2.00    -31.37      0.76          -31.45              -31.34             -31.25          -18.97         -18.94
-  3.00    -40.04      0.76          -40.12              -40.03             -39.91          -21.44         -21.43
+  1.00    -16.63      1.28          -16.48              -16.36             -16.32          -10.43         -10.16
+  2.00    -29.69      1.34          -29.68              -29.43             -29.30          -17.29         -17.03
+  3.00    -36.41      1.42          -36.52              -36.20             -35.96          -17.81         -17.60
 </pre>
-The error to transfer/bind 3 waters has now increased to about 0.8 kcal/mol. The binding free energy has been automatically plotted and looks like<br>
+The error to transfer/bind 3 waters has now increased to about 1.5 kcal/mol. The binding free energy has been automatically plotted and looks like<br>
 
 <img src="binding_free_energy_1000boots.png" width="%" height="50%" alt="" /><br>
 
-If there is larger variance in the boostrapping samples, blue and grey areas will be visible, showing the 50% and 90% confidence intervals, respectively, of the calculated free energies. From this graph, it's clear that the minimum free energy state of the system is with three waters bound. Thus, three is the optimal number of waters for the region encompassed by <code>gcmc_box.pdb</code>.
+The blue and grey areas of the curve show the 50% and 90% confidence intervals, respectively, of the calculated free energies. From this graph, the minimum free energy state of the system is between two and three waters bound. Thus, three is the optimal number of waters for the region encompassed by <code>gcmc_box.pdb</code>.
 
-The optimal water occupancy can also be calculated by looking at <em>B<sub>equil</sub></em>. The <em>B<sub>equil</sub></em> value should correspond to the optimal occupancy, shown in the setup section. As calculated previously, the volume of 160 <span>&#8491;</span><sup>3</sup> relates to a <em>B<sub>equil</sub></em> of -8.4. The water occupancy is calculated by determining the N value at the point where the fitted curve passes through <em>B<sub>equil</sub></em>. As this is dependent on the quality of the fit to the data, the average Nequil is also calculated as the average of simulated B values near to the <em>B<sub>equil</sub></em> value. 
+The optimal water occupancy can also be calculated by looking at <em>B<sub>equil</sub></em>. The <em>B<sub>equil</sub></em> value should correspond to the optimal occupancy, shown in the setup section. As calculated previously, the volume of 112 <span>&#8491;</span><sup>3</sup> relates to a <em>B<sub>equil</sub></em> of -9.15. The water occupancy is calculated by determining the N value at the point where the fitted curve passes through <em>B<sub>equil</sub></em>. As this is dependent on the quality of the fit to the data, the average Nequil is also calculated as the average of simulated B values near to the <em>B<sub>equil</sub></em> value. 
 <p>
 <pre>
 B EQUILIBRIUM CONDITION FROM FITTED MODELS:
-Bequil: -8.8
+Bequil: -9.2
 Number of molecules:  Mean   Std. dev   25th Percentile    50th Percentile   75th Percentile
-                      3.0      0.0            3.0              3.0                3.0
+                      2.9      0.9            2.8              2.9                2.9
 B EQUILIBRIUM CONDITION FROM SIMULATED B VALUE:
-Bequil: -8.8
-Similar simulated B values: [-8.8]
-Average N* at simululated at B values: [-8.8] is 3.0
+Bequil: -9.2
+Similar simulated B values: [-9.867]
+Average N* at simululated at B values: [-9.867] is 2.6
 </pre>
 <p>
-Both methods have calculated <em>N<sub>equil</sub></em> to be 3.0, which is consistent with the occupancy that minimises the binding free energy above. 
+The fitted model estimation of the water occupancy is 2.9 waters, which is consistent with the minimum binding free energy network also being 3 waters. The estimation based on the nearest B value underestimates the number of waters at 2.6, but this difference is probably due to the B value simulated (-9.8) being sufficiently different to the equilibrium value (-9.2).
 <p>
 To calculate the free energy to add a specific number of waters, say the free energy to bind 1 water when 2 are already bound, use the <code>--range</code> flag. We'll input the 1000 boostrap fits with the <code>-i</code> flag. The binding free energy of the 3rd water can be calculated with
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -c pmf -v 160 -i ANNs.pickle --range 2 3 </pre> 
+<pre>python2.7 $PROTOMSHOME/tools/calc_gci.py -d out_gcmc/b_-* -c pmf -v 112 -i ANNs.pickle --range 2 3 </pre> 
 
 with the result
 
 <pre>
+FREE ENERGIES:
+  Quoted errors are from the input model(s).
           |----------------------IDEAL GAS TRANSFER FREE ENERGIES--------------------|   |-BINDING FREE ENERGIES-|
 '# Waters' 'Mean'  'Std. dev.'  '25th Percentile'       'Median'      '75th Percentile'    'Mean'        'Median'
   2.00      0.00      0.00            0.00                0.00               0.00            0.00           0.00
-  3.00     -8.67      0.11           -8.72               -8.67              -8.61           -2.47          -2.47
+  3.00     -6.71      0.48           -6.81               -6.76              -6.72           -0.51          -0.56
 </pre>
-Note how the uncertainty has signicantly decreased. This is because we need only evaluate a smaller area for the relative calculation. The above tables shows that the free energy to bind the third and last water is -4.45 +/- 0.11 kcal/mol. 
+Note how the uncertainty has signicantly decreased. This is because we need only evaluate a smaller area for the relative calculation. The above tables shows that the free energy to bind the third and last water is -0.51 +/- 0.48 kcal/mol. 
 
-<h4>Written by Gregory A. Ross, 2015. Revised by Hannah Bruce-Macdonald, Jan 2017</h4>
+<h4>Written by Gregory A. Ross, 2015. Revised by Hannah Bruce Macdonald, Jan 2017</h4>
 </BODY>
 </HTML>
