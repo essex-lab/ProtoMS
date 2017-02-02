@@ -794,7 +794,6 @@ def minimum_from_bequil(models,B,N,dG_hyd,kT=0.592,print_lines=True):
 	return None, None, None
     else:
 	Bequil = dG_hyd*(1.0/0.592) + np.log(args.volume/30.0)
-	closestBfit = (np.abs(single_model.x - Bequil)).argmin() 
 	Nstarfit = []
 	Nstarcalc = []
 	
@@ -803,7 +802,9 @@ def minimum_from_bequil(models,B,N,dG_hyd,kT=0.592,print_lines=True):
 		return Bequil, Nstarcalc, Nstarfit
 	else:
 	    for model in models:
-	        model.x = np.linspace(start=B.min(),stop=B.max(),num=len(model.predicted))
+	        model.x = np.linspace(start=B.min(),stop=B.max(),num=len(model.predicted)*10.0)
+		model.forward()
+		closestBfit = (np.abs(model.x - Bequil)).argmin()
 	        Nstarfit.append(model.predicted[closestBfit])
 	    Nstarfit = np.array(Nstarfit)
 	    if print_lines:
