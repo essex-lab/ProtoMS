@@ -475,7 +475,7 @@ def _readfrcmod(filename):
 
 
 
-def build_template ( temfile, prepifile, translate=0.25, rotate=5, zmatfile=None, frcmodfile=None, resname="UNK", alldihs = False, gaffversion="gaff16" ) :
+def build_template ( temfile, prepifile, translate=0.1, rotate=1.0, zmatfile=None, frcmodfile=None, resname="UNK", alldihs = False, gaffversion="gaff16" ) :
     """ Build a ProtoMS template file 
   
     Parameters
@@ -691,16 +691,14 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
           out += "bond %4s %3s %4s %3s\n" % (atom1,resname,atom2,resname)
           moltem.connectivity.append(sim.TemplateConnectivity(record="bond %4s %3s %4s %3s\n" % (atom1,resname,atom2,resname)))
           
-# THIS CODE IF BROKEN, replaced with the one above
-#    for atom in atoms.itervalues():
-#        for i in atom.loop_closure:
-#            if atom.loop_closure[i] == True:
-#                out += "bond %4s %3s %4s %3s\n" % (atom.name,resname,i,resname)
-
     # Print out the angles:
     for line in zmat[2:]:
         angle = line.split()[:3]
         if "DM3" in angle : continue
+
+        #if this is a loop angle then exclude it
+        if atoms[angle[1]].is_on_loop[angle[0]] and atoms[angle[1]].is_on_loop[angle[2]]:
+          continue
         atypes = [ atoms[i].atype for i in angle ]
         try:
             k = angle_params.get_params ( atypes ).k
@@ -753,11 +751,6 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
         if alldihs:
           # even if we're sampling improper dihedrals we should not sample those that maintain
           # in-plane geometries as ProtoMS does not evaluate these energies. These appear as impropers in the prepi file
-          # slightly crude but check all atom order combinations that correspond to the same improper
-          dih2 = dihedral[:2] + dihedral[2:][::-1] # swap last two elements
-          dih3 = dihedral[::-1]
-          dih4 = dih2[::-1]
-          # if dihedral in impropers or dih2 in impropers or dih3 in impropers or dih4 in impropers:
           for imp in impropers:
             if dihedral[0] in imp and dihedral[1] in imp and dihedral[2] in imp and dihedral[3] in imp:
               skip = True
@@ -768,13 +761,16 @@ info translate %f rotate %f\n""" % ( resname, translate, rotate )
             skip = True
 
         if skip:
-#          print dihedral, impropers
           continue
 
         # If central bond is part of a loop
         if atoms[dihedral[1]].is_on_loop[dihedral[2]]:
-            # Ensure aromatic dihedrals are excluded
+            # Ensure rotations around aromatic dihedrals are excluded
             if atypes[1] in aromatic_types and atypes[2] in aromatic_types:
+                continue
+            
+            # If this is a dihedral of all loop atoms then exclude it as well
+            if atoms[dihedral[0]].is_on_loop[dihedral[1]] and atoms[dihedral[2]].is_on_loop[dihedral[3]]:
                 continue
               
             fmt = ( dihedral[0], resname, 
@@ -812,8 +808,8 @@ def get_arg_parser ():
     parser.add_argument('-z','--zmat',help="the name of the zmatrix-file, if it exists")
     parser.add_argument('-f','--frcmod',help="the name of the frcmod-file, if it exists")
     parser.add_argument('-n','--name',help="the name of the solute",default='UNK')
-    parser.add_argument('-t','--translate',help="maxmium size for translation moves in Angstroms", default=0.25, type=float)
-    parser.add_argument('-r','--rotate',help="maxmium size for rotation moves in degrees", default=5.0, type=float)
+    parser.add_argument('-t','--translate',help="maxmium size for translation moves in Angstroms", default=0.1, type=float)
+    parser.add_argument('-r','--rotate',help="maxmium size for rotation moves in degrees", default=1.0, type=float)
     parser.add_argument('--alldihs',help='sample improper dihedrals',default=False,action='store_true')
     parser.add_argument('--gaff',help='gaff version to use, gaff14 or gafff16',default='gaff16')
     return parser

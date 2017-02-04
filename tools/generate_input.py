@@ -20,7 +20,7 @@ DualTopology
 Can be executed from the command line as a stand-alone program
 """
 
-import os
+import os, sys
 import logging
 
 import numpy as np
@@ -62,7 +62,7 @@ def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
   pgcsolu = 0.0
 
   accel_prot = 5					# The amount by which the protein be accelerated over the solvent.
-  accel_solu = accel_prot				# The amount by which the solute be accelerated over the solvent.
+  accel_solu = 50       				# The amount by which the solute be accelerated over the solvent.
   addto = 1000.0					# Move proportion add up to this number. This is just for clarity.
 
   if protein is not None:
@@ -755,8 +755,8 @@ class GCMC(ProteinLigandSimulation) :
                     gcmcwater="gcmc_water.pdb",
                     gcmcbox=None,   
                     nequil=5E6,
-                    nprod=40E6,
-                    dumpfreq=1E5,
+                    nprod=80E6,
+                    dumpfreq=2E5,
                     adamval=None,
                     ranseed=None,
                     watmodel="tip4p",
@@ -1239,7 +1239,7 @@ if __name__ == "__main__":
 
   # Setup the logger
   logger = simulationobjects.setup_logger("generate_input_py.log")
-
+  
   free_cmd,bnd_cmd,gas_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args.ranseed,args) 
 
   args.out = args.out.lower() #protoMS cannot handle cmd files containing upper case letters
