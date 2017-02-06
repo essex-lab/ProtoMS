@@ -24,4 +24,4 @@ dump 10 results write results
 dump 10 pdb all solvent=all file=all.pdb standard
 dump 10 restart write restart
 dump 10 averages reset
-chunk simulate 100 solvent=841 protein=157 solute=1 volume=0
+chunk simulate 100 solvent=831 protein=155 solute=13 volume=0

@@ -16,7 +16,7 @@ par 3012    h1    01    0.02870    2.47135    0.01570
 par 3013    h1    01    0.02870    2.47135    0.01570
 mode template
 solute ETH
-info translate 0.250 rotate 5.000
+info translate 0.100 rotate 1.000
 atom  C05 ETH 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
 atom  C01 ETH 3001 3001  C05 ETH  DM3 DUM  DM2 DUM
 atom  H04 ETH 3002 3002  C01 ETH  C05 ETH  DM3 DUM
@@ -41,7 +41,7 @@ angle  H03 ETH  C01 ETH  C05 ETH flex 0.190
 dihedral  H06 ETH  C05 ETH  C01 ETH  H04 ETH flex 2.500
 mode template
 solute MEO
-info translate 0.250 rotate 5.000
+info translate 0.100 rotate 1.000
 atom  C01 MEO 3008 3008  DM3 DUM  DM2 DUM  DM1 DUM
 atom  O05 MEO 3009 3009  C01 MEO  DM3 DUM  DM2 DUM
 atom  H06 MEO 3010 3010  O05 MEO  C01 MEO  DM3 DUM

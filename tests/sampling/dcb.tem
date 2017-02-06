@@ -14,7 +14,7 @@ par 3010    ha    01    0.15100    2.59964    0.01500
 par 3011    ha    01    0.15100    2.59964    0.01500
 mode template
 solute DCB
-info translate 0.250 rotate 5.000
+info translate 0.100 rotate 1.000
 atom  CAD DCB 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
 atom  CAF DCB 3001 3001  CAD DCB  DM3 DUM  DM2 DUM
 atom  CAH DCB 3002 3002  CAF DCB  CAD DCB  DM3 DUM

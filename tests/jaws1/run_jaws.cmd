@@ -35,5 +35,5 @@ dump 10 results write results
 dump 10 pdb all solvent=all file=all.pdb standard
 dump 10 restart write restart
 dump 10 averages reset
-chunk equilibrate 0 solvent=376 protein=124 solute=1 theta=333 gcsolute=167
-chunk simulate 100 solvent=376 protein=124 solute=1 theta=333 gcsolute=167
+chunk equilibrate 0 solvent=371 protein=122 solute=7 theta=333 gcsolute=167
+chunk simulate 100 solvent=371 protein=122 solute=7 theta=333 gcsolute=167

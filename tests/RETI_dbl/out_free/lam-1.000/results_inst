@@ -593,7 +593,7 @@ RESULTS FILE    7
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
 Number of data steps =        1
-Lambda replica =        3
+Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
@@ -691,7 +691,7 @@ RESULTS FILE    8
 RESULTS for lambda  0.99900 <--  1.00000 -->  1.00000
 #####################################################
 Number of data steps =        1
-Lambda replica =        3
+Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000

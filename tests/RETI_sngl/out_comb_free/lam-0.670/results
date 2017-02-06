@@ -9,7 +9,7 @@ Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -80,7 +80,7 @@ Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -151,7 +151,7 @@ Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -222,7 +222,7 @@ Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -289,11 +289,11 @@ RESULTS FILE    5
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
 Number of data steps =        1
-Lambda replica =        1
+Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -303,7 +303,7 @@ Forwards  Free Energy =          0.0051 (    0.000 )
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
 ###########################################################
-Total Energy      -2218.9656 (    0.000 ) |      -2218.9605 (    0.000 )      -2218.9707 (    0.000 )
+Total Energy      -2218.7513 (    0.000 ) |      -2218.7462 (    0.000 )      -2218.7564 (    0.000 )
 ############################################
 Internal energy averages for solute    1 eth
 ############################################
@@ -320,9 +320,9 @@ DIFF                                        0.0001                      -0.0001
 ##############################
 Average solvent-solvent energy
 ##############################
-COU      -2612.9260 (    0.000 ) |      -2612.9260 (    0.000 )      -2612.9260 (    0.000 )
+COU      -2615.9076 (    0.000 ) |      -2615.9076 (    0.000 )      -2615.9076 (    0.000 )
 DIFF                                        0.0000                       0.0000
-LJ         392.4881 (    0.000 ) |        392.4881 (    0.000 )        392.4881 (    0.000 )
+LJ         395.6994 (    0.000 ) |        395.6994 (    0.000 )        395.6994 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #############################################
  Average inter-molecular interaction energies
@@ -330,9 +330,9 @@ DIFF                                        0.0000                       0.0000
 ###########################################################
 Average solute-solvent energy for    1                  eth
 ###########################################################
-COU          1.9962 (    0.000 ) |          1.9983 (    0.000 )          1.9941 (    0.000 )
+COU          1.9792 (    0.000 ) |          1.9813 (    0.000 )          1.9771 (    0.000 )
 DIFF                                        0.0021                      -0.0021
-LJ          -4.3688 (    0.000 ) |         -4.3690 (    0.000 )         -4.3686 (    0.000 )
+LJ          -4.3672 (    0.000 ) |         -4.3674 (    0.000 )         -4.3670 (    0.000 )
 DIFF                                       -0.0002                       0.0002
 #######################
  Average extra energies
@@ -343,12 +343,12 @@ FREE ENERGY DATA
 #####################
 lambda | Total Energy
 #####################
-0.000 |   -2222.1391
-0.330 |   -2221.0346
-0.670 |   -2218.9579
-1.000 |   -2217.4613
+0.000 |   -2221.9049
+0.330 |   -2220.8105
+0.670 |   -2218.7434
+1.000 |   -2217.2561
 ##################################
-Gradient       5.1298       0.0000
+Gradient       5.1023       0.0000
 ##################################
 HIGH       0       0.000       0.000       0.000
 LOW        0       0.000       0.000       0.000
@@ -360,11 +360,11 @@ RESULTS FILE    6
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
 Number of data steps =        1
-Lambda replica =        1
+Lambda replica =        3
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -374,7 +374,7 @@ Forwards  Free Energy =          0.0051 (    0.000 )
 ###########################################################
  Averages. Stddev in brackets. Average | forwards backwards
 ###########################################################
-Total Energy      -2219.0170 (    0.000 ) |      -2219.0119 (    0.000 )      -2219.0221 (    0.000 )
+Total Energy      -2218.7792 (    0.000 ) |      -2218.7741 (    0.000 )      -2218.7843 (    0.000 )
 ############################################
 Internal energy averages for solute    1 eth
 ############################################
@@ -391,9 +391,9 @@ DIFF                                        0.0001                      -0.0001
 ##############################
 Average solvent-solvent energy
 ##############################
-COU      -2612.9931 (    0.000 ) |      -2612.9931 (    0.000 )      -2612.9931 (    0.000 )
+COU      -2615.9486 (    0.000 ) |      -2615.9486 (    0.000 )      -2615.9486 (    0.000 )
 DIFF                                        0.0000                       0.0000
-LJ         392.5053 (    0.000 ) |        392.5053 (    0.000 )        392.5053 (    0.000 )
+LJ         395.7140 (    0.000 ) |        395.7140 (    0.000 )        395.7140 (    0.000 )
 DIFF                                        0.0000                       0.0000
 #############################################
  Average inter-molecular interaction energies
@@ -401,9 +401,9 @@ DIFF                                        0.0000                       0.0000
 ###########################################################
 Average solute-solvent energy for    1                  eth
 ###########################################################
-COU          1.9947 (    0.000 ) |          1.9967 (    0.000 )          1.9926 (    0.000 )
+COU          1.9777 (    0.000 ) |          1.9798 (    0.000 )          1.9756 (    0.000 )
 DIFF                                        0.0021                      -0.0021
-LJ          -4.3688 (    0.000 ) |         -4.3690 (    0.000 )         -4.3686 (    0.000 )
+LJ          -4.3672 (    0.000 ) |         -4.3674 (    0.000 )         -4.3670 (    0.000 )
 DIFF                                       -0.0002                       0.0002
 #######################
  Average extra energies
@@ -414,12 +414,12 @@ FREE ENERGY DATA
 #####################
 lambda | Total Energy
 #####################
-0.000 |   -2222.1888
-0.330 |   -2221.0850
-0.670 |   -2219.0092
-1.000 |   -2217.5136
+0.000 |   -2221.9310
+0.330 |   -2220.8375
+0.670 |   -2218.7713
+1.000 |   -2217.2849
 ##################################
-Gradient       5.1271       0.0000
+Gradient       5.0996       0.0000
 ##################################
 HIGH       0       0.000       0.000       0.000
 LOW        0       0.000       0.000       0.000
@@ -431,11 +431,11 @@ RESULTS FILE    7
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
 Number of data steps =        1
-Lambda replica =        4
+Lambda replica =        2
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -502,11 +502,11 @@ RESULTS FILE    8
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
 Number of data steps =        1
-Lambda replica =        4
+Lambda replica =        2
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -573,11 +573,11 @@ RESULTS FILE    9
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
 Number of data steps =        1
-Lambda replica =        3
+Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)
@@ -644,11 +644,11 @@ RESULTS FILE   10
 RESULTS for lambda  0.66900 <--  0.67000 -->  0.67100
 #####################################################
 Number of data steps =        1
-Lambda replica =        3
+Lambda replica =        4
 Temperature =      25.0000 C
 Solvents,Proteins,GC-solutes =      300       0       0
 Simulation B value =       0.0000
-Molecules in grid  =        0
+Molecules in grid  =       0.0000
 Pressure =       1.0000 atm
 Volume =   13851.6664 A^3
 Average volume =   13851.6664 (      0.0000)

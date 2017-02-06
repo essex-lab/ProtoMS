@@ -35,7 +35,7 @@ par 3019    ha    01    0.14700    2.59964    0.01500
 par 3020    h4    01    0.02410    2.51055    0.01500
 mode template
 solute XDK
-info translate 0.250 rotate 5.000
+info translate 0.100 rotate 1.000
 atom   C4 XDK 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
 atom   N3 XDK 3001 3001   C4 XDK  DM3 DUM  DM2 DUM
 atom   C2 XDK 3002 3002   N3 XDK   C4 XDK  DM3 DUM

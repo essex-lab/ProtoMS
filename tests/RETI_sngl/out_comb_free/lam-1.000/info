@@ -1,11 +1,11 @@
-protoms3 started at 14:43:31 on the 11/12/2015
+protoms3 started at 10:19:18 on the  6/ 2/2017
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-##############################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/amber14SB.ff
-##############################################################################
+######################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB.ff
+######################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -14,9 +14,9 @@ Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,  797 clj parameters
 and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#############################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/solvents.ff
-#############################################################################
+#####################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/solvents.ff
+#####################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
@@ -24,15 +24,15 @@ Found solvent template with TIP3p optimization
 Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#######################################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/amber14SB-residues.ff
-#######################################################################################
+###############################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB-residues.ff
+###############################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###########################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/gaff14.ff
-###########################################################################
+###################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/gaff14.ff
+###################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -89,23 +89,23 @@ Got initial random number seed       100000
 ###########################################
 Sanitised random number seed =       209999
 ###########################################
-Starting simulation at 14:43:31 on the 11/12/2015
+Starting simulation at 10:19:18 on the  6/ 2/2017
 ######################################################################
 Running simulation in lambda window    0.999 <--    1.000 -->    1.000
 ######################################################################
 There are   18 CLJ parameter types used in this simulation.
 Pre-calculating all the charge and LJ pairs...
 Running chunk    1
-New displacements for solute   1 translation =  0.0000 rotation =  0.0873
+New displacements for solute   1 translation =  0.0000 rotation =  0.0175
 Running chunk    2
-Move probabilies: Protein =        0 Solute =       16 Solvent =      981 Insertion =        0
+Move probabilies: Protein =        0 Solute =      143 Solvent =      854 Insertion =        0
                   Titrate =        0 Theta  =        0 Volume  =        3 Deletion  =        0
                   Rotamer =        0 Sample =        0 GCsolute =        0 SolTheta =        0
 #############################################
 Requested            0 steps of equilibration
 #############################################
 Running chunk    3
-Move probabilies: Protein =        0 Solute =       16 Solvent =      981 Insertion =        0
+Move probabilies: Protein =        0 Solute =      143 Solvent =      854 Insertion =        0
                   Titrate =        0 Theta  =        0 Volume  =        3 Deletion  =        0
                   Rotamer =        0 Sample =        0 GCsolute =        0 SolTheta =        0
 ##########################################
@@ -122,9 +122,9 @@ Writing restart file
 ####################
 Resetting free energy average to zero.
 Data collection complete. Attempted/accepted moves           10           6
-Attempted/successful lambda swaps for lambdaladder   1 :      7     7 ( 100.000%)
+Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
 ###############################
 Final volume =   13851.6664 A^3
 ###############################
 Simulation shutting down...
-protoms3 completed at 14:43:32 on the 11/12/2015
+protoms3 completed at 10:19:19 on the  6/ 2/2017
