@@ -11,6 +11,7 @@
       include 'gb.inc'
       include 'quickpot.inc'
       include 'solvents.inc'
+      include 'proteins.inc'
       include 'simparams.inc'
 c###############################################################
 c
@@ -31,7 +32,7 @@ c###############################################################
       integer lgth,lineLength
       character*4 statstring
       integer ranInt
-      integer i
+      integer i, j
 c     JM
       integer jsol, idih
 
@@ -161,19 +162,24 @@ c          JM Dual Topology, update energies of second solute if necessary
         endif
 c       we can now clear the solute coordinate stack
         call clearSoluteCoordStack
-c
-c       Possible bug spotted by S. Foucher Dec. 2005
-c       The prob of a solvent molecule must be updated if the solute move 
+c       The prob of all solvent and protein molecules must be updated if the solute move 
 c       is accepted in case of Pref. Sampling
         if (PrefSample) then
-c         we need to save the new solvent probabilities
-          do i=1,NSolvents
-            SvnProb(i) = SvnNewProb(i)
-          enddo
-          SvnMaxProb = SvnNewMaxProb
-          SvnSumProb = SvnNewSumProb
+           do i=1,NSolvents
+              SvnProb(i) = SvnNewProb(i)
+           enddo
+           SvnMaxProb = SvnNewMaxProb
+           SvnSumProb = SvnNewSumProb
         endif
-c       end bugfix
+        if (NProteins.gt.0 .and. ProPrefSample) then
+           do i=1,NProteins
+              do j=1,NResidues(i)
+                 ProProb(i,j) = ProNewProb(i,j)
+              enddo
+           enddo
+           ProMaxProb = ProNewMaxProb
+           ProSumProb = ProNewSumProb
+        endif
       else
         soluteMove = .false.
         statstring = "FAIL"

@@ -41,6 +41,9 @@ c
       double precision StoredProProCB(MAXPROTEINS,MAXPROTEINS,STOREDNRGS)
       double precision StoredProProLJB(MAXPROTEINS,MAXPROTEINS,STOREDNRGS)
       double precision StoredProProDist(MAXPROTEINS,MAXPROTEINS,STOREDNRGS)
+      double precision StoredProProb(MAXPROTEINS,MAXRESIDUES,STOREDNRGS)
+      double precision StoredProSumProb(STOREDNRGS)
+      double precision StoredProMaxProb(STOREDNRGS)
 
       double precision StoredSolBnd(MAXSOLUTES,STOREDNRGS)
       double precision StoredSolAng(MAXSOLUTES,STOREDNRGS)
@@ -156,6 +159,7 @@ c
      . StoredSolSvnLJF,StoredSolSvnCB,StoredSolSvnLJB,StoredSolSvnDist
 
       common /DSTORETWODATA/ StoredSvnProb,StoredSumProb,StoredMaxProb,
+     . StoredProProb,StoredProSumProb,StoredProMaxProb,
      . StoredTotalEnergy,StoredTotalEnergyF,StoredTotalEnergyB,StoredSolventCap,
      . StoredHarmEnergy,StoredHarmEnergyF,StoredHarmEnergyB,StoredFBotEnergy,
      . StoredFBotEnergyF,StoredFBotEnergyB,StoredTotalSurface,StoredTotalSurfaceF,

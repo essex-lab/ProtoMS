@@ -29,6 +29,7 @@ c     whether we are using Lorentz-Berthelot combining rules
       logical LorentzBerthelot
 c     whether or not to do preferential sampling
       logical PrefSample
+      logical ProPrefSample
 c     whether or not to do LambdaRE and TemperatureRE
       logical doLambdaRE,doTemperatureRE,doREST,doMultiGCMC,doMultiJaws2
 c     whether or not to calculate lambda-gradient and not energy
@@ -42,7 +43,7 @@ c     whether or not to perform a dihedral flexibilty tuning simulation
      .          protodebug,
      .          GotInitialTotalEnergy,testEnergy,
      .          SingleTopologyFreeNrg,DualTopologyFreeNrg,
-     .          DifferentLambdas,LorentzBerthelot,PrefSample,
+     .          DifferentLambdas,LorentzBerthelot,PrefSample,ProPrefSample,
      .          doLambdaRE,doTemperatureRE,doREST,doMultiGCMC,doMultiJaws2,
      .          PdbParams,doJaws,everyjaws2,
      .          printFE,mbar,doDerivative,doLowDerivative,reCalculateFreeEnergies,

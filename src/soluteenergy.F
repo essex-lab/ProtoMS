@@ -25,7 +25,7 @@ c     Modified by Samuel Genheden 2012-2013
 c
 c#################################################################
 
-      integer i,savenrg,isol
+      integer i,j,savenrg,isol
       double precision soluteIntraEnergy,soluteSoluteEnergy
       double precision proteinSoluteEnergy,soluteSolventEnergy,soluteGCSenergy
       double precision getLowScale,getHighScale
@@ -288,12 +288,22 @@ c       If the soft-core is on, the coulombic is scaled further here
 c         if this is the solute used for preferential sampling,
 c         then save the preferential sampling parameters
           if (isol.eq.SvnPrefSol .and. PrefSample) then
-            do i=1,NSolvents
-              SvnProb(i) = SvnNewProb(i)
-            enddo
-            SvnSumProb = SvnNewSumProb
-            SvnMaxProb = SvnNewMaxProb
+             do i=1,NSolvents
+                SvnProb(i) = SvnNewProb(i)
+             enddo
+             SvnSumProb = SvnNewSumProb
+             SvnMaxProb = SvnNewMaxProb
           endif
+          if (isol.eq.ProPrefSol .and. ProPrefSample) then
+             do i=1,NProteins
+                do j=1,NResidues(i)
+                   ProProb(i,j) = ProNewProb(i,j)
+                enddo
+             enddo
+             ProSumProb = ProNewSumProb
+             ProMaxProb = ProNewMaxProb
+          endif
+          
         else if (savenrg.eq.NEW) then
           NewSolSvnC(isol) = icnrg*scl
           NewSolSvnLJ(isol) = iljnrg*scl

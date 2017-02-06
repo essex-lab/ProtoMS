@@ -1041,7 +1041,7 @@ c     and the value of the pref sampling parameter
       if (getOption('prefsampling')) then
          svnPrefSol = getInt(words(1),0)
          if (svnPrefSol.le.0 .or. svnPrefSol.gt.NSolutes) then
-            call printLine(INFO,"Turning off preferential sampling")
+            call printLine(INFO,"Turning off solvent preferential sampling")
             prefSample = .false.
          else
             prefSample = .true.
@@ -1049,7 +1049,7 @@ c     see if the line also contains the pref sampling parameter
             if (nwords.ge.2) svnProbParam = getDouble(words(2),svnProbParam)
             
             lgth = lineLength(SoluteName(svnPrefSol))
-            write(printstring,"(a,a,f12.4,a,a,a,a,i4,a)") "Performing preferential sampling with ",
+            write(printstring,"(a,a,f12.4,a,a,a,a,i4,a)") "Performing solvent preferential sampling with ",
      .           "sampling parameter = ",svnProbParam," and centered ",
      .           "on solute ",SoluteName(svnPrefSol)(1:lgth)," (",
      .           svnPrefSol,")"
@@ -1058,8 +1058,32 @@ c     see if the line also contains the pref sampling parameter
       endif
 
       if (NSolvents.gt.0 .and. .not.prefSample) 
-     .     call printLine(INFO,"Not performing preferential sampling")
-      
+     .     call printLine(INFO,"Not performing solvent preferential sampling")
+
+c     Now whether or not we are doing preferential sampling,
+c     and the value of the pref sampling parameter
+      if (getOption('proteinprefsampling')) then
+         ProPrefSol = getInt(words(1),0)
+         if (ProPrefSol.le.0 .or. ProPrefSol.gt.NSolutes) then
+            call printLine(INFO,"Turning off protein preferential sampling")
+            ProPrefSample = .false.
+         else
+            ProPrefSample = .true.
+c     see if the line also contains the pref sampling parameter          
+            if (nwords.ge.2) ProProbParam = getDouble(words(2),ProProbParam)
+            
+            lgth = lineLength(SoluteName(ProPrefSol))
+            write(printstring,"(a,a,f12.4,a,a,a,a,i4,a)") "Performing protein preferential sampling with ",
+     .           "sampling parameter = ",ProProbParam," and centered ",
+     .           "on solute ",SoluteName(ProPrefSol)(1:lgth)," (",
+     .           ProPrefSol,")"
+            call printLine(INFO,printstring)
+         endif
+      endif
+
+      if (NProteins.gt.0 .and. .not.ProPrefSample) 
+     .     call printLine(INFO,"Not performing protein preferential sampling")
+
 
 c##########################
 c     finally get the random number seed - the default value is based on the current time

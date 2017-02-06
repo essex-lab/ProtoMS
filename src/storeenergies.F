@@ -17,7 +17,7 @@ c
 c
 c     (c) Julien Michel April 2005
 c###########################################################
-      integer i,j,pot
+      integer i,j,k,pot
 
 c      write(printstring,*) 'STORING ENERGIES FOR POT ',pot
 c      call printLine(DEBUG,printstring)
@@ -162,13 +162,24 @@ c      call printLine(DEBUG,printstring)
               StoredSolSvnLJB(i,pot) = OldSolSvnLJB(i) 
               StoredSolSvnDist(i,pot) = OldSolSvnDist(i) 
               if (i.eq.SvnPrefSol .and. PrefSample) then
-c               save the solvent probabilities...
-                do j=1,NSolvents
-                  StoredSvnProb(j,pot) = SvnProb(j) 
-                enddo
-                StoredSumProb(pot) = SvnSumProb 
-                StoredMaxProb(pot) = SvnMaxProb
+c     save the solvent probabilities...
+                 do j=1,NSolvents
+                    StoredSvnProb(j,pot) = SvnProb(j) 
+                 enddo
+                 StoredSumProb(pot) = SvnSumProb 
+                 StoredMaxProb(pot) = SvnMaxProb
               endif
+c     save the residue probabilities
+              if (i.eq.ProPrefSol .and. ProPrefSample) then
+                 do j=1,NProteins
+                    do k=1,NResidues(j)
+                       StoredProProb(j,k,pot) = ProProb(j,k)
+                    enddo
+                 enddo
+                 StoredProSumProb(pot) = ProSumProb
+                 StoredProMaxProb(pot) = ProMaxProb
+              endif
+              
             endif
           enddo
         endif

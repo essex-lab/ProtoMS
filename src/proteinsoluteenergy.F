@@ -20,9 +20,10 @@ c#############################################################
       double precision cnrg,ljnrg,nrg,icnrg,iljnrg
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb,icnrgf,icnrgb,iljnrgf,iljnrgb
       double precision mindist,imindist,sclfac
-      integer i,nres
+      integer i,j,nres
       double precision residueSoluteEnergy
       double precision scl,sclf,sclb
+      double precision idel
       proteinSoluteEnergy = ZERO
       cnrg = ZERO
       ljnrg = ZERO
@@ -55,6 +56,42 @@ c      PRINT*, "I AM",isol
         if (imindist.lt.mindist) mindist = imindist
       enddo
 
+c     Sort out the preferential sampling - we need to normalise
+c     all of the probabilities, and find the maximum probability
+      if (isol.eq.ProPrefSol .and. ProPrefSample .and. .not. doDerivative) then
+c       initialise the sum and max sampling
+        ProNewSumProb = ZERO
+        ProNewMaxProb = ZERO
+
+c       calculate the new sum of sampling
+        do i=1,NProteins
+           if (i.eq.iprot) then
+c     only take the new probability values for the protein we've calculated for
+              do j=1,NResidues(iprot)
+                 ProNewProb(i,j) = ONE / (ProNewProb(i,j) + ProProbParam)
+                 ProNewSumProb = ProNewSumProb + ProNewProb(i,j)
+              enddo
+           else
+c     take the unnormalised values for the other proteins
+              do j=1,NResidues(i)
+                 ProNewProb(i,j) = ProProb(i,j) * ProSumProb
+                 ProNewSumProb = ProNewSumProb + ProNewProb(i,j)
+              enddo
+           endif
+        enddo
+
+c       normalise the ProNewProb... - while doing so, watch 
+c       for the maximum probability..
+        idel = ONE / ProNewSumProb
+        do i=1,NProteins
+           do j=1,NResidues(i)
+              ProNewProb(i,j) = idel * ProNewProb(i,j)
+              if (ProNewProb(i,j).gt.ProNewMaxProb) ProNewMaxProb = ProNewProb(i,j)
+           enddo
+        enddo
+      endif
+      
+      
       if (cuttype.eq.MOLECULEMOLECULE) then
 c       performing protein-molecule solute-molecule cutting
         if (mindist.lt.cut2) then

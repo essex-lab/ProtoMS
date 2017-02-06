@@ -8,6 +8,7 @@
       include 'simparams.inc'
       include 'enums.inc'
       include 'energies.inc'
+      include 'flags.inc'
 c##################################################################
 c
 c     This function calculates and returns the total energy of 
@@ -22,7 +23,7 @@ c     Modified by Samuel Genheden 2012-2013
 c
 c##################################################################
 
-      integer ires,iprot,i,savenrg
+      integer ires,iprot,i,j,k,savenrg
       double precision bndnrg,angnrg,dihnrg,ubynrg,nbcnrg,nbljnrg
       double precision cnrg,ljnrg,icnrg,iljnrg,mindist
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb,icnrgf,icnrgb,iljnrgf,iljnrgb
@@ -33,6 +34,7 @@ c##################################################################
       double precision residueIntraEnergy,residueProteinEnergy
       double precision residueSoluteEnergy,residueSolventEnergy,residueGCSoluteEnergy
       double precision nrgf,nrgb
+      double precision idel
 
       residueEnergy = ZERO
       cnrgf = ZERO
@@ -259,6 +261,41 @@ c           this is the high solute
             newResSolLF(i) = iljnrgf*sclf
             newResSolLB(i) = iljnrgb*sclb
             newResSolDist(i) = mindist
+
+
+
+
+c     if this is a new conformation, and we are interacting with
+c           the preferential solute, then update the residue probabilities
+            if (i.eq.ProPrefSol .and. ProPrefSample) then
+              ProNewSumProb = ZERO
+              ProNewMaxProb = ZERO
+c             unnormalise the probabilities! - sum together as well
+              do j=1,Nproteins
+                 do k=1,NResidues(j)
+                    if (j.ne.iprot .and. k.ne.ires) then
+                       ProNewProb(j,k) = ProProb(j,k) * ProSumProb
+                       ProNewSumProb = ProNewSumProb + ProNewProb(j,k)
+                    endif
+                 enddo
+              enddo
+c             calculate the probability of this solvent
+              ProNewProb(iprot,ires) = ONE / (ProNewProb(iprot,ires) + ProProbParam)
+c             add this back onto the sum, and normalise the probabilities
+c             - also watch for the maximum probability
+              ProNewSumProb = ProNewSumProb + ProNewProb(iprot,ires)
+              idel = ONE / ProNewSumProb
+              do j=1,NProteins
+                 do k=1,NResidues(j)
+                    ProNewProb(j,k) = idel * ProNewProb(j,k)
+                    if (ProNewProb(j,k).gt.ProNewMaxProb) ProNewMaxProb = ProNewProb(j,k)
+                 enddo
+              enddo
+            endif
+
+
+
+            
           endif
         enddo
       endif

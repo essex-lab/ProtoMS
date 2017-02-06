@@ -77,6 +77,13 @@ c     of the solute
       dist2 = distx**2 + disty**2 + distz**2
       mindist = dist2
 
+c     if the protein molecule is interacting with the preferential
+c     sampling protein, then calculate SvnNewProb for this protein
+c     molecule
+      if (isol.eq.ProPrefSol) then
+        ProNewProb(iprot,ires) = dist2
+      endif
+      
 c     if the distance is greater than cut+solRadius+resRadius then cut
       if (dist2 .gt. (cut+SolRadius(isol)+ResRadius(iprot,ires)+ONE)**2) return
 

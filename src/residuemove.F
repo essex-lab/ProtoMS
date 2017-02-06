@@ -10,6 +10,7 @@
       include 'energies.inc'
       include 'gb.inc'
       include 'quickpot.inc'
+      include 'metropolis.inc'
 c##########################################################
 c
 c     This function performs everything necessary for a
@@ -23,11 +24,12 @@ c##########################################################
       double precision tempval
       integer iprot,ires,ityp
       double precision ieold,ienew,nrgb,nrgf
-      double precision residueEnergy
+      double precision residueEnergy, ranRange
       double precision extraEnergy,inrgb,inrgf
       logical metropolis
       character*4 statstring
-      integer ranInt      
+      integer ranInt,i,j
+      double precision itmp
 
 c     clear the move list
       call clearMoveList()      
@@ -36,6 +38,7 @@ c     randomly choose a protein..
       residueMove = .false.
       tempval = ZERO
       if (NProteins.le.0) return
+ 99   continue
       if (NProteins.eq.1) then
         iprot = 1
       else
@@ -56,6 +59,14 @@ c     This should make sure we don't pick fixed residues
 c     make sure we don't try to move a fixed residue
       if (fixedRes(iprot,ires)) goto 9
 
+      if (ProPrefSample) then
+c        compute the owicki preferential sampling probability
+c        for this residue, and compare with ran(0,1)
+         itmp = ProProb(iprot,ires) / ProMaxProb
+c        if we fail the test, then randomly pick another residue molecule
+         if (itmp .le. ranRange(ZERO,ONE)) goto 99
+      endif
+      
 c     increment the number of attempted moves for this residue
       NResTry(iprot,ires) = NResTry(iprot,ires) + 1
 
@@ -132,6 +143,16 @@ c     get the new energy
       endif
       DoneResNrg(iprot,ires) = .false.
       
+
+c     if we are doing preferential sampling, then we must
+c     use a biased MC test - this is based on the biased
+c     probability of the new position, over the biased
+c     probability of the old position
+      if (ProPrefSample) then
+        mt_bias = ProNewProb(iprot,ires) / ProProb(iprot,ires)
+      endif
+      
+      
       if (metropolis(ieold,ienew,movtyp)) then
         residueMove = .true.
         statstring = "PASS"
@@ -149,6 +170,16 @@ c       we can leave the internal angles of the residue alone
 c       we can now clear the residue coordinate stack
         call clearResidueCoordStack
         call clearResidueEnergyStack
+        if (ProPrefSample) then
+c         we need to save the new solvent probabilities!
+           do i=1,NProteins
+              do j=1,NResidues(i)
+                 ProProb(i,j) = ProNewProb(i,j)
+              enddo
+          enddo
+          ProMaxProb = ProNewMaxProb
+          ProSumProb = ProNewSumProb
+        endif
       else
         residueMove = .false.
         statstring = "FAIL"

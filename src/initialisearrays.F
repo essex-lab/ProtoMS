@@ -864,7 +864,9 @@ c        enddo
       enddo            
       do i=1,MAXPROTEINS            
         do j=1,MAXRESIDUES            
-          ResidueredoSA(i,j) = .false.            
+           ResidueredoSA(i,j) = .false.
+           ProProb(i,j) = ONE
+           ProNewProb(i,j) = ONE
 c          OldResidueSurf(i,j) = ZERO            
 c          NewResidueSurf(i,j) = ZERO            
 c          do k=1,MAXATOMS            
@@ -873,6 +875,11 @@ c            NewProtAtomSurf(i,k) = ZERO
 c          enddo            
         enddo            
       enddo            
+      ProProbParam = ZERO
+      ProSumProb = dble(MAXPROTEINS*MAXRESIDUES)
+      ProNewSumProb = ProSumProb
+      ProMaxProb = ONE
+      ProNewMaxProb = ONE
             
       do i=1,MAXSOLVENTS            
         SolventredoSA(i) = .false.            

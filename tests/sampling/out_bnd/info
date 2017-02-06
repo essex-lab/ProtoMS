@@ -1,4 +1,4 @@
-protoms3 started at  9:50:24 on the  6/ 2/2017
+protoms3 started at 10:31:45 on the  6/ 2/2017
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
@@ -81,12 +81,13 @@ Simulation temperature =      25.0000 C, (    298.1500 K)
 #########################
 Running an NVT simulation
 #########################
-Not performing preferential sampling
+Not performing solvent preferential sampling
+Not performing protein preferential sampling
 Got initial random number seed       100000
 ###########################################
 Sanitised random number seed =       209999
 ###########################################
-Starting simulation at  9:50:24 on the  6/ 2/2017
+Starting simulation at 10:31:46 on the  6/ 2/2017
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -119,4 +120,4 @@ Writing restart file
 Resetting free energy average to zero.
 Data collection complete. Attempted/accepted moves          100          58
 Simulation shutting down...
-protoms3 completed at  9:50:27 on the  6/ 2/2017
+protoms3 completed at 10:31:49 on the  6/ 2/2017

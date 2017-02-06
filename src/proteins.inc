@@ -136,12 +136,28 @@ c     the lengths/sizes of all of the bonds/angles/dihedrals...
       logical ProteinScoop
 c     whether or not to soften the residue-residue interactions
       logical ProteinSoftCore
+
+c     the solute from which preferential sampling is performed
+      integer ProPrefSol
+c     variables needed to do preferential sampling...
+c     The current probability of moving a particular protein residue
+      double precision ProProb(MAXPROTEINS,MAXRESIDUES)
+c     The new probability of moving a particular protein residue
+      double precision ProNewProb(MAXPROTEINS,MAXRESIDUES)
+c     The value of the maximum probability of moving a protein residue
+      double precision ProMaxProb,ProNewMaxProb
+c     The sum of the protein probabilities
+      double precision ProSumProb,ProNewSumProb
+c     The parameter that controls preferential sampling for proteins
+      double precision ProProbParam
       
       common /DPROTEINDATA/ BBCoord,SCCoord,ZValO,ZValSC,ZCoords,
      .                      ZDeltaO,ZDeltaSC,TotalCharge,
      .                      ResCentre,ResRadius,ProCentre,OldProCentre,
      .                      ResADel,ResRDel,BondLength,
-     .                      AngleSize,DihedralSize,UreyBradleySize
+     .                      AngleSize,DihedralSize,UreyBradleySize,
+     .                      ProProb,ProNewProb,ProMaxProb,ProNewMaxProb,
+     .                      ProSumProb,ProNewSumProb,ProProbParam
       common /IPROTEINDATA/ NProteins,NResidues,ZMatSC,Zid2ResID,
      .                      NSCAtoms,ResNum,ResidueBond,BBNum,
      .                      ResidueAngle,ResidueDihedral,ResidueUreyBradley,
@@ -151,7 +167,7 @@ c     whether or not to soften the residue-residue interactions
      .                      AcidicRes,BasicRes,NAcidicRes,NBasicRes,SCNum,
      .                      ResResBondIndex,NResResBonds,
      .                      NResNB,NResNB14,NResResNB,NResResNB14,
-     .                      ResNB,ResNB14,ResResNB,ResResNB14,ResMove,NResMove
+     .                      ResNB,ResNB14,ResResNB,ResResNB14,ResMove,NResMove,ProPrefSol
       common /LPROTEINDATA/ ZMovO,ZMovSC,FlexBond,FlexAngle,FlexDihedral,
      .                      BondDummy,AngleDummy,DihedralDummy,
      .                      ResResBond,TempRes1Map,TempRes2Map,TempResResMap,

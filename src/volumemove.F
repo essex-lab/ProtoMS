@@ -3,6 +3,7 @@
       include 'metropolis.inc'
       include 'printer.inc'
       include 'solvents.inc'
+      include 'proteins.inc'
       include 'flags.inc'
       include 'moves.inc'
       include 'enums.inc'
@@ -18,7 +19,7 @@ c
 c###############################################################
 
       integer updatenrg,movnum,savenrg
-      integer movtyp,newtyp,i
+      integer movtyp,newtyp,i,j
       double precision oldvol,newvol,volchg
       double precision ienew,ieold,inrgb,inrgf
       double precision ranRange,totalEnergy,extraEnergy
@@ -91,6 +92,16 @@ c         we need to save the new solvent probabilities!
           enddo
           SvnMaxProb = SvnNewMaxProb
           SvnSumProb = SvnNewSumProb
+        endif
+        if (ProPrefSample) then
+c         we need to save the new solvent probabilities!
+           do i=1,NProteins
+              do j=1,NResidues(i)
+                 ProProb(i,j) = ProNewProb(i,j)
+              enddo
+          enddo
+          ProMaxProb = ProNewMaxProb
+          ProSumProb = ProNewSumProb
         endif
       else
 c       change the volume back again!

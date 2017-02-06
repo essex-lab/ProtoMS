@@ -83,7 +83,7 @@ c     of the solvent molecule - cut if it greater than cutoff+residueRadius
       endif
       dist2 = distx**2 + disty**2 + distz**2
       mindist = dist2
-
+      
       if ( .not. SIRE_COMPATIBILITY_MODE ) then
         if (dist2 .gt. (cut+ResRadius(iprot,ires))**2) return
       else

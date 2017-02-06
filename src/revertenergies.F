@@ -17,7 +17,7 @@ c
 c
 c     (c) Julien Michel April 2005
 c#########################################
-      integer i,j,pot
+      integer i,j,k,pot
 c      write(printstring,*) 'REVERTING NERGIES FOR POT ',pot
 c      call printLine(DEBUG,printstring)
 
@@ -167,7 +167,17 @@ c               save the solvent probabilities...
                 enddo
                 SvnSumProb = StoredSumProb(pot) 
                 SvnMaxProb = StoredMaxProb(pot)
-              endif
+             endif
+             if (i.eq.ProPrefSol .and. ProPrefSample) then
+                do j=1,NProteins
+                   do k=1,NResidues(j)
+                      ProProb(j,k) = StoredProProb(j,k,pot)
+                   enddo
+                   ProSumProb = StoredProSumProb(pot)
+                   ProMaxProb = StoredProMaxProb(pot)
+                enddo
+             endif
+             
             endif
           enddo
         endif

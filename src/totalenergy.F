@@ -30,7 +30,7 @@ c
 c###########################################################
 
       integer savenrg
-      integer i,j
+      integer i,j,k
       double precision nrg,nrgb,nrgf
       double precision cnrg,ljnrg,mindist
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb
@@ -358,6 +358,14 @@ c                totalEnergy = totalEnergy + nrg
                   OldProSolCB(i,j) = cnrgb
                   OldProSolLJB(i,j) = ljnrgb
                   OldProSolDist(i,j) = mindist
+                  if (j.eq.ProPrefSol .and. ProPrefSample) then
+c     save the solvent probabilities...
+                     do k=1,NResidues(i)
+                        ProProb(i,k) = ProNewProb(i,k)
+                     enddo
+                     ProSumProb = ProNewSumProb
+                     ProMaxProb = ProNewMaxProb
+                  endif
                 else if (savenrg.eq.NEW) then
                   NewProSolC(i,j) = cnrg
                   NewProSolLJ(i,j) = ljnrg

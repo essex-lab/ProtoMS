@@ -15,7 +15,7 @@ c     (C) Christopher Woods   29 April 2003
 c
 c############################################################
 
-      integer i,j
+      integer i,j,k
 
       if (NProteins.gt.0) then
         do i=1,NProteins
@@ -122,8 +122,16 @@ c############################################################
                 OldProSolLJB(i,j)  = NewProSolLJB(i,j) 
                 OldProSolDist(i,j) = NewProSolDist(i,j)
               endif
+              if (j.eq.ProPrefSol .and. ProPrefSample) then
+c     save the solvent probabilities...
+                 do k=1,NResidues(i)
+                    ProProb(i,k) = ProNewProb(i,k)
+                 enddo
+              endif
             enddo
           enddo
+          ProSumProb = ProNewSumProb
+          ProMaxProb = ProNewMaxProb
         endif
       endif
       
