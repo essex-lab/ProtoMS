@@ -263,23 +263,25 @@ c           this is the high solute
             newResSolDist(i) = mindist
 
 
-
-
+c$$$            print *, 'before', ires, ProProb(iprot,ires), ProNewProb(iprot,ires), ProSumProb
 c     if this is a new conformation, and we are interacting with
-c           the preferential solute, then update the residue probabilities
+c     the preferential solute, then update the residue probabilities
             if (i.eq.ProPrefSol .and. ProPrefSample) then
               ProNewSumProb = ZERO
               ProNewMaxProb = ZERO
 c             unnormalise the probabilities! - sum together as well
               do j=1,Nproteins
                  do k=1,NResidues(j)
-                    if (j.ne.iprot .and. k.ne.ires) then
+c$$$                    if ( (j.eq.iprot) .and. (k.eq.ires)) then
+c$$$                       goto 99
+c$$$                    else
+                    if (.not.(( j.eq.iprot ).and.( k.eq.ires ))) then
                        ProNewProb(j,k) = ProProb(j,k) * ProSumProb
                        ProNewSumProb = ProNewSumProb + ProNewProb(j,k)
                     endif
                  enddo
               enddo
-c             calculate the probability of this solvent
+c             calculate the probability of this residue
               ProNewProb(iprot,ires) = ONE / (ProNewProb(iprot,ires) + ProProbParam)
 c             add this back onto the sum, and normalise the probabilities
 c             - also watch for the maximum probability
@@ -291,13 +293,10 @@ c             - also watch for the maximum probability
                     if (ProNewProb(j,k).gt.ProNewMaxProb) ProNewMaxProb = ProNewProb(j,k)
                  enddo
               enddo
-            endif
-
-
-
-            
+           endif
+c$$$           print *, 'after', ires, ProProb(iprot,ires), ProNewProb(iprot,ires), ProNewSumProb
           endif
-        enddo
+       enddo
       endif
       
 c     residue-solvent energy
