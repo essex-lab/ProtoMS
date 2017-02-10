@@ -37,7 +37,6 @@ c############################################
       gridx = 0
       gridy = 0
       gridz = 0      
-      vavail = gridx*gridy*gridz
       
       boundary = AGREESOLVENT
       solventBox = .false.

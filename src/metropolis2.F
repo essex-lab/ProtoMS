@@ -54,7 +54,7 @@ c######## NVT metropolis MC acceptance test ##############
 c       get the random number
         ranval = grnd()
 
-        expval = ((gridx*gridy*gridz/vavail)*(dexp(B))/GCSCavity)*dexp((olde-ienew)*mt_beta_T)
+        expval = ((dexp(B))/GCSCavity)*dexp((olde-ienew)*mt_beta_T)
 
         if (expval.lt.ranval) then
 c         move failed

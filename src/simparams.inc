@@ -9,8 +9,6 @@ c     the charge you want on the protein
       double precision desiredCharge
 c     B factor
       double precision B     
-c     volume available
-      double precision vavail
 c     bias-jaws
       double precision bias  
 c     one over the default coulombic 1-4 scale factor
@@ -87,7 +85,7 @@ c     (this slows things down, but is useful to allow debugging of Sire)
 
       common /SIMPARAMVALS/ cut,cut2,centerx,centery,centerz,
      .           Lambda,LambdaF,LambdaB,BoxDimension,BoxOrigin,feather,feather2,featherfac,
-     .           OldBoxDimension,OldBoxOrigin,temperatureC,temperature,B,vavail,coordx,coordy,coordz,gridx,gridy,gridz,space,bias,
+     .           OldBoxDimension,OldBoxOrigin,temperatureC,temperature,B,coordx,coordy,coordz,gridx,gridy,gridz,space,bias,
      .           BoxDimension2,BoxTop,TempAtoms,desiredCharge,coordhwx,coordhwy,coordhwz,gridhwx,gridhwy,gridhwz,
      .           cap,capradius,oldcapradius,capconstant,GCtheta,jaws1,jaws2,
      .           OneOverScl14C,OneOverScl14LJ,thres,
