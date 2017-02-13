@@ -11,22 +11,19 @@
 \usepackage{longtable}
 \usepackage{sphinx}
 \usepackage{multirow}
-\usepackage{eqparbox}
-\usepackage{amsfonts}
 
 \addto\captionsenglish{\renewcommand{\figurename}{Fig. }}
 \addto\captionsenglish{\renewcommand{\tablename}{Table }}
-\SetupFloatingEnvironment{literal-block}{name=Listing }
+\floatname{literal-block}{Listing }
 
 
 
 \title{ProtoMS Documentation}
-\date{January 23, 2017}
-\release{3.2}
+\date{February 13, 2017}
+\release{3.3}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and J. Graham}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
 \renewcommand{\releasename}{Release}
-\setcounter{tocdepth}{1}
 \makeindex
 
 \makeatletter
@@ -134,16 +131,14 @@
 \phantomsection\label{index::doc}
 
 
-Contents:
-
 
 \chapter{Introduction}
 \label{introduction:introduction}\label{introduction:protoms-documentation}\label{introduction::doc}
-ProtoMS is short for “Prototype Molecular Simulation”, and is a software package that was originally designed by Dr. Christopher Woods to perform protein-ligand binding free energy calculations during his PhD. Dr. Julien Michel and Dr. Michael Bodnarchuk latter added numerous features and used the program extensively during their PhDs. Dr. Samuel Genheden, Dr. Richard Bradshaw, Dr. Gregory Ross, Chris Cave-Ayland and Ana Cabedo Martinez has since then made numerous additions to the code among them a complete revision of the tools used to setup and analyse the simulation results.
+ProtoMS is short for “Prototype Molecular Simulation”, and is a software package that was originally designed by Dr. Christopher Woods to perform protein-ligand binding free energy calculations during his PhD. Dr. Julien Michel and Dr. Michael Bodnarchuk latter added numerous features and used the program extensively during their PhDs. Dr. Samuel Genheden, Dr. Richard Bradshaw, Dr. Gregory Ross, Dr. Chris Cave-Ayland, Dr. Ana Cabedo Martinez, Hannah Bruce-Macdonald and James Graham have since then made numerous additions to the code among them a complete revision of the tools used to setup and analyse the simulation results.
 
 The program is routinely used by several members of the research group of Jonathan Essex. This document has been written to try and explain how to use ProtoMS.
 
-The user manual has been written as a reference manual, with extensive hyperlinking to allow you to quickly dip in and out to find the information you need. While you could read it from start to end, it would be a boring and repetitive read and you probably wouldn’t learn much! We recommend that you engange with the tutorials that come with ProtoMS. You can then use the links in those descriptions to dip in and out of the user manual, thus obtaining a more detailed knowledge of how the examples, and thus ProtoMS, work.
+The user manual has been written as a reference manual, with extensive hyperlinking to allow you to quickly dip in and out to find the information you need. While you could read it from start to end, it would be a boring and repetitive read and you probably wouldn’t learn much! We recommend that you engage with the tutorials that come with ProtoMS. You can then use the links in those descriptions to dip in and out of the user manual, thus obtaining a more detailed knowledge of how the examples, and thus ProtoMS, work.
 
 
 \section{Formatting}
@@ -258,7 +253,15 @@ make install
 
 and \emph{cmake} will perform the necessary checks before it continues with the installation of ProtoMS. The executable will be placed in the top level of the folder hierarchy.
 
-We recommend to set the environmental variable \code{\$PROTOMSHOME} to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.
+In order for ProtoMS to find the relevant parameter files it is necessary to set the environmental variable \code{\$PROTOMSHOME} to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitute this variable when it is used in ProtoMS command files.
+
+Once building is complete it is highly recommended to run the test suite that comes with ProtoMS to test that the build was successful. From the build directory created above simply type:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{ctest} \PYG{o}{\PYGZhy{}}\PYG{n}{V}
+\end{Verbatim}
+
+all tests should be expected to pass and the above command will provide detailed output. The most common reason for failures is the need to set the correct environment variables. Notably \code{\$AMBERHOME} for the setup tests and \code{\$PROTOMSHOME}, as described above. Another reason for occasional failures is slight formatting and rounding differences between compilers, this can lead to values differing at the final decimal place in results files and such failures can be safely ignored.
 
 
 \section{Requirements}
@@ -353,22 +356,22 @@ ProtoMS divides all of the molecules loaded within a system into solvents, GCsol
 \index{Solvents}
 \textbf{Solvents}
 
-Solvents are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solventpdb]{\emph{Solvent File}}}). Each solvent molecule is identified by its residue name (the fourth column in the PDB file), e.g. ProtoMS identifies the TIP4P solvent with the residue name ‘T4P’. ProtoMS loads the coordinates of the solvent from the PDB file, and then assigns the parameters for the solvent from a solvent template (see section {\hyperref[protoms:temref]{\emph{Templates}}}). The solvent template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Note that this version of ProtoMS uses the coordinates of the solvent molecule that are present in the PDB file. ProtoMS does not yet have the capability to modify these coordinates to ensure that the internal geometry of the solvent is correct for the solvent model. This means that as solvents are only translated and rotated, the internal geometry of
+Solvents are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solventpdb]{\emph{\DUspan{}{Solvent File}}}}). Each solvent molecule is identified by its residue name (the fourth column in the PDB file), e.g. ProtoMS identifies the TIP4P solvent with the residue name ‘T4P’. ProtoMS loads the coordinates of the solvent from the PDB file, and then assigns the parameters for the solvent from a solvent template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). The solvent template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Note that this version of ProtoMS uses the coordinates of the solvent molecule that are present in the PDB file. ProtoMS does not yet have the capability to modify these coordinates to ensure that the internal geometry of the solvent is correct for the solvent model. This means that as solvents are only translated and rotated, the internal geometry of
 the solvent molecule loaded at the start of the simulation will be identical to that at the end of the simulation.
 
 \index{GCSolutes}
 \textbf{GCSolutes}
 
-Like solvents, GCsolutes are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:gcpdb]{\emph{GCsolute File}}}). Each GCsolute molecule is identified by its residue name (the fourth column in the PDB file). ProtoMS loads the coordinates of the GCsolute from the PDB file, and then assigns the parameters for the GCsolute from a GCsolute template (see section {\hyperref[protoms:temref]{\emph{Templates}}}). This template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Alongside translational and rotational moves, the intermolecular energy between the GCsolute and the system can be sampled.
+Like solvents, GCsolutes are loaded into ProtoMS from PDB files (see section {\hyperref[protoms:gcpdb]{\emph{\DUspan{}{GCsolute File}}}}). Each GCsolute molecule is identified by its residue name (the fourth column in the PDB file). ProtoMS loads the coordinates of the GCsolute from the PDB file, and then assigns the parameters for the GCsolute from a GCsolute template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). This template contains the information necessary to identify all of the atoms in the solvent molecule and to assign forcefield parameters to each atom. Alongside translational and rotational moves, the intermolecular energy between the GCsolute and the system can be sampled.
 
 \index{Solutes}
 \textbf{Solutes}
 
-Solutes are also loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solpdb]{\emph{Solute File}}}). Each solute molecule is identified by its solute name, which is given in the HEADER record of the PDB file. ProtoMS obtains the coordinates of the solute from the PDB file, and will then find a solute template that matches this solute name (see {\hyperref[protoms:temref]{\emph{Templates}}}). The solute template is used to build the z-matrix for the solute, and to assign all of the forcefield parameters. The solute template is also used to assign the connectivity of the solute and to define the flexible internal coordinates. The solute molecule is constructed using the z-matrix, with the reference being three automatically added dummy atoms, called ‘DM1’, ‘DM2’ and ‘DM3’, all part of residue ‘DUM’. These dummy atoms are automatically added by ProtoMS at the geometric center of the solute, as a right angled set of atoms pointing along the major and minor axes of the solute.
+Solutes are also loaded into ProtoMS from PDB files (see section {\hyperref[protoms:solpdb]{\emph{\DUspan{}{Solute File}}}}). Each solute molecule is identified by its solute name, which is given in the HEADER record of the PDB file. ProtoMS obtains the coordinates of the solute from the PDB file, and will then find a solute template that matches this solute name (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). The solute template is used to build the z-matrix for the solute, and to assign all of the forcefield parameters. The solute template is also used to assign the connectivity of the solute and to define the flexible internal coordinates. The solute molecule is constructed using the z-matrix, with the reference being three automatically added dummy atoms, called ‘DM1’, ‘DM2’ and ‘DM3’, all part of residue ‘DUM’. These dummy atoms are automatically added by ProtoMS at the geometric center of the solute, as a right angled set of atoms pointing along the major and minor axes of the solute.
 
 \index{Proteins}
 \textbf{Proteins}
-Proteins are loaded into ProtoMS via PDB files (see section {\hyperref[protoms:protpdb]{\emph{Protein File}}}). Each PDB file may only contain a single protein chain. ProtoMS constructs the linear chain of molecules based on the order of residues that it reads from the PDB file, and will ignore the residue number read from the PDB file. This means that you must ensure that you have the residues ordered correctly within the PDB file. ProtoMS assigns to each residue both a chain template (see section {\hyperref[protoms:temref]{\emph{Templates}}}), that describes the backbone of the residue, and a residue template (see section {\hyperref[protoms:temref]{\emph{Templates}}}), that describes the sidechain. The residue template is located based on the name of the residue given in the fourth column in the PDB file (e.g. ‘ASP’ or ‘HIS’). The chain template is located based on the chain template associated with the residue template for the position of the residue within the chain. For example, residue ‘ASP’ has a standard amino acid backbone chain template if this residue was in the middle of the chain, an NH+ capped backbone chain template 3 if this was the first residue of the chain (and thus at the n-terminus), and a CO-- capped backbone chain template 2 if this were the last residue of the chain (and thus at the c-terminus). If the protein consisted of only one residue, then the zwitterionic amino acid chain template would be used for ‘ASP’.
+Proteins are loaded into ProtoMS via PDB files (see section {\hyperref[protoms:protpdb]{\emph{\DUspan{}{Protein File}}}}). Each PDB file may only contain a single protein chain. ProtoMS constructs the linear chain of molecules based on the order of residues that it reads from the PDB file, and will ignore the residue number read from the PDB file. This means that you must ensure that you have the residues ordered correctly within the PDB file. ProtoMS assigns to each residue both a chain template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}), that describes the backbone of the residue, and a residue template (see section {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}), that describes the sidechain. The residue template is located based on the name of the residue given in the fourth column in the PDB file (e.g. ‘ASP’ or ‘HIS’). The chain template is located based on the chain template associated with the residue template for the position of the residue within the chain. For example, residue ‘ASP’ has a standard amino acid backbone chain template if this residue was in the middle of the chain, an NH+ capped backbone chain template 3 if this was the first residue of the chain (and thus at the n-terminus), and a CO-- capped backbone chain template 2 if this were the last residue of the chain (and thus at the c-terminus). If the protein consisted of only one residue, then the zwitterionic amino acid chain template would be used for ‘ASP’.
 
 ProtoMS obtains the coordinates of each residue from the PDB file, and will then use the residue and chain templates to build the z-matrix for each residue, and to assign all of the forcefield parameters.
 \phantomsection\label{protoms:bbatoms}
@@ -377,7 +380,7 @@ Proteins are moved in a different manner in ProtoMS compared to other Monte Carl
 \centering
 \capstart
 
-\scalebox{0.500000}{\includegraphics{{backbone}.png}}
+\scalebox{0.500000}{\includegraphics{backbone.png}}
 \caption{Four atoms from each protein residue are designated as backbone atoms (bbatoms). For most residues these atoms are the N, CA, C and O atoms respectively. The four backbone atoms for two neighbouring residues are shown above. The protein backbone move moves the last three bbatoms of one residue and the first bbatom of the next residue. This is because the moves assumes that these four bbatoms form a rigid triangle (as is shown by the grey lines). The four atoms are translated and rotated as a rigid triangle, with the origin of rotation of the triangle centered on the intersection of the vector between bbatoms 2 and 1, and the vector between bbatoms 3 and 4 (marked as a red dot directly above the C=O bond). Because this triangle is translated and rotated as a rigid unit, all atoms connected to the atoms of this triangle will also be translated and rotated as a rigid unit.}\end{figure}
 
 Four special backbone atoms (bbatoms) are identified in the chain-backbone of each residue. These atoms form the reference from which the rest of the residue atoms are built. These four atoms can be translated and rotated as a rigid unit via protein backbone moves (see figure above). As the rest of the residue is constructed from these bbatoms, the rest of the residue is thus also translated and rotated. Because the bbatoms are translated and rotated as a rigid unit, the internal geometry of these backbone atoms are held constant throughout the simulation. This means that the internal geometry of the bbatoms is taken from the PDB file, and may not be modified by the chain or residue templates. It is also not possible to build missing bbatoms, so they must all be present in the PDB file.
@@ -386,7 +389,8 @@ Once the coordinates and z-matrices of each residue have been assigned, interres
 
 
 \begin{threeparttable}
-\capstart\caption{Table 1.0 The default value of the maximum number of proteins, GCsolutes, solutes and solvents that may be loaded simultaneously by ProtoMS. These values may be changed by editing the \texttt{dimensions.inc} file located in the src directory, and recompiling ProtoMS.}\label{protoms:id3}
+\capstart\caption{Table 1.0 The default value of the maximum number of proteins, GCsolutes, solutes and solvents that may be loaded simultaneously by ProtoMS. These values may be changed by editing the dimensions.inc file located in the src directory, and recompiling ProtoMS.}
+\label{protoms:id3}
 \begin{tabulary}{\linewidth}{|L|L|L|}
 \hline
 \textsf{\relax 
@@ -466,7 +470,7 @@ Maximum number of atoms per solvent
 
 \textbf{Limits}
 
-ProtoMS is written using slightly extended Fortran 77 (see {\hyperref[compilation:fortran77]{\emph{Programming Language}}}). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 1.0 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.
+ProtoMS is written using slightly extended Fortran 77 (see {\hyperref[compilation:fortran77]{\emph{\DUspan{}{Programming Language}}}}). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 1.0 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.
 
 \index{Forcefields}
 
@@ -644,7 +648,7 @@ Any and all parts of the forcefield can be scaled. This includes all of the forc
 \centering
 \capstart
 
-\scalebox{0.500000}{\includegraphics{{alchemy}.png}}
+\scalebox{0.500000}{\includegraphics{alchemy.png}}
 \caption{Geometry variations allow for a smoother transition between two systems, for example here a methyl group is smoothly converted into a hydrogen.}\end{figure}
 
 As well as enabling smooth transitions between systems, geometry variations may be used to calculate potentials of mean force along structural coordinates.
@@ -733,7 +737,7 @@ If the move is accepted, then the new configuration of the residue is saved. If 
 
 \end{enumerate}
 
-You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section {\hyperref[protoms:misccmd]{\emph{Miscellaneous}}}. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see {\hyperref[protoms:temref]{\emph{Templates}}}). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was \(5.0^\circ\) , then the angle will be changed by a random value generated evenly between \(-5.0^\circ\) and \(+5.0^\circ\).
+You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section {\hyperref[protoms:misccmd]{\emph{\DUspan{}{Miscellaneous}}}}. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was \(5.0^\circ\) , then the angle will be changed by a random value generated evenly between \(-5.0^\circ\) and \(+5.0^\circ\).
 
 \index{Solute Moves}
 \textbf{Solute Moves}
@@ -752,7 +756,7 @@ All of the flexible internals of this residue are changed, and the whole solute 
 The change in energy associated with this move is evaluated and then tested via the Metropolis criterion to decide whether or not to accept the move.
 
 \item {} 
-If the move is accepted then the new configuration of the solute is saved. If the move was rejected then the original configuration is restored. You can control the maximum amounts that the solute moves via the solute template (see {\hyperref[protoms:temref]{\emph{Templates}}}).
+If the move is accepted then the new configuration of the solute is saved. If the move was rejected then the original configuration is restored. You can control the maximum amounts that the solute moves via the solute template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}).
 
 \end{enumerate}
 
@@ -762,7 +766,7 @@ If the move is accepted then the new configuration of the solute is saved. If th
 A solvent move is a Monte Carlo move on a single solvent molecule. Obviously, for a solvent move to be performed, at least one solvent molecule must be loaded. Each solvent move comprises the following steps
 \begin{enumerate}
 \item {} 
-A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see {\hyperref[protoms:parameters]{\emph{Simulation parameters}}}), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
+A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
 
 \item {} 
 The solvent molecule is randomly translated and rotated around its center of geometry.
@@ -775,7 +779,7 @@ If the move was accepted then the new solvent configuration is saved, otherwise 
 
 \end{enumerate}
 
-You can control the maximum amounts that the solvent is translated and rotated by by editing its solvent template (see {\hyperref[protoms:temref]{\emph{Templates}}}).
+You can control the maximum amounts that the solvent is translated and rotated by by editing its solvent template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}).
 
 \index{Volume Moves}
 \textbf{Volume Moves}
@@ -783,13 +787,13 @@ You can control the maximum amounts that the solvent is translated and rotated b
 A volume move is a Monte Carlo move that changes the volume of the system. This is needed to be able to perform Monte Carlo simulations at constant pressure (i.e. using the NPT ensemble). For a volume move to be performed you need to have loaded a box of solvent molecules, and be running using periodic boundary conditions. A volume move is comprised of the following steps
 \begin{enumerate}
 \item {} 
-A random change in volume is chosen within the range set via the maxvolchange command (see {\hyperref[protoms:parameters]{\emph{Simulation parameters}}}).
+A random change in volume is chosen within the range set via the maxvolchange command (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}).
 
 \item {} 
 The volume of the system is changed by this amount by scaling all of the coordinates evenly from the center of the simulation box.
 
 \item {} 
-The change in energy associated with this change in volume is evaluated and used to decide whether or not to accept this move via the constant pressure Monte Carlo test, for the system pressure set via the pressure command (see {\hyperref[protoms:parameters]{\emph{Simulation parameters}}}).
+The change in energy associated with this change in volume is evaluated and used to decide whether or not to accept this move via the constant pressure Monte Carlo test, for the system pressure set via the pressure command (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}).
 
 \item {} 
 If the move is accepted then the new system configuration is saved, otherwise the original system configuration is restored.
@@ -815,7 +819,7 @@ If the move was accepted then the new GCsolute configuration is saved, otherwise
 
 \end{enumerate}
 
-You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see {\hyperref[protoms:temref]{\emph{Templates}}}).
+You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}).
 
 \index{Insertion Moves}
 \textbf{Insertion Moves}
@@ -902,7 +906,7 @@ If the move was accepted then the new value of \(\theta\) for that GCsolute mole
 \index{Move Probabilities}
 \textbf{Relative Move Probabilities}
 
-You can specify which moves should be run by passing arguments to the simulate and equilibrate commands (see {\hyperref[protoms:runcmd]{\emph{Running a Simulation}}}). You can use these commands to assign a weight to each type of move, e.g. 100 for solvent moves, 10 for protein moves, 1 for solute moves and 0 for volume move. The type of move chosen for each step of the simulation is generated randomly based on these set relative weights. These weights mean that on average, in 111 moves, 100 of these moves will be solvent moves, 10 of these moves will be protein moves, 1 of these moves will be solute moves and none of the moves will be volume moves (e.g. no volume moves will be performed). Note that you need to perform some volume moves if you wish to sample from the NPT ensemble!
+You can specify which moves should be run by passing arguments to the simulate and equilibrate commands (see {\hyperref[protoms:runcmd]{\emph{\DUspan{}{Running a Simulation}}}}). You can use these commands to assign a weight to each type of move, e.g. 100 for solvent moves, 10 for protein moves, 1 for solute moves and 0 for volume move. The type of move chosen for each step of the simulation is generated randomly based on these set relative weights. These weights mean that on average, in 111 moves, 100 of these moves will be solvent moves, 10 of these moves will be protein moves, 1 of these moves will be solute moves and none of the moves will be volume moves (e.g. no volume moves will be performed). Note that you need to perform some volume moves if you wish to sample from the NPT ensemble!
 
 
 \chapter{Executing ProtoMS}
@@ -921,7 +925,7 @@ protoms3 mycmdfile.txt
 
 Note that ProtoMS is insensitive to whether commands, variables or contents of files are uppercase or lowercase, so you are free to mix and match capitals and small case wherever you want. The only exception to this is in the specification of filenames, where your operating system may care about case. As an example, depending on your operating system, ProtoMS may fail when the file containing the commands is named in upper case letters.
 
-For replica exchange or ensemble type calculations, you have to execeute ProtoMS through the OpenMPI program, e.g.
+For replica exchange or ensemble type calculations, you have to execute ProtoMS through an appropriate MPI wrapper, e.g.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 mpirun \PYGZhy{}np 16 protoms3 mycmdfile.txt
@@ -1002,7 +1006,7 @@ streams, these two cannot be turned off. These two streams will be directed to S
 
 By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, the WARNING and FATAL streams are directed to STDERR, and the remaining streams are switched off. Bear this in mind if you think that you should be getting output and you are not - make sure that the stream that contains your output is directed to something!
 
-The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section {\hyperref[protoms:misccmd]{\emph{Miscellaneous}}}.
+The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section {\hyperref[protoms:misccmd]{\emph{\DUspan{}{Miscellaneous}}}}.
 
 By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option
 
@@ -1120,7 +1124,7 @@ where \code{string} is either \emph{residue} or \emph{molecule}. This specifies 
 pressure float
 \end{Verbatim}
 
-This command sets the pressure of the system in atmospheres. By setting the pressure to a non-zero value you will be able to perform a simulation in the NPT isothermal-isobaric ensemble. Note that you need to perform volume moves (see {\hyperref[protoms:moves]{\emph{Generic Moves}}}) to be able to run in the NPT ensemble. By default the pressure is equal to zero, and thus a NPT simulation is not performed.
+This command sets the pressure of the system in atmospheres. By setting the pressure to a non-zero value you will be able to perform a simulation in the NPT isothermal-isobaric ensemble. Note that you need to perform volume moves (see {\hyperref[protoms:moves]{\emph{\DUspan{}{Generic Moves}}}}) to be able to run in the NPT ensemble. By default the pressure is equal to zero, and thus a NPT simulation is not performed.
 
 \index{maxvolchange}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1177,7 +1181,7 @@ This turns on solvent cap boundary conditions. Protein and solute molecules will
 boundary solvent
 \end{Verbatim}
 
-This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{Solvent File}}}
+This sets the boundary conditions to whatever is set by the loaded solvent files. If no solvent files are loaded then no boundary conditions are used. This is the default option, and the method of setting boundary conditions via a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{\DUspan{}{Solvent File}}}}
 
 
 \subsection{GBSA parameters}
@@ -1210,7 +1214,7 @@ ProtoMS can perform temperature replica-exchange simulations.
 temperaturere integer float float float
 \end{Verbatim}
 
-is the command to set a replica exchange simulation between the different temperatures given as floats, where \code{float} is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see {\hyperref[protoms:frequent\string-output\string-generation]{\emph{Frequent output generation}}}). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+is the command to set a replica exchange simulation between the different temperatures given as floats, where \code{float} is any positive float, and temperatures are given en Celsius. In principle, any desired number of temperature values can be used, and the simulation will require to be runned in as many cores as temperature values are provided. The integer value stands for the frequency at which the exchange between the different temperature values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see {\hyperref[protoms:frequent-output-generation]{\emph{Frequent output generation}}}). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
 
 As an example:
 
@@ -1227,7 +1231,7 @@ The temperature replica-exchange command can be used in conjuction with the \cod
 solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
 \end{Verbatim}
 
-Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see {\hyperref[protoms:temperature\string-replica\string-exchange\string-parameters]{\emph{Temperature replica-exchange parameters}}}). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the \code{temperaturere} command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; \code{bndang} controls the internal bond-angle energy terms, \code{dih} the internal dihedral energy term, \code{lj} the internal van der Waals energy, \code{coul} the internal Coulomb energy, \code{solu} the interaction with other solutes, \code{prot} the interaction with the protein and \code{solv} the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with \(\beta_i/\beta_0\), where \(\beta_i\) is the effective inverse temperature of the replica (set with the \code{temperaturre} command) and \(\beta_0\) is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with \((\beta_i+\beta_0)/2\beta_0\) and if the argument 3 the energy is unscaled.
+Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see {\hyperref[protoms:temperature-replica-exchange-parameters]{\emph{Temperature replica-exchange parameters}}}). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the \code{temperaturere} command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; \code{bndang} controls the internal bond-angle energy terms, \code{dih} the internal dihedral energy term, \code{lj} the internal van der Waals energy, \code{coul} the internal Coulomb energy, \code{solu} the interaction with other solutes, \code{prot} the interaction with the protein and \code{solv} the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with \(\beta_i/\beta_0\), where \(\beta_i\) is the effective inverse temperature of the replica (set with the \code{temperaturre} command) and \(\beta_0\) is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with \((\beta_i+\beta_0)/2\beta_0\) and if the argument 3 the energy is unscaled.
 
 
 \subsection{Free energy calculation parameters}
@@ -1254,7 +1258,7 @@ To run several at several values of \(\lambda\)  in parallel and hence perform y
 lambdare integer float float float
 \end{Verbatim}
 
-is the command to set a replica exchange calculation between the different \(\lambda\) given as floats, where \code{float} is a number between 0.0 and 1.0. In principle, any desired number of \(\lambda\) values can be used, and the simulation will require to be runned in as many cores as \(\lambda\) values are provided. The integer value stands for the frequency at which the exchange between the different \(\lambda\) values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see {\hyperref[protoms:frequent\string-output\string-generation]{\emph{Frequent output generation}}}). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
+is the command to set a replica exchange calculation between the different \(\lambda\) given as floats, where \code{float} is a number between 0.0 and 1.0. In principle, any desired number of \(\lambda\) values can be used, and the simulation will require to be runned in as many cores as \(\lambda\) values are provided. The integer value stands for the frequency at which the exchange between the different \(\lambda\) values is attempted. Please, note that this value should be a multiple of the frequency of printing output when the dump commands are used (see {\hyperref[protoms:frequent-output-generation]{\emph{Frequent output generation}}}). If no exchange is desired, the frequency of exchange can simply be set to the total number of moves of the simulation.
 
 As an example:
 
@@ -1380,10 +1384,10 @@ In the equation, \(\bar{n}\) is the number density of the GCsolute multiplied by
 
 \index{potential}
 \begin{Verbatim}[commandchars=\\\{\}]
-multigcmc float float float
+multigcmc integer float float float
 \end{Verbatim}
 
-is the right command to several gcmc simulations running in parallel for different B values. Each \code{float} is the B value for each independent calculation. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel in as many cores as B values.
+is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each \code{float} is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel with as many cores as B values.
 
 \index{origin}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1476,7 +1480,7 @@ thres 0.95
 
 This command will set the \(\theta\) threshold for defining whether a molecule is \emph{on} in the first stage of the JAWS method to be 0.95 (default)
 
-Note here that, in order to run a JAWS stage 1 calculation, you will also need to include softcores. The parameters to do this can be found among the {\hyperref[protoms:free\string-energy\string-calculation\string-parameters]{\emph{Free energy calculation parameters}}}.
+Note here that, in order to run a JAWS stage 1 calculation, you will also need to include softcores. The parameters to do this can be found among the {\hyperref[protoms:free-energy-calculation-parameters]{\emph{Free energy calculation parameters}}}.
 
 \index{jaws2}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1508,34 +1512,34 @@ Specifies the name of the Nth protein file, e.g.
 protein1 protein.pdb
 \end{Verbatim}
 
-specifies that protein 1 should be loaded from the file protein.pdb. Note that proteins must be numbered sequentially from 1 to MAXPROTEINS. The format of a protein file is described in {\hyperref[protoms:protpdb]{\emph{Protein File}}}.
+specifies that protein 1 should be loaded from the file protein.pdb. Note that proteins must be numbered sequentially from 1 to MAXPROTEINS. The format of a protein file is described in {\hyperref[protoms:protpdb]{\emph{\DUspan{}{Protein File}}}}.
 
 \index{solute, command}
 \begin{Verbatim}[commandchars=\\\{\}]
 soluteN filename
 \end{Verbatim}
 
-specifies the name of the Nth solute file. Note that the solutes must be numbered sequentially from 1 to MAXSOLUTES. The format of a solute file is described in section {\hyperref[protoms:solpdb]{\emph{Solute File}}}.
+specifies the name of the Nth solute file. Note that the solutes must be numbered sequentially from 1 to MAXSOLUTES. The format of a solute file is described in section {\hyperref[protoms:solpdb]{\emph{\DUspan{}{Solute File}}}}.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 solventN filename
 \end{Verbatim}
 
-specifies the name of the Nth solvent file. Unlike the protein and solute files, the solvent file may contain multiple solvent molecules, though the total number of solvent molecules cannot exceed MAXSOLVENTS. The format of a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{Solvent File}}}.
+specifies the name of the Nth solvent file. Unlike the protein and solute files, the solvent file may contain multiple solvent molecules, though the total number of solvent molecules cannot exceed MAXSOLVENTS. The format of a solvent file is described in section {\hyperref[protoms:solventpdb]{\emph{\DUspan{}{Solvent File}}}}.
 
 \index{grand}
 \begin{Verbatim}[commandchars=\\\{\}]
 grandN filename
 \end{Verbatim}
 
-specifies the name of the Nth GCsolute file. Unlike the protein and solute files, the GCsolute file may contain multiple GCsolute molecules, though the total number of GCsolute molecules cannot exceed MAXSOLVENTS. The format of a GCsolute file is described in section {\hyperref[protoms:gcpdb]{\emph{GCsolute File}}}.
+specifies the name of the Nth GCsolute file. Unlike the protein and solute files, the GCsolute file may contain multiple GCsolute molecules, though the total number of GCsolute molecules cannot exceed MAXSOLVENTS. The format of a GCsolute file is described in section {\hyperref[protoms:gcpdb]{\emph{\DUspan{}{GCsolute File}}}}.
 
 \index{parfile}
 \begin{Verbatim}[commandchars=\\\{\}]
 parfile filename
 \end{Verbatim}
 
-Specify the name of a forcefield parameter file. You can specify as many parameter files as you wish. The list of parameter files is read from top to bottom, such that if any paramater files contain contradictory information, the last parameters read by ProtoMS are used. The format of the parameter file is described in section {\hyperref[protoms:parfil]{\emph{Parameter / Forcefield Files}}} .
+Specify the name of a forcefield parameter file. You can specify as many parameter files as you wish. The list of parameter files is read from top to bottom, such that if any paramater files contain contradictory information, the last parameters read by ProtoMS are used. The format of the parameter file is described in section {\hyperref[protoms:parfil]{\emph{\DUspan{}{Parameter / Forcefield Files}}}} .
 
 
 \section{Running a Simulation}
@@ -1546,7 +1550,7 @@ There are two main keywords related to running a simulation. These are \emph{chu
 A simulation can be run as a sequence of chunks. Different things may be accomplished in each chunk, e.g. running some steps of equilibration, printing the protein coordinates to a PDB or redirecting a stream to a new file. Chunks may be mixed and matched, and you can run as many chunks as you desire within a single simulation. You specify a chunk using the command
 
 \begin{Verbatim}[commandchars=\\\{\}]
-chunk chunk command
+chunk command
 \end{Verbatim}
 
 Chunks are executed in the order they appear in the command file.
@@ -1832,7 +1836,7 @@ where \emph{id1} to \emph{id4} designate up to four ids. \emph{type1} designate 
 chunk restraint add id1 cartesian harmonic xrest yrest zrest krest [lambda]
 \end{Verbatim}
 
-For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. You may optionally give the keyword lambda at the end of the chunk to scale the energy of the restraint by the value of lambda. This means that when lambda=1 the restraint is on and when lambda=0 the restraint is off. This is useful to calculate the free energy change associated with the introduction of a restraint, although this procedure should not be carried out in the gas phase.:
+For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. You may optionally give the keyword lambda at the end of the chunk to scale the energy of the restraint by the value of lambda. This means that when lambda=1 the restraint is on and when lambda=0 the restraint is off. This is useful to calculate the free energy change associated with the introduction of a restraint, although this procedure should not be carried out unless for the bound phase:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 chunk restraint add id1 cartesian flatbottom xrest yrest zrest krest wrest
@@ -1909,7 +1913,7 @@ This is controlled with the alternative key word dump:
 dump frequency command
 \end{Verbatim}
 
-This manner of output generation can be applied to all commands included in {\hyperref[protoms:results\string-and\string-restarts]{\emph{Results and Restarts}}} secction, as well as {\hyperref[protoms:pdb\string-output]{\emph{PDB output}}} section.
+This manner of output generation can be applied to all commands included in {\hyperref[protoms:results-and-restarts]{\emph{Results and Restarts}}} secction, as well as {\hyperref[protoms:pdb-output]{\emph{PDB output}}} section.
 
 An example of a dump line would be:
 
@@ -2059,9 +2063,9 @@ As before but the output will be a spherical cap of solvent centered at the spec
 
 \section{Setup and analysis tools}
 \label{protoms:setup-and-analysis-tools}
-As there are many options that can be set in ProtoMS, we provide a range of setup tools that can be used to setup the most common type of simulations. The main tool is called \code{protoms.py} and is document in the next chapter. For more advanced use, one can use the individual setup tools as documented here.
+As there are many options that can be set in ProtoMS, we provide a range of setup tools that can be used to setup the most common type of simulations. The main tool is called \code{protoms.py} and is document in the next chapter. For more advanced use, one can use the individual setup tools as documented in the tools chapter.
 
-In order to perform analysis of the ProtoMS simulations, there is a range of tools than be used. They are documented here.
+In order to perform analysis of ProtoMS simulations, there is a range of tools that can be used. They are documented in the tools chapter.
 
 
 \chapter{Input Files}
@@ -2711,7 +2715,7 @@ Using an unsupported protein forcefield with ProtoMS requires the creation of a 
 
 \section{Protein File}
 \label{protoms:protein-file}\label{protoms:protpdb}
-Proteins are loaded from protein files. The names of the protein files are specified using the proteinN command described in section {\hyperref[protoms:incmd]{\emph{Specifying input files}}}. The protein file is just a standard PDB format file. The name of the protein contained within this file is taken from the HEADER line of the PDB. e.g.:
+Proteins are loaded from protein files. The names of the protein files are specified using the proteinN command described in section {\hyperref[protoms:incmd]{\emph{\DUspan{}{Specifying input files}}}}. The protein file is just a standard PDB format file. The name of the protein contained within this file is taken from the HEADER line of the PDB. e.g.:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 HEADER p38 kinase
@@ -3198,11 +3202,10 @@ In the \code{\$PROTOMSHOME/tools} folder we have collect a range of useful scrip
 
 Program to run antechamber and parmchk for a series of PDB-files
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: ambertools.py [\PYGZhy{}h] [\PYGZhy{}f FILES [FILES ...]] [\PYGZhy{}n NAME]
-                     [\PYGZhy{}c CHARGE [CHARGE ...]]
-\end{Verbatim}
+\begin{alltt}
+usage: ambertools.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-n NAME{]}
+                     {[}-c CHARGE {[}CHARGE ...{]}{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
@@ -3238,12 +3241,11 @@ The \code{antechamber} and \code{parmchk} program should exist in the system pat
 
 Program to build a ProtoMS template file
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: build\PYGZus{}template.py [\PYGZhy{}h] [\PYGZhy{}p PREPI] [\PYGZhy{}o OUT] [\PYGZhy{}z ZMAT] [\PYGZhy{}f FRCMOD]
-                         [\PYGZhy{}n NAME] [\PYGZhy{}t TRANSLATE] [\PYGZhy{}r ROTATE] [\PYGZhy{}\PYGZhy{}alldihs]
-                         [\PYGZhy{}\PYGZhy{}gaff GAFF]
-\end{Verbatim}
+\begin{alltt}
+usage: build\_template.py {[}-h{]} {[}-p PREPI{]} {[}-o OUT{]} {[}-z ZMAT{]} {[}-f FRCMOD{]}
+                         {[}-n NAME{]} {[}-t TRANSLATE{]} {[}-r ROTATE{]} {[}--alldihs{]}
+                         {[}--gaff GAFF{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}prepi]  
@@ -3256,9 +3258,9 @@ the name of the zmatrix-file, if it exists
 the name of the frcmod-file, if it exists
 \item [-n=UNK, -{-}name=UNK]  
 the name of the solute
-\item [-t=0.25, -{-}translate=0.25]  
+\item [-t=0.1, -{-}translate=0.1]  
 maxmium size for translation moves in Angstroms
-\item [-r=5.0, -{-}rotate=5.0]  
+\item [-r=1.0, -{-}rotate=1.0]  
 maxmium size for rotation moves in degrees
 \item [-{-}alldihs=False]  
 sample improper dihedrals
@@ -3293,11 +3295,10 @@ The default translational and rotational displacements are based on experience a
 
 Program to calculate free energy from Bennett Acceptance Ratio
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}bar.py [\PYGZhy{}h] [\PYGZhy{}d DIRECTORY] [\PYGZhy{}r RESULTS] [\PYGZhy{}s SKIP] [\PYGZhy{}m MAX]
-                   [\PYGZhy{}t TEMPERATURE] [\PYGZhy{}pw] [\PYGZhy{}pu] [\PYGZhy{}pl] [\PYGZhy{}b NBOOTS]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_bar.py {[}-h{]} {[}-d DIRECTORY{]} {[}-r RESULTS{]} {[}-s SKIP{]} {[}-m MAX{]}
+                   {[}-t TEMPERATURE{]} {[}-pw{]} {[}-pu{]} {[}-pl{]} {[}-b NBOOTS{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-d=./, -{-}directory=./]  
@@ -3354,13 +3355,12 @@ done
 
 Program to cluster molecules
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}clusters.py [\PYGZhy{}h] [\PYGZhy{}f FILES [FILES ...]] [\PYGZhy{}o OUT] [\PYGZhy{}m MOLECULE]
-                        [\PYGZhy{}a ATOM]
-                        [\PYGZhy{}t \PYGZob{}average,single,complete,weighted,centroid\PYGZcb{}]
-                        [\PYGZhy{}c CUTOFF] [\PYGZhy{}\PYGZhy{}skip SKIP] [\PYGZhy{}\PYGZhy{}max MAX]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_clusters.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]} {[}-m MOLECULE{]}
+                        {[}-a ATOM{]}
+                        {[}-t \{average,single,complete,weighted,centroid\}{]}
+                        {[}-c CUTOFF{]} {[}--skip SKIP{]} {[}--max MAX{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
@@ -3406,13 +3406,12 @@ It will extract the coordinates of all atoms with name equal to \code{atom} in r
 
 Program to discretize atoms on a 3D grid
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}density.py [\PYGZhy{}h] [\PYGZhy{}f FILES [FILES ...]] [\PYGZhy{}o OUT] [\PYGZhy{}r RESIDUE]
-                       [\PYGZhy{}a ATOM] [\PYGZhy{}p PADDING] [\PYGZhy{}s SPACING] [\PYGZhy{}e EXTENT]
-                       [\PYGZhy{}n NORM] [\PYGZhy{}t \PYGZob{}sphere,gaussian\PYGZcb{}] [\PYGZhy{}\PYGZhy{}skip SKIP]
-                       [\PYGZhy{}\PYGZhy{}max MAX]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_density.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]} {[}-r RESIDUE{]}
+                       {[}-a ATOM{]} {[}-p PADDING{]} {[}-s SPACING{]} {[}-e EXTENT{]}
+                       {[}-n NORM{]} {[}-t \{sphere,gaussian\}{]} {[}--skip SKIP{]}
+                       {[}--max MAX{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
@@ -3473,13 +3472,12 @@ vmd \PYGZhy{}m all.pdb grid.dx
 
 Program to calculate free energy from TI/BAR/MBAR
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}dg.py [\PYGZhy{}h] [\PYGZhy{}d DIRECTORIES [DIRECTORIES ...]] [\PYGZhy{}r RESULTS]
-                  [\PYGZhy{}s SKIP] [\PYGZhy{}m MAX] [\PYGZhy{}t TEMPERATURE] [\PYGZhy{}b NBOOTS] [\PYGZhy{}gr] [\PYGZhy{}pg]
-                  [\PYGZhy{}pe] [\PYGZhy{}\PYGZhy{}analytical] [\PYGZhy{}\PYGZhy{}numerical \PYGZob{}both,back,forw\PYGZcb{}]
-                  [\PYGZhy{}e \PYGZob{}ti,bar,mbar\PYGZcb{} [\PYGZob{}ti,bar,mbar\PYGZcb{} ...]] [\PYGZhy{}\PYGZhy{}autoeqb]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_dg.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-r RESULTS{]}
+                  {[}-s SKIP{]} {[}-m MAX{]} {[}-t TEMPERATURE{]} {[}-b NBOOTS{]} {[}-gr{]} {[}-pg{]}
+                  {[}-pe{]} {[}--analytical{]} {[}--numerical \{both,back,forw\}{]}
+                  {[}-e \{ti,bar,mbar\} {[}\{ti,bar,mbar\} ...{]}{]} {[}--autoeqb{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-d={[}'./'{]}, -{-}directories={[}'./'{]}]  
@@ -3541,15 +3539,14 @@ The MBAR estimator only works if PyMBAR is properly installed and can be loaded 
 
 Program to analyse and plot free energies from GCMC simulations
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}gci.py [\PYGZhy{}h] [\PYGZhy{}d DIRECTORIES [DIRECTORIES ...]] [\PYGZhy{}f FILE]
-                   [\PYGZhy{}p \PYGZob{}titration,fit,percentiles,pmf,all\PYGZcb{} [\PYGZob{}titration,fit,percentiles,pmf,all\PYGZcb{} ...]]
-                   [\PYGZhy{}c \PYGZob{}fit,pmf,minimum,excess,all\PYGZcb{} [\PYGZob{}fit,pmf,minimum,excess,all\PYGZcb{} ...]]
-                   [\PYGZhy{}s SKIP] [\PYGZhy{}b BOOTSTRAPS] [\PYGZhy{}i INPUT] [\PYGZhy{}o OUT]
-                   [\PYGZhy{}\PYGZhy{}steps STEPS] [\PYGZhy{}\PYGZhy{}range RANGE [RANGE ...]] [\PYGZhy{}\PYGZhy{}reverse]
-                   [\PYGZhy{}\PYGZhy{}fit\PYGZus{}options FIT\PYGZus{}OPTIONS] [\PYGZhy{}v VOLUME]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_gci.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-f FILE{]}
+                   {[}-p \{titration,fit,percentiles,pmf,all\} {[}\{titration,fit,percentiles,pmf,all\} ...{]}{]}
+                   {[}-c \{fit,pmf,minimum,excess,all\} {[}\{fit,pmf,minimum,excess,all\} ...{]}{]}
+                   {[}-s SKIP{]} {[}-b BOOTSTRAPS{]} {[}-i INPUT{]} {[}-o OUT{]}
+                   {[}--steps STEPS{]} {[}--range RANGE {[}RANGE ...{]}{]} {[}--reverse{]}
+                   {[}--fit\_options FIT\_OPTIONS{]} {[}-v VOLUME{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-d, -{-}directories]  
@@ -3622,12 +3619,11 @@ The flag \code{-{-}fit\_options} allows one to pass commands into the ANN fittin
 
 Program to calculate coupling free energy GCMC simulations of a single water molecule using the logistic fitting method by G. A. Ross et al.
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}gcsingle.py [\PYGZhy{}h] [\PYGZhy{}d DIRECTORIES [DIRECTORIES ...]] [\PYGZhy{}f FILE]
-                        [\PYGZhy{}s SKIP] [\PYGZhy{}c CALC] [\PYGZhy{}p] [\PYGZhy{}\PYGZhy{}guess GUESS] [\PYGZhy{}\PYGZhy{}excess]
-                        [\PYGZhy{}v VOLUME]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_gcsingle.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-f FILE{]}
+                        {[}-s SKIP{]} {[}-c CALC{]} {[}-p{]} {[}--guess GUESS{]} {[}--excess{]}
+                        {[}-v VOLUME{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-d, -{-}directories]  
@@ -3668,11 +3664,10 @@ This tool analyses and plots free energies from GCMC simulations on sites that c
 
 Program to analyze and plot a replica paths
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}replicapath.py [\PYGZhy{}h] [\PYGZhy{}f FILES [FILES ...]] [\PYGZhy{}p PLOT [PLOT ...]]
-                           [\PYGZhy{}k \PYGZob{}lambda,temperature,rest,global,B\PYGZcb{}] [\PYGZhy{}o OUT]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_replicapath.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-p PLOT {[}PLOT ...{]}{]}
+                           {[}-k \{lambda,temperature,rest,global,B\}{]} {[}-o OUT{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
@@ -3711,11 +3706,10 @@ If the kind of replicas is from REST or temperature replica exchange the \code{r
 
 Program to calculate RMSD of ligand centre
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}rmsd.py [\PYGZhy{}h] [\PYGZhy{}i INITIAL] [\PYGZhy{}f FILES [FILES ...]] [\PYGZhy{}l LIGAND]
-                    [\PYGZhy{}a ATOM] [\PYGZhy{}t TEMPERATURE]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_rmsd.py {[}-h{]} {[}-i INITIAL{]} {[}-f FILES {[}FILES ...{]}{]} {[}-l LIGAND{]}
+                    {[}-a ATOM{]} {[}-t TEMPERATURE{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-i, -{-}initial]  
@@ -3753,14 +3747,13 @@ A force constant to keep the ligand restrained for free energy calculations is e
 
 Program to analyze and plot a time series
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}series.py [\PYGZhy{}h] [\PYGZhy{}f FILE [FILE ...]] [\PYGZhy{}o OUT]
-                      [\PYGZhy{}s SERIES [SERIES ...]]
-                      [\PYGZhy{}p \PYGZob{}sep,sub,single,single\PYGZus{}first0,single\PYGZus{}last0\PYGZcb{}]
-                      [\PYGZhy{}\PYGZhy{}nperm NPERM] [\PYGZhy{}\PYGZhy{}threshold THRESHOLD] [\PYGZhy{}\PYGZhy{}average]
-                      [\PYGZhy{}\PYGZhy{}moving MOVING]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_series.py {[}-h{]} {[}-f FILE {[}FILE ...{]}{]} {[}-o OUT{]}
+                      {[}-s SERIES {[}SERIES ...{]}{]}
+                      {[}-p \{sep,sub,single,single\_first0,single\_last0\}{]}
+                      {[}--nperm NPERM{]} {[}--threshold THRESHOLD{]} {[}--average{]}
+                      {[}--moving MOVING{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-f={[}'results'{]}, -{-}file={[}'results'{]}]  
@@ -3797,12 +3790,11 @@ Typically only a single ProtoMS results file will be analysed and plotted. Howev
 
 Program to calculate free energy from thermodynamic integration
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: calc\PYGZus{}ti.py [\PYGZhy{}h] [\PYGZhy{}d DIRECTORY] [\PYGZhy{}\PYGZhy{}subdir SUBDIR] [\PYGZhy{}r RESULTS] [\PYGZhy{}s SKIP]
-                  [\PYGZhy{}m MAX] [\PYGZhy{}pg] [\PYGZhy{}pp] [\PYGZhy{}pu] [\PYGZhy{}pl] [\PYGZhy{}gr] [\PYGZhy{}pf] [\PYGZhy{}\PYGZhy{}analytical]
-                  [\PYGZhy{}\PYGZhy{}numerical \PYGZob{}both,back,forw\PYGZcb{}] [\PYGZhy{}\PYGZhy{}autoeqb]
-\end{Verbatim}
+\begin{alltt}
+usage: calc\_ti.py {[}-h{]} {[}-d DIRECTORY{]} {[}--subdir SUBDIR{]} {[}-r RESULTS{]} {[}-s SKIP{]}
+                  {[}-m MAX{]} {[}-pg{]} {[}-pp{]} {[}-pu{]} {[}-pl{]} {[}-gr{]} {[}-pf{]} {[}--analytical{]}
+                  {[}--numerical \{both,back,forw\}{]} {[}--autoeqb{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-d=./, -{-}directory=./]  
@@ -3873,10 +3865,9 @@ Rather than manually specifying snapshots to skip with \code{nskip} you can also
 
 Program to remove water molecules from a GCMC/JAWS-1 box
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: clear\PYGZus{}gcmcbox.py [\PYGZhy{}h] [\PYGZhy{}b BOX] [\PYGZhy{}s SOLVATION] [\PYGZhy{}o OUT]
-\end{Verbatim}
+\begin{alltt}
+usage: clear\_gcmcbox.py {[}-h{]} {[}-b BOX{]} {[}-s SOLVATION{]} {[}-o OUT{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-b, -{-}box]  
@@ -3910,11 +3901,10 @@ The \code{boxfile} is typically created by \code{make\_gcmcbox.py} and the \code
 
 Program convert atom names in a protein pdb-file to ProtoMS style
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: convertatomnames.py [\PYGZhy{}h] [\PYGZhy{}p PROTEIN] [\PYGZhy{}o OUT] [\PYGZhy{}s STYLE]
-                           [\PYGZhy{}c CONVERSIONFILE]
-\end{Verbatim}
+\begin{alltt}
+usage: convertatomnames.py {[}-h{]} {[}-p PROTEIN{]} {[}-o OUT{]} {[}-s STYLE{]}
+                           {[}-c CONVERSIONFILE{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}protein]  
@@ -3951,11 +3941,10 @@ A file containing conversion instructions for amber and charmm is available in t
 
 Program to convert water molecules - with or without hydrogens - in a pdb file to simulation models, such as tip4p. Currently ignores original hydrogen positions.
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: convertwater.py [\PYGZhy{}h] [\PYGZhy{}p PDB] [\PYGZhy{}o OUT] [\PYGZhy{}m MODEL] [\PYGZhy{}i] [\PYGZhy{}n RESNAME]
-                       [\PYGZhy{}\PYGZhy{}setupseed SETUPSEED]
-\end{Verbatim}
+\begin{alltt}
+usage: convertwater.py {[}-h{]} {[}-p PDB{]} {[}-o OUT{]} {[}-m MODEL{]} {[}-i{]} {[}-n RESNAME{]}
+                       {[}--setupseed SETUPSEED{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}pdb]  
@@ -3996,12 +3985,11 @@ If the \code{-{-}ignoreh} flag is given, the script will discard the hydrogen at
 
 Randomly distribute n molecules within box dimensions
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: distribute\PYGZus{}waters.py [\PYGZhy{}h] [\PYGZhy{}b BOX BOX BOX BOX BOX BOX] [\PYGZhy{}m MOLECULES]
-                            [\PYGZhy{}o OUTFILE] [\PYGZhy{}\PYGZhy{}model MODEL] [\PYGZhy{}\PYGZhy{}resname RESNAME]
-                            [\PYGZhy{}\PYGZhy{}number NUMBER] [\PYGZhy{}\PYGZhy{}setupseed SETUPSEED]
-\end{Verbatim}
+\begin{alltt}
+usage: distribute\_waters.py {[}-h{]} {[}-b BOX BOX BOX BOX BOX BOX{]} {[}-m MOLECULES{]}
+                            {[}-o OUTFILE{]} {[}--model MODEL{]} {[}--resname RESNAME{]}
+                            {[}--number NUMBER{]} {[}--setupseed SETUPSEED{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-b, -{-}box]  
@@ -4042,10 +4030,9 @@ It can place molecules in random positions and orientations with their geometry 
 
 Split your multi pdb file into individual files
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: divide\PYGZus{}pdb.py [\PYGZhy{}h] [\PYGZhy{}i INPUT] [\PYGZhy{}o OUTPUT] [\PYGZhy{}p PATH]
-\end{Verbatim}
+\begin{alltt}
+usage: divide\_pdb.py {[}-h{]} {[}-i INPUT{]} {[}-o OUTPUT{]} {[}-p PATH{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-i=all.pdb, -{-}input=all.pdb]  
@@ -4076,22 +4063,21 @@ This tool splits up a PDB file with multiple models (the keyword END defines the
 
 Program to create a ProtoMS command file
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: generate\PYGZus{}input.py [\PYGZhy{}h]
-                         [\PYGZhy{}s \PYGZob{}sampling,equilibration,dualtopology,singletopology,gcmc,jaws1,jaws2\PYGZcb{}]
-                         [\PYGZhy{}\PYGZhy{}dovacuum] [\PYGZhy{}p PROTEIN] [\PYGZhy{}l LIGANDS [LIGANDS ...]]
-                         [\PYGZhy{}t TEMPLATES [TEMPLATES ...]] [\PYGZhy{}pw PROTWATER]
-                         [\PYGZhy{}lw LIGWATER] [\PYGZhy{}o OUT] [\PYGZhy{}\PYGZhy{}outfolder OUTFOLDER]
-                         [\PYGZhy{}\PYGZhy{}gaff GAFF] [\PYGZhy{}\PYGZhy{}lambdas LAMBDAS [LAMBDAS ...]]
-                         [\PYGZhy{}\PYGZhy{}adams ADAMS [ADAMS ...]]
-                         [\PYGZhy{}\PYGZhy{}adamsrange ADAMSRANGE [ADAMSRANGE ...]]
-                         [\PYGZhy{}\PYGZhy{}jawsbias JAWSBIAS [JAWSBIAS ...]]
-                         [\PYGZhy{}\PYGZhy{}gcmcwater GCMCWATER] [\PYGZhy{}\PYGZhy{}gcmcbox GCMCBOX]
-                         [\PYGZhy{}\PYGZhy{}watmodel \PYGZob{}tip3p,tip4p\PYGZcb{}] [\PYGZhy{}\PYGZhy{}nequil NEQUIL]
-                         [\PYGZhy{}\PYGZhy{}nprod NPROD] [\PYGZhy{}\PYGZhy{}dumpfreq DUMPFREQ] [\PYGZhy{}\PYGZhy{}absolute]
-                         [\PYGZhy{}\PYGZhy{}ranseed RANSEED]
-\end{Verbatim}
+\begin{alltt}
+usage: generate\_input.py {[}-h{]}
+                         {[}-s \{sampling,equilibration,dualtopology,singletopology,gcmc,jaws1,jaws2\}{]}
+                         {[}--dovacuum{]} {[}-p PROTEIN{]} {[}-l LIGANDS {[}LIGANDS ...{]}{]}
+                         {[}-t TEMPLATES {[}TEMPLATES ...{]}{]} {[}-pw PROTWATER{]}
+                         {[}-lw LIGWATER{]} {[}-o OUT{]} {[}--outfolder OUTFOLDER{]}
+                         {[}--gaff GAFF{]} {[}--lambdas LAMBDAS {[}LAMBDAS ...{]}{]}
+                         {[}--adams ADAMS {[}ADAMS ...{]}{]}
+                         {[}--adamsrange ADAMSRANGE {[}ADAMSRANGE ...{]}{]}
+                         {[}--jawsbias JAWSBIAS {[}JAWSBIAS ...{]}{]}
+                         {[}--gcmcwater GCMCWATER{]} {[}--gcmcbox GCMCBOX{]}
+                         {[}--watmodel \{tip3p,tip4p\}{]} {[}--nequil NEQUIL{]}
+                         {[}--nprod NPROD{]} {[}--dumpfreq DUMPFREQ{]} {[}--absolute{]}
+                         {[}--ranseed RANSEED{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-s=equilibration, -{-}simulation=equilibration]  
@@ -4173,10 +4159,9 @@ The tool will create at most two ProtoMS command files, one for the protein simu
 
 Program make a dummy corresponding to a molecule
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: make\PYGZus{}dummy.py [\PYGZhy{}h] [\PYGZhy{}f FILE] [\PYGZhy{}o OUT]
-\end{Verbatim}
+\begin{alltt}
+usage: make\_dummy.py {[}-h{]} {[}-f FILE{]} {[}-o OUT{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}file]  
@@ -4206,11 +4191,10 @@ The dummy particle will be placed at the centre of the solute.
 
 Program to make a PDB-file with box coordinates covering a solute molecules
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: make\PYGZus{}gcmcbox.py [\PYGZhy{}h] [\PYGZhy{}s SOLUTE] [\PYGZhy{}p PADDING] [\PYGZhy{}o OUT]
-                       [\PYGZhy{}b BOX [BOX ...]]
-\end{Verbatim}
+\begin{alltt}
+usage: make\_gcmcbox.py {[}-h{]} {[}-s SOLUTE{]} {[}-p PADDING{]} {[}-o OUT{]}
+                       {[}-b BOX {[}BOX ...{]}{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-s, -{-}solute]  
@@ -4255,11 +4239,10 @@ When an appropriate box has been made, it can be used by \code{solvate.py} to fi
 
 Program to setup template files for single-toplogy perturbations semi-automatically
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: make\PYGZus{}single.py [\PYGZhy{}h] [\PYGZhy{}t0 TEM0] [\PYGZhy{}t1 TEM1] [\PYGZhy{}p0 PDB0] [\PYGZhy{}p1 PDB1]
-                      [\PYGZhy{}m MAP] [\PYGZhy{}o OUT] [\PYGZhy{}\PYGZhy{}gaff GAFF]
-\end{Verbatim}
+\begin{alltt}
+usage: make\_single.py {[}-h{]} {[}-t0 TEM0{]} {[}-t1 TEM1{]} {[}-p0 PDB0{]} {[}-p1 PDB1{]}
+                      {[}-m MAP{]} {[}-o OUT{]} {[}--gaff GAFF{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-t0, -{-}tem0]  
@@ -4308,10 +4291,9 @@ A summary of the charges and van der Waals parameters in the four states will be
 
 Program merge a series of ProtoMS template files
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: make\PYGZus{}templates.py [\PYGZhy{}h] [\PYGZhy{}f FILES [FILES ...]] [\PYGZhy{}o OUT]
-\end{Verbatim}
+\begin{alltt}
+usage: make\_templates.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
@@ -4340,11 +4322,10 @@ The force field parameters in \code{file2} will be re-numbered so that they do n
 
 Program to plot the theta distribution of a given molecule, result from a JAWS simulation
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: plot\PYGZus{}theta.py [\PYGZhy{}h] [\PYGZhy{}r RESULTS] [\PYGZhy{}s RESTART] [\PYGZhy{}m MOLECULE]
-                     [\PYGZhy{}p PLOTNAME] [\PYGZhy{}\PYGZhy{}skip SKIP]
-\end{Verbatim}
+\begin{alltt}
+usage: plot\_theta.py {[}-h{]} {[}-r RESULTS{]} {[}-s RESTART{]} {[}-m MOLECULE{]}
+                     {[}-p PLOTNAME{]} {[}--skip SKIP{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-r=results, -{-}results=results]  
@@ -4380,11 +4361,10 @@ Two different histograms will be generated. One in which all different copies of
 
 Program to extract ProtoMS results for pymbar
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: pms2pymbar.py [\PYGZhy{}h] [\PYGZhy{}d DIRECTORY] [\PYGZhy{}r RESULTS] [\PYGZhy{}o OUT] [\PYGZhy{}s SKIP]
-                     [\PYGZhy{}m MAX] [\PYGZhy{}t TEMPERATURE] [\PYGZhy{}\PYGZhy{}run] [\PYGZhy{}\PYGZhy{}nobar]
-\end{Verbatim}
+\begin{alltt}
+usage: pms2pymbar.py {[}-h{]} {[}-d DIRECTORY{]} {[}-r RESULTS{]} {[}-o OUT{]} {[}-s SKIP{]}
+                     {[}-m MAX{]} {[}-t TEMPERATURE{]} {[}--run{]} {[}--nobar{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-d=./, -{-}directory=./]  
@@ -4432,16 +4412,15 @@ Alternatively, if PyMBAR is properly installed and can be loaded as a python lib
 
 Program scoop a protein pdb-file
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: scoop.py [\PYGZhy{}h] [\PYGZhy{}p PROTEIN] [\PYGZhy{}l LIGAND] [\PYGZhy{}o OUT] [\PYGZhy{}\PYGZhy{}center CENTER]
-                [\PYGZhy{}\PYGZhy{}innercut INNERCUT] [\PYGZhy{}\PYGZhy{}outercut OUTERCUT]
-                [\PYGZhy{}\PYGZhy{}flexin \PYGZob{}sidechain,flexible,rigid\PYGZcb{}]
-                [\PYGZhy{}\PYGZhy{}flexout \PYGZob{}sidechain,flexible,rigid\PYGZcb{}]
-                [\PYGZhy{}\PYGZhy{}terminal \PYGZob{}keep,doublekeep,neutralize\PYGZcb{}]
-                [\PYGZhy{}\PYGZhy{}excluded EXCLUDED [EXCLUDED ...]]
-                [\PYGZhy{}\PYGZhy{}added ADDED [ADDED ...]] [\PYGZhy{}\PYGZhy{}scooplimit SCOOPLIMIT]
-\end{Verbatim}
+\begin{alltt}
+usage: scoop.py {[}-h{]} {[}-p PROTEIN{]} {[}-l LIGAND{]} {[}-o OUT{]} {[}--center CENTER{]}
+                {[}--innercut INNERCUT{]} {[}--outercut OUTERCUT{]}
+                {[}--flexin \{sidechain,flexible,rigid\}{]}
+                {[}--flexout \{sidechain,flexible,rigid\}{]}
+                {[}--terminal \{keep,doublekeep,neutralize\}{]}
+                {[}--excluded EXCLUDED {[}EXCLUDED ...{]}{]}
+                {[}--added ADDED {[}ADDED ...{]}{]} {[}--scooplimit SCOOPLIMIT{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}protein]  
@@ -4510,13 +4489,12 @@ The PDB file will contain specific instructions for ProtoMS to automatically enf
 
 Program to solvate a solute molecule in either a box or a droplet
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: solvate.py [\PYGZhy{}h] [\PYGZhy{}b BOX] [\PYGZhy{}s SOLUTE] [\PYGZhy{}pr PROTEIN] [\PYGZhy{}o OUT]
-                  [\PYGZhy{}g \PYGZob{}box,droplet,flood\PYGZcb{}] [\PYGZhy{}p PADDING] [\PYGZhy{}r RADIUS]
-                  [\PYGZhy{}c CENTER] [\PYGZhy{}n \PYGZob{}Amber,ProtoMS\PYGZcb{}] [\PYGZhy{}\PYGZhy{}offset OFFSET]
-                  [\PYGZhy{}\PYGZhy{}setupseed SETUPSEED]
-\end{Verbatim}
+\begin{alltt}
+usage: solvate.py {[}-h{]} {[}-b BOX{]} {[}-s SOLUTE{]} {[}-pr PROTEIN{]} {[}-o OUT{]}
+                  {[}-g \{box,droplet,flood\}{]} {[}-p PADDING{]} {[}-r RADIUS{]}
+                  {[}-c CENTER{]} {[}-n \{Amber,ProtoMS\}{]} {[}--offset OFFSET{]}
+                  {[}--setupseed SETUPSEED{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-b=, -{-}box=]  
@@ -4603,10 +4581,9 @@ The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulati
 
 Program to split JAWS-1 waters to a number of PDB-files for JAWS-2
 
-
-\begin{Verbatim}[commandchars=\\\{\}]
-usage: split\PYGZus{}jawswater.py [\PYGZhy{}h] [\PYGZhy{}w WATERS] [\PYGZhy{}o OUT] [\PYGZhy{}\PYGZhy{}jaws2box]
-\end{Verbatim}
+\begin{alltt}
+usage: split\_jawswater.py {[}-h{]} {[}-w WATERS{]} {[}-o OUT{]} {[}--jaws2box{]}
+\end{alltt}
 \begin{description}
 \item[{Options:}] \leavevmode\begin{optionlist}{3cm}
 \item [-w, -{-}waters]  

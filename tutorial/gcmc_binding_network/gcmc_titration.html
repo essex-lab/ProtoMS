@@ -36,7 +36,7 @@ We need to know the volume of the GCMC box later for analysis, but will use <em>
 <p>
      <em>B<sub>equil</sub></em> = <em>&beta;&mu;'</em><sub>hyd</sub> + <em>ln(V/V<sup>o</sup>)</em>,
 <p>
-where <em>B<sub>equil</sub></em> is the Adams value that produces the equilibrium number of waters for the system. <em>&mu;'</em><sub>hyd</sub> is the excess chemical potential of bulk water, which is the hydration free energy of a single water molecule. In ProtoMS, previous analysis has found that <em>&mu;'</em><sub>hyd</sub> equals -6.2 kcal/mol. As the region specified by <code>gcmc_box.pdb</code> has a volume of 112 <span>&#8491;</span><sup>3</sup>, the above equation gives <em>B<sub>equil</sub></em> to be -9.15.
+where <em>B<sub>equil</sub></em> is the Adams value that produces the equilibrium number of waters for the system. <em>&mu;'</em><sub>hyd</sub> is the excess chemical potential of bulk water, which is the hydration free energy of a single water molecule. In ProtoMS, previous analysis has found that <em>&mu;'</em><sub>hyd</sub> equals -6.2 kcal/mol. <em>V</em> here is the volume of the gcmc region and <em>V<sup>o</sup></em> is the volume occupied by a single water molecule at bulk density and has a value of 30 <em><span>&#8491;</span><sup>3</sup></em>. As the region specified by <code>gcmc_box.pdb</code> has a volume of 112 <span>&#8491;</span><sup>3</sup>, the above equation gives <em>B<sub>equil</sub></em> to be -9.15.
 <p>
 The box we've just created and the small cavity in the protein look like: XXX replace<br>
 <img src="box.png" width="%" height="40%" alt="" /><br>

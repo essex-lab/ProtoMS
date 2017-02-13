@@ -64,7 +64,13 @@ Building ProtoMS is done with *cmake* (http://www.cmake.org/), thus you need thi
 
 and *cmake* will perform the necessary checks before it continues with the installation of ProtoMS. The executable will be placed in the top level of the folder hierarchy.
 
-We recommend to set the environmental variable ``$PROTOMSHOME`` to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitue this variable when it is used in ProtoMS command files.
+In order for ProtoMS to find the relevant parameter files it is necessary to set the environmental variable ``$PROTOMSHOME`` to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitute this variable when it is used in ProtoMS command files.
+
+Once building is complete it is highly recommended to run the test suite that comes with ProtoMS to test that the build was successful. From the build directory created above simply type::
+
+  ctest -V
+
+all tests should be expected to pass and the above command will provide detailed output. The most common reason for failures is the need to set the correct environment variables. Notably ``$AMBERHOME`` for the setup tests and ``$PROTOMSHOME``, as described above. Another reason for occasional failures is slight formatting and rounding differences between compilers, this can lead to values differing at the final decimal place in results files and such failures can be safely ignored.
 
 =================
 Requirements

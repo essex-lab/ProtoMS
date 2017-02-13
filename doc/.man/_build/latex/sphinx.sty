@@ -269,15 +269,16 @@
   \fbox{\TheSbox}
 }
 
-\newcommand{\py@lightbox}{%
-  \par\allowbreak
-  \noindent\rule{\linewidth}{0.5pt}\par\nobreak
-  {\parskip\z@skip\noindent}%
-  }
-\newcommand{\py@endlightbox}{%
-  \par\nobreak
-  {\parskip\z@skip\noindent\rule[.4\baselineskip]{\linewidth}{0.5pt}}\par
-  }
+\newcommand{\py@lightbox}{{%
+  \setlength\parskip{0pt}\par
+  \noindent\rule[0ex]{\linewidth}{0.5pt}%
+  \par\noindent\vspace{-0.5ex}%
+  }}
+\newcommand{\py@endlightbox}{{%
+  \setlength{\parskip}{0pt}%
+  \par\noindent\rule[0.5ex]{\linewidth}{0.5pt}%
+  \par\vspace{-0.5ex}%
+  }}
 
 % Some are quite plain:
 \newcommand{\py@noticestart@note}{\py@lightbox}
@@ -523,18 +524,11 @@
 \fi
 
 % Define literal-block environment
-\RequirePackage{newfloat}
-\DeclareFloatingEnvironment{literal-block}
+\RequirePackage{float}
+\floatstyle{plaintop}
 \ifx\thechapter\undefined
-  \SetupFloatingEnvironment{literal-block}{within=section,placement=h}
+  \newfloat{literal-block}{htbp}{loc}[section]
 \else
-  \SetupFloatingEnvironment{literal-block}{within=chapter,placement=h}
+  \newfloat{literal-block}{htbp}{loc}[chapter]
 \fi
-\SetupFloatingEnvironment{literal-block}{name=List}
-% control caption around literal-block
-\RequirePackage{capt-of}
-\RequirePackage{needspace}
-% if the left page space is less than \literalblockneedsapce, insert page-break
-\newcommand{\literalblockneedspace}{5\baselineskip}
-% margin before the caption of literal-block
-\newcommand{\literalblockcaptiontopvspace}{0.5\baselineskip}
+\floatname{literal-block}{List}

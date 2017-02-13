@@ -580,7 +580,7 @@ into a file and have ProtoMS read commands from that file. You specify the comma
 
 Note that ProtoMS is insensitive to whether commands, variables or contents of files are uppercase or lowercase, so you are free to mix and match capitals and small case wherever you want. The only exception to this is in the specification of filenames, where your operating system may care about case. As an example, depending on your operating system, ProtoMS may fail when the file containing the commands is named in upper case letters.
 
-For replica exchange or ensemble type calculations, you have to execeute ProtoMS through the OpenMPI program, e.g. ::
+For replica exchange or ensemble type calculations, you have to execute ProtoMS through an appropriate MPI wrapper, e.g. ::
 
   mpirun -np 16 protoms3 mycmdfile.txt
 
@@ -1053,9 +1053,9 @@ In the equation, :math:`\bar{n}` is the number density of the GCsolute multiplie
 
 ::
 
-  multigcmc float float float
+  multigcmc integer float float float
 
-is the right command to several gcmc simulations running in parallel for different B values. Each ``float`` is the B value for each independent calculation. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel in as many cores as B values.
+is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each ``float`` is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel with as many cores as B values.
 
 .. index::
   single: origin
@@ -1219,7 +1219,7 @@ There are two main keywords related to running a simulation. These are `chunk` a
 
 A simulation can be run as a sequence of chunks. Different things may be accomplished in each chunk, e.g. running some steps of equilibration, printing the protein coordinates to a PDB or redirecting a stream to a new file. Chunks may be mixed and matched, and you can run as many chunks as you desire within a single simulation. You specify a chunk using the command ::
 
-  chunk chunk command
+  chunk command
 
 Chunks are executed in the order they appear in the command file.
 
@@ -1467,7 +1467,7 @@ where `id1` to `id4` designate up to four ids. `type1` designate the type of the
 
   chunk restraint add id1 cartesian harmonic xrest yrest zrest krest [lambda]
         
-For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. You may optionally give the keyword lambda at the end of the chunk to scale the energy of the restraint by the value of lambda. This means that when lambda=1 the restraint is on and when lambda=0 the restraint is off. This is useful to calculate the free energy change associated with the introduction of a restraint, although this procedure should not be carried out in the gas phase.::
+For a cartesian harmonic restraint you need to specify the coordinates of the anchoring point and the value of the force constant. You may optionally give the keyword lambda at the end of the chunk to scale the energy of the restraint by the value of lambda. This means that when lambda=1 the restraint is on and when lambda=0 the restraint is off. This is useful to calculate the free energy change associated with the introduction of a restraint, although this procedure should not be carried out unless for the bound phase::
 
   chunk restraint add id1 cartesian flatbottom xrest yrest zrest krest wrest
   
@@ -1696,9 +1696,9 @@ As before but the output will be a spherical cap of solvent centered at the spec
 Setup and analysis tools
 =========================
 
-As there are many options that can be set in ProtoMS, we provide a range of setup tools that can be used to setup the most common type of simulations. The main tool is called ``protoms.py`` and is document in the next `chapter <protomspy.html>`_. For more advanced use, one can use the individual setup tools as documented `here <tools.html>`_.
+As there are many options that can be set in ProtoMS, we provide a range of setup tools that can be used to setup the most common type of simulations. The main tool is called ``protoms.py`` and is document in the next `chapter <protomspy.html>`_. For more advanced use, one can use the individual setup tools as documented in the `tools chapter <tools.html>`_.
 
-In order to perform analysis of the ProtoMS simulations, there is a range of tools than be used. They are documented `here <tools.html>`_.
+In order to perform analysis of ProtoMS simulations, there is a range of tools that can be used. They are documented in the `tools chapter <tools.html>`_.
 
 ***********************
 Input Files

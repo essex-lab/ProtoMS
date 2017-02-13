@@ -6,7 +6,8 @@
 ProtoMS documentation
 ======================================
 
-Contents:
+..
+   Contents:
 
 .. toctree::
    :maxdepth: 2
