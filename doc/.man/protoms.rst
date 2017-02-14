@@ -494,7 +494,7 @@ You can control the maximum amounts that the GCsolute is translated and rotated 
 An insertion move is a Monte Carlo move on a single GCsolute molecule, whereby the :math:`\theta` value of a GCsolute is turned from 0 to 1. Each insertion move comprises the following steps;
 
 
-1. A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules. The value of :math:`\theta` is examined; if it is set to 1 then another is chosen until the examined :math:`\theta` value is 0
+1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules. The value of :math:`\theta` is examined; if it is set to 1 then another is chosen until the examined :math:`\theta` value is 0
 
 2. The GCsolute molecule is given a random position and orientation within the GCMC region.
 
@@ -512,7 +512,7 @@ An insertion move is a Monte Carlo move on a single GCsolute molecule, whereby t
 
 A deletion move is a Monte Carlo move on a single GCsolute molecule, whereby the :math:`\theta` value of a GCsolute is turned from 1 to 0. Each deletion move comprises the following steps
 
-1. A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules. The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1
+1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules. The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1
 
 2. The value of :math:`\theta` for that GCsolute molecule is set to 0, and the new energy associated with this value of :math:`\theta` is calculated
 
