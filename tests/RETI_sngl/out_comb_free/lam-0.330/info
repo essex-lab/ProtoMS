@@ -1,4 +1,4 @@
-protoms3 started at 10:19:18 on the  6/ 2/2017
+protoms3 started at 11:04:34 on the 14/ 2/2017
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
@@ -85,11 +85,11 @@ Simulation temperature =      25.0000 C, (    298.1500 K)
 Running an NPT periodic boundaries simulation with pressure =       1.0000 atm ( 101325.0000 pascals) and with a maximum volume change of      30.0000 A^3
 ##########################################################################################################################################################
 Not performing preferential sampling
-Got initial random number seed       100000
+Got initial random number seed       100002
 ###########################################
-Sanitised random number seed =       209999
+Sanitised random number seed =       100001
 ###########################################
-Starting simulation at 10:19:18 on the  6/ 2/2017
+Starting simulation at 11:04:34 on the 14/ 2/2017
 ######################################################################
 Running simulation in lambda window    0.329 <--    0.330 -->    0.331
 ######################################################################
@@ -121,10 +121,10 @@ Redirecting PDB to all.pdb
 Writing restart file
 ####################
 Resetting free energy average to zero.
-Data collection complete. Attempted/accepted moves           10           6
+Data collection complete. Attempted/accepted moves           10           8
 Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
 ###############################
 Final volume =   13851.6664 A^3
 ###############################
 Simulation shutting down...
-protoms3 completed at 10:19:19 on the  6/ 2/2017
+protoms3 completed at 11:04:35 on the 14/ 2/2017

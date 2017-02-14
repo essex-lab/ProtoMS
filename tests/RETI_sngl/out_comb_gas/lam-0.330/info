@@ -1,10 +1,10 @@
-protoms3 started at 15:14:25 on the 12/ 1/2017
+protoms3 started at 11:04:35 on the 14/ 2/2017
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-##############################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/amber14SB.ff
-##############################################################################
+######################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB.ff
+######################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -13,9 +13,9 @@ Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,  797 clj parameters
 and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#############################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/solvents.ff
-#############################################################################
+#####################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/solvents.ff
+#####################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
@@ -23,15 +23,15 @@ Found solvent template with TIP3p optimization
 Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#######################################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/amber14SB-residues.ff
-#######################################################################################
+###############################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB-residues.ff
+###############################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###########################################################################
-Reading parameter file /home/james/projects/protoms-dev/parameter/gaff14.ff
-###########################################################################
+###################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/gaff14.ff
+###################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -69,11 +69,11 @@ Finished fitting template...
 Using no boundary conditions (gas-phase)
 ########################################
 Simulation temperature =      25.0000 C, (    298.1500 K)
-Got initial random number seed       100000
+Got initial random number seed       100002
 ###########################################
-Sanitised random number seed =       209999
+Sanitised random number seed =       100001
 ###########################################
-Starting simulation at 15:14:25 on the 12/ 1/2017
+Starting simulation at 11:04:35 on the 14/ 2/2017
 ######################################################################
 Running simulation in lambda window    0.329 <--    0.330 -->    0.331
 ######################################################################
@@ -108,4 +108,4 @@ Resetting free energy average to zero.
 Data collection complete. Attempted/accepted moves           10          10
 Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
 Simulation shutting down...
-protoms3 completed at 15:14:25 on the 12/ 1/2017
+protoms3 completed at 11:04:35 on the 14/ 2/2017

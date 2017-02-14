@@ -1,4 +1,4 @@
-protoms3 started at 10:05:56 on the  6/ 2/2017
+protoms3 started at 11:02:05 on the 14/ 2/2017
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
@@ -100,11 +100,11 @@ Running a JAWS-2 sim
 Running an NVT simulation
 #########################
 Not performing preferential sampling
-Got initial random number seed       100000
+Got initial random number seed       100006
 ###########################################
-Sanitised random number seed =       209999
+Sanitised random number seed =       100005
 ###########################################
-Starting simulation at 10:05:57 on the  6/ 2/2017
+Starting simulation at 11:02:06 on the 14/ 2/2017
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -144,6 +144,6 @@ Redirecting PDB to all.pdb
 Writing restart file
 ####################
 Resetting free energy average to zero.
-Data collection complete. Attempted/accepted moves          100          70
+Data collection complete. Attempted/accepted moves          100          66
 Simulation shutting down...
-protoms3 completed at 10:06:03 on the  6/ 2/2017
+protoms3 completed at 11:02:11 on the 14/ 2/2017

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.11.21)  13 FEB 2017 09:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.11.21)  14 FEB 2017 11:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1110,11 +1110,11 @@ l.660 ...rotoms:equation-doubletopu}\begin{gather}
 Chapter 4.
 [21] [22]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 1041.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 1047.
  [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35]
 [36] [37] [38]
 Chapter 5.
-LaTeX Font Info:    Try loading font information for TS1+pcr on input line 2103
+LaTeX Font Info:    Try loading font information for TS1+pcr on input line 2118
 .
 (/usr/share/texmf-dist/tex/latex/psnfss/ts1pcr.fd
 File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
@@ -1122,7 +1122,7 @@ File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
 
 ] [40] [41] [42] [43]
 [44] [45] [46] [47] [48] [49] [50]
-Underfull \hbox (badness 10000) in paragraph at lines 2726--2727
+Underfull \hbox (badness 10000) in paragraph at lines 2741--2742
 []\T1/ptm/m/n/10 ProtoMS tries to fol-low the PDB for-mat when it reads in PDB 
 lines (see
  []
@@ -1130,112 +1130,112 @@ lines (see
 [51] [52] [53] [54]
 Chapter 6.
 
-Overfull \hbox (108.24506pt too wide) in paragraph at lines 2850--2851
+Overfull \hbox (108.24506pt too wide) in paragraph at lines 2865--2866
 []\T1/pcr/m/n/10 protoms.py [-s none|equilibration|sampling|dualtopology|single
 topology|gcmc|jaws1|jaws2]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 [-f folder1 folder2] [-p protein.pdb] [-sc scoop.pdb] [-l lig1.p
 db
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 lig2.pdb ...] [-t template1 template2 ...] [-w water.pdb] [-c
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 cmdfile] [-r nrepeats | prefix] [--outfolder folder] [--atomname
 s
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 namefile] [--watmodel tip4p|tip3p] [--waterbox watbox] [--charge
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 charge1 charge2] [--singlemap mapfile] [--center cent] [--innerc
 ut
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 icut] [--outercut ocut] [--flexin sidechain|flexible|rigid]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 [--flexout sidechain|flexible|rigid] [--scooplimit N] [--capradi
 us
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 radius] [--lambdas nlambdas | lambda1 lambda2 ...] [--adams B1 B
 2
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 ...] [--jawsbias bias] [--gcmcwater wat.pdb | N] [--gcmcbox box.
 pdb
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2850--2851
+Underfull \hbox (badness 10000) in paragraph at lines 2865--2866
 \T1/pcr/m/n/10 | X Y Z A B C] [--nequil N] [--nprod N] [--dumpfreq N] [--absolu
 te]
  []
 
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 2854.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 2869.
 
-Overfull \hbox (162.06357pt too wide) in paragraph at lines 2854--2856
+Overfull \hbox (162.06357pt too wide) in paragraph at lines 2869--2871
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2884--2886
+Underfull \hbox (badness 10000) in paragraph at lines 2899--2901
 []
  []
 
 [55
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 2966--2971
+Underfull \hbox (badness 10000) in paragraph at lines 2981--2986
 []\T1/ptm/m/n/10 optional,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2975--2980
+Underfull \hbox (badness 10000) in paragraph at lines 2990--2995
 []\T1/ptm/m/n/10 optional,
  []
 
 
-Overfull \hbox (22.97598pt too wide) in paragraph at lines 2996--3000
+Overfull \hbox (22.97598pt too wide) in paragraph at lines 3011--3015
 []
  []
 
 
-Overfull \hbox (59.71228pt too wide) in paragraph at lines 3016--3019
+Overfull \hbox (59.71228pt too wide) in paragraph at lines 3031--3034
 []
  []
 
 
-Overfull \hbox (164.80135pt too wide) in paragraph at lines 3023--3026
+Overfull \hbox (164.80135pt too wide) in paragraph at lines 3038--3041
 []
  []
 
 LaTeX Font Info:    Font shape `T1/ptm/bx/it' in size <10> not available
-(Font)              Font shape `T1/ptm/b/it' tried instead on input line 3048.
+(Font)              Font shape `T1/ptm/b/it' tried instead on input line 3063.
 [56]
-Underfull \hbox (badness 10000) in paragraph at lines 3127--3129
+Underfull \hbox (badness 10000) in paragraph at lines 3142--3144
 []\T1/ptm/m/n/10 only cre-ated if the --
  []
 
@@ -1244,19 +1244,19 @@ Chapter 7.
 [59
 
 ] [60] [61] [62] [63]
-Overfull \hbox (136.245pt too wide) in paragraph at lines 3544--3544
+Overfull \hbox (136.245pt too wide) in paragraph at lines 3559--3559
 []                   \T1/pcr/m/n/10 [-p {titration,fit,percentiles,pmf,all} [{t
 itration,fit,percentiles,pmf,all} ...]][] 
  []
 
 
-Overfull \hbox (52.245pt too wide) in paragraph at lines 3545--3545
+Overfull \hbox (52.245pt too wide) in paragraph at lines 3560--3560
 []                   \T1/pcr/m/n/10 [-c {fit,pmf,minimum,excess,all} [{fit,pmf,
 minimum,excess,all} ...]][] 
  []
 
 [64] [65] [66] [67] [68] [69] [70] [71] [72]
-Overfull \hbox (124.245pt too wide) in paragraph at lines 4068--4068
+Overfull \hbox (124.245pt too wide) in paragraph at lines 4083--4083
 []                         \T1/pcr/m/n/10 [-s {sampling,equilibration,dualtopol
 ogy,singletopology,gcmc,jaws1,jaws2}][] 
  []
@@ -1269,22 +1269,20 @@ Chapter 8.
 
 ] [89
 
-] [90
-
-])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 4955.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 4955.
+] [90])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 4970.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 4970.
  (./ProtoMS.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 4955.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 4955.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 4970.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 4970.
 
 Package rerunfilecheck Info: File `ProtoMS.out' has not changed.
 (rerunfilecheck)             Checksum: 60813F5C7A4E25196BF69CE8B49FC27E;3732.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 4955.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 4970.
  ) 
 Here is how much of TeX's memory you used:
- 9840 strings out of 493013
- 134785 string characters out of 6139316
+ 9841 strings out of 493013
+ 134792 string characters out of 6139316
  247733 words of memory out of 5000000
  12853 multiletter control sequences out of 15000+600000
  68804 words of font info for 73 fonts, out of 8000000 for 9000
@@ -1306,10 +1304,10 @@ ist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/
 times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr
 /share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts
 /type1/urw/times/utmri8a.pfb>
-Output written on ProtoMS.pdf (94 pages, 653539 bytes).
+Output written on ProtoMS.pdf (94 pages, 654800 bytes).
 PDF statistics:
- 1153 PDF objects out of 1200 (max. 8388607)
- 1022 compressed objects within 11 object streams
- 272 named destinations out of 1000 (max. 500000)
+ 1156 PDF objects out of 1200 (max. 8388607)
+ 1025 compressed objects within 11 object streams
+ 273 named destinations out of 1000 (max. 500000)
  504 words of extra memory for PDF output out of 10000 (max. 10000000)
 

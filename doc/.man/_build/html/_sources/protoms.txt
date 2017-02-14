@@ -891,6 +891,15 @@ The temperature replica-exchange command can be used in conjuction with the ``la
 
 Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see `Temperature replica-exchange parameters`_). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the ``temperaturere`` command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; ``bndang`` controls the internal bond-angle energy terms, ``dih`` the internal dihedral energy term, ``lj`` the internal van der Waals energy, ``coul`` the internal Coulomb energy, ``solu`` the interaction with other solutes, ``prot`` the interaction with the protein and ``solv`` the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with :math:`\beta_i/\beta_0`, where :math:`\beta_i` is the effective inverse temperature of the replica (set with the ``temperaturre`` command) and :math:`\beta_0` is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with :math:`(\beta_i+\beta_0)/2\beta_0` and if the argument 3 the energy is unscaled.
 
+.. index::
+   single: sameseeds
+
+By default ProtoMS will use different random seeds for each replica in a replica exchange simulation. Setting sameseeds to true will prevent this and all replicas will use the random seed provided in the command file. This is primarily available for backwards compatibility::
+
+   sameseeds logical
+
+The value of sameseeds is false by default.
+
 -----------------------------------
 Free energy calculation parameters
 -----------------------------------
@@ -1057,7 +1066,7 @@ In the equation, :math:`\bar{n}` is the number density of the GCsolute multiplie
 
   multigcmc integer float float float
 
-is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each ``float`` is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel with as many cores as B values.
+is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each ``float`` is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel with as many cores as B values. As above the random seed used by each replica can be influenced by the sameseeds command.
 
 .. index::
   single: origin

@@ -1,11 +1,11 @@
-protoms3 started at 15:02:55 on the  5/ 1/2017
+protoms3 started at 10:58:13 on the 14/ 2/2017
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-#################################################################################
-Reading parameter file /home/cica1d14/scratch/protoms-dev//parameter/amber14SB.ff
-#################################################################################
+######################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB.ff
+######################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -14,9 +14,9 @@ Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,  797 clj parameters
 and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-################################################################################
-Reading parameter file /home/cica1d14/scratch/protoms-dev//parameter/solvents.ff
-################################################################################
+#####################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/solvents.ff
+#####################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
@@ -24,15 +24,15 @@ Found solvent template with TIP3p optimization
 Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-##########################################################################################
-Reading parameter file /home/cica1d14/scratch/protoms-dev//parameter/amber14SB-residues.ff
-##########################################################################################
+###############################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB-residues.ff
+###############################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-##############################################################################
-Reading parameter file /home/cica1d14/scratch/protoms-dev//parameter/gaff14.ff
-##############################################################################
+###################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/gaff14.ff
+###################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -41,9 +41,9 @@ Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,    1 clj parameters
 and 1582/8142/4050/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-##############################################################################
-Reading parameter file /home/cica1d14/scratch/protoms-dev//data/gcmc_tip4p.tem
-##############################################################################
+###################################################################
+Reading parameter file /home/chris/protoms-dev//data/gcmc_tip4p.tem
+###################################################################
 Loaded    1 templates,    0 override templates,    3 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
@@ -87,7 +87,7 @@ Got initial random number seed       100000
 ###########################################
 Sanitised random number seed =       209999
 ###########################################
-Starting simulation at 15:02:56 on the  5/ 1/2017
+Starting simulation at 10:58:13 on the 14/ 2/2017
 ##########################################
 Performing simulation at lambda =    0.000
 ##########################################
@@ -124,7 +124,7 @@ Redirecting PDB to all.pdb
 Writing restart file
 ####################
 Resetting free energy average to zero.
-Data collection complete. Attempted/accepted moves         1000         337
-Attempted/successful GCMC swaps for ID   0 :      4     4 ( 100.000%)
+Data collection complete. Attempted/accepted moves         1000         314
+Attempted/successful GCMC swaps for ID   1 :      4     3 (  75.000%)
 Simulation shutting down...
-protoms3 completed at 15:02:58 on the  5/ 1/2017
+protoms3 completed at 10:58:15 on the 14/ 2/2017
