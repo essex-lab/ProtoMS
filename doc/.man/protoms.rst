@@ -439,7 +439,7 @@ A solute move is a Monte Carlo move on a single solute molecule. Obviously, for 
 
 A solvent move is a Monte Carlo move on a single solvent molecule. Obviously, for a solvent move to be performed, at least one solvent molecule must be loaded. Each solvent move comprises the following steps
 
-1. A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see :ref:`parameters`), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
+1. A solvent molecule is randomly chosen from the set of loaded solvent molecules. If preferential sampling is turned on (see :ref:`parameters`), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
 
 2. The solvent molecule is randomly translated and rotated around its center of geometry.
 
@@ -474,7 +474,7 @@ A volume move is a Monte Carlo move that changes the volume of the system. This 
 
 A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolute move comprises the following steps
 
-1. A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules.
+1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1
 
 2. The GCsolute molecule is randomly translated and rotated around its center of geometry. If it attempts to leave the confines of its predefined cubic region then it experiences a huge energetic penalty, ensuring that the Metropolis move is rejected.
 
@@ -496,9 +496,11 @@ An insertion move is a Monte Carlo move on a single GCsolute molecule, whereby t
 
 1. A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules. The value of :math:`\theta` is examined; if it is set to 1 then another is chosen until the examined :math:`\theta` value is 0
 
-2. The value of :math:`\theta` for that GCsolute molecule is set to 1, and the new energy associated with this value of :math:`\theta` is calculated
+2. The GCsolute molecule is given a random position and orientation within the GCMC region.
 
-3. The change in energy associated with this move is evaluated and used to decide whether or not to accept this move via the Metropolis criterion.
+3. The value of :math:`\theta` for that GCsolute molecule is set to 1, and the new energy associated with this value of :math:`\theta` is calculated
+
+4. The change in energy associated with this move is evaluated and used to decide whether or not to accept this move via the Metropolis criterion.
 
 4. If the move was accepted then the new value of :math:`\theta` for that GCsolute molecule is saved, otherwise the original value of 0 is restored.
 
@@ -526,7 +528,7 @@ A deletion move is a Monte Carlo move on a single GCsolute molecule, whereby the
 
 A theta move is a Monte Carlo move on a single GCsolute molecule, whereby the :math:`\theta` value of a GCsolute is sampled. Each theta move comprises the following steps
 
-1. A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules
+1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules
 
 2. The value of :math:`\theta` for that GCsolute molecule is randomly changed, and the new energy associated with this value of :math:`\theta` is calculated
 
@@ -542,7 +544,7 @@ A theta move is a Monte Carlo move on a single GCsolute molecule, whereby the :m
 
 A sample move is a Monte Carlo move on a single GCsolute molecule, whereby the :math:`\theta` value of a GCsolute is sampled whilst applying a biasing potential, jbias. Each sample move comprises the following steps
 
-1. A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules (typically only one GCsolute molecule is studied in a sample move)
+1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules (typically only one GCsolute molecule is studied in a sample move)
 
 2. The biasing potential is added onto the value of ieold for that molecule, based upon the volume of the restraint and the applied jbias
 

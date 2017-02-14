@@ -19,7 +19,7 @@
 
 
 \title{ProtoMS Documentation}
-\date{February 13, 2017}
+\date{February 14, 2017}
 \release{3.3}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and J. Graham}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
@@ -136,7 +136,7 @@
 \label{introduction:introduction}\label{introduction:protoms-documentation}\label{introduction::doc}
 ProtoMS is short for “Prototype Molecular Simulation”, and is a software package that was originally designed by Dr. Christopher Woods to perform protein-ligand binding free energy calculations during his PhD. Dr. Julien Michel and Dr. Michael Bodnarchuk latter added numerous features and used the program extensively during their PhDs. Dr. Samuel Genheden, Dr. Richard Bradshaw, Dr. Gregory Ross, Dr. Chris Cave-Ayland, Dr. Ana Cabedo Martinez, Hannah Bruce-Macdonald and James Graham have since then made numerous additions to the code among them a complete revision of the tools used to setup and analyse the simulation results.
 
-The program is routinely used by several members of the research group of Jonathan Essex. This document has been written to try and explain how to use ProtoMS.
+The program is routinely used by several members of the research group of Professor Jonathan Essex for the development of new techniques to perform free energy calculations. This document has been written to try and explain how to use ProtoMS.
 
 The user manual has been written as a reference manual, with extensive hyperlinking to allow you to quickly dip in and out to find the information you need. While you could read it from start to end, it would be a boring and repetitive read and you probably wouldn’t learn much! We recommend that you engage with the tutorials that come with ProtoMS. You can then use the links in those descriptions to dip in and out of the user manual, thus obtaining a more detailed knowledge of how the examples, and thus ProtoMS, work.
 
@@ -766,7 +766,7 @@ If the move is accepted then the new configuration of the solute is saved. If th
 A solvent move is a Monte Carlo move on a single solvent molecule. Obviously, for a solvent move to be performed, at least one solvent molecule must be loaded. Each solvent move comprises the following steps
 \begin{enumerate}
 \item {} 
-A solvent molecule is randomly chosed from the set of loaded solvent molecules. If preferential sampling is turned on (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
+A solvent molecule is randomly chosen from the set of loaded solvent molecules. If preferential sampling is turned on (see {\hyperref[protoms:parameters]{\emph{\DUspan{}{Simulation parameters}}}}), then the solvent molecules closest to the preferred solute have a relatively higher weight, so will be more likely to be chosen. If preferential sampling is off, then each solvent is weighted equally, regardless of its relative size or proximity to a solute.
 
 \item {} 
 The solvent molecule is randomly translated and rotated around its center of geometry.
@@ -806,7 +806,7 @@ If the move is accepted then the new system configuration is saved, otherwise th
 A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolute move comprises the following steps
 \begin{enumerate}
 \item {} 
-A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules.
+A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of \(\theta\) is examined; if it is set to 0 then another is chosen until the examined \(\theta\) value is 1
 
 \item {} 
 The GCsolute molecule is randomly translated and rotated around its center of geometry. If it attempts to leave the confines of its predefined cubic region then it experiences a huge energetic penalty, ensuring that the Metropolis move is rejected.
@@ -830,11 +830,17 @@ An insertion move is a Monte Carlo move on a single GCsolute molecule, whereby t
 A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules. The value of \(\theta\) is examined; if it is set to 1 then another is chosen until the examined \(\theta\) value is 0
 
 \item {} 
+The GCsolute molecule is given a random position and orientation within the GCMC region.
+
+\item {} 
 The value of \(\theta\) for that GCsolute molecule is set to 1, and the new energy associated with this value of \(\theta\) is calculated
 
 \item {} 
 The change in energy associated with this move is evaluated and used to decide whether or not to accept this move via the Metropolis criterion.
 
+\end{enumerate}
+\begin{enumerate}
+\setcounter{enumi}{3}
 \item {} 
 If the move was accepted then the new value of \(\theta\) for that GCsolute molecule is saved, otherwise the original value of 0 is restored.
 
@@ -865,7 +871,7 @@ If the move was accepted then the new value of \(\theta\) for that GCsolute mole
 A theta move is a Monte Carlo move on a single GCsolute molecule, whereby the \(\theta\) value of a GCsolute is sampled. Each theta move comprises the following steps
 \begin{enumerate}
 \item {} 
-A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules
+A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules
 
 \item {} 
 The value of \(\theta\) for that GCsolute molecule is randomly changed, and the new energy associated with this value of \(\theta\) is calculated
@@ -884,7 +890,7 @@ If the move was accepted then the new value of \(\theta\) for that GCsolute mole
 A sample move is a Monte Carlo move on a single GCsolute molecule, whereby the \(\theta\) value of a GCsolute is sampled whilst applying a biasing potential, jbias. Each sample move comprises the following steps
 \begin{enumerate}
 \item {} 
-A GCsolute molecule is randomly chosed from the set of loaded GCsolute molecules (typically only one GCsolute molecule is studied in a sample move)
+A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules (typically only one GCsolute molecule is studied in a sample move)
 
 \item {} 
 The biasing potential is added onto the value of ieold for that molecule, based upon the volume of the restraint and the applied jbias
@@ -3207,10 +3213,10 @@ usage: ambertools.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-n NAME{]}
                      {[}-c CHARGE {[}CHARGE ...{]}{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
 the name of the PDB-files
-\item [-n=UNK, -{-}name=UNK]  
+\item [-n=''UNK'', -{-}name=''UNK'']  
 the name of the solute
 \item [-c, -{-}charge]  
 the net charge of each PDB-file
@@ -3247,16 +3253,16 @@ usage: build\_template.py {[}-h{]} {[}-p PREPI{]} {[}-o OUT{]} {[}-z ZMAT{]} {[}
                          {[}--gaff GAFF{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}prepi]  
 the name of the leap prepi-file
-\item [-o=lig.tem, -{-}out=lig.tem]  
+\item [-o=''lig.tem'', -{-}out=''lig.tem'']  
 the name of the template file
 \item [-z, -{-}zmat]  
 the name of the zmatrix-file, if it exists
 \item [-f, -{-}frcmod]  
 the name of the frcmod-file, if it exists
-\item [-n=UNK, -{-}name=UNK]  
+\item [-n=''UNK'', -{-}name=''UNK'']  
 the name of the solute
 \item [-t=0.1, -{-}translate=0.1]  
 maxmium size for translation moves in Angstroms
@@ -3264,7 +3270,7 @@ maxmium size for translation moves in Angstroms
 maxmium size for rotation moves in degrees
 \item [-{-}alldihs=False]  
 sample improper dihedrals
-\item [-{-}gaff=gaff16]  
+\item [-{-}gaff=''gaff16'']  
 gaff version to use, gaff14 or gafff16
 \end{optionlist}
 
@@ -3300,10 +3306,10 @@ usage: calc\_bar.py {[}-h{]} {[}-d DIRECTORY{]} {[}-r RESULTS{]} {[}-s SKIP{]} {
                    {[}-t TEMPERATURE{]} {[}-pw{]} {[}-pu{]} {[}-pl{]} {[}-b NBOOTS{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
-\item [-d=./, -{-}directory=./]  
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
+\item [-d=''./'', -{-}directory=''./'']  
 the root directory that contains all the output files of the simulation. Default is cwd.
-\item [-r=results, -{-}results=results]  
+\item [-r=''results'', -{-}results=''results'']  
 the beginning of the name of the file to analyse. Default is results. 
 \item [-s=0, -{-}skip=0]  
 the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
@@ -3362,16 +3368,16 @@ usage: calc\_clusters.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]} {[
                         {[}-c CUTOFF{]} {[}--skip SKIP{]} {[}--max MAX{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
 the input PDB-files
-\item [-o=clusters.pdb, -{-}out=clusters.pdb]  
+\item [-o=''clusters.pdb'', -{-}out=''clusters.pdb'']  
 the name of the output pdb that contains the cluster representatives, default='clusters.pdb'
-\item [-m=wa1, -{-}molecule=wa1]  
+\item [-m=''wa1'', -{-}molecule=''wa1'']  
 the name of the molecule to extract, default='wa1'
 \item [-a, -{-}atom]  
 the name of the atom to extract. If left blank, the entire molecule will be clustered, default=None
-\item [-t=average, -{-}type=average]  
+\item [-t=''average'', -{-}type=''average'']  
 the type of hierarchical clustering method, default='average'
 
 Possible choices: average, single, complete, weighted, centroid
@@ -3413,14 +3419,14 @@ usage: calc\_density.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]} {[}
                        {[}--max MAX{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
 the input PDB-files
-\item [-o=grid.dx, -{-}out=grid.dx]  
+\item [-o=''grid.dx'', -{-}out=''grid.dx'']  
 the name of the output grid-file in DX-format, default='grid.dx'
-\item [-r=wa1, -{-}residue=wa1]  
+\item [-r=''wa1'', -{-}residue=''wa1'']  
 the name of the residue to extract, default='wa1'
-\item [-a=o00, -{-}atom=o00]  
+\item [-a=''o00'', -{-}atom=''o00'']  
 the name of the atom to extract, default='o00'
 \item [-p=2.0, -{-}padding=2.0]  
 the amount to increase the minimum box in each direction, default=2 A
@@ -3430,7 +3436,7 @@ the grid resolution, default=0.5 A
 the size of the smoothing, i.e. the extent of an atom, default=1A
 \item [-n, -{-}norm]  
 number used to normalize the grid, if not specified the number of input files is used
-\item [-t=sphere, -{-}type=sphere]  
+\item [-t=''sphere'', -{-}type=''sphere'']  
 the type  of coordinate smoothing, should be either `sphere', `gaussian'
 
 Possible choices: sphere, gaussian
@@ -3479,10 +3485,10 @@ usage: calc\_dg.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-r RES
                   {[}-e \{ti,bar,mbar\} {[}\{ti,bar,mbar\} ...{]}{]} {[}--autoeqb{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-d={[}'./'{]}, -{-}directories={[}'./'{]}]  
 the root directory that contains all the output files of the simulation. Default is cwd.
-\item [-r=results, -{-}results=results]  
+\item [-r=''results'', -{-}results=''results'']  
 the name of the file to analyse. Default is results. 
 \item [-s=0, -{-}skip=0]  
 the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
@@ -3500,7 +3506,7 @@ turns off printing of gradient
 turns off printing of each free energy
 \item [-{-}analytical=False]  
 turns on use of analytical gradients
-\item [-{-}numerical=both]  
+\item [-{-}numerical=''both'']  
 the kind of numerical gradient estimator
 
 Possible choices: both, back, forw
@@ -3548,10 +3554,10 @@ usage: calc\_gci.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}-f FI
                    {[}--fit\_options FIT\_OPTIONS{]} {[}-v VOLUME{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-d, -{-}directories]  
 the directories containing the GCMC simulation data, default=None
-\item [-f=results, -{-}file=results]  
+\item [-f=''results'', -{-}file=''results'']  
 the name of the file to analyse. Default is results.
 \item [-p, -{-}plot]  
 whether to plot the GCMC simulation data or analysis, default=None
@@ -3625,10 +3631,10 @@ usage: calc\_gcsingle.py {[}-h{]} {[}-d DIRECTORIES {[}DIRECTORIES ...{]}{]} {[}
                         {[}-v VOLUME{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-d, -{-}directories]  
 the directories containing the GCMC simulation data, default=None
-\item [-f=results, -{-}file=results]  
+\item [-f=''results'', -{-}file=''results'']  
 the name of the file to analyse, default=results
 \item [-s=0, -{-}skip=0]  
 the number of initial snapshots that will be discarded, default=0
@@ -3669,16 +3675,16 @@ usage: calc\_replicapath.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-p PLOT {
                            {[}-k \{lambda,temperature,rest,global,B\}{]} {[}-o OUT{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
 the name of the files to analyse
 \item [-p, -{-}plot]  
 the replica values to plot
-\item [-k=lambda, -{-}kind=lambda]  
+\item [-k=''lambda'', -{-}kind=''lambda'']  
 the kind of replica to analyze
 
 Possible choices: lambda, temperature, rest, global, B
-\item [-o=replica\_path.png, -{-}out=replica\_path.png]  
+\item [-o=''replica\_path.png'', -{-}out=''replica\_path.png'']  
 the prefix of the output figure. Default is replica\_path. 
 \end{optionlist}
 
@@ -3711,7 +3717,7 @@ usage: calc\_rmsd.py {[}-h{]} {[}-i INITIAL{]} {[}-f FILES {[}FILES ...{]}{]} {[
                     {[}-a ATOM{]} {[}-t TEMPERATURE{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-i, -{-}initial]  
 the initial PDB-file of the ligand
 \item [-f, -{-}files]  
@@ -3755,10 +3761,10 @@ usage: calc\_series.py {[}-h{]} {[}-f FILE {[}FILE ...{]}{]} {[}-o OUT{]}
                       {[}--moving MOVING{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-f={[}'results'{]}, -{-}file={[}'results'{]}]  
 the name of the file to analyse. Default is results. 
-\item [-o=series, -{-}out=series]  
+\item [-o=''series'', -{-}out=''series'']  
 the prefix of the output figure. Default is series. 
 \item [-s, -{-}series]  
 the series to analyze
@@ -3796,12 +3802,12 @@ usage: calc\_ti.py {[}-h{]} {[}-d DIRECTORY{]} {[}--subdir SUBDIR{]} {[}-r RESUL
                   {[}--numerical \{both,back,forw\}{]} {[}--autoeqb{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
-\item [-d=./, -{-}directory=./]  
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
+\item [-d=''./'', -{-}directory=''./'']  
 the root directory that contains all the output files of the simulation. Default is cwd.
 \item [-{-}subdir=]  
 optional subdirectory to check for each lamda value
-\item [-r=results, -{-}results=results]  
+\item [-r=''results'', -{-}results=''results'']  
 the name of the file to analyse. Default is results. 
 \item [-s=0, -{-}skip=0]  
 the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
@@ -3821,7 +3827,7 @@ turns on producing plot of gradients
 turns on fitting the pmf to a polynomial
 \item [-{-}analytical=False]  
 turns on use of analytical gradients
-\item [-{-}numerical=both]  
+\item [-{-}numerical=''both'']  
 the kind of numerical gradient estimator
 
 Possible choices: both, back, forw
@@ -3869,12 +3875,12 @@ Program to remove water molecules from a GCMC/JAWS-1 box
 usage: clear\_gcmcbox.py {[}-h{]} {[}-b BOX{]} {[}-s SOLVATION{]} {[}-o OUT{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-b, -{-}box]  
 the name of the PDB-file containing the box.
 \item [-s, -{-}solvation]  
 the name of the PDB-file containing the solvation waters
-\item [-o=cleared\_box.pdb, -{-}out=cleared\_box.pdb]  
+\item [-o=''cleared\_box.pdb'', -{-}out=''cleared\_box.pdb'']  
 the name of the output PDB-file
 \end{optionlist}
 
@@ -3906,14 +3912,14 @@ usage: convertatomnames.py {[}-h{]} {[}-p PROTEIN{]} {[}-o OUT{]} {[}-s STYLE{]}
                            {[}-c CONVERSIONFILE{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}protein]  
 the protein PDB-file
-\item [-o=protein\_pms.pdb, -{-}out=protein\_pms.pdb]  
+\item [-o=''protein\_pms.pdb'', -{-}out=''protein\_pms.pdb'']  
 the output PDB-file
-\item [-s=amber, -{-}style=amber]  
+\item [-s=''amber'', -{-}style=''amber'']  
 the style of the input PDB-file
-\item [-c=atomnamesmap.dat, -{-}conversionfile=atomnamesmap.dat]  
+\item [-c=''atomnamesmap.dat'', -{-}conversionfile=''atomnamesmap.dat'']  
 the name of the file with conversion rules
 \end{optionlist}
 
@@ -3946,12 +3952,12 @@ usage: convertwater.py {[}-h{]} {[}-p PDB{]} {[}-o OUT{]} {[}-m MODEL{]} {[}-i{]
                        {[}--setupseed SETUPSEED{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}pdb]  
 the PDF-file containing the waters to be transformed
-\item [-o=convertedwater.pdb, -{-}out=convertedwater.pdb]  
+\item [-o=''convertedwater.pdb'', -{-}out=''convertedwater.pdb'']  
 the output PDB-file
-\item [-m=tip4p, -{-}model=tip4p]  
+\item [-m=''tip4p'', -{-}model=''tip4p'']  
 the water model,default=tip4p
 \item [-i=False, -{-}ignoreh=False]  
 whether to ignore hydrogens in input water. If no hydrogens are present, waters are randomly orientated. default=No
@@ -3991,16 +3997,16 @@ usage: distribute\_waters.py {[}-h{]} {[}-b BOX BOX BOX BOX BOX BOX{]} {[}-m MOL
                             {[}--number NUMBER{]} {[}--setupseed SETUPSEED{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-b, -{-}box]  
 Dimensions of the box. Six arguments expected: origin (x,y,z) \& length (x,y,z)
 \item [-m, -{-}molecules]  
 Molecules to distribute in the box. Either the number of waters or a pdb file containing all of them
-\item [-o=ghostmolecules.pdb, -{-}outfile=ghostmolecules.pdb]  
+\item [-o=''ghostmolecules.pdb'', -{-}outfile=''ghostmolecules.pdb'']  
 Name of the pdb file to write the molecules to. Default='ghostmolecules.pdb'
-\item [-{-}model=t4p]  
+\item [-{-}model=''t4p'']  
 Water model. Used when only the amount of waters is specified. Options: `t4p','t3p'. Default='t4p'
-\item [-{-}resname=WAT]  
+\item [-{-}resname=''WAT'']  
 Residue name of the molecules writen to output. Default='WAT'
 \item [-{-}number]  
 Required number of molecules when it differs from the number of residues in the file.
@@ -4034,12 +4040,12 @@ Split your multi pdb file into individual files
 usage: divide\_pdb.py {[}-h{]} {[}-i INPUT{]} {[}-o OUTPUT{]} {[}-p PATH{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
-\item [-i=all.pdb, -{-}input=all.pdb]  
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
+\item [-i=''all.pdb'', -{-}input=''all.pdb'']  
 The name of your multi pdb file. Default = all.pdb
-\item [-o=snapshot\_, -{-}output=snapshot\_]  
+\item [-o=''snapshot\_'', -{-}output=''snapshot\_'']  
 The basename of your individual pdb files. Default = snapshot\_
-\item [-p=./, -{-}path=./]  
+\item [-p=''./'', -{-}path=''./'']  
 Where the input should be found and the output printed. Default = ./
 \end{optionlist}
 
@@ -4079,8 +4085,8 @@ usage: generate\_input.py {[}-h{]}
                          {[}--ranseed RANSEED{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
-\item [-s=equilibration, -{-}simulation=equilibration]  
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
+\item [-s=''equilibration'', -{-}simulation=''equilibration'']  
 the kind of simulation to setup
 
 Possible choices: sampling, equilibration, dualtopology, singletopology, gcmc, jaws1, jaws2
@@ -4096,11 +4102,11 @@ the name of ProtoMS template files
 the name of the solvent for protein
 \item [-lw, -{-}ligwater]  
 the name of the solvent for ligand
-\item [-o=run, -{-}out=run]  
+\item [-o=''run'', -{-}out=''run'']  
 the prefix of the name of the command file
-\item [-{-}outfolder=out]  
+\item [-{-}outfolder=''out'']  
 the ProtoMS output folder
-\item [-{-}gaff=gaff16]  
+\item [-{-}gaff=''gaff16'']  
 the version of GAFF to use for ligand
 \item [-{-}lambdas={[}16{]}]  
 the lambda values or the number of lambdas
@@ -4114,7 +4120,7 @@ the bias for the JAWS-2
 a pdb file with a box of water to do GCMC on
 \item [-{-}gcmcbox]  
 a pdb file with box dimensions for the GCMC box
-\item [-{-}watmodel=tip4p]  
+\item [-{-}watmodel=''tip4p'']  
 the name of the water model. Default = tip4p
 
 Possible choices: tip3p, tip4p
@@ -4163,10 +4169,10 @@ Program make a dummy corresponding to a molecule
 usage: make\_dummy.py {[}-h{]} {[}-f FILE{]} {[}-o OUT{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}file]  
 the name of a PDB file
-\item [-o=dummy.pdb, -{-}out=dummy.pdb]  
+\item [-o=''dummy.pdb'', -{-}out=''dummy.pdb'']  
 the name of the dummy PDB file
 \end{optionlist}
 
@@ -4196,12 +4202,12 @@ usage: make\_gcmcbox.py {[}-h{]} {[}-s SOLUTE{]} {[}-p PADDING{]} {[}-o OUT{]}
                        {[}-b BOX {[}BOX ...{]}{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-s, -{-}solute]  
 the name of the PDB-file containing the solute.
 \item [-p=2.0, -{-}padding=2.0]  
 the padding in A,default=2
-\item [-o=gcmc\_box.pdb, -{-}out=gcmc\_box.pdb]  
+\item [-o=''gcmc\_box.pdb'', -{-}out=''gcmc\_box.pdb'']  
 the name of the box PDB-file
 \item [-b, -{-}box]  
 Either the centre of the box (x,y,z), or the centre of box AND length (x,y,z,x,y,z). If the centre is specified and the length isn't, twice the `padding' will be the lengths of a cubic box.
@@ -4244,7 +4250,7 @@ usage: make\_single.py {[}-h{]} {[}-t0 TEM0{]} {[}-t1 TEM1{]} {[}-p0 PDB0{]} {[}
                       {[}-m MAP{]} {[}-o OUT{]} {[}--gaff GAFF{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-t0, -{-}tem0]  
 Template file for V0
 \item [-t1, -{-}tem1]  
@@ -4255,9 +4261,9 @@ PDB-file for V0
 PDB-file for V1
 \item [-m, -{-}map]  
 the correspondance map from V0 to V1
-\item [-o=single, -{-}out=single]  
+\item [-o=''single'', -{-}out=''single'']  
 prefix of the output file
-\item [-{-}gaff=gaff16]  
+\item [-{-}gaff=''gaff16'']  
 the version of GAFF to use for ligand
 \end{optionlist}
 
@@ -4295,7 +4301,7 @@ Program merge a series of ProtoMS template files
 usage: make\_templates.py {[}-h{]} {[}-f FILES {[}FILES ...{]}{]} {[}-o OUT{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-f, -{-}files]  
 the name of the template files
 \item [-o, -{-}out]  
@@ -4327,16 +4333,16 @@ usage: plot\_theta.py {[}-h{]} {[}-r RESULTS{]} {[}-s RESTART{]} {[}-m MOLECULE{
                      {[}-p PLOTNAME{]} {[}--skip SKIP{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
-\item [-r=results, -{-}results=results]  
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
+\item [-r=''results'', -{-}results=''results'']  
 the name of the results file. Deafult='results'
-\item [-s=restart, -{-}restart=restart]  
+\item [-s=''restart'', -{-}restart=''restart'']  
 the replica values to plot. Default='restart'
-\item [-m=WAT, -{-}molecule=WAT]  
+\item [-m=''WAT'', -{-}molecule=''WAT'']  
 the residue name of the JAWS molecule. Default='WAT'
-\item [-p=theta\_dist, -{-}plotname=theta\_dist]  
+\item [-p=''theta\_dist'', -{-}plotname=''theta\_dist'']  
 the start of the filename for the plots generated. Default='theta\_dist'
-\item [-{-}skip=0]  
+\item [-{-}skip=''0'']  
 the number of results snapshots to skip, Default = 0
 \end{optionlist}
 
@@ -4366,12 +4372,12 @@ usage: pms2pymbar.py {[}-h{]} {[}-d DIRECTORY{]} {[}-r RESULTS{]} {[}-o OUT{]} {
                      {[}-m MAX{]} {[}-t TEMPERATURE{]} {[}--run{]} {[}--nobar{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
-\item [-d=./, -{-}directory=./]  
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
+\item [-d=''./'', -{-}directory=''./'']  
 the root directory that contains all the output files of the simulation. Default is cwd.
-\item [-r=results, -{-}results=results]  
+\item [-r=''results'', -{-}results=''results'']  
 the name of the file to analyse. Default is results. 
-\item [-o=pymbar\_energy, -{-}out=pymbar\_energy]  
+\item [-o=''pymbar\_energy'', -{-}out=''pymbar\_energy'']  
 the name of the file to write. Default is pymbar\_energy. 
 \item [-s=0, -{-}skip=0]  
 the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0
@@ -4422,28 +4428,28 @@ usage: scoop.py {[}-h{]} {[}-p PROTEIN{]} {[}-l LIGAND{]} {[}-o OUT{]} {[}--cent
                 {[}--added ADDED {[}ADDED ...{]}{]} {[}--scooplimit SCOOPLIMIT{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-p, -{-}protein]  
 the protein PDB-file
 \item [-l, -{-}ligand]  
 the ligand PDB-file
-\item [-o=scoop.pdb, -{-}out=scoop.pdb]  
+\item [-o=''scoop.pdb'', -{-}out=''scoop.pdb'']  
 the output PDB-file
-\item [-{-}center=0.0 0.0 0.0]  
+\item [-{-}center=''0.0 0.0 0.0'']  
 the center of the scoop, if ligand is not available, either a string or a file with the coordinates
 \item [-{-}innercut=16.0]  
 maximum distance from ligand defining inner region of the scoop
 \item [-{-}outercut=20.0]  
 maximum distance from ligand defining outer region of the scoop
-\item [-{-}flexin=flexible]  
+\item [-{-}flexin=''flexible'']  
 the flexibility of the inner region
 
 Possible choices: sidechain, flexible, rigid
-\item [-{-}flexout=sidechain]  
+\item [-{-}flexout=''sidechain'']  
 the flexibility of the inner region
 
 Possible choices: sidechain, flexible, rigid
-\item [-{-}terminal=neutralize]  
+\item [-{-}terminal=''neutralize'']  
 controls of to deal with charged terminal
 
 Possible choices: keep, doublekeep, neutralize
@@ -4496,16 +4502,16 @@ usage: solvate.py {[}-h{]} {[}-b BOX{]} {[}-s SOLUTE{]} {[}-pr PROTEIN{]} {[}-o 
                   {[}--setupseed SETUPSEED{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-b=, -{-}box=]  
 a PDB-file containing a pre-equilibrated box of water molcules
 \item [-s, -{-}solute]  
 a PDB-file containing the solute molecule
 \item [-pr, -{-}protein]  
 a PDB-file containing the protein molecule
-\item [-o=solvent\_box.pdb, -{-}out=solvent\_box.pdb]  
+\item [-o=''solvent\_box.pdb'', -{-}out=''solvent\_box.pdb'']  
 the name of the output PDB-file containing the added water, default solvent\_box.pdb
-\item [-g=box, -{-}geometry=box]  
+\item [-g=''box'', -{-}geometry=''box'']  
 the geometry of the added water, should be either `box', `droplet' or `flood'
 
 Possible choices: box, droplet, flood
@@ -4513,9 +4519,9 @@ Possible choices: box, droplet, flood
 the minimum distance between the solute and the box edge, default=10 A
 \item [-r=30.0, -{-}radius=30.0]  
 the radius of the droplet, default=30A
-\item [-c=cent, -{-}center=cent]  
+\item [-c=''cent'', -{-}center=''cent'']  
 definition of center, default='cent'
-\item [-n=ProtoMS, -{-}names=ProtoMS]  
+\item [-n=''ProtoMS'', -{-}names=''ProtoMS'']  
 the naming convention, should be either Amber or ProtoMS
 
 Possible choices: Amber, ProtoMS
@@ -4585,7 +4591,7 @@ Program to split JAWS-1 waters to a number of PDB-files for JAWS-2
 usage: split\_jawswater.py {[}-h{]} {[}-w WATERS{]} {[}-o OUT{]} {[}--jaws2box{]}
 \end{alltt}
 \begin{description}
-\item[{Options:}] \leavevmode\begin{optionlist}{3cm}
+\item[{optional arguments}] \leavevmode\begin{optionlist}{3cm}
 \item [-w, -{-}waters]  
 the name of the PDB-file containing the waters.
 \item [-o=, -{-}out=]  
