@@ -474,7 +474,7 @@ A volume move is a Monte Carlo move that changes the volume of the system. This 
 
 A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolute move comprises the following steps
 
-1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1
+1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1.  If no GCsolutes with :math:`\theta=1` are available then the GCsolute move is counted as rejected.
 
 2. The GCsolute molecule is randomly translated and rotated around its center of geometry. If it attempts to leave the confines of its predefined cubic region then it experiences a huge energetic penalty, ensuring that the Metropolis move is rejected.
 
@@ -482,7 +482,7 @@ A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolu
 
 4. If the move was accepted then the new GCsolute configuration is saved, otherwise the original configuration is restored. 
 
-You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see :ref:`temref`).
+You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see :ref:`temref`). If performing a jaws simulation then a GCsolute is chosen at random in 1. without examining its :math:`\theta` value.
 
 
 .. index::
@@ -512,7 +512,7 @@ An insertion move is a Monte Carlo move on a single GCsolute molecule, whereby t
 
 A deletion move is a Monte Carlo move on a single GCsolute molecule, whereby the :math:`\theta` value of a GCsolute is turned from 1 to 0. Each deletion move comprises the following steps
 
-1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules. The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1
+1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules. The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1. If no GCsolutes with :math:`\theta=1` are available then the deletion move is counted as rejected.
 
 2. The value of :math:`\theta` for that GCsolute molecule is set to 0, and the new energy associated with this value of :math:`\theta` is calculated
 

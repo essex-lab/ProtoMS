@@ -126,7 +126,7 @@
 <p>ProtoMS has been written using the GNU Fortran compilers (<a class="reference external" href="https://gcc.gnu.org/">https://gcc.gnu.org/</a>), on the Linux operating system. ProtoMS is thus known to work well with this compiler and Linux. ProtoMS has also been compiled and tested using the Intel Fortran Compiler. ProtoMS has been compiled with other compilers but not extensively tested. It is therefore advised to use either GNU or Intel compilers with ProtoMS.</p>
 <p>You also need an MPI package to perform simulations that require multiple processes, e.g. replica exchange. Such libraries should be available on most modern computers and clusters. The MPI compilers in the GNU package is called mpiff77. ProtoMS has been compiled with both OpenMPI (<a class="reference external" href="http://www.open-mpi.org/">http://www.open-mpi.org/</a>) and MPICH (<a class="reference external" href="https://www.mpich.org/">https://www.mpich.org/</a>). However, note that this is <em>not</em> a requirement any more. ProtoMS will compile without OpenMPI, but you won&#8217;t be able to run for instance replica exchange.</p>
 <p>Building ProtoMS is done with <em>cmake</em> (<a class="reference external" href="http://www.cmake.org/">http://www.cmake.org/</a>), thus you need this package installed on your machine. To build ProtoMS type the following in a terminal:</p>
-<div class="highlight-python"><div class="highlight"><pre>mkdir build
+<div class="highlight-python"><div class="highlight"><pre><span></span>mkdir build
 cd build
 cmake ..
 make install
@@ -135,7 +135,7 @@ make install
 <p>and <em>cmake</em> will perform the necessary checks before it continues with the installation of ProtoMS. The executable will be placed in the top level of the folder hierarchy.</p>
 <p>In order for ProtoMS to find the relevant parameter files it is necessary to set the environmental variable <code class="docutils literal"><span class="pre">$PROTOMSHOME</span></code> to the installation directory of ProtoMS. This variable is used as a shortcut in the tutorials and by the Python tools. ProtoMS is also able to substitute this variable when it is used in ProtoMS command files.</p>
 <p>Once building is complete it is highly recommended to run the test suite that comes with ProtoMS to test that the build was successful. From the build directory created above simply type:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">ctest</span> <span class="o">-</span><span class="n">V</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ctest</span> <span class="o">-</span><span class="n">V</span>
 </pre></div>
 </div>
 <p>all tests should be expected to pass and the above command will provide detailed output. The most common reason for failures is the need to set the correct environment variables. Notably <code class="docutils literal"><span class="pre">$AMBERHOME</span></code> for the setup tests and <code class="docutils literal"><span class="pre">$PROTOMSHOME</span></code>, as described above. Another reason for occasional failures is slight formatting and rounding differences between compilers, this can lead to values differing at the final decimal place in results files and such failures can be safely ignored.</p>
@@ -150,7 +150,7 @@ make install
 </ul>
 <p>Optional:</p>
 <ul class="simple">
-<li>MPI, recommended OpenMPI (<a class="reference external" href="http://www.open-mpi.org/">http://www.open-mpi.org/</a>)  or MPICH (<a class="reference external" href="https://www.mpich.org/">https://www.mpich.org/</a>) - some functions will be unavailable without MPI</li>
+<li>MPI, recommended OpenMPI (<a class="reference external" href="http://www.open-mpi.org/">http://www.open-mpi.org/</a>) or MPICH (<a class="reference external" href="https://www.mpich.org/">https://www.mpich.org/</a>) - some functions will be unavailable without MPI</li>
 </ul>
 <p>The <em>ProtoMS tools</em> have the following requirements:</p>
 <ul class="simple">
@@ -161,7 +161,7 @@ make install
 </ul>
 <p>Optional:</p>
 <ul class="simple">
-<li>AmberTools (<a class="reference external" href="http://www.ambermd.org/">http://www.ambermd.org/</a>)          : Required to paramterise small molecules</li>
+<li>AmberTools (<a class="reference external" href="http://www.ambermd.org/">http://www.ambermd.org/</a>)          : Required to parameterise small molecules</li>
 <li>pymbar (<a class="reference external" href="https://github.com/choderalab/pymbar">https://github.com/choderalab/pymbar</a>) : Required to perform MBAR calculations</li>
 </ul>
 </div>

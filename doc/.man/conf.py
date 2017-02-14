@@ -201,7 +201,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'ProtoMS.tex', u'ProtoMS Documentation',
-   u'C. J. Woods, \\and J. Michel, \\and M. Bodnarchuk, \\and S. Genheden, \\and R. Bradshaw, \\and G. Ross, \\and C. Cave-Ayland, \\and A. I. Cabedo Martinez, \\and J. Graham', 'manual'),
+   u'C. J. Woods, \\and J. Michel, \\and M. Bodnarchuk, \\and S. Genheden, \\and R. Bradshaw, \\and G. Ross, \\and C. Cave-Ayland, \\and A. I. Cabedo Martinez, \\and H. Bruce-Macdonald, \\and J. Graham', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -231,7 +231,7 @@ latex_logo="_static/logo.png"
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'protoms', u'ProtoMS Documentation',
-     [u'C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, J. Graham'], 1)
+     [u'C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H. Bruce-MacDonald, J. Graham'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -245,7 +245,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'ProtoMS', u'ProtoMS Documentation',
-   u'C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, J. Graham', 'ProtoMS', 'One line description of project.',
+   u'C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H. Bruce-Macdonald, J. Graham', 'ProtoMS', 'One line description of project.',
    'Miscellaneous'),
 ]
 

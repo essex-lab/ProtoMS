@@ -21,7 +21,7 @@
 \title{ProtoMS Documentation}
 \date{February 14, 2017}
 \release{3.3}
-\author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and J. Graham}
+\author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and H. Bruce-Macdonald, \and J. Graham}
 \newcommand{\sphinxlogo}{\includegraphics{logo.png}\par}
 \renewcommand{\releasename}{Release}
 \makeindex
@@ -282,7 +282,7 @@ CMake (\href{http://www.cmake.org/}{http://www.cmake.org/}), required to compile
 Optional:
 \begin{itemize}
 \item {} 
-MPI, recommended OpenMPI (\href{http://www.open-mpi.org/}{http://www.open-mpi.org/})  or MPICH (\href{https://www.mpich.org/}{https://www.mpich.org/}) - some functions will be unavailable without MPI
+MPI, recommended OpenMPI (\href{http://www.open-mpi.org/}{http://www.open-mpi.org/}) or MPICH (\href{https://www.mpich.org/}{https://www.mpich.org/}) - some functions will be unavailable without MPI
 
 \end{itemize}
 
@@ -305,7 +305,7 @@ Matplotlib (\href{http://www.matplotlib.org/}{http://www.matplotlib.org/})
 Optional:
 \begin{itemize}
 \item {} 
-AmberTools (\href{http://www.ambermd.org/}{http://www.ambermd.org/})          : Required to paramterise small molecules
+AmberTools (\href{http://www.ambermd.org/}{http://www.ambermd.org/})          : Required to parameterise small molecules
 
 \item {} 
 pymbar (\href{https://github.com/choderalab/pymbar}{https://github.com/choderalab/pymbar}) : Required to perform MBAR calculations
@@ -806,7 +806,7 @@ If the move is accepted then the new system configuration is saved, otherwise th
 A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolute move comprises the following steps
 \begin{enumerate}
 \item {} 
-A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of \(\theta\) is examined; if it is set to 0 then another is chosen until the examined \(\theta\) value is 1
+A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of \(\theta\) is examined; if it is set to 0 then another is chosen until the examined \(\theta\) value is 1.  If no GCsolutes with \(\theta=1\) are available then the GCsolute move is counted as rejected.
 
 \item {} 
 The GCsolute molecule is randomly translated and rotated around its center of geometry. If it attempts to leave the confines of its predefined cubic region then it experiences a huge energetic penalty, ensuring that the Metropolis move is rejected.
@@ -819,7 +819,7 @@ If the move was accepted then the new GCsolute configuration is saved, otherwise
 
 \end{enumerate}
 
-You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}).
+You can control the maximum amounts that the GCsolute is translated and rotated by by editing its template (see {\hyperref[protoms:temref]{\emph{\DUspan{}{Templates}}}}). If performing a jaws simulation then a GCsolute is chosen at random in 1. without examining its \(\theta\) value.
 
 \index{Insertion Moves}
 \textbf{Insertion Moves}
@@ -852,7 +852,7 @@ If the move was accepted then the new value of \(\theta\) for that GCsolute mole
 A deletion move is a Monte Carlo move on a single GCsolute molecule, whereby the \(\theta\) value of a GCsolute is turned from 1 to 0. Each deletion move comprises the following steps
 \begin{enumerate}
 \item {} 
-A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules. The value of \(\theta\) is examined; if it is set to 0 then another is chosen until the examined \(\theta\) value is 1
+A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules. The value of \(\theta\) is examined; if it is set to 0 then another is chosen until the examined \(\theta\) value is 1. If no GCsolutes with \(\theta=1\) are available then the deletion move is counted as rejected.
 
 \item {} 
 The value of \(\theta\) for that GCsolute molecule is set to 0, and the new energy associated with this value of \(\theta\) is calculated

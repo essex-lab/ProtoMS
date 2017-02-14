@@ -1,13 +1,13 @@
 ########################
-##   ProtoMS 3.2      ##
+##   ProtoMS 3.3      ##
 ########################
 
 --------------------------------
  Prototype Molecular Simulation
 
-Version 3.2
+Version 3.3
 
-(C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez, James Graham 2002-2015
+(C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez, Hannah Bruce-Macdonald, James Graham 2002-2017
       
   Released under the GNU GPL
         (see LICENSE)
@@ -34,7 +34,7 @@ The ProtoMS tools have the following requirements:
 * Matplotlib (http://www.matplotlib.org/)
 
 Optional:
-* AmberTools (http://www.ambermd.org/)          : Required to paramterise small molecules (and for the test suite)
+* AmberTools (http://www.ambermd.org/)          : Required to parameterise small molecules (and for the test suite)
 * pymbar (https://github.com/choderalab/pymbar) : Required to perform MBAR calculations
 * Nose (https://nose.readthedocs.org/en/latest/): Required to run the test suite
 
