@@ -32,23 +32,21 @@ export PROTOMSHOME=/full/path/to/your/protoms-directory
 Running tests
 =============
 
-The ProtoMS test scripts run under nose or unittest or CTest. 
-
-In order to run the tests on ProtoMS scripts under the nose framework, type:
-
-        nosetests tests/<test_folder>/<test_script.py>  
-
-To run the tests using unittest, type:
-
-        python -m unittest discover tests/<test_folder>/<test_script.py>
-
-Once the project is built, to execute all the tests using CTest, type in the build directory which has test configuration file:
+Once the project is built, to execute all the tests using CTest, from the build directory type:
 
         ctest
 
         OR
 
         make test
+
+In order to run the tests manually under the nose framework, type:
+
+        nosetests $PROTOMSHOME/tests/<test_script.py>  
+
+To run the tests manually using unittest, type:
+
+        python -m unittest discover $PROTOMSHOME/tests
 
 Code coverage analysis for ProtoMS codebase
 ===========================================
