@@ -124,17 +124,29 @@ c     Activate Distance Dependent Dielectric calculation
 
           include 'nbinitial.inc'
           include 'nbsolgcs.inc'
-          include 'nbenergy3.inc'
+          include 'nbenergy_lj.inc'
 
           nrg = nrg + funcnbnrg
-          cnrg = cnrg + funccnrg
           ljnrg = ljnrg + funcljnrg
-          cnrgf = cnrgf + funccnrgf
-          cnrgb = cnrgb + funccnrgb
           ljnrgf = ljnrgf + funcljnrgf
           ljnrgb = ljnrgb + funcljnrgb
           if (funcmindist.lt.mindist) mindist = funcmindist
         enddo
+
+        do j=1,nat2
+          funcat2 = j
+
+          include 'nbinitial.inc'
+          include 'nbsolgcs.inc'
+          include 'nbenergy_coul.inc'
+
+          nrg = nrg + funcnbnrg
+          cnrg = cnrg + funccnrg
+          cnrgf = cnrgf + funccnrgf
+          cnrgb = cnrgb + funccnrgb
+          if (funcmindist.lt.mindist) mindist = funcmindist
+        enddo        
+
       enddo
 
       if (cuttype.eq.RESIDUEMOLECULE .or. cuttype.eq.MOLECULEMOLECULE) then
