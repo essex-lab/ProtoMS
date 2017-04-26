@@ -70,7 +70,7 @@ if __name__ == '__main__' :
     all_grad_std = []  
     pmf = pmf_std = None
     for directory in args.directories :
-      lambdas,gradients,grad_std,pmf,pmf_std = calc_ti.ti(directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical)
+      lambdas,gradients,grad_std,pmf,pmf_std = calc_ti.ti(directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,'',args.autoeqb)
       all_gradients.append(gradients)
       all_grad_std.append(grad_std)
       if args.printGrad and len(args.directories) == 1 :
