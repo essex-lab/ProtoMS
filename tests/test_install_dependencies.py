@@ -6,9 +6,7 @@ Tests for checking whether Python and Ambertools dependencies are installed.
 
 import os
 import unittest
-import sys
 import nose
-import nose.tools as nt
 
 
 class TestDependInstallation(unittest.TestCase):
@@ -23,9 +21,11 @@ class TestDependInstallation(unittest.TestCase):
         """Checking for AmberTools installation dependencies."""
         self.assertTrue(os.getenv("AMBERHOME"), "AMBERHOME is not set.")
 
-        self.assertTrue(os.path.exists(os.environ["AMBERHOME"] + "/AmberTools/bin/antechamber"), "Antechamber AMBERTOOLS module doesn't exist.")
+        self.assertTrue(os.path.exists(os.path.join(os.environ["AMBERHOME"], "/bin/antechamber")),
+                        "Antechamber AMBERTOOLS module doesn't exist.")
 
-        self.assertTrue(os.path.exists(os.environ["AMBERHOME"] + "/AmberTools/bin/parmchk"), "Parmchk AMBERTOOLS module doesn't exist.")
+        self.assertTrue(os.path.exists(os.path.join(os.environ["AMBERHOME"], "/bin/parmchk")),
+                        "Parmchk AMBERTOOLS module doesn't exist.")
 
 # Entry point for nosetests or unittests
 if __name__ == '__main__':
