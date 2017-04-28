@@ -195,18 +195,19 @@ class CompareTools:
         }
 
         # Which comparison tool to use for each file format
+        diff_text_decimal_rel_err_zero = functools.partial(CompareTools.diff_text, decimal_rel_err=0)
         self._comparetools = {
-            "accept"      : CompareTools.diff_text_try_number,
-            "warning"     : CompareTools.diff_text_try_number,
+            "accept"      : diff_text_decimal_rel_err_zero,
+            "warning"     : diff_text_decimal_rel_err_zero,
             ".cmd"        : CompareTools.diff_text,  # Use ign_starts_with if paths vary on different systems
             "info"        : functools.partial(CompareTools.diff_text,
                                               ign_starts_with=ignore_starts["info"]),
-            ".pdb"        : CompareTools.diff_text_try_number,
-            "restart"     : CompareTools.diff_text_try_number,
-            "restart.prev": CompareTools.diff_text_try_number,
-            "results"     : functools.partial(CompareTools.diff_text_try_number,
-                                              relative_error=0.01),
-            "results_inst": CompareTools.diff_text_try_number,
+            ".pdb"        : diff_text_decimal_rel_err_zero,
+            "restart"     : diff_text_decimal_rel_err_zero,
+            "restart.prev": diff_text_decimal_rel_err_zero,
+            "results"     : functools.partial(CompareTools.diff_text,
+                                              decimal_rel_err=0.01),
+            "results_inst": diff_text_decimal_rel_err_zero,
             None          : CompareTools.diff_filecmp
         }
 
@@ -232,8 +233,6 @@ class CompareTools:
                 filetype = os.path.basename(filename)
 
         if filetype not in self._comparetools:
-            if verbose:
-                print("Unrecognised type for file {0}, using default filecmp.".format(filename))
             filetype = None
 
         return self._comparetools[filetype]
@@ -255,12 +254,13 @@ class CompareTools:
 
         comparison = self._get_comparison_function(filename)
 
+        used_default_comparison = " using strict file comparison" if comparison is CompareTools.diff_filecmp else ""
         if comparison(filename, reffile, verbose=self.verbose):
             if self.verbose:
-                print("File matched reference: {0}".format(filename))
+                print("File matched reference{0}: {1}".format(used_default_comparison, filename))
             return True
         else:
-            print("File did not match reference: {0}".format(filename))
+            print("File did not match reference{0}: {1}".format(used_default_comparison, filename))
             return False
 
     @staticmethod
@@ -281,7 +281,8 @@ class CompareTools:
         return filecmp.cmp(file1, file2)
 
     @staticmethod
-    def diff_text(file1, file2, verbose=True, ign_white=False, ign_starts_with=None):
+    def diff_text(file1, file2, verbose=True,
+                  ign_white=False, ign_starts_with=None, decimal_rel_err=None):
         """
         Check whether text file contents match line by line
 
@@ -291,14 +292,18 @@ class CompareTools:
         file2 : path to second file to compare
         ign_white : ignore whitespace difference
         ign_starts_with : ignore lines starting with any string in this iterable
+        decimal_rel_err: allowed relative error for numbers, defaults to None - treat numbers as text
 
         Returns
         -------
         boolean
             Whether files match
         """
+        if ign_white and decimal_rel_err is not None:
+            raise Exception("Text diff cannot be used with both 'ign_white' and 'number_rel_error'")
+
         with open(file1) as f1, open(file2) as f2:
-            for l1, l2 in itertools.izip(f1, f2):
+            for l1, l2 in itertools.izip_longest(f1, f2):
                 if l1 == l2:
                     continue
 
@@ -314,6 +319,9 @@ class CompareTools:
                 if ign_white:
                     l1 = l1.translate(None, string.whitespace)
                     l2 = l2.translate(None, string.whitespace)
+                elif decimal_rel_err is not None and CompareTools._compare_decimals(l1, l2, decimal_rel_err):
+                    # _compare_decimals implicitly skips whitespace anyway
+                    continue
 
                 if l1 != l2:
                     if verbose:
@@ -324,40 +332,33 @@ class CompareTools:
         return True
 
     @staticmethod
-    def diff_text_try_number(file1, file2, verbose=True, relative_error=0):
+    def _compare_decimals(l1, l2, decimal_rel_err):
         """
-        Check whether text file contents match after trying to convert tokens to float
-
+        Check whether two lines match accounting for a relative error in any numbers.
+        Also accounts for equivalent representations (e.g. 1 vs 1.0) of a number.
+        
         Parameters
         ----------
-        file1 : path to first file to compare
-        file2 : path to second file to compare
-        relative_error : acceptable relative error - default 0
+        l1 : First line
+        l2 : Second line
+        decimal_rel_err : Relative (to number in l1) acceptable error between numbers
 
         Returns
         -------
         boolean
-            Whether files match
-        """
-        with open(file1) as f1, open(file2) as f2:
-            for l1, l2 in itertools.izip(f1, f2):
-                if l1 == l2:
-                    continue
+            Whether lines match
 
-                for a, b in itertools.izip_longest(l1.split(), l2.split()):
-                    if a == b:
-                        continue
-                    try:
-                        a = Decimal(a)
-                        b = Decimal(b)
-                        if abs(a - b) > abs(a * Decimal(relative_error)):
-                            if verbose:
-                                print(l1)
-                                print(l2)
-                            return False
-                    except decimal.InvalidOperation:
-                        if verbose:
-                            print(l1)
-                            print(l2)
-                        return False
+        """
+        for a, b in itertools.izip_longest(l1.split(), l2.split()):
+            if a == b:
+                # Strings match (includes numbers that match textually)
+                continue
+            try:
+                a = Decimal(a)
+                b = Decimal(b)
+                if abs(a - b) > abs(a * Decimal(decimal_rel_err)):
+                    return False
+            except decimal.InvalidOperation:
+                # It was a string but didn't match
+                return False
         return True
