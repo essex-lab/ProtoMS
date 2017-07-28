@@ -8,7 +8,7 @@
       integer isol,iprnt,iprot,ires,iend,istrt,j,i,inflx
       integer getInt
       logical check
-      character*64 line
+      character*300 line
 
       call split(line)
 
