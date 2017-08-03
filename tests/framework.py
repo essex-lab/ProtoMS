@@ -361,4 +361,6 @@ class CompareTools:
             except decimal.InvalidOperation:
                 # It was a string but didn't match
                 return False
+            except TypeError:
+                return False
         return True
