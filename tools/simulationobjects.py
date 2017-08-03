@@ -392,6 +392,42 @@ class PDBFile:
               maxxyz = np.maximum(maxxyz,atom.coords)
         return {"center":minxyz+(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
        
+    def getSphere(self,atomlist = 'all',reslist = 'all') :
+        """
+        Calculate the sphere to encompass the atoms
+
+        Parameters
+        ----------
+        atomlist = list, optional
+          the atoms to be taken into acount to get the box
+        reslist = list, optional
+          the residues to be taken into acount to get the box
+
+        Returns
+        -------
+          the center and radius of the sphere
+        """
+        center = self.getCenter()
+	furthestdist = 0.
+        if reslist is 'all' :
+          reslist = list(set([self.residues[i].name for i in self.residues] + [self.solvents[i].name for i in self.solvents]))	 
+        if atomlist is 'all' :
+          atomlist = list(set([atom.name for i in self.residues for atom in self.residues[i].atoms] + [atom.name for i in self.solvents for atom in self.solvents[i].atoms]))
+        for res in self.residues :
+          for atom in self.residues[res].atoms :
+            if atom.name in atomlist and self.residues[res].name in reslist :
+	      distance = np.linalg.norm(center-atom.coords)
+	      if distance > furthestdist:
+	        furthestdist = float(distance)
+        for res in self.solvents :
+          for atom in self.solvents[res].atoms :
+            if atom.name in atomlist and self.solvents[res].name in reslist :
+	      distance = np.linalg.norm(center-atom.coords)
+	      print center, atom.coords 
+	      if distance > furthestdist:
+	        furthestdist = float(distance)
+        return center, furthestdist 
+
 class  PDBSet :
     """
     Hold a collection of PDBFile objects
@@ -596,6 +632,23 @@ def write_box(filename,box) :
     f.write("CONECT    7    3    6    8\n")
     f.write("CONECT    8    4    5    7\n")
     
+def write_sphere(filename,center,radius) :
+  """
+  Write a box in PDB file format
+  
+  Parameters
+  ----------
+  filename : string
+    the name of the file to write
+  box : dictionary of Numpy array
+    the box specification
+  """
+
+  with open(filename,'w') as f :
+    f.write("HEADER    CENTER OF GCMC SPHERE\n")
+    f.write("REMARK    CENTER (X Y Z)   %.3f  %.3f  %.3f\n"%(center[0],center[1],center[2]))
+    f.write("REMARK    RADIUS   %.3f\n"%(radius))
+    f.write("ATOM      1  DUA BOX     1    %8.3f%8.3f%8.3f\n"%(center[0],center[1],center[2]))
 #--------------------------------
 # Classes to hold parameter sets
 #--------------------------------
