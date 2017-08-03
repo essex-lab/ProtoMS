@@ -274,6 +274,8 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
         if len('%s%s ' % (fixBB_line, outBB_entries[i])) <= linelength:
           fixBB_line += '%s ' % outBB_entries[i]
         else:
+          if fixBB_line[-2] == ',':
+              fixBB_line = fixBB_line[:-2]
           header += fixBB_line + '\n'
           fixBB_line = "REMARK chunk fixbackbone 1 %s " % outBB_entries[i]
       header += fixBB_line + '\n'
@@ -286,6 +288,8 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
         if len('%s%s ' % (fixSC_line, outSC_entries[i])) <= linelength:
           fixSC_line += '%s ' % outSC_entries[i]
         else:
+          if fixSC_line[-2] == ',':
+              fixSC_line = fxSC_line[:-2]
           header += fixSC_line + '\n'
           fixSC_line = "REMARK chunk fixbackbone 1 %s " % outSC_entries[i]
       header += fixSC_line + '\n'
