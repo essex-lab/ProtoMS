@@ -8,7 +8,10 @@ REMARK 0 residues are fixed
 REMARK flexibility of the inner part : flexible
 REMARK flexibility of the outer part : sidechain
 REMARK ProtoMS keyword to use
-REMARK chunk fixbackbone 1 1-3, 5, 8, 12, 15-16, 19-21, 43-47, 50, 53, 61-64, 92-93, 95-100, 117, 138-139, 144-145, 147-148, 161-167, 169-170, 172-173, 180
+REMARK chunk fixbackbone 1 1-3, 5, 8, 12, 15-16, 19-21, 43-47, 
+REMARK chunk fixbackbone 1 50, 53, 61-64, 92-93, 95-100, 117, 
+REMARK chunk fixbackbone 1 138-139, 144-145, 147-148, 161-167, 
+REMARK chunk fixbackbone 1 169-170, 172-173, 180 
 REMARK Xray Water within    20.00 Angstrom
 REMARK of the ligand
 HEADER scoop
