@@ -263,16 +263,32 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
         header += "REMARK flexibility of the outer part : %s\n" % flexout
         header += "REMARK ProtoMS keyword to use\n"
 
-# check that the outBB and outSC are short enough to be printed on one line
-    linelength = 270
-    if len(outBB) <= linelength:
+    # check that the outBB and outSC are short enough to be printed on one line
+    linelength = 64
+    if len("REMARK chunk fixbackbone 1 ") + len(outBB) <= linelength:
       if not len(rigidBB) == 0 : header += "REMARK chunk fixbackbone 1 %s\n" % outBB
     else:
-      print 'REMARK chunk fixbackbone line is too long for ProtoMS, please split over two lines'
-    if len(outSC) <= linelength:
+      outBB_entries = outBB.split()
+      fixBB_line = "REMARK chunk fixbackbone 1 "
+      for i in range(len(outBB_entries)):
+        if len('%s%s ' % (fixBB_line, outBB_entries[i])) <= linelength:
+          fixBB_line += '%s ' % outBB_entries[i]
+        else:
+          header += fixBB_line + '\n'
+          fixBB_line = "REMARK chunk fixbackbone 1 %s " % outBB_entries[i]
+      header += fixBB_line + '\n'
+    if len("REMARK chunk fixresidues 1 ") + len(outSC) <= linelength:
       if not len(rigidSC) == 0 : header += "REMARK chunk fixresidues 1 %s\n" % outSC
     else:
-      print 'REMARK chunk fixresidues line is too long for ProtoMS, please split over two lines'
+      outSC_entries = outSC.split()
+      fixSC_line = "REMARK chunk fixresidues 1 "
+      for i in range(len(outSC_entries)):
+        if len('%s%s ' % (fixSC_line, outSC_entries[i])) <= linelength:
+          fixSC_line += '%s ' % outSC_entries[i]
+        else:
+          header += fixSC_line + '\n'
+          fixSC_line = "REMARK chunk fixbackbone 1 %s " % outSC_entries[i]
+      header += fixSC_line + '\n'
 
     if kill_list.sum() > scooplimit:
         header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
