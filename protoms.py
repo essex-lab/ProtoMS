@@ -349,7 +349,9 @@ def _prep_protein(protprefix,ligands,watprefix,folders,tarlist,settings) :
   if protein_scoop_file is None and protein_pms_file is None :
     # Start with an object for the original pdb-file
     protobj = simulationobjects.PDBFile(filename=protein_orig_file)
-  
+    # Rename His, Cys and Asp residues, where appropriate
+    protobj = tools.rename_residues(protobj) 
+ 
     # Trying to locate a default conversions file
     if settings.atomnames is None :
       conversionfile = simulationobjects.standard_filename("atomnamesmap.dat","data")
