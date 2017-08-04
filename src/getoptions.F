@@ -37,7 +37,7 @@ c#######################################################
 c     the current system time and date            
       integer year,month,day,hour,mins,secs
       
-      logical getLogical,getOption,sameseeds
+      logical getLogical,getOption
       double precision getDouble
       integer getInt
       character*300 tempstring
@@ -860,6 +860,21 @@ c     Get the JAWS biasing term for JAWS-II simulations
          call printLine(INFO,printstring)
       endif
 
+      if (getOption('radius')) then
+         gcradius = getDouble(words(1),gcradius)
+         sphericalgcmc = .true.
+         write(printstring,300) "GCMC radius",gcradius
+         call printLine(INFO,printstring)
+      endif
+
+
+      if (getOption('vfree')) then
+         vavail= getDouble(words(1),vavail) 
+         write(printstring,300) "Free volume in GCMC box",vavail
+         call printLine(INFO,printstring)
+      else
+         vavail=gridx*gridy*gridz
+      endif
 
 
       if (getOption('spacing')) then
@@ -1062,14 +1077,6 @@ c     generate a different seed based on this time
       ranseed = 1+hour+secs*100+mins*10000+day*1000000+month*100000000
       
       if (getOption('ranseed')) ranseed = getInt(words(1),ranseed)
-
-#ifdef WITH_MPI_
-      sameseeds = .false.
-      if (getOption('sameseeds')) sameseeds = getLogical(words(1),.false.)
-      if (.not.sameseeds) then
-            ranseed = ranseed + myid * 2
-      endif
-#endif
       
       write(printstring,"(a,i12)") "Got initial random number seed ",ranseed
       call printLine(INFO,printstring)

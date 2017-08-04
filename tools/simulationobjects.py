@@ -632,6 +632,36 @@ def write_box(filename,box) :
     f.write("CONECT    7    3    6    8\n")
     f.write("CONECT    8    4    5    7\n")
     
+def find_sphere(pdbobj) :
+  """
+  Parse box information from a pdb file
+
+  Looks for CENTER, RADIUS and box keywords
+  in the header of the pdb file
+
+  Parameters
+  ----------
+  pdbobj : PDBFile object
+    the structure to parse
+
+  Returns
+  -------
+  dictionary of Numpy arrays
+    the center and radius of the box  
+  """
+  if pdbobj.header == "" : return None
+  center = dim = box = None
+  headerlines = pdbobj.header.split("\n")
+  for line in headerlines :
+    if line.find("CENTER") > -1 :
+      center = np.array(line.strip().split()[5:],float)            
+    elif line.find("RADIUS") > -1 :
+      radius = float(line.strip().split()[2])
+  if center is not None and radius is not None :
+    return {"center":center,"radius":radius}
+  else :
+    return None
+
 def write_sphere(filename,center,radius) :
   """
   Write a box in PDB file format
@@ -645,7 +675,7 @@ def write_sphere(filename,center,radius) :
   """
 
   with open(filename,'w') as f :
-    f.write("HEADER    CENTER OF GCMC SPHERE\n")
+    f.write("HEADER    CENTROID OF GCMC SPHERE\n")
     f.write("REMARK    CENTER (X Y Z)   %.3f  %.3f  %.3f\n"%(center[0],center[1],center[2]))
     f.write("REMARK    RADIUS   %.3f\n"%(radius))
     f.write("ATOM      1  DUA BOX     1    %8.3f%8.3f%8.3f\n"%(center[0],center[1],center[2]))

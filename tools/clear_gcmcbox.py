@@ -76,11 +76,62 @@ def clear_gcmcbox(gcmcbox,waters) :
   
   return nrem,waters 
 
+def clear_gcmcsphere(gcmcsphere,waters) :
+  """
+  Removes solvent molecules from the GCMC/JAWS-1 sphere as they will not be 
+  able to move during the simulation
+  
+  Parameters
+  ----------
+  gcmcbox : string or PDBFile object
+    the gcmcbox
+  waters : string or PDBFile object
+    the water molecule to check
+
+  Returns
+  -------
+  int 
+    the number of removed water molecules
+  PDBFile
+    the cleared solvation sphere 
+  """
+  
+  logger.debug("Running clear_gcmcsphere with arguments: ")
+  logger.debug("\tgcmcbox = %s"%gcmcsphere) 
+  logger.debug("\twaters = %s"%waters) 
+  logger.debug("This will remove solvent molecules within the GCMC/JAWS sphere")
+
+  extend = 1.0					# The amount to clear in excess of the box limits, as only the oxygen atoms of the water molecules are used to decide whether the water molecule is in the box or not.  
+  if isinstance(gcmcsphere,basestring) :
+    gcmcsphere = simulationobjects.PDBFile(filename=gcmcsphere)
+  if isinstance(waters,basestring) :
+    waters = simulationobjects.PDBFile(filename=waters)
+    
+  # Try to find box information in the header  
+  sphere = simulationobjects.find_sphere(gcmcsphere)
+  if sphere is None :
+    print 'Cannot read gcmc_sphere file'
+    quit()
+  # Remove waters that are inside the GCMC/JAWS-1 box
+  nrem = 0
+  removethese = []
+  for soli in waters.solvents :
+    xyz = waters.solvents[soli].atoms[0].coords
+    if np.linalg.norm(xyz - sphere['center']) < sphere['radius']:
+      logger.debug("Removing water %d from %s"%(soli,waters))
+      nrem = nrem + 1
+      removethese.append(soli)
+  for soli in removethese : del waters.solvents[soli]
+  logger.info("Removed %d water molecules from %s that were inside the GCMC/JAWS box %s"%(nrem,waters,gcmcsphere))
+  
+  return nrem,waters 
+
 def get_arg_parser():
   import argparse
   # Setup a parser of the command-line arguments
   parser = argparse.ArgumentParser(description="Program to remove water molecules from a GCMC/JAWS-1 box")
   parser.add_argument('-b','--box',help="the name of the PDB-file containing the box.")
+  parser.add_argument('-c','--sphere',help="the name of the PDB-file containing the sphere.")
   parser.add_argument('-s','--solvation',help="the name of the PDB-file containing the solvation waters")
   parser.add_argument('-o','--out',help="the name of the output PDB-file",default="cleared_box.pdb")
   return parser
@@ -94,6 +145,9 @@ if __name__ == "__main__":
 
   if args.solvation is None : 
     print "No pdb with solvent provided. Nothing to do! Exiting."
-  
-  nrem,cleared_box = clear_gcmcbox(args.box,args.solvation)
-  cleared_box.write(args.out)
+ 
+  if args.sphere is not None :
+    nrem,cleared_sphere = clear_gcmcsphere(args.sphere,args.solvation)
+  else:
+    nrem,cleared_box = clear_gcmcbox(args.box,args.solvation)
+    cleared_box.write(args.out)

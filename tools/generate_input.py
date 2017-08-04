@@ -718,6 +718,21 @@ class RestraintRelease(ProteinLigandSimulation) :
 # Helper routine
 #
 
+def _setsphere(simulation,waters,sphere) :
+  waters = simulationobjects.PDBFile(filename=waters)
+  headerbox = simulationobjects.find_sphere(waters)
+      
+  if headerbox is None :
+    if sphere is None :
+      raise simulationobjects.SetupError("Cannot setup simulation without a box")
+    pdbobj = simulationobjects.PDBFile(filename=sphere) 
+    outbox = pdbobj.getSphere()    
+  else :
+    outbox = headerbox
+  for i,param in enumerate(["x","y","z"]) :
+    simulation.setParameter("center"+param,outbox[0][i])
+  simulation.setParameter('radius',outbox[1])
+
 def _setbox(simulation,waters,inbox) :
 
   waters = simulationobjects.PDBFile(filename=waters)
@@ -730,7 +745,6 @@ def _setbox(simulation,waters,inbox) :
     outbox = pdbobj.getBox()    
   else :
     outbox = headerbox
-
   if "origin" in outbox :
     for i,param in enumerate(["x","y","z"]) :
       simulation.setParameter("origin"+param,outbox["origin"][i])
@@ -754,6 +768,7 @@ class GCMC(ProteinLigandSimulation) :
                     templates=[],
                     gcmcwater="gcmc_water.pdb",
                     gcmcbox=None,   
+                    gcmcsphere=None,   
                     nequil=5E6,
                     nprod=80E6,
                     dumpfreq=2E5,
@@ -776,6 +791,8 @@ class GCMC(ProteinLigandSimulation) :
       filename of the water to do gcmc one
     gcmcbox : dictionary of numpy array, optional
       defines the box if not found in gcmcwater
+    gcmcsphere : dictionary of numpy array, optional
+      defines the sphere if not found in gcmcwater
     nequil : int, optional
       number of equilibration moves
     nprod : int, optional
@@ -823,7 +840,10 @@ class GCMC(ProteinLigandSimulation) :
     else :
       self.setParameter("multigcmc","%d %s " % (2*dumpfreq," ".join("%.3f"%a for a in adamval) ))
       #self.setParameter("refolder",outfolder)
-    _setbox(self,gcmcwater,gcmcbox)
+    if gcmcsphere is None:
+      _setbox(self,gcmcwater,gcmcbox)
+    else:
+      _setsphere(self,gcmcwater,gcmcsphere)
     self.setParameter("#"," End of GCMC specific parameters")
   
     self.setDump("results write results",dumpfreq)
@@ -1179,7 +1199,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
 
       bnd_cmd = GCMC(protein=protein,solutes=ligands, 
                      templates=templates,solvent=protein_water,gcmcwater=settings.gcmcwater,
-                     adamval=settings.adams,nequil=settings.nequil,gcmcbox=settings.gcmcbox,
+                     adamval=settings.adams,nequil=settings.nequil,gcmcbox=settings.gcmcbox,gcmcsphere=settings.gcmcsphere,
                      nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder,ranseed=ranseed,watmodel=settings.watmodel)    
 
   elif settings.simulation == "jaws1" :

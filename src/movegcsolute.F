@@ -22,6 +22,7 @@ c###################################################
       integer igcs,i
       double precision ranRange,ienew,ieold
       double precision ranval,ranvec(3)
+      double precision distance
 
       ienew = 0
 c     translate the GCsolute molecule randomly
@@ -37,7 +38,17 @@ c     now rotate the GCsolute
       ranval = ranRange(-GCSRDel(igcs),GCSRDel(igcs))
       call rotateGCSolute(igcs,ranvec,ranval)
 c       PRINT*, "Post moved" ,GCSCentre(igcs,1) ,GCSCentre(igcs,2) ,GCSCentre(igcs,3)
+c calculate the distance
 
+        if ( sphericalgcmc ) then
+        print*, 'movegcsolute'
+        distance = ((GCSCentre(igcs,1)-centerx)**2.+(GCSCentre(igcs,2)
+     :  -centery)**2+(GCSCentre(igcs,3)-centerz)**2)**0.5
+        if (distance.gt.gcradius) then
+        ienew = (ienew + (HUGE*HUGE))
+        endif
+        
+        else
         if (GCSCentre(igcs,1).gt.(coordx+gridx+TINY)) then
         ienew = (ienew + (HUGE*HUGE))
         endif
@@ -55,6 +66,7 @@ c       PRINT*, "Post moved" ,GCSCentre(igcs,1) ,GCSCentre(igcs,2) ,GCSCentre(ig
         endif
         if (GCSCentre(igcs,3).lt.(coordz-TINY)) then
         ienew = (ienew + (HUGE*HUGE))
+        endif
         endif
       return
       end
