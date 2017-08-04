@@ -289,7 +289,7 @@ def scoop ( protein, ligand, innercut = 16, outercut  = 20,
           fixSC_line += '%s ' % outSC_entries[i]
         else:
           if fixSC_line[-2] == ',':
-              fixSC_line = fxSC_line[:-2]
+              fixSC_line = fixSC_line[:-2]
           header += fixSC_line + '\n'
           fixSC_line = "REMARK chunk fixbackbone 1 %s " % outSC_entries[i]
       header += fixSC_line + '\n'
