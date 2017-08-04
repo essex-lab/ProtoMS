@@ -22,7 +22,7 @@ import simulationobjects
 
 logger = logging.getLogger('protoms')
 
-def make_gcmcbox(pdb,filename,padding=2.0) :
+def make_gcmcbox(pdb,filename,padding=2.0,heavy=False) :
   """
   Make a GCMC/JAWS-1 simulation box around a PDB-structure
   
@@ -34,6 +34,8 @@ def make_gcmcbox(pdb,filename,padding=2.0) :
     the name of the output file
   padding : float, optional
     the amount of extra space around the ligand to add
+  heavy : boolean, optional
+    decides to ignore hydrogens, when set to true
   """
   
   logger.debug("Running make_gcmcbox with arguments: ")
@@ -43,7 +45,7 @@ def make_gcmcbox(pdb,filename,padding=2.0) :
   logger.debug("This will make a simulation box for GCMC/JAWS-1")
   print 'Making GCMC box' 
    # Create a box around the solute and pad it with two Angstromgs
-  box = pdb.getBox()
+  box = pdb.getBox(heavy=heavy)
   box["origin"] = box["origin"] - padding
   box["len"] = box["len"] + 2.0*padding
 
@@ -55,7 +57,7 @@ def make_gcmcbox(pdb,filename,padding=2.0) :
   simulationobjects.write_box(filename,box)
 
 
-def make_gcmcsphere(pdb,filename,padding=2.0) :
+def make_gcmcsphere(pdb,filename,padding=2.0,heavy=False) :
   """
   Make a GCMC/JAWS-1 simulation sphere around a PDB-structure
   
@@ -77,7 +79,7 @@ def make_gcmcsphere(pdb,filename,padding=2.0) :
   print 'Making GCMC sphere' 
 
  # finds the center of the GCMC sphere
-  center,radius = pdb.getSphere()
+  center,radius = pdb.getSphere(heavy=heavy)
   radius = radius + padding
   spherevol = volume_sphere(radius)
   print_bequil(spherevol)
@@ -112,6 +114,7 @@ def get_arg_parser():
   parser.add_argument('-p','--padding',type=float,help="the padding of box or radius of sphere in A,default=2",default=2.0)
   parser.add_argument('-o','--out',help="the name of the box PDB-file",default="gcmc_box.pdb")
   parser.add_argument('--sphere',help="If flag given, a gcmc sphere will be defined",action='store_true')
+  parser.add_argument('--heavy',help="If given, the GCMC region is built around heavy atoms only",action='store_true')
   parser.add_argument('-b','--box',nargs='+',help="Either the centre of the box (x,y,z), or the centre of box AND length (x,y,z,x,y,z). If the centre is specified and the length isn't, twice the 'padding' will be the lengths of a cubic box.",default=None)
   return parser
   
@@ -129,12 +132,12 @@ if __name__ == "__main__":
   if args.sphere == True:
       pdbobj = simulationobjects.PDBFile()
       pdbobj.read(args.solute)
-      make_gcmcsphere(pdbobj,'gcmc_sphere.pdb',args.padding)    
+      make_gcmcsphere(pdbobj,'gcmc_sphere.pdb',args.padding,args.heavy)    
   else:
     if args.box is None :
       pdbobj = simulationobjects.PDBFile()
       pdbobj.read(args.solute)
-      make_gcmcbox(pdbobj,args.out,args.padding)
+      make_gcmcbox(pdbobj,args.out,args.padding,args.heavy)
     elif len(args.box) == 3:
       box = {"center":np.array([float(args.box[0]),float(args.box[1]),float(args.box[2])]),"len":np.array([args.padding*2]*3)}
       volume = volume_box(box["len"])

@@ -358,7 +358,7 @@ class PDBFile:
             center = center + rescent
         self.center = center/float(len(self.residues))
         return self.center
-    def getBox(self,atomlist = 'all',reslist = 'all') :
+    def getBox(self,atomlist = 'all',reslist = 'all',heavy=False) :
         """
         Calculate the smallest box to encompass the atoms
 
@@ -368,6 +368,8 @@ class PDBFile:
           the atoms to be taken into acount to get the box
         reslist = list, optional
           the residues to be taken into acount to get the box
+        heavy = boolean, optional
+          When True, only considers heavy atoms
 
         Returns
         -------
@@ -383,16 +385,22 @@ class PDBFile:
         for res in self.residues :
           for atom in self.residues[res].atoms :
             if atom.name in atomlist and self.residues[res].name in reslist :
+              atom.getElement()
+              if heavy and atom.element.lower() == "h":
+                continue  # Skip hydrogens when using only heavy atoms
               minxyz = np.minimum(minxyz,atom.coords)
               maxxyz = np.maximum(maxxyz,atom.coords)
         for res in self.solvents :
           for atom in self.solvents[res].atoms :
             if atom.name in atomlist and self.solvents[res].name in reslist :
+              atom.getElement()
+              if heavy and atom.element.lower() == "h":
+                 continue  # Skip hydrogens when using only heavy atoms
               minxyz = np.minimum(minxyz,atom.coords)
               maxxyz = np.maximum(maxxyz,atom.coords)
         return {"center":minxyz+(maxxyz-minxyz)/2.0,"len":maxxyz-minxyz,"origin":minxyz}
        
-    def getSphere(self,atomlist = 'all',reslist = 'all') :
+    def getSphere(self,atomlist = 'all',reslist = 'all',heavy=False) :
         """
         Calculate the sphere to encompass the atoms
 
@@ -402,6 +410,8 @@ class PDBFile:
           the atoms to be taken into acount to get the box
         reslist = list, optional
           the residues to be taken into acount to get the box
+        heavy = boolean, optional
+          Defines whether to only use heavy atoms to make the sphere
 
         Returns
         -------
@@ -416,13 +426,19 @@ class PDBFile:
         for res in self.residues :
           for atom in self.residues[res].atoms :
             if atom.name in atomlist and self.residues[res].name in reslist :
-	      distance = np.linalg.norm(center-atom.coords)
-	      if distance > furthestdist:
+	      atom.getElement()
+              if heavy and atom.element.lower() == "h":
+                continue  # Ignore hydrogens when heavy is true
+              distance = np.linalg.norm(center-atom.coords)
+              if distance > furthestdist:
 	        furthestdist = float(distance)
         for res in self.solvents :
           for atom in self.solvents[res].atoms :
             if atom.name in atomlist and self.solvents[res].name in reslist :
-	      distance = np.linalg.norm(center-atom.coords)
+	      atom.getElement()
+              if heavy and atom.element.lower() == "h":
+                continue  # Ignoring hydrogens
+              distance = np.linalg.norm(center-atom.coords)
 	      print center, atom.coords 
 	      if distance > furthestdist:
 	        furthestdist = float(distance)
