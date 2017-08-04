@@ -9,6 +9,8 @@ c     the charge you want on the protein
       double precision desiredCharge
 c     B factor
       double precision B     
+c     volume available
+      double precision vavail
 c     bias-jaws
       double precision bias  
 c     one over the default coulombic 1-4 scale factor
@@ -48,8 +50,9 @@ c     grid dimensions for GCMC
       double precision gridhwx
       double precision gridhwy
       double precision gridhwz
-
-
+c     sphere radius for GCMC
+      double precision gcradius
+      logical sphericalgcmc
 c     the size of the non-bonded cutoff (and squared version)
       double precision cut,cut2
 c     the size of the feathering of the non-bonded cutoff (and squared)
@@ -85,11 +88,11 @@ c     (this slows things down, but is useful to allow debugging of Sire)
 
       common /SIMPARAMVALS/ cut,cut2,centerx,centery,centerz,
      .           Lambda,LambdaF,LambdaB,BoxDimension,BoxOrigin,feather,feather2,featherfac,
-     .           OldBoxDimension,OldBoxOrigin,temperatureC,temperature,B,coordx,coordy,coordz,gridx,gridy,gridz,space,bias,
-     .           BoxDimension2,BoxTop,TempAtoms,desiredCharge,coordhwx,coordhwy,coordhwz,gridhwx,gridhwy,gridhwz,
+     .           OldBoxDimension,OldBoxOrigin,temperatureC,temperature,B,vavail,coordx,coordy,coordz,gridx,gridy,gridz,space,bias,
+     .           BoxDimension2,BoxTop,TempAtoms,desiredCharge,coordhwx,coordhwy,coordhwz,gridhwx,gridhwy,gridhwz,gcradius,
      .           cap,capradius,oldcapradius,capconstant,GCtheta,jaws1,jaws2,
      .           OneOverScl14C,OneOverScl14LJ,thres,
-     .             SIRE_COMPATIBILITY_MODE  
+     .             SIRE_COMPATIBILITY_MODE,sphericalgcmc  
       common /SIMPARAMVALS2/ DeltaCoreCoul,DeltaCoreCoulL,SoftPower,SoftPowerInv,SoftPower2,SoftPowerInv6,
      .                          DeltaCore,CoulSoftPower,LJSoftPower,GBSoftPower,SoftType
       

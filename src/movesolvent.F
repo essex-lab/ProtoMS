@@ -23,6 +23,7 @@ c###################################################
       integer isvn,i,j,nats
       double precision ranRange,ienew
       double precision ranval,ranvec(3),idx(3)
+      double precision distance
 
 c     initialise the value of ienew to 0
       ienew = 0
@@ -64,7 +65,17 @@ c       over to the other side
         enddo
       endif
 
-     
+
+      if (sphericalgcmc) then
+      distance = ((SvnCentre(isvn,1)-centerx)**2.+(SvnCentre(isvn,2)
+     :  -centery)**2+(SvnCentre(isvn,3)-centerz)**2)**0.5
+
+      if (distance.lt.gcradius) then
+      print*, 'movesolvent'
+      goto 99
+      endif
+      endif
+
       if (SvnCentre(isvn,1).gt.(coordx+gridx)) then
       goto 99
       else

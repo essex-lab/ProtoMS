@@ -609,11 +609,20 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       boxpdb = settings.gcmcbox
     if "center" in box :
       box['origin'] = np.array([coord-box["len"][ind]/2 for ind,coord in enumerate(box["center"])])
-
-    # Fill the box with waters
     ghostobj, ghost_name = fill_box (settings,boxpdb,box,ghost_name)
-        
 
+   # If we are using a gcmcsphere
+  if settings.gcmcsphere is not None  :
+    gcmcsphereobj = simulationobjects.PDBFile(filename=settings.gcmcsphere) 
+    # Try to find the box in the header of the file
+    sphere = simulationobjects.find_sphere(gcmcsphereobj)
+    if sphere is None :
+      print 'no GCMC sphere found. Cannot set up ProtoMS'
+      quit()
+    else :
+      spherepdb = settings.gcmcsphere
+
+        
   # If the dimensions of the gcmc box have been provided
   elif settings.gcmcbox is not None and len(settings.gcmcbox) is 6 and [_is_float(value) for value in settings.gcmcbox] :
     # Generate the box pdb
@@ -631,7 +640,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     ghostobj, ghost_name = fill_box (settings,boxpdb,box,ghost_name)
   
   # If no box information has been provided but we have a gcmcwater file
-  elif settings.gcmcbox is None and settings.gcmcwater is not None and not settings.gcmcwater.isdigit() :
+  elif settings.gcmcbox is None and settings.gcmcsphere is None and settings.gcmcwater is not None and not settings.gcmcwater.isdigit() :
     waterobj = simulationobjects.PDBFile(filename = settings.gcmcwater)
     box = simulationobjects.find_box(waterobj)
     if box is None :
@@ -656,21 +665,22 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     logger.error(msg)
     simulationobjects.SetupError(msg) 
     
-  # Write the waters to disc
-  if write :
-    ghostobj.write(ghost_name) 
+  if settings.gcmcsphere is None:
+    # Write the waters to disc
+    if write :
+      ghostobj.write(ghost_name) 
+      logger.info("")
+      logger.info("Created %s; it contains the GCMC or JAWS-1 simulation waters. Please check the output carefully"%ghost_name)
+    
+    # Clear the GCMC/JAWS-1 box from solvation waters
     logger.info("")
-    logger.info("Created %s; it contains the GCMC or JAWS-1 simulation waters. Please check the output carefully"%ghost_name)
-  
-  # Clear the GCMC/JAWS-1 box from solvation waters
-  logger.info("")
-  nrem,waters2 = tools.clear_gcmcbox(ghostobj,waters)
-  if nrem > 0 :
-    waters2_name = _get_prefix(str(waters2))+"_clr.pdb"
-    logger.info("Created water cap-file: %s"%waters2_name)
-    tarlist.append(waters)
-    waters2.write(waters2_name)
-    waters = waters2_name
+    nrem,waters2 = tools.clear_gcmcbox(ghostobj,waters)
+    if nrem > 0 :
+      waters2_name = _get_prefix(str(waters2))+"_clr.pdb"
+      logger.info("Created water cap-file: %s"%waters2_name)
+      tarlist.append(waters)
+      waters2.write(waters2_name)
+      waters = waters2_name
   
   return ghost_name,waters
 
@@ -868,6 +878,7 @@ if __name__ == "__main__":
   simgroup.add_argument('--adamsrange',nargs="+",type=float,help="the upper and lower Adam/B values for the GCMC and, optionally, the number of values desired (default value every 1.0), e.g. -1 -16 gives all integers between and including -1 and -16",default=None)
   simgroup.add_argument('--gcmcwater',help="a pdb file with a box of water to do GCMC on or an integer corresponding to the number of water molecules to add")
   simgroup.add_argument('--gcmcbox',nargs="+",help="a pdb file with box dimensions for the GCMC box, or a list of origin(x,y,z) and length(x,y,z) coordinates")
+  simgroup.add_argument('--gcmcsphere',help="a pdb file with sphere centroid and radius for the GCMC sphere")
   simgroup.add_argument('--jawsbias',type=float,nargs="+",help="the bias in JAWS-2",default=[6.5])
   simgroup.add_argument('--nequil',type=float,help="the number of equilibration steps",default=5E6)
   simgroup.add_argument('--nprod',type=float,help="the number of production steps",default=40E6)
