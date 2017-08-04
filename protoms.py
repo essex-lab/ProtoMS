@@ -607,6 +607,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       boxpdb = settings.gcmcbox
     if "center" in box :
       box['origin'] = np.array([coord-box["len"][ind]/2 for ind,coord in enumerate(box["center"])])
+    ghostobj, ghost_name = fill_box (settings,boxpdb,box,ghost_name)
 
    # If we are using a gcmcsphere
   if settings.gcmcsphere is not None  :
@@ -662,7 +663,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     logger.error(msg)
     simulationobjects.SetupError(msg) 
     
-  if sphere is None:
+  if settings.gcmcsphere is None:
     # Write the waters to disc
     if write :
       ghostobj.write(ghost_name) 

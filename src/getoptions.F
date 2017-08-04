@@ -37,7 +37,7 @@ c#######################################################
 c     the current system time and date            
       integer year,month,day,hour,mins,secs
       
-      logical getLogical,getOption
+      logical getLogical,getOption,sameseeds
       double precision getDouble
       integer getInt
       character*300 tempstring
@@ -1077,6 +1077,14 @@ c     generate a different seed based on this time
       ranseed = 1+hour+secs*100+mins*10000+day*1000000+month*100000000
       
       if (getOption('ranseed')) ranseed = getInt(words(1),ranseed)
+#ifdef WITH_MPI_
+
+      sameseeds = .false.
+      if (getOption('sameseeds')) sameseeds = getLogical(words(1),.false.)
+      if (.not.sameseeds) then
+            ranseed = ranseed + myid * 2
+      endif
+#endif
       
       write(printstring,"(a,i12)") "Got initial random number seed ",ranseed
       call printLine(INFO,printstring)
