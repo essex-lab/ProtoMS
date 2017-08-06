@@ -19,6 +19,7 @@ import logging
 import numpy as np
 
 import simulationobjects
+import optimise_gcmcbox
 
 logger = logging.getLogger('protoms')
 
@@ -116,6 +117,8 @@ def get_arg_parser():
   parser.add_argument('--sphere',help="If flag given, a gcmc sphere will be defined",action='store_true')
   parser.add_argument('--heavy',help="If given, the GCMC region is built around heavy atoms only",action='store_true')
   parser.add_argument('-b','--box',nargs='+',help="Either the centre of the box (x,y,z), or the centre of box AND length (x,y,z,x,y,z). If the centre is specified and the length isn't, twice the 'padding' will be the lengths of a cubic box.",default=None)
+  parser.add_argument('--optimise', help='When true, systematically rotates the frame of reference of the ligand to minimise the box volume. Not relevant when using a GCMC sphere. Makse sure to supply any other input ligands or protein(s) to the -f flag so that the same rotation can be applied.', action='store_true')
+  parser.add_argument('-f', '--otherfiles', nargs='+', help='Other input files (ligands, proteins, etc.) which must be rotated in the same way to minimise the box size', default=None)
   return parser
   
 
@@ -135,6 +138,12 @@ if __name__ == "__main__":
       make_gcmcsphere(pdbobj,'gcmc_sphere.pdb',args.padding,args.heavy)    
   else:
     if args.box is None :
+      if args.optimise:
+          if args.otherfiles != None:
+              optimise_gcmcbox.optimise_system(ligand_file=args.solute, other_files=args.otherfiles, heavy=args.heavy)
+          else:
+              print '\nNo protein or other input data has been supplied! Check that this is not a mistake...\n'
+              optimise_gcmcbox.optimise_system(ligand_file=args.solute, other_files=args.otherfiles, heavy=args.heavy)
       pdbobj = simulationobjects.PDBFile()
       pdbobj.read(args.solute)
       make_gcmcbox(pdbobj,args.out,args.padding,args.heavy)
