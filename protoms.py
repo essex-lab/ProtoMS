@@ -1018,6 +1018,10 @@ if __name__ == "__main__":
   protein_file = None
   water_file = None
   if args.protein is not None or args.scoop is not None:
+    if args.protein is not None:
+      # Remove any TER lines separating protein chains so that multiple chains can be read
+      # If this is not done, the residues are counted incorrectly and the scoop crashes...
+      tools.remove_ter(args.protein, args.protein)
     protein_file,water_file = _prep_protein(args.protein,ligobjs,args.water,args.folders,tarlist,args)
 
   # Extra preparation for GCMC or JAWS-1     
