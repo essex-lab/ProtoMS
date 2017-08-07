@@ -19,7 +19,7 @@ import logging
 import numpy as np
 
 import simulationobjects
-#import optimise_gcmcbox
+import optimise_gcmcbox
 
 logger = logging.getLogger('protoms')
 
