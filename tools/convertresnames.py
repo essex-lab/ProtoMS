@@ -25,9 +25,6 @@ def rename_residues(pdb_in):
     # Count cysteine conversions
     n_cys_in = 0
     n_cyx_out = 0
-    # Count Aspartate conversions
-    n_asp_in = 0
-    n_ash_out = 0
     # Loop over residues and check for atoms which are indicative of a different form...
     for resnum in pdb_in.residues:
         residue = pdb_in.residues[resnum]
@@ -67,24 +64,9 @@ def rename_residues(pdb_in):
             else:
                 # Not bridging => leave name as CYS
                 continue
-        elif residue.name.upper() == "ASP":
-            n_asp_in += 1
-            protonated = False  # Assume deprotonated unless a carboxylic acid H is found
-            for atomnum in range(len(residue.atoms)):
-                atomname = residue.atoms[atomnum].name.upper()
-                if atomname == "HD2":
-                    protonated = True
-            if protonated:
-                # Protonated => rename as ASH
-                n_ash_out += 1
-                pdb_out.residues[resnum].name = "ASH"
-            else:
-                # Deprotonated => leave name as ASP
-                continue
     logger.info("%i/%i HIS residues were renamed to HIP"%(n_hip_out, n_his_in))
     logger.info("%i/%i HIS residues were renamed to HIE"%(n_hie_out, n_his_in))
     logger.info("%i/%i CYS residues were renamed to CYX"%(n_cyx_out, n_cys_in))
-    logger.info("%i/%i ASP residues were renamed to ASH"%(n_ash_out, n_asp_in))
     return pdb_out
 
 
