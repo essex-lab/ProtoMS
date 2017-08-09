@@ -76,6 +76,7 @@ def get_args():
     parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip', default=0)
     parser.add_argument('-rmsd', '--rmsdcut', type=float, help='RMSD cutoff to use during clustering', default=1.0)
     parser.add_argument('-o', '--output', help='Stem for the output networks', default='principalNetwork_')
+    parser.add_argument('--plot', help='Plot the probability distributions of each of the principal networks.', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -149,10 +150,14 @@ if __name__ == "__main__":
 
     # STEP 3: Use clusters to generate 'principal networks'
 
+    occupancies = []
+
     for i in range(num_clusters):
         print 'Principal Network {}:'.format(i+1)
         print '    Number of waters:\t{}'.format(len(pdbfiles.pdbs[all_clusters[i][0]].residues))
-        print '    Frame occupancy: \t{:.2f} %\n'.format(len(all_clusters[i])*100.0/num_frames)
+        cluster_occupancy = len(all_clusters[i]) * 100.0 / num_frames
+        occupancies.append(cluster_occupancy)
+        print '    Frame occupancy: \t{:.2f} %\n'.format(cluster_occupancy)
 
     print 'Writing networks to PDB files...\n'
     # Write networks to PDB files - choose a representative frame as that which has the smallest RMSD with all others
@@ -178,6 +183,22 @@ if __name__ == "__main__":
             filename += '0'
         filename += str(i+1) + '.pdb'
         pdbfiles.pdbs[cluster[best_j]].write(filename)
+
+    if args.plot:
+        # Plot the occupancies of the principal networks, in order
+        import matplotlib.pyplot as plt
+        ids = [i for i in range(num_clusters)]
+        fig, ax = plt.subplots()
+        bar_width = 1.0
+        opacity = 1.0
+        bar_pos = [ids[i]+0.5*bar_width for i in range(len(ids))] 
+        bars = plt.bar(bar_pos, occupancies, bar_width, alpha=opacity, color='red')
+        plt.xlabel('Principal network ID')
+        plt.ylabel('Occupancy / %')
+        plt.xlim(0.5, num_clusters+0.5)
+        plt.ylim(0, 100)
+        plt.show()
+        
 
     # STEP 4: Condense the principal network data into a smaller number of more meaningful networks
     # Not sure how to do this yet...
