@@ -622,7 +622,24 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     else :
       spherepdb = settings.gcmcsphere
 
-        
+  # If the gcmcbox has been set as a file
+  elif settings.gcmcbox is not None  and isinstance(settings.gcmcbox,str) :
+    gcmcboxobj = simulationobjects.PDBFile(filename=settings.gcmcbox) 
+    # Try to find the box in the header of the file
+    box = simulationobjects.find_box(gcmcboxobj)
+    if box is None :
+      boxpdb = pdb2box(gcmcboxobj,padding=0.0)
+      gcmcboxobj = simulationobjects.PDBFile(filename=boxpdb)
+      box = simulationobjects.find_box(gcmcboxobj)
+    else :
+      boxpdb = settings.gcmcbox
+    if "center" in box :
+      box['origin'] = np.array([coord-box["len"][ind]/2 for ind,coord in enumerate(box["center"])])
+
+    # Fill the box with waters
+    ghostobj, ghost_name = fill_box (settings,boxpdb,box,ghost_name)
+
+
   # If the dimensions of the gcmc box have been provided
   elif settings.gcmcbox is not None and len(settings.gcmcbox) is 6 and [_is_float(value) for value in settings.gcmcbox] :
     # Generate the box pdb
@@ -640,7 +657,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
     ghostobj, ghost_name = fill_box (settings,boxpdb,box,ghost_name)
   
   # If no box information has been provided but we have a gcmcwater file
-  elif settings.gcmcbox is None and settings.gcmcsphere is None and settings.gcmcwater is not None and not settings.gcmcwater.isdigit() :
+  elif (settings.gcmcbox is None or settings.gcmcsphere is None) and settings.gcmcwater is not None and not settings.gcmcwater.isdigit() :
     waterobj = simulationobjects.PDBFile(filename = settings.gcmcwater)
     box = simulationobjects.find_box(waterobj)
     if box is None :
