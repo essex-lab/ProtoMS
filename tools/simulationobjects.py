@@ -46,6 +46,23 @@ def is_solvent(name) :
   """
   return name in ['WAT','wat','HOH','hoh','DOD','dod','T3P','t3p','T4P','t4p','SOL','sol','see','SEE']
     
+def is_ion(name) :
+  """
+  Check whether a given residue name
+  is a solvent ion residue name
+  
+  Parameters
+  ----------
+  name : string
+    the residue name
+ 
+  Return
+  ------
+  Boolean
+    whether the residue name
+    is a solvent solvent residue name
+  """
+  return name in [' Ca','Ca ','Ca','I-','Br','Cl','F-','Xe','Kr','Ar']
 
 class SetupError(Exception) :
     """ A general exception class to be raised by setup code
@@ -175,6 +192,7 @@ class PDBFile:
     def __init__ ( self, filename = None ):
         self.residues = {}
         self.solvents = {}
+        self.ions = {}
         self.name = ""
         self.center = np.array([0.0,0.0,0.0])
         self.header = ""
@@ -231,6 +249,7 @@ class PDBFile:
         """
         residues = {}
         solvents = {}
+	ions = {}
         line = f.readline()
         nres = 0
         prevres = -1
@@ -261,6 +280,14 @@ class PDBFile:
                       residues[nres] = Residue(name=restype,index=nres)
                   #print "resnum is %d adding atom %d" % (resnum,index)
                   residues[nres].addAtom(atom=newatom)
+		  if is_ion(restype):
+                    try:
+                        ions[nres]
+                    except KeyError:
+                        ions[nres] = Residue(name=restype,index=nres)
+                    if len (ions[nres].atoms) >= 4:
+                        raise BaseException("More than one residue with number %d " % nres)
+                    ions[nres].addAtom(atom=newatom)
               else:
                   #print restype
                   try:
@@ -280,7 +307,7 @@ class PDBFile:
             return
           # Read next line
           line = f.readline()
-        self.residues,self.solvents = residues,solvents
+        self.residues,self.solvents,self.ions = residues,solvents,ions
     
     def _write_text ( self, f, renumber = False, header = None, solvents = True ):
         """

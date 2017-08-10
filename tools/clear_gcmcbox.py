@@ -61,10 +61,11 @@ def clear_gcmcbox(gcmcbox,waters) :
     box["origin"] = box["center"] - box["len"]/2.0
   box_max = box["origin"] + box["len"]
   box_min = box["origin"]
-
   # Remove waters that are inside the GCMC/JAWS-1 box
   nrem = 0
+  nrem_ion = 0
   removethese = []
+
   for soli in waters.solvents :
     xyz = waters.solvents[soli].atoms[0].coords
     if np.all(xyz < (box_max + extend)) and np.all(xyz > (box_min - extend)) :
@@ -74,6 +75,14 @@ def clear_gcmcbox(gcmcbox,waters) :
   for soli in removethese : del waters.solvents[soli]
   logger.info("Removed %d water molecules from %s that were inside the GCMC/JAWS box %s"%(nrem,waters,gcmcbox))
   
+  
+  for ion in waters.ions :
+    xyz = waters.ions[ion].atoms[0].coords
+    if np.all(xyz < (box_max)) and np.all(xyz > (box_min)) :
+      logger.debug("Ion %s inside the GCMC box and will not sample. To sample ion, remove from solvent and treat as a solute"%(ion))
+      nrem_ion = nrem_ion + 1
+  logger.info("%d ion(s) with the GCMC box that have not been removed and will not sample in the simulation. To sample please treat each ion as a solute, or consider a GCMC volume that does not encompass the ion."%(nrem_ion))
+
   return nrem,waters 
 
 def clear_gcmcsphere(gcmcsphere,waters) :
