@@ -24,11 +24,11 @@ def calc_distance(coords1, coords2):
     return np.sqrt(dist_sq)
 
 
-def calc_rmsd(watlist1, watlist2, atom):
+def find_pairs(watlist1, watlist2):
     """
-    Calculate the RMSD of two sets of water molecules
+    Match each water in a set to a water in another set
     """
-    # Store coordinates of waters via representative atoms
+    # Store water coordinates via representative atoms
     coordlist1 = []
     for i, wat in watlist1.iteritems():
         for atom in wat.atoms:
@@ -57,6 +57,16 @@ def calc_rmsd(watlist1, watlist2, atom):
                 closest_j = j
         if closest_dist < 100:
             pair_list.append([i, closest_j])
+    return pair_list, coordlist1, coordlist2
+
+
+def calc_rmsd(watlist1, watlist2):
+    """
+    Calculate the RMSD of two sets of water molecules
+    """
+    # Match each the waters in each set to form pairs
+    pair_list, coordlist1, coordlist2 = find_pairs(watlist1, watlist2)
+    # Calculate RMSD
     sq_dist_list = []
     for pair in pair_list:
         i = pair[0]
@@ -67,6 +77,22 @@ def calc_rmsd(watlist1, watlist2, atom):
     return rmsd
 
 
+def calc_max_dist(watlist1, watlist2):
+    """
+    Find maximum distance between two waters for each of the pairs
+    """
+    # Match the waters in each set
+    pair_list, coordlist1, coordlist2 = find_pairs(watlist1, watlist2)
+    # Find maximum distance
+    dist_list = []
+    for pair in pair_list:
+        i = pair[0]
+        j = pair[1]
+        dist_list.append(np.square(calc_distance(coordlist1[i], coordlist2[j])))
+    max_dist = max(dist_list)
+    return max_dist
+
+
 def get_args():
     import argparse
     parser = argparse.ArgumentParser('Network-based clustering of hydration sites')
@@ -74,7 +100,9 @@ def get_args():
     parser.add_argument('-m', '--molecule', help='Residue name of water molecules', default='WA1')
     parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates', default='O00')
     parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip', default=0)
-    parser.add_argument('-rmsd', '--rmsdcut', type=float, help='RMSD cutoff to use during clustering', default=1.0)
+    parser.add_argument('-d', '--distance', help='Distance measure used: rmsd or max', default='rmsd')
+    parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering', default='average')
+    parser.add_argument('-c', '--cutoff', type=float, help='Distance cutoff to use during clustering', default=1.0)
     parser.add_argument('-o', '--output', help='Stem for the output networks', default='principalNetwork_')
     parser.add_argument('--plot', help='Plot the probability distributions of each of the principal networks.', action='store_true')
     args = parser.parse_args()
@@ -114,14 +142,19 @@ if __name__ == "__main__":
     
     for i in range(max_wats+1):
         if len(bins[i]) == 0: continue
-        rmsd_list = []
+        if len(bins[i]) == 1:
+            all_clusters.append(bins[i])  # Cannot perform clustering if there is only one frame
+        dist_list = []
         for j in range(len(bins[i])):
             for k in range(j+1, len(bins[i])):
-                rmsd_list.append(calc_rmsd(pdbfiles.pdbs[bins[i][j]].residues, pdbfiles.pdbs[bins[i][k]].residues, args.atom))
-        # Perform average-linkage hierarchical clustering
-        tree = hierarchy.linkage(rmsd_list, method='average')
+                if args.distance == 'rmsd':
+                    dist_list.append(calc_rmsd(pdbfiles.pdbs[bins[i][j]].residues, pdbfiles.pdbs[bins[i][k]].residues))
+                elif args.distance == 'max':
+                    dist_list.append(calc_max_dist(pdbfiles.pdbs[bins[i][j]].residues, pdbfiles.pdbs[bins[i][k]].residues))
+        # Perform hierarchical clustering
+        tree = hierarchy.linkage(dist_list, method=args.linkage)
         # Use a distance cutoff to cut the tree
-        clust_ids = hierarchy.fcluster(tree, t=args.rmsdcut, criterion='distance')
+        clust_ids = hierarchy.fcluster(tree, t=args.cutoff, criterion='distance')
         num_new_clusts = max(clust_ids)
         new_clusts = [[] for j in range(num_new_clusts)]
         for j in range(len(bins[i])):
@@ -163,14 +196,17 @@ if __name__ == "__main__":
     # Write networks to PDB files - choose a representative frame as that which has the smallest RMSD with all others
     for i in range(num_clusters):
         cluster = all_clusters[i]
-        min_rmsd = 1E6
+        min_dist = 1E6
         for j in range(len(cluster)):
-            rmsd_list = []
+            dist_list = []
             for k in range(len(cluster)):
-                rmsd_list.append(calc_rmsd(pdbfiles.pdbs[cluster[j]].residues, pdbfiles.pdbs[cluster[k]].residues, args.atom))
-            mean_rmsd = sum(rmsd_list) / len(rmsd_list)
-            if mean_rmsd < min_rmsd:
-                min_rmsd = mean_rmsd
+                if args.distance == 'rmsd':
+                    dist_list.append(calc_rmsd(pdbfiles.pdbs[cluster[j]].residues, pdbfiles.pdbs[cluster[k]].residues))
+                elif args.distance == 'max':
+                    dist_list.append(calc_max_dist(pdbfiles.pdbs[cluster[j]].residues, pdbfiles.pdbs[cluster[k]].residues))
+            mean_dist = sum(dist_list) / len(dist_list)
+            if mean_dist < min_dist:
+                min_dist = mean_dist
                 best_j = j
         num_wats = len(pdbfiles.pdbs[cluster[best_j]].residues)
         filename = args.output
