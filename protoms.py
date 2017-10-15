@@ -698,7 +698,7 @@ def _prep_gcmc(ligands,ligand_files,waters,tarlist,settings) :
       tarlist.append(waters)
       waters2.write(waters2_name)
       waters = waters2_name
-  
+
   return ghost_name,waters
 
 def _prep_jaws2(water_file,tarlist,settings) :
