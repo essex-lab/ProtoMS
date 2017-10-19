@@ -31,7 +31,7 @@ class Estimator(object):
     def __init__(self, lambdas):
         self.data = []
         self.lambdas = lambdas
-
+        
 
 class TI(Estimator):
     """Estimate free energy differences using Thermodynamic Integration."""
@@ -48,6 +48,10 @@ class TI(Estimator):
                       for i in xrange(1, len(self.lambdas) + 1)]
         return PMF(self.lambdas, pmf_values)
 
+    def apply_slice(self, slc):
+        for i, series in enumerate(self.data):
+            self.data[i] = series[slc]
+
 
 class BAR(Estimator):
     """Estimate free energy differences using Bennett's Acceptance Ratio."""
@@ -56,8 +60,8 @@ class BAR(Estimator):
         lam_ind = self.lambdas.index(lam)
         lamf = self.lambdas[lam_ind+1] if lam != 1.0 else 1.0
         lamb = self.lambdas[lam_ind-1] if lam != 0.0 else 0.0
-        self.data.append((series.feenergies[lam] - series.feenergies[lamb],
-                          series.feenergies[lam] - series.feenergies[lamf]))
+        self.data.append([series.feenergies[lam] - series.feenergies[lamb],
+                          series.feenergies[lam] - series.feenergies[lamf]])
 
     def calculate(self, temp=300):
         beta = 1./(sim.boltz*temp)
@@ -67,6 +71,11 @@ class BAR(Estimator):
                               pymbar.BAR(-low_lam[1]*beta,
                                          -high_lam[0]*beta)[0]/beta)
         return PMF(self.lambdas, pmf_values)
+
+    def apply_slice(self, slc):
+        for i, dat in enumerate(self.data):
+            for j, series in enumerate(dat):
+                self.data[i][j] = series[slc]
 
 
 class MBAR(Estimator):
@@ -85,6 +94,9 @@ class MBAR(Estimator):
         return PMF(self.lambdas,
                    [FEs[0, i] for i in xrange(len(self.data))])
 
+    def apply_slice(self, slc):
+        for i, dat in enumerate(self.data):
+            self.data[i] = dat[:, slc]
 
 class FreeEnergyCalculation(object):
     """Top level class for performing a free energy calculation with
@@ -121,6 +133,21 @@ class FreeEnergyCalculation(object):
                 for estimator, repeats in self.estimators.iteritems()}
 
 
-calc = FreeEnergyCalculation(['/tmp/out_comb_bnd'],
-                             estimators=[TI, BAR])
-results = calc.calculate()
+# calc = FreeEnergyCalculation(['/tmp/out_comb_bnd'],
+#                              estimators=[TI, BAR])
+# results = calc.calculate()
+
+class DataEntry(object):
+    """Custom object for data stored by estimators. Designed to provide a
+    common interface to perform operations on data series where these may
+    have different levels of nesting.
+    """
+    def __init__(self):
+        self.series = []
+
+        
+
+
+# what i want to be able to do
+# est.data = est.data[5:]
+# est.data.
