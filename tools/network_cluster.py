@@ -144,6 +144,7 @@ if __name__ == "__main__":
         if len(bins[i]) == 0: continue
         if len(bins[i]) == 1:
             all_clusters.append(bins[i])  # Cannot perform clustering if there is only one frame
+	    break
         dist_list = []
         for j in range(len(bins[i])):
             for k in range(j+1, len(bins[i])):
@@ -152,6 +153,7 @@ if __name__ == "__main__":
                 elif args.distance == 'max':
                     dist_list.append(calc_max_dist(pdbfiles.pdbs[bins[i][j]].residues, pdbfiles.pdbs[bins[i][k]].residues))
         # Perform hierarchical clustering
+	print len(bins[i])
         tree = hierarchy.linkage(dist_list, method=args.linkage)
         # Use a distance cutoff to cut the tree
         clust_ids = hierarchy.fcluster(tree, t=args.cutoff, criterion='distance')
