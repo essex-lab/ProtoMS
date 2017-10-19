@@ -1,6 +1,7 @@
 """Collection of classes to form the basis of a replacement for the current
 free energy calculation framework. """
 
+from abc import abstractmethod
 import glob
 import os
 import numpy as np
@@ -31,7 +32,19 @@ class Estimator(object):
     def __init__(self, lambdas):
         self.data = []
         self.lambdas = lambdas
-        
+
+    @abstractmethod
+    def add_data(self):
+        pass
+
+    @abstractmethod
+    def calculate(self):
+        pass
+
+    @abstractmethod
+    def apply_slice(self):
+        pass
+
 
 class TI(Estimator):
     """Estimate free energy differences using Thermodynamic Integration."""
@@ -41,7 +54,7 @@ class TI(Estimator):
         self.data.append((series.forwfe-series.backfe) /
                          (series.lamf[0]-series.lamb[0]))
 
-    def calculate(self):
+    def calculate(self, temp=300):
         """Calculate the free energy difference and return a PMF object."""
         gradients = [gradient_data.mean() for gradient_data in self.data]
         pmf_values = [trapz(gradients[:i], self.lambdas[:i])
@@ -49,6 +62,7 @@ class TI(Estimator):
         return PMF(self.lambdas, pmf_values)
 
     def apply_slice(self, slc):
+        """Apply provided slice object to the estimators data series."""
         for i, series in enumerate(self.data):
             self.data[i] = series[slc]
 
@@ -98,6 +112,7 @@ class MBAR(Estimator):
         for i, dat in enumerate(self.data):
             self.data[i] = dat[:, slc]
 
+
 class FreeEnergyCalculation(object):
     """Top level class for performing a free energy calculation with
     simulation data."""
@@ -131,23 +146,3 @@ class FreeEnergyCalculation(object):
         """For each estimator return the evaluated potential of mean force."""
         return {estimator: [rep.calculate() for rep in repeats]
                 for estimator, repeats in self.estimators.iteritems()}
-
-
-# calc = FreeEnergyCalculation(['/tmp/out_comb_bnd'],
-#                              estimators=[TI, BAR])
-# results = calc.calculate()
-
-class DataEntry(object):
-    """Custom object for data stored by estimators. Designed to provide a
-    common interface to perform operations on data series where these may
-    have different levels of nesting.
-    """
-    def __init__(self):
-        self.series = []
-
-        
-
-
-# what i want to be able to do
-# est.data = est.data[5:]
-# est.data.

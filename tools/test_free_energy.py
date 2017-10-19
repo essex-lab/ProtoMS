@@ -11,7 +11,9 @@ class TestBAR(unittest.TestCase):
     def setUp(self):
         """Create a test based on the pymbar HarmonicOscillatorsTestCase.
         """
-        self.test = pymbar.testsystems.HarmonicOscillatorsTestCase()
+        self.test = pymbar.testsystems.HarmonicOscillatorsTestCase(
+            O_k=[0, 0, 0, 0, 0],
+            K_k=[4., 5., 6., 7., 8.])
         # k = sample state index
         # l = eval state index
         # n = sample index
@@ -52,44 +54,36 @@ class TestBAR(unittest.TestCase):
         self.estimator.apply_slice(slc)
         sliced_lens = [len(series)
                        for dat in self.estimator.data for series in dat]
-        
+
         for l1, l2 in zip(lens, sliced_lens):
             self.assertEqual(l1, l2 + dN)
-        
-    # def test_free_energies(self):
-    #     est = BAR(list(self.lambdas))
-    #     self.BARs(est)
 
 
 class TestMBAR(TestBAR):
     estimator_class = MBAR
-    # def test_free_energies(self):
-    #     est = MBAR(list(self.lambdas))
-    #     self.BARs(est)
-
-    # def test_slicing(self):
-    #     lens = [len(series)
-    #             for dat in self.estimator.data for series in dat]
-    #     dN = 50
-    #     slc = slice(dN, None, None)
-    #     self.estimator.apply_slice(slc)
-    #     sliced_lens = [len(series)
-    #                    for dat in self.estimator.data for series in dat]
-        
-    #     for l1, l2 in zip(lens, sliced_lens):
-    #         self.assertEqual(l1, l2 + dN)
 
 
 class TestTI(TestBAR):
     estimator_class = TI
 
     def add_data(self):
-        """For the time being the data added is meaningless but has the same
-        form and hence is suitable for testing slicing"""
-        for series in self.series:
-            self.estimator.data.append(series.feenergies[0.0])
-        # for series in self.series:
-        #     self.estimator.add_data(series)
+        """For the Harmonic oscillator it is simple to work out the gradient
+        of the energy with respect to lambda under certain
+        conditions. This data is spoofed into series.forwfe such that
+        when the estimator calculates the gradient it recovers the
+        correct values. Requires strictly linear scaling of spring
+        constants, and for all potentials to have the same bond length!
+
+        dU(\lambda)/d\lambda = (k_1-k_0)/2*(x-b_0)^2
+        """
+        dlam = 0.001
+        for series, state in zip(self.series, self.u_kln):
+            series.lamb = [series.lam[0]-0.001]
+            series.lamf = [series.lam[0]+0.001]
+            series.forwfe = dlam*2*(series.feenergies[1.0] -
+                                    series.feenergies[0.0])
+            series.backfe = np.zeros_like(series.forwfe)
+            self.estimator.add_data(series)
 
     def test_slicing(self):
         lens = [len(series)
@@ -102,7 +96,3 @@ class TestTI(TestBAR):
 
         for l1, l2 in zip(lens, sliced_lens):
             self.assertEqual(l1, l2 + dN)
-
-    def test_free_energies(self):
-        pass
-
