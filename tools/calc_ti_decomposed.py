@@ -15,8 +15,8 @@ class TI_decomposed(object):
     decomposition of the total free energy is not well-defined however
     can be indicative of the dominant terms in a free energy change.
     """
-    def __init__(self):
-        self.estimators = defaultdict(lambda: TI())
+    def __init__(self, lambdas):
+        self.estimators = defaultdict(lambda: TI(lambdas))
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object
@@ -32,10 +32,10 @@ class TI_decomposed(object):
                 self.estimators["%s_%s" % (name, energy.type)].data.append(
                     (energy.forw-energy.back) / dlam)
 
-    def calculate(self, lambdas):
+    def calculate(self):
         """Calculate the free energy difference for each energy component and
         return a dictionary of PMF objects."""
-        return {estimator: self.estimators[estimator].calculate(lambdas)
+        return {estimator: self.estimators[estimator].calculate()
                 for estimator in self.estimators}
 
 

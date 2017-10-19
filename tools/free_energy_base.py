@@ -2,6 +2,7 @@
 free energy calculation framework. """
 
 from abc import abstractmethod
+import argparse
 import glob
 import os
 import numpy as np
@@ -116,7 +117,7 @@ class MBAR(Estimator):
 class FreeEnergyCalculation(object):
     """Top level class for performing a free energy calculation with
     simulation data."""
-    def __init__(self, root_paths, estimators=[TI]):
+    def __init__(self, root_paths, estimators=[TI, BAR, MBAR]):
         """root_paths - a list of strings to ProtoMS output directories.
         The free energy will be calculated individually for each entry.
         estimators - a list of estimator classes to use"""
@@ -146,3 +147,11 @@ class FreeEnergyCalculation(object):
         """For each estimator return the evaluated potential of mean force."""
         return {estimator: [rep.calculate() for rep in repeats]
                 for estimator, repeats in self.estimators.iteritems()}
+
+
+def get_arg_parser():
+    """Returns a generic argparser for all free energy calculation scripts"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--directories', nargs='+',
+                        help='output directories')
+    return parser
