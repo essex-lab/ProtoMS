@@ -3,6 +3,7 @@ free energy calculation framework. """
 
 import glob
 import os
+import numpy as np
 import pymbar
 from scipy.integrate import trapz
 import simulationobjects as sim
@@ -66,7 +67,24 @@ class BAR(Estimator):
                               pymbar.BAR(-low_lam[1]*beta,
                                          -high_lam[0]*beta)[0]/beta)
         return PMF(self.lambdas, pmf_values)
-        
+
+
+class MBAR(Estimator):
+    """Estimate free energy differences using the Multistate Bennett's
+    Acceptante Ratio.
+    """
+    def add_data(self, series):
+        self.data.append(np.array([series.feenergies[lam]
+                                   for lam in sorted(series.feenergies)]))
+
+    def calculate(self, temp=300):
+        beta = 1./(sim.boltz*temp)
+        mbar = pymbar.MBAR(np.array(self.data)*beta,
+                           [len(dat[0]) for dat in self.data])
+        FEs = mbar.getFreeEnergyDifferences()[0]/beta
+        return PMF(self.lambdas,
+                   [FEs[0, i] for i in xrange(len(self.data))])
+
 
 class FreeEnergyCalculation(object):
     """Top level class for performing a free energy calculation with

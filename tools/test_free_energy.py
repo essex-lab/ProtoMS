@@ -1,7 +1,7 @@
 import pymbar
 import numpy as np
 import unittest
-from free_energy_base import BAR
+from free_energy_base import BAR, MBAR
 from simulationobjects import boltz, SnapshotResults
 
 beta = 1. / (boltz*300)
@@ -26,15 +26,22 @@ class TestEstimators(unittest.TestCase):
             snapshot.lam = [lam]
             self.series.append(snapshot)
 
-    def testBAR(self):
-
-        est = BAR(list(self.lambdas))
+    def BARs(self, est):
 
         for series in self.series:
             est.add_data(series)
-
+        print est
         pmf = est.calculate(temp=1/boltz)
+        print pmf.values
+        print self.test.analytical_free_energies()
         for fe1, fe2 in zip(pmf.values, self.test.analytical_free_energies()):
             self.assertAlmostEqual(fe1, fe2, places=1)
 
+    def testBAR(self):
+        est = BAR(list(self.lambdas))
+        self.BARs(est)
+
+    def testMBAR(self):
+        est = MBAR(list(self.lambdas))
+        self.BARs(est)
 
