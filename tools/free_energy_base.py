@@ -3,9 +3,9 @@ free energy calculation framework. """
 
 import glob
 import os
+import pymbar
 from scipy.integrate import trapz
 import simulationobjects as sim
-import numpy as np
 
 
 class PMF(object):
@@ -27,8 +27,9 @@ class PMF(object):
 
 class Estimator(object):
     """Base class for free energy estimators"""
-    def __init__(self):
+    def __init__(self, lambdas):
         self.data = []
+        self.lambdas = lambdas
 
 
 class TI(Estimator):
@@ -39,19 +40,39 @@ class TI(Estimator):
         self.data.append((series.forwfe-series.backfe) /
                          (series.lamf[0]-series.lamb[0]))
 
-    def calculate(self, lambdas):
+    def calculate(self):
         """Calculate the free energy difference and return a PMF object."""
         gradients = [gradient_data.mean() for gradient_data in self.data]
-        pmf_values = [trapz(gradients[:i], lambdas[:i])
-                      for i in xrange(1, len(lambdas) + 1)]
-        return PMF(lambdas, pmf_values)
+        pmf_values = [trapz(gradients[:i], self.lambdas[:i])
+                      for i in xrange(1, len(self.lambdas) + 1)]
+        return PMF(self.lambdas, pmf_values)
 
+
+class BAR(Estimator):
+    """Estimate free energy differences using Bennett's Acceptance Ratio."""
+    def add_data(self, series):
+        lam = series.lam[0]
+        lam_ind = self.lambdas.index(lam)
+        lamf = self.lambdas[lam_ind+1] if lam != 1.0 else 1.0
+        lamb = self.lambdas[lam_ind-1] if lam != 0.0 else 0.0
+        self.data.append((series.feenergies[lam] - series.feenergies[lamb],
+                          series.feenergies[lam] - series.feenergies[lamf]))
+
+    def calculate(self, temp=300):
+        beta = 1./(sim.boltz*temp)
+        pmf_values = [0.0]
+        for low_lam, high_lam in zip(self.data, self.data[1:]):
+            pmf_values.append(pmf_values[-1] +
+                              pymbar.BAR(-low_lam[1]*beta,
+                                         -high_lam[0]*beta)[0]/beta)
+        return PMF(self.lambdas, pmf_values)
+        
 
 class FreeEnergyCalculation(object):
     """Top level class for performing a free energy calculation with
     simulation data."""
     def __init__(self, root_paths, estimators=[TI]):
-        """root_paths - a list of strings to ProtoMS output directories. 
+        """root_paths - a list of strings to ProtoMS output directories.
         The free energy will be calculated individually for each entry.
         estimators - a list of estimator classes to use"""
         self.root_paths = root_paths
@@ -59,8 +80,10 @@ class FreeEnergyCalculation(object):
                       for root_path in self.root_paths]
         self.lambdas = [[float(path.split('lam-')[1]) for path in rep]
                         for rep in self.paths]
-        self.estimators = {estimator: [estimator() for rep in self.paths]
-                           for estimator in estimators}
+        self.estimators = {
+            estimator: [estimator(lams)
+                        for lams, rep in zip(self.lambdas, self.paths)]
+            for estimator in estimators}
         self._extract_ser(self.paths)
 
     def _extract_ser(self, paths):
@@ -76,11 +99,10 @@ class FreeEnergyCalculation(object):
 
     def calculate(self):
         """For each estimator return the evaluated potential of mean force."""
-        return {estimator: [rep.calculate(self.lambdas[0])
-                            for rep, lambdas in zip(repeats, self.lambdas)]
+        return {estimator: [rep.calculate() for rep in repeats]
                 for estimator, repeats in self.estimators.iteritems()}
 
 
-# calc = FreeEnergyCalculation(['/tmp/out_comb_bnd'],
-#                              estimators=[TI, TI_decomposed])
-# results = calc.calculate()
+calc = FreeEnergyCalculation(['/tmp/out_comb_bnd'],
+                             estimators=[TI, BAR])
+results = calc.calculate()
