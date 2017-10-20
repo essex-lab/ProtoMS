@@ -50,10 +50,12 @@ class Estimator(object):
 class TI(Estimator):
     """Estimate free energy differences using Thermodynamic Integration."""
     def add_data(self, series):
-        """Save data from a SnapshotResults.series object
-        for later calculation"""
+        """Save data from a SnapshotResults.series object for later
+        calculation. Return the length of the data series added.
+        """
         self.data.append((series.forwfe-series.backfe) /
                          (series.lamf[0]-series.lamb[0]))
+        return len(self.data[-1])
 
     def calculate(self, temp=300):
         """Calculate the free energy difference and return a PMF object."""
@@ -63,7 +65,7 @@ class TI(Estimator):
         return PMF(self.lambdas, pmf_values)
 
     def apply_slice(self, slc):
-        """Apply provided slice object to the estimators data series."""
+        """Apply provided slice object to this estimator's data series."""
         for i, series in enumerate(self.data):
             self.data[i] = series[slc]
 
@@ -77,6 +79,7 @@ class BAR(Estimator):
         lamb = self.lambdas[lam_ind-1] if lam != 0.0 else 0.0
         self.data.append([series.feenergies[lam] - series.feenergies[lamb],
                           series.feenergies[lam] - series.feenergies[lamf]])
+        return len(self.data[-1][0])
 
     def calculate(self, temp=300):
         beta = 1./(sim.boltz*temp)
@@ -100,6 +103,7 @@ class MBAR(Estimator):
     def add_data(self, series):
         self.data.append(np.array([series.feenergies[lam]
                                    for lam in sorted(series.feenergies)]))
+        return len(self.data[-1][0])
 
     def calculate(self, temp=300):
         beta = 1./(sim.boltz*temp)
@@ -136,12 +140,21 @@ class FreeEnergyCalculation(object):
         """For all results files extract the data series and supply these
         to each estimator instance."""
         for i, repeat in enumerate(paths):
+            min_len = 10E10
             for path in repeat:
                 rf = sim.ResultsFile()
                 rf.read(os.path.join(path, 'results'))
                 rf.make_series()
-                for estimator in self.estimators:
-                    self.estimators[estimator][i].add_data(rf.series)
+                for cls in self.estimators:
+                    data_len = self.estimators[cls][i].add_data(rf.series)
+                    min_len = data_len if data_len < min_len else min_len
+                    
+            # in cases where calculations terminate prematurely there
+            # can be slight differences in the length of data series
+            # within a repeat. Here we standardise the length for
+            # later convenience
+            for cls in self.estimators:
+                self.estimators[cls][i].apply_slice(slice(0, min_len))
 
     def calculate(self):
         """For each estimator return the evaluated potential of mean force."""
