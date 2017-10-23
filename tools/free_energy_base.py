@@ -180,7 +180,7 @@ class FreeEnergyCalculation(object):
         """For all results files extract the data series and supply these
         to each estimator instance."""
         for i, repeat in enumerate(paths):
-            min_len = 10E10
+            min_len = 10E20
             for path in repeat:
                 rf = sim.ResultsFile()
                 rf.read(os.path.join(path, 'results'))

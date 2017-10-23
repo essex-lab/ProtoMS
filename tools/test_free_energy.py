@@ -55,7 +55,7 @@ class TestBAR(unittest.TestCase):
             new_est = self.estimator[dN:]
             sliced_lens = [len(series)
                            for series in new_est._get_data()]
-            print lens, sliced_lens
+
             for l1, l2 in zip(lens, sliced_lens):
                 self.assertEqual(l1, l2 + dN)
 
@@ -74,7 +74,7 @@ class TestMBAR(TestBAR):
             new_est = self.estimator[dN:]
             sliced_lens = [series.shape[1]
                            for series in new_est._get_data()]
-            print lens, sliced_lens
+
             for l1, l2 in zip(lens, sliced_lens):
                 self.assertEqual(l1, l2 + dN)
 
