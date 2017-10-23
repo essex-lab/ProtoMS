@@ -2,6 +2,7 @@ import pymbar
 import numpy as np
 import unittest
 from free_energy_base import BAR, MBAR, TI
+from calc_ti_decomposed import TI_decomposed
 from simulationobjects import boltz, SnapshotResults
 
 
@@ -46,21 +47,39 @@ class TestBAR(unittest.TestCase):
         for fe1, fe2 in zip(pmf.values, self.test.analytical_free_energies()):
             self.assertAlmostEqual(fe1, fe2, places=1)
 
-    def test_slicing(self):
+    def test_getitem(self):
         lens = [len(series)
-                for dat in self.estimator.data for series in dat]
-        dN = 50
-        slc = slice(dN, None, None)
-        self.estimator.apply_slice(slc)
-        sliced_lens = [len(series)
-                       for dat in self.estimator.data for series in dat]
+                for series in self.estimator._get_data()]
 
-        for l1, l2 in zip(lens, sliced_lens):
-            self.assertEqual(l1, l2 + dN)
+        for dN in (10, 20, 50, 100, 500):
+            new_est = self.estimator[dN:]
+            sliced_lens = [len(series)
+                           for series in new_est._get_data()]
+            print lens, sliced_lens
+            for l1, l2 in zip(lens, sliced_lens):
+                self.assertEqual(l1, l2 + dN)
+
+        # check that new_est is a different instance
+        self.assertIsNot(self.estimator, new_est)
 
 
 class TestMBAR(TestBAR):
     estimator_class = MBAR
+
+    def test_getitem(self):
+        lens = [series.shape[1]
+                for series in self.estimator._get_data()]
+
+        for dN in (10, 20, 50, 100, 500):
+            new_est = self.estimator[dN:]
+            sliced_lens = [series.shape[1]
+                           for series in new_est._get_data()]
+            print lens, sliced_lens
+            for l1, l2 in zip(lens, sliced_lens):
+                self.assertEqual(l1, l2 + dN)
+
+        # check that new_est is a different instance
+        self.assertIsNot(self.estimator, new_est)
 
 
 class TestTI(TestBAR):
@@ -78,21 +97,9 @@ class TestTI(TestBAR):
         """
         dlam = 0.001
         for series, state in zip(self.series, self.u_kln):
-            series.lamb = [series.lam[0]-0.001]
-            series.lamf = [series.lam[0]+0.001]
+            series.lamb = [series.lam[0]-dlam]
+            series.lamf = [series.lam[0]+dlam]
             series.forwfe = dlam*2*(series.feenergies[1.0] -
                                     series.feenergies[0.0])
             series.backfe = np.zeros_like(series.forwfe)
             self.estimator.add_data(series)
-
-    def test_slicing(self):
-        lens = [len(series)
-                for series in self.estimator.data]
-        dN = 50
-        slc = slice(dN, None, None)
-        self.estimator.apply_slice(slc)
-        sliced_lens = [len(series)
-                       for series in self.estimator.data]
-
-        for l1, l2 in zip(lens, sliced_lens):
-            self.assertEqual(l1, l2 + dN)

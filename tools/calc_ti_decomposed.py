@@ -1,9 +1,8 @@
+import argparse
 from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
 import free_energy_base as feb
-# from free_energy_base import Estimator, FreeEnergyCalculation, TI
 
 plt.rcParams['figure.subplot.bottom'] = 0.3
 
@@ -18,6 +17,7 @@ class TI_decomposed(feb.Estimator):
     """
     def __init__(self, lambdas):
         self.estimators = defaultdict(lambda: feb.TI(lambdas))
+        self.lambdas = lambdas
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object
@@ -39,18 +39,36 @@ class TI_decomposed(feb.Estimator):
         return {term: self.estimators[term].calculate()
                 for term in self.estimators}
 
-    def apply_slice(self, slc):
-        for term in self.estimators:
-            self.estimators[term].apply_slice(slc)
+    def _set_data(self, data):
+        self.__init__(self.lambdas)  # reinitialise
+        for term in data:
+            self.estimators[term]._set_data(data[term])
+
+    def _get_data(self):
+        return {term: data for term, data in self.estimators.iteritems()}
+
+    def __getitem__(self, val):
+        new_est = self.__class__(self.lambdas)
+        new_est._set_data({term: data[val]
+                           for term, data in self.estimators.iteritems()})
+
 
 def get_arg_parser():
-    parser = feb.get_arg_parser()
+    """Add custom options for this script"""
+    parser = argparse.ArgumentParser(
+        description="Calculate individual contributions of different terms "
+                    "to the total free energy difference. Although terms are "
+                    "guaranteed to be additive with TI, the decomposition "
+                    "is not strictly well defined. That said, it can be "
+                    "illustrative to consider the dominant contributions of "
+                    "a calculation.",
+        parents=[feb.get_arg_parser()])
     return parser
 
 
 if __name__ == "__main__":
     args = get_arg_parser().parse_args()
-    calc = feb.FreeEnergyCalculation(args.directories, 
+    calc = feb.FreeEnergyCalculation(args.directories,
                                      estimators=[feb.TI, TI_decomposed])
     results = calc.calculate()
 
@@ -67,8 +85,7 @@ if __name__ == "__main__":
 
         ax.bar(xs, ys, color=colors[i])
         ax.set_xticks(xs)
-        ax.set_xticklabels(labels, 
-                           rotation="vertical")
+        ax.set_xticklabels(labels, rotation="vertical")
 
     for ti, ti_decomp in zip(results[feb.TI], results[TI_decomposed]):
         print "FDTI:", ti.dG,
