@@ -2,7 +2,6 @@ import pymbar
 import numpy as np
 import unittest
 from free_energy_base import BAR, MBAR, TI
-from calc_ti_decomposed import TI_decomposed
 from simulationobjects import boltz, SnapshotResults
 
 
@@ -48,13 +47,13 @@ class TestBAR(unittest.TestCase):
             self.assertAlmostEqual(fe1, fe2, places=1)
 
     def test_getitem(self):
-        lens = [len(series)
-                for series in self.estimator._get_data()]
+        lens = [series.shape[-1]
+                for series in self.estimator.data]
 
         for dN in (10, 20, 50, 100, 500):
             new_est = self.estimator[dN:]
-            sliced_lens = [len(series)
-                           for series in new_est._get_data()]
+            sliced_lens = [series.shape[-1]
+                           for series in new_est.data]
 
             for l1, l2 in zip(lens, sliced_lens):
                 self.assertEqual(l1, l2 + dN)
@@ -65,21 +64,6 @@ class TestBAR(unittest.TestCase):
 
 class TestMBAR(TestBAR):
     estimator_class = MBAR
-
-    def test_getitem(self):
-        lens = [series.shape[1]
-                for series in self.estimator._get_data()]
-
-        for dN in (10, 20, 50, 100, 500):
-            new_est = self.estimator[dN:]
-            sliced_lens = [series.shape[1]
-                           for series in new_est._get_data()]
-
-            for l1, l2 in zip(lens, sliced_lens):
-                self.assertEqual(l1, l2 + dN)
-
-        # check that new_est is a different instance
-        self.assertIsNot(self.estimator, new_est)
 
 
 class TestTI(TestBAR):

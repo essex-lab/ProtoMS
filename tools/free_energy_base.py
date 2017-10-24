@@ -44,21 +44,20 @@ class Estimator(object):
     def calculate(self):
         pass
 
-    # @abstractmethod
-    # def apply_slice(self):
-    #     pass
-
-    @abstractmethod
-    def _get_data(self):
-        pass
-
-    @abstractmethod
-    def _set_data(self, data):
-        pass
-
     def __getitem__(self, val):
+        """Return a new instance with the same class as this one with
+        series[val] applied to each individual data series.
+        """
+        # below is a bit hacky but robust at applying the slice to
+        # the final dimension of an array
         new_est = self.__class__(self.lambdas)
-        new_est._set_data((dat[val] for dat in self._get_data()))
+        for dat in self.data:
+            # swap last array axis to being first - no effect on 1d
+            reordered_dat = np.moveaxis(dat, -1, 0)
+            # apply slice to new first dimension
+            reordered_dat = reordered_dat[val]
+            # swap axes back and add to new instance data
+            new_est.data.append(np.moveaxis(reordered_dat, 0, -1))
         return new_est
 
 
@@ -79,17 +78,6 @@ class TI(Estimator):
                       for i in xrange(1, len(self.lambdas) + 1)]
         return PMF(self.lambdas, pmf_values)
 
-    def _get_data(self):
-        return self.data
-
-    def _set_data(self, data):
-        self.data = list(data)
-
-    # def apply_slice(self, slc):
-    #     """Apply provided slice object to this estimator's data series."""
-    #     for i, series in enumerate(self.data):
-    #         self.data[i] = series[slc]
-
 
 class BAR(Estimator):
     """Estimate free energy differences using Bennett's Acceptance Ratio."""
@@ -98,8 +86,9 @@ class BAR(Estimator):
         lam_ind = self.lambdas.index(lam)
         lamf = self.lambdas[lam_ind+1] if lam != 1.0 else 1.0
         lamb = self.lambdas[lam_ind-1] if lam != 0.0 else 0.0
-        self.data.append([series.feenergies[lam] - series.feenergies[lamb],
-                          series.feenergies[lam] - series.feenergies[lamf]])
+        self.data.append(
+            np.array([series.feenergies[lam] - series.feenergies[lamb],
+                      series.feenergies[lam] - series.feenergies[lamf]]))
         return len(self.data[-1][0])
 
     def calculate(self, temp=300):
@@ -110,26 +99,6 @@ class BAR(Estimator):
                               pymbar.BAR(-low_lam[1]*beta,
                                          -high_lam[0]*beta)[0]/beta)
         return PMF(self.lambdas, pmf_values)
-
-    def _get_data(self):
-        return [series for dat in self.data for series in dat]
-
-    def _set_data(self, data):
-        data_iter = [iter(data)] * 2
-        self.data = []
-        for pair in izip_longest(*data_iter):
-            self.data.append(pair)
-            
-
-        # print "sd:", self.data
-        # for i, dat in self.data:
-        #     for j, series in dat:
-        #         self.data[i][j] = next(iter_data)
-    
-    # def apply_slice(self, slc):
-    #     for i, dat in enumerate(self.data):
-    #         for j, series in enumerate(dat):
-    #             self.data[i][j] = series[slc]
 
 
 class MBAR(TI):
@@ -148,13 +117,6 @@ class MBAR(TI):
         FEs = mbar.getFreeEnergyDifferences()[0]/beta
         return PMF(self.lambdas,
                    [FEs[0, i] for i in xrange(len(self.data))])
-
-    def __getitem__(self, val):
-        """Due to the use of 2d arrays as the data series, MBAR is
-        a special case where this method requires reimplementation."""
-        new_est = self.__class__(self.lambdas)
-        new_est._set_data((dat[:, val] for dat in self._get_data()))
-        return new_est
 
 
 class FreeEnergyCalculation(object):
@@ -194,7 +156,7 @@ class FreeEnergyCalculation(object):
             # within a repeat. Here we standardise the length for
             # later convenience
             for cls in self.estimators:
-                self.estimators[cls][i].apply_slice(slice(0, min_len))
+                self.estimators[cls][i] = self.estimators[cls][i][:min_len]
 
     def calculate(self):
         """For each estimator return the evaluated potential of mean force."""
