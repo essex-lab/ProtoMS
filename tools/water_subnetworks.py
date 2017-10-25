@@ -308,7 +308,7 @@ if __name__ == "__main__":
 	  coordinates = []
 	  for atom in wat_whole[IDs].atoms:
 	    coordinates.append( atom.coords)
-          _printpdb(np.asarray(coordinates),molpdb,IDs,100.,outfile)
+          _printpdb(np.asarray(coordinates),molpdb,watid_to_clustid[IDs],100.,outfile)
 
 #    watid_to_clustid = dict(zip( range(len(clust_ids)), clust_ids ))
 #    print watid_to_clustid
