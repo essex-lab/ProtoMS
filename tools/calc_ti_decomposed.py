@@ -41,8 +41,8 @@ class TI_decomposed(feb.Estimator):
 
     def __getitem__(self, val):
         new_est = self.__class__(self.lambdas)
-        for term, est in self.estimators.iteritems:
-            new_est.estimators[term] = self.data[term][val]
+        for term in self.estimators:
+            new_est.estimators[term] = self.estimators[term][val]
         return new_est
 
 
