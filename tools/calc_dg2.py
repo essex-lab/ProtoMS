@@ -8,10 +8,6 @@ def get_arg_parser():
         description="Calculate free energy differences using a range of"
                     " estimators",
         parents=[free_energy_base.get_arg_parser()])
-    parser.add_argument(
-        '--autoeqb', dest='autoeqb', action='store_true',
-        help="Use automatic equilibration detection to determine how much "
-             "data is included in the calculation")
     return parser
 
 

@@ -1,8 +1,10 @@
 import pymbar
 import numpy as np
 import unittest
-from free_energy_base import BAR, MBAR, TI
+from free_energy_base import BAR, MBAR, TI, get_arg_parser
 from simulationobjects import boltz, SnapshotResults
+import calc_dg2
+import calc_ti_decomposed
 
 
 class TestBAR(unittest.TestCase):
@@ -87,3 +89,15 @@ class TestTI(TestBAR):
                                     series.feenergies[0.0])
             series.backfe = np.zeros_like(series.forwfe)
             self.estimator.add_data(series)
+
+
+class TestArgumentParsers(unittest.TestCase):
+    """Check for errors in the inheritance scheme used for argument parsers"""
+    def test_base_parser(self):
+        get_arg_parser()
+
+    def test_dg2_parser(self):
+        calc_dg2.get_arg_parser()
+
+    def test_ti_decomposed(self):
+        calc_ti_decomposed.get_arg_parser()

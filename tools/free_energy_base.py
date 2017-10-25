@@ -4,7 +4,6 @@ free energy calculation framework. """
 from abc import abstractmethod
 import argparse
 import glob
-from itertools import izip_longest
 import os
 import numpy as np
 import pymbar
