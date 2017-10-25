@@ -44,19 +44,16 @@ class Estimator(object):
         pass
 
     def __getitem__(self, val):
-        """Return a new instance with the same class as this one with
-        series[val] applied to each individual data series.
+        """Return a new class instance with series[val] applied to each
+        individual data series.
         """
-        # below is a bit hacky but robust at applying the slice to
-        # the final dimension of an array
         new_est = self.__class__(self.lambdas)
+        # add data series to the new estimator that have been sliced by val
+        # want to always apply slice to last dimension, so transpose array
+        # apply slice to first dimension and then transpose back
         for dat in self.data:
-            # swap last array axis to being first - no effect on 1d
-            reordered_dat = np.moveaxis(dat, -1, 0)
-            # apply slice to new first dimension
-            reordered_dat = reordered_dat[val]
-            # swap axes back and add to new instance data
-            new_est.data.append(np.moveaxis(reordered_dat, 0, -1))
+            reordered_dat = dat.T[val]
+            new_est.data.append(reordered_dat.T)
         return new_est
 
 
