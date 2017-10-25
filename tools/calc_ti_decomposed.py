@@ -1,5 +1,6 @@
 import argparse
 from collections import defaultdict
+from itertools import chain
 import numpy as np
 import matplotlib.pyplot as plt
 import free_energy_base as feb
@@ -46,6 +47,14 @@ class TI_decomposed(feb.Estimator):
         return new_est
 
 
+def get_result_means(repeats):
+    """Take a list of estimator results and average all the terms.
+    Return a dictionary mapping energy terms to single values."""
+    return {term: np.mean([repeat[term].dG 
+                           for repeat in repeats])
+            for term in repeats[0]}
+ 
+
 def get_arg_parser():
     """Add custom options for this script"""
     parser = argparse.ArgumentParser(
@@ -56,6 +65,16 @@ def get_arg_parser():
                     "illustrative to consider the dominant contributions of "
                     "a calculation.",
         parents=[feb.get_arg_parser()])
+    parser.add_argument("-b", "--bound", nargs="+",
+                        help="Output directories of bound phase calculations. "
+                             "If present, it is assumed that -d "
+                             "provides solvent phase simulation data.")
+    parser.add_argument("-g", "--gas", nargs="+",
+                        help="Output directories of gas phase calculations. "
+                             "If present, it is assumed that -d "
+                             "provides solvent phase simulation data.")
+    parser.add_argument("-o", "--out", type=str, default="decomposed.pdf",
+                        help="Filename of output graph.")
     return parser
 
 
@@ -63,26 +82,52 @@ if __name__ == "__main__":
     args = get_arg_parser().parse_args()
     calc = feb.FreeEnergyCalculation(args.directories,
                                      estimators=[feb.TI, TI_decomposed])
+    # store results in a default dict for later simplicity of arithmetic
     results = calc.calculate()
+    fdti_mean = np.mean([rep.dG for rep in results[feb.TI]])
+    decomp_means = defaultdict(lambda: 0., 
+                               get_result_means(results[TI_decomposed]))
 
+    if (args.bound and args.gas) is not None:
+        raise Exception("Cannot supply both bound and gas phase data.")
+    elif (args.bound or args.gas) is not None:
+        calc2 = feb.FreeEnergyCalculation(args.bound or args.gas,
+                                          estimators=[feb.TI, TI_decomposed])
+        results2 = defaultdict(lambda: 0., calc2.calculate())
+        fdti_mean2 = np.mean([rep.dG for rep in results2[feb.TI]])
+        decomp_means2 = defaultdict(lambda: 0., 
+                                    get_result_means(results2[TI_decomposed]))
+
+        # iterate over the unique keys from both calc and calc2
+        for term in set(chain(decomp_means, decomp_means2)):
+            decomp_means[term] -= decomp_means2[term]
+            # swap the sign if this is a binding calculation
+            if args.bound is not None:
+                decomp_means[term] *= -1
+
+        if args.gas is not None:
+            fdti_mean -= fdti_mean2
+        else:
+            fdti_mean = fdti_mean2 - fdti_mean
+            
+    
     width = 0.8
-    N = len(results[TI_decomposed])
-    colors = ('b', 'g', 'r', 'y')
+    N = 1
+
     fig, ax = plt.subplots()
-    for i, repeat in enumerate(results[TI_decomposed]):
-        xs = np.arange(len(repeat)) * N + width * i
-        ys, labels = [], []
-        for term in sorted(repeat):
-            ys.append(repeat[term].dG)
-            labels.append(term)
+    xs = np.arange(len(decomp_means)) * N
+    
+    ys, labels = [], []
+    for term in sorted(decomp_means):
+        ys.append(decomp_means[term])
+        labels.append(term)
 
-        ax.bar(xs, ys, color=colors[i])
-        ax.set_xticks(xs)
-        ax.set_xticklabels(labels, rotation="vertical")
+    ax.bar(xs, ys)
+    ax.set_xticks(xs)
+    ax.set_xticklabels(labels, rotation="vertical")
 
-    for ti, ti_decomp in zip(results[feb.TI], results[TI_decomposed]):
-        print "FDTI:", ti.dG,
-        print "sum:", np.sum(ti_decomp[term].dG for term in ti_decomp)
+    print "FDTI:", fdti_mean
+    print "sum of terms:", np.sum(decomp_means.values())
 
-    plt.legend(calc.root_paths)
-    plt.savefig('decomposed.pdf')
+    # plt.legend(calc.root_paths)
+    plt.savefig(args.out)
