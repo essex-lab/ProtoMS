@@ -166,7 +166,7 @@ class FreeEnergyCalculation(object):
 def get_arg_parser():
     """Returns a generic argparser for all free energy calculation scripts"""
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('-d', '--directories', nargs='+',
+    parser.add_argument('-d', '--directories', nargs='+', required=True,
                         help='output directories')
     parser.add_argument(
         '--autoeqb', dest='autoeqb', action='store_true',

@@ -39,18 +39,11 @@ class TI_decomposed(feb.Estimator):
         return {term: self.estimators[term].calculate()
                 for term in self.estimators}
 
-    def _set_data(self, data):
-        self.__init__(self.lambdas)  # reinitialise
-        for term in data:
-            self.estimators[term]._set_data(data[term])
-
-    def _get_data(self):
-        return {term: data for term, data in self.estimators.iteritems()}
-
     def __getitem__(self, val):
         new_est = self.__class__(self.lambdas)
-        new_est._set_data({term: data[val]
-                           for term, data in self.estimators.iteritems()})
+        for term, est in self.estimators.iteritems:
+            new_est.estimators[term] = self.data[term][val]
+        return new_est
 
 
 def get_arg_parser():
