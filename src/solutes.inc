@@ -114,6 +114,7 @@ c     whether or not we have calculated the energy of this solute
       logical DoneSolNrg(MAXSOLUTES)
 c     whether or not a softcore is used for interactions involving that solute
       logical SoluteSoftCore(MAXSOLUTES)
+      logical SoluteAtomSoftCore(MAXSOLUTES,MAXSOLUTEATOMS)
 c     wheter to use library charges for intra molecular energies or the perturbed ones
       logical perturbeIntra
 
@@ -155,7 +156,8 @@ c     Move success histograms
       common /LSOLDATA/ FlexSolBond,FlexSolAngle,FlexSolDihedral,ZSolMov,DoneSolNrg,
      .                  SolNB14,IgnoreSolute,DualTopologySyncTrans,SoluteTheta,SoluteHydScale, 
      .                  DualTopologySyncRot,DualTopologySyncInt,
-     .                  SolBondDummy,SolAngleDummy,SolDihedralDummy,SoluteSoftCore,perturbeIntra                  
+     .                  SolBondDummy,SolAngleDummy,SolDihedralDummy,SoluteSoftCore,SoluteAtomSoftCore,
+     .                  perturbeIntra                  
 
       common /FRAGDATA/ NThetaSolKind,NThetaSolutes,ThetaKind,UseConcCorr
 

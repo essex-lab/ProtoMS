@@ -61,12 +61,12 @@ class RetiDblSimulationTest(framework.BaseTest):
     output_files = [
         "accept",
         "all.pdb",
-        "info",
         "restart",
         "restart.prev",
         "results",
         "results_inst",
-        "warning"
+        "warning",
+        "info"
     ]
 
 

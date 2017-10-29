@@ -1,0 +1,15 @@
+mode dihedral
+# U(phi) = k1*( 1.0 + k2*(cos[k3*phi + k4]) )
+#term k1(kcal mol-1) k2 k3 k4(deg) #comment
+#par  term1  term2 etc..  #comment
+#atm atm1 atm2 atm3 atm4 parameter #comment
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1) 
+par 3000    br    35     0.10000    3.59924    0.42000
+par 3001    br    35     0.10000    3.59924    0.42000
+mode template
+solute BRD
+info translate 0.100 rotate 1.000
+atom   BR1 BRD 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
+atom   BR2 BRD 3001 3001  BR1 BRD  DM3 DUM  DM2 DUM
+bond   BR1 BRD BR2 BRD

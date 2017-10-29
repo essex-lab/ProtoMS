@@ -548,6 +548,9 @@ c     initialise the energies...
         SolADel(i) = ZERO
         SolRDel(i) = ZERO
         SoluteSoftCore(i) = .false.
+        do j=1,MAXSOLUTEATOMS
+           SoluteAtomSoftCore(i,j) = .false.
+        enddo
         do j=1,MAXSOLUTES
           NewSolSolC(i,j) = ZERO
           NewSolSolLJ(i,j) = ZERO

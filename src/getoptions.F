@@ -710,14 +710,56 @@ c     A softcore is applied if either atom is part of a softcore residue
          endif
          call lowercase(words(1))
          if (words(1) .eq. 'solute') then
+
             if (imol .eq. -1) then
+               if (nwords .gt. 3) then
+                  call printLine(Warning,"cannot set individual softcore atoms for multiple solutes")
+               endif
                do j=1,NSolutes
                   SoluteSoftCore(j) = .true.
+                  do k=1,NSolAtoms(j)
+                     SoluteAtomSoftCore(imol,j) = .true.
+                  enddo
                enddo
+               write(printstring,*) 'Turning softcore on for all atoms of all solutes'
             else
                SoluteSoftCore(imol) = .true.
+               if (nwords .gt. 3) then
+                  do j=4,nwords
+                     SoluteAtomSoftCore(imol,getInt(words(j))) = .true.
+                  enddo
+                  write(printstring,*) 'Turning softcore on for some atoms of solute', imol
+               else
+                  do j=1,NsolAtoms(imol)
+                     SoluteAtomSoftCore(imol,j) = .true.
+                  enddo
+                  write(printstring,*) 'Turning softcore on for all atoms of solute', imol
+               endif
             endif
-            write(printstring,"(2a)") 'Turning softcore on for Solute ',words(2)  
+c$$$c           if there are more words these specify atom numbers
+c$$$            if (nwords .gt. 2) then
+c$$$c           check for presence of 'atoms' tag
+c$$$               if (nwords(3) .eq. 'atoms') then
+c$$$                  if (imol .eq. -1) then
+c$$$                     call printLine(Warning,"cannot set individual softcore atoms for multiple solutes")
+c$$$                  else
+c$$$                     SoluteSoftCore(imol) = .true.
+c$$$c                    loop over the rest of the words
+c$$$                     do j=4,nwords
+c$$$                        SoluteAtomSoftCore(imol,j) = .true.
+c$$$                     enddo
+c$$$                  endif
+c$$$               endif
+c$$$            else
+c$$$            endif
+c$$$            if (imol .eq. -1) then
+c$$$               do j=1,NSolutes
+c$$$                  SoluteSoftCore(j) = .true.
+c$$$               enddo
+c$$$            else
+c$$$               SoluteSoftCore(imol) = .true.
+c$$$            endif
+c$$$            write(printstring,"(2a)") 'Turning softcore on for Solute ',words(2)  
          else if (words(1) .eq. 'gcsolute') then
             if (imol .eq. -1) then
                do j=1,NSolutes
