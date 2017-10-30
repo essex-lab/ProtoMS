@@ -102,8 +102,6 @@ c     thier interaction energy
 
 c     Activate Distance Dependent Dielectric calculation
       if (QuickMove .and. DDDon) ddd = .true.
-      last_nrg = ZERO
-      last_cnrg = ZERO
       do i=1,nat1
         funcat1 = i
 c       Are we going to use a softcore ? 
@@ -168,8 +166,6 @@ c         Charges on the rest of the particles, i.e., between hydrogens and extr
             if (funcmindist.lt.mindist) mindist = funcmindist
           enddo
          endif
-         last_nrg = nrg
-         last_cnrg = cnrg
       enddo
       if (cuttype.eq.RESIDUEMOLECULE .or. cuttype.eq.MOLECULEMOLECULE) then
         if (mindist.lt.cut2) then

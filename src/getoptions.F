@@ -17,6 +17,7 @@
       include 'keyset.inc'
       include 'parallel.inc'
       include 'stacks.inc'
+      include 'templates.inc'
 c#######################################################
 c     
 c     This subroutine gets the values of most of the
@@ -721,19 +722,23 @@ c     A softcore is applied if either atom is part of a softcore residue
                      SoluteAtomSoftCore(imol,j) = .true.
                   enddo
                enddo
-               write(printstring,*) 'Turning softcore on for all atoms of all solutes'
+               call printLine(INFO,'Turning softcore on for all atoms of all solutes')
             else
                SoluteSoftCore(imol) = .true.
                if (nwords .gt. 3) then
+                  write(printstring,'(a,i4,a)') 'Turning softcore on for atoms of solute', imol, ' listed below'
+                  call printLine(INFO,printstring)
                   do j=4,nwords
                      SoluteAtomSoftCore(imol,getInt(words(j))) = .true.
+                     write(printstring,'(a)') SolAtomNam(imol,getInt(words(j)))
+                     call printLine(INFO,printstring)
                   enddo
-                  write(printstring,*) 'Turning softcore on for some atoms of solute', imol
                else
                   do j=1,NsolAtoms(imol)
                      SoluteAtomSoftCore(imol,j) = .true.
                   enddo
                   write(printstring,*) 'Turning softcore on for all atoms of solute', imol
+                  call printLine(INFO,printstring)
                endif
             endif
 c$$$c           if there are more words these specify atom numbers
@@ -781,7 +786,7 @@ c$$$            write(printstring,"(2a)") 'Turning softcore on for Solute ',word
             goto 210
          endif
 
-         call printLine(INFO,printstring)
+c$$$         call printLine(INFO,printstring)
          goto 210
       endif
 c     end of do-while loop
