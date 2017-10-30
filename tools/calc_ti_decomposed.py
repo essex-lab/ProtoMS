@@ -1,9 +1,14 @@
 import argparse
 from collections import defaultdict
 from itertools import chain
+import matplotlib
 import numpy as np
-import matplotlib.pyplot as plt
+import os
 import free_energy_base as feb
+
+if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
+    matplotlib.use('Agg') 
+import matplotlib.pyplot as plt
 
 plt.rcParams['figure.subplot.bottom'] = 0.3
 
