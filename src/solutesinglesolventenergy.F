@@ -22,7 +22,7 @@ c
 c##########################################################
 
       integer isol,isvn
-      double precision cnrg,ljnrg,nrg,mindist
+      double precision cnrg,ljnrg,nrg,mindist,last_nrg
       double precision cnrgf,cnrgb,ljnrgf,ljnrgb
       double precision distx,disty,distz,dist2,sclfac
       integer i,j,nat1,nat2,istart
@@ -102,6 +102,7 @@ c     thier interaction energy
 
 c     Activate Distance Dependent Dielectric calculation
       if (QuickMove .and. DDDon) ddd = .true.
+      last_nrg = ZERO
       do i=1,nat1
         funcat1 = i
 c       Are we going to use a softcore ? 
@@ -144,6 +145,8 @@ c         Charges on the rest of the particles, i.e., between hydrogens and extr
 
             if (funcmindist.lt.mindist) mindist = funcmindist
           enddo
+          write (*,*) isol, i, SolAtomNam(isol,i), isvn, softcore, nrg - last_nrg
+          last_nrg = nrg
         else
           do j=1,nat2
             funcat2 = j
