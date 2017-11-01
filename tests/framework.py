@@ -148,12 +148,15 @@ class BaseTest(unittest.TestCase):
                 self._all_files.remove(filename)
             self.assertTrue(file_match, "Content mismatch between output and reference for file {0}".format(filename))
 
-    def test(self):
+    def _helper_copy_input_files(self):
         for filename in self.input_files:
             try:
                 shutil.copy(os.path.join(self._full_ref_dir, filename), ".")
             except IOError:
                 raise IOError("The required reference input file {0} could not be copied".format(filename))
+
+    def test(self):
+        self._helper_copy_input_files()
 
         print("\nTEST_RUN\n")
         args = [self.executable] + self.args
