@@ -1143,7 +1143,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
     cmdcls = {"dualtopology":DualTopology,"singletopology":SingleTopology}
     extra_kwargs = {}
     if settings.simulation == "dualtopology":
-      extra_kwargs['softcore'] == settings.softcore
+      extra_kwargs['softcore'] = settings.softcore
       
     if ligands is None :
       raise tools.SetupError("No ligands loaded, cannot do dual-topology simulations.")
