@@ -99,25 +99,27 @@ c       Break if both solute and gcsolute have softcore assigned
         call printLine(FATAL,"The calculation of interactions between softcored solute and softcored gcsolute is not implemented.")
         call printLine(FATAL,"The combination of lambda and JAWS calculations with softcores may be causing the issue.")
         call closeProgram(100,"")
-      elseif  (SoluteSoftCore(isol)) then 
-        softcore = .true.
-        thet = scl
-        thetf = sclf
-        thetb = sclb
-      elseif (GCsoluteSoftCore(igcs)) then
-        softcore = .true.
-        thet = thetaparam(funcigcs2)
-        thetf = thet
-        thetb = thet
-      else
-         thet = thetaparam(funcigcs2)
-         thetf = thet
-         thetb = thet
-      endif         
+      endif
 c     Activate Distance Dependent Dielectric calculation
       if (QuickMove .and. DDDon) ddd = .true. 
       do i=1,nat1
         funcat1 = i
+        if  (SoluteSoftCore(isol).and.SoluteAtomSoftCore(isol,i)) then 
+           softcore = .true.
+           thet = scl
+           thetf = sclf
+           thetb = sclb
+        elseif (GCsoluteSoftCore(igcs)) then
+           softcore = .true.
+           thet = thetaparam(funcigcs2)
+           thetf = thet
+           thetb = thet
+        else
+           softcore = .false.
+           thet = thetaparam(funcigcs2)
+           thetf = thet
+           thetb = thet
+        endif         
 
         do j=1,nat2
           funcat2 = j
