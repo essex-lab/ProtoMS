@@ -5,7 +5,7 @@ parfile brd.tem
 solvent1 soft_solvent.pdb
 solute1 soft_solute.pdb
 solute2 soft_solute.pdb
-outfolder out_mixed_solvent
+outfolder out_soft_solvent
 streamheader off
 streamdetail off
 streamwarning warning

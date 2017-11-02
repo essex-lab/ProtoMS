@@ -137,5 +137,42 @@ class EnergiesSimulationSoftProteinTest(EnergiesSimulationSoftSolventTest):
         return (term[0].curr, term[1].curr)
 
 
+class EnergiesSimulationSoftGcsoluteTest(EnergiesSimulationSoftSolventTest):
+    """In order to test the gcsolute-solute energy code, the t3p water
+    model is implemented as a gcsolute residue in t3p.ff. This required
+    the inclusion of additional 'backbone' atoms that are assigned
+    dummy parameters so do not influence the calculation of energies.
+    """
+
+    input_files = [
+        "run_soft_gcsolute.cmd",
+        "run_mixed_gcsolute.cmd",
+        "run_gcsolute.cmd",
+        "soft_solute.pdb",
+        "soft_gcsolute.pdb",
+        "brd.tem"
+    ]
+
+    args = [
+        ["run_soft_gcsolute.cmd"],
+        ["run_mixed_gcsolute.cmd"],
+        ["run_gcsolute.cmd"]
+    ]
+
+    output_directories = [
+        "out_soft_gcsolute",
+        "out_mixed_gcsolute",
+        "out_gcsolute"
+    ]
+
+    def get_result_energies(self, filename):
+        snapshot = sim.SnapshotResults()
+        with open(filename) as f:
+            snapshot.parse(f)
+
+        term = snapshot.interaction_energies['brd-GCS']
+        return (term[0].curr, term[1].curr)
+
+
 if __name__ == '__main__':
     unittest.main()
