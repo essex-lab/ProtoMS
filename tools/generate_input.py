@@ -562,13 +562,22 @@ class DualTopology(ProteinLigandSimulation) :
                               sim.PDBFile(filename=solutes[1]),
                               cmap)
 
+        atom_names = []
         for i, atom in enumerate(tem_file.templates[0].atoms):
           if atom.name not in cmap:
             softcore_options1 += "%d " % (i+1)
+            atom_names.append(atom.name)
+        logger.info("Applying softcore potentials to solute: 1, atoms: " + ' '.join(atom_names))
 
+        atom_names = []
         for i, atom in enumerate(tem_file.templates[1].atoms):
           if atom.name not in cmap.values():
             softcore_options2 += "%d " % (i+1)
+            atom_names.append(atom.name)
+        logger.info("Applying softcore potentials to solute: 2, atoms: " + ' '.join(atom_names))
+      else:
+        logger.info("Applying softcore potentials to solute: 1, atoms: all")
+        logger.info("Applying softcore potentials to solute: 2, atoms: all")
 
       self.setParameter("softcore1", softcore_options1)
       self.setParameter("softcore2", softcore_options2)
@@ -1155,7 +1164,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
       lambdavals = settings.lambdas
       nlambdas = len(lambdavals)
     logger.info("")
-    logger.info("Will simulate with %s lambda values"%nlambdas)
+    logger.info("Will simulate with %s lambda values\n"%nlambdas)
   
     if hasattr(settings,"outfolder") and settings.outfolder != "" :
       outfolder = settings.outfolder

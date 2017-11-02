@@ -215,7 +215,7 @@ def _auto_map(tem1,tem2,pdb1,pdb2,cmap):
         if dist2 < 0.02 and type1 == type2 :
           found[atom1] = atom2
           break
-    logger.info("Distance/atom type maps:\n%s"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys())))
+    logger.info("Distance/atom type maps:\n%s\n"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys())))
     for atom1 in found :
       atom2 = found[atom1] 
       not_taken1.remove(atom1)
