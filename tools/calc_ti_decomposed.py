@@ -64,12 +64,7 @@ class TI_decomposed(feb.Estimator):
         if len(set(lengths)) > 1:
             raise Exception("Found data entries of different lengths.")
         return lengths[0]
-        
-    
-    # def subset(self, low_bound=0.0, high_bound=1.0, step=1):
-    #     low_ind = int(len(self)*low_bound)
-    #     high_ind = int(len(self)*high_bound)
-    #     return self[low_ind:high_ind:step]
+
 
 def get_result_means(repeats):
     """Take a list of estimator results and average all the terms.
@@ -100,6 +95,11 @@ def get_arg_parser():
                         clashes=['bound'])
     parser.add_argument("-o", "--out", type=str, default="decomposed.pdf",
                         help="Filename of output graph.")
+    parser.add_argument("--dualtopology", action='store_true', default=False,
+                        help="Indicates provided data is from a dual topology"
+                             "calcalution. Attempts to consolidate terms "
+                             "from ligands for clarity that can have opposite "
+                             " sign and large magnitudes.")
     return parser
 
 
@@ -107,21 +107,19 @@ if __name__ == "__main__":
     args = get_arg_parser().parse_args()
     calc = feb.FreeEnergyCalculation(args.directories,
                                      estimators=[feb.TI, TI_decomposed])
-    subset = (args.lower_bound,args.upper_bound)
+    subset = (args.lower_bound, args.upper_bound)
     # store results in a default dict for later simplicity of arithmetic
     results = calc.calculate(subset=subset)
     fdti_mean = np.mean([rep.dG for rep in results[feb.TI]])
     decomp_means = defaultdict(lambda: 0.,
                                get_result_means(results[TI_decomposed]))
 
-    if (args.bound and args.gas) is not None:
-        raise Exception("Cannot supply both bound and gas phase data.")
-    elif (args.bound or args.gas) is not None:
+    if (args.bound or args.gas) is not None:
         calc2 = feb.FreeEnergyCalculation(args.bound or args.gas,
                                           estimators=[feb.TI, TI_decomposed])
         results2 = defaultdict(lambda: 0., calc2.calculate(subset=subset))
         fdti_mean2 = np.mean([rep.dG for rep in results2[feb.TI]])
-        decomp_means2 = defaultdict(lambda: 0., 
+        decomp_means2 = defaultdict(lambda: 0.,
                                     get_result_means(results2[TI_decomposed]))
 
         # iterate over the unique keys from both calc and calc2
@@ -136,9 +134,33 @@ if __name__ == "__main__":
         else:
             fdti_mean = fdti_mean2 - fdti_mean
 
+    # this is currently not robust to inclusion of gcsolute terms
+    # and just generally horrible
+    if args.dualtopology:
+        for i in ('COU', 'LJ'):
+            solvent_interaction_terms = []
+            for term in decomp_means:
+                if "-solvent" in term and i in term:
+                    if "protein" not in term and "solvent-solvent" not in term:
+                        solvent_interaction_terms.append(term)
+            decomp_means['lig-solvent_%s' % i] = sum(
+                [decomp_means.pop(term) for term in solvent_interaction_terms])
+            protein_interaction_terms = []
+            for term in decomp_means:
+                if "protein1-" in term and i in term:
+                    if "solvent" not in term:
+                        protein_interaction_terms.append(term)
+            decomp_means['protein1-lig_%s' % i] = sum(
+                [decomp_means.pop(term) for term in protein_interaction_terms])
+
+    # remove terms that do not contribute to free energy difference as
+    # these take up space and are uninteresting
+    for term in list(decomp_means.keys()):
+        if decomp_means[term] == 0.:
+            decomp_means.pop(term)
+
     width = 0.8
     N = 1
-
     fig, ax = plt.subplots()
     xs = np.arange(len(decomp_means)) * N
 
@@ -155,4 +177,7 @@ if __name__ == "__main__":
     print "sum of terms:", np.sum(decomp_means.values())
 
     # plt.legend(calc.root_paths)
+    # try:
+    plt.show()
+
     plt.savefig(args.out)

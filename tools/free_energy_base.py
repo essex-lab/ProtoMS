@@ -208,19 +208,21 @@ class FEArgumentParser(argparse.ArgumentParser):
     def add_argument(self, *args, **kwargs):
         # figure out what the argument will be called in the parser namespace
         try:
-            key = kwargs['dest']
+            name = kwargs['dest']
         except KeyError:
-            key = args[-1].strip('-')
+            name = args[-1].strip('-')
 
         # store clashes if these are provided, otherwise empty list
         try:
-            self.clashes[key] = kwargs.pop('clashes')
+            self.clashes[name] = kwargs.pop('clashes')
         except KeyError:
-            self.clashes[key] = []
+            self.clashes[name] = []
 
         argparse.ArgumentParser.add_argument(self, *args, **kwargs)
 
     def check_clashes(self, parsed):
+        """Check that arguments in Namespace parsed are compatible,
+        according to provided argument clashes."""
         for arg in self.clashes:
             # if parsed.arg has its default value it WAS NOT used so ignore
             if getattr(parsed, arg, None) == self.get_default(arg):
