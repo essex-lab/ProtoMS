@@ -6,8 +6,8 @@ import numpy as np
 import os
 import free_energy_base as feb
 
-if not "DISPLAY" in os.environ or os.environ["DISPLAY"] == "" :
-    matplotlib.use('Agg') 
+if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
+    matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 plt.rcParams['figure.subplot.bottom'] = 0.3
@@ -29,20 +29,25 @@ class TI_decomposed(feb.Estimator):
         """Save data from a SnapshotResults.series object
         for later calculation"""
         dlam = series.lamf[0]-series.lamb[0]
+        min_len = 10E20
         for name, term in series.interaction_energies.iteritems():
             for energy in term[:-1]:
-                self.estimators["%s_%s" % (name, energy.type)].data.append(
-                    (energy.forw-energy.back) / dlam)
+                dat = (energy.forw-energy.back) / dlam
+                min_len = len(dat) if len(dat) < min_len else min_len
+                self.estimators["%s_%s" % (name, energy.type)].data.append(dat)
 
         for name, term in series.internal_energies.iteritems():
             for energy in term[:-1]:
-                self.estimators["%s_%s" % (name, energy.type)].data.append(
-                    (energy.forw-energy.back) / dlam)
+                dat = (energy.forw-energy.back) / dlam
+                min_len = len(dat) if len(dat) < min_len else min_len
+                self.estimators["%s_%s" % (name, energy.type)].data.append(dat)
 
-    def calculate(self):
+        return min_len
+
+    def calculate(self, subset=(0., 1., 1)):
         """Calculate the free energy difference for each energy component and
         return a dictionary of PMF objects."""
-        return {term: self.estimators[term].calculate()
+        return {term: self.estimators[term].calculate(subset)
                 for term in self.estimators}
 
     def __getitem__(self, val):
@@ -51,18 +56,31 @@ class TI_decomposed(feb.Estimator):
             new_est.estimators[term] = self.estimators[term][val]
         return new_est
 
+    def __len__(self):
+        lengths = [dat.shape[-1] for term in self.estimators
+                   for dat in self.estimators[term].data]
+        if len(lengths) == 0:
+            return 0
+        if len(set(lengths)) > 1:
+            raise Exception("Found data entries of different lengths.")
+        return lengths[0]
+        
+    
+    # def subset(self, low_bound=0.0, high_bound=1.0, step=1):
+    #     low_ind = int(len(self)*low_bound)
+    #     high_ind = int(len(self)*high_bound)
+    #     return self[low_ind:high_ind:step]
 
 def get_result_means(repeats):
     """Take a list of estimator results and average all the terms.
     Return a dictionary mapping energy terms to single values."""
-    return {term: np.mean([repeat[term].dG 
-                           for repeat in repeats])
+    return {term: np.mean([repeat[term].dG for repeat in repeats])
             for term in repeats[0]}
- 
+
 
 def get_arg_parser():
     """Add custom options for this script"""
-    parser = argparse.ArgumentParser(
+    parser = feb.FEArgumentParser(
         description="Calculate individual contributions of different terms "
                     "to the total free energy difference. Although terms are "
                     "guaranteed to be additive with TI, the decomposition "
@@ -73,11 +91,13 @@ def get_arg_parser():
     parser.add_argument("-b", "--bound", nargs="+",
                         help="Output directories of bound phase calculations. "
                              "If present, it is assumed that -d "
-                             "provides solvent phase simulation data.")
+                             "provides solvent phase simulation data.",
+                        clashes=['gas'])
     parser.add_argument("-g", "--gas", nargs="+",
                         help="Output directories of gas phase calculations. "
                              "If present, it is assumed that -d "
-                             "provides solvent phase simulation data.")
+                             "provides solvent phase simulation data.",
+                        clashes=['bound'])
     parser.add_argument("-o", "--out", type=str, default="decomposed.pdf",
                         help="Filename of output graph.")
     return parser
@@ -87,10 +107,11 @@ if __name__ == "__main__":
     args = get_arg_parser().parse_args()
     calc = feb.FreeEnergyCalculation(args.directories,
                                      estimators=[feb.TI, TI_decomposed])
+    subset = (args.lower_bound,args.upper_bound)
     # store results in a default dict for later simplicity of arithmetic
-    results = calc.calculate()
+    results = calc.calculate(subset=subset)
     fdti_mean = np.mean([rep.dG for rep in results[feb.TI]])
-    decomp_means = defaultdict(lambda: 0., 
+    decomp_means = defaultdict(lambda: 0.,
                                get_result_means(results[TI_decomposed]))
 
     if (args.bound and args.gas) is not None:
@@ -98,7 +119,7 @@ if __name__ == "__main__":
     elif (args.bound or args.gas) is not None:
         calc2 = feb.FreeEnergyCalculation(args.bound or args.gas,
                                           estimators=[feb.TI, TI_decomposed])
-        results2 = defaultdict(lambda: 0., calc2.calculate())
+        results2 = defaultdict(lambda: 0., calc2.calculate(subset=subset))
         fdti_mean2 = np.mean([rep.dG for rep in results2[feb.TI]])
         decomp_means2 = defaultdict(lambda: 0., 
                                     get_result_means(results2[TI_decomposed]))
@@ -114,14 +135,13 @@ if __name__ == "__main__":
             fdti_mean -= fdti_mean2
         else:
             fdti_mean = fdti_mean2 - fdti_mean
-            
-    
+
     width = 0.8
     N = 1
 
     fig, ax = plt.subplots()
     xs = np.arange(len(decomp_means)) * N
-    
+
     ys, labels = [], []
     for term in sorted(decomp_means):
         ys.append(decomp_means[term])

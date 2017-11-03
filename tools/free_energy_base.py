@@ -56,6 +56,20 @@ class Estimator(object):
             new_est.data.append(reordered_dat.T)
         return new_est
 
+    def __len__(self):
+        """Return the number of data points contained in the data series."""
+        lengths = [dat.shape[-1] for dat in self.data]
+        if len(lengths) == 0:
+            return 0
+        if len(set(lengths)) > 1:
+            raise Exception("Found data entries of different lengths.")
+        return lengths[0]
+
+    def subset(self, low_bound=0.0, high_bound=1.0, step=1):
+        low_ind = int(len(self)*low_bound)
+        high_ind = int(len(self)*high_bound)
+        return self[low_ind:high_ind:step]
+
 
 class TI(Estimator):
     """Estimate free energy differences using Thermodynamic Integration."""
@@ -154,22 +168,98 @@ class FreeEnergyCalculation(object):
             for cls in self.estimators:
                 self.estimators[cls][i] = self.estimators[cls][i][:min_len]
 
-    def calculate(self):
+    def calculate(self, subset=(0., 1., 1)):
         """For each estimator return the evaluated potential of mean force."""
-        return {estimator: [rep.calculate() for rep in repeats]
+        return {estimator: [rep.subset(*subset).calculate() for rep in repeats]
                 for estimator, repeats in self.estimators.iteritems()}
 
     def autoeqb(self):
         pass
 
+    def test_equilibration(self, discard_limit):
+        proportions = np.linspace(0.0, discard_limit, 10)
+        return {prop: self.calculate(subset=(prop, 1.0))
+                for prop in proportions}
+
+    def test_convergence(self, discard_limit, lower_limit=0.):
+        proportions = np.linspace(discard_limit, 1.0, 10)
+        return {prop: self.calculate(subset=(lower_limit, prop))
+                for prop in proportions}
+
+
+class FEArgumentParser(argparse.ArgumentParser):
+    """Thin wrapper around argparse.ArgumentParser designed to allow
+    specification of individual arguments that cannot be used at the
+    same time as one another."""
+    def __init__(self, *args, **kwargs):
+        self.clashes = {}
+        try:
+            for parent in kwargs['parents']:
+                self.clashes.update(parent.clashes)
+        except KeyError:
+            pass
+        argparse.ArgumentParser.__init__(self, *args, **kwargs)
+
+    def parse_args(self, **kwargs):
+        parsed = argparse.ArgumentParser.parse_args(self, **kwargs)
+        self.check_clashes(parsed)
+        return parsed
+
+    def add_argument(self, *args, **kwargs):
+        # figure out what the argument will be called in the parser namespace
+        try:
+            key = kwargs['dest']
+        except KeyError:
+            key = args[-1].strip('-')
+
+        # store clashes if these are provided, otherwise empty list
+        try:
+            self.clashes[key] = kwargs.pop('clashes')
+        except KeyError:
+            self.clashes[key] = []
+
+        argparse.ArgumentParser.add_argument(self, *args, **kwargs)
+
+    def check_clashes(self, parsed):
+        for arg in self.clashes:
+            # if parsed.arg has its default value it WAS NOT used so ignore
+            if getattr(parsed, arg, None) == self.get_default(arg):
+                continue
+            for clash in self.clashes[arg]:
+                # check clashes for this argument
+                # if clashing argument has non-default value it WAS used
+                # so object and quit
+                if getattr(parsed, clash) != self.get_default(clash):
+                    self.error('Cannot provide both --%s and --%s arguments' %
+                               (arg, clash))
+
 
 def get_arg_parser():
     """Returns a generic argparser for all free energy calculation scripts"""
-    parser = argparse.ArgumentParser(add_help=False)
+    parser = FEArgumentParser(add_help=False)
     parser.add_argument('-d', '--directories', nargs='+', required=True,
                         help='output directories')
     parser.add_argument(
         '--autoeqb', dest='autoeqb', action='store_true',
         help="Use automatic equilibration detection to determine how much "
              "data is included in the calculation")
+    parser.add_argument(
+        '-l', '--lower_bound', default=0., type=float,
+        help="Define the lower bound of data to be used.")
+    parser.add_argument(
+        '-u', '--upper_bound', default=1., type=float,
+        help="Define the upper bound of data to be used.")
+    parser.add_argument(
+        '--test_equilibration', default=None, type=float,
+        help="Perform free energy calculations 10 times using varying "
+             "proportions of the total data set provided. Data used will "
+             "range from 100% of the dataset up to the proportion "
+             "provided to this argument",
+        clashes=('test_convergence', 'lower_bound', 'autoeqb'))
+    parser.add_argument(
+        '--test_convergence', default=None, type=float,
+        help="Perform free energy calculations 10 times using varying "
+             "proportions of the total data set provided. Data used will "
+             "range from 100% of the dataset up to the proportion "
+             "provided to this argument")
     return parser
