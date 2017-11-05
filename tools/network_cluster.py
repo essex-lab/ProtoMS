@@ -41,6 +41,29 @@ def find_pairs(watlist1, watlist2):
                 coordlist2.append(atom.coords)
     # Store a list of matched waters
     pair_list = []
+    distance_matrix = np.zeros((len(coordlist1), len(coordlist2)))
+    for i in range(len(coordlist1)):
+        for j in range(len(coordlist2)):
+            distance_matrix[i,j] = calc_distance(coordlist1[i], coordlist2[j])
+    while len(pair_list) < len(coordlist1):
+        min_dist = 1E6
+        for i in range(len(coordlist1)):
+            already_counted = False
+            for pair in pair_list:
+                if pair[0] == i:
+                    already_counted = True
+            if already_counted: continue
+            for j in range(len(coordlist2)):
+                already_counted = False
+                for pair in pair_list:
+                    if pair[1] == j:
+                        already_counted = True
+                if already_counted: continue
+                if distance_matrix[i,j] < min_dist:
+                    min_dist = distance_matrix[i,j]
+                    min_point = [i, j]
+            pair_list.append(min_point)
+    """
     for i in range(len(coordlist1)):
         closest_dist = 1E6
         for j in range(len(coordlist2)):
@@ -57,6 +80,7 @@ def find_pairs(watlist1, watlist2):
                 closest_j = j
         if closest_dist < 100:
             pair_list.append([i, closest_j])
+    """
     return pair_list, coordlist1, coordlist2
 
 
@@ -144,7 +168,7 @@ if __name__ == "__main__":
         if len(bins[i]) == 0: continue
         if len(bins[i]) == 1:
             all_clusters.append(bins[i])  # Cannot perform clustering if there is only one frame
-	    break
+	    continue
         dist_list = []
         for j in range(len(bins[i])):
             for k in range(j+1, len(bins[i])):
@@ -153,7 +177,6 @@ if __name__ == "__main__":
                 elif args.distance == 'max':
                     dist_list.append(calc_max_dist(pdbfiles.pdbs[bins[i][j]].residues, pdbfiles.pdbs[bins[i][k]].residues))
         # Perform hierarchical clustering
-	print len(bins[i])
         tree = hierarchy.linkage(dist_list, method=args.linkage)
         # Use a distance cutoff to cut the tree
         clust_ids = hierarchy.fcluster(tree, t=args.cutoff, criterion='distance')
@@ -196,6 +219,7 @@ if __name__ == "__main__":
 
     print 'Writing networks to PDB files...\n'
     # Write networks to PDB files - choose a representative frame as that which has the smallest RMSD with all others
+    principal_networks = []
     for i in range(num_clusters):
         cluster = all_clusters[i]
         min_dist = 1E6
@@ -220,6 +244,7 @@ if __name__ == "__main__":
         if i + 1 < 10:
             filename += '0'
         filename += str(i+1) + '.pdb'
+        principal_networks.append(pdbfiles.pdbs[cluster[best_j]])
         pdbfiles.pdbs[cluster[best_j]].write(filename)
 
     if args.plot:
@@ -239,6 +264,25 @@ if __name__ == "__main__":
         
 
     # STEP 4: Condense the principal network data into a smaller number of more meaningful networks
-    # Not sure how to do this yet...
+    # Not sure how best to do this yet...
 
+    print("Considering the presence of each network within larger networks...")
+    for i in range(len(principal_networks)):
+        contains_i = []
+        for j in range(len(principal_networks)):
+            if i == j: continue
+            if len(principal_networks[i].residues) > len(principal_networks[j].residues):
+                continue
+            if args.distance == 'rmsd':
+                dist = calc_rmsd(principal_networks[i].residues, principal_networks[j].residues)
+            elif args.distance == 'max':
+                dist = calc_max_dist(principal_networks[i].residues, principal_networks[j].residues)
+            if dist < args.cutoff:
+                contains_i.append(j)
+                #print("PN {} appears contained within PN {} (RMSD={:.2f})".format(i+1, j+1, rmsd))
+        print("PN {} appears contained within PNs {}".format(i+1, [j+1 for j in contains_i]))
+        conserved_occupancy = occupancies[i]
+        for j in contains_i:
+            conserved_occupancy += occupancies[j]
+        print("\tPresent {:.2f} % of the time".format(conserved_occupancy))
 
