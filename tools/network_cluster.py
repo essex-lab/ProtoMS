@@ -45,7 +45,7 @@ def find_pairs(watlist1, watlist2):
     for i in range(len(coordlist1)):
         for j in range(len(coordlist2)):
             distance_matrix[i,j] = calc_distance(coordlist1[i], coordlist2[j])
-    while len(pair_list) < len(coordlist1):
+    while len(pair_list) < len(coordlist1) and len(pair_list) < len(coordlist2):
         min_dist = 1E6
         for i in range(len(coordlist1)):
             already_counted = False
