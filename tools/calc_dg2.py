@@ -1,4 +1,3 @@
-# import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import free_energy_base
@@ -47,10 +46,14 @@ if __name__ == '__main__':
         ax.set_ylabel('free energy (kcal/mol)')
     else:
         results = calc.calculate(subset=(args.lower_bound, args.upper_bound))
-        for estimator in results:
-            print estimator
-            for pmf, path in zip(results[estimator], args.directories):
-                print "%s: %.4f" % (path, pmf.dG)
+        for estimator in sorted(results):
+            print estimator.__name__
+            dGs = [pmf.dG for pmf in results[estimator]]
+            for dG, path in zip(dGs, args.directories):
+                print "%s: %.4f" % (path, dG)
+            if len(dGs) > 1:
+                print "Mean: %.4f +/- %.4f" % (np.mean(dGs), 
+                                               np.std(dGs)/len(dGs)**0.5)
             print
 
     plt.show()
