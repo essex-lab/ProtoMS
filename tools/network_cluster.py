@@ -117,6 +117,17 @@ def calc_max_dist(watlist1, watlist2):
     return max_dist
 
 
+def list_overlap(list1, list2):
+    """
+    Find overlap of two lists..
+    """
+    overlap = []
+    for i in list1:
+        if i in list2:
+            overlap.append(i)
+    return overlap
+
+
 def get_args():
     import argparse
     parser = argparse.ArgumentParser('Network-based clustering of hydration sites')
@@ -265,7 +276,7 @@ if __name__ == "__main__":
 
     # STEP 4: Condense the principal network data into a smaller number of more meaningful networks
     # Not sure how best to do this yet...
-
+    """
     print("Considering the presence of each network within larger networks...")
     for i in range(len(principal_networks)):
         contains_i = []
@@ -285,4 +296,42 @@ if __name__ == "__main__":
         for j in contains_i:
             conserved_occupancy += occupancies[j]
         print("\tPresent {:.2f} % of the time".format(conserved_occupancy))
+    """
+    
+    wat_coords = []
+    wat_net_ids = []
+    for i in range(len(principal_networks)):
+        for j, wat in principal_networks[i].residues.iteritems():
+            for atom in wat.atoms:
+                if atom.name == "O00":
+                    wat_coords.append(atom.coords)
+                    wat_net_ids.append(i)
+    wat_dist_list = []
+    for i in range(len(wat_coords)):
+        for j in range(i+1, len(wat_coords)):
+            if wat_net_ids[i] == wat_net_ids[j]:
+                wat_dist_list.append(1E6)
+            else:
+                wat_dist_list.append(calc_distance(wat_coords[i], wat_coords[j]))
+    wat_tree = hierarchy.linkage(wat_dist_list, method='average')
+    wat_clust_ids = hierarchy.fcluster(wat_tree, t=2.0, criterion='distance')
+    wat_clusts = [[] for i in range(max(wat_clust_ids))]
+    for i in range(len(wat_clust_ids)):
+        clust_no = wat_clust_ids[i]-1
+        wat_clusts[clust_no].append(wat_net_ids[i])
+    pn_clusts = [[] for i in range(len(principal_networks))]
+    for i in range(len(principal_networks)):
+        for j in range(len(wat_clusts)):
+            if i in wat_clusts[j]:
+                pn_clusts[i].append(j)
+    for i in range(len(principal_networks)):
+        print("PN {} contains clusters\n\t{}".format(i+1, pn_clusts[i]))
+    for i in range(len(pn_clusts)):
+        for j in range(i+1, len(pn_clusts)):
+            print("Overlap between PNs {} and {}".format(i+1, j+1))
+            print("\t{}".format(list_overlap(pn_clusts[i], pn_clusts[j])))
+
+
+
+
 
