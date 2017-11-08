@@ -186,13 +186,31 @@ class FreeEnergyCalculation(object):
         return {prop: self.calculate(subset=(lower_limit, prop))
                 for prop in proportions}
 
+    def run(self, args):
+        """Execute the required calculation according to the values present in
+        the argparse.Namespace args.
+        """
+        if (args.test_equilibration or args.test_convergence) is not None:
+            if (args.test_equilibration) is not None:
+                results = self.test_equilibration(args.test_equilibration)
+            else:
+                results = self.test_convergence(args.test_convergence,
+                                                lower_limit=args.lower_bound)
+        else:
+            results = self.calculate(subset=(args.lower_bound,
+                                             args.upper_bound))
+        return results
+            
+
 
 class FEArgumentParser(argparse.ArgumentParser):
     """Thin wrapper around argparse.ArgumentParser designed to allow
     specification of individual arguments that cannot be used at the
     same time as one another."""
     def __init__(self, *args, **kwargs):
+        # use a dict to store clashes for arguments
         self.clashes = {}
+        # inherit any clashes belonging to parent argument parsers
         try:
             for parent in kwargs['parents']:
                 self.clashes.update(parent.clashes)
@@ -201,11 +219,17 @@ class FEArgumentParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
 
     def parse_args(self, **kwargs):
+        """Thin wrapper around ArgumentParser.parse_args that checks
+        for clashing arguments."""
         parsed = argparse.ArgumentParser.parse_args(self, **kwargs)
         self.check_clashes(parsed)
         return parsed
 
     def add_argument(self, *args, **kwargs):
+        """Thin wrapper around ArgumentParser.add_argument that
+        uses additional keyword argument 'clashes'. Clashes should
+        be a list that contains the names of other arguments which
+        cannot be provided at the same time as this one."""
         # figure out what the argument will be called in the parser namespace
         try:
             name = kwargs['dest']

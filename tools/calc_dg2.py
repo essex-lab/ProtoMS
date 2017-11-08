@@ -29,52 +29,46 @@ def plot_fractional_dataset_results(results, estimators):
     for estimator in ys:
         ax.plot(xs, ys[estimator], label=str(estimator))
     ax.legend()
+    ax.set_xlabel('Proportion')
+    ax.set_ylabel('Free energy (kcal/mol)')
     return fig, ax
+
+
+def plot_pmfs(results):
+    fig, ax = plt.subplots()
+    for estimator in sorted(results):
+        lambdas = results[estimator][0].lambdas
+        pmf_2d = np.array([pmf.values for pmf in results[estimator]])
+        ax.plot(lambdas, pmf_2d.mean(axis=0), label=estimator.__name__)
+    ax.legend()
+    ax.set_xlabel('Lambda value')
+    ax.set_ylabel('Free energy (kcal/mol)')
+    return fig, ax
+
+
+def print_results(results):
+    for estimator in sorted(results):
+        print estimator.__name__
+        dGs = [pmf.dG for pmf in results[estimator]]
+        for dG, path in zip(dGs, args.directories):
+            print "%s: %.4f" % (path, dG)
+        if len(dGs) > 1:
+            print "Mean: %.4f +/- %.4f" % (np.mean(dGs),
+                                           np.std(dGs)/len(dGs)**0.5)
+        print
 
 
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
     calc = free_energy_base.FreeEnergyCalculation(root_paths=args.directories)
 
-    # if args.autoeqb:
-    #     calc.autoeqb()
+    results = calc.run(args)
 
     if (args.test_equilibration or args.test_convergence) is not None:
-        if (args.test_equilibration) is not None:
-            results = calc.test_equilibration(args.test_equilibration)
-        else:
-            results = calc.test_convergence(args.test_convergence,
-                                            lower_limit=args.lower_bound)
-        fig, ax = plot_fractional_dataset_results(results, calc.estimators)
-        ax.set_xlabel('proportion')
-        ax.set_ylabel('free energy (kcal/mol)')
+        plot_fractional_dataset_results(results, calc.estimators)
     else:
         if args.pmf:
-            fig, ax = plt.subplots()
-            ax.set_xlabel('Lambda value')
-            ax.set_ylabel('Free energy (kcal/mol)')
+            plot_pmfs(results)
+        print_results(results)
 
-        results = calc.calculate(subset=(args.lower_bound, args.upper_bound))
-        for estimator in sorted(results):
-            print estimator.__name__
-            dGs = [pmf.dG for pmf in results[estimator]]
-            for dG, path in zip(dGs, args.directories):
-                print "%s: %.4f" % (path, dG)
-            if args.pmf:
-                lambdas = results[estimator][0].lambdas
-                pmf_2d = np.array([pmf.values for pmf in results[estimator]])
-                ax.plot(lambdas, pmf_2d.mean(axis=0), label=estimator.__name__)
-
-                # print "\nPMF -"
-                # print "Lambda   Free Energy (kcal/mol) "
-                # for lam, val in zip(lambdas, pmf_2d.T):
-                #     print "%.3f    %.4f" % (lam, val.mean())
-            if len(dGs) > 1:
-                print "Mean: %.4f +/- %.4f" % (np.mean(dGs),
-                                               np.std(dGs)/len(dGs)**0.5)
-            print
-
-    if args.pmf:
-        ax.legend()
-            
     plt.show()
