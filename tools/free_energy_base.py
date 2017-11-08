@@ -241,10 +241,10 @@ def get_arg_parser():
     parser = FEArgumentParser(add_help=False)
     parser.add_argument('-d', '--directories', nargs='+', required=True,
                         help='output directories')
-    parser.add_argument(
-        '--autoeqb', dest='autoeqb', action='store_true',
-        help="Use automatic equilibration detection to determine how much "
-             "data is included in the calculation")
+    # parser.add_argument(
+    #     '--autoeqb', dest='autoeqb', action='store_true',
+    #     help="Use automatic equilibration detection to determine how much "
+    #          "data is included in the calculation")
     parser.add_argument(
         '-l', '--lower_bound', default=0., type=float,
         help="Define the lower bound of data to be used.")
