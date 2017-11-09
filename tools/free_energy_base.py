@@ -2,13 +2,13 @@
 free energy calculation framework. """
 
 from abc import abstractmethod
-import argparse
 import glob
 import os
 import numpy as np
 import pymbar
 from scipy.integrate import trapz
 import simulationobjects as sim
+from free_energy_argument_parser import FEArgumentParser
 
 
 class PMF(object):
@@ -36,11 +36,19 @@ class Estimator(object):
         self.lambdas = lambdas
 
     @abstractmethod
-    def add_data(self):
+    def add_data(self, series):
+        """Save data from a SnapshotResults.series object for later
+        calculation. Return the length of the data series added.
+        """
         pass
 
     @abstractmethod
-    def calculate(self):
+    def calculate(self, temp=300):
+        """Calculate the free energy difference and return a PMF object.
+
+        temp: float, optional
+              temperature of calculation
+        """
         pass
 
     def __getitem__(self, val):
@@ -65,24 +73,29 @@ class Estimator(object):
             raise Exception("Found data entries of different lengths.")
         return lengths[0]
 
-    def subset(self, low_bound=0.0, high_bound=1.0, step=1):
+    def subset(self, low_bound=0., high_bound=1., step=1):
+        """Return a new class instance containing truncated data series."""
+        if not(0. <= low_bound < high_bound <= 1.):
+            raise ValueError("Both bounds must be in the range [0,1] and "
+                             "low_bound must be less than high_bound.")
+
         low_ind = int(len(self)*low_bound)
         high_ind = int(len(self)*high_bound)
+        if low_ind == high_ind:
+            raise ValueError("Specified bounds will return estimator "
+                             "containing no data.")
+
         return self[low_ind:high_ind:step]
 
 
 class TI(Estimator):
     """Estimate free energy differences using Thermodynamic Integration."""
     def add_data(self, series):
-        """Save data from a SnapshotResults.series object for later
-        calculation. Return the length of the data series added.
-        """
         self.data.append((series.forwfe-series.backfe) /
                          (series.lamf[0]-series.lamb[0]))
         return len(self.data[-1])
 
     def calculate(self, temp=300):
-        """Calculate the free energy difference and return a PMF object."""
         gradients = [gradient_data.mean() for gradient_data in self.data]
         pmf_values = [trapz(gradients[:i], self.lambdas[:i])
                       for i in xrange(1, len(self.lambdas) + 1)]
@@ -102,6 +115,7 @@ class BAR(Estimator):
         return len(self.data[-1][0])
 
     def calculate(self, temp=300):
+        """Calculate the free energy difference and return a PMF object."""
         beta = 1./(sim.boltz*temp)
         pmf_values = [0.0]
         for low_lam, high_lam in zip(self.data, self.data[1:]):
@@ -130,14 +144,16 @@ class MBAR(TI):
 
 
 class FreeEnergyCalculation(object):
-    """Top level class for performing a free energy calculation with
-    simulation data.
+    """Top level class for performing a free energy calculation from
+    ProtoMS simulation outputs.
     """
-    def __init__(self, root_paths, estimators=[TI, BAR, MBAR]):
+    def __init__(self, root_paths, temperature, estimators=[TI, BAR, MBAR]):
         """root_paths - a list of strings to ProtoMS output directories.
         The free energy will be calculated individually for each entry.
-        estimators - a list of estimator classes to use"""
+        temperature - simulation temperature in Kelvin.
+        estimators - a list of estimator classes to use."""
         self.root_paths = root_paths
+        self.temperature = temperature
         self.paths = [sorted(glob.glob(os.path.join(root_path, "lam-*")))
                       for root_path in self.root_paths]
         self.lambdas = [[float(path.split('lam-')[1]) for path in rep]
@@ -169,95 +185,23 @@ class FreeEnergyCalculation(object):
                 self.estimators[cls][i] = self.estimators[cls][i][:min_len]
 
     def calculate(self, subset=(0., 1., 1)):
-        """For each estimator return the evaluated potential of mean force."""
-        return {estimator: [rep.subset(*subset).calculate() for rep in repeats]
-                for estimator, repeats in self.estimators.iteritems()}
+        """For each estimator return the evaluated potential of mean force.
 
-    def autoeqb(self):
-        pass
-
-    def test_equilibration(self, discard_limit):
-        proportions = np.linspace(0.0, discard_limit, 10)
-        return {prop: self.calculate(subset=(prop, 1.0))
-                for prop in proportions}
-
-    def test_convergence(self, discard_limit, lower_limit=0.):
-        proportions = np.linspace(discard_limit, 1.0, 10)
-        return {prop: self.calculate(subset=(lower_limit, prop))
-                for prop in proportions}
-
-    def run(self, args):
-        """Execute the required calculation according to the values present in
-        the argparse.Namespace args.
+        Returns
+        -------
+        dict: 
+          results of calculation stored in the below structure:
+          return_val[estimator_class][i] = PMF instance
+          where i is an list index indicating a repeat
         """
-        if (args.test_equilibration or args.test_convergence) is not None:
-            if (args.test_equilibration) is not None:
-                results = self.test_equilibration(args.test_equilibration)
-            else:
-                results = self.test_convergence(args.test_convergence,
-                                                lower_limit=args.lower_bound)
-        else:
-            results = self.calculate(subset=(args.lower_bound,
-                                             args.upper_bound))
+        results = {}
+        for est, repeats in self.estimators.items():
+            results[est] = [rep.subset(*subset).calculate(self.temperature)
+                            for rep in repeats]
         return results
-            
-
-
-class FEArgumentParser(argparse.ArgumentParser):
-    """Thin wrapper around argparse.ArgumentParser designed to allow
-    specification of individual arguments that cannot be used at the
-    same time as one another."""
-    def __init__(self, *args, **kwargs):
-        # use a dict to store clashes for arguments
-        self.clashes = {}
-        # inherit any clashes belonging to parent argument parsers
-        try:
-            for parent in kwargs['parents']:
-                self.clashes.update(parent.clashes)
-        except KeyError:
-            pass
-        argparse.ArgumentParser.__init__(self, *args, **kwargs)
-
-    def parse_args(self, **kwargs):
-        """Thin wrapper around ArgumentParser.parse_args that checks
-        for clashing arguments."""
-        parsed = argparse.ArgumentParser.parse_args(self, **kwargs)
-        self.check_clashes(parsed)
-        return parsed
-
-    def add_argument(self, *args, **kwargs):
-        """Thin wrapper around ArgumentParser.add_argument that
-        uses additional keyword argument 'clashes'. Clashes should
-        be a list that contains the names of other arguments which
-        cannot be provided at the same time as this one."""
-        # figure out what the argument will be called in the parser namespace
-        try:
-            name = kwargs['dest']
-        except KeyError:
-            name = args[-1].strip('-')
-
-        # store clashes if these are provided, otherwise empty list
-        try:
-            self.clashes[name] = kwargs.pop('clashes')
-        except KeyError:
-            self.clashes[name] = []
-
-        argparse.ArgumentParser.add_argument(self, *args, **kwargs)
-
-    def check_clashes(self, parsed):
-        """Check that arguments in Namespace parsed are compatible,
-        according to provided argument clashes."""
-        for arg in self.clashes:
-            # if parsed.arg has its default value it WAS NOT used so ignore
-            if getattr(parsed, arg, None) == self.get_default(arg):
-                continue
-            for clash in self.clashes[arg]:
-                # check clashes for this argument
-                # if clashing argument has non-default value it WAS used
-                # so object and quit
-                if getattr(parsed, clash) != self.get_default(clash):
-                    self.error('Cannot provide both --%s and --%s arguments' %
-                               (arg, clash))
+        # return {estimator: [rep.subset(*subset).calculate(self.temperature)
+        #                     for rep in repeats]
+        #         for estimator, repeats in self.estimators.iteritems()}
 
 
 def get_arg_parser():
@@ -265,10 +209,6 @@ def get_arg_parser():
     parser = FEArgumentParser(add_help=False)
     parser.add_argument('-d', '--directories', nargs='+', required=True,
                         help='output directories')
-    # parser.add_argument(
-    #     '--autoeqb', dest='autoeqb', action='store_true',
-    #     help="Use automatic equilibration detection to determine how much "
-    #          "data is included in the calculation")
     parser.add_argument(
         '-l', '--lower_bound', default=0., type=float,
         help="Define the lower bound of data to be used.")
@@ -276,16 +216,6 @@ def get_arg_parser():
         '-u', '--upper_bound', default=1., type=float,
         help="Define the upper bound of data to be used.")
     parser.add_argument(
-        '--test_equilibration', default=None, type=float,
-        help="Perform free energy calculations 10 times using varying "
-             "proportions of the total data set provided. Data used will "
-             "range from 100% of the dataset up to the proportion "
-             "provided to this argument",
-        clashes=('test_convergence', 'lower_bound', 'autoeqb'))
-    parser.add_argument(
-        '--test_convergence', default=None, type=float,
-        help="Perform free energy calculations 10 times using varying "
-             "proportions of the total data set provided. Data used will "
-             "range from 100% of the dataset up to the proportion "
-             "provided to this argument")
+        '-t', '--temperature', default=298.15, type=float,
+        help="Temperature at which the simulation was run. Default=298.15K")
     return parser
