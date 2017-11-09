@@ -1,3 +1,5 @@
+"""Execute with 'python2.7 test_free_energy.py'"""
+
 import pymbar
 import numpy as np
 import unittest
@@ -101,3 +103,7 @@ class TestArgumentParsers(unittest.TestCase):
 
     def test_ti_decomposed(self):
         calc_ti_decomposed.get_arg_parser()
+
+
+if __name__ == '__main__':
+    unittest.main()
