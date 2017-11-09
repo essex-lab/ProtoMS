@@ -128,6 +128,18 @@ def list_overlap(list1, list2):
     return overlap
 
 
+def is_contained(list1, list2):
+    """
+    Check if list1 is contained within list2
+    """
+    if len(list1) > len(list2):
+        return False
+    elif len(list_overlap(list1, list2)) == len(list1):
+        return True
+    else:
+        return False
+
+
 def get_args():
     import argparse
     parser = argparse.ArgumentParser('Network-based clustering of hydration sites')
@@ -326,10 +338,35 @@ if __name__ == "__main__":
                 pn_clusts[i].append(j)
     for i in range(len(principal_networks)):
         print("PN {} contains clusters\n\t{}".format(i+1, pn_clusts[i]))
+    #print("")
+    overlaps = []
     for i in range(len(pn_clusts)):
         for j in range(i+1, len(pn_clusts)):
-            print("Overlap between PNs {} and {}".format(i+1, j+1))
-            print("\t{}".format(list_overlap(pn_clusts[i], pn_clusts[j])))
+            #print("Overlap between PNs {} and {}".format(i+1, j+1))
+            overl = list_overlap(pn_clusts[i], pn_clusts[j])
+            if not overl in overlaps:
+                overlaps.append(overl)
+            #print("\t{}".format(overl))
+    print("\n\nSub-networks from PN overlaps:")
+    for i in range(len(overlaps)):
+        print("\t{}".format(overlaps[i]))
+        in_pns = []
+        for j in range(len(pn_clusts)):
+            if is_contained(overlaps[i], pn_clusts[j]):
+                in_pns.append(j)
+        print("\t\tContains {} waters".format(len(overlaps[i])))
+        print("\t\tContained in PNs {}".format([j+1 for j in in_pns]))
+        print("\t\tPresent in {:.2f} % of frames\n".format(sum([occupancies[j] for j in in_pns])))
+
+
+
+
+
+
+
+
+
+
 
 
 
