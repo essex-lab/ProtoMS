@@ -22,6 +22,9 @@ pdbparams on
 
 dualtopology1 1 2 synctrans syncrot
 lambdas 0.5 0.75 0.25
-chunk fakesim
+# chunk fakesim
+chunk simulate 1 protein=1
+chunk simulate 1 solute=1
 chunk results write results
+chunk pdb all solvent=all file=all.pdb standard
 

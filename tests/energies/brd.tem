@@ -11,13 +11,13 @@ par 3002    cl    17     0.05000    3.47095    0.26500
 par 3003    cl    17     0.05000    3.47095    0.26500
 mode template
 solute BRD
-info translate 0.100 rotate 1.000
+info translate 0.000 rotate 0.000
 atom   BR1 BRD 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
 atom   BR2 BRD 3001 3001  BR1 BRD  DM3 DUM  DM2 DUM
 bond   BR1 BRD BR2 BRD
 mode template
 solute CLD
-info translate 0.100 rotate 1.000
+info translate 0.000 rotate 0.000
 atom   CL1 CLD 3002 3002  DM3 DUM  DM2 DUM  DM1 DUM
 atom   CL2 CLD 3003 3003  CL1 CLD  DM3 DUM  DM2 DUM
 bond   CL1 CLD CL2 CLD

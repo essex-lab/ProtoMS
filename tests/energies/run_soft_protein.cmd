@@ -25,6 +25,8 @@ softcore1 solute 1
 softcore2 solute 2
 softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 0 soft66
 lambdas 0.5 0.75 0.25
-chunk fakesim
+#chunk fakesim
+chunk simulate 1 protein=1
+chunk simulate 1 solute=1
 chunk results write results
 
