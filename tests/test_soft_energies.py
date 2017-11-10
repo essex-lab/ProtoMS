@@ -4,21 +4,23 @@ the below do not compare outputs against set reference data but look
 for internal consistency within a set of simulations.
 
 All tests are performed with a simple idealised system as shown below,
-containing a t3p water and a bromine dimer aligned within a plane.
+containing a t3p water and two halogen dimers aligned within a plane.
+At lambda = 0, a bromine dimer is interacting with the water and at
+lambda = 1 a chlorine dimer is interacting.
 
               H
-               \                Br
+               \                X
                 \               |
                  O              |
                 /               |
-               /                Br
+               /                X
               H
 
 Three energy calculations are performed at lambda=0.5, with standard
 softcore parameters on LJ and Coulomb interactions:
-a) Both Br atoms have softcores applied
-b) Neither Br atoms have softcores applied
-c) One atom has softcores applied
+a) All halogen atoms have softcores applied
+b) No halogen atoms have softcores applied
+c) One atom of each halogen dimer has softcores applied
 
 The formulation of the test means that, if correctly implemented, the
 interaction energies of the three calculations should obey the below
@@ -42,6 +44,7 @@ import framework
 sys.path.append(os.path.join(os.environ['PROTOMSHOME'], 'tools'))
 import simulationobjects as sim
 
+
 class EnergiesSimulationSoftSolventTest(framework.BaseTest):
     ref_dir = "tests/energies/"
 
@@ -49,7 +52,8 @@ class EnergiesSimulationSoftSolventTest(framework.BaseTest):
         "run_soft_solvent.cmd",
         "run_mixed_solvent.cmd",
         "run_solvent.cmd",
-        "soft_solute.pdb",
+        "brd.pdb",
+        "cld.pdb",
         "soft_solvent.pdb",
         "brd.tem"
     ]
@@ -69,7 +73,7 @@ class EnergiesSimulationSoftSolventTest(framework.BaseTest):
     ]
 
     output_files = [
-        "results",
+        "results"
     ]
 
     def test(self):
@@ -90,14 +94,16 @@ class EnergiesSimulationSoftSolventTest(framework.BaseTest):
         mixed_energies = self.get_result_energies(out_files[1])
         energies = self.get_result_energies(out_files[2])
         for se, me, e in zip(soft_energies, mixed_energies, energies):
+            print se, me, e
             self.assertAlmostEqual((se+e)/2, me, 2)
 
     def get_result_energies(self, filename):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term = snapshot.interaction_energies['brd-solvent']
-        return (term[0].curr, term[1].curr)
+        term1 = snapshot.interaction_energies['brd-solvent']
+        term2 = snapshot.interaction_energies['cld-solvent']
+        return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
 class EnergiesSimulationSoftProteinTest(EnergiesSimulationSoftSolventTest):
@@ -111,7 +117,8 @@ class EnergiesSimulationSoftProteinTest(EnergiesSimulationSoftSolventTest):
         "run_soft_protein.cmd",
         "run_mixed_protein.cmd",
         "run_protein.cmd",
-        "soft_solute.pdb",
+        "brd.pdb",
+        "cld.pdb",
         "soft_protein.pdb",
         "brd.tem",
         "t3p.ff"
@@ -133,8 +140,9 @@ class EnergiesSimulationSoftProteinTest(EnergiesSimulationSoftSolventTest):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term = snapshot.interaction_energies['protein1-brd1']
-        return (term[0].curr, term[1].curr)
+        term1 = snapshot.interaction_energies['protein1-brd1']
+        term2 = snapshot.interaction_energies['protein1-cld2']
+        return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
 class EnergiesSimulationSoftGcsoluteTest(EnergiesSimulationSoftSolventTest):
@@ -148,7 +156,8 @@ class EnergiesSimulationSoftGcsoluteTest(EnergiesSimulationSoftSolventTest):
         "run_soft_gcsolute.cmd",
         "run_mixed_gcsolute.cmd",
         "run_gcsolute.cmd",
-        "soft_solute.pdb",
+        "brd.pdb",
+        "cld.pdb",
         "soft_gcsolute.pdb",
         "brd.tem"
     ]
@@ -169,8 +178,9 @@ class EnergiesSimulationSoftGcsoluteTest(EnergiesSimulationSoftSolventTest):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term = snapshot.interaction_energies['brd-GCS']
-        return (term[0].curr, term[1].curr)
+        term1 = snapshot.interaction_energies['brd-GCS']
+        term2 = snapshot.interaction_energies['cld-GCS']
+        return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
 class EnergiesSimulationSoftSoluteTest(EnergiesSimulationSoftSolventTest):
@@ -184,7 +194,8 @@ class EnergiesSimulationSoftSoluteTest(EnergiesSimulationSoftSolventTest):
         "run_soft_solute.cmd",
         "run_mixed_solute.cmd",
         "run_solute.cmd",
-        "soft_solute.pdb",
+        "brd.pdb",
+        "cld.pdb",
         "soft_solute_t3p.pdb",
         "brd.tem",
         "t3p.tem"
@@ -206,8 +217,9 @@ class EnergiesSimulationSoftSoluteTest(EnergiesSimulationSoftSolventTest):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term = snapshot.interaction_energies['brd-t3p']
-        return (term[0].curr, term[1].curr)
+        term1 = snapshot.interaction_energies['brd-t3p']
+        term2 = snapshot.interaction_energies['cld-t3p']
+        return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
 if __name__ == '__main__':

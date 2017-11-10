@@ -3,8 +3,8 @@ parfile $PROTOMSHOME/parameter/gaff16.ff
 parfile t3p.ff
 parfile brd.tem
 protein1 soft_protein.pdb
-solute1 soft_solute.pdb
-solute2 soft_solute.pdb
+solute1 brd.pdb
+solute2 cld.pdb
 outfolder out_mixed_protein
 streamheader off
 streamdetail off

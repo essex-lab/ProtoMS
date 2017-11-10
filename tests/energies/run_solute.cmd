@@ -3,8 +3,8 @@ parfile $PROTOMSHOME/parameter/solvents.ff
 parfile $PROTOMSHOME/parameter/amber14SB-residues.ff
 parfile brd.tem
 parfile t3p.tem
-solute1 soft_solute.pdb
-solute2 soft_solute.pdb
+solute1 brd.pdb
+solute2 cld.pdb
 solute3 soft_solute_t3p.pdb
 outfolder out_solute
 streamheader off
