@@ -24,25 +24,24 @@ class FreeEnergy(object):
         return "<FreeEnergy: value=%.4f error=%.4f>" % (self.value, self.error)
 
 
-def get_arg_parser():
-    """Add custom options for this script"""
-    parser = feb.FEArgumentParser(
-        description="Calculate free energy differences using a range of"
-                    " estimators",
-        parents=[feb.get_arg_parser()])
-    parser.add_argument(
-        "-s", "--signs", nargs='+', type=str, choices=('+', '-'),
-        help="", required=True)
+def print_state_data(results, directories, signs, states, estimator):
 
-    # use mutually exclusive group for these as we need one and only one
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
-        "--dualtopology", action='store_true', default=False,
-        help="")
-    group.add_argument(
-        "--singletopology", nargs=1, type=str, choices=('comp', 'decomp'),
-        help="")
-    return parser
+    fmt = "%20s  %20s  %20s  %20s"
+    print fmt % ('', 'dG gas', 'dG free', 'dG bound')
+
+    closures = {state: FreeEnergy(0., 0.) for state in states}
+    for root, sign in zip(directories, signs):
+        root_dGs = (root,)
+        for state in states:
+            dG = results[root][state][est]
+            root_dGs += (dG,)
+            if sign == '+':
+                closures[state] += dG
+            else:
+                closures[state] -= dG
+        print fmt % root_dGs
+    print fmt % (
+        ('Cycle Closure',) + tuple(closures[state] for state in states))
 
 
 def print_solv_bind(dG_solvs, dG_binds, directories, signs, estimator):
@@ -64,32 +63,79 @@ def print_solv_bind(dG_solvs, dG_binds, directories, signs, estimator):
     print
 
 
+def get_arg_parser():
+    """Add custom options for this script"""
+    parser = feb.FEArgumentParser(
+        description="High level script that attempts to use data from multiple"
+                    " calculations to provide free energies of solvation and "
+                    "binding. Also calculates cycle closures for all data. "
+                    "Assumes standard ProtoMS naming conventions for data "
+                    "output directories. Data should be organised such that "
+                    "each transformation between two ligands should have a "
+                    "single master directory containing output directories "
+                    "for each simulation state (e.g. master/out1_free). Master"
+                    "directories should be passed to the -d flag. "
+                    "Reported free energies are averages "
+                    "over all repeats found. Reported errors are single "
+                    "standard errors calculated from repeats.",
+        parents=[feb.get_arg_parser()])
+    parser.add_argument(
+        "-s", "--signs", nargs='+', type=str, choices=('+', '-'),
+        help="List of '+' or '-' characters, one for each directory provided "
+             "to the -d flag. Indicates the sign that should be used for each "
+             "free energy difference when calculating cycle closures.",
+        required=True)
+
+    # use mutually exclusive group for these as we need one and only one
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "--dualtopology", action='store_true', default=False,
+        help="Indicates data is for a dual topology calculation.")
+    group.add_argument(
+        "--singletopology", type=str, choices=('comb', 'sep'),
+        help="Indicates data is for a single topology calculation. "
+             "Option comb indicates a single step calculation. "
+             "Option sep indicates separate steps for van der Waals "
+             " and electrostatics components.")
+    return parser
+
+
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
 
     if len(args.directories) != len(args.signs):
         raise Exception(
-            "Please provide one valid sign for each provided directory.")
+            "Please give exactly one sign for each provided directory.")
 
+    # determine what output folder names we're looking for
+    # elements of midfixes will replace the central %s of
+    # the output_dir_format string
     output_dir_format = "%s/out?%s_%s"
-
-    if args.singletopology == 'decomp':
+    if args.singletopology == 'sep':
+        # calculation is split into electrostatics and van der Waals
+        # components, need to do both and add them up
         midfixes = ['_ele', '_vdw']
-    elif args.singletopology == 'comp':
-        midfixes = ['_comp']
+    elif args.singletopology == 'comb':
+        midfixes = ['_comb']
     else:
         midfixes = ['']
 
-    legs = ('gas', 'free', 'bnd')
+    states = ('gas', 'free', 'bnd')
     estimators = (feb.TI, feb.BAR, feb.MBAR)
-    results = {}
 
+    # perform calculations
+    # end up with results dictionary structured as -
+    # results[root][state][estimator] == FreeEnergy object
+    # thus we have one free energy difference for each root
+    # directory, for each state (gas, free or bound), calculated
+    # with each of the estimators
+    results = {}
     for root in args.directories:
         results[root] = {}
-        for leg in legs:
-            leg_dGs = {est: FreeEnergy(0., 0.) for est in estimators}
+        for state in states:
+            state_dGs = {est: FreeEnergy(0., 0.) for est in estimators}
             for mid in midfixes:
-                output_dir = output_dir_format % (root, mid, leg)
+                output_dir = output_dir_format % (root, mid, state)
                 calc = feb.FreeEnergyCalculation(
                     root_paths=glob(output_dir),
                     temperature=args.temperature,
@@ -97,16 +143,23 @@ if __name__ == '__main__':
                 data = calc.calculate(
                     subset=(args.lower_bound, args.upper_bound, 1))
                 for est in estimators:
+                    # average over repeats for this state
                     dat = np.array([pmf.dG for pmf in data[est]])
                     if len(dat) == 0:
+                        # no data found!
+                        # use nan's so that higher order terms depending
+                        # on this one will be deliberately polluted and
+                        # clearly meaningless
                         fe = FreeEnergy(float('nan'), float('nan'))
                     else:
+                        # average over repeats for this state
                         fe = FreeEnergy(dat.mean(), dat.std()/len(dat)**0.5)
-                    leg_dGs[est] += fe
-            results[root][leg] = leg_dGs
-
-    dG_solvation = {}
-    dG_binding = {}
+                    # combine over multiple midfixes - for separate vdw + ele
+                    state_dGs[est] += fe
+            results[root][state] = state_dGs
+    
+    # combine state changes to get meaningful free energy differences
+    dG_solvation, dG_binding = {}, {}
     for root in args.directories:
         dG_solvation[root] = {}
         dG_binding[root] = {}
@@ -114,31 +167,17 @@ if __name__ == '__main__':
             gas = results[root]['gas'][est]
             free = results[root]['free'][est]
             bnd = results[root]['bnd'][est]
+
+            # solvation depends on calculation type
             if args.dualtopology:
                 dG_solvation[root][est] = free
-                dG_binding[root][est] = bnd - free
             else:
                 dG_solvation[root][est] = free - gas
-                dG_binding[root][est] = bnd - free
+            dG_binding[root][est] = bnd - free
 
     for est in estimators:
-        print "%s -" % est.__name__
-        fmt = "%20s  %20s  %20s  %20s"
-        print fmt % ('', 'dG gas', 'dG free', 'dG bound')
-        # closures = defaultdict(lambda: FreeEnergy(0., 0.))
-        closures = {leg: FreeEnergy(0., 0.) for leg in legs}
-        for root, sign in zip(args.directories, args.signs):
-            sub_vals = (root,)
-            for leg in legs:
-                dG = results[root][leg][est]
-                sub_vals += (dG,)
-                if sign == '+':
-                    closures[leg] += dG
-                else:
-                    closures[leg] -= dG
-            print fmt % sub_vals
-        print fmt % (('Cycle Closure',) + tuple(closures[leg] for leg in legs))
+        print "%s -\n" % est.__name__
+        print_state_data(results, args.directories, args.signs, states, est)
         print
-
         print_solv_bind(dG_solvation, dG_binding,
                         args.directories, args.signs, est)
