@@ -381,6 +381,8 @@ if __name__ == "__main__":
         #sub_occupancies.append(sum([occupancies[j] for j in in_pns]))
     # Add full PNs
     for i in range(len(pn_clusts)):
+        if pn_clusts[i] in overlaps:
+            continue
         overlaps.append(pn_clusts[i])
         clust_sizes.append(len(pn_clusts[i]))
         sub_occupancies.append(occupancies[i])
