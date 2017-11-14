@@ -321,18 +321,53 @@ if __name__ == "__main__":
                 pn_clusts[i].append(j)
     for i in range(len(principal_networks)):
         print("PN {} contains clusters\n\t{}".format(i+1, pn_clusts[i]))
+    max_occupancy = max([sum([occupancies[j] for j in wat_clusts[i]]) for i in range(len(wat_clusts))])
+    print("Maximum occupancy: {} %".format(max_occupancy))
     #print("")
-    overlaps = []
+    overlaps = [] # Lists of clusters which represent overlaps between PNs
+    clust_sizes = []  # Numbers of clusters in each overlap
+    sub_occupancies = [] # Occupancy of each subnetwork
     for i in range(len(pn_clusts)):
         for j in range(i+1, len(pn_clusts)):
             #print("Overlap between PNs {} and {}".format(i+1, j+1))
             overl = list_overlap(pn_clusts[i], pn_clusts[j])
             if not overl in overlaps:
                 overlaps.append(overl)
-            #print("\t{}".format(overl))
+                in_pns = []
+                for k in range(len(pn_clusts)):
+                    if is_contained(overl, pn_clusts[k]):
+                        in_pns.append(k)
+                clust_sizes.append(len(overl))
+                sub_occupancies.append(sum([occupancies[k] for k in in_pns]))
+    tested_until = 0  # Used to keep track of which sub-networks have been overlapped with PNs
+    while max(sub_occupancies) < max_occupancy:
+        # Keep finding overlaps until the highest occupancy unit has been found
+        for i in range(tested_until, len(overlaps)):
+            for j in range(len(pn_clusts)):
+                if not is_contained(overlaps[i], pn_clusts[j]):
+                    # Test the overlap against PNs which don't contain this entire unit
+                    overl = list_overlap(overlaps[i], pn_clusts[j])
+                    if not overl in overlaps:
+                        overlaps.append(overl)
+                        in_pns = [] 
+                        for k in range(len(pn_clusts)):
+                            if is_contained(overl, pn_clusts[k]):
+                                in_pns.append(k)
+                        clust_sizes.append(len(overl))
+                        sub_occupancies.append(sum([occupancies[k] for k in in_pns]))
+            tested_until += 1
     print("\n\nSub-networks from PN overlaps:")
-    clust_sizes = []
-    sub_occupancies = []
+    """
+    for i in range(len(overlaps)):
+        in_pns = []
+        for j in range(len(pn_clusts)):
+            if is_contained(overlaps[i], pn_clusts[j]):
+                in_pns.append(j)
+            else:
+                overl = list_overlap(overlaps[i], pn_clusts[j])
+                if not overl in overlaps:
+                    overlaps.append(overl)
+    """
     for i in range(len(overlaps)):
         print("\t{}".format(overlaps[i]))
         in_pns = []
@@ -340,12 +375,15 @@ if __name__ == "__main__":
             if is_contained(overlaps[i], pn_clusts[j]):
                 in_pns.append(j)
         print("\t\tContains {} waters".format(len(overlaps[i])))
-        clust_sizes.append(len(overlaps[i]))
+        #clust_sizes.append(len(overlaps[i]))
         print("\t\tContained in PNs {}".format([j+1 for j in in_pns]))
         print("\t\tPresent in {:.2f} % of frames\n".format(sum([occupancies[j] for j in in_pns])))
-        sub_occupancies.append(sum([occupancies[j] for j in in_pns]))
-
-    
+        #sub_occupancies.append(sum([occupancies[j] for j in in_pns]))
+    # Add full PNs
+    for i in range(len(pn_clusts)):
+        overlaps.append(pn_clusts[i])
+        clust_sizes.append(len(pn_clusts[i]))
+        sub_occupancies.append(occupancies[i])
 
 ##### tree diagram
     zippeda = zip(range(1,len(overlaps)+1),sub_occupancies,clust_sizes,overlaps)
@@ -386,7 +424,8 @@ if __name__ == "__main__":
 	previous = clust_size
 	count+=1
       labels[i+1] = int(a[0])
-      names[i+1] = str(a[3])
+      #names[i+1] = str(a[3])
+      names[i+1] = ''
     G.add_nodes_from(pos)    
     labels_back = {int(v): k for k, v in labels.items()}
 
