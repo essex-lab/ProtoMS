@@ -14,6 +14,10 @@ from scipy.cluster import hierarchy
 
 import simulationobjects
 
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import itertools
 
 def calc_distance(coords1, coords2):
     """
@@ -288,27 +292,6 @@ if __name__ == "__main__":
 
     # STEP 4: Condense the principal network data into a smaller number of more meaningful networks
     # Not sure how best to do this yet...
-    """
-    print("Considering the presence of each network within larger networks...")
-    for i in range(len(principal_networks)):
-        contains_i = []
-        for j in range(len(principal_networks)):
-            if i == j: continue
-            if len(principal_networks[i].residues) > len(principal_networks[j].residues):
-                continue
-            if args.distance == 'rmsd':
-                dist = calc_rmsd(principal_networks[i].residues, principal_networks[j].residues)
-            elif args.distance == 'max':
-                dist = calc_max_dist(principal_networks[i].residues, principal_networks[j].residues)
-            if dist < args.cutoff:
-                contains_i.append(j)
-                #print("PN {} appears contained within PN {} (RMSD={:.2f})".format(i+1, j+1, rmsd))
-        print("PN {} appears contained within PNs {}".format(i+1, [j+1 for j in contains_i]))
-        conserved_occupancy = occupancies[i]
-        for j in contains_i:
-            conserved_occupancy += occupancies[j]
-        print("\tPresent {:.2f} % of the time".format(conserved_occupancy))
-    """
     
     wat_coords = []
     wat_net_ids = []
@@ -348,6 +331,8 @@ if __name__ == "__main__":
                 overlaps.append(overl)
             #print("\t{}".format(overl))
     print("\n\nSub-networks from PN overlaps:")
+    clust_sizes = []
+    sub_occupancies = []
     for i in range(len(overlaps)):
         print("\t{}".format(overlaps[i]))
         in_pns = []
@@ -355,20 +340,120 @@ if __name__ == "__main__":
             if is_contained(overlaps[i], pn_clusts[j]):
                 in_pns.append(j)
         print("\t\tContains {} waters".format(len(overlaps[i])))
+        clust_sizes.append(len(overlaps[i]))
         print("\t\tContained in PNs {}".format([j+1 for j in in_pns]))
         print("\t\tPresent in {:.2f} % of frames\n".format(sum([occupancies[j] for j in in_pns])))
+        sub_occupancies.append(sum([occupancies[j] for j in in_pns]))
+
+    
+
+##### tree diagram
+    zippeda = zip(range(1,len(overlaps)+1),sub_occupancies,clust_sizes,overlaps)
+    zippeda.sort(key = lambda t: t[2])
+    zipped = filter(lambda (a,b,c,d): b > 25.,zippeda)
+
+    G=nx.Graph()
+    sort_occ = []
+
+   
+    for row in zipped:
+        sort_occ.append(row[1])
+
+    additional_occ = [0.]*len(overlaps) 
+
+    labels = {} 
+    labels_back = {} 
+    names = {}
+
+    clust_sizes_filter = [c for a,b,c,d in zipped]
+    occurence = {}
+    clust_unique = list(set(clust_sizes_filter)) 
+    for clust_size in clust_unique:
+      occurence[clust_size]=clust_sizes_filter.count(clust_size)
+
+    pos = {}
+    previous = 0
+    count = 0
+    for i,a in enumerate(zipped):
+      clust_size = zipped[i][2]
+      if occurence[clust_size] == 1:
+        pos[i+1]= (0,zipped[i][2])
+      else:
+	if clust_size != previous:  # if it is the first
+  	  spacing = np.linspace(-7,7,occurence[clust_size])	
+          count = 0
+	pos[i+1]= (spacing[count],zipped[i][2])
+	previous = clust_size
+	count+=1
+      labels[i+1] = int(a[0])
+      names[i+1] = str(a[3])
+    G.add_nodes_from(pos)    
+    labels_back = {int(v): k for k, v in labels.items()}
+
+    edges = []
+    for a,b in itertools.combinations(zipped,2):
+      if all(x in b[3] for x in a[3]): 
+        print("SubN {} overlaps with SubNs {}".format(a[0], b[0]))
+        if a[2] == b[2]-1 : 
+    	  edges.append((labels_back[a[0]],labels_back[b[0]]))
+   
+    nx.draw_networkx_nodes(G,pos,node_color=sort_occ,vmin = 0, vmax = 100, linewidths=0.0, cmap = plt.cm.Blues)
+    nx.draw_networkx_edges(G,pos,edgelist=edges, edge_color='grey',width=3,alpha=0.5)
+    nx.draw_networkx_labels(G,pos,names,font_size=10)
+   
+    axes = plt.gca()
+    axes.get_xaxis().set_visible(False)
+    axes.set_yticks(np.arange(min(clust_sizes)-1,max(clust_sizes)+1,1))
+    plt.savefig('tree.png')
+    plt.gcf().clear()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+#    #### PLOTTING ####
+#
+#    combined = zip(pn_clusts,occupancies)
+#    sites = max([max(x) for x in pn_clusts])
+#    hyd_occ = [0.]*(sites+1)
+#    for pn, occ in combined:
+#      for water in pn:
+#        hyd_occ[water]+= occ
+#
+#    hyd_sites = range(len(hyd_occ))
+#    nodes = zip(hyd_sites,hyd_occ)
+##    nodes = filter(lambda (a,b): b > 5.,nodes)
+#    
+##    hyd_sites = [x for x,y in nodes]
+##    hyd_occ = [y for x,y in nodes]
+#
+#    observed_pairings = []
+#    occ_pairings = []
+#    for pn,occ in combined:
+#      for (i,j) in list(itertools.combinations(pn, 2)):
+#        observed_pairings.append((i,j))
+#        occ_pairings.append(occ)
+#    pairings = zip(observed_pairings,occ_pairings)
+#
+#    G = nx.cycle_graph(len(nodes))                           # create a graph object
+#    pos = nx.circular_layout(G)   # arranges 'nodes' in a circle
+#    fig, ax = plt.subplots(1, 1, num=1)
+#
+#    all_pairs = list(itertools.combinations([x for x,y in nodes], 2))
+#
+#
+#    weight = []
+#    for (fr, to) in all_pairs:
+#      pair_occ = 0.
+#      for (a,b),occ in pairings:
+#        if (a,b) == (fr,to) or (b,a) == (fr,to):
+#          pair_occ+=(occ/100.)
+#      chance = (hyd_occ[hyd_sites.index(to)]/100.)*(hyd_occ[hyd_sites.index(fr)]/100.) # this will break
+#      correlation = pair_occ - chance
+#      weight.append(correlation*5)
+# 
+#    nx.draw_networkx_nodes(G,pos,node_color=hyd_occ,cmap=plt.cm.Blues,vmin = 0., vmax = 100.)
+#    nx.draw_networkx_edges(G,pos,edgelist=all_pairs,width=weight,edge_cmap=plt.cm.PRGn,alpha=0.5,edge_color=weight)
+#    nx.draw_networkx_labels(G,pos,font_size=10)
+#
+# 
+#    ax.set_axis_off()
+#    plt.savefig('correlations.png')
