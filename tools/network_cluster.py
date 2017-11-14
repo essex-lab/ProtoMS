@@ -8,13 +8,16 @@ Marley Samways
 """
 
 import logging
+import math
 
 import numpy as np
 from scipy.cluster import hierarchy
 
 import simulationobjects
 
+import copy
 import networkx as nx
+from calc_clusters import _GetMolTemplate,_printpdb
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import itertools
@@ -186,6 +189,7 @@ if __name__ == "__main__":
     for i in range(max_wats+1):
         if len(bins[i]) == 0: continue
         print '{:>3} frames contain {} waters'.format(len(bins[i]), i)
+    Nstar = np.mean(num_wat_list)
 
     # STEP 2: Cluster frames within each bin, using RMSD as a measure of distance
 
@@ -319,8 +323,8 @@ if __name__ == "__main__":
         for j in range(len(wat_clusts)):
             if i in wat_clusts[j]:
                 pn_clusts[i].append(j)
-    for i in range(len(principal_networks)):
-        print("PN {} contains clusters\n\t{}".format(i+1, pn_clusts[i]))
+#    for i in range(len(principal_networks)):
+    #    print("PN {} contains clusters\n\t{}".format(i+1, pn_clusts[i]))
     #print("")
     overlaps = []
     for i in range(len(pn_clusts)):
@@ -334,6 +338,7 @@ if __name__ == "__main__":
     clust_sizes = []
     sub_occupancies = []
     for i in range(len(overlaps)):
+        print 'Subnetwork:', i
         print("\t{}".format(overlaps[i]))
         in_pns = []
         for j in range(len(pn_clusts)):
@@ -345,7 +350,139 @@ if __name__ == "__main__":
         print("\t\tPresent in {:.2f} % of frames\n".format(sum([occupancies[j] for j in in_pns])))
         sub_occupancies.append(sum([occupancies[j] for j in in_pns]))
 
+    num_of_core = 0.
+    if max(sub_occupancies) >= 90.:
+      print 'CORE WATER MOLECULES'
+      print 'occupancy:', max(sub_occupancies)
+      core = set(overlaps[sub_occupancies.index(max(sub_occupancies))]) 
+      print 'water molecules:', ', '.join(str(s) for s in core) 
+      num_of_core = len(core)
+    else:
+      print 'no persistent water molecules found. Site may be disordered'
+      core = set([])
+   
+
+    non_core_subnet=[] 
+    for clust,waters in zip(clust_sizes,overlaps):
+      if clust==math.floor(Nstar) or clust==math.ceil(Nstar):
+        non_core_subnet.append(waters)
+    non_core = [a for sublist in non_core_subnet for a in sublist]
+    non_core = set(non_core)-set(core)
+    print 'NON-CORE WATER MOLECULES'
+    print 'water molecules:', ', '.join(str(s) for s in non_core) 
+
+    centroids = [[] for i in range(max(wat_clust_ids))]
+    contained = [[] for i in range(max(wat_clust_ids))]
+    for coords, ids in zip(wat_coords,wat_clust_ids):
+      contained[ids-1].append(coords)
     
+    for i,each in enumerate(contained):
+      centroids[i].append(np.mean(each,axis=0))
+
+
+    pdbfiles = simulationobjects.PDBSet()
+    pdbfiles.read(args.input, resname=args.molecule, skip=args.skip, readmax=9999)
+    molpdb = _GetMolTemplate(args.input, args.molecule)
+    num_frames = len(pdbfiles.pdbs)
+
+    if len(pdbfiles.pdbs[0].residues) > 20.:
+      quit()
+    wat_list = []  # Store water molecules
+    wat_whole = []  # Store water molecules
+    frame_wat_ids = [[] for i in range(num_frames)]  # Store list ids of waters for each frame
+    for i in range(num_frames):
+        for j, wat in pdbfiles.pdbs[i].residues.iteritems():
+            for atom in wat.atoms:
+                if atom.name.upper() == 'O00':
+                   wat_list.append(atom)
+                   wat_whole.append(wat)
+            frame_wat_ids[i].append(len(wat_list)-1)
+ 
+    frame_clust_ids =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames
+    frame_clust_ids_all =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames
+    frame_clust_dist =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames
+
+    for i,frame in enumerate(frame_wat_ids):
+      for j,water in enumerate(frame):
+        dist = [np.linalg.norm(x-wat_list[water].coords) for x in centroids]
+        frame_clust_ids_all[i][j] = np.argmin(dist)
+        frame_clust_dist[i][j] = np.min(dist)
+        if np.argmin(dist) in non_core:
+          frame_clust_ids[i][j] = np.argmin(dist)
+        else:
+          frame_clust_ids[i][j] = None
+
+
+    flat_frame_clust_ids_all = [item for sublist in frame_clust_ids_all for item in sublist]
+    all_occ = [0.]*len(centroids)
+    for i,j in enumerate(range(len(centroids))):
+      all_occ[i] = (flat_frame_clust_ids_all.count(j)/float(num_frames))*100
+
+    for sub_id,clust in enumerate(non_core_subnet):
+      best=[1E6,1E6]
+      for i,(dist,frame) in enumerate(zip(frame_clust_dist,frame_clust_ids_all)): ### finding our best snapshot
+        if all(x in frame for x in clust):
+          distclust=0.
+          for water in clust:
+            distclust+= dist[frame.index(water)]
+            if distclust <= best[1]:
+              best[0] = i
+              best[1] = distclust
+      rep_struct_ids = []
+      for water in clust:
+        rep_struct_ids.append( frame_wat_ids[best[0]][frame_clust_ids_all[best[0]].index(water)])
+      outfile = open('subnet'+str(sub_id)+'.pdb',"w")
+      for clustid,IDs in zip(clust,rep_struct_ids):
+        coordinates = []
+        for atom in wat_whole[IDs].atoms:
+          coordinates.append( atom.coords)
+        occ = float(all_occ[clustid])
+        _printpdb(np.asarray(coordinates),molpdb,clustid,occ,outfile)
+
+
+    print 'Plotting correlation between non-core water molecules'
+
+    G = nx.cycle_graph(len(non_core))
+    pos = nx.circular_layout(G)   # arranges 'nodes' in a circle
+    fig, ax = plt.subplots(1, 1, num=1)
+
+
+    flat_frame_clust_ids = [item for sublist in frame_clust_ids for item in sublist]
+    non_core_occ = [0.]*len(non_core)
+    for i,j in enumerate(non_core):
+      non_core_occ[i] = flat_frame_clust_ids.count(j)
+
+
+
+    all_pairs = list(itertools.combinations(non_core, 2))
+    observed_pairings=[]
+    for frame in frame_clust_ids:
+      for (i,j) in list(itertools.combinations(frame, 2)):
+        observed_pairings.append((i,j))
+    
+    pair_occupancy = [0.]*len(all_pairs)
+    weight = [0.]*len(all_pairs)
+    for a,(i,j) in enumerate(all_pairs):
+      pair_occupancy[a] = (observed_pairings.count((i,j)) + observed_pairings.count((j,i)))/float(num_frames)
+      spontaneous_occupancy = (non_core_occ[list(non_core).index(i)]/float(num_frames))*(non_core_occ[list(non_core).index(j)]/float(num_frames))
+      temp = 10*(pair_occupancy[a]-spontaneous_occupancy)
+      if temp >=.5:
+        weight[a] = temp 
+      else:
+        weight[a]= 0.
+    for a,(i,j) in enumerate(all_pairs):
+      all_pairs[a]= (list(non_core).index(i),list(non_core).index(j))
+
+    ids = [x for x in list(non_core)]  # dictionary of included nodes
+    labels = {}
+    for i,j in enumerate(ids):
+      labels[i]= str(j)
+
+    nx.draw_networkx_nodes(G,pos,node_color=non_core_occ,cmap=plt.cm.Blues,vmin = 0., vmax = num_frames)
+    nx.draw_networkx_edges(G,pos,edgelist=all_pairs,width=weight,edge_cmap=plt.cm.PRGn,alpha=0.5,edge_color=weight)
+    nx.draw_networkx_labels(G,pos,labels,font_size=10)
+    ax.set_axis_off()
+    plt.savefig('correlations.png')
 
 ##### tree diagram
     zippeda = zip(range(1,len(overlaps)+1),sub_occupancies,clust_sizes,overlaps)
@@ -386,74 +523,31 @@ if __name__ == "__main__":
 	previous = clust_size
 	count+=1
       labels[i+1] = int(a[0])
-      names[i+1] = str(a[3])
+      names[i+1] = str(' '.join( repr(e) for e in a[3]))
     G.add_nodes_from(pos)    
     labels_back = {int(v): k for k, v in labels.items()}
 
     edges = []
     for a,b in itertools.combinations(zipped,2):
       if all(x in b[3] for x in a[3]): 
-        print("SubN {} overlaps with SubNs {}".format(a[0], b[0]))
         if a[2] == b[2]-1 : 
     	  edges.append((labels_back[a[0]],labels_back[b[0]]))
    
     nx.draw_networkx_nodes(G,pos,node_color=sort_occ,vmin = 0, vmax = 100, linewidths=0.0, cmap = plt.cm.Blues)
     nx.draw_networkx_edges(G,pos,edgelist=edges, edge_color='grey',width=3,alpha=0.5)
-    nx.draw_networkx_labels(G,pos,names,font_size=10)
+    nx.draw_networkx_labels(G,pos,labels,font_size=10)
    
     axes = plt.gca()
     axes.get_xaxis().set_visible(False)
-    axes.set_yticks(np.arange(min(clust_sizes)-1,max(clust_sizes)+1,1))
+    axes.set_yticks(np.arange(min(clust_sizes),max(clust_sizes)+1,1))
+    
+    spacing = 0.2
+#    for each in names:
+#      axes.text(0, min(clust_sizes)-0.2-spacing, str(each)+':  '+names[each],fontsize=10,horizontalalignment='center',color='green')
+#      spacing+=0.2
+    axes.set_ylim(min(clust_sizes)-spacing-0.2,max(clust_sizes)+1)
+    axes.set_xlim(-8,8)
+    #plt.plot(-8,Nstar,marker='*',color='orange',markersize=20)
+    plt.plot([-8,8],[Nstar,Nstar],'--',alpha=0.5,color='orange')
     plt.savefig('tree.png')
     plt.gcf().clear()
-
-
-
-#    #### PLOTTING ####
-#
-#    combined = zip(pn_clusts,occupancies)
-#    sites = max([max(x) for x in pn_clusts])
-#    hyd_occ = [0.]*(sites+1)
-#    for pn, occ in combined:
-#      for water in pn:
-#        hyd_occ[water]+= occ
-#
-#    hyd_sites = range(len(hyd_occ))
-#    nodes = zip(hyd_sites,hyd_occ)
-##    nodes = filter(lambda (a,b): b > 5.,nodes)
-#    
-##    hyd_sites = [x for x,y in nodes]
-##    hyd_occ = [y for x,y in nodes]
-#
-#    observed_pairings = []
-#    occ_pairings = []
-#    for pn,occ in combined:
-#      for (i,j) in list(itertools.combinations(pn, 2)):
-#        observed_pairings.append((i,j))
-#        occ_pairings.append(occ)
-#    pairings = zip(observed_pairings,occ_pairings)
-#
-#    G = nx.cycle_graph(len(nodes))                           # create a graph object
-#    pos = nx.circular_layout(G)   # arranges 'nodes' in a circle
-#    fig, ax = plt.subplots(1, 1, num=1)
-#
-#    all_pairs = list(itertools.combinations([x for x,y in nodes], 2))
-#
-#
-#    weight = []
-#    for (fr, to) in all_pairs:
-#      pair_occ = 0.
-#      for (a,b),occ in pairings:
-#        if (a,b) == (fr,to) or (b,a) == (fr,to):
-#          pair_occ+=(occ/100.)
-#      chance = (hyd_occ[hyd_sites.index(to)]/100.)*(hyd_occ[hyd_sites.index(fr)]/100.) # this will break
-#      correlation = pair_occ - chance
-#      weight.append(correlation*5)
-# 
-#    nx.draw_networkx_nodes(G,pos,node_color=hyd_occ,cmap=plt.cm.Blues,vmin = 0., vmax = 100.)
-#    nx.draw_networkx_edges(G,pos,edgelist=all_pairs,width=weight,edge_cmap=plt.cm.PRGn,alpha=0.5,edge_color=weight)
-#    nx.draw_networkx_labels(G,pos,font_size=10)
-#
-# 
-#    ax.set_axis_off()
-#    plt.savefig('correlations.png')
