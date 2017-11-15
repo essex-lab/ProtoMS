@@ -17,10 +17,9 @@ import simulationobjects
 
 import copy
 import networkx as nx
-from calc_clusters import _GetMolTemplate,_printpdb
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import itertools
+from calc_clusters import _GetMolTemplate,_printpdb
 
 def calc_distance(coords1, coords2):
     """
@@ -70,24 +69,6 @@ def find_pairs(watlist1, watlist2):
                     min_dist = distance_matrix[i,j]
                     min_point = [i, j]
             pair_list.append(min_point)
-    """
-    for i in range(len(coordlist1)):
-        closest_dist = 1E6
-        for j in range(len(coordlist2)):
-            already_paired = False
-            for pair in pair_list:
-                if pair[1] == j:
-                    already_paired = True
-                    break
-            if already_paired:
-                continue
-            dist = calc_distance(coordlist1[i], coordlist2[j])
-            if dist < closest_dist:
-                closest_dist = dist
-                closest_j = j
-        if closest_dist < 100:
-            pair_list.append([i, closest_j])
-    """
     return pair_list, coordlist1, coordlist2
 
 
@@ -189,7 +170,7 @@ if __name__ == "__main__":
     for i in range(max_wats+1):
         if len(bins[i]) == 0: continue
         print '{:>3} frames contain {} waters'.format(len(bins[i]), i)
-    Nstar = np.mean(num_wat_list)
+    Nstar = np.mean(num_wat_list) 
 
     # STEP 2: Cluster frames within each bin, using RMSD as a measure of distance
 
@@ -249,6 +230,7 @@ if __name__ == "__main__":
         print '    Frame occupancy: \t{:.2f} %\n'.format(cluster_occupancy)
 
     print 'Writing networks to PDB files...\n'
+
     # Write networks to PDB files - choose a representative frame as that which has the smallest RMSD with all others
     principal_networks = []
     for i in range(num_clusters):
@@ -323,22 +305,46 @@ if __name__ == "__main__":
         for j in range(len(wat_clusts)):
             if i in wat_clusts[j]:
                 pn_clusts[i].append(j)
-#    for i in range(len(principal_networks)):
-    #    print("PN {} contains clusters\n\t{}".format(i+1, pn_clusts[i]))
-    #print("")
-    overlaps = []
+    for i in range(len(principal_networks)):
+        print("PN {} contains clusters\n\t{}".format(i+1, pn_clusts[i]))
+    max_occupancy = max([sum([occupancies[j] for j in wat_clusts[i]]) for i in range(len(wat_clusts))])
+    print("Maximum occupancy: {} %".format(max_occupancy))
+    overlaps = [] # Lists of clusters which represent overlaps between PNs
+    clust_sizes = []  # Numbers of clusters in each overlap
+    sub_occupancies = [] # Occupancy of each subnetwork
     for i in range(len(pn_clusts)):
         for j in range(i+1, len(pn_clusts)):
             #print("Overlap between PNs {} and {}".format(i+1, j+1))
             overl = list_overlap(pn_clusts[i], pn_clusts[j])
             if not overl in overlaps:
                 overlaps.append(overl)
-            #print("\t{}".format(overl))
+                in_pns = []
+                for k in range(len(pn_clusts)):
+                    if is_contained(overl, pn_clusts[k]):
+                        in_pns.append(k)
+                clust_sizes.append(len(overl))
+                sub_occupancies.append(sum([occupancies[k] for k in in_pns]))
+    tested_until = 0  # Used to keep track of which sub-networks have been overlapped with PNs
+    while max(sub_occupancies) < max_occupancy:
+        # Keep finding overlaps until the highest occupancy unit has been found
+        for i in range(tested_until, len(overlaps)):
+            for j in range(len(pn_clusts)):
+                if not is_contained(overlaps[i], pn_clusts[j]):
+                    # Test the overlap against PNs which don't contain this entire unit
+                    overl = list_overlap(overlaps[i], pn_clusts[j])
+                    if not overl in overlaps:
+                        overlaps.append(overl)
+                        in_pns = [] 
+                        for k in range(len(pn_clusts)):
+                            if is_contained(overl, pn_clusts[k]):
+                                in_pns.append(k)
+                        clust_sizes.append(len(overl))
+                        sub_occupancies.append(sum([occupancies[k] for k in in_pns]))
+            tested_until += 1
     print("\n\nSub-networks from PN overlaps:")
-    clust_sizes = []
-    sub_occupancies = []
+
     for i in range(len(overlaps)):
-        print 'Subnetwork:', i
+        print 'Subnetwork ',i,':'
         print("\t{}".format(overlaps[i]))
         in_pns = []
         for j in range(len(pn_clusts)):
@@ -349,7 +355,86 @@ if __name__ == "__main__":
         print("\t\tContained in PNs {}".format([j+1 for j in in_pns]))
         print("\t\tPresent in {:.2f} % of frames\n".format(sum([occupancies[j] for j in in_pns])))
         sub_occupancies.append(sum([occupancies[j] for j in in_pns]))
+    # Add full PNs
+    for i in range(len(pn_clusts)):
+        if pn_clusts[i] in overlaps:
+            continue
+        overlaps.append(pn_clusts[i])
+        clust_sizes.append(len(pn_clusts[i]))
+        sub_occupancies.append(occupancies[i])
 
+##### tree diagram
+    print 'Plotting tree diagram from PNs and SubNs'
+    zippeda = zip(range(1,len(overlaps)+1),sub_occupancies,clust_sizes,overlaps)
+    zippeda.sort(key = lambda t: t[2])
+    zipped = filter(lambda (a,b,c,d): b > 25.,zippeda)
+
+    G=nx.Graph()
+    sort_occ = []
+
+   
+    for row in zipped:
+        sort_occ.append(row[1])
+
+    additional_occ = [0.]*len(overlaps) 
+
+    labels = {} 
+    labels_back = {} 
+    names = {}
+
+    clust_sizes_filter = [c for a,b,c,d in zipped]
+    occurence = {}
+    clust_unique = list(set(clust_sizes_filter)) 
+    for clust_size in clust_unique:
+      occurence[clust_size]=clust_sizes_filter.count(clust_size)
+
+    pos = {}
+    previous = 0
+    count = 0
+    for i,a in enumerate(zipped):
+      clust_size = zipped[i][2]
+      if occurence[clust_size] == 1:
+        pos[i+1]= (0,zipped[i][2])
+      else:
+        if clust_size != previous:  # if it is the first
+          spacing = np.linspace(-7,7,occurence[clust_size]) 
+          count = 0
+        pos[i+1]= (spacing[count],zipped[i][2])
+        previous = clust_size
+        count+=1
+      labels[i+1] = int(a[0])
+      names[i+1] = str(' '.join( repr(e) for e in a[3]))
+    G.add_nodes_from(pos)    
+    labels_back = {int(v): k for k, v in labels.items()}
+
+    edges = []
+    for a,b in itertools.combinations(zipped,2):
+      if all(x in b[3] for x in a[3]): 
+        if a[2] == b[2]-1 : 
+          edges.append((labels_back[a[0]],labels_back[b[0]]))
+   
+    nx.draw_networkx_nodes(G,pos,node_color=sort_occ,vmin = 0, vmax = 100, linewidths=0.0, cmap = plt.cm.Blues)
+    nx.draw_networkx_edges(G,pos,edgelist=edges, edge_color='grey',width=3,alpha=0.5)
+    nx.draw_networkx_labels(G,pos,labels,font_size=10)
+   
+    axes = plt.gca()
+    axes.get_xaxis().set_visible(False)
+    axes.set_yticks(np.arange(min(clust_sizes),max(clust_sizes)+1,1))
+    
+    spacing = 0.2
+#    for each in names:
+#      axes.text(0, min(clust_sizes)-0.2-spacing, str(each)+':  '+names[each],fontsize=10,horizontalalignment='center',color='green')
+#      spacing+=0.2
+    axes.set_ylim(min(clust_sizes)-spacing-0.2,max(clust_sizes)+1)
+    axes.set_xlim(-8,8)
+    #plt.plot(-8,Nstar,marker='*',color='orange',markersize=20)
+    plt.plot([-8,8],[Nstar,Nstar],'--',alpha=0.5,color='orange')
+    plt.savefig('tree.png')
+    plt.gcf().clear()
+    ### end of tree diagram --- take this directly from marleys orig....
+
+
+# identifying core water molecules from largest occupancy sub_network
     num_of_core = 0.
     if max(sub_occupancies) >= 90.:
       print 'CORE WATER MOLECULES'
@@ -358,10 +443,10 @@ if __name__ == "__main__":
       print 'water molecules:', ', '.join(str(s) for s in core) 
       num_of_core = len(core)
     else:
-      print 'no persistent water molecules found. Site may be disordered'
+      print 'no persistent water molecules found. Site may be very disordered'
       core = set([])
    
-
+# identifying non-core water molecules. This looks at the waters in the subnetworks with N* occupancies
     non_core_subnet=[] 
     for clust,waters in zip(clust_sizes,overlaps):
       if clust==math.floor(Nstar) or clust==math.ceil(Nstar):
@@ -371,15 +456,18 @@ if __name__ == "__main__":
     print 'NON-CORE WATER MOLECULES'
     print 'water molecules:', ', '.join(str(s) for s in non_core) 
 
-    centroids = [[] for i in range(max(wat_clust_ids))]
-    contained = [[] for i in range(max(wat_clust_ids))]
+# this now finds the centroids of the clusters
+    centroids = [[] for i in range(max(wat_clust_ids))] #centroids to be stored
+    contained = [[] for i in range(max(wat_clust_ids))] #determine waters in each cluster
     for coords, ids in zip(wat_coords,wat_clust_ids):
       contained[ids-1].append(coords)
     
-    for i,each in enumerate(contained):
+    for i,each in enumerate(contained): # determining centroid by average of all waters inside it
       centroids[i].append(np.mean(each,axis=0))
 
 
+# rereading in data (re-write to avoid)
+# below is taken from sub-network script to read in locations of ALL waters, not just PN ones
     pdbfiles = simulationobjects.PDBSet()
     pdbfiles.read(args.input, resname=args.molecule, skip=args.skip, readmax=9999)
     molpdb = _GetMolTemplate(args.input, args.molecule)
@@ -398,10 +486,10 @@ if __name__ == "__main__":
                    wat_whole.append(wat)
             frame_wat_ids[i].append(len(wat_list)-1)
  
-    frame_clust_ids =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames
-    frame_clust_ids_all =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames
-    frame_clust_dist =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames
-
+    frame_clust_ids =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames ONLY NON CORE
+    frame_clust_ids_all =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames CORE AND NONCORE
+    frame_clust_dist =copy.deepcopy(frame_wat_ids)  # converting water_ids to cluster ids in shape of frames DISTANCE FROM EACH CENTROID
+ 
     for i,frame in enumerate(frame_wat_ids):
       for j,water in enumerate(frame):
         dist = [np.linalg.norm(x-wat_list[water].coords) for x in centroids]
@@ -416,27 +504,37 @@ if __name__ == "__main__":
     flat_frame_clust_ids_all = [item for sublist in frame_clust_ids_all for item in sublist]
     all_occ = [0.]*len(centroids)
     for i,j in enumerate(range(len(centroids))):
-      all_occ[i] = (flat_frame_clust_ids_all.count(j)/float(num_frames))*100
+      temp_occ = (flat_frame_clust_ids_all.count(j)/float(num_frames))*100
+      if temp_occ > 100. and temp_occ < 105.:
+        temp_occ = 100.
+      if temp_occ > 105.:
+        print 'something has gone wrong with clustering, too many waters in one cluster'
+        quit()
+      all_occ[i] = temp_occ #calculating the overall occupancy of each cluster
+      # need to write check that all_occ is never more than 100% occupied
+      # a clustid should not be repeated in frame_clust_ids_all...
 
-    for sub_id,clust in enumerate(non_core_subnet):
+
+
+    for sub_id,clust in enumerate(non_core_subnet): # for each subnet of size N*
       best=[1E6,1E6]
       for i,(dist,frame) in enumerate(zip(frame_clust_dist,frame_clust_ids_all)): ### finding our best snapshot
         if all(x in frame for x in clust):
           distclust=0.
           for water in clust:
             distclust+= dist[frame.index(water)]
-            if distclust <= best[1]:
+            if distclust <= best[1]:   #finding the frame with smallest overall distance (equivalent to RMSD)
               best[0] = i
               best[1] = distclust
       rep_struct_ids = []
       for water in clust:
         rep_struct_ids.append( frame_wat_ids[best[0]][frame_clust_ids_all[best[0]].index(water)])
-      outfile = open('subnet'+str(sub_id)+'.pdb',"w")
+      outfile = open('subnet'+str(sub_id)+'.pdb',"w") 
       for clustid,IDs in zip(clust,rep_struct_ids):
         coordinates = []
         for atom in wat_whole[IDs].atoms:
           coordinates.append( atom.coords)
-        occ = float(all_occ[clustid])
+        occ = float(all_occ[clustid])   # again, need to check that occ is not more than 100%
         _printpdb(np.asarray(coordinates),molpdb,clustid,occ,outfile)
 
 
@@ -483,71 +581,3 @@ if __name__ == "__main__":
     nx.draw_networkx_labels(G,pos,labels,font_size=10)
     ax.set_axis_off()
     plt.savefig('correlations.png')
-
-##### tree diagram
-    zippeda = zip(range(1,len(overlaps)+1),sub_occupancies,clust_sizes,overlaps)
-    zippeda.sort(key = lambda t: t[2])
-    zipped = filter(lambda (a,b,c,d): b > 25.,zippeda)
-
-    G=nx.Graph()
-    sort_occ = []
-
-   
-    for row in zipped:
-        sort_occ.append(row[1])
-
-    additional_occ = [0.]*len(overlaps) 
-
-    labels = {} 
-    labels_back = {} 
-    names = {}
-
-    clust_sizes_filter = [c for a,b,c,d in zipped]
-    occurence = {}
-    clust_unique = list(set(clust_sizes_filter)) 
-    for clust_size in clust_unique:
-      occurence[clust_size]=clust_sizes_filter.count(clust_size)
-
-    pos = {}
-    previous = 0
-    count = 0
-    for i,a in enumerate(zipped):
-      clust_size = zipped[i][2]
-      if occurence[clust_size] == 1:
-        pos[i+1]= (0,zipped[i][2])
-      else:
-	if clust_size != previous:  # if it is the first
-  	  spacing = np.linspace(-7,7,occurence[clust_size])	
-          count = 0
-	pos[i+1]= (spacing[count],zipped[i][2])
-	previous = clust_size
-	count+=1
-      labels[i+1] = int(a[0])
-      names[i+1] = str(' '.join( repr(e) for e in a[3]))
-    G.add_nodes_from(pos)    
-    labels_back = {int(v): k for k, v in labels.items()}
-
-    edges = []
-    for a,b in itertools.combinations(zipped,2):
-      if all(x in b[3] for x in a[3]): 
-        if a[2] == b[2]-1 : 
-    	  edges.append((labels_back[a[0]],labels_back[b[0]]))
-   
-    nx.draw_networkx_nodes(G,pos,node_color=sort_occ,vmin = 0, vmax = 100, linewidths=0.0, cmap = plt.cm.Blues)
-    nx.draw_networkx_edges(G,pos,edgelist=edges, edge_color='grey',width=3,alpha=0.5)
-    nx.draw_networkx_labels(G,pos,labels,font_size=10)
-   
-    axes = plt.gca()
-    axes.get_xaxis().set_visible(False)
-    axes.set_yticks(np.arange(min(clust_sizes),max(clust_sizes)+1,1))
-    
-    spacing = 0.2
-#    for each in names:
-#      axes.text(0, min(clust_sizes)-0.2-spacing, str(each)+':  '+names[each],fontsize=10,horizontalalignment='center',color='green')
-#      spacing+=0.2
-    axes.set_ylim(min(clust_sizes)-spacing-0.2,max(clust_sizes)+1)
-    axes.set_xlim(-8,8)
-    #plt.plot(-8,Nstar,marker='*',color='orange',markersize=20)
-    plt.plot([-8,8],[Nstar,Nstar],'--',alpha=0.5,color='orange')
-    plt.savefig('tree.png')
-    plt.gcf().clear()
