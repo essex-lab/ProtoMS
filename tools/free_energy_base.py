@@ -260,5 +260,7 @@ def get_arg_parser():
         help="Define the upper bound of data to be used.")
     parser.add_argument(
         '-t', '--temperature', default=298.15, type=float,
-        help="Temperature at which the simulation was run. Default=298.15K")
+        help='Temperature at which the simulation was run. Default=298.15K')
+    parser.add_argument(
+        '--pickle', help='Name of file in which to store results as a pickle.')
     return parser

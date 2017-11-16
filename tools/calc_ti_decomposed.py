@@ -3,6 +3,7 @@ from itertools import chain
 import matplotlib
 import numpy as np
 import os
+import pickle
 import free_energy_base as feb
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
@@ -207,6 +208,10 @@ if __name__ == "__main__":
 
     print "FDTI:", fdti
     print "sum of terms:", np.sum(decomp.values())
+
+    if args.pickle is not None:
+        with open(args.pickle, 'w') as f:
+            pickle.dump(results, f, protocol=2)
 
     plt.show()
     plt.savefig(args.out)

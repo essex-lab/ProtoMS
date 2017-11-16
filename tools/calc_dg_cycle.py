@@ -1,4 +1,5 @@
 from glob import glob
+import pickle
 import free_energy_base as feb
 
 
@@ -147,3 +148,7 @@ if __name__ == '__main__':
         print
         print_solv_bind(dG_solvation, dG_binding,
                         args.directories, args.signs, est)
+
+    if args.pickle is not None:
+        with open(args.pickle, 'w') as f:
+            pickle.dump(results, f, protocol=2)

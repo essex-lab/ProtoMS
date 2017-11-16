@@ -1,6 +1,7 @@
 import matplotlib
 import numpy as np
 import os
+import pickle
 import free_energy_base
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
@@ -166,5 +167,9 @@ if __name__ == '__main__':
         if args.pmf:
             plot_pmfs(results)
         print_results(results)
+
+    if args.pickle is not None:
+        with open(args.pickle, 'w') as f:
+            pickle.dump(results, f, protocol=2)
 
     plt.show()
