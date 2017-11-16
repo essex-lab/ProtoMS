@@ -101,13 +101,6 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         return results
 
 
-# def get_result_means(repeats):
-#     """Take a list of estimator results and average all the terms.
-#     Return a dictionary mapping energy terms to single values."""
-#     return {term: np.mean([repeat[term].dG for repeat in repeats])
-#             for term in repeats[0]}
-
-
 def get_arg_parser():
     """Add custom options for this script"""
     parser = feb.FEArgumentParser(
@@ -153,7 +146,7 @@ if __name__ == "__main__":
     if (args.bound or args.gas) is not None:
         calc2 = DecomposedCalculation(args.bound or args.gas)
         results2 = defaultdict(lambda: 0., calc2.calculate(subset=subset))
-        fdti2 = results[feb.TI].dG
+        fdti2 = results2[feb.TI].dG
         decomp2 = defaultdict(
             lambda: feb.FreeEnergy(0., 0.),
             {term: res.dG for term, res in results2[TI_decomposed].items()}
