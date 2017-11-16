@@ -505,11 +505,8 @@ if __name__ == "__main__":
     all_occ = [0.]*len(centroids)
     for i,j in enumerate(range(len(centroids))):
       temp_occ = (flat_frame_clust_ids_all.count(j)/float(num_frames))*100
-      if temp_occ > 100. and temp_occ < 105.:
+      if temp_occ > 100.:
         temp_occ = 100.
-      if temp_occ > 105.:
-        print 'something has gone wrong with clustering, too many waters in one cluster'
-        quit()
       all_occ[i] = temp_occ #calculating the overall occupancy of each cluster
       # need to write check that all_occ is never more than 100% occupied
       # a clustid should not be repeated in frame_clust_ids_all...
