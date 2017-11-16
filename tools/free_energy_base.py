@@ -29,6 +29,51 @@ class PMF(object):
         return self.values[-1] - self.values[0]
 
 
+class Result(object):
+    def __init__(self, data):
+        self.data = data
+
+    @property
+    def lambdas(self):
+        return self.data[0].lambdas
+
+    @property
+    def dG(self):
+        dGs = [pmf.dG for pmf in self.data]
+        return FreeEnergy(*self._get_mean_std_err(dGs))
+
+    @property
+    def pmf(self):
+        pmfs = np.array([pmf.values for pmf in self.data])
+        return [FreeEnergy(*self._get_mean_std_err(dat)) for dat in pmfs.T]
+
+    def _get_mean_std_err(self, dat):
+        return np.mean(dat), np.std(dat)/len(dat)**0.5
+
+
+class FreeEnergy(object):
+    def __init__(self, value, error):
+        self.value = value
+        self.error = error
+
+    def __add__(self, other):
+        return FreeEnergy(self.value + other.value,
+                          (self.error**2 + other.error**2)**0.5)
+
+    def __sub__(self, other):
+        return FreeEnergy(self.value - other.value,
+                          (self.error**2 + other.error**2)**0.5)
+
+    def __mul__(self, other):
+        return FreeEnergy(self.value * other, self.error)
+
+    def __str__(self):
+        return "%.4f +/- %.4f" % (self.value, self.error)
+
+    def __repr__(self):
+        return "<FreeEnergy: value=%.4f error=%.4f>" % (self.value, self.error)
+
+
 class Estimator(object):
     """Base class for free energy estimators"""
     def __init__(self, lambdas):
@@ -196,12 +241,10 @@ class FreeEnergyCalculation(object):
         """
         results = {}
         for est, repeats in self.estimators.items():
-            results[est] = [rep.subset(*subset).calculate(self.temperature)
-                            for rep in repeats]
+            results[est] = Result(
+                [rep.subset(*subset).calculate(self.temperature)
+                 for rep in repeats])
         return results
-        # return {estimator: [rep.subset(*subset).calculate(self.temperature)
-        #                     for rep in repeats]
-        #         for estimator, repeats in self.estimators.iteritems()}
 
 
 def get_arg_parser():

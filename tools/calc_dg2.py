@@ -78,20 +78,23 @@ class FreeEnergyCalculation(free_energy_base.FreeEnergyCalculation):
         return results
 
 
+def plot_free_energies(x, FEs, ax, linewidth=3, **kwargs):
+    y = np.array([fe.value for fe in FEs])
+    err = np.array([fe.error for fe in FEs])
+
+    line = ax.plot(x, y, linewidth=linewidth, **kwargs)[0]
+    ax.plot(x, y+err, '--', color=line.get_color())
+    ax.plot(x, y-err, '--', color=line.get_color())
+
+
 def plot_fractional_dataset_results(results, estimators):
     """Graph results of calculations that use variable portions of available
     data i.e. equilibration and convergence test.s."""
     fig, ax = plt.subplots()
-    ys = {}
     for estimator in estimators:
-        ys[estimator] = []
-        for prop in sorted(results):
-            ys[estimator].append(
-                np.mean([pmf.dG for pmf in results[prop][estimator]]))
-
-    x = sorted(results)
-    for estimator in ys:
-        ax.plot(x, ys[estimator], label=estimator.__name__)
+        x = sorted(results)
+        dat = [results[prop][estimator].dG for prop in x]
+        plot_free_energies(x, dat, ax, label=estimator.__name__)
     ax.legend(loc='best')
     ax.set_xlabel('Proportion')
     ax.set_ylabel('Free energy (kcal/mol)')
@@ -99,12 +102,12 @@ def plot_fractional_dataset_results(results, estimators):
 
 
 def plot_pmfs(results):
-    """Graph averge potentials of mean force for all estimators."""
+    """Graph average potentials of mean force for all estimators."""
     fig, ax = plt.subplots()
     for estimator in sorted(results):
-        lambdas = results[estimator][0].lambdas
-        pmf_2d = np.array([pmf.values for pmf in results[estimator]])
-        ax.plot(lambdas, pmf_2d.mean(axis=0), label=estimator.__name__)
+        result = results[estimator]
+        plot_free_energies(result.lambdas, result.pmf, ax,
+                           label=estimator.__name__)
     ax.legend(loc='best')
     ax.set_xlabel('Lambda value')
     ax.set_ylabel('Free energy (kcal/mol)')
@@ -117,12 +120,11 @@ def print_results(results):
     """
     for estimator in sorted(results, key=lambda x: x.__name__):
         print estimator.__name__
-        dGs = [pmf.dG for pmf in results[estimator]]
+        dGs = [pmf.dG for pmf in results[estimator].data]
         for dG, path in zip(dGs, args.directories):
             print "%s: %.4f" % (path, dG)
         if len(dGs) > 1:
-            print "Mean: %.4f +/- %.4f" % (np.mean(dGs),
-                                           np.std(dGs)/len(dGs)**0.5)
+            print "Mean: %s" % results[estimator].dG
         print
 
 

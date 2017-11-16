@@ -1,35 +1,12 @@
-from collections import defaultdict
 from glob import glob
-import numpy as np
 import free_energy_base as feb
 
 
-class FreeEnergy(object):
-    def __init__(self, value, error):
-        self.value = value
-        self.error = error
-
-    def __add__(self, other):
-        return FreeEnergy(self.value + other.value,
-                          (self.error**2 + other.error**2)**0.5)
-
-    def __sub__(self, other):
-        return FreeEnergy(self.value - other.value,
-                          (self.error**2 + other.error**2)**0.5)
-
-    def __str__(self):
-        return "%.4f +/- %.4f" % (self.value, self.error)
-
-    def __repr__(self):
-        return "<FreeEnergy: value=%.4f error=%.4f>" % (self.value, self.error)
-
-
 def print_state_data(results, directories, signs, states, estimator):
-
     fmt = "%20s  %20s  %20s  %20s"
     print fmt % ('', 'dG gas', 'dG free', 'dG bound')
 
-    closures = {state: FreeEnergy(0., 0.) for state in states}
+    closures = {state: feb.FreeEnergy(0., 0.) for state in states}
     for root, sign in zip(directories, signs):
         root_dGs = (root,)
         for state in states:
@@ -47,8 +24,8 @@ def print_state_data(results, directories, signs, states, estimator):
 def print_solv_bind(dG_solvs, dG_binds, directories, signs, estimator):
     fmt = "%20s  %20s  %20s"
     print fmt % ('', 'ddG Solvation', 'ddG Binding')
-    closure_solv = FreeEnergy(0., 0.)
-    closure_bind = FreeEnergy(0., 0.)
+    closure_solv = feb.FreeEnergy(0., 0.)
+    closure_bind = feb.FreeEnergy(0., 0.)
     for root, sign in zip(directories, signs):
         dG_solv = dG_solvs[root][estimator]
         dG_bind = dG_binds[root][estimator]
@@ -125,7 +102,7 @@ if __name__ == '__main__':
 
     # perform calculations
     # end up with results dictionary structured as -
-    # results[root][state][estimator] == FreeEnergy object
+    # results[root][state][estimator] == feb.FreeEnergy object
     # thus we have one free energy difference for each root
     # directory, for each state (gas, free or bound), calculated
     # with each of the estimators
@@ -133,7 +110,7 @@ if __name__ == '__main__':
     for root in args.directories:
         results[root] = {}
         for state in states:
-            state_dGs = {est: FreeEnergy(0., 0.) for est in estimators}
+            state_dGs = {est: feb.FreeEnergy(0., 0.) for est in estimators}
             for mid in midfixes:
                 output_dir = output_dir_format % (root, mid, state)
                 calc = feb.FreeEnergyCalculation(
@@ -143,21 +120,10 @@ if __name__ == '__main__':
                 data = calc.calculate(
                     subset=(args.lower_bound, args.upper_bound, 1))
                 for est in estimators:
-                    # average over repeats for this state
-                    dat = np.array([pmf.dG for pmf in data[est]])
-                    if len(dat) == 0:
-                        # no data found!
-                        # use nan's so that higher order terms depending
-                        # on this one will be deliberately polluted and
-                        # clearly meaningless
-                        fe = FreeEnergy(float('nan'), float('nan'))
-                    else:
-                        # average over repeats for this state
-                        fe = FreeEnergy(dat.mean(), dat.std()/len(dat)**0.5)
-                    # combine over multiple midfixes - for separate vdw + ele
-                    state_dGs[est] += fe
+                    state_dGs[est] += data[est].dG
+
             results[root][state] = state_dGs
-    
+
     # combine state changes to get meaningful free energy differences
     dG_solvation, dG_binding = {}, {}
     for root in args.directories:

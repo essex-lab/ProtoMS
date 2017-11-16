@@ -65,11 +65,47 @@ class TI_decomposed(feb.Estimator):
         return lengths[0]
 
 
-def get_result_means(repeats):
-    """Take a list of estimator results and average all the terms.
-    Return a dictionary mapping energy terms to single values."""
-    return {term: np.mean([repeat[term].dG for repeat in repeats])
-            for term in repeats[0]}
+class DecomposedCalculation(feb.FreeEnergyCalculation):
+    def __init__(self, root_paths):
+        # temperature can be given as zero as TI estimators do
+        # not make use of it
+        feb.FreeEnergyCalculation.__init__(
+            self,
+            root_paths=root_paths,
+            temperature=0.,
+            estimators={feb.TI, TI_decomposed})
+
+    def calculate(self, subset=(0., 1., 1.)):
+        results = {}
+
+        results[feb.TI] = feb.Result(
+            [rep.subset(*subset).calculate(self.temperature)
+             for rep in self.estimators[feb.TI]])
+
+        # dealing with the decomposed estimator is a little more difficult
+        # repeats for the same term need to be grouped together into a
+        # single Results object
+        # start by pulling out all the data
+        data = []
+        for rep in self.estimators[TI_decomposed]:
+            data.append(rep.subset(*subset).calculate(self.temperature))
+
+        # now add into results in a compatible order such that
+        # results[TI_decomposed][term] = Results object
+        results[TI_decomposed] = {}
+        for term in data[0]:
+            results[TI_decomposed][term] = feb.Result(
+                [rep[term] for rep in data]
+            )
+
+        return results
+
+
+# def get_result_means(repeats):
+#     """Take a list of estimator results and average all the terms.
+#     Return a dictionary mapping energy terms to single values."""
+#     return {term: np.mean([repeat[term].dG for repeat in repeats])
+#             for term in repeats[0]}
 
 
 def get_arg_parser():
@@ -104,79 +140,80 @@ def get_arg_parser():
 
 if __name__ == "__main__":
     args = get_arg_parser().parse_args()
-    calc = feb.FreeEnergyCalculation(args.directories,
-                                     estimators=[feb.TI, TI_decomposed])
+    calc = DecomposedCalculation(args.directories)
     subset = (args.lower_bound, args.upper_bound)
-    # store results in a default dict for later simplicity of arithmetic
     results = calc.calculate(subset=subset)
-    fdti_mean = np.mean([rep.dG for rep in results[feb.TI]])
-    decomp_means = defaultdict(lambda: 0.,
-                               get_result_means(results[TI_decomposed]))
+    fdti = results[feb.TI].dG
+    # store results in a default dict for later simplicity of arithmetic
+    decomp = defaultdict(
+        lambda: feb.FreeEnergy(0., 0.),
+        {term: res.dG for term, res in results[TI_decomposed].items()}
+    )
 
     if (args.bound or args.gas) is not None:
-        calc2 = feb.FreeEnergyCalculation(args.bound or args.gas,
-                                          estimators=[feb.TI, TI_decomposed])
+        calc2 = DecomposedCalculation(args.bound or args.gas)
         results2 = defaultdict(lambda: 0., calc2.calculate(subset=subset))
-        fdti_mean2 = np.mean([rep.dG for rep in results2[feb.TI]])
-        decomp_means2 = defaultdict(lambda: 0.,
-                                    get_result_means(results2[TI_decomposed]))
+        fdti2 = results[feb.TI].dG
+        decomp2 = defaultdict(
+            lambda: feb.FreeEnergy(0., 0.),
+            {term: res.dG for term, res in results2[TI_decomposed].items()}
+        )
 
         # iterate over the unique keys from both calc and calc2
-        for term in set(chain(decomp_means, decomp_means2)):
-            decomp_means[term] -= decomp_means2[term]
+        for term in set(chain(decomp, decomp2)):
+            decomp[term] -= decomp2[term]
             # swap the sign if this is a binding calculation
             if args.bound is not None:
-                decomp_means[term] *= -1
+                decomp[term] *= -1
 
         if args.gas is not None:
-            fdti_mean -= fdti_mean2
+            fdti -= fdti2
         else:
-            fdti_mean = fdti_mean2 - fdti_mean
+            fdti = fdti2 - fdti
 
     # this is currently not robust to inclusion of gcsolute terms
     # and just generally horrible
     if args.dualtopology:
         for i in ('COU', 'LJ'):
             solvent_interaction_terms = []
-            for term in decomp_means:
+            for term in decomp:
                 if "-solvent" in term and i in term:
                     if "protein" not in term and "solvent-solvent" not in term:
                         solvent_interaction_terms.append(term)
-            decomp_means['lig-solvent_%s' % i] = sum(
-                [decomp_means.pop(term) for term in solvent_interaction_terms])
+            decomp['lig-solvent_%s' % i] = sum(
+                [decomp.pop(term) for term in solvent_interaction_terms],
+                feb.FreeEnergy(0., 0.))
             protein_interaction_terms = []
-            for term in decomp_means:
+            for term in decomp:
                 if "protein1-" in term and i in term:
                     if "solvent" not in term:
                         protein_interaction_terms.append(term)
-            decomp_means['protein1-lig_%s' % i] = sum(
-                [decomp_means.pop(term) for term in protein_interaction_terms])
+            decomp['protein1-lig_%s' % i] = sum(
+                [decomp.pop(term) for term in protein_interaction_terms],
+                feb.FreeEnergy(0., 0.))
 
     # remove terms that do not contribute to free energy difference as
     # these take up space and are uninteresting
-    for term in list(decomp_means.keys()):
-        if decomp_means[term] == 0.:
-            decomp_means.pop(term)
+    for term in list(decomp.keys()):
+        if decomp[term].value == 0.:
+            decomp.pop(term)
 
     width = 0.8
     N = 1
     fig, ax = plt.subplots()
-    xs = np.arange(len(decomp_means)) * N
+    xs = np.arange(len(decomp)) * N
 
     ys, labels = [], []
-    for term in sorted(decomp_means):
-        ys.append(decomp_means[term])
+    for term in sorted(decomp):
+        ys.append(decomp[term].value)
         labels.append(term)
 
     ax.bar(xs, ys)
     ax.set_xticks(xs)
     ax.set_xticklabels(labels, rotation="vertical")
 
-    print "FDTI:", fdti_mean
-    print "sum of terms:", np.sum(decomp_means.values())
+    print "FDTI:", fdti
+    print "sum of terms:", np.sum(decomp.values())
 
-    # plt.legend(calc.root_paths)
-    # try:
     plt.show()
-
     plt.savefig(args.out)
