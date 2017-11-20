@@ -2,13 +2,22 @@
 free energy calculation framework. """
 
 from abc import abstractmethod
+from copy import copy
 import glob
+from operator import add
 import os
+import matplotlib
 import numpy as np
 import pymbar
 from scipy.integrate import trapz
 import simulationobjects as sim
 from free_energy_argument_parser import FEArgumentParser
+
+if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
+    matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+plt.rcParams['lines.linewidth'] = 3
 
 
 class PMF(object):
@@ -28,27 +37,71 @@ class PMF(object):
         """Return the free energy difference at the PMF end points."""
         return self.values[-1] - self.values[0]
 
+    # def __div__(self, other):
+    #     return PMF(self.lambdas, [val/other for val in self.values])
+
+    def __neg__(self):
+        return PMF(self.lambdas, [-val for val in self.values])
+
+    def __iter__(self):
+        return iter(self.values)
+
+
+class CompositePMF(PMF):
+    def __init__(self, *args):
+        if len({tuple(arg.lambdas) for arg in args}) > 1:
+            raise ValueError("All data must use the same lambda values")
+        self.lambdas = args[0].lambdas
+        self.values = []
+        for dat in zip(*args):
+            self.values.append(FreeEnergy(*_get_mean_std_err(dat)))
+
+    def __add__(self, other):
+        print type(self.lambdas), type(other.lambdas)
+        if list(self.lambdas) != list(other.lambdas):
+            raise ValueError("Cannot add PMFs with different lambda values.")
+        return PMF(
+            self.lambdas,
+            [v1 + v2 for v1, v2 in zip(self.values, other.values)])
+
+    def __neg__(self):
+        other = copy(self)
+        other.values = [-val for val in other.values]
+        return other
+
+    def plot(self, ax, **kwargs):
+        y = np.array([fe.value for fe in self.values])
+        err = np.array([fe.error for fe in self.values])
+
+        line = ax.plot(self.lambdas, y, **kwargs)[0]
+        ax.plot(self.lambdas, y+err, '--', linewidth=1, color=line.get_color())
+        ax.plot(self.lambdas, y-err, '--', linewidth=1, color=line.get_color())
+
 
 class Result(object):
-    def __init__(self, data):
-        self.data = data
-
-    @property
-    def lambdas(self):
-        return self.data[0].lambdas
+    def __init__(self, *args):
+        self.data = args
+        if len({tuple(pmf.lambdas) for dat in self.data for pmf in dat}) > 1:
+            raise ValueError("All data must use the same lambda values")
+        self.lambdas = self.data[0][0].lambdas
 
     @property
     def dG(self):
-        dGs = [pmf.dG for pmf in self.data]
-        return FreeEnergy(*self._get_mean_std_err(dGs))
+        """Return a free energy object from this result's data."""
+        data_dGs = [[pmf.dG for pmf in dat] for dat in self.data]
+        FEs = [FreeEnergy(*_get_mean_std_err(dG)) for dG in data_dGs]
+        return sum(FEs, FreeEnergy(0., 0.))
 
     @property
     def pmf(self):
-        pmfs = np.array([pmf.values for pmf in self.data])
-        return [FreeEnergy(*self._get_mean_std_err(dat)) for dat in pmfs.T]
+        pmfs = [CompositePMF(*dat) for dat in self.data]
+        return reduce(add, pmfs)
 
-    def _get_mean_std_err(self, dat):
-        return np.mean(dat), np.std(dat)/len(dat)**0.5
+    def __add__(self, other):
+        return Result(*(self.data + other.data))
+
+    def __neg__(self):
+        return Result(*[[-pmf for pmf in dat] for dat in self.data])
 
 
 class FreeEnergy(object):
@@ -64,8 +117,14 @@ class FreeEnergy(object):
         return FreeEnergy(self.value - other.value,
                           (self.error**2 + other.error**2)**0.5)
 
-    def __mul__(self, other):
-        return FreeEnergy(self.value * other, self.error)
+    # def __mul__(self, other):
+    #     return FreeEnergy(self.value * other, self.error)
+
+    def __neg__(self):
+        return FreeEnergy(-self.value, self.error)
+
+    def __eq__(self, other):
+        return (self.value == other.value) and (self.error == other.error)
 
     def __str__(self):
         return "%.4f +/- %.4f" % (self.value, self.error)
@@ -245,6 +304,10 @@ class FreeEnergyCalculation(object):
                 [rep.subset(*subset).calculate(self.temperature)
                  for rep in repeats])
         return results
+
+
+def _get_mean_std_err(dat):
+    return np.mean(dat), np.std(dat)/len(dat)**0.5
 
 
 def get_arg_parser():

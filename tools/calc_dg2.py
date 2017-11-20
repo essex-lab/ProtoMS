@@ -79,13 +79,13 @@ class FreeEnergyCalculation(free_energy_base.FreeEnergyCalculation):
         return results
 
 
-def plot_free_energies(x, FEs, ax, linewidth=3, **kwargs):
+def plot_free_energies(x, FEs, ax, **kwargs):
     y = np.array([fe.value for fe in FEs])
     err = np.array([fe.error for fe in FEs])
 
-    line = ax.plot(x, y, linewidth=linewidth, **kwargs)[0]
-    ax.plot(x, y+err, '--', color=line.get_color())
-    ax.plot(x, y-err, '--', color=line.get_color())
+    line = ax.plot(x, y, **kwargs)[0]
+    ax.plot(x, y+err, '--', linewidth=1, color=line.get_color())
+    ax.plot(x, y-err, '--', linewidth=1, color=line.get_color())
 
 
 def plot_fractional_dataset_results(results, estimators):
@@ -106,9 +106,7 @@ def plot_pmfs(results):
     """Graph average potentials of mean force for all estimators."""
     fig, ax = plt.subplots()
     for estimator in sorted(results):
-        result = results[estimator]
-        plot_free_energies(result.lambdas, result.pmf, ax,
-                           label=estimator.__name__)
+        results[estimator].pmf.plot(ax, label=estimator.__name__)
     ax.legend(loc='best')
     ax.set_xlabel('Lambda value')
     ax.set_ylabel('Free energy (kcal/mol)')
@@ -121,7 +119,9 @@ def print_results(results):
     """
     for estimator in sorted(results, key=lambda x: x.__name__):
         print estimator.__name__
-        dGs = [pmf.dG for pmf in results[estimator].data]
+        # note that we are assuming here that there is only one set
+        # of data in the results[estimator]
+        dGs = [pmf.dG for pmf in results[estimator].data[0]]
         for dG, path in zip(dGs, args.directories):
             print "%s: %.4f" % (path, dG)
         if len(dGs) > 1:
