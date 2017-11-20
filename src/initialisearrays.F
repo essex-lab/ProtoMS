@@ -53,6 +53,9 @@ c     set the delta for big moves to +/- 180 degrees
 c     set the delta for rotamer moves to +/- 10 degrees
       RotamerDelta = deg2Rad(10.0D+00)
 
+      startstep = 0
+      completed = .true.
+      
       do i=1,3
         BoxDimension(i) = ZERO
         BoxDimension2(i) = ZERO

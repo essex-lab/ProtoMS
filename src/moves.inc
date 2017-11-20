@@ -23,3 +23,7 @@ c     the number of attempted and accepted moves for each moeity
 
       save /MOVEVALS/
       
+      logical completed
+      integer startstep
+
+      common /RESTARTVALS/ completed, startstep

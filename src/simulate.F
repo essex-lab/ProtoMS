@@ -67,7 +67,7 @@ c       4 in the line below stands for the lenght of 'dump'
 
       NAcceptedMoves = 0
       NTotalMoves = 0
-      do i=1,nconfig
+      do i=startstep+1,nconfig
         NTotalMoves = NTotalMoves + 1
 
 c       obtain the move type based on probabilities entered by the user

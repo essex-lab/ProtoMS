@@ -10,6 +10,7 @@
       include 'stacks.inc'
       include 'pressure.inc'
       include 'splitter.inc'
+      include 'moves.inc'
 c######################################################
 c
 c     This subroutine reads the restart information
@@ -21,14 +22,14 @@ c     (C) Christopher Woods   26 November 2002
 c
 c######################################################
 
-      integer FILE,itmp,i,j,inats,ires,iat,ires2,gcs, startstep
+      integer FILE,itmp,i,j,inats,ires,iat,ires2,gcs
       double precision ix,iy,iz,theta
       character*(*) restartfile
       character*300 tmpnam,tmpstr,line
       integer lineLength,lgth,lgth2
       character*4 inam,inam2
       character*4 iresnam,iresnam2
-      logical allok, getLogical, completed
+      logical allok, getLogical
       integer getInt
       parameter(FILE=40)
 
@@ -55,13 +56,21 @@ c     need slightly more sophisticated text parsing for this
       call lowercase(words(1))
       if (words(1)(1:10).eq."completed=") then
          completed = getLogical(words(2),.true.)
-         read(FILE,"(11x,i16)",err=9700,end=9900) startstep
+         read(FILE,"(11x,i16)",err=9700,end=9900) itmp
+         if (.not.completed) then
+            startstep = itmp
+            write(printstring,*) "Restarting simulation that did not complete previously."
+            call printLine(INFO,printstring)
+            write(printstring,*) "Equilibration will not be performed and simulation step",
+     .           " count will begin at ", startstep
+            call printLine(INFO,printstring)
+         endif
+         
       else
 c     assume it must have been an NProteins line, grab the integer
 c     value and move on to the next bit of logic.
          itmp = getInt(words(2),1000)
          goto 1000
-         write(*,*) itmp
       endif
 
       
