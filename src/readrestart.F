@@ -9,6 +9,7 @@
       include 'enums.inc'
       include 'stacks.inc'
       include 'pressure.inc'
+      include 'splitter.inc'
 c######################################################
 c
 c     This subroutine reads the restart information
@@ -20,14 +21,15 @@ c     (C) Christopher Woods   26 November 2002
 c
 c######################################################
 
-      integer FILE,itmp,i,j,inats,ires,iat,ires2,gcs
+      integer FILE,itmp,i,j,inats,ires,iat,ires2,gcs, startstep
       double precision ix,iy,iz,theta
       character*(*) restartfile
-      character*300 tmpnam,tmpstr
+      character*300 tmpnam,tmpstr,line
       integer lineLength,lgth,lgth2
       character*4 inam,inam2
       character*4 iresnam,iresnam2
-      logical allok
+      logical allok, getLogical, completed
+      integer getInt
       parameter(FILE=40)
 
       lgth = lineLength(restartfile)
@@ -43,11 +45,29 @@ c     can only open this restart file for reading if it is not already open for 
      .          err=9600)
      
       rewind(FILE)
+
+      allok = .true.
+      nwords = 0
+c     first line may contain NProteins= or Completed=
+c     need slightly more sophisticated text parsing for this
+      read(FILE,"(a300)",err=9700,end=9900) line
+      call split(line)
+      call lowercase(words(1))
+      if (words(1)(1:10).eq."completed=") then
+         completed = getLogical(words(2),.true.)
+         read(FILE,"(11x,i16)",err=9700,end=9900) startstep
+      else
+c     assume it must have been an NProteins line, grab the integer
+c     value and move on to the next bit of logic.
+         itmp = getInt(words(2),1000)
+         goto 1000
+         write(*,*) itmp
+      endif
+
       
 c     read the number of proteins
-      allok = .true.
       read(FILE,10,ERR=9700,END=9900) itmp
-      if (itmp.ne.NProteins) then
+ 1000 if (itmp.ne.NProteins) then
         write(printstring,*) "The restart file contains the wrong number ",
      .         "of proteins! - ",itmp," vs. ",NProteins
         call printLine(FATAL,printstring)

@@ -117,7 +117,7 @@ c       taking care of dumping with the right frequency
             call split(values(kdumps(j)))
             call join(2,nwords,tempstring)
             numb = int(i/fdumps(j))
-            call dump(tempstring,append,numb)
+            call dump(tempstring,append,numb,i,nconfig)
           endif
         enddo
 

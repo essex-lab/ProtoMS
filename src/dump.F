@@ -1,4 +1,4 @@
-      subroutine dump(line,append,numb)
+      subroutine dump(line,append,numb,nummove,nconfig)
 
       include 'dimensions.inc'
       include 'printer.inc'
@@ -15,7 +15,7 @@
       logical getLogical,printdummies,showhidden,printstd,append,newfile,getoption
       double precision printsolvent,getDouble,lb,lf,lambda
       integer lgth,j,iprnt,ilgth,lineLength,openFILE,getint,i,ios,filehandle
-      integer numb
+      integer numb, nummove, nconfig
       character*64 line,tempstring
       character*600 tempname,cmd
       character*255 fullfilename
@@ -212,7 +212,7 @@ c              if (numb.ne.0) then
 c                write(tempstring,"(A,I4)")"RESTART FILE ",numb
 c                call prettyline(RESTART, tempstring)
 c              endif  
-              call writeRestart()
+              call writeRestart(nummove,(nummove.eq.nconfig))
             else
               call printLine(WARNING,"Cannot interpret restart line")
               call join(1,nwords,printstring)
