@@ -340,12 +340,12 @@ c               scale the energies
                 ljnrgf = ljnrgf*sclf
                 cnrgb = cnrgb*sclb
                 ljnrgb = ljnrgb*sclb
-c               If the soft-core is on, the coulombic is scaled further here
-                if (Solutesoftcore(j)) then
-                  cnrg = cnrg * (scl)**CoulSoftPower
-                  cnrgf = cnrgf * (sclf)**CoulSoftPower
-                  cnrgb = cnrgb * (sclb)**CoulSoftPower
-                endif                
+c$$$c               If the soft-core is on, the coulombic is scaled further here
+c$$$                if (Solutesoftcore(j)) then
+c$$$                  cnrg = cnrg * (scl)**CoulSoftPower
+c$$$                  cnrgf = cnrgf * (sclf)**CoulSoftPower
+c$$$                  cnrgb = cnrgb * (sclb)**CoulSoftPower
+c$$$                endif                
                 nrgf = nrgf + cnrgf + ljnrgf
                 nrgb = nrgb + cnrgb + ljnrgb
 c                totalEnergy = totalEnergy + nrg
@@ -493,12 +493,12 @@ c             scale the energies
               cnrgb = cnrgb*sclb
               ljnrgb = ljnrgb*sclb
 
-c             If the soft-core is on, the coulombic is scaled further here
-              if (Solutesoftcore(i)) then
-                cnrg = cnrg * (scl)**CoulSoftPower
-                cnrgf = cnrgf * (sclf)**CoulSoftPower
-                cnrgb = cnrgb * (sclb)**CoulSoftPower
-              endif
+c$$$c             If the soft-core is on, the coulombic is scaled further here
+c$$$              if (Solutesoftcore(i)) then
+c$$$                cnrg = cnrg * (scl)**CoulSoftPower
+c$$$                cnrgf = cnrgf * (sclf)**CoulSoftPower
+c$$$                cnrgb = cnrgb * (sclb)**CoulSoftPower
+c$$$              endif
               nrgf = nrgf + cnrgf + ljnrgf
               nrgb = nrgb + cnrgb + ljnrgb
 c             totalEnergy = totalEnergy + nrg
@@ -621,11 +621,11 @@ c             scale the energies
               cnrgb = cnrgb*sclb
               ljnrgb = ljnrgb*sclb
 c             If the soft-core is on, the coulombic is scaled further here
-              if (Solutesoftcore(i)) then
-                cnrg = cnrg * (scl)**CoulSoftPower
-                cnrgf = cnrgf * (sclf)**CoulSoftPower
-                cnrgb = cnrgb * (sclb)**CoulSoftPower
-              endif
+c$$$              if (Solutesoftcore(i)) then
+c$$$                cnrg = cnrg * (scl)**CoulSoftPower
+c$$$                cnrgf = cnrgf * (sclf)**CoulSoftPower
+c$$$                cnrgb = cnrgb * (sclb)**CoulSoftPower
+c$$$              endif
               nrgf = nrgf + cnrgf + ljnrgf
               nrgb = nrgb + cnrgb + ljnrgb
 c             totalEnergy = totalEnergy + nrg

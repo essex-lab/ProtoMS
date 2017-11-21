@@ -1,0 +1,16 @@
+mode template
+chain singlet3p
+bbatom 1 C1 1001 1001
+bbatom 2 C2 1001 1001
+bbatom 3 C3 1001 1001
+bbatom 4 C4 1001 1001
+
+mode template
+residue T3P
+info rotate 0.0 translate 0.0
+backbone single singlet3p
+atom O00 2001 2001 2001 2001 2001 2001 C4 C3 C2
+atom H01 2002 2002 2002 2002 2002 2002 O00 C4 C3
+atom H02 2002 2002 2002 2002 2002 2002 O00 C4 C3
+bond O00 H01
+bond O00 H02

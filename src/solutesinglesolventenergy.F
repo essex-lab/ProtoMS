@@ -99,16 +99,19 @@ c     loop over all solvent-atom - solute-atom pairs, and calculate
 c     thier interaction energy
       funcisol1 = isol
       funcisvn2 = isvn
-c     Are we going to use a softcore ? 
-      if (SoluteSoftCore(isol)) softcore = .true.
+
 c     Activate Distance Dependent Dielectric calculation
-      if (QuickMove .and. DDDon) ddd = .true. 
+      if (QuickMove .and. DDDon) ddd = .true.
       do i=1,nat1
         funcat1 = i
-
+c       Are we going to use a softcore ? 
+        if (SoluteSoftCore(isol).and.SoluteAtomSoftCore(isol,i)) then
+           softcore = .true.
+        else
+           softcore = .false.
+        endif
         if ((SvnOptimization(isvn).eq.OPTTIP3P.or.SvnOptimization(isvn).eq.OPTTIP4P).and..not.doDerivative) then
 c         Optimized for TIP4P-TIP4P interactions
-
 c         LJ on oxygens only
           funcat2 = 1
           include 'nbinitial.inc'
@@ -162,9 +165,8 @@ c         Charges on the rest of the particles, i.e., between hydrogens and extr
             ljnrgb = ljnrgb + funcljnrgb
             if (funcmindist.lt.mindist) mindist = funcmindist
           enddo
-        endif
+         endif
       enddo
-
       if (cuttype.eq.RESIDUEMOLECULE .or. cuttype.eq.MOLECULEMOLECULE) then
         if (mindist.lt.cut2) then
 c         smallest distance within cutoff

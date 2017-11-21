@@ -876,6 +876,13 @@ if __name__ == "__main__":
   simgroup.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
   simgroup.add_argument('--cleanup',action='store_true',help="Clean up extra files. Default=False",default=False)
   simgroup.add_argument('--tune',action='store_true',help='Carry out dihedral tuning simulation',default=False)
+  simgroup.add_argument('--softcore', type=str, default='mixed', 
+                        choices=('mixed', 'all', 'none'),
+                        help="determine which atoms to apply softcore potentials to.\n "
+                             "'all'=softcores applied to all atoms of both solutes, "
+                             "'none'=softcores not applied to any atoms\n "
+                             "'mixed'=softcores will be applied only to non matching "
+                             "atoms within ligand structures")
   args = parser.parse_args()
  
   print r"""

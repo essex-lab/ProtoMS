@@ -1,4 +1,4 @@
-protoms3 started at 11:07:47 on the 14/ 2/2017
+protoms3 started at 11:54:28 on the  2/11/2017
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
@@ -6,9 +6,9 @@ Using protein-residue/solute-molecule/solvent-molecule cut-off
 SoftCore Parameters for this simulation :
 Coul    1 LJ    1 GB    1 Delta       0.2000 DeltaCoul       2.0000 (      64.0000 ) Power    6
 Using 6-6 soft-core potential
-######################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/amber14SB.ff
-######################################################################
+##################################################################################
+Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/amber14SB.ff
+##################################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -17,9 +17,9 @@ Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,  797 clj parameters
 and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#####################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/solvents.ff
-#####################################################################
+#################################################################################
+Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/solvents.ff
+#################################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
@@ -27,15 +27,15 @@ Found solvent template with TIP3p optimization
 Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###############################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/amber14SB-residues.ff
-###############################################################################
+###########################################################################################
+Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/amber14SB-residues.ff
+###########################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/gaff14.ff
-###################################################################
+###############################################################################
+Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/gaff14.ff
+###############################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -85,8 +85,8 @@ All axes successfully generated!
 Dual topology simulation with group    1 at lambda=0, and group    2 at lambda=1. If groups are not defined, each group corresponds to the solute with the same number.
 Solutes will be translated together
 Solutes will rotated together
-Turning softcore on for Solute 1
-Turning softcore on for Solute 2
+ Turning softcore on for all atoms of solute           1
+ Turning softcore on for all atoms of solute           2
 Simulation temperature =      25.0000 C, (    298.1500 K)
 ##########################################################################################################################################################
 Running an NPT periodic boundaries simulation with pressure =       1.0000 atm ( 101325.0000 pascals) and with a maximum volume change of      30.0000 A^3
@@ -96,7 +96,7 @@ Got initial random number seed       100006
 ###########################################
 Sanitised random number seed =       100005
 ###########################################
-Starting simulation at 11:07:47 on the 14/ 2/2017
+Starting simulation at 11:54:28 on the  2/11/2017
 ######################################################################
 Running simulation in lambda window    0.999 <--    1.000 -->    1.000
 ######################################################################
@@ -136,4 +136,4 @@ Attempted/successful lambda swaps for lambdaladder   1 :      7     7 ( 100.000%
 Final volume =   13851.6664 A^3
 ###############################
 Simulation shutting down...
-protoms3 completed at 11:07:48 on the 14/ 2/2017
+protoms3 completed at 11:54:28 on the  2/11/2017

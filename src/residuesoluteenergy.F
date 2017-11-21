@@ -94,6 +94,12 @@ c     Activate Distance Dependent Dielectric calculation
         funcat1 = i  
         do j=1,nat
           funcat2 = j        
+c         Are we going to use a softcore ? 
+          if (SoluteSoftCore(isol).and.SoluteAtomSoftCore(isol,j)) then
+             softcore = .true.
+          else
+             softcore = .false.
+          endif
 
           include 'nbinitial.inc'
           include 'nbprosol.inc'
