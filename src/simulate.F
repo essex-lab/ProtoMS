@@ -63,6 +63,10 @@ c       4 in the line below stands for the lenght of 'dump'
         endif
       enddo
 
+#ifdef WITH_MPI_
+      call checksamestart
+#endif
+
       append = .TRUE.
 
       NAcceptedMoves = 0

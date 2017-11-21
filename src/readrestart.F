@@ -11,6 +11,7 @@
       include 'pressure.inc'
       include 'splitter.inc'
       include 'moves.inc'
+      include 'parameters.inc'
 c######################################################
 c
 c     This subroutine reads the restart information
@@ -58,18 +59,30 @@ c     need slightly more sophisticated text parsing for this
          completed = getLogical(words(2),.true.)
          read(FILE,"(11x,i16)",err=9700,end=9900) itmp
          if (.not.completed) then
+c     restarting a simulation that did not finish previously
+c     adjust starting point of simulation and print details to INFO            
             startstep = itmp
             write(printstring,*) "Restarting simulation that did not complete previously."
             call printLine(INFO,printstring)
             write(printstring,*) "Equilibration will not be performed and simulation step",
      .           " count will begin at ", startstep
             call printLine(INFO,printstring)
+
+c     don't want to resuse the same random seed from the start as with 
+c     frequent restarts this could lead to artifacts
+c     update the random seed based on the new starting step so its reproducible
+            ranseed = ranseed + startstep
+            if (ranseed.lt.0) ranseed = -ranseed
+            if (mod(ranseed,2).eq.0) ranseed = ranseed - 1
+            if (ranseed.lt.100000) ranseed = ranseed+110000
+            write(printstring,"(a, i12)") "Random number seed updated based on restart file to ", ranseed
+            call prettyLine(INFO,printstring)
+            call sgrnd(ranseed)
          endif
-         
       else
 c     assume it must have been an NProteins line, grab the integer
 c     value and move on to the next bit of logic.
-         itmp = getInt(words(2),1000)
+         itmp = getInt(words(2),-1)
          goto 1000
       endif
 
