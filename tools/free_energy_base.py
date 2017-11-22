@@ -83,7 +83,13 @@ class Result(object):
         self.data = args
         if len({tuple(pmf.lambdas) for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
-        self.lambdas = self.data[0][0].lambdas
+
+    @property
+    def lambdas(self):
+        try:
+            return self.data[0][0].lambdas
+        except IndexError:
+            raise ValueError("This result does not contain any data.")
 
     @property
     def dG(self):

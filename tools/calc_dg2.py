@@ -79,9 +79,9 @@ class FreeEnergyCalculation(free_energy_base.FreeEnergyCalculation):
         return results
 
 
-def plot_free_energies(x, FEs, ax, **kwargs):
-    y = np.array([fe.value for fe in FEs])
-    err = np.array([fe.error for fe in FEs])
+def plot_results(x, results, ax, **kwargs):
+    y = np.array([result.dG.value for result in results])
+    err = np.array([result.dG.error for result in results])
 
     line = ax.plot(x, y, **kwargs)[0]
     ax.plot(x, y+err, '--', linewidth=1, color=line.get_color())
@@ -94,8 +94,8 @@ def plot_fractional_dataset_results(results, estimators):
     fig, ax = plt.subplots()
     for estimator in estimators:
         x = sorted(results)
-        dat = [results[prop][estimator].dG for prop in x]
-        plot_free_energies(x, dat, ax, label=estimator.__name__)
+        dat = [results[prop][estimator] for prop in x]
+        plot_results(x, dat, ax, label=estimator.__name__)
     ax.legend(loc='best')
     ax.set_xlabel('Proportion')
     ax.set_ylabel('Free energy (kcal/mol)')
