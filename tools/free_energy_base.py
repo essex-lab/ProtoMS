@@ -37,9 +37,6 @@ class PMF(object):
         """Return the free energy difference at the PMF end points."""
         return self.values[-1] - self.values[0]
 
-    # def __div__(self, other):
-    #     return PMF(self.lambdas, [val/other for val in self.values])
-
     def __neg__(self):
         return PMF(self.lambdas, [-val for val in self.values])
 
@@ -54,15 +51,15 @@ class CompositePMF(PMF):
         self.lambdas = args[0].lambdas
         self.values = []
         for dat in zip(*args):
-            self.values.append(FreeEnergy(*_get_mean_std_err(dat)))
+            try:
+                # if constructing from PMFs just have floats
+                self.values.append(FreeEnergy(*_get_mean_std_err(dat)))
+            except TypeError:
+                # constructing from CompositePMFs already have FreeEnergy's
+                self.values.append(np.sum(dat))
 
     def __add__(self, other):
-        print type(self.lambdas), type(other.lambdas)
-        if list(self.lambdas) != list(other.lambdas):
-            raise ValueError("Cannot add PMFs with different lambda values.")
-        return PMF(
-            self.lambdas,
-            [v1 + v2 for v1, v2 in zip(self.values, other.values)])
+        return CompositePMF(self, other)
 
     def __neg__(self):
         other = copy(self)
@@ -106,6 +103,9 @@ class Result(object):
     def __add__(self, other):
         return Result(*(self.data + other.data))
 
+    def __sub__(self, other):
+        return self + -other
+
     def __neg__(self):
         return Result(*[[-pmf for pmf in dat] for dat in self.data])
 
@@ -123,9 +123,6 @@ class FreeEnergy(object):
         return FreeEnergy(self.value - other.value,
                           (self.error**2 + other.error**2)**0.5)
 
-    # def __mul__(self, other):
-    #     return FreeEnergy(self.value * other, self.error)
-
     def __neg__(self):
         return FreeEnergy(-self.value, self.error)
 
@@ -133,7 +130,7 @@ class FreeEnergy(object):
         return (self.value == other.value) and (self.error == other.error)
 
     def __str__(self):
-        return "%.4f +/- %.4f" % (self.value, self.error)
+        return "%9.4f +/- %.4f" % (self.value, self.error)
 
     def __repr__(self):
         return "<FreeEnergy: value=%.4f error=%.4f>" % (self.value, self.error)

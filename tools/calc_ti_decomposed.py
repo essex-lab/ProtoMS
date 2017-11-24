@@ -102,6 +102,57 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         return results
 
 
+def considate_terms(data):
+    # this is currently not robust to inclusion of gcsolute terms
+    # and just generally horrible
+    for i in ('COU', 'LJ'):
+        solvent_interaction_terms = []
+        for term in data:
+            if "-solvent" in term and i in term:
+                if "protein" not in term and "solvent-solvent" not in term:
+                    solvent_interaction_terms.append(term)
+        if len(solvent_interaction_terms) > 1:
+            data['lig-solvent_%s' % i] = np.sum(
+                [data.pop(term) for term in solvent_interaction_terms])
+
+        protein_interaction_terms = []
+        for term in data:
+            if "protein1-" in term and i in term:
+                if "solvent" not in term:
+                    protein_interaction_terms.append(term)
+        if len(protein_interaction_terms) > 1:
+            data['protein1-lig_%s' % i] = np.sum(
+                [data.pop(term) for term in protein_interaction_terms])
+
+
+def plot_terms(data):
+    fig, ax = plt.subplots()
+
+    ys, errs, labels = [], [], []
+    for term in sorted(data):
+        dG = data[term].dG
+        # only include terms with non-zero differences
+        if dG.value != 0.:
+            ys.append(dG.value)
+            errs.append(dG.error)
+            labels.append(term)
+
+    xs = np.arange(len(ys))
+    ax.bar(xs, ys, yerr=errs, ecolor='black')
+    ax.set_xticks(xs)
+    ax.set_xticklabels(labels, rotation="vertical")
+    return fig, ax
+
+
+def plot_pmfs(data):
+    fig, ax = plt.subplots()
+    for term in decomp:
+        if decomp[term].dG.value != 0.:
+            decomp[term].pmf.plot(ax, label=term)
+    ax.legend(loc='best')
+    return fig, ax
+
+
 def get_arg_parser():
     """Add custom options for this script"""
     parser = feb.FEArgumentParser(
@@ -129,6 +180,8 @@ def get_arg_parser():
                              "calcalution. Attempts to consolidate terms "
                              "from ligands for clarity that can have opposite "
                              " sign and large magnitudes.")
+    parser.add_argument("--pmf", action='store_true', default=False,
+                        help="Plot the pmf of the individual terms.")
     return parser
 
 
@@ -137,77 +190,41 @@ if __name__ == "__main__":
     calc = DecomposedCalculation(args.directories)
     subset = (args.lower_bound, args.upper_bound)
     results = calc.calculate(subset=subset)
-    fdti = results[feb.TI].dG
-    # store results in a default dict for later simplicity of arithmetic
-    decomp = defaultdict(
-        lambda: feb.FreeEnergy(0., 0.),
-        {term: res.dG for term, res in results[TI_decomposed].items()}
-    )
+    decomp = results[TI_decomposed]
 
     if (args.bound or args.gas) is not None:
         calc2 = DecomposedCalculation(args.bound or args.gas)
-        results2 = defaultdict(lambda: 0., calc2.calculate(subset=subset))
-        fdti2 = results2[feb.TI].dG
-        decomp2 = defaultdict(
-            lambda: feb.FreeEnergy(0., 0.),
-            {term: res.dG for term, res in results2[TI_decomposed].items()}
-        )
+        results2 = calc2.calculate(subset=subset)
+        decomp2 = results2[TI_decomposed]
 
         # iterate over the unique keys from both calc and calc2
         for term in set(chain(decomp, decomp2)):
-            decomp[term] -= decomp2[term]
-            # swap the sign if this is a binding calculation
+            try:
+                decomp[term] -= decomp2[term]
+            except KeyError:
+                decomp[term] = -decomp2[term]
             if args.bound is not None:
-                decomp[term] *= -1
+                decomp[term] = -decomp[term]
 
-        if args.gas is not None:
-            fdti -= fdti2
-        else:
-            fdti = fdti2 - fdti
+        # update standard TI result as well
+        results[feb.TI] -= results2[feb.TI]
+        # swap the sign if this is a binding calculation
+        if args.bound is not None:
+            results[feb.TI] = -results[feb.TI]
 
-    # this is currently not robust to inclusion of gcsolute terms
-    # and just generally horrible
     if args.dualtopology:
-        for i in ('COU', 'LJ'):
-            solvent_interaction_terms = []
-            for term in decomp:
-                if "-solvent" in term and i in term:
-                    if "protein" not in term and "solvent-solvent" not in term:
-                        solvent_interaction_terms.append(term)
-            decomp['lig-solvent_%s' % i] = sum(
-                [decomp.pop(term) for term in solvent_interaction_terms],
-                feb.FreeEnergy(0., 0.))
-            protein_interaction_terms = []
-            for term in decomp:
-                if "protein1-" in term and i in term:
-                    if "solvent" not in term:
-                        protein_interaction_terms.append(term)
-            decomp['protein1-lig_%s' % i] = sum(
-                [decomp.pop(term) for term in protein_interaction_terms],
-                feb.FreeEnergy(0., 0.))
+        considate_terms(decomp)
+    plot_terms(decomp)
 
-    # remove terms that do not contribute to free energy difference as
-    # these take up space and are uninteresting
-    for term in list(decomp.keys()):
-        if decomp[term].value == 0.:
-            decomp.pop(term)
+    if args.pmf:
+        plot_pmfs(decomp)
 
-    width = 0.8
-    N = 1
-    fig, ax = plt.subplots()
-    xs = np.arange(len(decomp)) * N
+    print "%20s:" % "FDTI", results[feb.TI].dG
+    print
 
-    ys, labels = [], []
     for term in sorted(decomp):
-        ys.append(decomp[term].value)
-        labels.append(term)
-
-    ax.bar(xs, ys)
-    ax.set_xticks(xs)
-    ax.set_xticklabels(labels, rotation="vertical")
-
-    print "FDTI:", fdti
-    print "sum of terms:", np.sum(decomp.values())
+        print "%20s:" % term, decomp[term].dG
+    print "%20s:" % "sum of terms", np.sum(decomp.values()).dG
 
     if args.pickle is not None:
         with open(args.pickle, 'w') as f:
