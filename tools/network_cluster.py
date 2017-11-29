@@ -171,6 +171,7 @@ if __name__ == "__main__":
         if len(bins[i]) == 0: continue
         print '{:>3} frames contain {} waters'.format(len(bins[i]), i)
     Nstar = np.mean(num_wat_list) 
+    print '<N>: ',Nstar
 
     # STEP 2: Cluster frames within each bin, using RMSD as a measure of distance
 
@@ -356,12 +357,12 @@ if __name__ == "__main__":
         print("\t\tPresent in {:.2f} % of frames\n".format(sum([occupancies[j] for j in in_pns])))
         sub_occupancies.append(sum([occupancies[j] for j in in_pns]))
     # Add full PNs
-    for i in range(len(pn_clusts)):
-        if pn_clusts[i] in overlaps:
-            continue
-        overlaps.append(pn_clusts[i])
-        clust_sizes.append(len(pn_clusts[i]))
-        sub_occupancies.append(occupancies[i])
+#    for i in range(len(pn_clusts)):
+#        if pn_clusts[i] in overlaps:
+#            continue
+#        overlaps.append(pn_clusts[i])
+#        clust_sizes.append(len(pn_clusts[i]))
+#        sub_occupancies.append(occupancies[i])
 
 ##### tree diagram
     print 'Plotting tree diagram from PNs and SubNs'
@@ -449,8 +450,14 @@ if __name__ == "__main__":
 # identifying non-core water molecules. This looks at the waters in the subnetworks with N* occupancies
     non_core_subnet=[] 
     for clust,waters in zip(clust_sizes,overlaps):
+      print clust
+      print waters
       if clust==math.floor(Nstar) or clust==math.ceil(Nstar):
         non_core_subnet.append(waters)
+    if len(non_core_subnet) == 0:     # if there are no sub-networks of size N*, find the next biggest one(s)
+      for clust,waters in zip(clust_sizes,overlaps):
+        if clust == max(clust_sizes):
+          non_core_subnet.append(waters)
     non_core = [a for sublist in non_core_subnet for a in sublist]
     non_core = set(non_core)-set(core)
     print 'NON-CORE WATER MOLECULES'
@@ -473,8 +480,6 @@ if __name__ == "__main__":
     molpdb = _GetMolTemplate(args.input, args.molecule)
     num_frames = len(pdbfiles.pdbs)
 
-    if len(pdbfiles.pdbs[0].residues) > 20.:
-      quit()
     wat_list = []  # Store water molecules
     wat_whole = []  # Store water molecules
     frame_wat_ids = [[] for i in range(num_frames)]  # Store list ids of waters for each frame
@@ -507,6 +512,8 @@ if __name__ == "__main__":
       temp_occ = (flat_frame_clust_ids_all.count(j)/float(num_frames))*100
       if temp_occ > 100.:
         temp_occ = 100.
+      if j in core:
+        temp_occ = 100.
       all_occ[i] = temp_occ #calculating the overall occupancy of each cluster
       # need to write check that all_occ is never more than 100% occupied
       # a clustid should not be repeated in frame_clust_ids_all...
@@ -536,6 +543,9 @@ if __name__ == "__main__":
 
 
     print 'Plotting correlation between non-core water molecules'
+
+    if len(non_core) > 30:
+      quit()
 
     G = nx.cycle_graph(len(non_core))
     pos = nx.circular_layout(G)   # arranges 'nodes' in a circle
