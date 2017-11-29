@@ -3,14 +3,11 @@ from itertools import chain
 import matplotlib
 import numpy as np
 import os
-import pickle
 import free_energy_base as feb
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
-plt.rcParams['figure.subplot.bottom'] = 0.3
 
 
 class TI_decomposed(feb.Estimator):
@@ -101,8 +98,49 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
 
         return results
 
+    def _body(self, args):
+        subset = (args.lower_bound, args.upper_bound)
+        results = self.calculate(subset=subset)
+        decomp = results[TI_decomposed]
 
-def considate_terms(data):
+        if (args.bound or args.gas) is not None:
+            calc2 = DecomposedCalculation(args.bound or args.gas)
+            results2 = calc2.calculate(subset=subset)
+            decomp2 = results2[TI_decomposed]
+
+            # iterate over the unique keys from both calc and calc2
+            for term in set(chain(decomp, decomp2)):
+                try:
+                    decomp[term] -= decomp2[term]
+                except KeyError:
+                    decomp[term] = -decomp2[term]
+                if args.bound is not None:
+                    decomp[term] = -decomp[term]
+
+            # update standard TI result as well
+            results[feb.TI] -= results2[feb.TI]
+            # swap the sign if this is a binding calculation
+            if args.bound is not None:
+                results[feb.TI] = -results[feb.TI]
+
+        if args.dualtopology:
+            consolidate_terms(decomp)
+        self.figures['decomposed'], _ = plot_terms(decomp)
+
+        if args.pmf:
+            self.figures['decomposed_pmf'], _ = plot_pmfs(decomp)
+
+        print "%20s:" % "FDTI", results[feb.TI].dG
+        print
+
+        for term in sorted(decomp):
+            print "%20s:" % term, decomp[term].dG
+        print "%20s:" % "sum of terms", np.sum(decomp.values()).dG
+
+        return results
+
+
+def consolidate_terms(data):
     # this is currently not robust to inclusion of gcsolute terms
     # and just generally horrible
     for i in ('COU', 'LJ'):
@@ -127,6 +165,7 @@ def considate_terms(data):
 
 def plot_terms(data):
     fig, ax = plt.subplots()
+    fig.subplots_adjust(bottom=0.3)
 
     ys, errs, labels = [], [], []
     for term in sorted(data):
@@ -146,9 +185,9 @@ def plot_terms(data):
 
 def plot_pmfs(data):
     fig, ax = plt.subplots()
-    for term in decomp:
-        if decomp[term].dG.value != 0.:
-            decomp[term].pmf.plot(ax, label=term)
+    for term in data:
+        if data[term].dG.value != 0.:
+            data[term].pmf.plot(ax, label=term)
     ax.legend(loc='best')
     return fig, ax
 
@@ -188,47 +227,4 @@ def get_arg_parser():
 if __name__ == "__main__":
     args = get_arg_parser().parse_args()
     calc = DecomposedCalculation(args.directories)
-    subset = (args.lower_bound, args.upper_bound)
-    results = calc.calculate(subset=subset)
-    decomp = results[TI_decomposed]
-
-    if (args.bound or args.gas) is not None:
-        calc2 = DecomposedCalculation(args.bound or args.gas)
-        results2 = calc2.calculate(subset=subset)
-        decomp2 = results2[TI_decomposed]
-
-        # iterate over the unique keys from both calc and calc2
-        for term in set(chain(decomp, decomp2)):
-            try:
-                decomp[term] -= decomp2[term]
-            except KeyError:
-                decomp[term] = -decomp2[term]
-            if args.bound is not None:
-                decomp[term] = -decomp[term]
-
-        # update standard TI result as well
-        results[feb.TI] -= results2[feb.TI]
-        # swap the sign if this is a binding calculation
-        if args.bound is not None:
-            results[feb.TI] = -results[feb.TI]
-
-    if args.dualtopology:
-        considate_terms(decomp)
-    plot_terms(decomp)
-
-    if args.pmf:
-        plot_pmfs(decomp)
-
-    print "%20s:" % "FDTI", results[feb.TI].dG
-    print
-
-    for term in sorted(decomp):
-        print "%20s:" % term, decomp[term].dG
-    print "%20s:" % "sum of terms", np.sum(decomp.values()).dG
-
-    if args.pickle is not None:
-        with open(args.pickle, 'w') as f:
-            pickle.dump(results, f, protocol=2)
-
-    plt.show()
-    plt.savefig(args.out)
+    calc.run(args)

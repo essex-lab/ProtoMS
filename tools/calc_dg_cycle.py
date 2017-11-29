@@ -1,5 +1,4 @@
 from glob import glob
-import pickle
 import free_energy_base as feb
 
 
@@ -11,7 +10,7 @@ def print_state_data(results, directories, signs, states, estimator):
     for root, sign in zip(directories, signs):
         root_dGs = (root,)
         for state in states:
-            dG = results[root][state][est]
+            dG = results[root][state][estimator]
             root_dGs += (dG,)
             if sign == '+':
                 closures[state] += dG
@@ -39,6 +38,83 @@ def print_solv_bind(dG_solvs, dG_binds, directories, signs, estimator):
             closure_bind -= dG_bind
     print fmt % ('Cycle Closure', closure_solv, closure_bind)
     print
+
+
+class CycleCalculation(feb.FreeEnergyCalculation):
+    def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR]):
+        self.estimators = estimators
+        self.figures = {}
+
+    def _body(self, args):
+        if len(args.directories) != len(args.signs):
+            raise Exception(
+                "Please give exactly one sign for each provided directory.")
+
+        # determine what output folder names we're looking for
+        # elements of midfixes will replace the central %s of
+        # the output_dir_format string
+        output_dir_format = "%s/out?%s_%s"
+        if args.singletopology == 'sep':
+            # calculation is split into electrostatics and van der Waals
+            # components, need to do both and add them up
+            midfixes = ['_ele', '_vdw']
+        elif args.singletopology == 'comb':
+            midfixes = ['_comb']
+        else:
+            midfixes = ['']
+
+        # perform calculations
+        # end up with results dictionary structured as -
+        # results[root][state][estimator] == feb.FreeEnergy object
+        # thus we have one free energy difference for each root
+        # directory, for each state (gas, free or bound), calculated
+        # with each of the estimators
+        states = ('gas', 'free', 'bnd')
+        results = {}
+        for root in args.directories:
+            results[root] = {}
+            for state in states:
+                state_dGs = {est: feb.FreeEnergy(0., 0.)
+                             for est in self.estimators}
+                for mid in midfixes:
+                    output_dir = output_dir_format % (root, mid, state)
+                    calc = feb.FreeEnergyCalculation(
+                        root_paths=glob(output_dir),
+                        temperature=args.temperature,
+                        estimators=self.estimators)
+                    data = calc.calculate(
+                        subset=(args.lower_bound, args.upper_bound, 1))
+                    for est in self.estimators:
+                        state_dGs[est] += data[est].dG
+
+                results[root][state] = state_dGs
+
+        # combine state changes to get meaningful free energy differences
+        dG_solvation, dG_binding = {}, {}
+        for root in args.directories:
+            dG_solvation[root] = {}
+            dG_binding[root] = {}
+            for est in self.estimators:
+                gas = results[root]['gas'][est]
+                free = results[root]['free'][est]
+                bnd = results[root]['bnd'][est]
+
+                # solvation depends on calculation type
+                if args.dualtopology:
+                    dG_solvation[root][est] = free
+                else:
+                    dG_solvation[root][est] = free - gas
+                dG_binding[root][est] = bnd - free
+
+        for est in self.estimators:
+            print "%s -\n" % est.__name__
+            print_state_data(results, args.directories,
+                             args.signs, states, est)
+            print
+            print_solv_bind(dG_solvation, dG_binding,
+                            args.directories, args.signs, est)
+
+        return results
 
 
 def get_arg_parser():
@@ -80,75 +156,5 @@ def get_arg_parser():
 
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
-
-    if len(args.directories) != len(args.signs):
-        raise Exception(
-            "Please give exactly one sign for each provided directory.")
-
-    # determine what output folder names we're looking for
-    # elements of midfixes will replace the central %s of
-    # the output_dir_format string
-    output_dir_format = "%s/out?%s_%s"
-    if args.singletopology == 'sep':
-        # calculation is split into electrostatics and van der Waals
-        # components, need to do both and add them up
-        midfixes = ['_ele', '_vdw']
-    elif args.singletopology == 'comb':
-        midfixes = ['_comb']
-    else:
-        midfixes = ['']
-
-    states = ('gas', 'free', 'bnd')
-    estimators = (feb.TI, feb.BAR, feb.MBAR)
-
-    # perform calculations
-    # end up with results dictionary structured as -
-    # results[root][state][estimator] == feb.FreeEnergy object
-    # thus we have one free energy difference for each root
-    # directory, for each state (gas, free or bound), calculated
-    # with each of the estimators
-    results = {}
-    for root in args.directories:
-        results[root] = {}
-        for state in states:
-            state_dGs = {est: feb.FreeEnergy(0., 0.) for est in estimators}
-            for mid in midfixes:
-                output_dir = output_dir_format % (root, mid, state)
-                calc = feb.FreeEnergyCalculation(
-                    root_paths=glob(output_dir),
-                    temperature=args.temperature,
-                    estimators=estimators)
-                data = calc.calculate(
-                    subset=(args.lower_bound, args.upper_bound, 1))
-                for est in estimators:
-                    state_dGs[est] += data[est].dG
-
-            results[root][state] = state_dGs
-
-    # combine state changes to get meaningful free energy differences
-    dG_solvation, dG_binding = {}, {}
-    for root in args.directories:
-        dG_solvation[root] = {}
-        dG_binding[root] = {}
-        for est in estimators:
-            gas = results[root]['gas'][est]
-            free = results[root]['free'][est]
-            bnd = results[root]['bnd'][est]
-
-            # solvation depends on calculation type
-            if args.dualtopology:
-                dG_solvation[root][est] = free
-            else:
-                dG_solvation[root][est] = free - gas
-            dG_binding[root][est] = bnd - free
-
-    for est in estimators:
-        print "%s -\n" % est.__name__
-        print_state_data(results, args.directories, args.signs, states, est)
-        print
-        print_solv_bind(dG_solvation, dG_binding,
-                        args.directories, args.signs, est)
-
-    if args.pickle is not None:
-        with open(args.pickle, 'w') as f:
-            pickle.dump(results, f, protocol=2)
+    calc = CycleCalculation()
+    calc.run(args)

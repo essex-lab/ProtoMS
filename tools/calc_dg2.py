@@ -63,7 +63,7 @@ class FreeEnergyCalculation(free_energy_base.FreeEnergyCalculation):
         return {prop: self.calculate(subset=(lower_limit, prop))
                 for prop in proportions}
 
-    def run(self, args):
+    def _body(self, args):
         """Execute the required calculation according to the values present in
         the argparse.Namespace args.
         """
@@ -76,6 +76,15 @@ class FreeEnergyCalculation(free_energy_base.FreeEnergyCalculation):
         else:
             results = self.calculate(subset=(args.lower_bound,
                                              args.upper_bound))
+
+        if (args.test_equilibration or args.test_convergence) is not None:
+            fig = plot_fractional_dataset_results(results, calc.estimators)
+            figname = 'equil' if args.test_equilibration else 'convergence'
+            self.figures[figname] = fig
+        else:
+            if args.pmf:
+                self.figures['pmf'] = plot_pmfs(results)
+            print_results(results)
         return results
 
 
@@ -99,7 +108,7 @@ def plot_fractional_dataset_results(results, estimators):
     ax.legend(loc='best')
     ax.set_xlabel('Proportion')
     ax.set_ylabel('Free energy (kcal/mol)')
-    return fig, ax
+    return fig
 
 
 def plot_pmfs(results):
@@ -110,7 +119,7 @@ def plot_pmfs(results):
     ax.legend(loc='best')
     ax.set_xlabel('Lambda value')
     ax.set_ylabel('Free energy (kcal/mol)')
-    return fig, ax
+    return fig
 
 
 def print_results(results):
@@ -140,14 +149,14 @@ def get_arg_parser():
         help="Make graph of potential of mean force",
         clashes=('test_convergence', 'test_equilibration'))
     parser.add_argument(
-        '--test_equilibration', default=None, type=float,
+        '--test-equilibration', default=None, type=float,
         help="Perform free energy calculations 10 times using varying "
              "proportions of the total data set provided. Data used will "
              "range from 100%% of the dataset down to the proportion "
              "provided to this argument",
         clashes=('test_convergence', 'lower_bound'))
     parser.add_argument(
-        '--test_convergence', default=None, type=float,
+        '--test-convergence', default=None, type=float,
         help="Perform free energy calculations 10 times using varying "
              "proportions of the total data set provided. Data used will "
              "range from 100%% of the dataset up to the proportion "
@@ -159,17 +168,4 @@ if __name__ == '__main__':
     args = get_arg_parser().parse_args()
     calc = FreeEnergyCalculation(root_paths=args.directories,
                                  temperature=args.temperature)
-    results = calc.run(args)
-
-    if (args.test_equilibration or args.test_convergence) is not None:
-        plot_fractional_dataset_results(results, calc.estimators)
-    else:
-        if args.pmf:
-            plot_pmfs(results)
-        print_results(results)
-
-    if args.pickle is not None:
-        with open(args.pickle, 'w') as f:
-            pickle.dump(results, f, protocol=2)
-
-    plt.show()
+    calc.run(args)

@@ -1,13 +1,14 @@
 """Collection of classes to form the basis of a replacement for the current
 free energy calculation framework. """
 
-from abc import abstractmethod
+from abc import abstractmethod, ABCMeta
 from copy import copy
 import glob
 from operator import add
 import os
 import matplotlib
 import numpy as np
+import pickle
 import pymbar
 from scipy.integrate import trapz
 import simulationobjects as sim
@@ -137,6 +138,7 @@ class FreeEnergy(object):
 
 
 class Estimator(object):
+    __metaclass__ = ABCMeta
     """Base class for free energy estimators"""
     def __init__(self, lambdas):
         self.data = []
@@ -254,6 +256,7 @@ class FreeEnergyCalculation(object):
     """Top level class for performing a free energy calculation from
     ProtoMS simulation outputs.
     """
+
     def __init__(self, root_paths, temperature, estimators=[TI, BAR, MBAR]):
         """root_paths - a list of strings to ProtoMS output directories.
         The free energy will be calculated individually for each entry.
@@ -270,6 +273,7 @@ class FreeEnergyCalculation(object):
                         for lams, rep in zip(self.lambdas, self.paths)]
             for estimator in estimators}
         self._extract_series(self.paths)
+        self.figures = {}
 
     def _extract_series(self, paths):
         """For all results files extract the data series and supply these
@@ -296,7 +300,7 @@ class FreeEnergyCalculation(object):
 
         Returns
         -------
-        dict: 
+        dict:
           results of calculation stored in the below structure:
           return_val[estimator_class][i] = PMF instance
           where i is an list index indicating a repeat
@@ -307,6 +311,35 @@ class FreeEnergyCalculation(object):
                 [rep.subset(*subset).calculate(self.temperature)
                  for rep in repeats])
         return results
+
+    def run(self, args):
+        results = self._body(args)
+
+        if args.pickle is not None:
+            with open(args.pickle, 'w') as f:
+                pickle.dump(results, f, protocol=2)
+
+        # slightly tortured logic arises below from the behaviour of argparse
+        if (args.save_figures is None) or args.save_figures:
+            for key in self.figures:
+                if args.save_figures is None:
+                    figname = "%s.pdf" % key
+                else:
+                    figname = "%s_%s.pdf" % (args.save_figures, key)
+                self.figures[key].savefig(figname)
+
+        plt.show()
+
+    def _body(self, args):
+        """This method contains the main body of code that defines the
+        behaviour of the calculation. This is a simple example that
+        invokes self.calculate and returns the result. The return
+        value of this function is given to self.run which handles any
+        outputs. Any figures created in this method should be added to
+        the dictionary self.figures. The key used for each figure will
+        be used as the basis of the name when saved.
+        """
+        return self.calculate(subset=(args.lower_bound, args.upper_bound))
 
 
 def _get_mean_std_err(dat):
@@ -319,14 +352,18 @@ def get_arg_parser():
     parser.add_argument('-d', '--directories', nargs='+', required=True,
                         help='output directories')
     parser.add_argument(
-        '-l', '--lower_bound', default=0., type=float,
+        '-l', '--lower-bound', default=0., type=float,
         help="Define the lower bound of data to be used.")
     parser.add_argument(
-        '-u', '--upper_bound', default=1., type=float,
+        '-u', '--upper-bound', default=1., type=float,
         help="Define the upper bound of data to be used.")
     parser.add_argument(
         '-t', '--temperature', default=298.15, type=float,
         help='Temperature at which the simulation was run. Default=298.15K')
     parser.add_argument(
         '--pickle', help='Name of file in which to store results as a pickle.')
+    parser.add_argument(
+        '--save-figures', nargs='?', default='',
+        help="Save figures produced by script. Takes optional argument that "
+             "adds a prefix to figure names.")
     return parser
