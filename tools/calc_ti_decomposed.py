@@ -141,26 +141,26 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
 
 
 def consolidate_terms(data):
-    # this is currently not robust to inclusion of gcsolute terms
-    # and just generally horrible
-    for i in ('COU', 'LJ'):
-        solvent_interaction_terms = []
-        for term in data:
-            if "-solvent" in term and i in term:
-                if "protein" not in term and "solvent-solvent" not in term:
-                    solvent_interaction_terms.append(term)
-        if len(solvent_interaction_terms) > 1:
-            data['lig-solvent_%s' % i] = np.sum(
-                [data.pop(term) for term in solvent_interaction_terms])
+    # this is a little better than the previous iteration, copes with
+    # gcsolutes at least, set operations are still not ideal though
+    components = {'protein1', 'solvent', 'GCS'}
+    for inter in ('COU', 'LJ'):
+        for comp in components:
+            interaction_terms = []
+            for term in data:
+                if inter not in term or comp not in term:
+                    continue
+                
+                # get the one of more parts of the energy term
+                parts = term.split('_')[0].split('-')
+                # if it has two parts and exactly one is a non-solute
+                # component then we can consolidate
+                if len(parts) == 2 and len(set(parts) - components) == 1:
+                    interaction_terms.append(term)
 
-        protein_interaction_terms = []
-        for term in data:
-            if "protein1-" in term and i in term:
-                if "solvent" not in term:
-                    protein_interaction_terms.append(term)
-        if len(protein_interaction_terms) > 1:
-            data['protein1-lig_%s' % i] = np.sum(
-                [data.pop(term) for term in protein_interaction_terms])
+            if len(interaction_terms) > 1:
+                data['lig-%s_%s' % (comp, inter)] = np.sum(
+                    [data.pop(term) for term in interaction_terms])
 
 
 def plot_terms(data):
