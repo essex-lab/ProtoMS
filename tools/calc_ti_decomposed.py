@@ -180,6 +180,7 @@ def plot_terms(data):
     ax.bar(xs, ys, yerr=errs, ecolor='black')
     ax.set_xticks(xs)
     ax.set_xticklabels(labels, rotation="vertical")
+    ax.set_ylabel('Free Energy (kcal/mol)')
     return fig, ax
 
 
@@ -189,6 +190,8 @@ def plot_pmfs(data):
         if data[term].dG.value != 0.:
             data[term].pmf.plot(ax, label=term)
     ax.legend(loc='best')
+    ax.set_xlabel('Lambda Value')
+    ax.set_ylabel('Free Energy (kcal/mol)')
     return fig, ax
 
 
