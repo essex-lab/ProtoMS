@@ -9,11 +9,9 @@ class FEArgumentParser(argparse.ArgumentParser):
         # use a dict to store clashes for arguments
         self.clashes = {}
         # inherit any clashes belonging to parent argument parsers
-        try:
-            for parent in kwargs['parents']:
-                self.clashes.update(parent.clashes)
-        except KeyError:
-            pass
+        for parent in kwargs.get('parents', {}):
+            self.clashes.update(parent.clashes)
+
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
 
     def parse_args(self, *args, **kwargs):

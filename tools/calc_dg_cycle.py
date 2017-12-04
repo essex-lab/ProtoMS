@@ -2,9 +2,10 @@ from glob import glob
 import free_energy_base as feb
 
 
-def print_state_data(results, directories, signs, states, estimator):
-    fmt = "%20s  %20s  %20s  %20s"
-    print fmt % ('', 'dG gas', 'dG free', 'dG bound')
+def state_data_table(results, directories, signs, states, estimator):
+    table = feb.Table(estimator.__name__,
+                      fmts=["%s:", "%.3f", "%.3f", "%.3f"],
+                      headers=['', 'dG gas', 'dG free', 'dG bound'])
 
     closures = {state: feb.FreeEnergy(0., 0.) for state in states}
     for root, sign in zip(directories, signs):
@@ -16,36 +17,40 @@ def print_state_data(results, directories, signs, states, estimator):
                 closures[state] += dG
             else:
                 closures[state] -= dG
-        print fmt % root_dGs
-    print fmt % (
-        ('Cycle Closure',) + tuple(closures[state] for state in states))
+        table.add_row(root_dGs)
+    table.add_row(['Cycle Closure'] + [closures[state] for state in states])
+    return table
 
 
-def print_solv_bind(dG_solvs, dG_binds, directories, signs, estimator):
-    fmt = "%20s  %20s  %20s"
-    print fmt % ('', 'ddG Solvation', 'ddG Binding')
+def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
+    table = feb.Table('',
+                      fmts=["%s:", "%.3f", "%.3f"],
+                      headers=['', 'ddG Solvation', 'ddG Binding'])
+
     closure_solv = feb.FreeEnergy(0., 0.)
     closure_bind = feb.FreeEnergy(0., 0.)
     for root, sign in zip(directories, signs):
         dG_solv = dG_solvs[root][estimator]
         dG_bind = dG_binds[root][estimator]
-        print fmt % (root, dG_solv, dG_bind)
+        table.add_row([root, dG_solv, dG_bind])
         if sign == '+':
             closure_solv += dG_solv
             closure_bind += dG_bind
         else:
             closure_solv -= dG_solv
             closure_bind -= dG_bind
-    print fmt % ('Cycle Closure', closure_solv, closure_bind)
-    print
+    table.add_row(["Cycle Closure", closure_solv, closure_bind])
+    return table
 
 
 class CycleCalculation(feb.FreeEnergyCalculation):
     def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR]):
         self.estimators = estimators
         self.figures = {}
+        self.tables = []
 
     def _body(self, args):
+
         if len(args.directories) != len(args.signs):
             raise Exception(
                 "Please give exactly one sign for each provided directory.")
@@ -79,7 +84,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
                 for mid in midfixes:
                     output_dir = output_dir_format % (root, mid, state)
                     calc = feb.FreeEnergyCalculation(
-                        root_paths=glob(output_dir),
+                        root_paths=[glob(output_dir)],
                         temperature=args.temperature,
                         estimators=self.estimators)
                     data = calc.calculate(
@@ -107,12 +112,14 @@ class CycleCalculation(feb.FreeEnergyCalculation):
                 dG_binding[root][est] = bnd - free
 
         for est in self.estimators:
-            print "%s -\n" % est.__name__
-            print_state_data(results, args.directories,
-                             args.signs, states, est)
-            print
-            print_solv_bind(dG_solvation, dG_binding,
-                            args.directories, args.signs, est)
+            self.tables.append(
+                state_data_table(results, args.directories,
+                                 args.signs, states, est))
+            # print
+            self.tables.append(
+                solv_bind_table(dG_solvation, dG_binding,
+                                args.directories, args.signs, est)
+)
 
         return results
 
@@ -132,7 +139,10 @@ def get_arg_parser():
                     "Reported free energies are averages "
                     "over all repeats found. Reported errors are single "
                     "standard errors calculated from repeats.",
-        parents=[feb.get_arg_parser()])
+        parents=[feb.get_arg_parser()], conflict_handler='resolve')
+    parser.add_argument(
+        '-d', '--directories', nargs='+', required=True,
+        help="Location of folders containing ProtoMS output directories.")
     parser.add_argument(
         "-s", "--signs", nargs='+', type=str, choices=('+', '-'),
         help="List of '+' or '-' characters, one for each directory provided "

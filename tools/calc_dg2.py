@@ -1,15 +1,14 @@
 import matplotlib
 import numpy as np
 import os
-import pickle
-import free_energy_base
+import free_energy_base as feb
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-class FreeEnergyCalculation(free_energy_base.FreeEnergyCalculation):
+class FreeEnergyCalculation(feb.FreeEnergyCalculation):
     def test_equilibration(self, discard_limit):
         """Perform a series of calculations discarding increasing portions
         from the start of the loaded data series. This assesses whether
@@ -84,7 +83,8 @@ class FreeEnergyCalculation(free_energy_base.FreeEnergyCalculation):
         else:
             if args.pmf:
                 self.figures['pmf'] = plot_pmfs(results)
-            print_results(results)
+            # print_results(args.directories, results)
+            self.tables.extend(results_tables(args.directories, results))
         return results
 
 
@@ -122,28 +122,46 @@ def plot_pmfs(results):
     return fig
 
 
-def print_results(results):
+# def print_results(directories, results):
+#     """Print calculated free energies. If multiple repeats are present
+#     the mean and standard error are also printed.
+#     """
+#     for estimator in sorted(results, key=lambda x: x.__name__):
+#         print "%s -" % estimator.__name__
+#         for i, res in enumerate(results[estimator].data):
+#             dGs = []
+#             for j, pmf in enumerate(res):
+#                 dGs.append(pmf.dG)
+#                 print "%-20s: %.4f" % (directories[i][j], pmf.dG)
+#             print "%-20s: %s\n" % ('Mean', feb.FreeEnergy.fromData(dGs))
+#         print "Total Mean: %s\n" % results[estimator].dG
+
+def results_tables(directories, results):
     """Print calculated free energies. If multiple repeats are present
     the mean and standard error are also printed.
     """
+    tables = []
     for estimator in sorted(results, key=lambda x: x.__name__):
-        print estimator.__name__
-        # note that we are assuming here that there is only one set
-        # of data in the results[estimator]
-        dGs = [pmf.dG for pmf in results[estimator].data[0]]
-        for dG, path in zip(dGs, args.directories):
-            print "%s: %.4f" % (path, dG)
-        if len(dGs) > 1:
-            print "Mean: %s" % results[estimator].dG
-        print
+        table = feb.Table(estimator.__name__, ['%s', "%.2f"])
+        # print "%s -" % estimator.__name__
+        for i, res in enumerate(results[estimator].data):
+            dGs = []
+            for j, pmf in enumerate(res):
+                dGs.append(pmf.dG)
+                table.add_row([directories[i][j], pmf.dG])
+            table.add_row(['Mean', feb.FreeEnergy.fromData(dGs)])
+            table.add_blank_row()
+        table.add_row(['Total Mean', results[estimator].dG])
+        tables.append(table)
+    return tables
 
 
 def get_arg_parser():
     """Add custom options for this script"""
-    parser = free_energy_base.FEArgumentParser(
+    parser = feb.FEArgumentParser(
         description="Calculate free energy differences using a range of"
                     " estimators",
-        parents=[free_energy_base.get_arg_parser()])
+        parents=[feb.get_arg_parser()])
     parser.add_argument(
         '--pmf', action='store_true', default=False,
         help="Make graph of potential of mean force",

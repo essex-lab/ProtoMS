@@ -4,6 +4,7 @@ free energy calculation framework. """
 from abc import abstractmethod, ABCMeta
 from copy import copy
 import glob
+from itertools import izip_longest
 from operator import add
 import os
 import matplotlib
@@ -11,6 +12,7 @@ import numpy as np
 import pickle
 import pymbar
 from scipy.integrate import trapz
+import warnings
 import simulationobjects as sim
 from free_energy_argument_parser import FEArgumentParser
 
@@ -54,7 +56,7 @@ class CompositePMF(PMF):
         for dat in zip(*args):
             try:
                 # if constructing from PMFs just have floats
-                self.values.append(FreeEnergy(*_get_mean_std_err(dat)))
+                self.values.append(FreeEnergy.fromData(dat))
             except TypeError:
                 # constructing from CompositePMFs already have FreeEnergy's
                 self.values.append(np.sum(dat))
@@ -93,7 +95,7 @@ class Result(object):
     def dG(self):
         """Return a free energy object from this result's data."""
         data_dGs = [[pmf.dG for pmf in dat] for dat in self.data]
-        FEs = [FreeEnergy(*_get_mean_std_err(dG)) for dG in data_dGs]
+        FEs = [FreeEnergy.fromData(dG) for dG in data_dGs]
         return sum(FEs, FreeEnergy(0., 0.))
 
     @property
@@ -115,6 +117,17 @@ class FreeEnergy(object):
     def __init__(self, value, error):
         self.value = value
         self.error = error
+
+    @staticmethod
+    def fromData(data):
+        """Alternative initialiser that allows use of a set of data
+        points rather than providing an explicit value and error."""
+
+        # suppress warnings that arise when data is an empty list
+        # NaN is the output and this is desired
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            return FreeEnergy(np.mean(data), np.std(data)/len(data)**0.5)
 
     def __add__(self, other):
         return FreeEnergy(self.value + other.value,
@@ -253,47 +266,57 @@ class MBAR(TI):
 
 
 class FreeEnergyCalculation(object):
-    """Top level class for performing a free energy calculation from
+    """Class for performing a free energy calculation from one or more
     ProtoMS simulation outputs.
     """
 
     def __init__(self, root_paths, temperature, estimators=[TI, BAR, MBAR]):
-        """root_paths - a list of strings to ProtoMS output directories.
-        The free energy will be calculated individually for each entry.
+        """root_paths - a list of lists of strings to ProtoMS output
+        directories. Each list of strings specifies the output
+        directory(s) that make up multiple repeats of a single 'leg'
+        of the calculation. The result for each leg is a mean over
+        constituent repeats. Results from each leg are then summed together
+        to give a total free energy difference for the calculation.
         temperature - simulation temperature in Kelvin.
-        estimators - a list of estimator classes to use."""
+        estimators - a list of estimator classes to use.
+
+        """
         self.root_paths = root_paths
         self.temperature = temperature
-        self.paths = [sorted(glob.glob(os.path.join(root_path, "lam-*")))
-                      for root_path in self.root_paths]
-        self.lambdas = [[float(path.split('lam-')[1]) for path in rep]
-                        for rep in self.paths]
+
+        # data heirarchy -> root_paths[leg][repeat]
+        self.paths = [[sorted(glob.glob(os.path.join(root_path, "lam-*")))
+                       for root_path in leg] for leg in self.root_paths]
+        self.lambdas = [[[float(path.split('lam-')[1]) for path in rep]
+                         for rep in leg] for leg in self.paths]
         self.estimators = {
-            estimator: [estimator(lams)
-                        for lams, rep in zip(self.lambdas, self.paths)]
+            estimator: [[estimator(l) for l in lams]
+                        for lams in self.lambdas]
             for estimator in estimators}
         self._extract_series(self.paths)
         self.figures = {}
+        self.tables = []
 
     def _extract_series(self, paths):
         """For all results files extract the data series and supply these
         to each estimator instance."""
-        for i, repeat in enumerate(paths):
+        for i, leg in enumerate(paths):
             min_len = 10E20
-            for path in repeat:
-                rf = sim.ResultsFile()
-                rf.read(os.path.join(path, 'results'))
-                rf.make_series()
-                for cls in self.estimators:
-                    data_len = self.estimators[cls][i].add_data(rf.series)
-                    min_len = data_len if data_len < min_len else min_len
+            for j, repeat in enumerate(leg):
+                for path in repeat:
+                    rf = sim.ResultsFile()
+                    rf.read(os.path.join(path, 'results'))
+                    rf.make_series()
+                    for est in self.estimators.values():
+                        data_len = est[i][j].add_data(rf.series)
+                        min_len = data_len if data_len < min_len else min_len
 
-            # in cases where calculations terminate prematurely there
-            # can be slight differences in the length of data series
-            # within a repeat. Here we standardise the length for
-            # later convenience
-            for cls in self.estimators:
-                self.estimators[cls][i] = self.estimators[cls][i][:min_len]
+                # in cases where calculations terminate prematurely there
+                # can be slight differences in the length of data series
+                # within a repeat. Here we standardise the length for
+                # later convenience
+                for est in self.estimators.values():
+                    est[i][j] = est[i][j][:min_len]
 
     def calculate(self, subset=(0., 1., 1)):
         """For each estimator return the evaluated potential of mean force.
@@ -306,26 +329,37 @@ class FreeEnergyCalculation(object):
           where i is an list index indicating a repeat
         """
         results = {}
-        for est, repeats in self.estimators.items():
-            results[est] = Result(
-                [rep.subset(*subset).calculate(self.temperature)
-                 for rep in repeats])
+        for est, legs in self.estimators.items():
+            leg_result = Result()
+            for i, leg in enumerate(legs):
+                leg_result += Result(
+                    [rep.subset(*subset).calculate(self.temperature)
+                     for rep in leg])
+            results[est] = leg_result
         return results
 
     def run(self, args):
+        """Method for public execution of calculation. Runs self._body(args)
+        and uses the return value as the calculation result. Handles
+        logic for printing of output tables and saving of output
+        pickles and figures. Calls plt.show() to display figures."""
         results = self._body(args)
 
         if args.pickle is not None:
             with open(args.pickle, 'w') as f:
                 pickle.dump(results, f, protocol=2)
 
-        # slightly tortured logic arises below from the behaviour of argparse
-        if (args.save_figures is None) or args.save_figures:
+        for table in self.tables:
+            print "%s\n" % table
+
+        if args.save_figures is not None:
+            # flag provided so save figures
             for key in self.figures:
-                if args.save_figures is None:
-                    figname = "%s.pdf" % key
-                else:
+                if args.save_figures:
+                    # optional argument provided so add as prefix
                     figname = "%s_%s.pdf" % (args.save_figures, key)
+                else:
+                    figname = "%s.pdf" % key
                 self.figures[key].savefig(figname)
 
         plt.show()
@@ -337,20 +371,23 @@ class FreeEnergyCalculation(object):
         value of this function is given to self.run which handles any
         outputs. Any figures created in this method should be added to
         the dictionary self.figures. The key used for each figure will
-        be used as the basis of the name when saved.
+        be used as the basis of the name when saved. Any output tables
+        created in this method should be added to the list self.tables.
         """
         return self.calculate(subset=(args.lower_bound, args.upper_bound))
-
-
-def _get_mean_std_err(dat):
-    return np.mean(dat), np.std(dat)/len(dat)**0.5
 
 
 def get_arg_parser():
     """Returns a generic argparser for all free energy calculation scripts"""
     parser = FEArgumentParser(add_help=False)
-    parser.add_argument('-d', '--directories', nargs='+', required=True,
-                        help='output directories')
+    parser.add_argument(
+        '-d', '--directories', nargs='+', required=True, action='append',
+        help="Location of folders containing ProtoMS output subdirectories. "
+             "Multiple directories can be supplied to this flag and indicate "
+             "repeats of the same calculation. This flag may be given "
+             "multiple times and each instances is treated as an individual "
+             "leg making up a single free energy difference e.g. vdw and ele "
+             "contributions of a single topology calculation.")
     parser.add_argument(
         '-l', '--lower-bound', default=0., type=float,
         help="Define the lower bound of data to be used.")
@@ -363,7 +400,82 @@ def get_arg_parser():
     parser.add_argument(
         '--pickle', help='Name of file in which to store results as a pickle.')
     parser.add_argument(
-        '--save-figures', nargs='?', default='',
+        '--save-figures', nargs='?', const='',
         help="Save figures produced by script. Takes optional argument that "
              "adds a prefix to figure names.")
     return parser
+
+
+class Table(object):
+    def __init__(self, title, fmts, headers=[], space=3):
+        self.title = title
+        self.columns = [
+            Column(head, fmt, fmt)
+            for fmt, head in izip_longest(fmts, headers, fillvalue='')
+        ]
+        self.spacer = " " * space
+
+    def add_row(self, data):
+        for col, dat in zip(self.columns, data):
+            col.add_data(dat)
+
+    def add_blank_row(self):
+        for col in self.columns:
+            col.add_data(None)
+
+    def __str__(self):
+        s = ''
+        if self.title:
+            s += "%s\n" % self.title
+
+        for col in self.columns:
+            s += ("%-{}s" + self.spacer).format(col.width) % col.header
+        s += '\n'
+
+        for row in zip(*self.columns):
+            s += self.spacer.join(row) + '\n'
+        return s
+
+
+class Column(object):
+    def __init__(self, header='', value_fmt="%.4f", error_fmt="%.4f"):
+        self.header = header
+        self.left = SubColumn(value_fmt)
+        self.right = SubColumn(error_fmt)
+
+    def add_data(self, data):
+        try:
+            self.left.add_data(data.value)
+            self.right.add_data(data.error)
+        except AttributeError:
+            self.left.add_data(data)
+            self.right.add_data(None)
+
+    def __iter__(self):
+        for l, r in zip(self.left, self.right):
+            stuff = "%s +- %s" % (l, r) if len(r) != r.count(" ") else "%s" % l
+            yield "%-{}s".format(self.width) % stuff
+
+    @property
+    def width(self):
+        if self.right.width:
+            contents = self.left.width + self.right.width + 4
+        else:
+            contents = self.left.width
+        return max(contents, len(self.header))
+
+
+class SubColumn(object):
+    def __init__(self, fmt="%.4f"):
+        self.values = []
+        self.fmt = fmt
+        self.width = 0
+
+    def add_data(self, data):
+        line = self.fmt % data if data is not None else ''
+        self.values.append(line)
+        self.width = max(len(line), self.width)
+
+    def __iter__(self):
+        for val in self.values:
+            yield "%{}s".format(self.width) % val

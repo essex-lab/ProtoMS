@@ -76,25 +76,29 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
     def calculate(self, subset=(0., 1., 1.)):
         results = {}
 
-        results[feb.TI] = feb.Result(
-            [rep.subset(*subset).calculate(self.temperature)
-             for rep in self.estimators[feb.TI]])
+        leg_result = feb.Result()
+        for leg in self.estimators[feb.TI]:
+            leg_result += feb.Result(
+                [rep.subset(*subset).calculate(self.temperature)
+                 for rep in leg])
+        results[feb.TI] = leg_result
 
         # dealing with the decomposed estimator is a little more difficult
         # repeats for the same term need to be grouped together into a
         # single Results object
         # start by pulling out all the data
-        data = []
-        for rep in self.estimators[TI_decomposed]:
-            data.append(rep.subset(*subset).calculate(self.temperature))
+        data = [[rep.subset(*subset).calculate(self.temperature)
+                 for rep in leg]
+                for leg in self.estimators[TI_decomposed]]
 
-        # now add into results in a compatible order such that
+        # now add into results in a compatible order and combine legs such that
         # results[TI_decomposed][term] = Results object
         results[TI_decomposed] = {}
-        for term in data[0]:
-            results[TI_decomposed][term] = feb.Result(
-                [rep[term] for rep in data]
-            )
+        for term in data[0][0]:
+            result = feb.Result()
+            for leg in data:
+                result += feb.Result([rep[term] for rep in leg])
+            results[TI_decomposed][term] = result
 
         return results
 
@@ -125,17 +129,18 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
 
         if args.dualtopology:
             consolidate_terms(decomp)
-        self.figures['decomposed'], _ = plot_terms(decomp)
+        self.figures['decomposed'] = plot_terms(decomp)
 
         if args.pmf:
-            self.figures['decomposed_pmf'], _ = plot_pmfs(decomp)
+            self.figures['decomposed_pmfs'] = plot_pmfs(decomp)
 
-        print "%20s:" % "FDTI", results[feb.TI].dG
-        print
-
+        table = feb.Table('', fmts=["%s:", "%.3f"])
+        table.add_row(["FDTI", results[feb.TI].dG])
+        table.add_blank_row()
         for term in sorted(decomp):
-            print "%20s:" % term, decomp[term].dG
-        print "%20s:" % "sum of terms", np.sum(decomp.values()).dG
+            table.add_row([term, decomp[term].dG])
+        table.add_row(['sum of terms', np.sum(decomp.values()).dG])
+        self.tables.append(table)
 
         return results
 
@@ -150,8 +155,8 @@ def consolidate_terms(data):
             for term in data:
                 if inter not in term or comp not in term:
                     continue
-                
-                # get the one of more parts of the energy term
+
+                # get the one or more parts of the energy term
                 parts = term.split('_')[0].split('-')
                 # if it has two parts and exactly one is a non-solute
                 # component then we can consolidate
@@ -181,7 +186,7 @@ def plot_terms(data):
     ax.set_xticks(xs)
     ax.set_xticklabels(labels, rotation="vertical")
     ax.set_ylabel('Free Energy (kcal/mol)')
-    return fig, ax
+    return fig
 
 
 def plot_pmfs(data):
@@ -192,7 +197,7 @@ def plot_pmfs(data):
     ax.legend(loc='best')
     ax.set_xlabel('Lambda Value')
     ax.set_ylabel('Free Energy (kcal/mol)')
-    return fig, ax
+    return fig
 
 
 def get_arg_parser():
@@ -205,25 +210,28 @@ def get_arg_parser():
                     "illustrative to consider the dominant contributions of "
                     "a calculation.",
         parents=[feb.get_arg_parser()])
-    parser.add_argument("-b", "--bound", nargs="+",
-                        help="Output directories of bound phase calculations. "
-                             "If present, it is assumed that -d "
-                             "provides solvent phase simulation data.",
-                        clashes=['gas'])
-    parser.add_argument("-g", "--gas", nargs="+",
-                        help="Output directories of gas phase calculations. "
-                             "If present, it is assumed that -d "
-                             "provides solvent phase simulation data.",
-                        clashes=['bound'])
-    parser.add_argument("-o", "--out", type=str, default="decomposed.pdf",
-                        help="Filename of output graph.")
-    parser.add_argument("--dualtopology", action='store_true', default=False,
-                        help="Indicates provided data is from a dual topology"
-                             "calcalution. Attempts to consolidate terms "
-                             "from ligands for clarity that can have opposite "
-                             " sign and large magnitudes.")
+    parser.add_argument(
+        "-b", "--bound", nargs="+", action='append',
+        help="Output directory(s) of additional bound phase calculation(s). "
+             "Using this flag causes data loaded via -d to be considered as "
+             "solvent phase data. All data is then combined to provide a "
+             "decomposition of the binding free energy. Behaves identically "
+             "to -d in treatment of repeats and calculation legs.",
+        clashes=['gas'])
+    parser.add_argument(
+        "-g", "--gas", nargs="+", action='append',
+        help="As -b except data loaded via this flag is treated as gas phase "
+             "data to provide to provide a decomposed solvation free energy.",
+        clashes=['bound'])
+    parser.add_argument(
+        "--dualtopology", action='store_true', default=False,
+        help="Indicates provided data is from a dual topology calculation. "
+             "Attempts to consolidate terms, for clarity, from ligands that "
+             "can have opposite signs and large magnitudes. Please note that "
+             "standard errors calculated with this approach are no longer "
+             "rigorous and can be spuriously large.")
     parser.add_argument("--pmf", action='store_true', default=False,
-                        help="Plot the pmf of the individual terms.")
+                        help="Plot the Potential of Mean Force for all terms.")
     return parser
 
 
