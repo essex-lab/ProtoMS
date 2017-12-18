@@ -86,6 +86,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
                     calc = feb.FreeEnergyCalculation(
                         root_paths=[glob(output_dir)],
                         temperature=args.temperature,
+                        subdir=args.subdir,
                         estimators=self.estimators)
                     data = calc.calculate(
                         subset=(args.lower_bound, args.upper_bound, 1))

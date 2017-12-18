@@ -270,7 +270,8 @@ class FreeEnergyCalculation(object):
     ProtoMS simulation outputs.
     """
 
-    def __init__(self, root_paths, temperature, estimators=[TI, BAR, MBAR]):
+    def __init__(self, root_paths, temperature,
+                 estimators=[TI, BAR, MBAR], subdir=''):
         """root_paths - a list of lists of strings to ProtoMS output
         directories. Each list of strings specifies the output
         directory(s) that make up multiple repeats of a single 'leg'
@@ -284,10 +285,10 @@ class FreeEnergyCalculation(object):
         self.root_paths = root_paths
         self.temperature = temperature
 
-        # data heirarchy -> root_paths[leg][repeat]
-        self.paths = [[sorted(glob.glob(os.path.join(root_path, "lam-*")))
+        # data hierarchy -> root_paths[leg][repeat]
+        self.paths = [[sorted(glob.glob(os.path.join(root_path, "lam-*", subdir)))
                        for root_path in leg] for leg in self.root_paths]
-        self.lambdas = [[[float(path.split('lam-')[1]) for path in rep]
+        self.lambdas = [[[float(path.split('/')[-2][4:]) for path in rep]
                          for rep in leg] for leg in self.paths]
         self.estimators = {
             estimator: [[estimator(l) for l in lams]
@@ -388,6 +389,12 @@ def get_arg_parser():
              "multiple times and each instances is treated as an individual "
              "leg making up a single free energy difference e.g. vdw and ele "
              "contributions of a single topology calculation.")
+    parser.add_argument(
+        '--subdir', default='',
+        help="Optional sub-directory for each lambda value to search within "
+             "for simulation output. This is useful in, for instance, "
+             "processing only the results of a GCAP calculation at a "
+             "particular B value.")
     parser.add_argument(
         '-l', '--lower-bound', default=0., type=float,
         help="Define the lower bound of data to be used.")

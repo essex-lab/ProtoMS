@@ -185,5 +185,6 @@ def get_arg_parser():
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
     calc = FreeEnergyCalculation(root_paths=args.directories,
-                                 temperature=args.temperature)
+                                 temperature=args.temperature,
+                                 subdir=args.subdir)
     calc.run(args)

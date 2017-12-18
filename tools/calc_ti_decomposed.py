@@ -64,13 +64,14 @@ class TI_decomposed(feb.Estimator):
 
 
 class DecomposedCalculation(feb.FreeEnergyCalculation):
-    def __init__(self, root_paths):
+    def __init__(self, root_paths, subdir=''):
         # temperature can be given as zero as TI estimators do
         # not make use of it
         feb.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
             temperature=0.,
+            subdir=subdir,
             estimators={feb.TI, TI_decomposed})
 
     def calculate(self, subset=(0., 1., 1.)):
@@ -237,5 +238,5 @@ def get_arg_parser():
 
 if __name__ == "__main__":
     args = get_arg_parser().parse_args()
-    calc = DecomposedCalculation(args.directories)
+    calc = DecomposedCalculation(args.directories, subdir=args.subdir)
     calc.run(args)
