@@ -25,6 +25,7 @@ import sys
 import matplotlib
 from free_energy_base import *
 from calc_ti_decomposed import TI_decomposed
+from calc_gci2 import GCIResult
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')

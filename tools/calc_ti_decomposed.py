@@ -77,11 +77,11 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
     def calculate(self, subset=(0., 1., 1.)):
         results = {}
 
-        leg_result = feb.Result()
+        leg_result = feb.Result([])
         for leg in self.estimators[feb.TI]:
             leg_result += feb.Result(
-                [rep.subset(*subset).calculate(self.temperature)
-                 for rep in leg])
+                [[rep.subset(*subset).calculate(self.temperature)
+                 for rep in leg]])
         results[feb.TI] = leg_result
 
         # dealing with the decomposed estimator is a little more difficult
@@ -96,9 +96,9 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         # results[TI_decomposed][term] = Results object
         results[TI_decomposed] = {}
         for term in data[0][0]:
-            result = feb.Result()
+            result = feb.Result([])
             for leg in data:
-                result += feb.Result([rep[term] for rep in leg])
+                result += feb.Result([[rep[term] for rep in leg]])
             results[TI_decomposed][term] = result
 
         return results

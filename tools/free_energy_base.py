@@ -3,7 +3,7 @@ free energy calculation framework. """
 
 from abc import abstractmethod, ABCMeta
 from copy import copy
-import glob
+from glob import glob
 from itertools import izip_longest
 from operator import add
 import os
@@ -79,8 +79,8 @@ class CompositePMF(PMF):
 
 
 class Result(object):
-    def __init__(self, *args):
-        self.data = args
+    def __init__(self, data):
+        self.data = data
         if len({tuple(pmf.lambdas) for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
 
@@ -104,13 +104,13 @@ class Result(object):
         return reduce(add, pmfs)
 
     def __add__(self, other):
-        return Result(*(self.data + other.data))
+        return Result(self.data + other.data)
 
     def __sub__(self, other):
         return self + -other
 
     def __neg__(self):
-        return Result(*[[-pmf for pmf in dat] for dat in self.data])
+        return Result([[-pmf for pmf in dat] for dat in self.data])
 
 
 class FreeEnergy(object):
@@ -284,12 +284,30 @@ class FreeEnergyCalculation(object):
         """
         self.root_paths = root_paths
         self.temperature = temperature
+        self.subdir = subdir
 
         # data hierarchy -> root_paths[leg][repeat]
-        self.paths = [[sorted(glob.glob(os.path.join(root_path, "lam-*", subdir)))
-                       for root_path in leg] for leg in self.root_paths]
-        self.lambdas = [[[float(path.split('/')[-2][4:]) for path in rep]
-                         for rep in leg] for leg in self.paths]
+        # self.paths = [
+        #     [sorted(glob(self._path_constructor(root_path)))
+        #      for root_path in leg]
+        #     for leg in self.root_paths
+        # ]
+        # self.lambdas = [
+        #     [[self._get_lambda(path) for path in rep]
+        #      for rep in leg]
+        #     for leg in self.paths
+        # ]
+        self.paths = []
+        self.lambdas = []
+        for leg in self.root_paths:
+            self.paths.append([])
+            self.lambdas.append([])
+            for root_path in leg:
+                paths = glob(self._path_constructor(root_path))
+                paths.sort(key=self._get_lambda)
+                self.paths[-1].append(paths)
+                self.lambdas[-1].append(map(self._get_lambda, paths))
+
         self.estimators = {
             estimator: [[estimator(l) for l in lams]
                         for lams in self.lambdas]
@@ -297,6 +315,12 @@ class FreeEnergyCalculation(object):
         self._extract_series(self.paths)
         self.figures = {}
         self.tables = []
+
+    def _path_constructor(self, root_path):
+        return os.path.join(root_path, "lam-*", self.subdir)
+
+    def _get_lambda(self, path):
+        return float(path.split('/')[-2][4:])
 
     def _extract_series(self, paths):
         """For all results files extract the data series and supply these
@@ -331,11 +355,11 @@ class FreeEnergyCalculation(object):
         """
         results = {}
         for est, legs in self.estimators.items():
-            leg_result = Result()
+            leg_result = Result([])
             for i, leg in enumerate(legs):
                 leg_result += Result(
-                    [rep.subset(*subset).calculate(self.temperature)
-                     for rep in leg])
+                    [[rep.subset(*subset).calculate(self.temperature)
+                     for rep in leg]])
             results[est] = leg_result
         return results
 
@@ -486,3 +510,6 @@ class SubColumn(object):
     def __iter__(self):
         for val in self.values:
             yield "%{}s".format(self.width) % val
+
+
+#### Check Scripts work
