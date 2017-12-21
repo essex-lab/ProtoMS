@@ -103,8 +103,10 @@ class BaseTest(unittest.TestCase):
         output_files = [os.path.join(d, f) for f in cls.output_files for d in cls.output_directories]
         cls._all_files.extend(output_files)
 
-        # Delete files left over from previous test runs
+        # Delete files left over from previous test runs and replace them
+        # with fresh copies
         cls._helper_clean_files()
+        cls._helper_copy_input_files()
 
     @classmethod
     def tearDownClass(cls):
@@ -148,12 +150,16 @@ class BaseTest(unittest.TestCase):
                 self._all_files.remove(filename)
             self.assertTrue(file_match, "Content mismatch between output and reference for file {0}".format(filename))
 
-    def test(self):
-        for filename in self.input_files:
+    @classmethod
+    def _helper_copy_input_files(cls):
+        for filename in cls.input_files:
             try:
-                shutil.copy(os.path.join(self._full_ref_dir, filename), ".")
+                shutil.copy(os.path.join(cls._full_ref_dir, filename), ".")
             except IOError:
                 raise IOError("The required reference input file {0} could not be copied".format(filename))
+
+    def test(self):
+        # self._helper_copy_input_files()
 
         print("\nTEST_RUN\n")
         args = [self.executable] + self.args

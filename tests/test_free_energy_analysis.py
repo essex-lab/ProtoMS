@@ -2,13 +2,21 @@
 
 import pymbar
 import numpy as np
+import os
+import shutil
+import sys
 import unittest
-from free_energy_base import BAR, MBAR, TI, get_arg_parser
-from free_energy_base import CompositePMF, FreeEnergy, PMF, Result
-from simulationobjects import boltz, SnapshotResults
+import framework
+
+sys.path.append(os.path.join(os.environ['PROTOMSHOME'], 'tools'))
+
 import calc_dg2
 import calc_ti_decomposed
 import calc_dg_cycle
+import calc_gci2
+from free_energy_base import BAR, MBAR, TI, get_arg_parser
+from free_energy_base import CompositePMF, FreeEnergy, PMF, Result
+from simulationobjects import boltz, SnapshotResults
 
 
 class TestBAR(unittest.TestCase):
@@ -215,6 +223,124 @@ class TestResult(unittest.TestCase):
                          single_result.dG.value*2)
         self.assertEqual((double_result+single_result).dG.value,
                          single_result.dG.value*4)
+
+
+class testCalcDG(framework.BaseTest):
+    """Test main driver classes associated with each of the analysis
+    scripts.
+
+    As very artificial data is used to construct these tests we are mainly
+    looking for them to pass without throwing exceptions."""
+    ref_dir = "tests/free_energy_analysis/"
+
+    input_files = ['ala_gly']
+    executable = ''
+    args = []
+    output_files = ['results.pkl', 'pref_pmf.pdf']
+
+    @classmethod
+    def _helper_copy_input_files(self):
+        for filename in self.input_files:
+            try:
+                shutil.copytree(os.path.join(self._full_ref_dir, filename),
+                                filename)
+            except IOError:
+                raise IOError(
+                    "The required reference input file {0} could not be "
+                    "copied".format(filename))
+
+    @classmethod
+    def _helper_clean_files(cls):
+        for filename in cls.input_files + cls.output_files:
+            try:
+                os.remove(filename)
+            except OSError:
+                pass
+            try:
+                shutil.rmtree(filename)
+            except OSError:
+                pass
+
+    def tearDown(self):
+        for filename in self.output_files:
+            self.assertTrue(
+                os.path.exists(filename),
+                "Expected output file {0} is missing".format(filename))
+
+    def test(self):
+        cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --pmf --no-show "
+                   "--pickle results.pkl --save-figures pref")
+        args = calc_dg2.get_arg_parser().parse_args(cmdline.split())
+        calc = calc_dg2.FreeEnergyCalculation(root_paths=args.directories,
+                                              temperature=args.temperature,
+                                              subdir=args.subdir)
+        calc.run(args)
+
+
+class testCalcDgCycleDual(testCalcDG):
+    input_files = ['ala_gly', 'gly_val', 'ala_val']
+    output_files = ['results.pkl']
+
+    def test(self):
+        cmdline = ("-d ala_gly gly_val ala_val --signs + + - --dual"
+                   " --no-show --pickle results.pkl")
+        args = calc_dg_cycle.get_arg_parser().parse_args(cmdline.split())
+        calc = calc_dg_cycle.CycleCalculation()
+        calc.run(args)
+
+
+class testCalcDgCycleComb(testCalcDG):
+    input_files = ['ala_gly', 'gly_val', 'ala_val']
+    output_files = ['results.pkl']
+
+    def test(self):
+        cmdline = ("-d ala_gly gly_val ala_val --signs + + - "
+                   "--single comb --no-show --pickle results.pkl")
+        args = calc_dg_cycle.get_arg_parser().parse_args(cmdline.split())
+        calc = calc_dg_cycle.CycleCalculation()
+        calc.run(args)
+
+
+class testCalcDgCycleSep(testCalcDG):
+    input_files = ['ala_gly', 'gly_val', 'ala_val']
+    output_files = ['results.pkl']
+
+    def test(self):
+        cmdline = ("-d ala_gly gly_val ala_val --signs + + - "
+                   "--single sep --no-show --pickle results.pkl")
+        args = calc_dg_cycle.get_arg_parser().parse_args(cmdline.split())
+        calc = calc_dg_cycle.CycleCalculation()
+        calc.run(args)
+
+
+class testCalcTiDecomposed(testCalcDG):
+    input_files = ['ala_gly']
+    output_files = ['results.pkl', 'pref_decomposed_pmfs.pdf',
+                    'pref_decomposed.pdf']
+
+    def test(self):
+        cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --pmf --no-show "
+                   "--pickle results.pkl --save-figures pref")
+        args = calc_ti_decomposed.get_arg_parser().parse_args(cmdline.split())
+        calc = calc_ti_decomposed.DecomposedCalculation(
+            root_paths=args.directories,
+            subdir=args.subdir)
+        calc.run(args)
+
+
+class testCalcTiDecomposedDual(testCalcDG):
+    input_files = ['ala_gly']
+    output_files = ['results.pkl', 'pref_decomposed_pmfs.pdf',
+                    'pref_decomposed.pdf']
+
+    def test(self):
+        cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --dual --pmf "
+                   " --no-show --pickle results.pkl --save-figures pref")
+        args = calc_ti_decomposed.get_arg_parser().parse_args(cmdline.split())
+        calc = calc_ti_decomposed.DecomposedCalculation(
+            root_paths=args.directories,
+            subdir=args.subdir)
+        calc.run(args)
 
 
 if __name__ == '__main__':

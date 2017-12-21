@@ -79,8 +79,8 @@ class CompositePMF(PMF):
 
 
 class Result(object):
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, *args):
+        self.data = args
         if len({tuple(pmf.lambdas) for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
 
@@ -104,13 +104,13 @@ class Result(object):
         return reduce(add, pmfs)
 
     def __add__(self, other):
-        return Result(self.data + other.data)
+        return Result(*(self.data + other.data))
 
     def __sub__(self, other):
         return self + -other
 
     def __neg__(self):
-        return Result([[-pmf for pmf in dat] for dat in self.data])
+        return Result(*[[-pmf for pmf in dat] for dat in self.data])
 
 
 class FreeEnergy(object):
@@ -287,16 +287,6 @@ class FreeEnergyCalculation(object):
         self.subdir = subdir
 
         # data hierarchy -> root_paths[leg][repeat]
-        # self.paths = [
-        #     [sorted(glob(self._path_constructor(root_path)))
-        #      for root_path in leg]
-        #     for leg in self.root_paths
-        # ]
-        # self.lambdas = [
-        #     [[self._get_lambda(path) for path in rep]
-        #      for rep in leg]
-        #     for leg in self.paths
-        # ]
         self.paths = []
         self.lambdas = []
         for leg in self.root_paths:
@@ -355,11 +345,11 @@ class FreeEnergyCalculation(object):
         """
         results = {}
         for est, legs in self.estimators.items():
-            leg_result = Result([])
+            leg_result = Result()
             for i, leg in enumerate(legs):
                 leg_result += Result(
-                    [[rep.subset(*subset).calculate(self.temperature)
-                     for rep in leg]])
+                    [rep.subset(*subset).calculate(self.temperature)
+                     for rep in leg])
             results[est] = leg_result
         return results
 
@@ -387,7 +377,8 @@ class FreeEnergyCalculation(object):
                     figname = "%s.pdf" % key
                 self.figures[key].savefig(figname)
 
-        plt.show()
+        if not args.no_show:
+            plt.show()
 
     def _body(self, args):
         """This method contains the main body of code that defines the
@@ -434,6 +425,10 @@ def get_arg_parser():
         '--save-figures', nargs='?', const='',
         help="Save figures produced by script. Takes optional argument that "
              "adds a prefix to figure names.")
+    parser.add_argument(
+        '--no-show', action='store_true', default=False,
+        help="Do not display any figures on screen. Does not interfere with"
+             " --save-figures.")
     return parser
 
 
@@ -510,6 +505,3 @@ class SubColumn(object):
     def __iter__(self):
         for val in self.values:
             yield "%{}s".format(self.width) % val
-
-
-#### Check Scripts work
