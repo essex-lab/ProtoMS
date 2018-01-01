@@ -24,45 +24,20 @@ plt.rcParams['lines.linewidth'] = 3
 
 
 class PMF(object):
-    """A potential of mean force, describing the free energy change as a
-    function of the lambda value.
-    """
-    def __init__(self, lambdas, values):
-        """lambdas - a sequence containing the lambda values at which the free
-        energy has been evaluated.
-        values - sequence of the free energy values at each lambda
-        """
+    """A PMF object """
+    def __init__(self, lambdas, *args):
         self.lambdas = lambdas
-        self.values = values
-
-    @property
-    def dG(self):
-        """Return the free energy difference at the PMF end points."""
-        return self.values[-1] - self.values[0]
-
-    def __neg__(self):
-        return PMF(self.lambdas, [-val for val in self.values])
-
-    def __iter__(self):
-        return iter(self.values)
-
-
-class CompositePMF(PMF):
-    def __init__(self, *args):
-        if len({tuple(arg.lambdas) for arg in args}) > 1:
-            raise ValueError("All data must use the same lambda values")
-        self.lambdas = args[0].lambdas
         self.values = []
         for dat in zip(*args):
-            try:
-                # if constructing from PMFs just have floats
-                self.values.append(FreeEnergy.fromData(dat))
-            except TypeError:
-                # constructing from CompositePMFs already have FreeEnergy's
-                self.values.append(np.sum(dat))
+            self.values.append(FreeEnergy.fromData(dat))
 
     def __add__(self, other):
-        return CompositePMF(self, other)
+        if list(self.lambdas) != list(other.lambdas):
+            raise ValueError(
+                'Cannot add PMF instances with different lambda values')
+        new_pmf = PMF(self.lambdas)
+        new_pmf.values = [s + o for s, o in zip(self.values, other.values)]
+        return new_pmf
 
     def __neg__(self):
         other = copy(self)
@@ -76,6 +51,14 @@ class CompositePMF(PMF):
         line = ax.plot(self.lambdas, y, **kwargs)[0]
         ax.plot(self.lambdas, y+err, '--', linewidth=1, color=line.get_color())
         ax.plot(self.lambdas, y-err, '--', linewidth=1, color=line.get_color())
+
+    @property
+    def dG(self):
+        """Return the free energy difference at the PMF end points."""
+        return self.values[-1] - self.values[0]
+
+    def __iter__(self):
+        return iter(self.values)
 
 
 class Result(object):
@@ -100,7 +83,7 @@ class Result(object):
 
     @property
     def pmf(self):
-        pmfs = [CompositePMF(*dat) for dat in self.data]
+        pmfs = [PMF(self.lambdas, *dat) for dat in self.data]
         return reduce(add, pmfs)
 
     def __add__(self, other):
@@ -127,7 +110,12 @@ class FreeEnergy(object):
         # NaN is the output and this is desired
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=RuntimeWarning)
-            return FreeEnergy(np.mean(data), np.std(data)/len(data)**0.5)
+            try:
+                return FreeEnergy(np.mean(data), np.std(data)/len(data)**0.5)
+            except TypeError:
+                values = [dat.value for dat in data]
+                return FreeEnergy(np.mean(values),
+                                  np.std(values)/len(values)**0.5)
 
     def __add__(self, other):
         return FreeEnergy(self.value + other.value,

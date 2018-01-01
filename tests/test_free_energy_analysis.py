@@ -15,7 +15,7 @@ import calc_ti_decomposed
 import calc_dg_cycle
 import calc_gci2
 from free_energy_base import BAR, MBAR, TI, get_arg_parser
-from free_energy_base import CompositePMF, FreeEnergy, PMF, Result
+from free_energy_base import PMF, FreeEnergy, Result
 from simulationobjects import boltz, SnapshotResults
 
 
@@ -58,7 +58,7 @@ class TestBAR(unittest.TestCase):
         # default test parameters use thermodynamic beta = 1
         pmf = self.estimator.calculate(temp=1/boltz)
         for fe1, fe2 in zip(pmf.values, self.test.analytical_free_energies()):
-            self.assertAlmostEqual(fe1, fe2, places=1)
+            self.assertAlmostEqual(fe1.value, fe2, places=1)
 
     def test_getitem(self):
         lens = [series.shape[-1]
@@ -118,53 +118,48 @@ class TestArgumentParsers(unittest.TestCase):
         calc_dg_cycle.get_arg_parser()
 
 
-class TestCompositePMF(unittest.TestCase):
+class TestPMF(unittest.TestCase):
     def setUp(self):
         self.pmf_values = np.linspace(0., 5., 16)
-        lambdas = np.linspace(0., 1., 16)
-        self.pmfs = [PMF(lambdas, list(self.pmf_values*i*0.05))
-                     for i in xrange(1, 3)]
-
-    def test_init(self):
-        """Test that validation of data lambda values during construction
-        works correctly. Must all be the same else a ValueError should be
-        raised."""
-        CompositePMF(self.pmfs[0])
-        CompositePMF(*self.pmfs)
-        self.pmfs[0].lambdas = np.linspace(0., 2., 16)
-        with self.assertRaises(ValueError):
-            CompositePMF(*self.pmfs)
+        self.lambdas = np.linspace(0., 1., 16)
+        self.pmfs = [list(self.pmf_values*i*0.05) for i in xrange(1, 3)]
+        self.single = PMF(self.lambdas, self.pmfs[0])
+        self.double = PMF(self.lambdas, *self.pmfs)
 
     def test_dG(self):
-        single = CompositePMF(self.pmfs[0])
-        double = CompositePMF(*self.pmfs)
-        self.assertEqual(single.dG, FreeEnergy(self.pmf_values[-1]*0.05, 0.))
-        self.assertEqual(double.dG.value, self.pmf_values[-1]*0.05*1.5)
+        self.assertEqual(self.single.dG,
+                         FreeEnergy(self.pmf_values[-1]*0.05, 0.))
+        self.assertEqual(self.double.dG.value, self.pmf_values[-1]*0.05*1.5)
 
     def test_negation(self):
         """Test use of negation operator"""
-        single_pmf = CompositePMF(self.pmfs[0])
-        double_pmf = CompositePMF(*self.pmfs)
+        self.single = PMF(self.lambdas, self.pmfs[0])
+        self.double = PMF(self.lambdas, *self.pmfs)
 
         # as copy operator has been used check that data of original
         # object is not changed by the copied version
-        pre = single_pmf.dG
-        -single_pmf
-        self.assertEqual(pre, single_pmf.dG)
+        pre = self.single.dG
+        -self.single
+        self.assertEqual(pre, self.single.dG)
 
         # check for expected behaviours
-        self.assertEqual((-single_pmf).dG, -(single_pmf.dG))
-        self.assertEqual((-double_pmf).dG, -(double_pmf.dG))
+        self.assertEqual((-self.single).dG, -(self.single.dG))
+        self.assertEqual((-self.double).dG, -(self.double.dG))
 
     def test_addition(self):
         """Test addition"""
-        single_pmf = CompositePMF(self.pmfs[0])
-        double_pmf = CompositePMF(*self.pmfs)
+        self.single = PMF(self.lambdas, self.pmfs[0])
+        self.double = PMF(self.lambdas, *self.pmfs)
 
-        self.assertEqual((single_pmf+single_pmf).dG.value,
-                         single_pmf.dG.value*2)
-        self.assertEqual((double_pmf+single_pmf).dG.value,
-                         single_pmf.dG.value*2.5)
+        self.assertEqual((self.single+self.single).dG.value,
+                         self.single.dG.value*2)
+        self.assertEqual((self.double+self.single).dG.value,
+                         self.single.dG.value*2.5)
+
+        # test lambda value checking on addition
+        self.single.lambdas = [0, 1]
+        with self.assertRaises(ValueError):
+            self.single + self.double
 
 
 class TestResult(unittest.TestCase):
@@ -175,13 +170,13 @@ class TestResult(unittest.TestCase):
                      for i in xrange(1, 4)]
         self.pmfs2 = [PMF(lambdas, list(self.pmf_values*2*i*0.05))
                       for i in xrange(1, 4)]
+        self.single_result = Result(self.pmfs)
+        self.double_result = Result(self.pmfs, self.pmfs2)
 
     def test_init(self):
         """Test that validation of data lambda values during construction
         works correctly. Must all be the same else a ValueError should be
         raised."""
-        Result(self.pmfs)
-        Result(self.pmfs, self.pmfs2)
         self.pmfs[0].lambdas = np.linspace(0., 2., 16)
         with self.assertRaises(ValueError):
             Result(self.pmfs)
@@ -190,39 +185,30 @@ class TestResult(unittest.TestCase):
 
     def test_dG(self):
         """Test that expected free energy values are returned."""
-        single_result = Result(self.pmfs)
-        double_result = Result(self.pmfs, self.pmfs2)
-
-        self.assertEqual(single_result.dG.value, self.pmf_values[-1]*2*0.05)
-        self.assertEqual(double_result.dG.value,
+        self.assertEqual(self.single_result.dG.value,
+                         self.pmf_values[-1]*2*0.05)
+        self.assertEqual(self.double_result.dG.value,
                          self.pmf_values[-1]*6*0.05)
 
     def test_pmf(self):
-        single_result = Result(self.pmfs)
-        double_result = Result(self.pmfs, self.pmfs2)
         self.assertEqual(
-            [round(fe.value, 8) for fe in single_result.pmf],
+            [round(fe.value, 8) for fe in self.single_result.pmf],
             [round(val*2*0.05, 8) for val in self.pmf_values])
         self.assertEqual(
-            [round(fe.value, 8) for fe in double_result.pmf],
+            [round(fe.value, 8) for fe in self.double_result.pmf],
             [round(val*6*0.05, 8) for val in self.pmf_values])
 
     def test_negation(self):
         """Test use of negation operator"""
-        single_result = Result(self.pmfs)
-        double_result = Result(self.pmfs, self.pmfs2)
-        self.assertEqual((-single_result).dG, -(single_result.dG))
-        self.assertEqual((-double_result).dG, -(double_result.dG))
+        self.assertEqual((-self.single_result).dG, -(self.single_result.dG))
+        self.assertEqual((-self.double_result).dG, -(self.double_result.dG))
 
     def test_addition(self):
         """Test addition of Results objects"""
-        single_result = Result(self.pmfs)
-        double_result = Result(self.pmfs, self.pmfs2)
-
-        self.assertEqual((single_result+single_result).dG.value,
-                         single_result.dG.value*2)
-        self.assertEqual((double_result+single_result).dG.value,
-                         single_result.dG.value*4)
+        self.assertEqual((self.single_result+self.single_result).dG.value,
+                         self.single_result.dG.value*2)
+        self.assertEqual((self.double_result+self.single_result).dG.value,
+                         self.single_result.dG.value*4)
 
 
 class testCalcDG(framework.BaseTest):
@@ -268,8 +254,10 @@ class testCalcDG(framework.BaseTest):
                 "Expected output file {0} is missing".format(filename))
 
     def test(self):
-        cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --pmf --no-show "
-                   "--pickle results.pkl --save-figures pref")
+        cmdline = (
+            "-d ala_gly/out1_free ala_gly/out2_free -d ala_gly/out3_free --pmf"
+            " --no-show --pickle results.pkl --save-figures pref"
+        )
         args = calc_dg2.get_arg_parser().parse_args(cmdline.split())
         calc = calc_dg2.FreeEnergyCalculation(root_paths=args.directories,
                                               temperature=args.temperature,

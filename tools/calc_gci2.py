@@ -9,12 +9,25 @@ if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
 import matplotlib.pyplot as plt
 
 
-class GCIResult(feb.PMF):
+# this redundancy needs sorting out, preferably by generalising the
+# pmf object to a more series
+class GCIResult():
     def __init__(self, lambdas, values, model, pmf):
         self.lambdas = lambdas
         self.values = values
         self.model = model
         self.pmf = feb.PMF(range(len(pmf)), pmf)
+
+    @property
+    def dG(self):
+        """Return the free energy difference at the PMF end points."""
+        return self.values[-1] - self.values[0]
+
+    def __neg__(self):
+        return PMF(self.lambdas, [-val for val in self.values])
+
+    def __iter__(self):
+        return iter(self.values)
 
 
 class GCI(feb.Estimator):
@@ -110,7 +123,7 @@ def insertion_pmf(results):
     table = feb.Table('', fmts=['%d', '%.3f'],
                       headers=['Number of Waters', 'Binding Free Energy'])
 
-    pmf = feb.CompositePMF(*[rep.pmf for rep in results.data[0]])
+    pmf = feb.PMF(*[rep.pmf for rep in results.data[0]])
     for i, fe in enumerate(pmf):
         table.add_row([i, fe])
 

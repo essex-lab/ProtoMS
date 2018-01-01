@@ -143,12 +143,11 @@ def results_tables(directories, results):
     tables = []
     for estimator in sorted(results, key=lambda x: x.__name__):
         table = feb.Table(estimator.__name__, ['%s', "%.2f"])
-        # print "%s -" % estimator.__name__
         for i, res in enumerate(results[estimator].data):
             dGs = []
             for j, pmf in enumerate(res):
                 dGs.append(pmf.dG)
-                table.add_row([directories[i][j], pmf.dG])
+                table.add_row([directories[i][j], pmf.dG.value])
             table.add_row(['Mean', feb.FreeEnergy.fromData(dGs)])
             table.add_blank_row()
         table.add_row(['Total Mean', results[estimator].dG])
