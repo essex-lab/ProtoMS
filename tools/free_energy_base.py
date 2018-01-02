@@ -24,18 +24,20 @@ plt.rcParams['lines.linewidth'] = 3
 
 
 class PMF(object):
-    """A PMF object """
-    def __init__(self, lambdas, *args):
-        self.lambdas = lambdas
+    """A Potential of Mean Force, describing a free energy profile
+    as a function of some coordinate."""
+    def __init__(self, coordinate, *args):
+        
+        self.coordinate = coordinate
         self.values = []
         for dat in zip(*args):
             self.values.append(FreeEnergy.fromData(dat))
 
     def __add__(self, other):
-        if list(self.lambdas) != list(other.lambdas):
+        if list(self.coordinate) != list(other.coordinate):
             raise ValueError(
-                'Cannot add PMF instances with different lambda values')
-        new_pmf = PMF(self.lambdas)
+                'Cannot add PMF instances with different coordinate values')
+        new_pmf = PMF(self.coordinate)
         new_pmf.values = [s + o for s, o in zip(self.values, other.values)]
         return new_pmf
 
@@ -44,13 +46,18 @@ class PMF(object):
         other.values = [-val for val in other.values]
         return other
 
-    def plot(self, ax, **kwargs):
+    def plot(self, ax, xlabel='Lambda Value',
+             ylabel='Free Energy (kcal)', **kwargs):
         y = np.array([fe.value for fe in self.values])
         err = np.array([fe.error for fe in self.values])
 
-        line = ax.plot(self.lambdas, y, **kwargs)[0]
-        ax.plot(self.lambdas, y+err, '--', linewidth=1, color=line.get_color())
-        ax.plot(self.lambdas, y-err, '--', linewidth=1, color=line.get_color())
+        line = ax.plot(self.coordinate, y, **kwargs)[0]
+        ax.plot(self.coordinate, y+err, '--',
+                linewidth=1, color=line.get_color())
+        ax.plot(self.coordinate, y-err, '--',
+                linewidth=1, color=line.get_color())
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
 
     @property
     def dG(self):
@@ -64,13 +71,14 @@ class PMF(object):
 class Result(object):
     def __init__(self, *args):
         self.data = args
-        if len({tuple(pmf.lambdas) for dat in self.data for pmf in dat}) > 1:
+        if len({tuple(pmf.coordinate)
+                for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
 
     @property
     def lambdas(self):
         try:
-            return self.data[0][0].lambdas
+            return self.data[0][0].coordinate
         except IndexError:
             raise ValueError("This result does not contain any data.")
 

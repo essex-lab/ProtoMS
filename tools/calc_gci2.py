@@ -9,25 +9,12 @@ if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
 import matplotlib.pyplot as plt
 
 
-# this redundancy needs sorting out, preferably by generalising the
-# pmf object to a more series
-class GCIResult():
-    def __init__(self, lambdas, values, model, pmf):
-        self.lambdas = lambdas
+class GCIResult(object):
+    def __init__(self, coordinate, values, model, pmf):
+        self.coordinate = coordinate
         self.values = values
         self.model = model
         self.pmf = feb.PMF(range(len(pmf)), pmf)
-
-    @property
-    def dG(self):
-        """Return the free energy difference at the PMF end points."""
-        return self.values[-1] - self.values[0]
-
-    def __neg__(self):
-        return PMF(self.lambdas, [-val for val in self.values])
-
-    def __iter__(self):
-        return iter(self.values)
 
 
 class GCI(feb.Estimator):
@@ -40,8 +27,6 @@ class GCI(feb.Estimator):
         return self.data[-1].shape[-1]
 
     def calculate(self, subset=(0., 1., 1)):
-        # model = linear_model.Perceptron()
-        # print np.array(self.data).mean(axis=1)
         Ns = np.array(self.data).mean(axis=1)
         model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns, size=2,
                                  verbose=False)[0]
@@ -52,8 +37,6 @@ class GCI(feb.Estimator):
             model,
             gci.insertion_pmf(np.array([0, 1, 2]), model, 30.)
         )
-        # model.fit(np.array(self.B_values).reshape((len(self.B_values), 1)),
-        #           )
 
     def __getitem__(self, val):
         """Return a new class instance with series[val] applied to each
@@ -102,8 +85,9 @@ def plot_titration(results):
     fig, ax = plt.subplots()
     model_ys = []
     for rep in results.data[0]:
-        ax.scatter(rep.lambdas, rep.values)
-        rep.model.x = np.linspace(min(rep.lambdas), max(rep.lambdas), 100)
+        ax.scatter(rep.coordinate, rep.values)
+        rep.model.x = np.linspace(min(rep.coordinate), max(rep.coordinate),
+                                  100)
         rep.model.forward()
         model_ys.append(rep.model.predicted)
 
@@ -123,12 +107,12 @@ def insertion_pmf(results):
     table = feb.Table('', fmts=['%d', '%.3f'],
                       headers=['Number of Waters', 'Binding Free Energy'])
 
-    pmf = feb.PMF(*[rep.pmf for rep in results.data[0]])
+    pmf = feb.PMF([0, 1, 2], *[rep.pmf for rep in results.data[0]])
     for i, fe in enumerate(pmf):
         table.add_row([i, fe])
 
     fig, ax = plt.subplots()
-    pmf.plot(ax)
+    pmf.plot(ax, xlabel="Occupancy")
     return fig, table
 
 

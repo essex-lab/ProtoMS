@@ -157,7 +157,7 @@ class TestPMF(unittest.TestCase):
                          self.single.dG.value*2.5)
 
         # test lambda value checking on addition
-        self.single.lambdas = [0, 1]
+        self.single.coordinate = [0, 1]
         with self.assertRaises(ValueError):
             self.single + self.double
 
@@ -177,7 +177,7 @@ class TestResult(unittest.TestCase):
         """Test that validation of data lambda values during construction
         works correctly. Must all be the same else a ValueError should be
         raised."""
-        self.pmfs[0].lambdas = np.linspace(0., 2., 16)
+        self.pmfs[0].coordinate = np.linspace(0., 2., 16)
         with self.assertRaises(ValueError):
             Result(self.pmfs)
         with self.assertRaises(ValueError):

@@ -117,24 +117,8 @@ def plot_pmfs(results):
     for estimator in sorted(results):
         results[estimator].pmf.plot(ax, label=estimator.__name__)
     ax.legend(loc='best')
-    ax.set_xlabel('Lambda value')
-    ax.set_ylabel('Free energy (kcal/mol)')
     return fig
 
-
-# def print_results(directories, results):
-#     """Print calculated free energies. If multiple repeats are present
-#     the mean and standard error are also printed.
-#     """
-#     for estimator in sorted(results, key=lambda x: x.__name__):
-#         print "%s -" % estimator.__name__
-#         for i, res in enumerate(results[estimator].data):
-#             dGs = []
-#             for j, pmf in enumerate(res):
-#                 dGs.append(pmf.dG)
-#                 print "%-20s: %.4f" % (directories[i][j], pmf.dG)
-#             print "%-20s: %s\n" % ('Mean', feb.FreeEnergy.fromData(dGs))
-#         print "Total Mean: %s\n" % results[estimator].dG
 
 def results_tables(directories, results):
     """Print calculated free energies. If multiple repeats are present
