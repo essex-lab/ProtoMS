@@ -25,9 +25,25 @@ plt.rcParams['lines.linewidth'] = 3
 
 class PMF(object):
     """A Potential of Mean Force, describing a free energy profile
-    as a function of some coordinate."""
+    as a function of some coordinate.
+
+    Attributes
+    ----------
+    coordinate : sequence of numbers
+        The values of the coordinate for the PMF
+    values : list of FreeEnergy objects
+        The free energy at the corresponding coordinate value
+    """
     def __init__(self, coordinate, *args):
-        
+        """Parameters
+        ----------
+        coordinate : sequence of numbers
+            Stored without alteration as self.coordinate
+        *args : An arbitrary number of iterators containing numbers
+                or FreeEnergy objects
+            All arguments after coordinate are iterated simultaneously,
+            the first entry of each is used to construct the first FreeEnergy
+            object in self.values and so on."""
         self.coordinate = coordinate
         self.values = []
         for dat in zip(*args):
@@ -46,22 +62,35 @@ class PMF(object):
         other.values = [-val for val in other.values]
         return other
 
-    def plot(self, ax, xlabel='Lambda Value',
+    def plot(self, axes, xlabel='Lambda Value',
              ylabel='Free Energy (kcal)', **kwargs):
+        """Plot this PMF onto the provided figure axes.
+
+        Parameters
+        ----------
+        axes : matplotlib Axes object
+            axes onto which the figure will be drawn
+        xlabel : string
+            label for x-axis
+        ylabel : string
+            label for y-axis
+        **kwargs :
+            additional keyword arguments to be passed to axes.plot
+        """
         y = np.array([fe.value for fe in self.values])
         err = np.array([fe.error for fe in self.values])
 
-        line = ax.plot(self.coordinate, y, **kwargs)[0]
-        ax.plot(self.coordinate, y+err, '--',
-                linewidth=1, color=line.get_color())
-        ax.plot(self.coordinate, y-err, '--',
-                linewidth=1, color=line.get_color())
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
+        line = axes.plot(self.coordinate, y, **kwargs)[0]
+        axes.plot(self.coordinate, y+err, '--',
+                  linewidth=1, color=line.get_color())
+        axes.plot(self.coordinate, y-err, '--',
+                  linewidth=1, color=line.get_color())
+        axes.set_xlabel(xlabel)
+        axes.set_ylabel(ylabel)
 
     @property
     def dG(self):
-        """Return the free energy difference at the PMF end points."""
+        """The free energy difference at the PMF end points."""
         return self.values[-1] - self.values[0]
 
     def __iter__(self):
@@ -69,6 +98,15 @@ class PMF(object):
 
 
 class Result(object):
+    """The result of a free energy calculation. Contains multiple PMF
+    objects that are combined together to give a meaningful free energy
+    difference.
+
+    Attributes
+    ----------
+    data : list of lists of PMF objects
+        
+    """
     def __init__(self, *args):
         self.data = args
         if len({tuple(pmf.coordinate)
