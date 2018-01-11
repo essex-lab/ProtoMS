@@ -28,7 +28,11 @@ class GCI(feb.Estimator):
 
     def calculate(self, subset=(0., 1., 1)):
         Ns = np.array(self.data).mean(axis=1)
-        model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns, size=2,
+        steps = int(max(Ns))
+        if max(Ns) - steps > 0.9:
+            steps += 1
+
+        model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns, size=steps,
                                  verbose=False)[0]
 
         return GCIResult(
@@ -107,7 +111,8 @@ def insertion_pmf(results):
     table = feb.Table('', fmts=['%d', '%.3f'],
                       headers=['Number of Waters', 'Binding Free Energy'])
 
-    pmf = feb.PMF([0, 1, 2], *[rep.pmf for rep in results.data[0]])
+    steps = results.data[0][0].pmf.coordinate
+    pmf = feb.PMF(steps, *[rep.pmf for rep in results.data[0]])
     for i, fe in enumerate(pmf):
         table.add_row([i, fe])
 
