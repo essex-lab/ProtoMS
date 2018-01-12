@@ -39,7 +39,7 @@ class PMF(object):
         ----------
         coordinate : sequence of numbers
             Stored without alteration as self.coordinate
-        *args : An arbitrary number of iterators containing numbers
+        *args : An arbitrary number of iterables containing numbers
                 or FreeEnergy objects
             All arguments after coordinate are iterated simultaneously,
             the first entry of each is used to construct the first FreeEnergy
@@ -97,7 +97,24 @@ class PMF(object):
         return iter(self.values)
 
 
-class Result(object):
+class BaseResult(object):
+    def __init__(self, *args):
+        self.data = args
+        if len({tuple(pmf.coordinate)
+                for dat in self.data for pmf in dat}) > 1:
+            raise ValueError("All data must use the same lambda values")
+
+    def __add__(self, other):
+        return Result(*(self.data + other.data))
+
+    def __sub__(self, other):
+        return self + -other
+
+    def __neg__(self):
+        return Result(*[[-pmf for pmf in dat] for dat in self.data])
+
+
+class Result(BaseResult):
     """The result of a free energy calculation. Contains multiple PMF
     objects that are combined together to give a meaningful free energy
     difference.
@@ -107,12 +124,6 @@ class Result(object):
     data : list of lists of PMF objects
         
     """
-    def __init__(self, *args):
-        self.data = args
-        if len({tuple(pmf.coordinate)
-                for dat in self.data for pmf in dat}) > 1:
-            raise ValueError("All data must use the same lambda values")
-
     @property
     def lambdas(self):
         try:
@@ -131,15 +142,6 @@ class Result(object):
     def pmf(self):
         pmfs = [PMF(self.lambdas, *dat) for dat in self.data]
         return reduce(add, pmfs)
-
-    def __add__(self, other):
-        return Result(*(self.data + other.data))
-
-    def __sub__(self, other):
-        return self + -other
-
-    def __neg__(self):
-        return Result(*[[-pmf for pmf in dat] for dat in self.data])
 
 
 class FreeEnergy(object):

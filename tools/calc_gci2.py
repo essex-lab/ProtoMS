@@ -9,12 +9,33 @@ if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
 import matplotlib.pyplot as plt
 
 
-class GCIResult(object):
+class GCIPMF(feb.PMF):
     def __init__(self, coordinate, values, model, pmf):
         self.coordinate = coordinate
         self.values = values
         self.model = model
         self.pmf = feb.PMF(range(len(pmf)), pmf)
+
+
+class GCIResult(feb.BaseResult):
+    def __init(self, *args):
+        if len(args) > 1:
+            raise TypeError(
+                'GCIResult objects do not support multiple data instances')
+        feb.BaseResult.__init__(self, *args)
+
+    @property
+    def B_values(self):
+        return feb.Result.lambdas.fget(self)
+
+    @property
+    def occupancies(self):
+        return [feb.FreeEnergy.fromData(pmfs) for pmfs in zip(*self.data[0])]
+
+    @property
+    def insertion_pmf(self):
+        return feb.PMF(self.data[0][0].coordinate,
+                       *[dat.pmf for dat in self.data[0]])
 
 
 class GCI(feb.Estimator):
@@ -35,11 +56,11 @@ class GCI(feb.Estimator):
         model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns, size=steps,
                                  verbose=False)[0]
 
-        return GCIResult(
+        return GCIPMF(
             self.B_values,
             Ns,
             model,
-            gci.insertion_pmf(np.array([0, 1, 2]), model, 30.)
+            gci.insertion_pmf(np.arange(steps+1), model, 30.)
         )
 
     def __getitem__(self, val):
@@ -71,8 +92,25 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
     def _get_lambda(self, path):
         return float(path.split('/')[-2].split('_')[1])
 
-    def calculate(self, *args, **kwargs):
-        return feb.FreeEnergyCalculation.calculate(self, *args, **kwargs)[GCI]
+    def calculate(self, subset=(0., 1., 1)):
+        """For each estimator return the evaluated potential of mean force.
+
+        Returns
+        -------
+        dict:
+          results of calculation stored in the below structure:
+          return_val[estimator_class][i] = PMF instance
+          where i is an list index indicating a repeat
+        """
+        results = {}
+        for est, legs in self.estimators.items():
+            leg_result = GCIResult()
+            for i, leg in enumerate(legs):
+                leg_result += GCIResult(
+                    [rep.subset(*subset).calculate(self.temperature)
+                     for rep in leg])
+            results[est] = leg_result
+        return results[GCI]
 
     def _body(self, args):
         results = self.calculate(subset=(args.lower_bound, args.upper_bound))
@@ -90,8 +128,8 @@ def plot_titration(results):
     model_ys = []
     for rep in results.data[0]:
         ax.scatter(rep.coordinate, rep.values)
-        rep.model.x = np.linspace(min(rep.coordinate), max(rep.coordinate),
-                                  100)
+        rep.model.x = np.linspace(
+            min(rep.coordinate), max(rep.coordinate), 100)
         rep.model.forward()
         model_ys.append(rep.model.predicted)
 
