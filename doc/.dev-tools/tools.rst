@@ -132,6 +132,15 @@ tools.divide_pdb module
     :undoc-members:
     :show-inheritance:
 
+tools.free_energy_base module
+-----------------------------
+       
+.. automodule:: tools.free_energy_base
+    :special-members: __init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tools.generate_input module
 ---------------------------
 

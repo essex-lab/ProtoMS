@@ -71,6 +71,9 @@
 <li><a class="reference internal" href="#module-tools.convertwater">tools.convertwater module</a></li>
 <li><a class="reference internal" href="#module-tools.distribute_waters">tools.distribute_waters module</a></li>
 <li><a class="reference internal" href="#module-tools.divide_pdb">tools.divide_pdb module</a></li>
+<li><a class="reference internal" href="#module-tools.free_energy_base">tools.free_energy_base module</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-tools.generate_input">tools.generate_input module</a><ul>
 </ul>
 </li>
@@ -131,8 +134,8 @@ run_antechamber
 run_parmchk</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
-<dt id="tools.ambertools.get_cmd_args">
-<code class="descclassname">tools.ambertools.</code><code class="descname">get_cmd_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.ambertools.get_cmd_args" title="Permalink to this definition">¶</a></dt>
+<dt id="tools.ambertools.get_arg_parser">
+<code class="descclassname">tools.ambertools.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.ambertools.get_arg_parser" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -314,7 +317,7 @@ has not been defined and where the bond has not been traversed</p>
 
 <dl class="function">
 <dt id="tools.build_template.build_template">
-<code class="descclassname">tools.build_template.</code><code class="descname">build_template</code><span class="sig-paren">(</span><em>temfile</em>, <em>prepifile</em>, <em>translate=0.25</em>, <em>rotate=5</em>, <em>zmatfile=None</em>, <em>frcmodfile=None</em>, <em>resname='UNK'</em>, <em>alldihs=False</em>, <em>gaffversion='gaff16'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.build_template.build_template" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.build_template.</code><code class="descname">build_template</code><span class="sig-paren">(</span><em>temfile</em>, <em>prepifile</em>, <em>translate=0.1</em>, <em>rotate=1.0</em>, <em>zmatfile=None</em>, <em>frcmodfile=None</em>, <em>resname='UNK'</em>, <em>alldihs=False</em>, <em>gaffversion='gaff16'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.build_template.build_template" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build a ProtoMS template file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -367,6 +370,11 @@ has not been defined and where the bond has not been traversed</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="tools.build_template.get_arg_parser">
+<code class="descclassname">tools.build_template.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.build_template.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="tools.build_template.make_zmat">
@@ -459,6 +467,11 @@ bar</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.calc_bar.get_arg_parser">
+<code class="descclassname">tools.calc_bar.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_bar.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.calc_clusters">
 <span id="tools-calc-clusters-module"></span><h2>tools.calc_clusters module<a class="headerlink" href="#module-tools.calc_clusters" title="Permalink to this headline">¶</a></h2>
@@ -499,6 +512,11 @@ bar</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_clusters.get_arg_parser">
+<code class="descclassname">tools.calc_clusters.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_clusters.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="tools.calc_clusters.get_coords">
@@ -605,6 +623,11 @@ writeDX</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.calc_density.get_arg_parser">
+<code class="descclassname">tools.calc_density.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_density.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="tools.calc_density.writeDX">
 <code class="descclassname">tools.calc_density.</code><code class="descname">writeDX</code><span class="sig-paren">(</span><em>grid</em>, <em>origin</em>, <em>spacing</em>, <em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_density.writeDX" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the grid to file in DX-format</p>
@@ -638,6 +661,11 @@ writeDX</p>
 <div class="section" id="module-tools.calc_dg">
 <span id="tools-calc-dg-module"></span><h2>tools.calc_dg module<a class="headerlink" href="#module-tools.calc_dg" title="Permalink to this headline">¶</a></h2>
 <p>Program to calculate free energies using TI, BAR and MBAR</p>
+<dl class="function">
+<dt id="tools.calc_dg.get_arg_parser">
+<code class="descclassname">tools.calc_dg.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_dg.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.calc_gcsingle">
 <span id="tools-calc-gcsingle-module"></span><h2>tools.calc_gcsingle module<a class="headerlink" href="#module-tools.calc_gcsingle" title="Permalink to this headline">¶</a></h2>
@@ -650,6 +678,11 @@ writeDX</p>
 <dl class="function">
 <dt id="tools.calc_gcsingle.gaussian_smooth">
 <code class="descclassname">tools.calc_gcsingle.</code><code class="descname">gaussian_smooth</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>sigma=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_gcsingle.gaussian_smooth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_gcsingle.get_arg_parser">
+<code class="descclassname">tools.calc_gcsingle.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_gcsingle.get_arg_parser" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -669,6 +702,11 @@ writeDX</p>
 <p>This module defines the following public functions:
 replica_path</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.calc_replicapath.get_arg_parser">
+<code class="descclassname">tools.calc_replicapath.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_replicapath.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="tools.calc_replicapath.replica_path">
 <code class="descclassname">tools.calc_replicapath.</code><code class="descname">replica_path</code><span class="sig-paren">(</span><em>filenames</em>, <em>replicakind='lambda'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_replicapath.replica_path" title="Permalink to this definition">¶</a></dt>
@@ -744,6 +782,11 @@ calc_rmsd</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.calc_rmsd.get_arg_parser">
+<code class="descclassname">tools.calc_rmsd.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_rmsd.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.calc_series">
 <span id="tools-calc-series-module"></span><h2>tools.calc_series module<a class="headerlink" href="#module-tools.calc_series" title="Permalink to this headline">¶</a></h2>
@@ -798,6 +841,11 @@ write_series</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="tools.calc_series.get_arg_parser">
+<code class="descclassname">tools.calc_series.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_series.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="tools.calc_series.maximize_samples">
@@ -1117,6 +1165,11 @@ lambdas : list</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.calc_ti.get_arg_parser">
+<code class="descclassname">tools.calc_ti.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_ti.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="tools.calc_ti.print_ene">
 <code class="descclassname">tools.calc_ti.</code><code class="descname">print_ene</code><span class="sig-paren">(</span><em>lam</em>, <em>ene</em>, <em>std</em>, <em>print_uncert</em>, <em>print_lam</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.calc_ti.print_ene" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print energy row to standard output</p>
@@ -1292,6 +1345,11 @@ able to move during the simulation</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.clear_gcmcbox.get_arg_parser">
+<code class="descclassname">tools.clear_gcmcbox.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.clear_gcmcbox.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.convertatomnames">
 <span id="tools-convertatomnames-module"></span><h2>tools.convertatomnames module<a class="headerlink" href="#module-tools.convertatomnames" title="Permalink to this headline">¶</a></h2>
@@ -1300,6 +1358,11 @@ able to move during the simulation</p>
 read_convfile
 pdb2pms</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.convertatomnames.get_arg_parser">
+<code class="descclassname">tools.convertatomnames.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.convertatomnames.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="tools.convertatomnames.pdb2pms">
 <code class="descclassname">tools.convertatomnames.</code><code class="descname">pdb2pms</code><span class="sig-paren">(</span><em>pdb_in</em>, <em>forcefield</em>, <em>conversion_file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.convertatomnames.pdb2pms" title="Permalink to this definition">¶</a></dt>
@@ -1436,6 +1499,11 @@ convertwater</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="tools.convertwater.get_arg_parser">
+<code class="descclassname">tools.convertwater.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.convertwater.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="tools.convertwater.rotatesolute">
@@ -1674,6 +1742,11 @@ distributed randomly in the box</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.distribute_waters.get_arg_parser">
+<code class="descclassname">tools.distribute_waters.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.distribute_waters.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.divide_pdb">
 <span id="tools-divide-pdb-module"></span><h2>tools.divide_pdb module<a class="headerlink" href="#module-tools.divide_pdb" title="Permalink to this headline">¶</a></h2>
@@ -1705,6 +1778,726 @@ Division is controled by lines starting with END</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.divide_pdb.get_arg_parser">
+<code class="descclassname">tools.divide_pdb.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.divide_pdb.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-tools.free_energy_base">
+<span id="tools-free-energy-base-module"></span><h2>tools.free_energy_base module<a class="headerlink" href="#module-tools.free_energy_base" title="Permalink to this headline">¶</a></h2>
+<p>Collection of classes to form the basis of a replacement for the current
+free energy calculation framework.</p>
+<dl class="class">
+<dt id="tools.free_energy_base.BAR">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">BAR</code><span class="sig-paren">(</span><em>lambdas</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.BAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.free_energy_base.Estimator" title="tools.free_energy_base.Estimator"><code class="xref py py-class docutils literal"><span class="pre">tools.free_energy_base.Estimator</span></code></a></p>
+<p>Estimate free energy differences using Bennett&#8217;s Acceptance Ratio.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.BAR.add_data" title="tools.free_energy_base.BAR.add_data"><code class="xref py py-obj docutils literal"><span class="pre">add_data</span></code></a>(series)</td>
+<td>Save data from a SnapshotResults.series object for later calculation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.free_energy_base.BAR.calculate" title="tools.free_energy_base.BAR.calculate"><code class="xref py py-obj docutils literal"><span class="pre">calculate</span></code></a>([temp])</td>
+<td>Calculate the free energy difference and return a PMF object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subset</span></code>([low_bound,&nbsp;high_bound,&nbsp;step])</td>
+<td>Return a new class instance containing truncated data series.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.BAR.add_data">
+<code class="descname">add_data</code><span class="sig-paren">(</span><em>series</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.BAR.add_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save data from a SnapshotResults.series object for later
+calculation. Return the length of the data series added.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series: SnapshotResults.series</strong></p>
+<blockquote class="last">
+<div><p>free energy simulation data for a particular lambda value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.BAR.calculate">
+<code class="descname">calculate</code><span class="sig-paren">(</span><em>temp=300</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.BAR.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the free energy difference and return a PMF object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>temp: float, optional</strong></p>
+<blockquote class="last">
+<div><p>temperature of calculation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.BaseResult">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">BaseResult</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.BaseResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A base class for Result objects.</p>
+<dl class="method">
+<dt id="tools.free_energy_base.BaseResult.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.BaseResult.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>*args</strong> : an arbitrary number of lists of PMF objects</p>
+<blockquote class="last">
+<div><p>Each list should contain the PMF objects corresponding to
+multiple repeats within a calculation leg. The free energy
+estimates from multiple lists will be summed together.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.Column">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">Column</code><span class="sig-paren">(</span><em>header=''</em>, <em>value_fmt='%.4f'</em>, <em>error_fmt='%.4f'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.Column.width" title="tools.free_energy_base.Column.width"><code class="xref py py-obj docutils literal"><span class="pre">width</span></code></a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.Column.add_data" title="tools.free_energy_base.Column.add_data"><code class="xref py py-obj docutils literal"><span class="pre">add_data</span></code></a>(data)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.Column.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>header=''</em>, <em>value_fmt='%.4f'</em>, <em>error_fmt='%.4f'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Column.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.Column.add_data">
+<code class="descname">add_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Column.add_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tools.free_energy_base.Column.width">
+<code class="descname">width</code><a class="headerlink" href="#tools.free_energy_base.Column.width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.Estimator">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">Estimator</code><span class="sig-paren">(</span><em>lambdas</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for free energy estimators.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.Estimator.add_data" title="tools.free_energy_base.Estimator.add_data"><code class="xref py py-obj docutils literal"><span class="pre">add_data</span></code></a>(series)</td>
+<td>Save data from a SnapshotResults.series object for later calculation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.free_energy_base.Estimator.calculate" title="tools.free_energy_base.Estimator.calculate"><code class="xref py py-obj docutils literal"><span class="pre">calculate</span></code></a>([temp])</td>
+<td>Calculate the free energy difference and return a PMF object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.Estimator.subset" title="tools.free_energy_base.Estimator.subset"><code class="xref py py-obj docutils literal"><span class="pre">subset</span></code></a>([low_bound,&nbsp;high_bound,&nbsp;step])</td>
+<td>Return a new class instance containing truncated data series.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.Estimator.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>lambdas</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Estimator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lambdas: list of numbers</strong></p>
+<blockquote class="last">
+<div><p>lambda values used in a calculation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.Estimator.add_data">
+<code class="descname">add_data</code><span class="sig-paren">(</span><em>series</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Estimator.add_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save data from a SnapshotResults.series object for later
+calculation. Return the length of the data series added.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series: SnapshotResults.series</strong></p>
+<blockquote class="last">
+<div><p>free energy simulation data for a particular lambda value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.Estimator.calculate">
+<code class="descname">calculate</code><span class="sig-paren">(</span><em>temp=300</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Estimator.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the free energy difference and return a PMF object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>temp: float, optional</strong></p>
+<blockquote class="last">
+<div><p>temperature of calculation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.Estimator.subset">
+<code class="descname">subset</code><span class="sig-paren">(</span><em>low_bound=0.0</em>, <em>high_bound=1.0</em>, <em>step=1</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Estimator.subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new class instance containing truncated data series.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.FreeEnergy">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">FreeEnergy</code><span class="sig-paren">(</span><em>value</em>, <em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.FreeEnergy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Stores both the value and error associated with a
+free energy estimate.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.FreeEnergy.fromData" title="tools.free_energy_base.FreeEnergy.fromData"><code class="xref py py-obj docutils literal"><span class="pre">fromData</span></code></a>(data)</td>
+<td>Alternative initialiser that uses of a set of data points rather than providing an explicit value and error.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.FreeEnergy.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>value</em>, <em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.FreeEnergy.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>value: float</strong></p>
+<blockquote>
+<div><p>the magnitude of the free energy difference</p>
+</div></blockquote>
+<p><strong>error: float</strong></p>
+<blockquote class="last">
+<div><p>one standard error associated with value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tools.free_energy_base.FreeEnergy.fromData">
+<em class="property">static </em><code class="descname">fromData</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.FreeEnergy.fromData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alternative initialiser that uses of a set of data
+points rather than providing an explicit value and error.
+Returns a FreeEnergy object with a value and error determined
+from the mean of and standard error of the provided data. If
+FreeEnergy objects are provided as data their individual
+error attributes are ignored</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data: sequence of numbers or FreeEnergy objects</strong></p>
+<blockquote class="last">
+<div><p>data from which to determine value and error</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.FreeEnergyCalculation">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">FreeEnergyCalculation</code><span class="sig-paren">(</span><em>root_paths, temperature, estimators=[&lt;class 'tools.free_energy_base.TI'&gt;, &lt;class 'tools.free_energy_base.BAR'&gt;, &lt;class 'tools.free_energy_base.MBAR'&gt;], subdir=''</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.FreeEnergyCalculation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for performing a free energy calculation from one or more
+ProtoMS simulation outputs.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.FreeEnergyCalculation.calculate" title="tools.free_energy_base.FreeEnergyCalculation.calculate"><code class="xref py py-obj docutils literal"><span class="pre">calculate</span></code></a>([subset])</td>
+<td>For each estimator return the evaluated potential of mean force.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.free_energy_base.FreeEnergyCalculation.run" title="tools.free_energy_base.FreeEnergyCalculation.run"><code class="xref py py-obj docutils literal"><span class="pre">run</span></code></a>(args)</td>
+<td>Method for public execution of calculation.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.FreeEnergyCalculation.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>root_paths, temperature, estimators=[&lt;class 'tools.free_energy_base.TI'&gt;, &lt;class 'tools.free_energy_base.BAR'&gt;, &lt;class 'tools.free_energy_base.MBAR'&gt;], subdir=''</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.FreeEnergyCalculation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>root_paths: a list of lists of strings</strong></p>
+<blockquote>
+<div><p>Paths to ProtoMS output directories. Each list of strings specifies
+the output directory(s) that make up multiple repeats of a single &#8216;leg&#8217;
+of the calculation. The result for each leg is a mean over
+constituent repeats. Results from each leg are then summed together
+to give a total free energy difference for the calculation.</p>
+</div></blockquote>
+<p><strong>temperature: float</strong></p>
+<blockquote>
+<div><p>Simulation temperature in degrees Kelvin.</p>
+</div></blockquote>
+<p><strong>estimators: list of Estimator classes</strong></p>
+<blockquote>
+<div><p>Estimator classes to use in evaluating free energies.</p>
+</div></blockquote>
+<p><strong>subdir: string</strong></p>
+<blockquote class="last">
+<div><p>subdirectory within each lambda folder to search for output</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.FreeEnergyCalculation.calculate">
+<code class="descname">calculate</code><span class="sig-paren">(</span><em>subset=(0.0</em>, <em>1.0</em>, <em>1)</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.FreeEnergyCalculation.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each estimator return the evaluated potential of mean force.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict:</p>
+<blockquote class="last">
+<div><p>results of calculation stored in the below structure:
+return_val[estimator_class][i] = PMF instance
+where i is an list index indicating a repeat</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.FreeEnergyCalculation.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.FreeEnergyCalculation.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for public execution of calculation. Runs self._body(args)
+and uses the return value as the calculation result. Handles
+logic for printing of output tables and saving of output
+pickles and figures. Calls plt.show() to display figures.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.MBAR">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">MBAR</code><span class="sig-paren">(</span><em>lambdas</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.MBAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.free_energy_base.TI" title="tools.free_energy_base.TI"><code class="xref py py-class docutils literal"><span class="pre">tools.free_energy_base.TI</span></code></a></p>
+<p>Estimate free energy differences using the Multistate Bennett&#8217;s
+Acceptante Ratio.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.MBAR.add_data" title="tools.free_energy_base.MBAR.add_data"><code class="xref py py-obj docutils literal"><span class="pre">add_data</span></code></a>(series)</td>
+<td>Save data from a SnapshotResults.series object for later calculation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.free_energy_base.MBAR.calculate" title="tools.free_energy_base.MBAR.calculate"><code class="xref py py-obj docutils literal"><span class="pre">calculate</span></code></a>([temp])</td>
+<td>Calculate the free energy difference and return a PMF object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subset</span></code>([low_bound,&nbsp;high_bound,&nbsp;step])</td>
+<td>Return a new class instance containing truncated data series.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.MBAR.add_data">
+<code class="descname">add_data</code><span class="sig-paren">(</span><em>series</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.MBAR.add_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save data from a SnapshotResults.series object for later
+calculation. Return the length of the data series added.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series: SnapshotResults.series</strong></p>
+<blockquote class="last">
+<div><p>free energy simulation data for a particular lambda value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.MBAR.calculate">
+<code class="descname">calculate</code><span class="sig-paren">(</span><em>temp=300</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.MBAR.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the free energy difference and return a PMF object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>temp: float, optional</strong></p>
+<blockquote class="last">
+<div><p>temperature of calculation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.PMF">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">PMF</code><span class="sig-paren">(</span><em>coordinate</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.PMF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.free_energy_base.Series" title="tools.free_energy_base.Series"><code class="xref py py-class docutils literal"><span class="pre">tools.free_energy_base.Series</span></code></a></p>
+<p>A Potential of Mean Force, describing a free energy profile
+as a function of some coordinate.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.PMF.dG" title="tools.free_energy_base.PMF.dG"><code class="xref py py-obj docutils literal"><span class="pre">dG</span></code></a></td>
+<td>The free energy difference at the PMF end points</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.PMF.plot" title="tools.free_energy_base.PMF.plot"><code class="xref py py-obj docutils literal"><span class="pre">plot</span></code></a>(axes[,&nbsp;xlabel,&nbsp;ylabel])</td>
+<td>Plot this PMF onto the provided figure axes.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="tools.free_energy_base.PMF.dG">
+<code class="descname">dG</code><a class="headerlink" href="#tools.free_energy_base.PMF.dG" title="Permalink to this definition">¶</a></dt>
+<dd><p>The free energy difference at the PMF end points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.PMF.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>axes</em>, <em>xlabel='Lambda Value'</em>, <em>ylabel='Free Energy (kcal)'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.PMF.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot this PMF onto the provided figure axes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>axes</strong> : matplotlib Axes object</p>
+<blockquote>
+<div><p>axes onto which the figure will be drawn</p>
+</div></blockquote>
+<p><strong>xlabel</strong> : string</p>
+<blockquote>
+<div><p>label for x-axis</p>
+</div></blockquote>
+<p><strong>ylabel</strong> : string</p>
+<blockquote>
+<div><p>label for y-axis</p>
+</div></blockquote>
+<p><strong>**kwargs :</strong></p>
+<blockquote class="last">
+<div><p>additional keyword arguments to be passed to axes.plot</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.Result">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">Result</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.free_energy_base.BaseResult" title="tools.free_energy_base.BaseResult"><code class="xref py py-class docutils literal"><span class="pre">tools.free_energy_base.BaseResult</span></code></a></p>
+<p>The result of a free energy calculation. Contains multiple PMF
+objects that are combined together to give a meaningful free energy
+difference.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.Result.dG" title="tools.free_energy_base.Result.dG"><code class="xref py py-obj docutils literal"><span class="pre">dG</span></code></a></td>
+<td>The free energy difference at the PMF end points</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.free_energy_base.Result.lambdas" title="tools.free_energy_base.Result.lambdas"><code class="xref py py-obj docutils literal"><span class="pre">lambdas</span></code></a></td>
+<td>Lambda values at which the calculation has been performed</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.Result.pmf" title="tools.free_energy_base.Result.pmf"><code class="xref py py-obj docutils literal"><span class="pre">pmf</span></code></a></td>
+<td>The potential of mean force for this result</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="tools.free_energy_base.Result.dG">
+<code class="descname">dG</code><a class="headerlink" href="#tools.free_energy_base.Result.dG" title="Permalink to this definition">¶</a></dt>
+<dd><p>The free energy difference at the PMF end points</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tools.free_energy_base.Result.lambdas">
+<code class="descname">lambdas</code><a class="headerlink" href="#tools.free_energy_base.Result.lambdas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lambda values at which the calculation has been performed</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tools.free_energy_base.Result.pmf">
+<code class="descname">pmf</code><a class="headerlink" href="#tools.free_energy_base.Result.pmf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The potential of mean force for this result</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.Series">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">Series</code><span class="sig-paren">(</span><em>coordinate</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Object for storing data series, i.e. some value that changes
+as a function of some coordinate. Designed to act as a base class
+for PMF classes.</p>
+<dl class="method">
+<dt id="tools.free_energy_base.Series.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>coordinate</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Series.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coordinate</strong> : sequence of numbers</p>
+<blockquote>
+<div><p>The values of the coordinate for the PMF</p>
+</div></blockquote>
+<p><strong>*args</strong> : An arbitrary number of iterables containing numbers</p>
+<blockquote class="last">
+<div><blockquote>
+<div><p>or FreeEnergy objects</p>
+</div></blockquote>
+<p>All arguments after coordinate are iterated simultaneously,
+the first entry of each is used to construct the first FreeEnergy
+object in self.values and so on.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.SubColumn">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">SubColumn</code><span class="sig-paren">(</span><em>fmt='%.4f'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.SubColumn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.SubColumn.add_data" title="tools.free_energy_base.SubColumn.add_data"><code class="xref py py-obj docutils literal"><span class="pre">add_data</span></code></a>(data)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.SubColumn.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>fmt='%.4f'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.SubColumn.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.SubColumn.add_data">
+<code class="descname">add_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.SubColumn.add_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.TI">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">TI</code><span class="sig-paren">(</span><em>lambdas</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.TI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tools.free_energy_base.Estimator" title="tools.free_energy_base.Estimator"><code class="xref py py-class docutils literal"><span class="pre">tools.free_energy_base.Estimator</span></code></a></p>
+<p>Estimate free energy differences using Thermodynamic Integration.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.TI.add_data" title="tools.free_energy_base.TI.add_data"><code class="xref py py-obj docutils literal"><span class="pre">add_data</span></code></a>(series)</td>
+<td>Save data from a SnapshotResults.series object for later calculation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.free_energy_base.TI.calculate" title="tools.free_energy_base.TI.calculate"><code class="xref py py-obj docutils literal"><span class="pre">calculate</span></code></a>([temp])</td>
+<td>Calculate the free energy difference and return a PMF object.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">subset</span></code>([low_bound,&nbsp;high_bound,&nbsp;step])</td>
+<td>Return a new class instance containing truncated data series.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.TI.add_data">
+<code class="descname">add_data</code><span class="sig-paren">(</span><em>series</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.TI.add_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save data from a SnapshotResults.series object for later
+calculation. Return the length of the data series added.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>series: SnapshotResults.series</strong></p>
+<blockquote class="last">
+<div><p>free energy simulation data for a particular lambda value</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.TI.calculate">
+<code class="descname">calculate</code><span class="sig-paren">(</span><em>temp=300</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.TI.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the free energy difference and return a PMF object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>temp: float, optional</strong></p>
+<blockquote class="last">
+<div><p>temperature of calculation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tools.free_energy_base.Table">
+<em class="property">class </em><code class="descclassname">tools.free_energy_base.</code><code class="descname">Table</code><span class="sig-paren">(</span><em>title</em>, <em>fmts</em>, <em>headers=[]</em>, <em>space=3</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#tools.free_energy_base.Table.add_blank_row" title="tools.free_energy_base.Table.add_blank_row"><code class="xref py py-obj docutils literal"><span class="pre">add_blank_row</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#tools.free_energy_base.Table.add_row" title="tools.free_energy_base.Table.add_row"><code class="xref py py-obj docutils literal"><span class="pre">add_row</span></code></a>(data)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="tools.free_energy_base.Table.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>title</em>, <em>fmts</em>, <em>headers=[]</em>, <em>space=3</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Table.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.Table.add_blank_row">
+<code class="descname">add_blank_row</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Table.add_blank_row" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tools.free_energy_base.Table.add_row">
+<code class="descname">add_row</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.Table.add_row" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.free_energy_base.get_arg_parser">
+<code class="descclassname">tools.free_energy_base.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.free_energy_base.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generic argparser for all free energy calculation scripts</p>
 </dd></dl>
 
 </div>
@@ -1831,7 +2624,7 @@ Generates input for proteins, solutes and solvent and write an equilibration and
 
 <dl class="class">
 <dt id="tools.generate_input.GCMC">
-<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">GCMC</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>gcmcwater='gcmc_water.pdb'</em>, <em>gcmcbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=40000000.0</em>, <em>dumpfreq=100000.0</em>, <em>adamval=None</em>, <em>ranseed=None</em>, <em>watmodel='tip4p'</em>, <em>outfolder='out_gcmc'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.GCMC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tools.generate_input.</code><code class="descname">GCMC</code><span class="sig-paren">(</span><em>protein='protein.pdb'</em>, <em>solutes=[]</em>, <em>solvent='water.pdb'</em>, <em>templates=[]</em>, <em>gcmcwater='gcmc_water.pdb'</em>, <em>gcmcbox=None</em>, <em>nequil=5000000.0</em>, <em>nprod=80000000.0</em>, <em>dumpfreq=200000.0</em>, <em>adamval=None</em>, <em>ranseed=None</em>, <em>watmodel='tip4p'</em>, <em>outfolder='out_gcmc'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.GCMC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tools.generate_input.ProteinLigandSimulation" title="tools.generate_input.ProteinLigandSimulation"><code class="xref py py-class docutils literal"><span class="pre">tools.generate_input.ProteinLigandSimulation</span></code></a></p>
 <p>This a command file for a GCMC simulation
 Generates input for proteins, solutes and solvent
@@ -2582,6 +3375,11 @@ ligands contains at least one valid filename a ligand simulation is setup.</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.generate_input.get_arg_parser">
+<code class="descclassname">tools.generate_input.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.generate_input.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-tools.make_dummy">
 <span id="tools-make-dummy-module"></span><h2>tools.make_dummy module<a class="headerlink" href="#module-tools.make_dummy" title="Permalink to this headline">¶</a></h2>
@@ -2589,6 +3387,11 @@ ligands contains at least one valid filename a ligand simulation is setup.</p>
 <p>This module defines a single public function:
 make_dummy</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.make_dummy.get_arg_parser">
+<code class="descclassname">tools.make_dummy.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_dummy.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="tools.make_dummy.make_dummy">
 <code class="descclassname">tools.make_dummy.</code><code class="descname">make_dummy</code><span class="sig-paren">(</span><em>pdbfile</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_dummy.make_dummy" title="Permalink to this definition">¶</a></dt>
@@ -2621,6 +3424,11 @@ make_dummy</p>
 <p>This module defines a single public function:
 make_gcmcbox</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.make_gcmcbox.get_arg_parser">
+<code class="descclassname">tools.make_gcmcbox.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_gcmcbox.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="tools.make_gcmcbox.make_gcmcbox">
 <code class="descclassname">tools.make_gcmcbox.</code><code class="descname">make_gcmcbox</code><span class="sig-paren">(</span><em>pdb</em>, <em>filename</em>, <em>padding=2.0</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_gcmcbox.make_gcmcbox" title="Permalink to this definition">¶</a></dt>
@@ -2661,6 +3469,11 @@ make_single
 write_map
 summarize</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.make_single.get_arg_parser">
+<code class="descclassname">tools.make_single.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_single.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="tools.make_single.make_single">
 <code class="descclassname">tools.make_single.</code><code class="descname">make_single</code><span class="sig-paren">(</span><em>tem1</em>, <em>tem2</em>, <em>pdb1</em>, <em>pdb2</em>, <em>mapfile=None</em>, <em>gaffversion='gaff16'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.make_single.make_single" title="Permalink to this definition">¶</a></dt>
@@ -2779,6 +3592,11 @@ summarize</p>
 merge_templates</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
+<dt id="tools.merge_templates.get_arg_parser">
+<code class="descclassname">tools.merge_templates.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.merge_templates.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="tools.merge_templates.merge_templates">
 <code class="descclassname">tools.merge_templates.</code><code class="descname">merge_templates</code><span class="sig-paren">(</span><em>templates</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.merge_templates.merge_templates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge a series of ProtoMS template files</p>
@@ -2896,6 +3714,11 @@ mbar</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.pms2pymbar.get_arg_parser">
+<code class="descclassname">tools.pms2pymbar.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.pms2pymbar.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="tools.pms2pymbar.mbar">
 <code class="descclassname">tools.pms2pymbar.</code><code class="descname">mbar</code><span class="sig-paren">(</span><em>lambdas</em>, <em>energies</em>, <em>RT</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.pms2pymbar.mbar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the MBAR free energy using the PyMBAR package</p>
@@ -2938,6 +3761,11 @@ mbar</p>
 <p>This module defines a single public function
 scoop</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.scoop.get_arg_parser">
+<code class="descclassname">tools.scoop.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.scoop.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="tools.scoop.scoop">
 <code class="descclassname">tools.scoop.</code><code class="descname">scoop</code><span class="sig-paren">(</span><em>protein</em>, <em>ligand</em>, <em>innercut=16</em>, <em>outercut=20</em>, <em>flexin='full'</em>, <em>flexout='sidechain'</em>, <em>terminal='neutralize'</em>, <em>excluded=[]</em>, <em>added=[]</em>, <em>scooplimit=10</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.scoop.scoop" title="Permalink to this definition">¶</a></dt>
@@ -4817,6 +5645,11 @@ it uses the location of this module as to create the base-path</p>
 solvate</p>
 <p>Can be executed from the command line as a stand-alone program</p>
 <dl class="function">
+<dt id="tools.solvate.get_arg_parser">
+<code class="descclassname">tools.solvate.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.solvate.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="tools.solvate.solvate">
 <code class="descclassname">tools.solvate.</code><code class="descname">solvate</code><span class="sig-paren">(</span><em>box</em>, <em>ligand=None</em>, <em>protein=None</em>, <em>geometry='box'</em>, <em>padding=10.0</em>, <em>radius=30.0</em>, <em>center='cent'</em>, <em>namescheme='ProtoMS'</em>, <em>offset=0.89</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.solvate.solvate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to solvate ligand and/or protein structures using a pre-equilibrated box of waters.</p>
@@ -4895,6 +5728,11 @@ Three numbers defines coordinates for the center as separate x,y,z</p>
 <p>This module defines a single public function:
 split_water</p>
 <p>Can be executed from the command line as a stand-alone program</p>
+<dl class="function">
+<dt id="tools.split_jawswater.get_arg_parser">
+<code class="descclassname">tools.split_jawswater.</code><code class="descname">get_arg_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.split_jawswater.get_arg_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="tools.split_jawswater.set_jaws2_box">
 <code class="descclassname">tools.split_jawswater.</code><code class="descname">set_jaws2_box</code><span class="sig-paren">(</span><em>water_files</em>, <em>length=3</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.split_jawswater.set_jaws2_box" title="Permalink to this definition">¶</a></dt>

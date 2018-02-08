@@ -1,10 +1,8 @@
 """Collection of classes to form the basis of a replacement for the current
 free energy calculation framework. """
 
-from abc import abstractmethod, ABCMeta
 from copy import copy
 from glob import glob
-from itertools import izip_longest
 from operator import add
 import os
 import matplotlib
@@ -23,22 +21,16 @@ import matplotlib.pyplot as plt
 plt.rcParams['lines.linewidth'] = 3
 
 
-class PMF(object):
-    """A Potential of Mean Force, describing a free energy profile
-    as a function of some coordinate.
-
-    Attributes
-    ----------
-    coordinate : sequence of numbers
-        The values of the coordinate for the PMF
-    values : list of FreeEnergy objects
-        The free energy at the corresponding coordinate value
+class Series(object):
+    """Object for storing data series, i.e. some value that changes
+    as a function of some coordinate. Designed to act as a base class
+    for PMF classes.
     """
     def __init__(self, coordinate, *args):
         """Parameters
         ----------
         coordinate : sequence of numbers
-            Stored without alteration as self.coordinate
+            The values of the coordinate for the PMF
         *args : An arbitrary number of iterables containing numbers
                 or FreeEnergy objects
             All arguments after coordinate are iterated simultaneously,
@@ -62,7 +54,10 @@ class PMF(object):
         other.values = [-val for val in other.values]
         return other
 
-    def plot(self, axes, xlabel='Lambda Value',
+    def __iter__(self):
+        return iter(self.values)
+
+    def plot(self, axes, show_error=True, fmt='-', xlabel='Lambda Value',
              ylabel='Free Energy (kcal)', **kwargs):
         """Plot this PMF onto the provided figure axes.
 
@@ -80,52 +75,60 @@ class PMF(object):
         y = np.array([fe.value for fe in self.values])
         err = np.array([fe.error for fe in self.values])
 
-        line = axes.plot(self.coordinate, y, **kwargs)[0]
-        axes.plot(self.coordinate, y+err, '--',
-                  linewidth=1, color=line.get_color())
-        axes.plot(self.coordinate, y-err, '--',
-                  linewidth=1, color=line.get_color())
+        line = axes.plot(self.coordinate, y, fmt, **kwargs)[0]
+        if show_error:
+            axes.plot(self.coordinate, y+err, '--',
+                      linewidth=1, color=line.get_color())
+            axes.plot(self.coordinate, y-err, '--',
+                      linewidth=1, color=line.get_color())
         axes.set_xlabel(xlabel)
         axes.set_ylabel(ylabel)
+        return line
+
+
+class PMF(Series):
+    """A Potential of Mean Force, describing a free energy profile
+    as a function of some coordinate.
+    """
 
     @property
     def dG(self):
-        """The free energy difference at the PMF end points."""
+        """The free energy difference at the PMF end points"""
         return self.values[-1] - self.values[0]
-
-    def __iter__(self):
-        return iter(self.values)
 
 
 class BaseResult(object):
+    """A base class for Result objects."""
     def __init__(self, *args):
+        """Parameters
+        ----------
+        *args : an arbitrary number of lists of PMF objects
+            Each list should contain the PMF objects corresponding to
+            multiple repeats within a calculation leg. The free energy
+            estimates from multiple lists will be summed together."""
         self.data = args
         if len({tuple(pmf.coordinate)
                 for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
 
     def __add__(self, other):
-        return Result(*(self.data + other.data))
+        return self.__class__(*(self.data + other.data))
 
     def __sub__(self, other):
         return self + -other
 
     def __neg__(self):
-        return Result(*[[-pmf for pmf in dat] for dat in self.data])
+        return self.__class__(*[[-pmf for pmf in dat] for dat in self.data])
 
 
 class Result(BaseResult):
     """The result of a free energy calculation. Contains multiple PMF
     objects that are combined together to give a meaningful free energy
     difference.
-
-    Attributes
-    ----------
-    data : list of lists of PMF objects
-        
     """
     @property
     def lambdas(self):
+        """Lambda values at which the calculation has been performed"""
         try:
             return self.data[0][0].coordinate
         except IndexError:
@@ -133,26 +136,48 @@ class Result(BaseResult):
 
     @property
     def dG(self):
-        """Return a free energy object from this result's data."""
+        """The free energy difference at the PMF end points"""
         data_dGs = [[pmf.dG for pmf in dat] for dat in self.data]
         FEs = [FreeEnergy.fromData(dG) for dG in data_dGs]
         return sum(FEs, FreeEnergy(0., 0.))
 
     @property
     def pmf(self):
+        """The potential of mean force for this result"""
         pmfs = [PMF(self.lambdas, *dat) for dat in self.data]
         return reduce(add, pmfs)
 
 
 class FreeEnergy(object):
+    """Stores both the value and error associated with a
+    free energy estimate.
+    """
     def __init__(self, value, error):
+        """
+        Parameters
+        ----------
+        value: float
+            the magnitude of the free energy difference
+        error: float
+            one standard error associated with value
+        """
         self.value = value
         self.error = error
 
     @staticmethod
     def fromData(data):
-        """Alternative initialiser that allows use of a set of data
-        points rather than providing an explicit value and error."""
+        """Alternative initialiser that uses of a set of data
+        points rather than providing an explicit value and error.
+        Returns a FreeEnergy object with a value and error determined
+        from the mean of and standard error of the provided data. If
+        FreeEnergy objects are provided as data their individual
+        error attributes are ignored
+
+        Parameters
+        ----------
+        data: sequence of numbers or FreeEnergy objects
+           data from which to determine value and error
+        """
 
         # suppress warnings that arise when data is an empty list
         # NaN is the output and this is desired
@@ -187,23 +212,34 @@ class FreeEnergy(object):
 
 
 class Estimator(object):
-    __metaclass__ = ABCMeta
-    """Base class for free energy estimators"""
+    """Base class for free energy estimators."""
+    results_name = 'results'
+
     def __init__(self, lambdas):
+        """Parameters
+        ----------
+        lambdas: list of numbers
+            lambda values used in a calculation
+        """
         self.data = []
         self.lambdas = lambdas
 
-    @abstractmethod
     def add_data(self, series):
         """Save data from a SnapshotResults.series object for later
         calculation. Return the length of the data series added.
+
+        Parameters
+        ----------
+        series: SnapshotResults.series
+            free energy simulation data for a particular lambda value
         """
         pass
 
-    @abstractmethod
     def calculate(self, temp=300):
         """Calculate the free energy difference and return a PMF object.
 
+        Parameters
+        ----------
         temp: float, optional
               temperature of calculation
         """
@@ -232,7 +268,18 @@ class Estimator(object):
         return lengths[0]
 
     def subset(self, low_bound=0., high_bound=1., step=1):
-        """Return a new class instance containing truncated data series."""
+        """Return a new class instance containing truncated data series.
+
+        Parameters
+        ----------
+        low_bound: float, default=0.
+            Starting position of truncated data series.
+        high_bound: float, default=1.
+            Finishing position of truncated data series.
+        step: int, default=1
+            Subsampling frequency of data. 1=all data points,
+            2=every other data point, etc.
+        """
         if not(0. <= low_bound < high_bound <= 1.):
             raise ValueError("Both bounds must be in the range [0,1] and "
                              "low_bound must be less than high_bound.")
@@ -249,11 +296,26 @@ class Estimator(object):
 class TI(Estimator):
     """Estimate free energy differences using Thermodynamic Integration."""
     def add_data(self, series):
+        """Save data from a SnapshotResults.series object for later
+        calculation. Return the length of the data series added.
+
+        Parameters
+        ----------
+        series: SnapshotResults.series
+            free energy simulation data for a particular lambda value
+        """
         self.data.append((series.forwfe-series.backfe) /
                          (series.lamf[0]-series.lamb[0]))
         return len(self.data[-1])
 
     def calculate(self, temp=300):
+        """Calculate the free energy difference and return a PMF object.
+
+        Parameters
+        ----------
+        temp: float, optional
+              temperature of calculation
+        """
         gradients = [gradient_data.mean() for gradient_data in self.data]
         pmf_values = [trapz(gradients[:i], self.lambdas[:i])
                       for i in xrange(1, len(self.lambdas) + 1)]
@@ -263,6 +325,14 @@ class TI(Estimator):
 class BAR(Estimator):
     """Estimate free energy differences using Bennett's Acceptance Ratio."""
     def add_data(self, series):
+        """Save data from a SnapshotResults.series object for later
+        calculation. Return the length of the data series added.
+
+        Parameters
+        ----------
+        series: SnapshotResults.series
+            free energy simulation data for a particular lambda value
+        """
         lam = series.lam[0]
         lam_ind = self.lambdas.index(lam)
         lamf = self.lambdas[lam_ind+1] if lam != 1.0 else 1.0
@@ -273,7 +343,13 @@ class BAR(Estimator):
         return len(self.data[-1][0])
 
     def calculate(self, temp=300):
-        """Calculate the free energy difference and return a PMF object."""
+        """Calculate the free energy difference and return a PMF object.
+
+        Parameters
+        ----------
+        temp: float, optional
+              temperature of calculation
+        """
         beta = 1./(sim.boltz*temp)
         pmf_values = [0.0]
         for low_lam, high_lam in zip(self.data, self.data[1:]):
@@ -288,11 +364,26 @@ class MBAR(TI):
     Acceptante Ratio.
     """
     def add_data(self, series):
+        """Save data from a SnapshotResults.series object for later
+        calculation. Return the length of the data series added.
+
+        Parameters
+        ----------
+        series: SnapshotResults.series
+            free energy simulation data for a particular lambda value
+        """
         self.data.append(np.array([series.feenergies[lam]
                                    for lam in sorted(series.feenergies)]))
         return len(self.data[-1][0])
 
     def calculate(self, temp=300):
+        """Calculate the free energy difference and return a PMF object.
+
+        Parameters
+        ----------
+        temp: float, optional
+              temperature of calculation
+        """
         beta = 1./(sim.boltz*temp)
         mbar = pymbar.MBAR(np.array(self.data)*beta,
                            [len(dat[0]) for dat in self.data])
@@ -307,20 +398,30 @@ class FreeEnergyCalculation(object):
     """
 
     def __init__(self, root_paths, temperature,
-                 estimators=[TI, BAR, MBAR], subdir=''):
-        """root_paths - a list of lists of strings to ProtoMS output
-        directories. Each list of strings specifies the output
-        directory(s) that make up multiple repeats of a single 'leg'
-        of the calculation. The result for each leg is a mean over
-        constituent repeats. Results from each leg are then summed together
-        to give a total free energy difference for the calculation.
-        temperature - simulation temperature in Kelvin.
-        estimators - a list of estimator classes to use.
-
+                 estimators=[TI, BAR, MBAR], subdir='',
+                 extract_data=True):
+        """Parameters
+        ----------
+        root_paths: a list of lists of strings
+            Paths to ProtoMS output directories. Each list of strings specifies
+            the output directory(s) that make up multiple repeats of a single
+             'leg' of the calculation. The result for each leg is a mean over
+            constituent repeats. Results from each leg are then summed together
+            to give a total free energy difference for the calculation.
+        temperature: float
+            Simulation temperature in degrees Kelvin.
+        estimators: list of Estimator classes
+            Estimator classes to use in evaluating free energies.
+        subdir: string
+            subdirectory within each lambda folder to search for output
+        extract_data: bool
+            If True extract data from simulation results in prepartion for
+            calculation.
         """
         self.root_paths = root_paths
         self.temperature = temperature
         self.subdir = subdir
+        self.estimator_classes = estimators
 
         # data hierarchy -> root_paths[leg][repeat]
         self.paths = []
@@ -338,29 +439,38 @@ class FreeEnergyCalculation(object):
             estimator: [[estimator(l) for l in lams]
                         for lams in self.lambdas]
             for estimator in estimators}
-        self._extract_series(self.paths)
+        if extract_data:
+            self._extract_series(self.paths)
         self.figures = {}
         self.tables = []
 
     def _path_constructor(self, root_path):
+        """Given a root_path (string) construct a full path
+        suitable for globbing to find output directories."""
         return os.path.join(root_path, "lam-*", self.subdir)
 
     def _get_lambda(self, path):
+        """Given a path (string) extract the contained lambda value"""
         return float(path.split('/')[-2][4:])
 
     def _extract_series(self, paths):
-        """For all results files extract the data series and supply these
+        """For each entry of paths (list of strings) open the contained
+        results file and extract the data series and supply these
         to each estimator instance."""
         for i, leg in enumerate(paths):
             min_len = 10E20
             for j, repeat in enumerate(leg):
                 for path in repeat:
-                    rf = sim.ResultsFile()
-                    rf.read(os.path.join(path, 'results'))
-                    rf.make_series()
-                    for est in self.estimators.values():
-                        data_len = est[i][j].add_data(rf.series)
-                        min_len = data_len if data_len < min_len else min_len
+                    result_names = set(self.estimators[cls][i][j].results_name
+                                       for cls in self.estimator_classes)
+                    for fname in result_names:
+                        rf = sim.ResultsFile()
+                        rf.read(os.path.join(path, fname))
+                        rf.make_series()
+                        for est in self.estimators.values():
+                            if est[i][j].results_name == fname:
+                                data_len = est[i][j].add_data(rf.series)
+                                min_len = data_len if data_len < min_len else min_len
 
                 # in cases where calculations terminate prematurely there
                 # can be slight differences in the length of data series
@@ -372,12 +482,10 @@ class FreeEnergyCalculation(object):
     def calculate(self, subset=(0., 1., 1)):
         """For each estimator return the evaluated potential of mean force.
 
-        Returns
-        -------
-        dict:
-          results of calculation stored in the below structure:
-          return_val[estimator_class][i] = PMF instance
-          where i is an list index indicating a repeat
+        Parameters
+        ----------
+        subset: tuple of two floats and an int
+            specify the subset of data to use in the calculation
         """
         results = {}
         for est, legs in self.estimators.items():
@@ -390,10 +498,18 @@ class FreeEnergyCalculation(object):
         return results
 
     def run(self, args):
-        """Method for public execution of calculation. Runs self._body(args)
-        and uses the return value as the calculation result. Handles
-        logic for printing of output tables and saving of output
-        pickles and figures. Calls plt.show() to display figures."""
+        """Public method for execution of calculation. This is usually the
+        desired way to use execute calculations. andles logic for
+        printing of output tables and saving of output pickles and
+        figures. Calls plt.show() to display figures.  Runs
+        self._body(args) and uses the return value as the calculation
+        result.
+
+        Parameters
+        ----------
+        args
+        """
+        
         results = self._body(args)
 
         if args.pickle is not None:
@@ -425,6 +541,11 @@ class FreeEnergyCalculation(object):
         the dictionary self.figures. The key used for each figure will
         be used as the basis of the name when saved. Any output tables
         created in this method should be added to the list self.tables.
+
+        Parameters
+        ----------
+        args: argparse.Namespace object
+            Namespace from argumentparser
         """
         return self.calculate(subset=(args.lower_bound, args.upper_bound))
 
@@ -448,10 +569,12 @@ def get_arg_parser():
              "particular B value.")
     parser.add_argument(
         '-l', '--lower-bound', default=0., type=float,
-        help="Define the lower bound of data to be used.")
+        help="Value between 0 and 1 that determines the proportion to omit "
+             "from the beginning of the simulation data series.")
     parser.add_argument(
         '-u', '--upper-bound', default=1., type=float,
-        help="Define the upper bound of data to be used.")
+        help="Value between 0 and 1 that determines the proportion to omit "
+             "from the end of the simulation data series.")
     parser.add_argument(
         '-t', '--temperature', default=298.15, type=float,
         help='Temperature at which the simulation was run. Default=298.15K')
@@ -463,81 +586,6 @@ def get_arg_parser():
              "adds a prefix to figure names.")
     parser.add_argument(
         '--no-show', action='store_true', default=False,
-        help="Do not display any figures on screen. Does not interfere with"
-             " --save-figures.")
+        help="Do not display any figures on screen. Does not interfere with "
+             "--save-figures.")
     return parser
-
-
-class Table(object):
-    def __init__(self, title, fmts, headers=[], space=3):
-        self.title = title
-        self.columns = [
-            Column(head, fmt, fmt)
-            for fmt, head in izip_longest(fmts, headers, fillvalue='')
-        ]
-        self.spacer = " " * space
-
-    def add_row(self, data):
-        for col, dat in zip(self.columns, data):
-            col.add_data(dat)
-
-    def add_blank_row(self):
-        for col in self.columns:
-            col.add_data(None)
-
-    def __str__(self):
-        s = ''
-        if self.title:
-            s += "%s\n" % self.title
-
-        for col in self.columns:
-            s += ("%-{}s" + self.spacer).format(col.width) % col.header
-        s += '\n'
-
-        for row in zip(*self.columns):
-            s += self.spacer.join(row) + '\n'
-        return s
-
-
-class Column(object):
-    def __init__(self, header='', value_fmt="%.4f", error_fmt="%.4f"):
-        self.header = header
-        self.left = SubColumn(value_fmt)
-        self.right = SubColumn(error_fmt)
-
-    def add_data(self, data):
-        try:
-            self.left.add_data(data.value)
-            self.right.add_data(data.error)
-        except AttributeError:
-            self.left.add_data(data)
-            self.right.add_data(None)
-
-    def __iter__(self):
-        for l, r in zip(self.left, self.right):
-            stuff = "%s +- %s" % (l, r) if len(r) != r.count(" ") else "%s" % l
-            yield "%-{}s".format(self.width) % stuff
-
-    @property
-    def width(self):
-        if self.right.width:
-            contents = self.left.width + self.right.width + 4
-        else:
-            contents = self.left.width
-        return max(contents, len(self.header))
-
-
-class SubColumn(object):
-    def __init__(self, fmt="%.4f"):
-        self.values = []
-        self.fmt = fmt
-        self.width = 0
-
-    def add_data(self, data):
-        line = self.fmt % data if data is not None else ''
-        self.values.append(line)
-        self.width = max(len(line), self.width)
-
-    def __iter__(self):
-        for val in self.values:
-            yield "%{}s".format(self.width) % val

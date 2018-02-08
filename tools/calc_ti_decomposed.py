@@ -4,6 +4,7 @@ import matplotlib
 import numpy as np
 import os
 import free_energy_base as feb
+from table import Table
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
@@ -135,7 +136,7 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         if args.pmf:
             self.figures['decomposed_pmfs'] = plot_pmfs(decomp)
 
-        table = feb.Table('', fmts=["%s:", "%.3f"])
+        table = Table('', fmts=["%s:", "%.3f"])
         table.add_row(["FDTI", results[feb.TI].dG])
         table.add_blank_row()
         for term in sorted(decomp):

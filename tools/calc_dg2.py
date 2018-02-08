@@ -2,6 +2,7 @@ import matplotlib
 import numpy as np
 import os
 import free_energy_base as feb
+from table import Table
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
@@ -9,6 +10,8 @@ import matplotlib.pyplot as plt
 
 
 class FreeEnergyCalculation(feb.FreeEnergyCalculation):
+    """Perform a basic free energy calculation.
+    """
     def test_equilibration(self, discard_limit):
         """Perform a series of calculations discarding increasing portions
         from the start of the loaded data series. This assesses whether
@@ -22,13 +25,6 @@ class FreeEnergyCalculation(feb.FreeEnergyCalculation):
           data to discard. E.g. a value of 0.2 would perform a series
           of calculations that range between using all of available
           data and the last 80% of the data.
-
-        Returns
-        -------
-        dict
-          keys: data proportions
-          values: outputs from self.calculate(subset=(X, 1.0))
-                  where X is the corresponding key
         """
         proportions = np.linspace(0.0, discard_limit, 10)
         return {prop: self.calculate(subset=(prop, 1.0))
@@ -50,21 +46,18 @@ class FreeEnergyCalculation(feb.FreeEnergyCalculation):
         lower_limit : float, optional
           Specifies an initial proportion of the data set to discard from all
           calculations. Allows unequilibrated data to be removed.
-
-        Returns
-        -------
-        dict
-          keys: data proportions
-          values: outputs from self.calculate(subset=(lower_limit, X))
-                  where X is the corresponding key
         """
         proportions = np.linspace(discard_limit, 1.0, 10)
         return {prop: self.calculate(subset=(lower_limit, prop))
                 for prop in proportions}
 
     def _body(self, args):
-        """Execute the required calculation according to the values present in
-        the argparse.Namespace args.
+        """Calculation business logic.
+
+        Parameters
+        ----------
+        args: argparse.Namespace object
+            Namespace from argumentparser
         """
         if (args.test_equilibration or args.test_convergence) is not None:
             if (args.test_equilibration) is not None:
@@ -72,34 +65,33 @@ class FreeEnergyCalculation(feb.FreeEnergyCalculation):
             else:
                 results = self.test_convergence(args.test_convergence,
                                                 lower_limit=args.lower_bound)
-        else:
-            results = self.calculate(subset=(args.lower_bound,
-                                             args.upper_bound))
-
-        if (args.test_equilibration or args.test_convergence) is not None:
             fig = plot_fractional_dataset_results(results, calc.estimators)
             figname = 'equil' if args.test_equilibration else 'convergence'
             self.figures[figname] = fig
         else:
+            results = self.calculate(subset=(args.lower_bound,
+                                             args.upper_bound))
             if args.pmf:
                 self.figures['pmf'] = plot_pmfs(results)
-            # print_results(args.directories, results)
             self.tables.extend(results_tables(args.directories, results))
         return results
 
 
-def plot_results(x, results, ax, **kwargs):
+def plot_results(x, results, axes, **kwargs):
+    """Plot the free energies from a collection of Result objects
+    onto matplotlib axes. All **kwargs are passed to calls of
+    axes.plot()."""
     y = np.array([result.dG.value for result in results])
     err = np.array([result.dG.error for result in results])
 
-    line = ax.plot(x, y, **kwargs)[0]
-    ax.plot(x, y+err, '--', linewidth=1, color=line.get_color())
-    ax.plot(x, y-err, '--', linewidth=1, color=line.get_color())
+    line = axes.plot(x, y, **kwargs)[0]
+    axes.plot(x, y+err, '--', linewidth=1, color=line.get_color())
+    axes.plot(x, y-err, '--', linewidth=1, color=line.get_color())
 
 
 def plot_fractional_dataset_results(results, estimators):
-    """Graph results of calculations that use variable portions of available
-    data i.e. equilibration and convergence test.s."""
+    """Plot results of calculations that use variable portions of available
+    data i.e. equilibration and convergence tests."""
     fig, ax = plt.subplots()
     for estimator in estimators:
         x = sorted(results)
@@ -112,7 +104,7 @@ def plot_fractional_dataset_results(results, estimators):
 
 
 def plot_pmfs(results):
-    """Graph average potentials of mean force for all estimators."""
+    """Plot average potentials of mean force for all estimators."""
     fig, ax = plt.subplots()
     for estimator in sorted(results):
         results[estimator].pmf.plot(ax, label=estimator.__name__)
@@ -126,7 +118,7 @@ def results_tables(directories, results):
     """
     tables = []
     for estimator in sorted(results, key=lambda x: x.__name__):
-        table = feb.Table(estimator.__name__, ['%s', "%.2f"])
+        table = Table(estimator.__name__, ['%s', "%.2f"])
         for i, res in enumerate(results[estimator].data):
             dGs = []
             for j, pmf in enumerate(res):
