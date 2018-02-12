@@ -58,11 +58,12 @@ class GCI(feb.Estimator):
         self.data.append(series.solventson)
         return self.data[-1].shape[-1]
 
-    def calculate(self, temp, volume):
+    def calculate(self, temp, volume, steps=None):
         Ns = np.array(self.data).mean(axis=1)
-        steps = int(max(Ns))
-        if max(Ns) - steps > 0.9:
-            steps += 1
+        if steps is None:
+            steps = int(max(Ns))
+            if max(Ns) - steps > 0.9:
+                steps += 1
 
         model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns, size=steps,
                                  verbose=False)[0]
@@ -89,7 +90,7 @@ class GCI(feb.Estimator):
 
 
 class TitrationCalculation(feb.FreeEnergyCalculation):
-    def __init__(self, root_paths, temperature, volume, subdir=''):
+    def __init__(self, root_paths, temperature, volume, steps=None, subdir=''):
         feb.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
@@ -97,6 +98,7 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
             estimators=[GCI],
             subdir=subdir)
         self.volume = volume
+        self.steps = steps
 
     def _path_constructor(self, root_path):
         return os.path.join(root_path, "b_*", self.subdir)
@@ -120,7 +122,8 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
             for i, leg in enumerate(legs):
                 leg_result += GCIResult(
                     [rep.subset(*subset).calculate(self.temperature,
-                                                   self.volume)
+                                                   self.volume,
+                                                   self.steps)
                      for rep in leg])
             results[est] = leg_result
         return results[GCI]
@@ -173,12 +176,17 @@ def get_arg_parser():
     parser.add_argument(
         '-v', '--volume', required=True, type=float,
         help="Volume of the calculations GCMC region.")
+    parser.add_argument(
+        '-n', '--nsteps', type=int,
+        help='Override automatic guessing of maximum number of waters for '
+             'titration curve fitting.')
     return parser
 
 
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
     tc = TitrationCalculation(
-        [args.directories], args.temperature, args.volume, subdir=args.subdir)
+        [args.directories], args.temperature, args.volume,
+        args.nsteps, subdir=args.subdir)
     tc.run(args)
     plt.show()

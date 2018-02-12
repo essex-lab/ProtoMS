@@ -30,7 +30,7 @@ class GCSLongEnergies(GCSEnergies):
 
 
 class ReweightedTitration(gci2.TitrationCalculation):
-    def __init__(self, root_paths, temperature, volume,
+    def __init__(self, root_paths, temperature, volume, steps,
                  filename, longname, subdir=''):
         feb.FreeEnergyCalculation.__init__(
             self,
@@ -40,6 +40,7 @@ class ReweightedTitration(gci2.TitrationCalculation):
             subdir=subdir,
             extract_data=False)
         self.volume = volume
+        self.steps = steps
         # adjust estimator instance attributes so that the
         # correct filenames are read, this is a bit ugly
         for est in self.estimators[gci2.GCI][0]:
@@ -85,16 +86,21 @@ class ReweightedTitration(gci2.TitrationCalculation):
             N_k = np.zeros(Nsims * 2, dtype=int)
             N_k[:Nsims] = N
 
+            # MBAR reweighting
             mbar = pymbar.MBAR(u_kn, N_k)
             mbar_ns = mbar.computeExpectations(ns.reshape(Nsims*N))[0]
 
+            # also do reweighting with conventional umbrella result
             umbrella_ns = np.zeros_like(mus)
             for i in xrange(Nsims):
                 exps = np.exp(beta*(es[i]-les[i]))
                 umbrella_ns[i] = (exps*ns[i]).mean() / exps.mean()
 
+            # rep is a suitable GCI estimator for raw occupancy data
             GCI_estimators['raw'].append(rep.subset(*subset))
 
+            # create GCI estimators to calculate binding free energies
+            # from reweighted occupancy data
             mbar = gci2.GCI(Bs)
             mbar.data = mbar_ns[Nsims:][::-1].reshape((Nsims, 1))
             GCI_estimators['mbar'].append(mbar)
@@ -103,10 +109,12 @@ class ReweightedTitration(gci2.TitrationCalculation):
             umbrella.data = umbrella_ns.reshape((Nsims, 1))
             GCI_estimators['umbrella'].append(umbrella)
 
+        # gather calculatinos from each repeat and package into
+        # GCIResult objects for different reweighting methods.
         results = {}
         for key in 'raw', 'mbar', 'umbrella':
             results[key] = gci2.GCIResult(
-                [rep.calculate(self.temperature, self.volume)
+                [rep.calculate(self.temperature, self.volume, self.steps)
                  for rep in GCI_estimators[key]])
         return results
 
@@ -168,7 +176,7 @@ def get_arg_parser():
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
     tc = ReweightedTitration([args.directories], args.temperature,
-                             args.volume, args.filename,
+                             args.volume, args.nsteps, args.filename,
                              args.longname, subdir=args.subdir)
     tc.run(args)
     plt.show()
