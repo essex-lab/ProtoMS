@@ -280,27 +280,35 @@ if __name__ == "__main__":
     # STEP 4: Condense the principal network data into a smaller number of more meaningful networks
     # Not sure how best to do this yet...
     
-    wat_coords = []
-    wat_net_ids = []
+    wat_coords = []   # Store oxygen coordinates of each water
+    wat_net_ids = []  # Store the PN ID for each water
     for i in range(len(principal_networks)):
         for j, wat in principal_networks[i].residues.iteritems():
             for atom in wat.atoms:
                 if atom.name == "O00":
                     wat_coords.append(atom.coords)
                     wat_net_ids.append(i)
-    wat_dist_list = []
+    wat_dist_list = []  # List of inter-water distances
     for i in range(len(wat_coords)):
         for j in range(i+1, len(wat_coords)):
             if wat_net_ids[i] == wat_net_ids[j]:
-                wat_dist_list.append(1E6)
+                wat_dist_list.append(1E6)  # Use large distances to ensure that two watrs from the same frame aren't joined
             else:
                 wat_dist_list.append(calc_distance(wat_coords[i], wat_coords[j]))
+    # Cluster the sites
     wat_tree = hierarchy.linkage(wat_dist_list, method='average')
     wat_clust_ids = hierarchy.fcluster(wat_tree, t=2.0, criterion='distance')
     wat_clusts = [[] for i in range(max(wat_clust_ids))]
     for i in range(len(wat_clust_ids)):
         clust_no = wat_clust_ids[i]-1
         wat_clusts[clust_no].append(wat_net_ids[i])
+    # Check which clustered sites are H-bonding - in progress
+    """
+    clust_h_bonds = [[] for i in range(len(]
+    for i in range(len(wat_clusts)):
+       
+    """ 
+    # Check which clusters are contained in each PN
     pn_clusts = [[] for i in range(len(principal_networks))]
     for i in range(len(principal_networks)):
         for j in range(len(wat_clusts)):

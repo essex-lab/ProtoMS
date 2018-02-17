@@ -2,6 +2,7 @@
 Script to find long live water units in the hydration patterns from GCMC runs
 
 Marley Samways
+Hannah Bruce-Macdonald
 """
 
 import logging

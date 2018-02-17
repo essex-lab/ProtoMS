@@ -37,7 +37,7 @@ def read_box(boxpdb):
     input_lines = input_file.readlines()
     input_file.close()
 
-    for line in input_lines:
+    for line in input_lines[:3]:
         data = line.split()
         if data[1] == "CENTER":
             origin = np.array([float(data[5]), float(data[6]), float(data[7])])
