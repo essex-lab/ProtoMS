@@ -113,26 +113,33 @@ if __name__ == "__main__":
                     clust_frame_ids[i].append(j)
                     frame_clust_ids[j].append(i)
 
-    # Build a network starting with the most occupied sites
-    network = []
-    left_out = []
-    for i in clusts_sorted:
-        if float(clust_occs[i-1])/n_frames < args.cutoff:
-            left_out.append(i)
-            continue
-        suitable = False  # Checks that all waters in the network have been observed together at least once
-        # Check that all waters are observed in the same frame at least once
-        for frame in frame_clust_ids:
-            if i in frame and np.all([j in frame for j in network]):
-                suitable = True
-        if suitable:
-            network.append(i)
-        else:
-            left_out.append(i)
+    # Build a set of networks starting with the most occupied sites
+    rep_networks = []
+    left_out = [i for i in clusts_sorted if clust_occs[i-1] > args.cutoff * n_frames]
+    while len(left_out) > 0:
+        network = [left_out[0]] # Start the network from the most occupied cluster which as not been included yet
+        for i in clusts_sorted:
+            if i in network: continue
+            suitable = False  # Checks that all waters in the network have been observed together at least once
+            # Check that all waters are observed in the same frame at least once
+            for frame in frame_clust_ids:
+                if i in frame and np.all([j in frame for j in network]):
+                    suitable = True
+            if suitable:
+                network.append(i)
+        # Add this network to the list
+        rep_networks.append(network)
+        left_out = []
+        # Check which occupied sites have not been yet included in a network.
+        for i in clusts_sorted:
+            if clust_occs[i-1] > args.cutoff * n_frames and np.all([i not in net for net in rep_networks]):
+                left_out.append(i)
     
-    print("Representative network built:")
-    print("\t{}\n".format(network))
+    # Need to identify which frames represent each network
     
-    print("Sites left out of the network:")
-    print("\t{}\n".format(left_out))
+    # Print out networks
+    print("Representative network(s) built:")
+    for network in rep_networks:
+        print("\t{}\n".format(network))
+    
 
