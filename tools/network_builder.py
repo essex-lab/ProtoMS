@@ -117,9 +117,10 @@ if __name__ == "__main__":
     rep_networks = []
     left_out = [i for i in clusts_sorted if clust_occs[i-1] > args.cutoff * n_frames]
     while len(left_out) > 0:
-        network = [left_out[0]] # Start the network from the most occupied cluster which as not been included yet
-        for i in clusts_sorted:
-            if i in network: continue
+        network = [] 
+        # Start the network by including those which have been left out..
+        for i in left_out + clusts_sorted:
+            if i in network: continue  # Make sure not to include the same water twice...
             suitable = False  # Checks that all waters in the network have been observed together at least once
             # Check that all waters are observed in the same frame at least once
             for frame in frame_clust_ids:
@@ -128,7 +129,7 @@ if __name__ == "__main__":
             if suitable:
                 network.append(i)
         # Add this network to the list
-        rep_networks.append(network)
+        rep_networks.append([i for i in clusts_sorted if i in network])  # Sort the cluster IDs in the network
         left_out = []
         # Check which occupied sites have not been yet included in a network.
         for i in clusts_sorted:
