@@ -157,7 +157,8 @@ if __name__ == "__main__":
     network_rep_frames = []
     for i, network in enumerate(rep_networks):
         min_rmsd = 1E6  # Use smallest RMSD to identify the best frame
-        for j, frame in enumerate(frame_wat_ids):
+        for j in network_frame_ids[i]:
+            frame = frame_wat_ids[j]
             sq_dists = []  # List of square differences in water positions
             for wat in frame:
                 # Check which cluster each water in the frame corresponds to
