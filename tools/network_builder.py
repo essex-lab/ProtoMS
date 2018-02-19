@@ -23,10 +23,10 @@ def get_args():
     parser.add_argument('-m', '--molecule', help='Residue name of water molecules', default='WA1')
     parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates', default='O00')
     parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip', default=0)
-    parser.add_argument('-d', '--distance', type=float, help='Distance cutoff for clustering. Default=2.0 Angs', default=2.0)
+    parser.add_argument('-d', '--distance', type=float, help='Distance cutoff for clustering. Default=3.0 Angs', default=3.0)
     parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering', default='average')
     parser.add_argument('-c', '--cutoff', type=float, help='Occupancy cutoffs for waters to be considered. Between 0 and 1.', default=0.0)
-    parser.add_argument('-o', '--output', help='Stem for the PDB output', default='output')
+    parser.add_argument('-o', '--output', help='Stem for the PDB output', default='network')
     args = parser.parse_args()
     return args
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         clust = clust_ids[i]
         clust_wat_ids[clust].append(i)
     
-    print("\nClusters:")
+    print("\n{} clusters identified:".format(n_clusts))
     for i in range(1, n_clusts+1):
         print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
     print("")
@@ -136,11 +136,51 @@ if __name__ == "__main__":
             if clust_occs[i-1] > args.cutoff * n_frames and np.all([i not in net for net in rep_networks]):
                 left_out.append(i)
     
-    # Need to identify which frames represent each network
+    # Need to identify which frames contain each network
+    network_frame_ids = [[] for net in rep_networks]
+    for i, network in enumerate(rep_networks):
+        for j, frame in enumerate(frame_clust_ids):
+            # Check that the network and frame contain the same clusters
+            if len(network) == len(frame) and np.all([wat in frame for wat in network]):
+                network_frame_ids[i].append(j)
+    
+    # Now need to compute cluster centres for each cluster
+    clust_centres = {}
+    for i in range(1, n_clusts+1):
+        centre = np.zeros(3)
+        for wat in clust_wat_ids[i]:
+            centre += coord_list[wat]
+        centre /= clust_occs[i-1]
+        clust_centres[i] = centre
+    
+    # Now want to find a representative frame for each network
+    network_rep_frames = []
+    for i, network in enumerate(rep_networks):
+        min_rmsd = 1E6  # Use smallest RMSD to identify the best frame
+        for j, frame in enumerate(frame_wat_ids):
+            sq_dists = []  # List of square differences in water positions
+            for wat in frame:
+                # Check which cluster each water in the frame corresponds to
+                for k in range(1, n_clusts+1):
+                    if wat in clust_wat_ids[k]:
+                        sq_dists.append(np.square(np.linalg.norm(clust_centres[k]-coord_list[wat])))
+                    else: continue
+            rmsd = np.sqrt(sum(sq_dists))
+            if rmsd < min_rmsd:
+                min_rmsd = rmsd
+                best_frame = j
+        network_rep_frames.append(best_frame)
     
     # Print out networks
-    print("Representative network(s) built:")
-    for network in rep_networks:
-        print("\t{}\n".format(network))
-    
+    print("{} representative network(s) built.".format(len(rep_networks)))
+   
+    # Write out representative frames to PDB files..
+    print("Writing PDB output...") 
+    pdbfiles2 = simulationobjects.PDBSet()
+    pdbfiles2.read(args.input, skip=args.skip, readmax=9999)
+    for i, j in enumerate(network_rep_frames):
+        pdbfiles.pdbs[j].write("{}-{}{}-wat.pdb".format(args.output, "0"*(2-len(str(i+1))), i+1))
+        pdbfiles2.pdbs[j].write("{}-{}{}-all.pdb".format(args.output, "0"*(2-len(str(i+1))), i+1))
+        
+    print("Done!\n")
 
