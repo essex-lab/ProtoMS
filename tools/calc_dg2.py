@@ -124,7 +124,7 @@ def results_tables(directories, results):
             for j, pmf in enumerate(res):
                 dGs.append(pmf.dG)
                 table.add_row([directories[i][j], pmf.dG.value])
-            table.add_row(['Mean', feb.FreeEnergy.fromData(dGs)])
+            table.add_row(['Mean', feb.Quantity.fromData(dGs)])
             table.add_blank_row()
         table.add_row(['Total Mean', results[estimator].dG])
         tables.append(table)

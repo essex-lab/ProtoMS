@@ -15,7 +15,7 @@ import calc_ti_decomposed
 import calc_dg_cycle
 import calc_gci2
 from free_energy_base import BAR, MBAR, TI, get_arg_parser
-from free_energy_base import PMF, FreeEnergy, Result
+from free_energy_base import PMF, Quantity, Result
 from simulationobjects import boltz, SnapshotResults
 
 
@@ -128,7 +128,7 @@ class TestPMF(unittest.TestCase):
 
     def test_dG(self):
         self.assertEqual(self.single.dG,
-                         FreeEnergy(self.pmf_values[-1]*0.05, 0.))
+                         Quantity(self.pmf_values[-1]*0.05, 0.))
         self.assertEqual(self.double.dG.value, self.pmf_values[-1]*0.05*1.5)
 
     def test_negation(self):
@@ -140,7 +140,7 @@ class TestPMF(unittest.TestCase):
         # object is not changed by the copied version
         pre = self.single.dG
         -self.single
-        self.assertEqual(pre, self.single.dG)
+        self.assertNotEqual(pre, -self.single.dG)
 
         # check for expected behaviours
         self.assertEqual((-self.single).dG, -(self.single.dG))

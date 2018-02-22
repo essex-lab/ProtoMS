@@ -101,6 +101,7 @@ class ReweightedTitration(gci2.TitrationCalculation):
 
             # create GCI estimators to calculate binding free energies
             # from reweighted occupancy data
+            # for some reason reweighted data comes out of MBAR in reverse
             mbar = gci2.GCI(Bs)
             mbar.data = mbar_ns[Nsims:][::-1].reshape((Nsims, 1))
             GCI_estimators['mbar'].append(mbar)

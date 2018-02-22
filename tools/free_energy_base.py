@@ -32,14 +32,14 @@ class Series(object):
         coordinate : sequence of numbers
             The values of the coordinate for the PMF
         *args : An arbitrary number of iterables containing numbers
-                or FreeEnergy objects
+                or Quantity objects
             All arguments after coordinate are iterated simultaneously,
-            the first entry of each is used to construct the first FreeEnergy
+            the first entry of each is used to construct the first Quantity
             object in self.values and so on."""
         self.coordinate = coordinate
         self.values = []
         for dat in zip(*args):
-            self.values.append(FreeEnergy.fromData(dat))
+            self.values.append(Quantity.fromData(dat))
 
     def __add__(self, other):
         if list(self.coordinate) != list(other.coordinate):
@@ -138,8 +138,8 @@ class Result(BaseResult):
     def dG(self):
         """The free energy difference at the PMF end points"""
         data_dGs = [[pmf.dG for pmf in dat] for dat in self.data]
-        FEs = [FreeEnergy.fromData(dG) for dG in data_dGs]
-        return sum(FEs, FreeEnergy(0., 0.))
+        FEs = [Quantity.fromData(dG) for dG in data_dGs]
+        return sum(FEs, Quantity(0., 0.))
 
     @property
     def pmf(self):
@@ -148,7 +148,7 @@ class Result(BaseResult):
         return reduce(add, pmfs)
 
 
-class FreeEnergy(object):
+class Quantity(object):
     """Stores both the value and error associated with a
     free energy estimate.
     """
@@ -168,14 +168,14 @@ class FreeEnergy(object):
     def fromData(data):
         """Alternative initialiser that uses of a set of data
         points rather than providing an explicit value and error.
-        Returns a FreeEnergy object with a value and error determined
+        Returns a Quantity object with a value and error determined
         from the mean of and standard error of the provided data. If
-        FreeEnergy objects are provided as data their individual
+        Quantity objects are provided as data their individual
         error attributes are ignored
 
         Parameters
         ----------
-        data: sequence of numbers or FreeEnergy objects
+        data: sequence of numbers or Quantity objects
            data from which to determine value and error
         """
 
@@ -184,22 +184,22 @@ class FreeEnergy(object):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=RuntimeWarning)
             try:
-                return FreeEnergy(np.mean(data), np.std(data)/len(data)**0.5)
+                return Quantity(np.mean(data), np.std(data)/len(data)**0.5)
             except TypeError:
                 values = [dat.value for dat in data]
-                return FreeEnergy(np.mean(values),
+                return Quantity(np.mean(values),
                                   np.std(values)/len(values)**0.5)
 
     def __add__(self, other):
-        return FreeEnergy(self.value + other.value,
+        return Quantity(self.value + other.value,
                           (self.error**2 + other.error**2)**0.5)
 
     def __sub__(self, other):
-        return FreeEnergy(self.value - other.value,
+        return Quantity(self.value - other.value,
                           (self.error**2 + other.error**2)**0.5)
 
     def __neg__(self):
-        return FreeEnergy(-self.value, self.error)
+        return Quantity(-self.value, self.error)
 
     def __eq__(self, other):
         return (self.value == other.value) and (self.error == other.error)
@@ -208,7 +208,7 @@ class FreeEnergy(object):
         return "%9.4f +/- %.4f" % (self.value, self.error)
 
     def __repr__(self):
-        return "<FreeEnergy: value=%.4f error=%.4f>" % (self.value, self.error)
+        return "<Quantity: value=%.4f error=%.4f>" % (self.value, self.error)
 
 
 class Estimator(object):

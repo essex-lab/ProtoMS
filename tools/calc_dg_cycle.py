@@ -10,7 +10,7 @@ def state_data_table(results, directories, signs, states, estimator):
                   fmts=["%s:", "%.3f", "%.3f", "%.3f"],
                   headers=['', 'dG gas', 'dG free', 'dG bound'])
 
-    closures = {state: feb.FreeEnergy(0., 0.) for state in states}
+    closures = {state: feb.Quantity(0., 0.) for state in states}
     for root, sign in zip(directories, signs):
         root_dGs = (root,)
         for state in states:
@@ -31,8 +31,8 @@ def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
                   fmts=["%s:", "%.3f", "%.3f"],
                   headers=['', 'ddG Solvation', 'ddG Binding'])
 
-    closure_solv = feb.FreeEnergy(0., 0.)
-    closure_bind = feb.FreeEnergy(0., 0.)
+    closure_solv = feb.Quantity(0., 0.)
+    closure_bind = feb.Quantity(0., 0.)
     for root, sign in zip(directories, signs):
         dG_solv = dG_solvs[root][estimator]
         dG_bind = dG_binds[root][estimator]
@@ -74,7 +74,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
 
         # perform calculations
         # end up with results dictionary structured as -
-        # results[root][state][estimator] == feb.FreeEnergy object
+        # results[root][state][estimator] == feb.Quantity object
         # thus we have one free energy difference for each root
         # directory, for each state (gas, free or bound), calculated
         # with each of the estimators
@@ -83,7 +83,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
         for root in args.directories:
             results[root] = {}
             for state in states:
-                state_dGs = {est: feb.FreeEnergy(0., 0.)
+                state_dGs = {est: feb.Quantity(0., 0.)
                              for est in self.estimators}
                 for mid in midfixes:
                     output_dir = output_dir_format % (root, mid, state)

@@ -76,7 +76,7 @@ class Column(object):
 
         Parameters
         ----------
-        data: FreeEnergy object or number
+        data: Quantity object or number
             entry to add
         """
         try:
