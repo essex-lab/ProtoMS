@@ -458,7 +458,7 @@ def solvate(box, ligand=None, protein=None, geometry="box",
   # -------------------------------------
   # Main routine begins below
   # -------------------------------------
- 
+
   logger.debug("Running solvate with arguments: ")
   logger.debug("\tbox        = %s"%box) 
   logger.debug("\tligand     = %s"%ligand) 
@@ -514,7 +514,6 @@ def solvate(box, ligand=None, protein=None, geometry="box",
   solute["max"] = np.max(solute["xyz"],axis=0)
   solute["len"] = solute["max"] - solute["min"]
   solute["cent"] = np.average(solute["xyz"],axis=0)
-  
   # Now add waters
   added_water = {}
   if geometry == "box" :

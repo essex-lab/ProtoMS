@@ -17,6 +17,7 @@ class ProtSetupTest(framework.BaseTest):
         "-s", "none",
         "-l", "dcb.pdb",
         "-p", "protein.pdb",
+        "--charge", "0",
         "--setupseed", "100000",
         "--gaff", "gaff14"
     ]

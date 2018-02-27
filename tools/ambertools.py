@@ -121,6 +121,7 @@ def run_antechamber ( lig, charge, resnam = None):
     	the filename of the created prepi file
     """
 
+    logger.info("Running antechamber. Please check the output carefully")
     logger.debug("Running run_antechamber with arguments: ")
     logger.debug("\tlig    = %s"%lig) 
     logger.debug("\tcharge = %d"%charge) 
@@ -145,6 +146,9 @@ def run_antechamber ( lig, charge, resnam = None):
     cmd = '%s -i %s -fi pdb -o %s.prepi -fo prepi -c bcc -nc %d %s -pf y' % ( ante_exe, name, out_name,  charge, resnamstr )
     _run_program ( 'antechamber', cmd )
     subprocess.call ( "rm sqm.in sqm.out sqm.pdb", shell = True )
+
+    logger.info("Created %s.prepi." % out_name)
+
     return "%s.prepi"%out_name
 
 def run_parmchk ( lig ):
@@ -161,7 +165,8 @@ def run_parmchk ( lig ):
     string
     	the filename of the created frcmod file
     """
-   
+    logger.info("Running parmchk. Please check the output carefully")
+
     logger.debug("Running run_parmchk with arguments: ")
     logger.debug("\tlig = %s"%lig) 
     logger.debug("This will generate an Amber frcmod file with additional parameters")
@@ -178,6 +183,7 @@ def run_parmchk ( lig ):
     out_name = os.path.splitext ( name )[0]
     cmd = '%s -i %s.prepi -f prepi -o %s.frcmod' % ( parm_exe, out_name, out_name )
     _run_program ( 'parmchk', cmd )
+    logger.info("Created frcmod-file: %s.frcmod" % out_name)
     return "%s.frcmod"%out_name
 
 def get_arg_parser ():
