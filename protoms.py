@@ -9,6 +9,7 @@
 Program to setup, run and analyse a ProtoMS simulation
 """
 
+from copy import deepcopy
 import os
 import numpy as np
 import sys
@@ -53,9 +54,9 @@ class Ligand(SystemComponent):
                     os.path.basename(self.pdb_file_path))
 
         # check for existing template file
-        template_file_path = _locate_file(self.name + '.tem',
-                                          settings.folders)
-        if template_file_path is None:
+        template_path = _locate_file(self.name + '.tem',
+                                     settings.folders)
+        if template_path is None:
             logger.info('Unable to find template file. Building. '
                         'Please check the output carefully.')
 
@@ -81,12 +82,10 @@ class Ligand(SystemComponent):
                                                 settings.folders)
 
             # now build the template, this will create a .zmat if necessary
-            self.template = tools.build_template(self.name + '.tem',
-                                                 prepi_file_path,
-                                                 zmatfile=zmat_file_path,
-                                                 frcmodfile=frcmod_file_path,
-                                                 resname=self.residue_name,
-                                                 gaffversion=settings.gaff)
+            self.template = tools.build_template(
+                self.name + '.tem', prepi_file_path, zmatfile=zmat_file_path,
+                frcmodfile=frcmod_file_path, resname=self.residue_name,
+                gaffversion=settings.gaff)
             self.template_file_path = self.name + '.tem'
             self.template.write(self.template_file_path)
 
@@ -95,9 +94,9 @@ class Ligand(SystemComponent):
                 self.template.templates[0].write_zmat(self.name + '.zmat')
         else:
             logger.info('Using existing template file, %s.' %
-                        template_file_path)
-            self.template_file_path = template_file_path
-            self.template_file = sim.TemplateFile(self.template_file_path)
+                        template_path)
+            self.template_path = template_path
+            self.template = sim.TemplateFile(self.template_path)
 
         water_box_path = _locate_file('%s_box.pdb' % self.name,
                                       settings.folders)
@@ -110,6 +109,16 @@ class Ligand(SystemComponent):
             self.water_box.write(water_box_path)
         else:
             self.water_box = sim.PDBFile(water_box_path)
+
+    @staticmethod
+    def createDummyLigand(ligand):
+        dummy_pdb = tools.make_dummy(ligand.pdb)
+        name = ligand.name + '_dummy.pdb'
+        dummy_pdb.write(name)
+        dummy = Ligand(name, 0)
+        dummy.template_file_path = sim.standard_filename("dummy.tem", "data")
+        dummy.template = sim.TemplateFile(dummy.template_file_path)
+        return dummy
 
 
 class Protein(SystemComponent):
@@ -277,7 +286,7 @@ def _locate_file(filename, folders):
     return None
 
 
-def _merge_templates(templates, tarlist):
+def _merge_templates(templates):
     """
     Merge template files
 
@@ -293,9 +302,9 @@ def _merge_templates(templates, tarlist):
     list of strings
       modify list of names
     """
-    for tem in templates:
-        # All of the original templates can safely be stored away
-        tarlist.append(tem)
+    # for tem in templates:
+    #     # All of the original templates can safely be stored away
+    #     tarlist.append(tem)
     temfile = tools.merge_templates(templates)
     if isinstance(temfile, sim.TemplateFile):
         allnames = "-".join(t.name.lower() for t in temfile.templates)
@@ -1072,6 +1081,35 @@ def _wizard(settings):
             args.ligand.append(instr)
 
 
+def prepare_single_topology(protein, ligands, args):
+    if args.absolute:
+        if len(ligands) > 1:
+            raise Exception(
+                "Too many ligands for absolute free energy calculation")
+
+        # start by building a single topology template that
+        # handles the charge annihilations
+        ligand = ligands[0]
+        template = ligand.template
+        uncharged_template = deepcopy(template)
+        for clj in uncharged_template.cljparams:
+            clj.params[2] = '0.00000'
+        # no actual changes in topology so correspondence map is trivial
+        cmap = {atom.name.upper(): atom.name.upper()
+                for atom in ligand.pdb.residues.values()[0].atoms}
+        charge_perturbation_template = tools._make_ele_tem(
+            template, uncharged_template, cmap)
+        charge_perturbation_template.write('%s_discharge.tem' % ligand.name)
+
+        # now build a 'dual topology' template that
+        # handles the vdw annihilations
+        dummy_ligand = Ligand.createDummyLigand(ligand)
+        vdw_perturbation_template = tools.merge_templates(
+            [uncharged_template.filename, dummy_ligand.template.filename])
+        vdw_perturbation_template.write('uncharged_%s-dummy.tem' % ligand.name)
+
+        
+
 def get_arg_parser():
     # Setup a parser of the command-line arguments
     parser = sim.MyArgumentParser(
@@ -1229,11 +1267,13 @@ if __name__ == "__main__":
         lig.prepare(args)
 
     # load and prepare all protein structures
+    protein = None
     if (args.protein or args.scoop) is not None:
         protein = Protein(args.protein or args.scoop, args.folders)
         protein.prepare(ligands, args)
 
-    
+    if args.simulation == "singletopology":
+        prepare_single_topology(protein, ligands, args)
 
 
     # # if provided load the gcmcbox structure
