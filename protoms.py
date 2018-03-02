@@ -28,6 +28,8 @@ class SystemComponent(object):
         self.pdb_file_path = _locate_file(pdb_file_name, folders)
         self.name = os.path.splitext(pdb_file_name)[0]
         self.pdb = sim.PDBFile(filename=self.pdb_file_path)
+        self.water = None
+        self.water_file_path = None
 
         # Cannot do anything without a pdb-file so raise an exception
         if self.pdb.name == "":
@@ -98,17 +100,17 @@ class Ligand(SystemComponent):
             self.template_path = template_path
             self.template = sim.TemplateFile(self.template_path)
 
-        water_box_path = _locate_file('%s_box.pdb' % self.name,
-                                      settings.folders)
-        if water_box_path is None:
-            self.water_box = tools.solvate(
+        self.water_file_path = _locate_file('%s_box.pdb' % self.name,
+                                            settings.folders)
+        if self.water_file_path is None:
+            self.water = tools.solvate(
                 settings.waterbox, ligand=self.pdb, protein=None,
                 geometry="box", padding=10.0, center="cent",
                 radius=30.0, namescheme="ProtoMS")
-            water_box_path = '%s_box.pdb' % self.name
-            self.water_box.write(water_box_path)
+            self.water_file_path = '%s_box.pdb' % self.name
+            self.water.write(self.water_file_path)
         else:
-            self.water_box = sim.PDBFile(water_box_path)
+            self.water = sim.PDBFile(self.water_file_path)
 
     @staticmethod
     def createDummyLigand(ligand):
@@ -165,9 +167,9 @@ class Protein(SystemComponent):
             self.pdb.write(self.pdb_file_path, renumber=True, solvents=False)
 
         water_file_name = settings.water + '.pdb'
-        water_path = _locate_file(water_file_name, settings.folders)
-        if water_path is not None:
-            self.water_pdb = sim.PDBFile(water_path)
+        self.water_file_path = _locate_file(water_file_name, settings.folders)
+        if self.water_file_path is not None:
+            self.water_pdb = sim.PDBFile(self.water_file_path)
         else:
             self.water_pdb = tools.solvate(
                 settings.waterbox, ligand=ligands[0].pdb if ligands else None,
@@ -175,6 +177,7 @@ class Protein(SystemComponent):
                 radius=settings.capradius, center='center',
                 namescheme='ProtoMS')
             self.water_pdb.write(water_file_name)
+            self.water_file_path = water_file_name
             logger.info("Created water cap-file: %s" % water_file_name)
 
 
@@ -1099,23 +1102,44 @@ def prepare_single_topology(protein, ligands, args):
                 for atom in ligand.pdb.residues.values()[0].atoms}
         charge_perturbation_template = tools._make_ele_tem(
             template, uncharged_template, cmap)
-        charge_perturbation_template.write('%s_discharge.tem' % ligand.name)
+        name = '%s_discharge.tem' % ligand.name
+        charge_perturbation_template.write(name)
+        charge_perturbation_template.filename = name
 
         # now build a 'dual topology' template that
         # handles the vdw annihilations
         dummy_ligand = Ligand.createDummyLigand(ligand)
         vdw_perturbation_template = tools.merge_templates(
             [uncharged_template.filename, dummy_ligand.template.filename])
-        vdw_perturbation_template.write('uncharged_%s-dummy.tem' % ligand.name)
+        name = 'uncharged_%s-dummy.tem' % ligand.name
+        vdw_perturbation_template.write(name)
+        vdw_perturbation_template.filename = name
 
-        
+    for rep in args.repeats:
+        command_files = tools.generate_input(
+            None if protein is None else protein.pdb_file_path,
+            [ligand.pdb_file_path, dummy_ligand.pdb_file_path],
+            [charge_perturbation_template.filename,
+             vdw_perturbation_template.filename],
+            None if protein is None else protein.water_file_path,
+            ligand.water_file_path,
+            args.ranseed,
+            args)
+        for key in command_files:
+            command_files[key].writeCommandFile(
+                '%s_%s%s.cmd' % (args.cmdfile, key, rep))
+
+
 
 def get_arg_parser():
     # Setup a parser of the command-line arguments
     parser = sim.MyArgumentParser(
         description="Program setup and run a ProtoMS simulations")
-    parser.add_argument('-s', '--simulation', choices=["none", "equilibration", "sampling", "dualtopology",
-                                                       "singletopology", "gcmc", "jaws1", "jaws2"], help="the kind of simulation to setup", default="none")
+    parser.add_argument(
+        '-s', '--simulation',
+        choices=["none", "equilibration", "sampling", "dualtopology",
+                 "singletopology", "gcmc", "jaws1", "jaws2"],
+        help="the kind of simulation to setup", default="none")
     parser.add_argument('-f', '--folders', nargs="+",
                         help="folders to search for files ", default=["."])
     parser.add_argument('-p', '--protein', help="the prefix of the protein")
@@ -1134,11 +1158,12 @@ def get_arg_parser():
     # General control variables
     cntrlgroup = parser.add_argument_group("General control variables")
     cntrlgroup.add_argument(
-        '--outfolder', help="the ProtoMS output folder", default="")
+        '--outfolder', help="the ProtoMS output folder", default="out")
     cntrlgroup.add_argument(
         '--atomnames', help="a file with atom name conversions")
-    cntrlgroup.add_argument('--watmodel', help="the name of the water model. Default = tip4p",
-                            choices=['tip3p', 'tip4p'], default='tip4p')
+    cntrlgroup.add_argument(
+        '--watmodel', help="the name of the water model. Default = tip4p",
+        choices=['tip3p', 'tip4p'], default='tip4p')
     cntrlgroup.add_argument(
         '--waterbox', help="a file with pre-equilibrated water molecules")
     cntrlgroup.add_argument(
@@ -1266,6 +1291,12 @@ if __name__ == "__main__":
     for lig in ligands:
         lig.prepare(args)
 
+    if args.repeats.isdigit():
+        nreps = int(args.repeats)
+        args.repeats = map(str, range(1, nreps + 1))
+    else:
+        args.repeats = [args.repeats.lower()]
+
     # load and prepare all protein structures
     protein = None
     if (args.protein or args.scoop) is not None:
@@ -1273,9 +1304,10 @@ if __name__ == "__main__":
         protein.prepare(ligands, args)
 
     if args.simulation == "singletopology":
-        prepare_single_topology(protein, ligands, args)
+        command_files = prepare_single_topology(protein, ligands, args)
 
-
+    
+    
     # # if provided load the gcmcbox structure
     # foci = tuple(ligands)
     # if args.gcmcbox is not None:
