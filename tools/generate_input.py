@@ -1108,7 +1108,7 @@ class Jaws2(ProteinLigandSimulation):
 
 
 def generate_input(protein, ligands, templates, protein_water, ligand_water,
-                   ranseed, settings):
+                   ranseed, settings, repeat=""):
     """
     Generates ProtoMS command files
 
@@ -1127,8 +1127,13 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
       the filename of a solvent pdb file for the protein
     ligand_water : string
       the filename of a solvent pdb file for the ligands
+    ranseed : integer
+      the random number seed to use in the command file
     settings : Namespace object (from argparse)
       additional settings
+    repeat : string, optional
+      suffix for output folder
+    
 
     Returns
     -------
@@ -1231,17 +1236,17 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
             if settings.absolute:
                 command_files['ele_free'] = SingleTopology(
                     protein=None, solutes=ligands[:1], templates=templates[:1],
-                    solvent=ligand_water, outfolder=outfolder + "ele_free",
+                    solvent=ligand_water, outfolder=outfolder + "ele_free" + repeat,
                     **cmd_kwargs)
                 command_files['vdw_free'] = DualTopology(
                     protein=None, solutes=ligands[:2], templates=templates[1:],
-                    solvent=ligand_water, outfolder=outfolder + "vdw_free",
+                    solvent=ligand_water, outfolder=outfolder + "vdw_free" + repeat,
                     **cmd_kwargs)
                 if protein is None:
                     command_files['ele_gas'] = SingleTopology(
                         protein=None, solutes=ligands[:1],
                         templates=templates[:1], solvent=None,
-                        outfolder=outfolder + "ele_gas", **cmd_kwargs)
+                        outfolder=outfolder + "ele_gas" + repeat, **cmd_kwargs)
                 else:
                     command_files['ele_bnd'] = SingleTopology(
                         protein=protein, solutes=ligands[:1],
@@ -1250,7 +1255,7 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
                     command_files['vdw_bnd'] = DualTopology(
                         protein=protein, solutes=ligands[:2],
                         templates=templates[1:], solvent=None,
-                        outfolder=outfolder + "vdw_bnd", **cmd_kwargs)
+                        outfolder=outfolder + "vdw_bnd" + repeat, **cmd_kwargs)
 
         # rest_solutes = []
         # if settings.simulation == 'dualtopology' and settings.absolute:

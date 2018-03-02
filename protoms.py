@@ -284,7 +284,7 @@ def _locate_file(filename, folders):
         for f in folders:
             test = os.path.join(f, t)
             if os.path.isfile(test):
-                return test
+                return os.path.abspath(test)
     # If we haven't found it up to now, give up and return None
     return None
 
@@ -1124,7 +1124,8 @@ def prepare_single_topology(protein, ligands, args):
             None if protein is None else protein.water_file_path,
             ligand.water_file_path,
             args.ranseed,
-            args)
+            args,
+            rep)
         for key in command_files:
             command_files[key].writeCommandFile(
                 '%s_%s%s.cmd' % (args.cmdfile, key, rep))
@@ -1158,7 +1159,7 @@ def get_arg_parser():
     # General control variables
     cntrlgroup = parser.add_argument_group("General control variables")
     cntrlgroup.add_argument(
-        '--outfolder', help="the ProtoMS output folder", default="out")
+        '--outfolder', help="the ProtoMS output folder", default="out_")
     cntrlgroup.add_argument(
         '--atomnames', help="a file with atom name conversions")
     cntrlgroup.add_argument(
