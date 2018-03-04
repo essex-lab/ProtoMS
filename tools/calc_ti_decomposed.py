@@ -118,7 +118,11 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
                 try:
                     decomp[term] -= decomp2[term]
                 except KeyError:
-                    decomp[term] = -decomp2[term]
+                    try:
+                        decomp[term] = -decomp2[term]
+                    except KeyError:
+                        # term is not in decomp2, no furthor action needed
+                        pass
                 if args.bound is not None:
                     decomp[term] = -decomp[term]
 
