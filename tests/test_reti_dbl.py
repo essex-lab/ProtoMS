@@ -16,6 +16,7 @@ class RetiDblSetupTest(framework.BaseTest):
     args = [
         "-s", "dualtopology",
         "-l", "ethane.pdb", "methanol.pdb",
+        "--charge", "0", "0",
         "--lambdas", "0.00", "0.33", "0.67", "1.00",
         "--nequil", "0",
         "--nprod", "10",
@@ -26,9 +27,9 @@ class RetiDblSetupTest(framework.BaseTest):
     ]
 
     output_files = [
-        "ethane_box.pdb",
         "eth-meo.tem",
-        "run_free.cmd"
+        "run_free.cmd",
+        "ethane_box.pdb"
     ]
 
 

@@ -18,17 +18,17 @@ class RetiSnglSetupTest(framework.BaseTest):
         "-s", "singletopology",
         "-l", "ethane.pdb", "methanol.pdb",
         "--lambdas", "0.00", "0.33", "0.67", "1.00",
+        "--charge", "0", "0",
         "--nequil", "0",
         "--nprod", "10",
         "--ranseed", "100000",
         "--dumpfreq", "1",
         "--cleanup",
         "--singlemap", "single_cmap.dat",
-        "--gaff", "gaff14"
+        "--gaff", "gaff14",
     ]
 
     output_files = [
-        "ethane_box.pdb",
         "ethtmeo_comb.tem",
         "ethtmeo_ele.tem",
         "ethtmeo_vdw.tem",
@@ -37,7 +37,8 @@ class RetiSnglSetupTest(framework.BaseTest):
         "run_ele_free.cmd",
         "run_ele_gas.cmd",
         "run_vdw_free.cmd",
-        "run_vdw_gas.cmd"
+        "run_vdw_gas.cmd",
+        "ethane_box.pdb",
     ]
 
 

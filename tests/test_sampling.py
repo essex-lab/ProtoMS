@@ -18,6 +18,7 @@ class SamplingSetupTest(framework.BaseTest):
         "-s", "sampling",
         "-l", "dcb.pdb",
         "-p", "protein.pdb",
+        "--charge", "0",
         "--nequil", "0",
         "--nprod", "100",
         "--ranseed", "100000",

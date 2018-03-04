@@ -88,6 +88,7 @@ class Ligand(SystemComponent):
                 self.name + '.tem', prepi_file_path, zmatfile=zmat_file_path,
                 frcmodfile=frcmod_file_path, resname=self.residue_name,
                 gaffversion=settings.gaff)
+
             self.template_file_path = self.name + '.tem'
             self.template.write(self.template_file_path)
 
@@ -97,8 +98,8 @@ class Ligand(SystemComponent):
         else:
             logger.info('Using existing template file, %s.' %
                         template_path)
-            self.template_path = template_path
-            self.template = sim.TemplateFile(self.template_path)
+            self.template_file_path = template_path
+            self.template = sim.TemplateFile(self.template_file_path)
 
         self.water_file_path = _locate_file('%s_box.pdb' % self.name,
                                             settings.folders)
@@ -1084,6 +1085,23 @@ def _wizard(settings):
             args.ligand.append(instr)
 
 
+def prepare_sampling(protein, ligands, args):
+    for rep in args.repeats:
+        print ligands[0], ligands[0].template.filename
+        command_files = tools.generate_input(
+            None if protein is None else protein.pdb_file_path,
+            [lig.pdb_file_path for lig in ligands],
+            [lig.template_file_path for lig in ligands],
+            None if protein is None else protein.water_file_path,
+            ligands[0].water_file_path,
+            args.ranseed,
+            args,
+            "{}{}_%s".format(args.outfolder, rep))
+        for key in command_files:
+            command_files[key].writeCommandFile(
+                '%s%s_%s.cmd' % (args.cmdfile, rep, key))
+
+
 def prepare_single_topology(protein, ligands, args):
     if args.absolute:
         if len(ligands) > 1:
@@ -1091,7 +1109,7 @@ def prepare_single_topology(protein, ligands, args):
                 "Too many ligands for absolute free energy calculation")
 
         # start by building a single topology template that
-        # handles the charge annihilations
+         # handles the charge annihilations
         ligand = ligands[0]
         template = ligand.template
         uncharged_template = deepcopy(template)
@@ -1115,22 +1133,76 @@ def prepare_single_topology(protein, ligands, args):
         vdw_perturbation_template.write(name)
         vdw_perturbation_template.filename = name
 
+        for rep in args.repeats:
+            command_files = tools.generate_input(
+                None if protein is None else protein.pdb_file_path,
+                [ligand.pdb_file_path, dummy_ligand.pdb_file_path],
+                [charge_perturbation_template.filename,
+                 vdw_perturbation_template.filename],
+                None if protein is None else protein.water_file_path,
+                ligand.water_file_path,
+                args.ranseed,
+                args,
+                "{}{}_%s".format(args.outfolder, rep))
+            for key in command_files:
+                command_files[key].writeCommandFile(
+                    '%s%s_%s.cmd' % (args.cmdfile, rep, key))
+    else:
+        templates, cmap = tools.make_single(
+            ligands[0].template, ligands[1].template, ligands[0].pdb,
+            ligands[1].pdb, mapfile=args.singlemap, gaffversion=args.gaff)
+        pert_name = "%st%s" % (ligands[0].template.templates[0].name.lower(),
+                               ligands[1].template.templates[0].name.lower())
+        for key in templates:
+            tem = templates[key]
+            tem.filename = "%s_%s.tem" % (pert_name, key)
+            tem.write(tem.filename)
+
+        for tem in templates:
+            for rep in args.repeats:
+                command_files = tools.generate_input(
+                    None if protein is None else protein.pdb_file_path,
+                    [ligands[0].pdb_file_path],
+                    [templates[tem].filename],
+                    None if protein is None else protein.water_file_path,
+                    ligands[0].water_file_path,
+                    args.ranseed,
+                    args,
+                    "{}{}_{}_%s".format(args.outfolder, rep, tem))
+                for key in command_files:
+                    command_files[key].writeCommandFile(
+                        '%s%s_%s_%s.cmd' % (args.cmdfile, rep, tem, key))
+
+
+def prepare_dual_topology(protein, ligands, args):
+    if args.absolute:
+        if len(ligands) > 1:
+            raise Exception(
+                "Too many ligands for absolute free energy calculation")
+        # now build a 'dual topology' template that
+        # handles the vdw annihilations
+        dummy_ligand = Ligand.createDummyLigand(ligands[0])
+        ligands.append(dummy_ligand)
+    template = tools.merge_templates(
+        [lig.template_file_path for lig in ligands])
+    name = '%s.tem' % '-'.join(
+        [lig.template.templates[0].name.lower() for lig in ligands])
+    template.write(name)
+    template.filename = name
+
     for rep in args.repeats:
         command_files = tools.generate_input(
             None if protein is None else protein.pdb_file_path,
-            [ligand.pdb_file_path, dummy_ligand.pdb_file_path],
-            [charge_perturbation_template.filename,
-             vdw_perturbation_template.filename],
+            [lig.pdb_file_path for lig in ligands],
+            [template.filename],
             None if protein is None else protein.water_file_path,
-            ligand.water_file_path,
+            ligands[0].water_file_path,
             args.ranseed,
             args,
-            rep)
+            "{}{}_%s".format(args.outfolder, rep))
         for key in command_files:
             command_files[key].writeCommandFile(
-                '%s_%s%s.cmd' % (args.cmdfile, key, rep))
-
-
+                '%s%s_%s.cmd' % (args.cmdfile, rep, key))
 
 def get_arg_parser():
     # Setup a parser of the command-line arguments
@@ -1159,7 +1231,7 @@ def get_arg_parser():
     # General control variables
     cntrlgroup = parser.add_argument_group("General control variables")
     cntrlgroup.add_argument(
-        '--outfolder', help="the ProtoMS output folder", default="out_")
+        '--outfolder', help="the ProtoMS output folder", default="out")
     cntrlgroup.add_argument(
         '--atomnames', help="a file with atom name conversions")
     cntrlgroup.add_argument(
@@ -1304,9 +1376,13 @@ if __name__ == "__main__":
         protein = Protein(args.protein or args.scoop, args.folders)
         protein.prepare(ligands, args)
 
-    if args.simulation == "singletopology":
+    if args.simulation == "sampling":
+        command_files = prepare_sampling(protein, ligands, args)
+    elif args.simulation == "singletopology":
         command_files = prepare_single_topology(protein, ligands, args)
-
+    elif args.simulation == "dualtopology":
+        command_files = prepare_dual_topology(protein, ligands, args)
+    
     
     
     # # if provided load the gcmcbox structure

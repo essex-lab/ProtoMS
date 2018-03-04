@@ -1108,7 +1108,7 @@ class Jaws2(ProteinLigandSimulation):
 
 
 def generate_input(protein, ligands, templates, protein_water, ligand_water,
-                   ranseed, settings, repeat=""):
+                   ranseed, settings, output_folder_format="out_%s"):
     """
     Generates ProtoMS command files
 
@@ -1131,7 +1131,7 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
       the random number seed to use in the command file
     settings : Namespace object (from argparse)
       additional settings
-    repeat : string, optional
+    output_folder_format : string, optional
       suffix for output folder
     
 
@@ -1165,50 +1165,47 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
     ranseed = settings.ranseed
     ProteinLigandSimulation.gaffversion = settings.gaff
 
-    if settings.simulation in "equilibration":
-
-        if protein is not None:  # Setup a protein simulation
-            command_files['bnd'] = Equilibration(
-                protein=protein, solutes=ligands, solvent=protein_water,
-                outfolder=settings.outfolder + "_bnd", nsteps=settings.nequil,
-                pdbfile="equil_bnd.pdb", ranseed=ranseed)
-        elif ligands is not None:
+    if settings.simulation == 'sampling':
+        if protein is None:
             if settings.dovacuum:
                 solvent = None
-                prestr = "gas"
+                phase = 'gas'
             else:
                 solvent = ligand_water
-                prestr = "free"
+                phase = 'free'
+        else:
+            solvent = protein_water
+            phase = 'bnd'
 
-            command_files[prestr] = Equilibration(
-                protein=None, solutes=ligands[:2],  # [:min(len(ligands), 2)],
-                templates=templates, solvent=solvent,
-                outfolder=settings.outfolder + "_" + prestr,
-                nsteps=settings.nequil, pdbfile="equil_%s.pdb" % prestr,
-                ranseed=ranseed)
+        command_files[phase] = Sampling(
+            protein=protein, solutes=ligands,
+            templates=templates, solvent=solvent,
+            outfolder=output_folder_format % phase,
+            nequil=settings.nequil, nprod=settings.nprod,
+            dumpfreq=settings.dumpfreq, ranseed=ranseed,
+            tune=settings.tune)
 
-    elif settings.simulation == "sampling":
-        if protein is not None:  # Setup a protein simulation
-            command_files['bnd'] = Sampling(
-                protein=protein, solutes=ligands, templates=templates,
-                solvent=protein_water, outprefix="bnd_",
-                nequil=settings.nequil, outfolder=settings.outfolder + "_bnd",
-                nprod=settings.nprod, dumpfreq=settings.dumpfreq,
-                ranseed=ranseed, tune=settings.tune)
-        elif ligands is not None:
-            if settings.dovacuum:
-                solvent = None
-                prestr = "gas"
-            else:
-                solvent = ligand_water
-                prestr = "free"
+        # if protein is not None:  # Setup a protein simulation
+        #     command_files['bnd'] = Sampling(
+        #         protein=protein, solutes=ligands, templates=templates,
+        #         solvent=protein_water, outprefix="bnd_",
+        #         nequil=settings.nequil, outfolder=settings.outfolder + "_bnd",s
+        #         nprod=settings.nprod, dumpfreq=settings.dumpfreq,
+        #         ranseed=ranseed, tune=settings.tune)
+        # elif ligands is not None:
+        #     if settings.dovacuum:
+        #         solvent = None
+        #         prestr = "gas"
+        #     else:
+        #         solvent = ligand_water
+        #         prestr = "free"
 
-            command_files[prestr] = Sampling(
-                protein=None, solutes=ligands[:2], templates=templates,
-                solvent=solvent, outprefix=prestr + "_", nequil=settings.nequil,
-                outfolder=settings.outfolder + "_" + prestr,
-                nprod=settings.nprod, dumpfreq=settings.dumpfreq,
-                ranseed=ranseed, tune=settings.tune)
+        #     command_files[prestr] = Sampling(
+        #         protein=None, solutes=ligands[:2], templates=templates,
+        #         solvent=solvent, outprefix=prestr + "_", nequil=settings.nequil,
+        #         outfolder=settings.outfolder + "_" + prestr,
+        #         nprod=settings.nprod, dumpfreq=settings.dumpfreq,
+        #         ranseed=ranseed, tune=settings.tune)
 
     elif settings.simulation in ["dualtopology", "singletopology"]:
 
@@ -1236,26 +1233,67 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
             if settings.absolute:
                 command_files['ele_free'] = SingleTopology(
                     protein=None, solutes=ligands[:1], templates=templates[:1],
-                    solvent=ligand_water, outfolder=outfolder + "ele_free" + repeat,
+                    solvent=ligand_water,
+                    outfolder=output_folder_format % 'ele_free',
                     **cmd_kwargs)
                 command_files['vdw_free'] = DualTopology(
                     protein=None, solutes=ligands[:2], templates=templates[1:],
-                    solvent=ligand_water, outfolder=outfolder + "vdw_free" + repeat,
+                    solvent=ligand_water,
+                    outfolder=output_folder_format % 'vdw_free',
                     **cmd_kwargs)
                 if protein is None:
                     command_files['ele_gas'] = SingleTopology(
                         protein=None, solutes=ligands[:1],
                         templates=templates[:1], solvent=None,
-                        outfolder=outfolder + "ele_gas" + repeat, **cmd_kwargs)
+                        outfolder=output_folder_format % 'ele_gas',
+                        **cmd_kwargs)
                 else:
                     command_files['ele_bnd'] = SingleTopology(
                         protein=protein, solutes=ligands[:1],
                         templates=templates[:1], solvent=protein_water,
-                        outfolder=outfolder + "ele_bnd", **cmd_kwargs)
+                        outfolder=output_folder_format % 'ele_bnd',
+                        **cmd_kwargs)
                     command_files['vdw_bnd'] = DualTopology(
                         protein=protein, solutes=ligands[:2],
                         templates=templates[1:], solvent=None,
-                        outfolder=outfolder + "vdw_bnd" + repeat, **cmd_kwargs)
+                        outfolder=output_folder_format % 'vdw_bnd',
+                        **cmd_kwargs)
+            else:
+                cmd_kwargs.update({'solutes': ligands,
+                                   'templates': templates})
+                command_files['free'] = SingleTopology(
+                    protein=None, solvent=ligand_water,
+                    outfolder=output_folder_format % 'free',
+                    **cmd_kwargs)
+                if protein is None:
+                    command_files['gas'] = SingleTopology(
+                        protein=None, solvent=None,
+                        outfolder=output_folder_format % 'gas',
+                        **cmd_kwargs)
+                else:
+                    command_files['bnd'] = SingleTopology(
+                        protein=None, solvent=None,
+                        outfolder=output_folder_format % 'bnd',
+                        **cmd_kwargs)
+        elif settings.simulation == 'dualtopology':
+            command_files['free'] = DualTopology(
+                protein=None, solutes=ligands[:2], templates=templates,
+                solvent=ligand_water,
+                outfolder=output_folder_format % 'free',
+                **cmd_kwargs)
+            if protein is not None:
+                command_files['bnd'] = DualTopology(
+                    protein=protein, solvent=protein_water,
+                    outfolder=output_folder_format % 'bnd',
+                    **cmd_kwargs)
+
+            if settings.absolute and protein is not None:
+                cmd_kwargs.pop('lambdaval')
+                command_files['restr'] = RestraintRelease(
+                    protein=protein, solutes=ligands[:1], templates=templates,
+                    solvent=protein_water, lambdaval=(0., 0.333, 0.667, 1.),
+                    outfolder=output_folder_format % "bnd_rstr",
+                    restrained=[0], **cmd_kwargs)
 
         # rest_solutes = []
         # if settings.simulation == 'dualtopology' and settings.absolute:

@@ -1721,7 +1721,7 @@ class MolTemplate :
       for atom in self.atoms :
         f.write("%s\n"%atom.zmat())
 
-class TemplateFile() :
+class TemplateFile(object):
   """ 
   Class to hold a ProtoMS template file
 
@@ -1760,7 +1760,7 @@ class TemplateFile() :
     if filename is not None : self.read(filename)
 
   def __str__(self) :
-   return self.filename
+   return "<TemplateFile - %s>" % self.filename
 
   def append(self,other) :
     """
