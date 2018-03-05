@@ -13,7 +13,7 @@ from copy import deepcopy
 import os
 import numpy as np
 import sys
-import subprocess
+# import subprocess
 import time
 
 import tools
@@ -1115,6 +1115,9 @@ def prepare_single_topology(protein, ligands, args):
         uncharged_template = deepcopy(template)
         for clj in uncharged_template.cljparams:
             clj.params[2] = '0.00000'
+        uncharged_template.filename = 'uncharged_%s.tem' % ligand.name
+        uncharged_template.write(uncharged_template.filename)
+
         # no actual changes in topology so correspondence map is trivial
         cmap = {atom.name.upper(): atom.name.upper()
                 for atom in ligand.pdb.residues.values()[0].atoms}
