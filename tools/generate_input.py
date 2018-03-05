@@ -1258,6 +1258,14 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
                         templates=templates[1:], solvent=None,
                         outfolder=output_folder_format % 'vdw_bnd',
                         **cmd_kwargs)
+                    cmd_kwargs.pop('lambdaval')
+                    command_files['restr'] = RestraintRelease(
+                        protein=protein, solutes=ligands[:1],
+                        templates=templates[1:],
+                        solvent=protein_water,
+                        lambdaval=(0., 0.333, 0.667, 1.),
+                        outfolder=output_folder_format % "bnd_rstr",
+                        restrained=[0], **cmd_kwargs)
             else:
                 cmd_kwargs.update({'solutes': ligands,
                                    'templates': templates})
@@ -1327,10 +1335,10 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
 
     elif settings.simulation == "gcmc":
 
-        if hasattr(settings, "outfolder") and settings.outfolder != "":
-            outfolder = settings.outfolder
-        else:
-            outfolder = "out_gcmc"
+        # if hasattr(settings, "outfolder") and settings.outfolder != "":
+        #     outfolder = settings.outfolder
+        # else:
+        #     outfolder = "out_gcmc"
 
         if settings.adamsrange is not None:
             if len(settings.adamsrange) not in (2, 3):
@@ -1355,7 +1363,7 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
             solvent=protein_water, gcmcwater=settings.gcmcwater,
             adamval=settings.adams, nequil=settings.nequil,
             gcmcbox=settings.gcmcbox, nprod=settings.nprod,
-            dumpfreq=settings.dumpfreq, outfolder=outfolder,
+            dumpfreq=settings.dumpfreq, outfolder=output_folder_format % 'gcmc',
             ranseed=ranseed, watmodel=settings.watmodel)
 
     elif settings.simulation == "jaws1":

@@ -1204,6 +1204,7 @@ def prepare_dual_topology(protein, ligands, args):
             command_files[key].writeCommandFile(
                 '%s%s_%s.cmd' % (args.cmdfile, rep, key))
 
+
 def get_arg_parser():
     # Setup a parser of the command-line arguments
     parser = sim.MyArgumentParser(
