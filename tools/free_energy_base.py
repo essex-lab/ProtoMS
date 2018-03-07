@@ -387,7 +387,7 @@ class MBAR(TI):
         beta = 1./(sim.boltz*temp)
         mbar = pymbar.MBAR(np.array(self.data)*beta,
                            [len(dat[0]) for dat in self.data])
-        FEs = mbar.getFreeEnergyDifferences()[0]/beta
+        FEs = mbar.getFreeEnergyDifferences(compute_uncertainty=False)[0]/beta
         return PMF(self.lambdas,
                    [FEs[0, i] for i in xrange(len(self.data))])
 
