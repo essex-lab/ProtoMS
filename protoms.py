@@ -1109,7 +1109,7 @@ def prepare_single_topology(protein, ligands, args):
                 "Too many ligands for absolute free energy calculation")
 
         # start by building a single topology template that
-         # handles the charge annihilations
+        # handles the charge annihilations
         ligand = ligands[0]
         template = ligand.template
         uncharged_template = deepcopy(template)
@@ -1146,7 +1146,7 @@ def prepare_single_topology(protein, ligands, args):
                 ligand.water_file_path,
                 args.ranseed,
                 args,
-                "{}{}_%s".format(args.outfolder, rep))
+                "{}_%s{}".format(args.outfolder, rep))
             for key in command_files:
                 command_files[key].writeCommandFile(
                     '%s%s_%s.cmd' % (args.cmdfile, rep, key))
@@ -1171,7 +1171,7 @@ def prepare_single_topology(protein, ligands, args):
                     ligands[0].water_file_path,
                     args.ranseed,
                     args,
-                    "{}{}_{}_%s".format(args.outfolder, rep, tem))
+                    "{}_{}_%s{}".format(args.outfolder, tem, rep))
                 for key in command_files:
                     command_files[key].writeCommandFile(
                         '%s%s_%s_%s.cmd' % (args.cmdfile, rep, tem, key))
@@ -1202,7 +1202,7 @@ def prepare_dual_topology(protein, ligands, args):
             ligands[0].water_file_path,
             args.ranseed,
             args,
-            "{}{}_%s".format(args.outfolder, rep))
+            "{}_%s{}".format(args.outfolder, rep))
         for key in command_files:
             command_files[key].writeCommandFile(
                 '%s%s_%s.cmd' % (args.cmdfile, rep, key))
