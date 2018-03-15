@@ -11,6 +11,8 @@ pipelines:
         caches:
           - pip
         script: # Modify the commands below to build your repository.
+          - apt-get update
+          - apt-get install -y cmake
           - pip install numpy six
           - pip install -r requirements.txt
           - mkdir build
