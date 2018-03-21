@@ -3,6 +3,7 @@ import numpy as np
 import os
 import free_energy_base as feb
 from table import Table
+from calc_multistate import GCMCMBAR
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
@@ -154,12 +155,21 @@ def get_arg_parser():
              "proportions of the total data set provided. Data used will "
              "range from 100%% of the dataset up to the proportion "
              "provided to this argument")
+    parser.add_argument(
+        '--estimators', nargs='+', default=['ti', 'mbar', 'bar'],
+        choices=['ti', 'mbar', 'bar', 'gcap'],
+        help="Choose estimators")
     return parser
+
+
+class_map = {'ti': feb.TI, 'mbar': feb.MBAR, 'bar': feb.BAR, 'gcap': GCMCMBAR}
 
 
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
-    calc = FreeEnergyCalculation(root_paths=args.directories,
-                                 temperature=args.temperature,
-                                 subdir=args.subdir)
+    calc = FreeEnergyCalculation(
+        root_paths=args.directories,
+        temperature=args.temperature,
+        subdir=args.subdir,
+        estimators=map(class_map.get, args.estimators))
     calc.run(args)

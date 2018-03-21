@@ -45,7 +45,8 @@ class Series(object):
         if list(self.coordinate) != list(other.coordinate):
             raise ValueError(
                 'Cannot add PMF instances with different coordinate values')
-        new_pmf = PMF(self.coordinate)
+        # new_pmf = PMF(self.coordinate)
+        new_pmf = copy(self)
         new_pmf.values = [s + o for s, o in zip(self.values, other.values)]
         return new_pmf
 
@@ -99,7 +100,7 @@ class PMF(Series):
 
 class BaseResult(object):
     """A base class for Result objects."""
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         """Parameters
         ----------
         *args : an arbitrary number of lists of PMF objects
@@ -110,15 +111,21 @@ class BaseResult(object):
         if len({tuple(pmf.coordinate)
                 for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
+        try:
+            self.pmf_class = kwargs['pmf_class']
+        except KeyError:
+            self.pmf_class = PMF
 
     def __add__(self, other):
-        return self.__class__(*(self.data + other.data))
+        return self.__class__(*(self.data + other.data),
+                              pmf_class=self.pmf_class)
 
     def __sub__(self, other):
         return self + -other
 
     def __neg__(self):
-        return self.__class__(*[[-pmf for pmf in dat] for dat in self.data])
+        return self.__class__(*[[-pmf for pmf in dat] for dat in self.data],
+                              pmf_class=self.pmf_class)
 
 
 class Result(BaseResult):
@@ -144,7 +151,7 @@ class Result(BaseResult):
     @property
     def pmf(self):
         """The potential of mean force for this result"""
-        pmfs = [PMF(self.lambdas, *dat) for dat in self.data]
+        pmfs = [self.pmf_class(self.lambdas, *dat) for dat in self.data]
         return reduce(add, pmfs)
 
 
@@ -214,8 +221,11 @@ class Quantity(object):
 class Estimator(object):
     """Base class for free energy estimators."""
     results_name = 'results'
+    subdir_glob = './'
+    pmf_class = PMF
+    result_class = Result
 
-    def __init__(self, lambdas):
+    def __init__(self, lambdas, **kwargs):
         """Parameters
         ----------
         lambdas: list of numbers
@@ -235,7 +245,7 @@ class Estimator(object):
         """
         pass
 
-    def calculate(self, temp=300):
+    def calculate(self, temp=300.):
         """Calculate the free energy difference and return a PMF object.
 
         Parameters
@@ -249,7 +259,8 @@ class Estimator(object):
         """Return a new class instance with series[val] applied to each
         individual data series.
         """
-        new_est = self.__class__(self.lambdas)
+        new_est = copy(self)
+        new_est.data = []
         # add data series to the new estimator that have been sliced by val
         # want to always apply slice to last dimension, so transpose array
         # apply slice to first dimension and then transpose back
@@ -308,7 +319,7 @@ class TI(Estimator):
                          (series.lamf[0]-series.lamb[0]))
         return len(self.data[-1])
 
-    def calculate(self, temp=300):
+    def calculate(self, temp=300.):
         """Calculate the free energy difference and return a PMF object.
 
         Parameters
@@ -342,7 +353,7 @@ class BAR(Estimator):
                       series.feenergies[lam] - series.feenergies[lamf]]))
         return len(self.data[-1][0])
 
-    def calculate(self, temp=300):
+    def calculate(self, temp=300.):
         """Calculate the free energy difference and return a PMF object.
 
         Parameters
@@ -376,7 +387,7 @@ class MBAR(TI):
                                    for lam in sorted(series.feenergies)]))
         return len(self.data[-1][0])
 
-    def calculate(self, temp=300):
+    def calculate(self, temp=300.):
         """Calculate the free energy difference and return a PMF object.
 
         Parameters
@@ -399,7 +410,7 @@ class FreeEnergyCalculation(object):
 
     def __init__(self, root_paths, temperature,
                  estimators=[TI, BAR, MBAR], subdir='',
-                 extract_data=True):
+                 extract_data=True, volume=30.):
         """Parameters
         ----------
         root_paths: a list of lists of strings
@@ -436,7 +447,7 @@ class FreeEnergyCalculation(object):
                 self.lambdas[-1].append(map(self._get_lambda, paths))
 
         self.estimators = {
-            estimator: [[estimator(l) for l in lams]
+            estimator: [[estimator(l, volume=volume) for l in lams]
                         for lams in self.lambdas]
             for estimator in estimators}
         if extract_data:
@@ -461,16 +472,30 @@ class FreeEnergyCalculation(object):
             min_len = 10E20
             for j, repeat in enumerate(leg):
                 for path in repeat:
-                    result_names = set(self.estimators[cls][i][j].results_name
-                                       for cls in self.estimator_classes)
-                    for fname in result_names:
+                    # get the names of required data files
+                    # for each estimator class
+                    result_names = {
+                        cls: glob(os.path.join(
+                            path,
+                            cls.subdir_glob,
+                            self.estimators[cls][i][j].results_name))
+                        for cls in self.estimator_classes}
+                    # get the unique list of file names so that we only
+                    # open each one once for efficiency
+                    result_names_uniq = set(v for val in result_names.values()
+                                            for v in val)
+                    for fname in sorted(result_names_uniq):
                         rf = sim.ResultsFile()
-                        rf.read(os.path.join(path, fname))
+                        rf.read(fname)
                         rf.make_series()
                         for est in self.estimators.values():
-                            if est[i][j].results_name == fname:
-                                data_len = est[i][j].add_data(rf.series)
-                                min_len = data_len if data_len < min_len else min_len
+                            inst = est[i][j]
+                            # only add data from a results file if it is in
+                            # list for the associated class
+                            if fname in result_names[inst.__class__]:
+                                data_len = inst.add_data(rf.series)
+                                min_len = data_len \
+                                    if data_len < min_len else min_len
 
                 # in cases where calculations terminate prematurely there
                 # can be slight differences in the length of data series
@@ -489,9 +514,9 @@ class FreeEnergyCalculation(object):
         """
         results = {}
         for est, legs in self.estimators.items():
-            leg_result = Result()
+            leg_result = est.result_class()
             for i, leg in enumerate(legs):
-                leg_result += Result(
+                leg_result += est.result_class(
                     [rep.subset(*subset).calculate(self.temperature)
                      for rep in leg])
             results[est] = leg_result

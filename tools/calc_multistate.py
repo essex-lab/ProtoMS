@@ -1,25 +1,252 @@
 # Author: Chris Cave-Ayland
 
+from collections import defaultdict
+from functools import partial
 import glob
-import os
-import logging
-
 import matplotlib
 import matplotlib.pyplot as pl
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
-
-import simulationobjects
+from operator import add
+import os
 import pymbar
+
+import simulationobjects as sim
+import free_energy_base as feb
+import calc_ti_decomposed
+import calc_gci2
+
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 
-logger = logging.getLogger('protoms')
+# logger = logging.getLogger('protoms')
 thermal_wavelength = 1.00778365325  # of water, in angstroms
 kB = 0.0019872  # Boltzmann's constant, in kcal.mol^-1.K^-1
 standard_volume = 30.  # Standard volume of a water in bulk water
 tip4p_excess = -6.2  # Excess chemical potential of tip4p in bulk tip4p
+
+
+# class SolventsOn(calc_gci2):
+#     results_name = 'results_inst'
+
+class PMF2D(feb.Series):
+    def __init__(self, lambdas, Bs, volume, temperature, *args):
+        self.coordinate = lambdas
+        self.coordinate2 = Bs
+        self.volume = volume
+        self.temperature = temperature
+        self.values = []
+        for dat in zip(*args):
+            # self.values.append(
+            #     [feb.Quantity.fromData(d) for d in zip(*dat)])
+            self.values.append(feb.PMF(self.coordinate2, *dat))
+        # raise Exception()
+
+    def equilibrium_B(self):
+        """Get the value of B equating to equilibrium with bulk water."""
+        beta = 1 / (self.temperature * kB)
+        return beta * tip4p_excess + np.log(self.volume / standard_volume)
+
+    @property
+    def dG(self):
+        eqb_B = self.equilibrium_B()
+        closest = np.argmin([abs(B - eqb_B) for B in self.coordinate2])
+        return self.values[-1].values[closest] - self.values[0].values[closest]
+
+    def plot(self, axes, show_error=True,  **kwargs):
+        fig = pl.figure()
+        ax = Axes3D(fig)
+        lambdas, Bs = np.meshgrid(self.coordinate2, self.coordinate)
+        values = np.array([[col.value for col in row] for row in self.values])
+        ax.plot_surface(lambdas, Bs, values, cstride=1, rstride=1)
+        return ax
+
+    # def __add__(self, other):
+        
+
+# def plot_surface(lambdas, Bs, Z):
+#     fig = pl.figure()
+#     ax = Axes3D(fig)
+#     lambdas, Bs = np.meshgrid(Bs, lambdas)
+
+#     ax.plot_surface(lambdas, Bs, Z,
+#                     cstride=1, rstride=1)
+#     return fig
+        
+
+class Result2D(feb.Result):
+    @property
+    def pmf(self):
+        pmfs = [PMF2D(self.lambdas, dat[0].coordinate2,
+                      dat[0].volume, dat[0].temperature, *dat)
+                for dat in self.data]
+        return reduce(add, pmfs)
+
+
+class GCMCMBAR(feb.MBAR):
+    results_name = 'results_inst'
+    subdir_glob = 'b_*/'
+    pmf_class = PMF2D
+    result_class = Result2D
+
+    def __init__(self, lambdas, volume=30.):
+        self.lambdas = lambdas
+        self.volume = volume
+        self.data = []
+        self._data_lambdas = []
+        self._data_Bs = []
+
+    def add_data(self, series):
+        dat = np.array([series.feenergies[lam]
+                        for lam in sorted(series.feenergies)])
+        N = dat.shape[-1]
+        # add solventson data as the final row
+        # not an ideal solution but saves the need to rewrite
+        # __getitem__
+        dat = np.append(dat, series.solventson.reshape((1, N)), axis=0)
+        self.data.append(dat)
+        self._data_lambdas.append(series.lam[0])
+        self._data_Bs.append(series.bvalue)
+        return N
+
+    def B_to_chemical_potential(self, B, temperature):
+        """Convert a B value to the equivalent chemical potential"""
+        beta = 1 / (temperature * kB)
+        return (B-np.log(self.volume/thermal_wavelength**3)) / beta
+
+    # def calculate(self, subset=(0., 1., 1)):
+    #     return feb.PMF(self.lambdas)
+
+    def calculate(self, temp=300.):
+        # for ilam, lam in enumerate(self.lambdas):
+        #     for B in self.Bs:
+
+        N = self.data[0].shape[-1]
+        N_sims = len(self.data)
+        N_Bs = len(self.Bs)
+        N_lams = len(self.lambdas)
+        # mus = [self.B_to_chemical_potential(B, self.temperature)
+        #        for B in self.Bs]
+        beta = 1 / (sim.boltz * temp)
+
+        u_kn = np.zeros(shape=(N_sims, N*N_sims))
+        ns = np.zeros(N*N_sims)
+        for dat, B_sim, lam_sim in zip(
+                self.data, self._data_Bs, self._data_lambdas):
+            # due to globbing simulation data will not have been
+            # read in a logical order, need the below indices to
+            # determine the proper position for each set of data
+            i_B = self.Bs.index(B_sim)
+            i_lam = self.lambdas.index(lam_sim)
+            ns = dat[-1]  # water occupancy  data
+            es = dat[:-1]  # simulation energies
+            for i in xrange(N_lams):
+                for j, B in enumerate(self.Bs):
+                    mu = self.B_to_chemical_potential(B, temp)
+                    u_kn[i*N_Bs+j, (i_lam*N_Bs+i_B)*N: (i_lam*N_Bs+i_B+1)*N] =\
+                        beta*(es[i] + ns * mu)
+        samples = np.array([N] * N_sims)
+        mbar = pymbar.MBAR(u_kn, samples)
+        free_energies = mbar.getFreeEnergyDifferences(
+            compute_uncertainty=False, return_theta=False)[0] / beta
+
+        return PMF2D(self.lambdas, self.Bs[::-1], self.volume, temp,
+                     free_energies[0].reshape([N_lams, N_Bs]))
+
+        # # this array will be used to sort data into ascending
+        # # B value later
+        # arg_sort = np.argsort(self._data_Bs[:len(self.lambdas)])
+        # for i in xrange(len(self.data)):
+        # for dat, B_sim, lam_sim in zip(
+        #         self.data, self._data_Bs, self._data_lambdas):
+        #     ns = self.data[i][-1]
+        #     es = self.data[i][:-1].reshape((N * N_lams,))
+        #     i_B = self.Bs.index[B_sim]
+        #     i_lam = self.lambdas.index[lam_sim]
+        #     for i, B in enumerate(self.Bs):
+        #         mu = self.B_to_chemical_potential(B, self.temperature)
+        #         u_kn[i_lam*N_lam + i_B, i*N_sims: (i+1) * N_sims] = \
+        #             beta*(es)
+                
+                
+
+            
+        
+        # for i in xrange(len(self.data)):
+        #     energies = self.estimators[B].data[ilam]
+        #     energies = self.data[i][:-1]
+        #     solventson = self.data[i][-1]
+        #     state_reduced_energies = np.zeros(
+        #         (len(self.lambdas) * len(self.Bs), energies.shape[-1]))
+        #     samples.append(energies.shape[-1])
+        #     count = 0
+        #     for j, (lam, B) in enumerate(zip(self._data_lambdas,
+        #                                      self._data_Bs)):
+        #         # for ilam, lam in enumerate(self.lambdas):
+        #         # for B in self.Bs:
+        #         ilam = self.lambdas.index(lam)
+        #         chem_pot = self.B_to_chemical_potential(B, temp)
+        #         state_reduced_energies[j] = \
+        #             1 / (kB * temp) * (energies[ilam] + chem_pot *
+        #                                solventson)
+        #         if count == 0 and i == 0:
+        #             print energies[:10]
+        #         count += 1
+        #     reduced_energies.append(state_reduced_energies)
+
+        # reduced_energies = np.array(reduced_energies)
+        # reduced_energies.dump('new.pkl')
+        # mbar = pymbar.MBAR(reduced_energies, np.array(samples))
+        # free_energies = mbar.getFreeEnergyDifferences(
+        #     compute_uncertainty=False, return_theta=False)[0] * kB * temp
+        # return PMF2D(self.lambdas, self.Bs, self.volume, temp,
+        #     free_energies[0].reshape((len(self.lambdas), len(self.Bs))))
+
+    @property
+    def Bs(self):
+        return sorted(set(self._data_Bs))
+
+
+# class GCMCLambdaCalculation(feb.FreeEnergyCalculation):
+#     def __init__(self, root_paths, temperature, volume):
+#         feb.FreeEnergyCalculation.__init__(self, root_paths,
+#                                            temperature,
+#                                            estimators=[GCMCMBAR,
+#                                                        SolventsOn],
+#                                            extract_data=True)
+#         self.volume = volume
+
+#     def _extract_series(self, paths):
+#         """For each entry of paths (list of strings) open the contained
+#         results file and extract the data series and supply these
+#         to each estimator instance."""
+#         for i, leg in enumerate(paths):
+#             min_len = 10E20
+#             for j, repeat in enumerate(leg):
+#                 for path in repeat:
+#                     for b_value in glob.glob("%s/b_*" % path):
+#                         result_names = set(
+#                             self.estimators[cls][i][j].results_name
+#                             for cls in self.estimator_classes)
+#                         for fname in result_names:
+#                             rf = sim.ResultsFile()
+#                             rf.read(os.path.join(b_value, fname))
+#                             rf.make_series()
+#                             for est in self.estimators.values():
+#                                 if est[i][j].results_name == fname:
+#                                     data_len = est[i][j].add_data(rf.series)
+#                                     min_len = data_len if data_len < min_len else min_len
+
+#                 # in cases where calculations terminate prematurely there
+#                 # can be slight differences in the length of data series
+#                 # within a repeat. Here we standardise the length for
+#                 # later convenience
+#                 for est in self.estimators.values():
+#                     est[i][j] = est[i][j][:min_len]
+
+    # def calculate(self, subset=(0., 1., 1)):
+
 
 
 class GCMC_MBAR(object):
@@ -68,8 +295,7 @@ class GCMC_MBAR(object):
           reduced potential energy evaluated at all states
         """
 
-        # List all results files and sort them
-        results_file = simulationobjects.ResultsFile()
+        results_file = sim.ResultsFile()
         results_file.read(filename=os.path.join(path, self.file_name),
                           skip=self.skip, readmax=self.max_read)
         results_file.make_series()
@@ -121,6 +347,7 @@ class GCMC_MBAR(object):
                     gcfldr, lambdas, Bs))
 
         reduced_energies = np.array(reduced_energies)
+        reduced_energies.dump('old.pkl')
         return lambdas, Bs, reduced_energies
 
     def B_to_chemical_potential(self, B):
@@ -174,6 +401,24 @@ def get_arg_parser():
     parser.add_argument('-v','--volume', type=float, help="volume of the GCMC insertion region", required=True)
     return parser
 
+# def get_arg_parser():
+#     # parser = feb.FEArgumentParser(
+#     #     description="Calcutate MBAR stuff", parents=[feb.get_arg_parser()])
+#     # return parser
+#     parser = feb.FEArgumentParser(
+#         description="Calculate water binding free energies using Grand "
+#                     "Canonical Integration.",
+#         parents=[feb.get_arg_parser()], conflict_handler='resolve')
+#     # parser.add_argument(
+#     #     '-d', '--directories', nargs='+', required=True,
+#     #     help="Location of folders containing ProtoMS output subdirectories. "
+#     #          "Multiple directories can be supplied to this flag and indicate "
+#     #          "repeats of the same calculation.")
+#     parser.add_argument(
+#         '-v', '--volume', required=True, type=float,
+#         help="Volume of the calculations GCMC region.")
+#     return parser
+
 
 def plot_surface(lambdas, Bs, Z):
     fig = pl.figure()
@@ -210,3 +455,12 @@ if __name__ == '__main__':
         fig = plot_surface(lambdas, Bs, free_energies)
         fig.savefig('free_energy_surface.png')
         pl.show()
+
+# if __name__ == '__main__':
+#     args = get_arg_parser().parse_args()
+
+#     calc = GCMCLambdaCalculation(root_paths=args.directories,
+#                                  temperature=args.temperature,
+#                                  volume=args.volume)
+#     result = calc.calculate()
+#     # calc.run(args)

@@ -50,7 +50,7 @@ class GCIResult(feb.BaseResult):
 
 
 class GCI(feb.Estimator):
-    def __init__(self, B_values):
+    def __init__(self, B_values, **kwargs):
         self.B_values = B_values
         self.data = []
 
