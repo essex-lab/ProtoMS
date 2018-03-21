@@ -28,6 +28,7 @@ from scipy import optimize
 import simulationobjects
 import calc_gci
 import calc_ti
+import pickle
 
 logger = logging.getLogger('protoms')
 def _parse_folder(path,res_tem,skip,maxread,numkind,useanalytical) :
@@ -192,7 +193,9 @@ def _calc_gradmatrix(path,res_tem,skip,maxread,verbose,numkind,useanalytical,plo
         pl.ylabel('gradient')
       else:
         ax = Axes3D(fig)
-        ax.plot_wireframe(adamsmat, lambmat, gradmat, rstride = 1, cstride = 1)
+        ax.plot_wireframe(adamsmat, lambmat, watmat, rstride = 1, cstride = 1)
+#        with open(str(args.directory)+'.pi','w') as f:
+#          pickle.dump(f,
         pl.xlabel('Adams Value')
         pl.ylabel('$\lambda$')
 
@@ -266,7 +269,7 @@ def _calc_gcweights(lambmat,watmat,adamsmat,singlepath=False,sizes=None,hyd_nrg 
         gc_bind_nrgs = []
         for num in smoothed_watnums:
             N_range = np.array((smoothed_watnums.min(),num))
-            trans_nrg = calc_gci.insertion_pmf(N_range,single_model)[1]
+            trans_nrg = calc_gci.insertion_pmf(N_range,single_model,args.volume)[1]
             gc_bind_nrgs.append(trans_nrg - hyd_nrg*num)
             
         gci_energy_mat[i,] = np.array(gc_bind_nrgs)
@@ -479,6 +482,7 @@ if __name__ == '__main__' :
   parser.add_argument('--steps',nargs="+",default=None, help="list of number of steps for each titration at each lambda value")
   parser.add_argument('--plot',action='store_true',default=True, help="3D Plots the gradient and free energy surface against lambda and B values")
   parser.add_argument('--quicksurf',action='store_true',default=False, help="Use a quick and dirty method to make free energy surfaces. This is faster but produces less quantitatively accurate surfaces.")
+  parser.add_argument('-v','--volume',type=float,help="Volume of GCMC region")
   args = parser.parse_args()
 
   # Setup the logger
