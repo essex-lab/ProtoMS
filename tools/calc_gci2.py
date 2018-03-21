@@ -3,13 +3,14 @@ import numpy as np
 import os
 import free_energy_base as feb
 import calc_gci as gci
+from table import Table
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-class GCIPMF(feb.PMF):
+class GCIPMF(feb.Series):
     def __init__(self, coordinate, values, model, pmf):
         self.coordinate = coordinate
         self.values = values
@@ -30,12 +31,22 @@ class GCIResult(feb.BaseResult):
 
     @property
     def occupancies(self):
-        return [feb.FreeEnergy.fromData(pmfs) for pmfs in zip(*self.data[0])]
+        return feb.Series(self.B_values, *self.data[0])
 
     @property
     def insertion_pmf(self):
-        return feb.PMF(self.data[0][0].coordinate,
+        return feb.PMF(self.data[0][0].pmf.coordinate,
                        *[dat.pmf for dat in self.data[0]])
+
+    @property
+    def model(self):
+        model_ys = []
+        for rep in self.data[0]:
+            rep.model.x = np.linspace(
+                min(rep.coordinate), max(rep.coordinate), 100)
+            rep.model.forward()
+            model_ys.append(rep.model.predicted)
+        return feb.Series(rep.model.x, *model_ys)
 
 
 class GCI(feb.Estimator):
@@ -47,11 +58,12 @@ class GCI(feb.Estimator):
         self.data.append(series.solventson)
         return self.data[-1].shape[-1]
 
-    def calculate(self, subset=(0., 1., 1)):
+    def calculate(self, temp, volume, steps=None):
         Ns = np.array(self.data).mean(axis=1)
-        steps = int(max(Ns))
-        if max(Ns) - steps > 0.9:
-            steps += 1
+        if steps is None:
+            steps = int(max(Ns))
+            if max(Ns) - steps > 0.9:
+                steps += 1
 
         model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns, size=steps,
                                  verbose=False)[0]
@@ -60,7 +72,7 @@ class GCI(feb.Estimator):
             self.B_values,
             Ns,
             model,
-            gci.insertion_pmf(np.arange(steps+1), model, 30.)
+            gci.insertion_pmf(np.arange(steps+1), model, volume)
         )
 
     def __getitem__(self, val):
@@ -78,13 +90,15 @@ class GCI(feb.Estimator):
 
 
 class TitrationCalculation(feb.FreeEnergyCalculation):
-    def __init__(self, root_paths, temperature, subdir=''):
+    def __init__(self, root_paths, temperature, volume, steps=None, subdir=''):
         feb.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
             temperature=temperature,
             estimators=[GCI],
             subdir=subdir)
+        self.volume = volume
+        self.steps = steps
 
     def _path_constructor(self, root_path):
         return os.path.join(root_path, "b_*", self.subdir)
@@ -107,7 +121,9 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
             leg_result = GCIResult()
             for i, leg in enumerate(legs):
                 leg_result += GCIResult(
-                    [rep.subset(*subset).calculate(self.temperature)
+                    [rep.subset(*subset).calculate(self.temperature,
+                                                   self.volume,
+                                                   self.steps)
                      for rep in leg])
             results[est] = leg_result
         return results[GCI]
@@ -115,7 +131,10 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
     def _body(self, args):
         results = self.calculate(subset=(args.lower_bound, args.upper_bound))
 
-        self.figures['titration'] = plot_titration(results)
+        fig, ax = plt.subplots()
+        plot_titration(results, ax)
+        self.figures['titration'] = fig
+
         fig, table = insertion_pmf(results)
         self.tables.append(table)
         self.figures['insertion_pmf'] = fig
@@ -123,31 +142,15 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
         return results
 
 
-def plot_titration(results):
-    fig, ax = plt.subplots()
-    model_ys = []
+def plot_titration(results, ax, dot_fmt='b'):
     for rep in results.data[0]:
-        ax.scatter(rep.coordinate, rep.values)
-        rep.model.x = np.linspace(
-            min(rep.coordinate), max(rep.coordinate), 100)
-        rep.model.forward()
-        model_ys.append(rep.model.predicted)
-
-    ys = np.mean(model_ys, axis=0)
-    errs = np.std(model_ys, axis=0) / len(results.data)**0.5
-
-    ax.plot(rep.model.x, ys, 'r')
-    ax.fill_between(rep.model.x, ys + 2*errs, ys - 2*errs,
-                    facecolor='gray', alpha=0.3,
-                    interpolate=True, linewidth=0.)
-    ax.fill_between(rep.model.x, ys + errs, ys - errs, facecolor='yellow',
-                    alpha=0.3, interpolate=True, linewidth=0.)
-    return fig
+        ax.plot(rep.coordinate, rep.values, 'o')
+    results.model.plot(ax, xlabel='B Value', ylabel='Occupancy', color='black')
 
 
-def insertion_pmf(results):
-    table = feb.Table('', fmts=['%d', '%.3f'],
-                      headers=['Number of Waters', 'Binding Free Energy'])
+def insertion_pmf(results, title=''):
+    table = Table(title, fmts=['%d', '%.3f'],
+                  headers=['Number of Waters', 'Binding Free Energy'])
 
     steps = results.data[0][0].pmf.coordinate
     pmf = feb.PMF(steps, *[rep.pmf for rep in results.data[0]])
@@ -170,13 +173,20 @@ def get_arg_parser():
         help="Location of folders containing ProtoMS output subdirectories. "
              "Multiple directories can be supplied to this flag and indicate "
              "repeats of the same calculation.")
+    parser.add_argument(
+        '-v', '--volume', required=True, type=float,
+        help="Volume of the calculations GCMC region.")
+    parser.add_argument(
+        '-n', '--nsteps', type=int,
+        help='Override automatic guessing of maximum number of waters for '
+             'titration curve fitting.')
     return parser
 
 
 if __name__ == '__main__':
     args = get_arg_parser().parse_args()
-
     tc = TitrationCalculation(
-        [args.directories], 300., subdir=args.subdir)
+        [args.directories], args.temperature, args.volume,
+        args.nsteps, subdir=args.subdir)
     tc.run(args)
     plt.show()
