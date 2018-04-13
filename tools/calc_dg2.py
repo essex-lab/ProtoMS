@@ -159,6 +159,9 @@ def get_arg_parser():
         '--estimators', nargs='+', default=['ti', 'mbar', 'bar'],
         choices=['ti', 'mbar', 'bar', 'gcap'],
         help="Choose estimators")
+    parser.add_argument(
+        '-v', '--volume', type=float, default=30.,
+        help="Volume of GCMC region")
     return parser
 
 
@@ -171,5 +174,6 @@ if __name__ == '__main__':
         root_paths=args.directories,
         temperature=args.temperature,
         subdir=args.subdir,
-        estimators=map(class_map.get, args.estimators))
+        estimators=map(class_map.get, args.estimators),
+        volume=args.volume)
     calc.run(args)

@@ -195,15 +195,15 @@ class Quantity(object):
             except TypeError:
                 values = [dat.value for dat in data]
                 return Quantity(np.mean(values),
-                                  np.std(values)/len(values)**0.5)
+                                np.std(values)/len(values)**0.5)
 
     def __add__(self, other):
         return Quantity(self.value + other.value,
-                          (self.error**2 + other.error**2)**0.5)
+                        (self.error**2 + other.error**2)**0.5)
 
     def __sub__(self, other):
         return Quantity(self.value - other.value,
-                          (self.error**2 + other.error**2)**0.5)
+                        (self.error**2 + other.error**2)**0.5)
 
     def __neg__(self):
         return Quantity(-self.value, self.error)
@@ -410,7 +410,7 @@ class FreeEnergyCalculation(object):
 
     def __init__(self, root_paths, temperature,
                  estimators=[TI, BAR, MBAR], subdir='',
-                 extract_data=True, volume=30.):
+                 extract_data=True, **kwargs):
         """Parameters
         ----------
         root_paths: a list of lists of strings
@@ -428,6 +428,9 @@ class FreeEnergyCalculation(object):
         extract_data: bool
             If True extract data from simulation results in prepartion for
             calculation.
+        **kwargs:
+            Additional keyword arguments are passed to Estimator classes
+            during initialisation.
         """
         self.root_paths = root_paths
         self.temperature = temperature
@@ -447,7 +450,7 @@ class FreeEnergyCalculation(object):
                 self.lambdas[-1].append(map(self._get_lambda, paths))
 
         self.estimators = {
-            estimator: [[estimator(l, volume=volume) for l in lams]
+            estimator: [[estimator(l, **kwargs) for l in lams]
                         for lams in self.lambdas]
             for estimator in estimators}
         if extract_data:
