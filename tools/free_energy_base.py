@@ -45,7 +45,6 @@ class Series(object):
         if list(self.coordinate) != list(other.coordinate):
             raise ValueError(
                 'Cannot add PMF instances with different coordinate values')
-        # new_pmf = PMF(self.coordinate)
         new_pmf = copy(self)
         new_pmf.values = [s + o for s, o in zip(self.values, other.values)]
         return new_pmf
@@ -111,10 +110,11 @@ class BaseResult(object):
         if len({tuple(pmf.coordinate)
                 for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
-        try:
-            self.pmf_class = kwargs['pmf_class']
-        except KeyError:
-            self.pmf_class = PMF
+        # try:
+        #     self.pmf_class = kwargs['pmf_class']
+        # except KeyError:
+        #     self.pmf_class = PMF
+        self.pmf_class = PMF
 
     def __add__(self, other):
         return self.__class__(*(self.data + other.data),
@@ -524,7 +524,7 @@ class FreeEnergyCalculation(object):
 
     def run(self, args):
         """Public method for execution of calculation. This is usually the
-        desired way to use execute calculations. andles logic for
+        desired way to use execute calculations. Handles logic for
         printing of output tables and saving of output pickles and
         figures. Calls plt.show() to display figures.  Runs
         self._body(args) and uses the return value as the calculation
@@ -534,7 +534,7 @@ class FreeEnergyCalculation(object):
         ----------
         args
         """
-        
+
         results = self._body(args)
 
         if args.pickle is not None:

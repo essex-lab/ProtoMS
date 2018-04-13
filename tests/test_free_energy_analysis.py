@@ -331,5 +331,24 @@ class testCalcTiDecomposedDual(testCalcDG):
         calc.run(args)
 
 
+class testCalcDGGCAP(testCalcDG):
+    input_files = ['gcap']
+    output_files = ['results.pkl']
+
+    def test(self):
+        cmdline = (
+            "-d gcap/ --est gcap"
+            " --no-show --pickle results.pkl --save-figures pref"
+        )
+
+        args = calc_dg2.get_arg_parser().parse_args(cmdline.split())
+        calc = calc_dg2.FreeEnergyCalculation(
+            root_paths=args.directories,
+            temperature=args.temperature,
+            subdir=args.subdir,
+            estimators=map(calc_dg2.class_map.get, args.estimators))
+        calc.run(args)
+
+
 if __name__ == '__main__':
     unittest.main()
