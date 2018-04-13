@@ -158,7 +158,7 @@ class BaseTest(unittest.TestCase):
         print("\nTEST_RUN\n")
         args = [self.executable] + self.args
         if self.mpi_processes > 0:
-            args = ["mpirun", "-np", str(self.mpi_processes)] + args
+            args = ["mpirun", "-np", str(self.mpi_processes), "--oversubscribe"] + args
         self._helper_subprocess_call(args)
 
         print("\nTEST_OUTPUT\n")

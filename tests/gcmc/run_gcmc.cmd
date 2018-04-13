@@ -26,7 +26,7 @@ multigcmc 200 19.000 20.000
 originx 30.024
 originy 1.952
 originz 8.033
-x 5.3
+x 5.300
 y 4.731
 z 4.645
 #  End of GCMC specific parameters

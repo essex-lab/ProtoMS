@@ -27,7 +27,7 @@ grand1 jaws1_wat.pdb
 originx 59.774
 originy 31.007
 originz 20.931
-x 13.02
+x 13.020
 y 8.188
 z 8.402
 #  End of JAWS specific parameters

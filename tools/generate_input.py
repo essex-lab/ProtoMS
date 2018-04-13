@@ -738,7 +738,7 @@ def _setbox(simulation,waters,inbox) :
     for i,param in enumerate(["x","y","z"]) :
       simulation.setParameter("center"+param,outbox["center"][i])
   for i,param in enumerate(["x","y","z"]) :
-    simulation.setParameter(param,outbox["len"][i])
+    simulation.setParameter(param,"%.3f" % outbox["len"][i])
 
 class GCMC(ProteinLigandSimulation) :
   """ 
