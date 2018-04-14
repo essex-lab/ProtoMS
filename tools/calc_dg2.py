@@ -1,4 +1,5 @@
 import matplotlib
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import os
 import free_energy_base as feb
@@ -73,7 +74,11 @@ class FreeEnergyCalculation(feb.FreeEnergyCalculation):
             results = self.calculate(subset=(args.lower_bound,
                                              args.upper_bound))
             if args.pmf:
-                self.figures['pmf'] = plot_pmfs(results)
+                if GCMCMBAR in self.estimators:
+                    self.figures['pmf_2d'] = plot_pmfs_2d(results)
+                if len(self.estimators) > 1 or GCMCMBAR not in self.estimators:
+                    self.figures['pmf'] = plot_pmfs(results)
+
             self.tables.extend(results_tables(args.directories, results))
         return results
 
@@ -108,10 +113,20 @@ def plot_pmfs(results):
     """Plot average potentials of mean force for all estimators."""
     fig, ax = plt.subplots()
     for estimator in sorted(results):
-        results[estimator].pmf.plot(ax, label=estimator.__name__)
+        if estimator != GCMCMBAR:
+            results[estimator].pmf.plot(ax, label=estimator.__name__)
     ax.legend(loc='best')
     return fig
 
+
+def plot_pmfs_2d(results):
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    results[GCMCMBAR].pmf.plot(ax)
+    ax.set_xlabel('B')
+    ax.set_ylabel('lambda')
+    ax.set_zlabel('dG (kcal/mol)')
+    return fig
 
 def results_tables(directories, results):
     """Print calculated free energies. If multiple repeats are present

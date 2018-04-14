@@ -333,7 +333,7 @@ class testCalcTiDecomposedDual(testCalcDG):
 
 class testCalcDGGCAP(testCalcDG):
     input_files = ['gcap']
-    output_files = ['results.pkl']
+    output_files = ['results.pkl', 'pmf_2d.pdf']
 
     def test(self):
         cmdline = (

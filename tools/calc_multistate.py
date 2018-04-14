@@ -49,12 +49,10 @@ class PMF2D(feb.Series):
         return self.values[-1].values[closest] - self.values[0].values[closest]
 
     def plot(self, axes, show_error=True,  **kwargs):
-        fig = pl.figure()
-        ax = Axes3D(fig)
         lambdas, Bs = np.meshgrid(self.coordinate2, self.coordinate)
         values = np.array([[col.value for col in row] for row in self.values])
-        ax.plot_surface(lambdas, Bs, values, cstride=1, rstride=1)
-        return ax
+        axes.plot_surface(lambdas, Bs, values, cstride=1, rstride=1)
+        return axes
 
 
 class Result2D(feb.Result):
