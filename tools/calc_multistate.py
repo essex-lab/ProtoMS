@@ -66,16 +66,16 @@ class Result2D(feb.Result):
 
 class GCMCMBAR(feb.MBAR):
     results_name = 'results_inst'
-    subdir_glob = 'b_*/'
+    # subdir_glob = 'b_*/'
     pmf_class = PMF2D
     result_class = Result2D
 
-    def __init__(self, lambdas, volume=30.):
+    def __init__(self, lambdas, volume=30., **kwargs):
         self.lambdas = lambdas
         self.volume = volume
         self.data = []
         self._data_lambdas = []
-
+        self.subdir_glob = 'b_*/'
         self._data_Bs = []
 
     def add_data(self, series):

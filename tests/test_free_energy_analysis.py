@@ -333,11 +333,11 @@ class testCalcTiDecomposedDual(testCalcDG):
 
 class testCalcDGGCAP(testCalcDG):
     input_files = ['gcap']
-    output_files = ['results.pkl', 'pmf_2d.pdf']
+    output_files = ['results.pkl', 'pref_pmf_2d.pdf', 'pref_pmf.pdf']
 
     def test(self):
         cmdline = (
-            "-d gcap/ --est gcap"
+            "-d gcap/ --est gcap bar --pmf --subdir -9.700"
             " --no-show --pickle results.pkl --save-figures pref"
         )
 

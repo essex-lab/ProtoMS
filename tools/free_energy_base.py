@@ -221,11 +221,11 @@ class Quantity(object):
 class Estimator(object):
     """Base class for free energy estimators."""
     results_name = 'results'
-    subdir_glob = './'
+    # subdir_glob = './'
     pmf_class = PMF
     result_class = Result
 
-    def __init__(self, lambdas, **kwargs):
+    def __init__(self, lambdas, subdir_glob="./", **kwargs):
         """Parameters
         ----------
         lambdas: list of numbers
@@ -233,6 +233,7 @@ class Estimator(object):
         """
         self.data = []
         self.lambdas = lambdas
+        self.subdir_glob = subdir_glob
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object for later
@@ -434,7 +435,7 @@ class FreeEnergyCalculation(object):
         """
         self.root_paths = root_paths
         self.temperature = temperature
-        self.subdir = subdir
+        # self.subdir = subdir
         self.estimator_classes = estimators
 
         # data hierarchy -> root_paths[leg][repeat]
@@ -450,7 +451,8 @@ class FreeEnergyCalculation(object):
                 self.lambdas[-1].append(map(self._get_lambda, paths))
 
         self.estimators = {
-            estimator: [[estimator(l, **kwargs) for l in lams]
+            estimator: [[estimator(l, subdir_glob=subdir, **kwargs)
+                         for l in lams]
                         for lams in self.lambdas]
             for estimator in estimators}
         if extract_data:
@@ -461,11 +463,11 @@ class FreeEnergyCalculation(object):
     def _path_constructor(self, root_path):
         """Given a root_path (string) construct a full path
         suitable for globbing to find output directories."""
-        return os.path.join(root_path, "lam-*", self.subdir)
+        return os.path.join(root_path, "lam-*") #, self.subdir)
 
     def _get_lambda(self, path):
         """Given a path (string) extract the contained lambda value"""
-        return float(path.split('/')[-2][4:])
+        return float(path.split('/')[-1][4:])
 
     def _extract_series(self, paths):
         """For each entry of paths (list of strings) open the contained
@@ -477,12 +479,18 @@ class FreeEnergyCalculation(object):
                 for path in repeat:
                     # get the names of required data files
                     # for each estimator class
-                    result_names = {
-                        cls: glob(os.path.join(
+                    result_names = {}
+                    for cls in self.estimators:
+                        est = self.estimators[cls][i][j]
+                        file_path = os.path.join(
                             path,
-                            cls.subdir_glob,
-                            self.estimators[cls][i][j].results_name))
-                        for cls in self.estimator_classes}
+                            est.subdir_glob,
+                            est.results_name)
+                        result_names[cls] = glob(file_path)
+                        if result_names[cls] == []:
+                            raise Exception(
+                                "Unable to find ProtoMS output files matching "
+                                "the file glob:\n%s" % file_path)
                     # get the unique list of file names so that we only
                     # open each one once for efficiency
                     result_names_uniq = set(v for val in result_names.values()
