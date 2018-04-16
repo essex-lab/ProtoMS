@@ -19,10 +19,13 @@ class TI_decomposed(feb.Estimator):
     decomposition of the total free energy is not well-defined however
     can be indicative of the dominant terms in a free energy change.
     """
-    def __init__(self, lambdas, subdir_glob='./', **kwargs):
-        self.estimators = defaultdict(lambda: feb.TI(lambdas))
+    def __init__(self, lambdas, results_name='results',
+                 subdir_glob='./', **kwargs):
+        self.estimators = defaultdict(
+            lambda: feb.TI(lambdas, results_name, subdir_glob))
         self.lambdas = lambdas
         self.subdir_glob = subdir_glob
+        self.results_name = results_name
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object

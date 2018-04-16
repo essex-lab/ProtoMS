@@ -337,8 +337,8 @@ class testCalcDGGCAP(testCalcDG):
 
     def test(self):
         cmdline = (
-            "-d gcap/ --est gcap bar --pmf --subdir -9.700"
-            " --no-show --pickle results.pkl --save-figures pref"
+            "-d gcap/ --est gcap bar --pmf --subdir b_-9.700 --name"
+            " results_inst --no-show --pickle results.pkl --save-figures pref"
         )
 
         args = calc_dg2.get_arg_parser().parse_args(cmdline.split())
@@ -346,7 +346,9 @@ class testCalcDGGCAP(testCalcDG):
             root_paths=args.directories,
             temperature=args.temperature,
             subdir=args.subdir,
-            estimators=map(calc_dg2.class_map.get, args.estimators))
+            estimators=map(calc_dg2.class_map.get, args.estimators),
+            volume=args.volume,
+            results_name=args.name)
         calc.run(args)
 
 

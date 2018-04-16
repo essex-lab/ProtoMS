@@ -65,9 +65,6 @@ class Result2D(feb.Result):
 
 
 class GCMCMBAR(feb.MBAR):
-    results_name = 'results_inst'
-    # subdir_glob = 'b_*/'
-    pmf_class = PMF2D
     result_class = Result2D
 
     def __init__(self, lambdas, volume=30., **kwargs):
@@ -77,6 +74,7 @@ class GCMCMBAR(feb.MBAR):
         self._data_lambdas = []
         self.subdir_glob = 'b_*/'
         self._data_Bs = []
+        self.results_name = 'results_inst'
 
     def add_data(self, series):
         dat = np.array([series.feenergies[lam]

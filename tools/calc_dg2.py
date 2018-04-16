@@ -177,6 +177,11 @@ def get_arg_parser():
     parser.add_argument(
         '-v', '--volume', type=float, default=30.,
         help="Volume of GCMC region")
+    parser.add_argument(
+        '-n', '--name', default='results',
+        help="Name of ProtoMS output file containing free energy data. "
+             "Note that this option will not change the output file "
+             "used by the gcap estimator from results_inst.")
     return parser
 
 
@@ -190,5 +195,6 @@ if __name__ == '__main__':
         temperature=args.temperature,
         subdir=args.subdir,
         estimators=map(class_map.get, args.estimators),
-        volume=args.volume)
+        volume=args.volume,
+        results_name=args.name)
     calc.run(args)

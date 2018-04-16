@@ -220,12 +220,11 @@ class Quantity(object):
 
 class Estimator(object):
     """Base class for free energy estimators."""
-    results_name = 'results'
-    # subdir_glob = './'
     pmf_class = PMF
     result_class = Result
 
-    def __init__(self, lambdas, subdir_glob="./", **kwargs):
+    def __init__(self, lambdas, results_name="results",
+                 subdir_glob="./", **kwargs):
         """Parameters
         ----------
         lambdas: list of numbers
@@ -234,6 +233,7 @@ class Estimator(object):
         self.data = []
         self.lambdas = lambdas
         self.subdir_glob = subdir_glob
+        self.results_name = results_name
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object for later

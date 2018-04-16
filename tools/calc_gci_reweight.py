@@ -13,7 +13,10 @@ import matplotlib.pyplot as plt
 
 
 class GCSEnergies(feb.Estimator):
-    results_name = 'results_inst'
+    # results_name = 'results_inst'
+    def __init__(self, lambdas, subdir_glob, **kwargs):
+        feb.Estimator.__init__(self, lambdas, subdir_glob=subdir_glob,
+                               results_name='results_inst', **kwargs)
 
     def add_data(self, series):
         tmp = []
@@ -26,7 +29,10 @@ class GCSEnergies(feb.Estimator):
 
 
 class GCSLongEnergies(GCSEnergies):
-    results_name = 'results_long'
+    # results_name = 'results_long'
+    def __init__(self, lambdas, subdir_glob, **kwargs):
+        feb.Estimator.__init__(self, lambdas, subdir_glob=subdir_glob,
+                               results_name='results_long', **kwargs)
 
 
 class ReweightedTitration(gci2.TitrationCalculation):

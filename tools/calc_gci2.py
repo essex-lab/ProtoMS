@@ -53,6 +53,8 @@ class GCI(feb.Estimator):
     def __init__(self, B_values, **kwargs):
         self.B_values = B_values
         self.data = []
+        self.subdir_glob = 'b_*/'
+        self.results_name = 'results_inst'
 
     def add_data(self, series):
         self.data.append(series.solventson)
