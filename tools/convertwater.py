@@ -158,7 +158,7 @@ def rotatesolute(solutecoords,alpha,beta,gamma):
 
 
 
-def alignhydrogens(watcoords,template,tol=0.05):
+def alignhydrogens(watcoords,template,tol=0.000001):
   """ 
   Rotates a template water molecule such that it has the same orientation as a reference water molecule. Useful for converting between different water models in cases when one wishes to retain the same orientations of hydrogens. It assumes that both the template and the reference water have maching oxygen locations.
 
