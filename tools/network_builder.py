@@ -176,12 +176,17 @@ if __name__ == "__main__":
     print("{} representative network(s) built.".format(len(rep_networks)))
    
     # Write out representative frames to PDB files..
-    print("Writing PDB output...") 
-    pdbfiles2 = simulationobjects.PDBSet()
-    pdbfiles2.read(args.input, skip=args.skip, readmax=9999)
+    print("Writing PDB output...")
+    import time
+    starttime = time.time() 
     for i, j in enumerate(network_rep_frames):
+        # Write out water only for rep. frames
         pdbfiles.pdbs[j].write("{}-{}{}-wat.pdb".format(args.output, "0"*(2-len(str(i+1))), i+1))
-        pdbfiles2.pdbs[j].write("{}-{}{}-all.pdb".format(args.output, "0"*(2-len(str(i+1))), i+1))
+        # Read in whole system - only want to read a single frame to save time/memory
+        pdbfiles2 = simulationobjects.PDBSet()
+        pdbfiles2.read(args.input, skip=args.skip+j, readmax=1)
+        pdbfiles2.pdbs[0].write("{}-{}{}-all.pdb".format(args.output, "0"*(2-len(str(i+1))), i+1))
+    print("{} seconds to read in all PDB data and then write out frames".format(time.time()-starttime))
         
     print("Done!\n")
 

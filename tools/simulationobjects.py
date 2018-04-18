@@ -520,8 +520,13 @@ class  PDBSet :
         with open(filename,"r") as f :
             while True :
                 pdb = PDBFile()
-                pdb.read_from(f,resname=resname)                
-                if not (pdb.residues or pdb.solvents) :
+                if nread < skip:
+                    # Don't bother reading skipped frames
+                    pdb.read_from(f,resname='dummyname')                
+                else:
+                    pdb.read_from(f,resname=resname)                
+                # Only break if frames after the skip are empty
+                if nread >= skip and not (pdb.residues or pdb.solvents):
                     break
                 else :
                     nread += 1
