@@ -586,7 +586,7 @@ class FreeEnergyCalculation(object):
         return self.calculate(subset=(args.lower_bound, args.upper_bound))
 
 
-def get_arg_parser():
+def get_base_arg_parser():
     """Returns a generic argparser for all free energy calculation scripts"""
     parser = FEArgumentParser(add_help=False)
     parser.add_argument(
@@ -597,12 +597,6 @@ def get_arg_parser():
              "multiple times and each instances is treated as an individual "
              "leg making up a single free energy difference e.g. vdw and ele "
              "contributions of a single topology calculation.")
-    parser.add_argument(
-        '--subdir', default='',
-        help="Optional sub-directory for each lambda value to search within "
-             "for simulation output. This is useful in, for instance, "
-             "processing only the results of a GCAP calculation at a "
-             "particular B value.")
     parser.add_argument(
         '-l', '--lower-bound', default=0., type=float,
         help="Value between 0 and 1 that determines the proportion to omit "
@@ -624,4 +618,20 @@ def get_arg_parser():
         '--no-show', action='store_true', default=False,
         help="Do not display any figures on screen. Does not interfere with "
              "--save-figures.")
+    parser.add_argument(
+        '-n', '--name', default='results',
+        help="Name of ProtoMS output file containing free energy data. "
+             "Note that this option will not change the output file "
+             "used by the gcap estimator from results_inst.")
+    return parser
+
+
+def get_alchemical_arg_parser():
+    parser = FEArgumentParser(add_help=False, parents=[get_base_arg_parser()])
+    parser.add_argument(
+        '--subdir', default='',
+        help="Optional sub-directory for each lambda value to search within "
+             "for simulation output. This is useful in, for instance, "
+             "processing only the results of a GCAP calculation at a "
+             "particular B value.")
     return parser

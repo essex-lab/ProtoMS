@@ -3,6 +3,7 @@ from itertools import chain
 import matplotlib
 import numpy as np
 import os
+import sys
 import free_energy_base as feb
 from table import Table
 
@@ -219,7 +220,7 @@ def get_arg_parser():
                     "is not strictly well defined. That said, it can be "
                     "illustrative to consider the dominant contributions of "
                     "a calculation.",
-        parents=[feb.get_arg_parser()])
+        parents=[feb.get_alchemical_arg_parser()])
     parser.add_argument(
         "-b", "--bound", nargs="+", action='append',
         help="Output directory(s) of additional bound phase calculation(s). "
@@ -245,7 +246,11 @@ def get_arg_parser():
     return parser
 
 
-if __name__ == "__main__":
-    args = get_arg_parser().parse_args()
+def run_script(cmdline):
+    args = get_arg_parser().parse_args(cmdline)
     calc = DecomposedCalculation(args.directories, subdir=args.subdir)
     calc.run(args)
+
+
+if __name__ == "__main__":
+    run_script(sys.argv[1:])

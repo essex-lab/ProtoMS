@@ -14,7 +14,7 @@ import calc_dg2
 import calc_ti_decomposed
 import calc_dg_cycle
 import calc_gci2
-from free_energy_base import BAR, MBAR, TI, get_arg_parser
+from free_energy_base import BAR, MBAR, TI, get_alchemical_arg_parser
 from free_energy_base import PMF, Quantity, Result
 from simulationobjects import boltz, SnapshotResults
 
@@ -106,7 +106,7 @@ class TestTI(TestBAR):
 class TestArgumentParsers(unittest.TestCase):
     """Check for errors in the inheritance scheme used for argument parsers"""
     def test_base_parser(self):
-        get_arg_parser()
+        get_alchemical_arg_parser()
 
     def test_dg2_parser(self):
         calc_dg2.get_arg_parser()
@@ -211,7 +211,7 @@ class TestResult(unittest.TestCase):
                          self.single_result.dG.value*4)
 
 
-class testCalcDG(framework.BaseTest):
+class testCalcDg(framework.BaseTest):
     """Test main driver classes associated with each of the analysis
     scripts.
 
@@ -223,6 +223,10 @@ class testCalcDG(framework.BaseTest):
     executable = ''
     args = []
     output_files = ['results.pkl', 'pref_pmf.pdf']
+    cmdline = (
+        "-d ala_gly/out1_free ala_gly/out2_free -d ala_gly/out3_free --pmf"
+        " --no-show --pickle results.pkl --save-figures pref"
+    )
 
     @classmethod
     def _helper_copy_input_files(self):
@@ -254,102 +258,72 @@ class testCalcDG(framework.BaseTest):
                 "Expected output file {0} is missing".format(filename))
 
     def test(self):
-        cmdline = (
-            "-d ala_gly/out1_free ala_gly/out2_free -d ala_gly/out3_free --pmf"
-            " --no-show --pickle results.pkl --save-figures pref"
-        )
-        args = calc_dg2.get_arg_parser().parse_args(cmdline.split())
-        calc = calc_dg2.FreeEnergyCalculation(root_paths=args.directories,
-                                              temperature=args.temperature,
-                                              subdir=args.subdir)
-        calc.run(args)
+        calc_dg2.run_script(self.cmdline.split())
 
 
-class testCalcDgCycleDual(testCalcDG):
+class testCalcDgCycleDual(testCalcDg):
     input_files = ['ala_gly', 'gly_val', 'ala_val']
     output_files = ['results.pkl']
+    cmdline = ("-d ala_gly gly_val ala_val --signs + + - --dual"
+               " --no-show --pickle results.pkl")
 
     def test(self):
-        cmdline = ("-d ala_gly gly_val ala_val --signs + + - --dual"
-                   " --no-show --pickle results.pkl")
-        args = calc_dg_cycle.get_arg_parser().parse_args(cmdline.split())
-        calc = calc_dg_cycle.CycleCalculation()
-        calc.run(args)
+        calc_dg_cycle.run_script(self.cmdline.split())
 
 
-class testCalcDgCycleComb(testCalcDG):
-    input_files = ['ala_gly', 'gly_val', 'ala_val']
-    output_files = ['results.pkl']
-
-    def test(self):
-        cmdline = ("-d ala_gly gly_val ala_val --signs + + - "
-                   "--single comb --no-show --pickle results.pkl")
-        args = calc_dg_cycle.get_arg_parser().parse_args(cmdline.split())
-        calc = calc_dg_cycle.CycleCalculation()
-        calc.run(args)
+class testCalcDgCycleComb(testCalcDgCycleDual):
+    cmdline = ("-d ala_gly gly_val ala_val --signs + + - "
+               "--single comb --no-show --pickle results.pkl")
 
 
-class testCalcDgCycleSep(testCalcDG):
-    input_files = ['ala_gly', 'gly_val', 'ala_val']
-    output_files = ['results.pkl']
-
-    def test(self):
-        cmdline = ("-d ala_gly gly_val ala_val --signs + + - "
-                   "--single sep --no-show --pickle results.pkl")
-        args = calc_dg_cycle.get_arg_parser().parse_args(cmdline.split())
-        calc = calc_dg_cycle.CycleCalculation()
-        calc.run(args)
+class testCalcDgCycleSep(testCalcDgCycleDual):
+    cmdline = ("-d ala_gly gly_val ala_val --signs + + - "
+               "--single sep --no-show --pickle results.pkl")
 
 
-class testCalcTiDecomposed(testCalcDG):
+class testCalcTiDecomposed(testCalcDg):
     input_files = ['ala_gly']
     output_files = ['results.pkl', 'pref_decomposed_pmfs.pdf',
                     'pref_decomposed.pdf']
+    cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --pmf --no-show "
+               "--pickle results.pkl --save-figures pref")
 
     def test(self):
-        cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --pmf --no-show "
-                   "--pickle results.pkl --save-figures pref")
-        args = calc_ti_decomposed.get_arg_parser().parse_args(cmdline.split())
-        calc = calc_ti_decomposed.DecomposedCalculation(
-            root_paths=args.directories,
-            subdir=args.subdir)
-        calc.run(args)
+        calc_ti_decomposed.run_script(self.cmdline.split())
 
 
-class testCalcTiDecomposedDual(testCalcDG):
-    input_files = ['ala_gly']
-    output_files = ['results.pkl', 'pref_decomposed_pmfs.pdf',
-                    'pref_decomposed.pdf']
-
-    def test(self):
-        cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --dual --pmf "
-                   " --no-show --pickle results.pkl --save-figures pref")
-        args = calc_ti_decomposed.get_arg_parser().parse_args(cmdline.split())
-        calc = calc_ti_decomposed.DecomposedCalculation(
-            root_paths=args.directories,
-            subdir=args.subdir)
-        calc.run(args)
+class testCalcTiDecomposedDual(testCalcTiDecomposed):
+    cmdline = ("-d ala_gly/out1_free ala_gly/out2_free --dual --pmf "
+               " --no-show --pickle results.pkl --save-figures pref")
 
 
-class testCalcDGGCAP(testCalcDG):
+class testCalcDgGCAP(testCalcDg):
     input_files = ['gcap']
     output_files = ['results.pkl', 'pref_pmf_2d.pdf', 'pref_pmf.pdf']
+    cmdline = (
+        "-d gcap/ --est gcap bar --pmf --subdir b_-9.700 --name"
+        " results_inst --no-show --pickle results.pkl --save-figures pref"
+    )
+
+
+class testCalcGCI(testCalcDg):
+    input_files = ['gcap/lam-1.000']
+    output_files = ['results.pkl']
+    cmdline = ("-d gcap/lam-1.000 --save-figures pref --no-show"
+               " --pickle results.pkl --name results_inst -v 30.")
 
     def test(self):
-        cmdline = (
-            "-d gcap/ --est gcap bar --pmf --subdir b_-9.700 --name"
-            " results_inst --no-show --pickle results.pkl --save-figures pref"
-        )
+        calc_gci2.run_script(self.cmdline.split())
 
-        args = calc_dg2.get_arg_parser().parse_args(cmdline.split())
-        calc = calc_dg2.FreeEnergyCalculation(
-            root_paths=args.directories,
-            temperature=args.temperature,
-            subdir=args.subdir,
-            estimators=map(calc_dg2.class_map.get, args.estimators),
-            volume=args.volume,
-            results_name=args.name)
-        calc.run(args)
+
+class testCalcGCIZero(testCalcGCI):
+    """This test works with data that has a uniform water occupancy of zero.
+    This ensures the corner case of a flat titration curve is
+    handled gracefully."""
+    input_files = ['gcap/lam-0.000']
+    output_files = ['results.pkl']
+    cmdline = ("-d gcap/lam-0.000 --save-figures pref --no-show"
+               " --pickle results.pkl --name results_inst -v 30.")
 
 
 if __name__ == '__main__':

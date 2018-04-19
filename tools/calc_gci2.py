@@ -1,6 +1,7 @@
 import matplotlib
 import numpy as np
 import os
+import sys
 import free_energy_base as feb
 import calc_gci as gci
 from table import Table
@@ -50,11 +51,11 @@ class GCIResult(feb.BaseResult):
 
 
 class GCI(feb.Estimator):
-    def __init__(self, B_values, **kwargs):
+    def __init__(self, B_values, results_name='results', **kwargs):
         self.B_values = B_values
         self.data = []
-        self.subdir_glob = 'b_*/'
-        self.results_name = 'results_inst'
+        self.subdir_glob = ''
+        self.results_name = results_name
 
     def add_data(self, series):
         self.data.append(series.solventson)
@@ -67,8 +68,9 @@ class GCI(feb.Estimator):
             if max(Ns) - steps > 0.9:
                 steps += 1
 
-        model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns, size=steps,
-                                 verbose=False)[0]
+        model_steps = steps if steps != 0 else 1
+        model = gci.fit_ensemble(x=np.array(self.B_values), y=Ns,
+                                 size=model_steps, verbose=False)[0]
 
         return GCIPMF(
             self.B_values,
@@ -92,13 +94,14 @@ class GCI(feb.Estimator):
 
 
 class TitrationCalculation(feb.FreeEnergyCalculation):
-    def __init__(self, root_paths, temperature, volume, steps=None, subdir=''):
+    def __init__(self, root_paths, temperature, volume, steps=None, **kwargs):
+        self.subdir = ''
         feb.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
             temperature=temperature,
             estimators=[GCI],
-            subdir=subdir)
+            **kwargs)
         self.volume = volume
         self.steps = steps
 
@@ -169,7 +172,7 @@ def get_arg_parser():
     parser = feb.FEArgumentParser(
         description="Calculate water binding free energies using Grand "
                     "Canonical Integration.",
-        parents=[feb.get_arg_parser()], conflict_handler='resolve')
+        parents=[feb.get_base_arg_parser()], conflict_handler='resolve')
     parser.add_argument(
         '-d', '--directories', nargs='+', required=True,
         help="Location of folders containing ProtoMS output subdirectories. "
@@ -185,10 +188,13 @@ def get_arg_parser():
     return parser
 
 
-if __name__ == '__main__':
-    args = get_arg_parser().parse_args()
+def run_script(cmdline):
+    args = get_arg_parser().parse_args(cmdline)
     tc = TitrationCalculation(
         [args.directories], args.temperature, args.volume,
-        args.nsteps, subdir=args.subdir)
+        args.nsteps, results_name=args.name)
     tc.run(args)
-    plt.show()
+
+
+if __name__ == '__main__':
+    run_script(sys.argv[1:])

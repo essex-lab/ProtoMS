@@ -1,6 +1,8 @@
 from glob import glob
+import sys
 import free_energy_base as feb
 from table import Table
+from calc_multistate import GCMCMBAR
 
 
 def state_data_table(results, directories, signs, states, estimator):
@@ -48,10 +50,13 @@ def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
 
 
 class CycleCalculation(feb.FreeEnergyCalculation):
-    def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR]):
+    def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR], volume=30.,
+                 results_name='results'):
         self.estimators = estimators
         self.figures = {}
         self.tables = []
+        self.volume = volume
+        self.results_name = results_name
 
     def _body(self, args):
 
@@ -91,7 +96,9 @@ class CycleCalculation(feb.FreeEnergyCalculation):
                         root_paths=[glob(output_dir)],
                         temperature=args.temperature,
                         subdir=args.subdir,
-                        estimators=self.estimators)
+                        estimators=self.estimators,
+                        volume=self.volume,
+                        results_name=self.results_name)
                     data = calc.calculate(
                         subset=(args.lower_bound, args.upper_bound, 1))
                     for est in self.estimators:
@@ -144,7 +151,7 @@ def get_arg_parser():
                     "Reported free energies are averages "
                     "over all repeats found. Reported errors are single "
                     "standard errors calculated from repeats.",
-        parents=[feb.get_arg_parser()], conflict_handler='resolve')
+        parents=[feb.get_alchemical_arg_parser()], conflict_handler='resolve')
     parser.add_argument(
         '-d', '--directories', nargs='+', required=True,
         help="Location of folders containing ProtoMS output directories.")
@@ -154,6 +161,13 @@ def get_arg_parser():
              "to the -d flag. Indicates the sign that should be used for each "
              "free energy difference when calculating cycle closures.",
         required=True)
+    parser.add_argument(
+        '--estimators', nargs='+', default=['ti', 'mbar', 'bar'],
+        choices=['ti', 'mbar', 'bar', 'gcap'],
+        help="Choose estimators")
+    parser.add_argument(
+        '-v', '--volume', type=float, default=30.,
+        help="Volume of GCMC region")
 
     # use mutually exclusive group for these as we need one and only one
     group = parser.add_mutually_exclusive_group(required=True)
@@ -169,7 +183,15 @@ def get_arg_parser():
     return parser
 
 
-if __name__ == '__main__':
-    args = get_arg_parser().parse_args()
-    calc = CycleCalculation()
+def run_script(cmdline):
+    class_map = {'ti': feb.TI, 'mbar': feb.MBAR,
+                 'bar': feb.BAR, 'gcap': GCMCMBAR}
+    args = get_arg_parser().parse_args(cmdline)
+    calc = CycleCalculation(estimators=map(class_map.get, args.estimators),
+                            volume=args.volume,
+                            results_name=args.name)
     calc.run(args)
+
+
+if __name__ == '__main__':
+    run_script(sys.argv[1:])

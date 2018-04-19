@@ -2,6 +2,7 @@ import matplotlib
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import os
+import sys
 import free_energy_base as feb
 from table import Table
 from calc_multistate import GCMCMBAR
@@ -128,6 +129,7 @@ def plot_pmfs_2d(results):
     ax.set_zlabel('dG (kcal/mol)')
     return fig
 
+
 def results_tables(directories, results):
     """Print calculated free energies. If multiple repeats are present
     the mean and standard error are also printed.
@@ -152,7 +154,7 @@ def get_arg_parser():
     parser = feb.FEArgumentParser(
         description="Calculate free energy differences using a range of"
                     " estimators",
-        parents=[feb.get_arg_parser()])
+        parents=[feb.get_alchemical_arg_parser()])
     parser.add_argument(
         '--pmf', action='store_true', default=False,
         help="Make graph of potential of mean force",
@@ -177,19 +179,18 @@ def get_arg_parser():
     parser.add_argument(
         '-v', '--volume', type=float, default=30.,
         help="Volume of GCMC region")
-    parser.add_argument(
-        '-n', '--name', default='results',
-        help="Name of ProtoMS output file containing free energy data. "
-             "Note that this option will not change the output file "
-             "used by the gcap estimator from results_inst.")
+    # parser.add_argument(
+    #     '-n', '--name', default='results',
+    #     help="Name of ProtoMS output file containing free energy data. "
+    #          "Note that this option will not change the output file "
+    #          "used by the gcap estimator from results_inst.")
     return parser
 
 
-class_map = {'ti': feb.TI, 'mbar': feb.MBAR, 'bar': feb.BAR, 'gcap': GCMCMBAR}
-
-
-if __name__ == '__main__':
-    args = get_arg_parser().parse_args()
+def run_script(cmdline):
+    class_map = {'ti': feb.TI, 'mbar': feb.MBAR,
+                 'bar': feb.BAR, 'gcap': GCMCMBAR}
+    args = get_arg_parser().parse_args(cmdline)
     calc = FreeEnergyCalculation(
         root_paths=args.directories,
         temperature=args.temperature,
@@ -198,3 +199,7 @@ if __name__ == '__main__':
         volume=args.volume,
         results_name=args.name)
     calc.run(args)
+
+
+if __name__ == '__main__':
+    run_script(sys.argv[1:])
