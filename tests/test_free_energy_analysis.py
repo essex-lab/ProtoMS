@@ -298,18 +298,24 @@ class testCalcTiDecomposedDual(testCalcTiDecomposed):
 
 
 class testCalcDgGCAP(testCalcDg):
-    input_files = ['gcap']
+    input_files = ['gcap/out1_bnd']
     output_files = ['results.pkl', 'pref_pmf_2d.pdf', 'pref_pmf.pdf']
     cmdline = (
-        "-d gcap/ --est gcap bar --pmf --subdir b_-9.700 --name"
+        "-d gcap/out1_bnd --est gcap bar --pmf --subdir b_-9.700 --name"
         " results_inst --no-show --pickle results.pkl --save-figures pref"
     )
 
 
+class testCalcDgCycleGCAP(testCalcDgCycleDual):
+    input_files = ['gcap/out1_bnd']
+    cmdline = ("-d gcap gcap --signs + - --name results_inst --est gcap ti "
+               "--dual --no-show --pickle results.pkl --subdir b_-10.700")
+
+
 class testCalcGCI(testCalcDg):
-    input_files = ['gcap/lam-1.000']
+    input_files = ['gcap/out1_bnd/lam-1.000']
     output_files = ['results.pkl']
-    cmdline = ("-d gcap/lam-1.000 --save-figures pref --no-show"
+    cmdline = ("-d gcap/out1_bnd/lam-1.000 --save-figures pref --no-show"
                " --pickle results.pkl --name results_inst -v 30.")
 
     def test(self):
@@ -320,9 +326,9 @@ class testCalcGCIZero(testCalcGCI):
     """This test works with data that has a uniform water occupancy of zero.
     This ensures the corner case of a flat titration curve is
     handled gracefully."""
-    input_files = ['gcap/lam-0.000']
+    input_files = ['gcap/out1_bnd/lam-0.000']
     output_files = ['results.pkl']
-    cmdline = ("-d gcap/lam-0.000 --save-figures pref --no-show"
+    cmdline = ("-d gcap/out1_bnd/lam-0.000 --save-figures pref --no-show"
                " --pickle results.pkl --name results_inst -v 30.")
 
 
