@@ -303,13 +303,37 @@ class testCalcDgGCAP(testCalcDg):
     cmdline = (
         "-d gcap/out1_bnd --est gcap bar --pmf --subdir b_-9.700 --name"
         " results_inst --no-show --pickle results.pkl --save-figures pref"
+        " -v 30."
     )
+
+
+class testCalcDgGCAPNoVol(testCalcDgGCAP):
+    output_files = []
+    cmdline = (
+        "-d gcap/out1_bnd --est gcap bar --pmf --subdir b_-9.700 --name"
+        " results_inst --no-show --pickle results.pkl --save-figures pref"
+    )
+
+    def test(self):
+        with self.assertRaises(TypeError):
+            calc_dg2.run_script(self.cmdline.split())
 
 
 class testCalcDgCycleGCAP(testCalcDgCycleDual):
     input_files = ['gcap/out1_bnd']
+    cmdline = (
+        "-d gcap gcap --signs + - --name results_inst --est gcap ti "
+        "--dual --no-show --pickle results.pkl --subdir b_-10.700 -v 30.")
+
+
+class testCalcDgCycleGCAPNoVol(testCalcDgCycleGCAP):
+    output_files = []
     cmdline = ("-d gcap gcap --signs + - --name results_inst --est gcap ti "
                "--dual --no-show --pickle results.pkl --subdir b_-10.700")
+
+    def test(self):
+        with self.assertRaises(TypeError):
+            calc_dg_cycle.run_script(self.cmdline.split())
 
 
 class testCalcGCI(testCalcDg):

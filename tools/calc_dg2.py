@@ -177,7 +177,7 @@ def get_arg_parser():
         choices=['ti', 'mbar', 'bar', 'gcap'],
         help="Choose estimators")
     parser.add_argument(
-        '-v', '--volume', type=float, default=30.,
+        '-v', '--volume', type=float, default=None,
         help="Volume of GCMC region")
     # parser.add_argument(
     #     '-n', '--name', default='results',

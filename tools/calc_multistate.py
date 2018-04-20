@@ -67,7 +67,7 @@ class Result2D(feb.Result):
 class GCMCMBAR(feb.MBAR):
     result_class = Result2D
 
-    def __init__(self, lambdas, volume=30., **kwargs):
+    def __init__(self, lambdas, volume, **kwargs):
         self.lambdas = lambdas
         self.volume = volume
         self.data = []
@@ -75,6 +75,13 @@ class GCMCMBAR(feb.MBAR):
         self.subdir_glob = 'b_*/'
         self._data_Bs = []
         self.results_name = 'results_inst'
+
+        # deals with a gotcha when user forgets the volume flag
+        # when using analysis script interface
+        if volume is None:
+            raise TypeError(
+                'No gcmc volume information passed to GCMCMBAR estimator. '
+                'If using a script you may need the --volume flag.')
 
     def add_data(self, series):
         dat = np.array([series.feenergies[lam]

@@ -50,7 +50,7 @@ def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
 
 
 class CycleCalculation(feb.FreeEnergyCalculation):
-    def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR], volume=30.,
+    def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR], volume=None,
                  results_name='results'):
         self.estimators = estimators
         self.figures = {}
@@ -166,7 +166,7 @@ def get_arg_parser():
         choices=['ti', 'mbar', 'bar', 'gcap'],
         help="Choose estimators")
     parser.add_argument(
-        '-v', '--volume', type=float, default=30.,
+        '-v', '--volume', type=float, default=None,
         help="Volume of GCMC region")
 
     # use mutually exclusive group for these as we need one and only one
