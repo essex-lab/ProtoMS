@@ -13,7 +13,7 @@ sys.path.append(os.path.join(os.environ['PROTOMSHOME'], 'tools'))
 import calc_dg2
 import calc_ti_decomposed
 import calc_dg_cycle
-import calc_gci2
+import calc_gci
 from free_energy_base import BAR, MBAR, TI, get_alchemical_arg_parser
 from free_energy_base import PMF, Quantity, Result
 from simulationobjects import boltz, SnapshotResults
@@ -343,7 +343,7 @@ class testCalcGCI(testCalcDg):
                " --pickle results.pkl --name results_inst -v 30.")
 
     def test(self):
-        calc_gci2.run_script(self.cmdline.split())
+        calc_gci.run_script(self.cmdline.split())
 
 
 class testCalcGCIZero(testCalcGCI):
