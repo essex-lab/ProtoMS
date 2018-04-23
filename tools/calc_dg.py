@@ -1,156 +1,205 @@
-# Authors: Richard Bradshaw
-#          Ana Cabedo Martinez
-#          Chris Cave-Ayland
-#          Samuel Genheden
-#          Gregory Ross
-
-"""
-Program to calculate free energies using TI, BAR and MBAR
-"""
-
-import os
-import logging
-
+import matplotlib
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
+import os
+import sys
+import free_energy_base as feb
+from table import Table
+from gcmc_free_energy_base import GCMCMBAR
 
-import simulationobjects
-import calc_ti
-import calc_bar
-import pms2pymbar
-import calc_series
-
+if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
+    matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-logger = logging.getLogger('protoms')
+
+class FreeEnergyCalculation(feb.FreeEnergyCalculation):
+    """Perform a basic free energy calculation.
+    """
+    def test_equilibration(self, discard_limit):
+        """Perform a series of calculations discarding increasing portions
+        from the start of the loaded data series. This assesses whether
+        unequilibrated data from the start of a simulation is biasing
+        the result.
+
+        Parameters
+        ----------
+        discard_limit : float
+          Value between 0 and 1 that indicates the maximum amount of
+          data to discard. E.g. a value of 0.2 would perform a series
+          of calculations that range between using all of available
+          data and the last 80% of the data.
+        """
+        proportions = np.linspace(0.0, discard_limit, 10)
+        return {prop: self.calculate(subset=(prop, 1.0))
+                for prop in proportions}
+
+    def test_convergence(self, discard_limit, lower_limit=0.):
+        """Perform a series of calculations discarding increasing portions
+        from the end of the loaded data series. This assesses whether
+        sufficient data has been sampled to produce converged free energy
+        estimates.
+
+        Parameters
+        ----------
+        discard_limit : float
+          Value between 0 and 1 that indicates the minimum proportion of data
+          to use. E.g. a value of 0.8 would perform a series of calculations
+          that range between using the all of the available data and the first
+          80% of the data.
+        lower_limit : float, optional
+          Specifies an initial proportion of the data set to discard from all
+          calculations. Allows unequilibrated data to be removed.
+        """
+        proportions = np.linspace(discard_limit, 1.0, 10)
+        return {prop: self.calculate(subset=(lower_limit, prop))
+                for prop in proportions}
+
+    def _body(self, args):
+        """Calculation business logic.
+
+        Parameters
+        ----------
+        args: argparse.Namespace object
+            Namespace from argumentparser
+        """
+        if (args.test_equilibration or args.test_convergence) is not None:
+            if (args.test_equilibration) is not None:
+                results = self.test_equilibration(args.test_equilibration)
+            else:
+                results = self.test_convergence(args.test_convergence,
+                                                lower_limit=args.lower_bound)
+            fig = plot_fractional_dataset_results(results, self.estimators)
+            figname = 'equil' if args.test_equilibration else 'convergence'
+            self.figures[figname] = fig
+        else:
+            results = self.calculate(subset=(args.lower_bound,
+                                             args.upper_bound))
+            if args.pmf:
+                if GCMCMBAR in self.estimators:
+                    self.figures['pmf_2d'] = plot_pmfs_2d(results)
+                if len(self.estimators) > 1 or GCMCMBAR not in self.estimators:
+                    self.figures['pmf'] = plot_pmfs(results)
+
+            self.tables.extend(results_tables(args.directories, results))
+        return results
+
+
+def plot_results(x, results, axes, **kwargs):
+    """Plot the free energies from a collection of Result objects
+    onto matplotlib axes. All **kwargs are passed to calls of
+    axes.plot()."""
+    y = np.array([result.dG.value for result in results])
+    err = np.array([result.dG.error for result in results])
+
+    line = axes.plot(x, y, **kwargs)[0]
+    axes.plot(x, y+err, '--', linewidth=1, color=line.get_color())
+    axes.plot(x, y-err, '--', linewidth=1, color=line.get_color())
+
+
+def plot_fractional_dataset_results(results, estimators):
+    """Plot results of calculations that use variable portions of available
+    data i.e. equilibration and convergence tests."""
+    fig, ax = plt.subplots()
+    for estimator in estimators:
+        x = sorted(results)
+        dat = [results[prop][estimator] for prop in x]
+        plot_results(x, dat, ax, label=estimator.__name__)
+    ax.legend(loc='best')
+    ax.set_xlabel('Proportion')
+    ax.set_ylabel('Free energy (kcal/mol)')
+    return fig
+
+
+def plot_pmfs(results):
+    """Plot average potentials of mean force for all estimators."""
+    fig, ax = plt.subplots()
+    for estimator in sorted(results):
+        if estimator != GCMCMBAR:
+            results[estimator].pmf.plot(ax, label=estimator.__name__)
+    ax.legend(loc='best')
+    return fig
+
+
+def plot_pmfs_2d(results):
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    results[GCMCMBAR].pmf.plot(ax)
+    ax.set_xlabel('B')
+    ax.set_ylabel('lambda')
+    ax.set_zlabel('dG (kcal/mol)')
+    return fig
+
+
+def results_tables(directories, results):
+    """Print calculated free energies. If multiple repeats are present
+    the mean and standard error are also printed.
+    """
+    tables = []
+    for estimator in sorted(results, key=lambda x: x.__name__):
+        table = Table(estimator.__name__, ['%s', "%.2f"])
+        for i, res in enumerate(results[estimator].data):
+            dGs = []
+            for j, pmf in enumerate(res):
+                dGs.append(pmf.dG)
+                table.add_row([directories[i][j], pmf.dG.value])
+            table.add_row(['Mean', feb.Quantity.fromData(dGs)])
+            table.add_blank_row()
+        table.add_row(['Total Mean', results[estimator].dG])
+        tables.append(table)
+    return tables
+
 
 def get_arg_parser():
-  import argparse
+    """Add custom options for this script"""
+    parser = feb.FEArgumentParser(
+        description="Calculate free energy differences using a range of"
+                    " estimators",
+        parents=[feb.get_alchemical_arg_parser()])
+    parser.add_argument(
+        '--pmf', action='store_true', default=False,
+        help="Make graph of potential of mean force",
+        clashes=('test_convergence', 'test_equilibration'))
+    parser.add_argument(
+        '--test-equilibration', default=None, type=float,
+        help="Perform free energy calculations 10 times using varying "
+             "proportions of the total data set provided. Data used will "
+             "range from 100%% of the dataset down to the proportion "
+             "provided to this argument",
+        clashes=('test_convergence', 'lower_bound'))
+    parser.add_argument(
+        '--test-convergence', default=None, type=float,
+        help="Perform free energy calculations 10 times using varying "
+             "proportions of the total data set provided. Data used will "
+             "range from 100%% of the dataset up to the proportion "
+             "provided to this argument")
+    parser.add_argument(
+        '--estimators', nargs='+', default=['ti', 'mbar', 'bar'],
+        choices=['ti', 'mbar', 'bar', 'gcap'],
+        help="Choose estimators")
+    parser.add_argument(
+        '-v', '--volume', type=float, default=None,
+        help="Volume of GCMC region")
+    # parser.add_argument(
+    #     '-n', '--name', default='results',
+    #     help="Name of ProtoMS output file containing free energy data. "
+    #          "Note that this option will not change the output file "
+    #          "used by the gcap estimator from results_inst.")
+    return parser
 
-  # Setup a parser of the command-line arguments
-  parser = argparse.ArgumentParser(description="Program to calculate free energy from TI/BAR/MBAR")
-  parser.add_argument('-d','--directories',nargs="+",help="the root directory that contains all the output files of the simulation. Default is cwd.",default=["./"])
-  parser.add_argument('-r','--results',help="the name of the file to analyse. Default is results. ",default="results")
-  parser.add_argument('-s','--skip',type=int,help="the number of blocks to skip to calculate the free energy differences in one window. default is 0. Skip must be greater or equal to 0",default=0)
-  parser.add_argument('-m','--max',type=int,help="the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0",default=99999)
-  parser.add_argument('-t','--temperature',type=float,help="the simulation temperature in degrees. Default is 25.0",default=25.0)
-  parser.add_argument('-b','--nboots',type=int,help="the number of bootstrap samples",default=100)
-  parser.add_argument('-gr','--plot-grads',dest='plotGrad',action='store_true',help="turns on producing plot of gradients",default=False)
-  parser.add_argument('-pg','--print-grad',dest='printGrad',action='store_false',help="turns off printing of gradient",default=True)
-  parser.add_argument('-pe','--print-each',dest='printEach',action='store_false',help="turns off printing of each free energy",default=True)
-  parser.add_argument('--analytical',action='store_true',help="turns on use of analytical gradients",default=False)
-  parser.add_argument('--numerical',choices=["both","back","forw"],default="both",help="the kind of numerical gradient estimator")
-  parser.add_argument('-e','--estimator',nargs="+",choices=["ti","bar","mbar"],default=["ti","bar","mbar"],help="the type of estimator to use")
-  parser.add_argument('--autoeqb',dest='autoeqb',action='store_true',help="use automatic equilibration detection to determine how much data is included in free energy difference")
-  return parser
-#
-# If this is run from the command-line
-#
-if __name__ == '__main__' :
 
-  args = get_arg_parser().parse_args()
-  
+def run_script(cmdline):
+    class_map = {'ti': feb.TI, 'mbar': feb.MBAR,
+                 'bar': feb.BAR, 'gcap': GCMCMBAR}
+    args = get_arg_parser().parse_args(cmdline)
+    calc = FreeEnergyCalculation(
+        root_paths=args.directories,
+        temperature=args.temperature,
+        subdir=args.subdir,
+        estimators=map(class_map.get, args.estimators),
+        volume=args.volume,
+        results_name=args.name)
+    calc.run(args)
 
-  # Setup the logger
-  logger = simulationobjects.setup_logger()
 
-  # Fix negative values of skip and max
-  if args.max < 0 :
-    args.max = 99999
-  if args.skip <= 0 :
-    args.skip = -1
-
-  RT = 1.9872041*(args.temperature+273.15)/1000
-
-  # Estimate TI for each of the output directories
-  if "ti" in args.estimator :
-    print ""
-    verbose = {"total":False,"gradient":False,"pmf":False,"uncert":False,"lambda":False}  
-    lambdas = None
-    all_gradients = []
-    all_grad_std = []  
-    pmf = pmf_std = None
-    for directory in args.directories :
-      lambdas,gradients,grad_std,pmf,pmf_std = calc_ti.ti(directory,args.results,args.skip,args.max,verbose,args.numerical,args.analytical,'',args.autoeqb)
-      all_gradients.append(gradients)
-      all_grad_std.append(grad_std)
-      if args.printGrad and len(args.directories) == 1 :
-        print "\n%6s %12s %8s"%("lambda","gradient","std")
-        for i in range(len(lambdas)) :
-          print "%-6.3f %12.4f %8.4f"%(lambdas[i],gradients[i],grad_std[i])
-        print ""
-      if args.printEach or len(args.directories) == 1:        
-        print "TI (%s) : %.3f +- %.3f"%(directory,pmf[-1],pmf_std[-1])
-    if len(all_gradients) == 1 :    
-      if args.plotGrad :
-        plt.plot(lambdas,all_gradients[0],color='c')
-    else :
-      # Calculates the average gradient and do the integration over that
-      gradients = np.array(all_gradients).mean(axis=0)
-      grad_std = np.array(all_gradients).std(axis=0)/np.sqrt(len(all_gradients))
-      pmf = np.zeros(gradients.shape)
-      pmf_std = np.zeros(gradients.shape)
-      w = 0.5*(lambdas[0]+lambdas[1])
-      pmf_std[0] = w**2*grad_std[0]**2
-      if args.printGrad : 
-        print "\n%6s %12s %8s"%("lambda","gradient","std")
-        print "%-6.3f %12.4f %8.4f"%(lambdas[0],gradients[0],grad_std[0])
-
-      for i in range(1,len(lambdas)) :
-        if args.printGrad : print "%-6.3f %12.4f %8.4f"%(lambdas[i],gradients[i],grad_std[i])
-        h = lambdas[i]-lambdas[i-1]
-        pmf[i] = pmf[i-1] + h*(gradients[i]+gradients[i-1])/2.0
-        if i == len(lambdas) - 1 :
-          w = 1.0 - 0.5*(lambdas[i]+lambdas[i-1])
-        else :
-          w = 0.5*(lambdas[i+1]-lambdas[i-1])      
-        pmf_std[i] = pmf_std[i-1] + w**2*grad_std[i]**2
-      print "TI : %.3f +- %.3f"%(pmf[-1],np.sqrt(pmf_std[-1]))
-      if args.plotGrad :
-        plt.errorbar(lambdas,gradients,yerr=grad_std,color='c')
-    if args.plotGrad :
-      plt.xlabel('$\lambda$')
-      plt.ylabel('$\Delta G / \Delta \lambda$ (kcal)')
-      plt.savefig('gradients.png')  
-
-  # Estimate BAR for each of the output directories
-  if "bar" in args.estimator :
-    print ""
-    verbose = {"total":False,"window":False,"uncert":False,"lambda":False}
-    if len(args.directories) :
-      args.nboots = 2
-    all_dgs = []
-    for directory in args.directories :
-      lambdas,windg,std = calc_bar.bar(directory,args.results,args.skip,args.max,RT,verbose,args.nboots)
-      all_dgs.append(windg.sum())
-      if args.printEach or len(args.directories) == 1:
-        print "BAR (%s): %.3f +- %.3f"%(directory,windg.sum(),np.sqrt(np.sum(std**2)))
-    if len(all_dgs) > 1 :
-      dg = np.array(all_dgs).mean()
-      std = np.array(all_dgs).std() / np.sqrt(len(all_dgs))
-      print "BAR: %.3f +- %.3f"%(dg,std) 
-
-  # Estimate MBAR for each of the output directories
-  if "mbar" in args.estimator :
-    print ""
-    try :
-      import pymbar
-    except :
-      print "Could not import pymbar! Please make sure that pymbar is in your Python path."
-      quit()
-
-    all_dgs = []
-    for directory in args.directories : 
-      lambdas,energies,paths = pms2pymbar.extract_energies(directory,args.results,args.skip,args.max)
-      try:
-        resp = pms2pymbar.mbar(lambdas,energies,RT)
-      except np.linalg.LinAlgError:
-        print "MBAR (%s): nan +- nan" % directory
-        continue
-      (Deltaf_ij, dDeltaf_ij) = (resp[0],resp[1])
-      if args.printEach or len(args.directories) == 1:
-        print "MBAR (%s): %.3f +- %.3f"%(directory,Deltaf_ij[0,-1]*RT,dDeltaf_ij[0,-1]*RT)
-      all_dgs.append(Deltaf_ij[0,-1]*RT)
-    if len(all_dgs) > 1 :
-      dg = np.array(all_dgs).mean()
-      std = np.array(all_dgs).std() / np.sqrt(len(all_dgs))
-      print "MBAR: %.3f +- %.3f"%(dg,std) 
+if __name__ == '__main__':
+    run_script(sys.argv[1:])

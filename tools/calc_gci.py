@@ -10,7 +10,7 @@ import sys
 import os
 
 import free_energy_base as feb
-from gc_free_energy_base import GCI, GCMCResult
+from gcmc_free_energy_base import GCI, GCMCResult
 from table import Table
 
 import matplotlib

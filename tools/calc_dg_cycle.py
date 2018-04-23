@@ -2,7 +2,7 @@ from glob import glob
 import sys
 import free_energy_base as feb
 from table import Table
-from gc_free_energy_base import GCMCMBAR
+from gcmc_free_energy_base import GCMCMBAR
 
 
 def state_data_table(results, directories, signs, states, estimator):

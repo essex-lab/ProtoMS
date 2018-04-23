@@ -2,7 +2,7 @@ import matplotlib
 import numpy as np
 import os
 import free_energy_base as feb
-import calc_gci2 as gci2
+import calc_gci as gci
 import pymbar
 import simulationobjects as sim
 from table import Table
@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 
 
 class GCSEnergies(feb.Estimator):
-    # results_name = 'results_inst'
     def __init__(self, lambdas, subdir_glob, **kwargs):
         feb.Estimator.__init__(self, lambdas, subdir_glob=subdir_glob,
                                results_name='results_inst', **kwargs)
@@ -22,7 +21,6 @@ class GCSEnergies(feb.Estimator):
         tmp = []
         for term, dat in series.interaction_energies.items():
             if 'GCS' in term:
-                # tmp.append(dat[-1].curr)
                 tmp.append(dat[0].curr)
         self.data.append(np.sum(tmp, axis=0))
         return len(self.data[-1])
@@ -35,21 +33,21 @@ class GCSLongEnergies(GCSEnergies):
                                results_name='results_long', **kwargs)
 
 
-class ReweightedTitration(gci2.TitrationCalculation):
+class ReweightedTitration(gci.TitrationCalculation):
     def __init__(self, root_paths, temperature, volume, steps,
                  filename, longname, subdir=''):
         feb.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
             temperature=temperature,
-            estimators=[gci2.GCI, GCSEnergies, GCSLongEnergies],
+            estimators=[gci.GCI, GCSEnergies, GCSLongEnergies],
             subdir=subdir,
             extract_data=False)
         self.volume = volume
         self.steps = steps
         # adjust estimator instance attributes so that the
         # correct filenames are read, this is a bit ugly
-        for est in self.estimators[gci2.GCI][0]:
+        for est in self.estimators[gci.GCI][0]:
             est.results_name = filename
         for est in self.estimators[GCSEnergies][0]:
             est.results_name = filename
@@ -61,7 +59,7 @@ class ReweightedTitration(gci2.TitrationCalculation):
         GCI_estimators = {'raw': [], 'umbrella': [], 'mbar': []}
         beta = 1/(sim.boltz*self.temperature)
 
-        for i, rep in enumerate(self.estimators[gci2.GCI][0]):
+        for i, rep in enumerate(self.estimators[gci.GCI][0]):
             # get relevant quantities into nice numpy arrays
             # occupancy data
             ns = np.array(rep.subset(*subset).data)
@@ -108,11 +106,11 @@ class ReweightedTitration(gci2.TitrationCalculation):
             # create GCI estimators to calculate binding free energies
             # from reweighted occupancy data
             # for some reason reweighted data comes out of MBAR in reverse
-            mbar = gci2.GCI(Bs)
+            mbar = gci.GCI(Bs)
             mbar.data = mbar_ns[Nsims:][::-1].reshape((Nsims, 1))
             GCI_estimators['mbar'].append(mbar)
 
-            umbrella = gci2.GCI(Bs)
+            umbrella = gci.GCI(Bs)
             umbrella.data = umbrella_ns.reshape((Nsims, 1))
             GCI_estimators['umbrella'].append(umbrella)
 
@@ -120,7 +118,7 @@ class ReweightedTitration(gci2.TitrationCalculation):
         # GCIResult objects for different reweighting methods.
         results = {}
         for key in 'raw', 'mbar', 'umbrella':
-            results[key] = gci2.GCIResult(
+            results[key] = gci.GCMCResult(
                 [rep.calculate(self.temperature, self.volume, self.steps)
                  for rep in GCI_estimators[key]])
         return results
@@ -168,7 +166,7 @@ def get_arg_parser():
                     "corrections for long-range electrostatics and "
                     "dispersion. Reweighting is carried out using both "
                     "an umbrella sampling result and MBAR.",
-        parents=[gci2.get_arg_parser()], conflict_handler='resolve')
+        parents=[gci.get_arg_parser()], conflict_handler='resolve')
     parser.add_argument(
         '-f', '--filename', default='results_inst',
         help="Name of file containing simulation energies with short cutoff."
