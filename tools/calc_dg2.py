@@ -5,7 +5,7 @@ import os
 import sys
 import free_energy_base as feb
 from table import Table
-from calc_multistate import GCMCMBAR
+from gc_free_energy_base import GCMCMBAR
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
@@ -68,7 +68,7 @@ class FreeEnergyCalculation(feb.FreeEnergyCalculation):
             else:
                 results = self.test_convergence(args.test_convergence,
                                                 lower_limit=args.lower_bound)
-            fig = plot_fractional_dataset_results(results, calc.estimators)
+            fig = plot_fractional_dataset_results(results, self.estimators)
             figname = 'equil' if args.test_equilibration else 'convergence'
             self.figures[figname] = fig
         else:

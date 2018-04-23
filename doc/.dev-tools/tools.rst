@@ -60,6 +60,14 @@ tools.calc_gcsingle module
     :undoc-members:
     :show-inheritance:
 
+tools.calc_gci module
+---------------------------
+
+.. automodule:: tools.calc_gci
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tools.calc_replicapath module
 -----------------------------
 
@@ -136,6 +144,15 @@ tools.free_energy_base module
 -----------------------------
        
 .. automodule:: tools.free_energy_base
+    :special-members: __init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tools.gc_free_energy_base module
+-----------------------------
+       
+.. automodule:: tools.gc_free_energy_base
     :special-members: __init__
     :members:
     :undoc-members:

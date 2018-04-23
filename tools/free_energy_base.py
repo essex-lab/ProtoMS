@@ -114,18 +114,18 @@ class BaseResult(object):
         #     self.pmf_class = kwargs['pmf_class']
         # except KeyError:
         #     self.pmf_class = PMF
-        self.pmf_class = PMF
+        # self.pmf_class = PMF
 
     def __add__(self, other):
-        return self.__class__(*(self.data + other.data),
-                              pmf_class=self.pmf_class)
+        return self.__class__(*(self.data + other.data))  # ,
+                              # pmf_class=self.pmf_class)
 
     def __sub__(self, other):
         return self + -other
 
     def __neg__(self):
-        return self.__class__(*[[-pmf for pmf in dat] for dat in self.data],
-                              pmf_class=self.pmf_class)
+        return self.__class__(*[[-pmf for pmf in dat] for dat in self.data] ) # ,
+                              # pmf_class=self.pmf_class)
 
 
 class Result(BaseResult):
@@ -151,7 +151,7 @@ class Result(BaseResult):
     @property
     def pmf(self):
         """The potential of mean force for this result"""
-        pmfs = [self.pmf_class(self.lambdas, *dat) for dat in self.data]
+        pmfs = [PMF(self.lambdas, *dat) for dat in self.data]
         return reduce(add, pmfs)
 
 
@@ -220,7 +220,6 @@ class Quantity(object):
 
 class Estimator(object):
     """Base class for free energy estimators."""
-    pmf_class = PMF
     result_class = Result
 
     def __init__(self, lambdas, results_name="results",
@@ -463,7 +462,7 @@ class FreeEnergyCalculation(object):
     def _path_constructor(self, root_path):
         """Given a root_path (string) construct a full path
         suitable for globbing to find output directories."""
-        return os.path.join(root_path, "lam-*") #, self.subdir)
+        return os.path.join(root_path, "lam-*")
 
     def _get_lambda(self, path):
         """Given a path (string) extract the contained lambda value"""
