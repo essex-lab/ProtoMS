@@ -7,10 +7,11 @@ Can be executed from the command line as a stand-alone program
 """
 
 import sys
+import numpy as np
 import os
 
 import free_energy_base as feb
-from gcmc_free_energy_base import GCI, GCMCResult
+from gcmc_free_energy_base import GCI, GCMCResult, tip4p_excess
 from table import Table
 
 import matplotlib
@@ -70,6 +71,19 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
         self.tables.append(table)
         self.figures['insertion_pmf'] = fig
 
+        eqb_B = results.equilibrium_B
+        eqb_index = np.argmin(
+            [abs(B - eqb_B) for B in results.occupancies.coordinate])
+        closest_B = results.occupancies.coordinate[eqb_index]
+
+        self.footer += 'The equilibrium B value is %.3f\n' % eqb_B
+        self.footer += 'Most similar simulated B value is %.3f\n' % closest_B
+        self.footer += 'Occupancy at %.3f is %s\n' % \
+                       (closest_B, results.occupancies.values[eqb_index])
+
+        min_index = np.argmin(results.insertion_pmf.values)
+        self.footer += "\nOccupancy at insertion PMF minimum is %.3f\n" % \
+                       results.insertion_pmf.coordinate[min_index]
         return results
 
 
@@ -82,13 +96,19 @@ def plot_titration(results, ax, dot_fmt='b'):
 def plot_insertion_pmf(results, title=''):
     table = Table(
         title,
-        fmts=['%d', '%.3f'],
-        headers=['Number of Waters', 'Binding Free Energy'])
+        fmts=['%d', '%.3f', '%.3f', '%.3f'],
+        headers=['Number of Waters',
+                 'Insertion Free Energy',
+                 'Network Binding Free Energy',
+                 'Water Binding Free Energy'])
 
     steps = results.data[0][0].pmf.coordinate
     pmf = feb.PMF(steps, *[rep.pmf for rep in results.data[0]])
+    prev_fe = 0.0
     for i, fe in enumerate(pmf):
-        table.add_row([i, fe])
+        bind_fe = fe - i*tip4p_excess
+        table.add_row([i, fe, bind_fe, bind_fe - prev_fe])
+        prev_fe = bind_fe.value
 
     fig, ax = plt.subplots()
     pmf.plot(ax, xlabel="Occupancy")
@@ -99,29 +119,21 @@ def get_arg_parser():
     """Add custom options for this script"""
     parser = feb.FEArgumentParser(
         description="Calculate water binding free energies using Grand "
-        "Canonical Integration.",
+                    "Canonical Integration.",
         parents=[feb.get_base_arg_parser()],
         conflict_handler='resolve')
     parser.add_argument(
-        '-d',
-        '--directories',
-        nargs='+',
-        required=True,
+        '-d', '--directories', nargs='+', required=True,
         help="Location of folders containing ProtoMS output subdirectories. "
-        "Multiple directories can be supplied to this flag and indicate "
+             "Multiple directories can be supplied to this flag and indicate "
         "repeats of the same calculation.")
     parser.add_argument(
-        '-v',
-        '--volume',
-        required=True,
-        type=float,
+        '-v', '--volume', required=True, type=float,
         help="Volume of the calculations GCMC region.")
     parser.add_argument(
-        '-n',
-        '--nsteps',
-        type=int,
+        '-n', '--nsteps', type=int,
         help='Override automatic guessing of maximum number of waters for '
-        'titration curve fitting.')
+             'titration curve fitting.')
     return parser
 
 

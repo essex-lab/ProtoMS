@@ -11,17 +11,26 @@ thermal_wavelength = 1.00778365325  # of water, in angstroms
 kB = 0.0019872  # Boltzmann's constant, in kcal.mol^-1.K^-1
 standard_volume = 30.  # Standard volume of a water in bulk water
 tip4p_excess = -6.2  # Excess chemical potential of tip4p in bulk tip4p
+# tip4p_excess = feb.Quantity(-6.2, 0.)
 
 
 class GCMCPMF(feb.Series):
-    def __init__(self, coordinate, values, model, pmf):
+    def __init__(self, coordinate, values, volume, temperature, model, pmf):
         self.coordinate = coordinate
         self.values = values
+        self.volume = volume
+        self.temperature = temperature
         self.model = model
         self.pmf = feb.PMF(range(len(pmf)), pmf)
 
+    @property
+    def equilibrium_B(self):
+        """Get the value of B equating to equilibrium with bulk water."""
+        beta = 1 / (self.temperature * kB)
+        return beta * tip4p_excess + np.log(self.volume / standard_volume)
 
-class GCMCPMF2D(feb.Series):
+
+class GCMCPMF2D(GCMCPMF):
     def __init__(self, lambdas, Bs, volume, temperature, *args):
         self.coordinate = lambdas
         self.coordinate2 = Bs
@@ -31,14 +40,9 @@ class GCMCPMF2D(feb.Series):
         for dat in zip(*args):
             self.values.append(feb.PMF(self.coordinate2, *dat))
 
-    def equilibrium_B(self):
-        """Get the value of B equating to equilibrium with bulk water."""
-        beta = 1 / (self.temperature * kB)
-        return beta * tip4p_excess + np.log(self.volume / standard_volume)
-
     @property
     def dG(self):
-        eqb_B = self.equilibrium_B()
+        eqb_B = self.equilibrium_B
         closest = np.argmin([abs(B - eqb_B) for B in self.coordinate2])
         return self.values[-1].values[closest] - self.values[0].values[closest]
 
@@ -59,6 +63,10 @@ class GCMCResult(feb.BaseResult):
     @property
     def B_values(self):
         return feb.Result.lambdas.fget(self)
+
+    @property
+    def equilibrium_B(self):
+        return self.data[0][0].equilibrium_B
 
     @property
     def occupancies(self):
@@ -112,7 +120,7 @@ class GCI(feb.Estimator):
             x=np.array(self.B_values), y=Ns, size=model_steps,
             verbose=False)[0]
 
-        return GCMCPMF(self.B_values, Ns, model,
+        return GCMCPMF(self.B_values, Ns, volume, temp, model,
                        insertion_pmf(np.arange(steps + 1), model, volume))
 
     def __getitem__(self, val):
@@ -659,6 +667,8 @@ def insertion_pmf(N, gcmc_model, volume, T=298.15):
     gcmc_model : Slp object
       an ANN model (single layer perceptron) that will
       be used to calculate the free energy
+    volume : float
+      the volume of the GCMC region in Angstroms^3
     T : float
       the temperature of the simulation in Kelvin
 
@@ -668,10 +678,7 @@ def insertion_pmf(N, gcmc_model, volume, T=298.15):
       relative ideal gas transfer free energies for each water specified in N
     """
     # Boltmann's constant (in kcal/mol/K) multiplied by temperature (in K).
-    kT = T * 0.0019872
-    Vstandard = 30.0
-    if volume is None:
-        volume = 30.0
+    kT = T * kB
 
     def integral(gcmc_model, Bi, Bf):  # For numerical integration.
         logies = [
@@ -681,7 +688,7 @@ def insertion_pmf(N, gcmc_model, volume, T=298.15):
         return np.sum(logies)  # Under the convention that 0*log(0) = 0.
 
     def nonintegral(N, B):
-        return N * B  # - special.gammaln(N+1)
+        return N * B
 
     dG = np.zeros(N.size)
     correction = np.zeros(N.size)
@@ -694,7 +701,7 @@ def insertion_pmf(N, gcmc_model, volume, T=298.15):
         dG[i] = (nonintegral(N[i], B_upper) - nonintegral(N_lower, B_lower) -
                  integrate.quad(gcmc_model.predict, a=B_lower, b=B_upper)[0]
                  )[0]  # This version numerical integration.
-        correction[i] = (N[i] - N_lower) * np.log(volume / Vstandard)
+        correction[i] = (N[i] - N_lower) * np.log(volume / standard_volume)
         dG[i] = dG[i] - correction[i]
     return dG * kT
 

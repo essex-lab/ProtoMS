@@ -175,15 +175,12 @@ def get_arg_parser():
     parser.add_argument(
         '--estimators', nargs='+', default=['ti', 'mbar', 'bar'],
         choices=['ti', 'mbar', 'bar', 'gcap'],
-        help="Choose estimators")
+        help="Choose free energy estimator to use. By default TI, BAR and MBAR"
+             " are used. Note that the GCAP estimator assumes a different file"
+             " structure and ignores the --subdir flag.")
     parser.add_argument(
         '-v', '--volume', type=float, default=None,
         help="Volume of GCMC region")
-    # parser.add_argument(
-    #     '-n', '--name', default='results',
-    #     help="Name of ProtoMS output file containing free energy data. "
-    #          "Note that this option will not change the output file "
-    #          "used by the gcap estimator from results_inst.")
     return parser
 
 

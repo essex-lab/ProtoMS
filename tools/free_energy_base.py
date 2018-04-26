@@ -110,22 +110,15 @@ class BaseResult(object):
         if len({tuple(pmf.coordinate)
                 for dat in self.data for pmf in dat}) > 1:
             raise ValueError("All data must use the same lambda values")
-        # try:
-        #     self.pmf_class = kwargs['pmf_class']
-        # except KeyError:
-        #     self.pmf_class = PMF
-        # self.pmf_class = PMF
 
     def __add__(self, other):
-        return self.__class__(*(self.data + other.data))  # ,
-                              # pmf_class=self.pmf_class)
+        return self.__class__(*(self.data + other.data))
 
     def __sub__(self, other):
         return self + -other
 
     def __neg__(self):
-        return self.__class__(*[[-pmf for pmf in dat] for dat in self.data] ) # ,
-                              # pmf_class=self.pmf_class)
+        return self.__class__(*[[-pmf for pmf in dat] for dat in self.data])
 
 
 class Result(BaseResult):
@@ -198,12 +191,18 @@ class Quantity(object):
                                 np.std(values)/len(values)**0.5)
 
     def __add__(self, other):
-        return Quantity(self.value + other.value,
-                        (self.error**2 + other.error**2)**0.5)
+        try:
+            return Quantity(self.value + other.value,
+                            (self.error**2 + other.error**2)**0.5)
+        except AttributeError:
+            return Quantity(self.value + other, self.error)
 
     def __sub__(self, other):
-        return Quantity(self.value - other.value,
-                        (self.error**2 + other.error**2)**0.5)
+        try:
+            return Quantity(self.value - other.value,
+                            (self.error**2 + other.error**2)**0.5)
+        except AttributeError:
+            return Quantity(self.value - other, self.error)
 
     def __neg__(self):
         return Quantity(-self.value, self.error)
@@ -434,7 +433,6 @@ class FreeEnergyCalculation(object):
         """
         self.root_paths = root_paths
         self.temperature = temperature
-        # self.subdir = subdir
         self.estimator_classes = estimators
 
         # data hierarchy -> root_paths[leg][repeat]
@@ -458,6 +456,8 @@ class FreeEnergyCalculation(object):
             self._extract_series(self.paths)
         self.figures = {}
         self.tables = []
+        self.header = ''
+        self.footer = ''
 
     def _path_constructor(self, root_path):
         """Given a root_path (string) construct a full path
@@ -544,15 +544,17 @@ class FreeEnergyCalculation(object):
         ----------
         args
         """
-
+        self.header += 'All free energy quantities are given in kcal/mol\n'
         results = self._body(args)
 
         if args.pickle is not None:
             with open(args.pickle, 'w') as f:
                 pickle.dump(results, f, protocol=2)
 
+        print self.header
         for table in self.tables:
             print "%s\n" % table
+        print self.footer
 
         if args.save_figures is not None:
             # flag provided so save figures

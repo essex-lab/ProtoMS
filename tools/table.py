@@ -18,6 +18,10 @@ class Table(object):
             number of spaces between columns
         """
         self.title = title
+        if len(fmts) < len(headers):
+            raise ValueError(
+                'Not enough format strings provided for number of headers.')
+
         self.columns = [
             Column(head, fmt, fmt)
             for fmt, head in izip_longest(fmts, headers, fillvalue='')

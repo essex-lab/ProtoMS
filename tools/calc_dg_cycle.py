@@ -57,6 +57,8 @@ class CycleCalculation(feb.FreeEnergyCalculation):
         self.tables = []
         self.volume = volume
         self.results_name = results_name
+        self.header = ''
+        self.footer = ''
 
     def _body(self, args):
 
