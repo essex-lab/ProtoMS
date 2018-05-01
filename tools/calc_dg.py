@@ -80,14 +80,24 @@ class FreeEnergyCalculation(feb.FreeEnergyCalculation):
                 if len(self.estimators) > 1 or GCMCMBAR not in self.estimators:
                     self.figures['pmf'] = plot_pmfs(results)
 
-            self.tables.extend(results_tables(args.directories, results))
+            self.tables.extend(make_result_tables(args.directories, results))
         return results
 
 
 def plot_results(x, results, axes, **kwargs):
-    """Plot the free energies from a collection of Result objects
-    onto matplotlib axes. All **kwargs are passed to calls of
-    axes.plot()."""
+    """Plot the free energy differences from a collection of result objects.
+
+    Parameters
+    ----------
+    x : list (or other sequence) of numbers
+      the x-axis values
+    results : list (or other sequence) of Result objects
+      the free energy results to plot
+    axes : a matplotlib.Axes object
+      the axes to plot on
+    **kwargs :
+      all additional keyword arguments are passed to axes.plot()
+    """
     y = np.array([result.dG.value for result in results])
     err = np.array([result.dG.error for result in results])
 
@@ -98,7 +108,15 @@ def plot_results(x, results, axes, **kwargs):
 
 def plot_fractional_dataset_results(results, estimators):
     """Plot results of calculations that use variable portions of available
-    data i.e. equilibration and convergence tests."""
+    data i.e. equilibration and convergence tests.
+
+    Parameters
+    ----------
+    results : dict of float-(dict of Estimator class-Result object pairs)
+      results to plot, keys are used as the x-values
+    estimators : list (or other sequence) of Estimator classes
+      Estimator classes used to store 
+    """
     fig, ax = plt.subplots()
     for estimator in estimators:
         x = sorted(results)
@@ -111,7 +129,12 @@ def plot_fractional_dataset_results(results, estimators):
 
 
 def plot_pmfs(results):
-    """Plot average potentials of mean force for all estimators."""
+    """Plot average potentials of mean force for all (1d) estimators.
+
+    Parameters
+    ----------
+    results : dict of Estimator class-Result object pairs
+      the results to plot"""
     fig, ax = plt.subplots()
     for estimator in sorted(results):
         if estimator != GCMCMBAR:
@@ -121,6 +144,12 @@ def plot_pmfs(results):
 
 
 def plot_pmfs_2d(results):
+    """Plot average potentials of mean force for all (2d) estimators
+
+    Parameters
+    ----------
+    results : list (or other sequence) of results objects
+      the results to plot"""
     fig = plt.figure()
     ax = Axes3D(fig)
     results[GCMCMBAR].pmf.plot(ax)
@@ -130,16 +159,22 @@ def plot_pmfs_2d(results):
     return fig
 
 
-def results_tables(directories, results):
+def make_result_tables(directories, results):
     """Print calculated free energies. If multiple repeats are present
     the mean and standard error are also printed.
+
+    Parameters
+    ----------
+    directories : list of list (or other sequences) of strings
+      the directory name associated with each result
+    results : dict of Estimator class-Result object pairs
     """
     tables = []
     for estimator in sorted(results, key=lambda x: x.__name__):
         table = Table(estimator.__name__, ['%s', "%.2f"])
-        for i, res in enumerate(results[estimator].data):
+        for i, result in enumerate(results[estimator].data):
             dGs = []
-            for j, pmf in enumerate(res):
+            for j, pmf in enumerate(result):
                 dGs.append(pmf.dG)
                 table.add_row([directories[i][j], pmf.dG.value])
             table.add_row(['Mean', feb.Quantity.fromData(dGs)])
@@ -150,7 +185,7 @@ def results_tables(directories, results):
 
 
 def get_arg_parser():
-    """Add custom options for this script"""
+    """Returns the custom argument parser for this script"""
     parser = feb.FEArgumentParser(
         description="Calculate free energy differences using a range of"
                     " estimators",

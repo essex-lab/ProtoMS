@@ -11,7 +11,6 @@ thermal_wavelength = 1.00778365325  # of water, in angstroms
 kB = 0.0019872  # Boltzmann's constant, in kcal.mol^-1.K^-1
 standard_volume = 30.  # Standard volume of a water in bulk water
 tip4p_excess = -6.2  # Excess chemical potential of tip4p in bulk tip4p
-# tip4p_excess = feb.Quantity(-6.2, 0.)
 
 
 class GCMCPMF(feb.Series):
