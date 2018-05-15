@@ -82,18 +82,30 @@ def sort_clusters(clust_ids):
     return clust_ids_sorted, clust_occs
 
 
-def write_average_clusts(clust_wat_ids, n_clusts, n_frames, clust_occs):
+def write_average_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs):
     """
     Write the average oxygen positions of each cluster to a PDB file
 
     Parameters
     ----------
+    filename : str
+        Name of PDB output file
+    clust_wat_ids : list
+        List of lists indicating which water observations are present in each cluster
+    n_clusts : int
+        Total number of clusters
+    n_frames : int
+        Total number of frames
+    clust_occs : list
+        List containing occupancies of each cluster
 
     Returns
     -------
+    centres : dict
+        Dictionary containing the average coordinates of each cluster
     """
     centres = {}
-    with open('clusts.pdb', 'w') as f:
+    with open(filename, 'w') as f:
         for i in range(1, n_clusts+1):
             print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
         print("")
@@ -187,7 +199,7 @@ if __name__ == "__main__":
             frame_wat_ids[i].append(len(wat_list)-1)
     total_wats = len(wat_list)
 
-    # Calculate a one-dimensionalised distance matrix of all water observations
+    # Calculate a 1D distance matrix between all water observations
     dist_list = get_distances(frame_wat_ids, coord_list)
     
     # Cluster waters into discrete hydration sites
@@ -197,6 +209,7 @@ if __name__ == "__main__":
     n_clusts = max(clust_ids)
     print("\n{} clusters identified:".format(n_clusts))
 
+    # Renumber clusters based on occupancy
     clust_ids_sorted, clust_occs = sort_clusters(clust_ids)
 
     clust_wat_ids = {}  # Store water IDs for each cluster
@@ -207,7 +220,8 @@ if __name__ == "__main__":
         clust_wat_ids[clust].append(i)
 
     # this prints out the average of each cluster
-    clust_centres = write_average_clusts(clust_wat_ids, n_clusts, n_frames, clust_occs)
+    clust_centres = write_average_clusts("{}-clusts.pdb".format(args.output), clust_wat_ids,
+                                         n_clusts, n_frames, clust_occs)
 
     # Check which clusters are ever observed together
     clust_frame_ids = {}  # Store frame IDs for each cluster
@@ -248,31 +262,14 @@ if __name__ == "__main__":
                 o.write('neg = '+str(neg)+'\n\n')
             else:
                 o.write(line)
-#    longlist = []
-#    for pair in neg:
-#      for y in pair:
-#        longlist.append(y)
-#    print set(longlist)
-#    print all_in_neg
-#    quit()
-
-    # Sort clusters
-    clusts_sorted = []
-    clust_occs = [len(clust_wat_ids[i]) for i in range(1, n_clusts+1)]
-    while len(clusts_sorted) < n_clusts:
-        max_occ = max([len(clust_wat_ids[i]) for i in range(1, n_clusts+1) if i not in clusts_sorted])
-        for i in range(1, n_clusts+1):
-            if i not in clusts_sorted:
-                if np.isclose(clust_occs[i-1], max_occ):
-                    clusts_sorted.append(i)
 
     # Build a set of networks starting with the most occupied sites
     rep_networks = []
-    left_out = [i for i in clusts_sorted if clust_occs[i-1] > args.cutoff * n_frames]
+    left_out = [i for i in range(1, n_clusts+1) if clust_occs[i-1] > args.cutoff * n_frames]
     while len(left_out) > 0:
         network = [] 
         # Start the network by including those which have been left out..
-        for i in left_out + clusts_sorted:
+        for i in left_out + [j+1 for j in range(n_clusts)]:
             if i in network: continue  # Make sure not to include the same water twice...
             suitable = False  # Checks that all waters in the network have been observed together at least once
             # Check that all waters are observed in the same frame at least once
@@ -282,10 +279,10 @@ if __name__ == "__main__":
             if suitable:
                 network.append(i)
         # Add this network to the list
-        rep_networks.append([i for i in clusts_sorted if i in network])  # Sort the cluster IDs in the network
+        rep_networks.append([i for i in range(1, n_clusts+1) if i in network])  # Sort the cluster IDs in the network
         left_out = []
         # Check which occupied sites have not been yet included in a network.
-        for i in clusts_sorted:
+        for i in range(1, n_clusts+1):
             if clust_occs[i-1] > args.cutoff * n_frames and np.all([i not in net for net in rep_networks]):
                 left_out.append(i)
     
