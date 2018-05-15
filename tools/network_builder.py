@@ -10,9 +10,25 @@ Marley Samways
 import numpy as np
 import argparse
 from scipy.cluster import hierarchy
+from scipy.stats import norm
 
 import simulationobjects
 
+def phi(a,b,frame_clust_ids):
+    n11 = 0.0
+    n01 = 0.0
+    n10 = 0.0
+    n00 = 0.0
+    for frame in frame_clust_ids:
+      if a in frame and b in frame:
+        n11 += 1
+      elif a in frame and b not in frame:
+        n10 += 1
+      elif a not in frame and b in frame:
+        n01 += 1
+      else:
+        n00 +=1
+    return (n11*n00 - n01*n10) / ((n11+n01)*(n11+n10)*(n00+n01)*(n00+n10))**0.5 
 
 def get_args():
     """
@@ -53,7 +69,6 @@ if __name__ == "__main__":
                     coord_list.append(atom.coords)
             frame_wat_ids[i].append(len(wat_list)-1)
     total_wats = len(wat_list)
-    
     # Calculate a one-dimensionalised distance matrix of all water observations
     print("Calculating distance matrix...")
     dist_list = []
@@ -76,20 +91,45 @@ if __name__ == "__main__":
     print("Clustering...")
     tree = hierarchy.linkage(dist_list, method=args.linkage)
     clust_ids = hierarchy.fcluster(tree, t=args.distance, criterion='distance')
-    
-    clust_wat_ids = {}  # Store water IDs for each cluster
     n_clusts = max(clust_ids)
+
+    # count occupancy of each cluster
+    clust_occ = [[i,list(clust_ids).count(i)] for i in range(1,n_clusts+1)] 
+    clust_occ = sorted(clust_occ, key=lambda x:-x[1])
+    # renumber the clusters based on this
+    old_order = [x[0] for x in clust_occ]
+    # this renumbers the cluster ids so that 1 is the most occupied...
+    clust_ids_sorted = np.asarray([old_order.index(x)+1 for x in clust_ids])
+
+    print("\n{} clusters identified:".format(n_clusts))
+    clust_wat_ids = {}  # Store water IDs for each cluster
     for i in range(1, n_clusts+1):
         clust_wat_ids[i] = []
     for i in range(total_wats):
-        clust = clust_ids[i]
+        clust = clust_ids_sorted[i]
         clust_wat_ids[clust].append(i)
-    
-    print("\n{} clusters identified:".format(n_clusts))
-    for i in range(1, n_clusts+1):
-        print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
-    print("")
-    
+
+
+# this prints out the average of each cluster 
+    with open('clusts.pdb','w') as f: 
+      for i in range(1, n_clusts+1):
+          print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
+      print("")
+      for n in range(1,n_clusts+1):
+          av_coords = [0.,0.,0.]
+          count  = 0
+          for i in clust_wat_ids[n]:
+              for j in range(3):
+                  av_coords[j] += coord_list[i][j]
+              count += 1
+          av_coords[0] /= count
+          av_coords[1] /= count
+          av_coords[2] /= count
+          #print 'Cluster ', n, 'avg: ', av_coords
+          f.write('HETATM{0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.2f}         {9:>2}  \n'.format(n, 'O00', 'WA1',n, av_coords[0], av_coords[1], av_coords[2], clust_occ[n-1][1], clust_occ[n-1][1], 'O'))
+
+
+
     # Sort clusters
     clusts_sorted = []
     clust_occs = [len(clust_wat_ids[i]) for i in range(1, n_clusts+1)]
@@ -99,9 +139,7 @@ if __name__ == "__main__":
             if i not in clusts_sorted:
                 if np.isclose(clust_occs[i-1], max_occ):
                     clusts_sorted.append(i)
-    #print("Clusters in order of occupancy:")
-    #print("\t{}\n".format(clusts_sorted))
-    
+
     # Check which clusters are ever observed together
     clust_frame_ids = {}  # Store frame IDs for each cluster
     frame_clust_ids = [[] for i in range(n_frames)]
@@ -112,6 +150,44 @@ if __name__ == "__main__":
                 if wat_id in frame:
                     clust_frame_ids[i].append(j)
                     frame_clust_ids[j].append(i)
+    # frame_clust_ids all of the simulation frames and the clusters observed in it
+
+
+    # this finds the waters for which to do correlation analysis. Those that are on less than 100% of the time, and more than 25% of the time
+    pos = []
+    neg = []
+    correlation_water_set = [(i,float(n)/float(n_frames)) for i,n in zip(clust_wat_ids,clust_occs) if n < n_frames and n >=0.25*n_frames]
+    import itertools 
+    # starting with pairwise, maybe possibility for n-body...
+    for x,y in itertools.combinations(correlation_water_set,2):
+      phi_coef = phi(x[0],y[0],frame_clust_ids)
+      if phi_coef > 0.5:
+        print
+        print 'positive correlation'
+        print 'between:',x[0],y[0]
+        print 'phi:',np.round(phi_coef,2) 
+        pos.append([x[0],y[0]])
+      elif phi_coef < -0.5:
+        print
+        print 'negative correlation'
+        print 'between:',x[0],y[0]
+        print 'phi:',np.round(phi_coef,2) 
+        neg.append([x[0],y[0]])
+    with open('test.py','r') as i, open('good.py','w') as o:
+      for line in i:
+        if line[0:3] == 'pos':
+          o.write('pos = '+str(pos)+'\n\n') 
+        elif line[0:3] == 'neg':
+          o.write('neg = '+str(neg)+'\n\n')
+        else:
+          o.write(line)
+#    longlist = []
+#    for pair in neg:
+#      for y in pair:
+#        longlist.append(y)
+#    print set(longlist)
+#    print all_in_neg
+#    quit()
 
     # Build a set of networks starting with the most occupied sites
     rep_networks = []
