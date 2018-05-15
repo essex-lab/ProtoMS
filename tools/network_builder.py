@@ -1,5 +1,5 @@
 """
-Test code for building representative water network(s) from GCMC simulation output
+Analysis code for building representative water network(s) from GCMC simulation output
 
 This code is still under development!
 
@@ -90,8 +90,8 @@ def write_average_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs
     ----------
     filename : str
         Name of PDB output file
-    clust_wat_ids : list
-        List of lists indicating which water observations are present in each cluster
+    clust_wat_ids : dict
+        Dictionary indicating which water observations are present in each cluster
     n_clusts : int
         Total number of clusters
     n_frames : int
@@ -104,28 +104,27 @@ def write_average_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs
     centres : dict
         Dictionary containing the average coordinates of each cluster
     """
+    # Print cluster occupancy data to screen
+    for i in range(1, n_clusts+1):
+        print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
+    print("")
+    # Calculate average coordinates and write to PDB
     centres = {}
     with open(filename, 'w') as f:
-        for i in range(1, n_clusts+1):
-            print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
-        print("")
+        f.write("REMARK Average cluster locations written by network_builder.py\n")
         for n in range(1, n_clusts+1):
-            av_coords = [0., 0., 0.]
-            count  = 0
+            # Calculate average coordinates
+            av_coords = np.zeros(3)
             for i in clust_wat_ids[n]:
-                for j in range(3):
-                    av_coords[j] += coord_list[i][j]
-                count += 1
-            av_coords[0] /= count
-            av_coords[1] /= count
-            av_coords[2] /= count
-            centres[n] = np.array(av_coords)
-            #print 'Cluster ', n, 'avg: ', av_coords
+                av_coords += coord_list[i]
+            av_coords /= len(clust_wat_ids[n])
+            centres[n] = av_coords.copy()
+            # Write to file
             f.write('HETATM{0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.2f}         {9:>2}  \n'.format(n, 'O00', 'WA1',n, av_coords[0], av_coords[1], av_coords[2], clust_occs[n-1], clust_occs[n-1], 'O'))
     return centres
 
 
-def phi(a, b, frame_clust_ids):
+def calc_phi(a, b, frame_clust_ids):
     """
     Calculate a correlation score for two water sites as the correlation
     between two binary variables (on/off for each site)
@@ -177,6 +176,7 @@ def get_args():
 
 
 if __name__ == "__main__":
+    start = time.time()
     # Read command line arguments
     args = get_args()
     
@@ -223,9 +223,9 @@ if __name__ == "__main__":
     clust_centres = write_average_clusts("{}-clusts.pdb".format(args.output), clust_wat_ids,
                                          n_clusts, n_frames, clust_occs)
 
-    # Check which clusters are ever observed together
+    # Check which clusters are observed in each frame
     clust_frame_ids = {}  # Store frame IDs for each cluster
-    frame_clust_ids = [[] for i in range(n_frames)]
+    frame_clust_ids = [[] for i in range(n_frames)]  # Stores clusters present in each frame
     for i in range(1, n_clusts+1):
         clust_frame_ids[i] = []
         for wat_id in clust_wat_ids[i]:
@@ -233,27 +233,22 @@ if __name__ == "__main__":
                 if wat_id in frame:
                     clust_frame_ids[i].append(j)
                     frame_clust_ids[j].append(i)
-    # frame_clust_ids all of the simulation frames and the clusters observed in it
 
     # this finds the waters for which to do correlation analysis. Those that are on less than 100% of the time, and more than 25% of the time
     pos = []
     neg = []
-    correlation_water_set = [(i, float(n)/float(n_frames)) for i, n in zip(clust_wat_ids, clust_occs) if 0.25*n_frames <= n < n_frames]
+    correlation_water_set = [i for i in range(1, n_clusts+1) if 0.25*n_frames <= clust_occs[i-1] < n_frames]
     # starting with pairwise, maybe possibility for n-body...
     for x, y in itertools.combinations(correlation_water_set, 2):
-        phi_coef = phi(x[0],y[0],frame_clust_ids)
+        phi_coef = calc_phi(x, y, frame_clust_ids)
         if phi_coef > 0.5:
-            print
-            print 'positive correlation'
-            print 'between:',x[0],y[0]
-            print 'phi:', np.round(phi_coef,2)
-            pos.append([x[0],y[0]])
+            print("Positive correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
+            pos.append([x,y])
         elif phi_coef < -0.5:
-            print
-            print 'negative correlation'
-            print 'between:', x[0], y[0]
-            print 'phi:', np.round(phi_coef, 2)
-            neg.append([x[0], y[0]])
+            print("Negative correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
+            neg.append([x, y])
+
+    # Write PyMOL visualisation script
     with open('test.py', 'r') as i, open('good.py', 'w') as o:
         for line in i:
             if line[0:3] == 'pos':
@@ -270,7 +265,8 @@ if __name__ == "__main__":
         network = [] 
         # Start the network by including those which have been left out..
         for i in left_out + [j+1 for j in range(n_clusts)]:
-            if i in network: continue  # Make sure not to include the same water twice...
+            if i in network:
+                continue  # Make sure not to include the same water twice...
             suitable = False  # Checks that all waters in the network have been observed together at least once
             # Check that all waters are observed in the same frame at least once
             for frame in frame_clust_ids:
@@ -294,21 +290,9 @@ if __name__ == "__main__":
             if len(network) == len(frame) and np.all([wat in frame for wat in network]):
                 network_frame_ids[i].append(j)
 
-    """
-    # Now need to compute cluster centres for each cluster
-    clust_centres = {}
-    for i in range(1, n_clusts+1):
-        centre = np.zeros(3)
-        for wat in clust_wat_ids[i]:
-            centre += coord_list[wat]
-        centre /= clust_occs[i-1]
-        clust_centres[i] = centre
-    """
-
     # Now want to find a representative frame for each network
     network_rep_frames = []
     for i, network in enumerate(rep_networks):
-        #print(network)
         min_rmsd = 1E6  # Use smallest RMSD to identify the best frame
         for j in network_frame_ids[i]:
             frame = frame_wat_ids[j]
@@ -327,11 +311,10 @@ if __name__ == "__main__":
         network_rep_frames.append(best_frame)
     
     # Print out networks
-    print("{} representative network(s) built.".format(len(rep_networks)))
+    print("\n{} representative network(s) built.".format(len(rep_networks)))
    
     # Write out representative frames to PDB files..
     print("Writing PDB output...")
-    starttime = time.time() 
     for i, j in enumerate(network_rep_frames):
         # Write out water only for rep. frames
         pdbfiles.pdbs[j].write("{}-{:02d}-wat.pdb".format(args.output, i+1))
@@ -339,7 +322,6 @@ if __name__ == "__main__":
         pdbfiles2 = simulationobjects.PDBSet()
         pdbfiles2.read(args.input, skip=args.skip+j, readmax=1)
         pdbfiles2.pdbs[0].write("{}-{:02d}-all.pdb".format(args.output, i+1))
-    print("{} seconds to read in all PDB data and then write out frames".format(time.time()-starttime))
-        
-    print("Done!\n")
+
+    print("\nNetwork analysis completed in {} seconds\n".format(time.time()-start))
 
