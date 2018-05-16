@@ -7,15 +7,30 @@ Marley Samways
 Hannah Bruce Macdonald
 """
 
-
-import numpy as np
 import argparse
 import itertools
 import time
+import numpy as np
 from scipy.cluster import hierarchy
-from scipy.stats import norm
 
 import simulationobjects
+
+
+def get_args():
+    """
+    Parse command line arguments
+    """
+    parser = argparse.ArgumentParser('network_builder.py')
+    parser.add_argument('-i', '--input', help='PDB file containing input frames. Currently accepts only one file', default='all.pdb')
+    parser.add_argument('-m', '--molecule', help='Residue name of water molecules', default='WA1')
+    parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates', default='O00')
+    parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip', default=0)
+    parser.add_argument('-d', '--distance', type=float, help='Distance cutoff for clustering. Default=3.0 Angs', default=3.0)
+    parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering', default='average')
+    parser.add_argument('-c', '--cutoff', type=float, help='Occupancy cutoffs for waters to be considered. Between 0 and 1.', default=0.0)
+    parser.add_argument('-o', '--output', help='Stem for the PDB output', default='network')
+    args = parser.parse_args()
+    return args
 
 
 def get_distances(frame_wat_ids, coord_list):
@@ -201,21 +216,58 @@ def write_pymol(filename, pos, neg):
     return None
 
 
-def get_args():
+def get_rep_frames(rep_networks, frame_clust_ids, frame_wat_ids, clust_wat_ids, clust_centres):
     """
-    Parse command line arguments
+    Get representative frames for each of the networks generated
+
+    Parameters
+    ----------
+    rep_networks : list
+        List of lists containing the cluster IDs present in each network
+    frame_clust_ids : list
+        List of lists containing the cluster IDs present in each frame
+    frame_wat_ids : list
+        List of lists containing the water observations present in each frame
+    clust_wat_ids : dict
+        Dictionary containing the water observations contained in each cluster
+    clust_centres : dict
+        Dictionary containing average positions of each cluster
+
+    Returns
+    -------
+    network_rep_frames : list
+        List of frame representing each of the networks
     """
-    parser = argparse.ArgumentParser('network_builder.py')
-    parser.add_argument('-i', '--input', help='PDB file containing input frames. Currently accepts only one file', default='all.pdb')
-    parser.add_argument('-m', '--molecule', help='Residue name of water molecules', default='WA1')
-    parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates', default='O00')
-    parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip', default=0)
-    parser.add_argument('-d', '--distance', type=float, help='Distance cutoff for clustering. Default=3.0 Angs', default=3.0)
-    parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering', default='average')
-    parser.add_argument('-c', '--cutoff', type=float, help='Occupancy cutoffs for waters to be considered. Between 0 and 1.', default=0.0)
-    parser.add_argument('-o', '--output', help='Stem for the PDB output', default='network')
-    args = parser.parse_args()
-    return args
+    # Need to identify which frames contain each network
+    network_frame_ids = [[] for net in rep_networks]
+    for i, network in enumerate(rep_networks):
+        for j, frame in enumerate(frame_clust_ids):
+            # Check that the network and frame contain the same clusters
+            if len(network) == len(frame) and np.all([wat in frame for wat in network]):
+                network_frame_ids[i].append(j)
+        # Make sure that the network is present in at least one frame
+        if len(network_frame_ids[i]) == 0:
+            raise RuntimeError("Network {} is not present in any frame".format(i+1))
+    # Now want to find the representative frames
+    network_rep_frames = []
+    for i, network in enumerate(rep_networks):
+        min_rmsd = 1E6  # Use smallest RMSD to identify the best frame
+        for j in network_frame_ids[i]:
+            frame = frame_wat_ids[j]
+            sq_dists = []  # List of square differences in water positions
+            for wat in frame:
+                # Check which cluster each water in the frame corresponds to
+                for k in range(1, n_clusts+1):
+                    if wat in clust_wat_ids[k]:
+                        sq_dists.append(np.square(np.linalg.norm(clust_centres[k]-coord_list[wat])))
+                    else:
+                        continue
+            rmsd = np.sqrt(sum(sq_dists))
+            if rmsd < min_rmsd:
+                min_rmsd = rmsd
+                best_frame = j
+        network_rep_frames.append(best_frame)
+    return network_rep_frames
 
 
 if __name__ == "__main__":
@@ -261,6 +313,7 @@ if __name__ == "__main__":
     # Renumber clusters based on occupancy
     clust_ids_sorted, clust_occs = sort_clusters(clust_ids)
 
+    # Identify which water observations are present in each cluster
     clust_wat_ids = {}  # Store water IDs for each cluster
     for i in range(1, n_clusts+1):
         clust_wat_ids[i] = []
@@ -268,7 +321,7 @@ if __name__ == "__main__":
         clust = clust_ids_sorted[i]
         clust_wat_ids[clust].append(i)
 
-    # this prints out the average of each cluster
+    # Prints out the average of each cluster to PDB
     clust_centres = write_average_clusts("clusts.pdb".format(args.output), clust_wat_ids,
                                          n_clusts, n_frames, clust_occs)
 
@@ -294,12 +347,11 @@ if __name__ == "__main__":
         phi_coef = calc_phi(x, y, frame_clust_ids)
         if phi_coef > 0.5:
             print("Positive correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
-            positives.append([x,y])
+            positives.append([x, y])
         elif phi_coef < -0.5:
             print("Negative correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
             negatives.append([x, y])
     correl_time = time.time() - correl_time
-
     # Write PyMOL visualisation script
     write_pymol("{}-pymol.py".format(args.output), positives, negatives)
 
@@ -327,37 +379,13 @@ if __name__ == "__main__":
         for i in range(1, n_clusts+1):
             if clust_occs[i-1] > args.cutoff * n_frames and np.all([i not in net for net in rep_networks]):
                 left_out.append(i)
-    
-    # Need to identify which frames contain each network
-    network_frame_ids = [[] for net in rep_networks]
-    for i, network in enumerate(rep_networks):
-        for j, frame in enumerate(frame_clust_ids):
-            # Check that the network and frame contain the same clusters
-            if len(network) == len(frame) and np.all([wat in frame for wat in network]):
-                network_frame_ids[i].append(j)
 
-    # Now want to find a representative frame for each network
-    network_rep_frames = []
-    for i, network in enumerate(rep_networks):
-        min_rmsd = 1E6  # Use smallest RMSD to identify the best frame
-        for j in network_frame_ids[i]:
-            frame = frame_wat_ids[j]
-            sq_dists = []  # List of square differences in water positions
-            for wat in frame:
-                # Check which cluster each water in the frame corresponds to
-                for k in range(1, n_clusts+1):
-                    if wat in clust_wat_ids[k]:
-                        sq_dists.append(np.square(np.linalg.norm(clust_centres[k]-coord_list[wat])))
-                    else:
-                        continue
-            rmsd = np.sqrt(sum(sq_dists))
-            if rmsd < min_rmsd:
-                min_rmsd = rmsd
-                best_frame = j
-        network_rep_frames.append(best_frame)
+    # Generate a representative frame for each network
+    network_rep_frames = get_rep_frames(rep_networks, frame_clust_ids, frame_wat_ids,
+                                        clust_wat_ids, clust_centres)
     network_time = time.time() - network_time
     
-    # Print out networks
+    # Print number of networks
     print("\n{} representative network(s) built.".format(len(rep_networks)))
    
     # Write out representative frames to PDB files..
