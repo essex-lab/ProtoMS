@@ -343,83 +343,101 @@ if __name__ == "__main__":
     negatives = []
     correlation_water_set = [i for i in range(1, n_clusts+1) if args.cutoff * n_frames <= clust_occs[i-1] < n_frames]
     # Starting with pairwise correlations - may figure out n-body later...
+    print("Analysing water-water correlations...")
     for x, y in itertools.combinations(correlation_water_set, 2):
         phi_coef = calc_phi(x, y, frame_clust_ids)
         if phi_coef > 0.35:
-            print("Positive correlation between clusters {:2d} and {:2d} (phi = {})".format(x, y, np.round(phi_coef, 2)))
+            print("\tPositive correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
             positives.append([x, y])
         elif phi_coef < -0.35:
-            print("Negative correlation between clusters {:2d} and {:2d} (phi = {})".format(x, y, np.round(phi_coef, 2)))
+            print("\tNegative correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
             negatives.append([x, y])
+    print("{} positive and {} negative correlations found".format(len(positives), len(negatives)))
     correl_time = time.time() - correl_time
+
     # Write PyMOL visualisation script
     write_pymol("{}-pymol.py".format(args.output), positives, negatives)
 
     # Build a set of networks based on the correlation data calculated
     # Want to exclude negative correlations and include positive correlations
+    # Process:
+    #    - Identify all waters involved in negative correlations
+    #    - Build 'seeds' from these waters
+    #         - These are used to start network building, by separating negative correlations
+    #         - A seed is added if it is negatively correlated with all other seeds
+    #    - For each seed, we first build in all of its positive correlations, to start off
+    #      a network
+    #         - If there are any negative correlations between these, one of the waters involved
+    #           is used as a seed for an extra network
+    #         - Need to keep an eye out for any issues with this - an exception should be raised if so
+    #    - Given these starting chunks for each network, we then work in all other waters, in order of
+    #      occupancy
+    #    - Then we simply find a representative frame for each network and write these to PDBs
     network_time = time.time()
     print("\nBuilding networks...")
-    neg_wats = []  # Build a list of waters involved in negative correlations
+    # Build a list of waters involved in negative correlations
+    neg_wats = []
     for i in range(1, n_clusts+1):
         for pair in negatives:
             if i in pair:
                 neg_wats.append(i)
                 break
-    seeds = []  # Use 'seeds' to start network building
+    # Use 'seeds' to start network building
+    seeds = []
     for wat_i in neg_wats:
-        add = True  # Indicates whether to use this water as a seed (if neg. correlated with all other seeds)
-        for wat_j in seeds:
-            # Check if this water is negatively correlated with each seed
-            if not np.any([wat_i in pair and wat_j in pair for pair in negatives]):
-                # If water is positively or not correlated with any of the seeds, it doesn't need to be added
-                add = False
-        if add:
+        # Add in seeds if the water is negatively correlated with all other seeds
+        if np.all([np.any([wat_i in pair and wat_j in pair for pair in negatives]) for wat_j in seeds]):
             seeds.append(wat_i)
-    print("Seeds: {}".format(seeds))
-    # For each seed, start building networks by adding in positively correlated waters
+    # If there are no negative correlations, we simply use the first cluster to start building networks
+    if len(neg_wats) == 0:
+        seeds.append(1)
+    # For each seed, start building networks by adding in positively correlated waters,
+    # provided that no negative correlations are added (in this case, the offending water is
+    # used as a new seed)
     networks = [[seed] for seed in seeds]
     for i, seed in enumerate(seeds):
         for wat in correlation_water_set:
+            include = True  # Indicates whether to include the water
             if wat == seed:
                 continue
             # Check if each water is positively correlated with the seed
             if not np.any([seed in pair and wat in pair for pair in positives]):
                 continue
+            # Check if the water is negatively correlated with any waters already added
             for otherwat in networks[i]:
                 if np.any([wat in pair and otherwat in pair for pair in negatives]):
-                    raise Exception("{} and {} are positively correlated with the seed and negatively with each other!".format(wat, otherwat))
-            networks[i].append(wat)
-    print("Networks (start):")
-    for net in networks:
-        print("\t{}".format(net))
-    # Now want to build in uncorrelated waters
+                    if wat in seeds:
+                        raise Exception("Correlation issue between {}, {} and {}".format(seed, wat, otherwat))
+                    else:
+                        seeds.append(wat)
+                        include = False
+            # Build water in if suitable
+            if include:
+                networks[i].append(wat)
+    # Now want to build in other waters, in order of occupancy, making
+    # sure not to add any negative correlations to the network
     for i in range(len(networks)):
         for j in range(1, n_clusts+1):
             # Check if cluster is already in network
             if j in networks[i]:
                 continue
             # Check if cluster is negatively correlated with any of the waters already in the network
-            if not np.any([np.any([(j in pair and k in pair) and j != k for pair in negatives]) for k in networks[i]]):
+            if not np.any([np.any([j in pair and k in pair for pair in negatives]) for k in networks[i]]):
                 # Check if there is at least one frame with the whole network present
+                # This is necessary to make sure that we can print a frame which contains the network
                 suitable = False
                 for frame in frame_clust_ids:
                     if j in frame and np.all([k in frame for k in networks[i]]):
                         suitable = True
                 if suitable:
                     networks[i].append(j)
-    print("Networks (finish):")
-    for net in networks:
-        print("\t{}".format(net))
 
-    rep_networks = networks
+    print("{} network(s) built.".format(len(networks)))
 
     # Generate a representative frame for each network
-    network_rep_frames = get_rep_frames(rep_networks, frame_clust_ids, frame_wat_ids,
+    network_rep_frames = get_rep_frames(networks, frame_clust_ids, frame_wat_ids,
                                         clust_wat_ids, clust_centres)
     network_time = time.time() - network_time
-    
-    # Print number of networks
-    print("{} representative network(s) built.".format(len(rep_networks)))
    
     # Write out representative frames to PDB files..
     writing_time = time.time()
