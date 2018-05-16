@@ -158,6 +158,49 @@ def calc_phi(a, b, frame_clust_ids):
     return phi
 
 
+def write_pymol(filename, pos, neg):
+    """
+    Write out a PyMOL script to visualise the system, with lines drawn between correlated waters
+
+    Parameters
+    ----------
+    filename : str
+        Name of output PyMOL script
+    pos : list
+        List of list describing all positive correlations between clusters
+    neg : list
+        List of list describing all negative correlations between clusters
+    """
+    with open(filename, 'w') as f:
+        # Write a comment indicating that the code was written by this script
+        f.write("# PyMOL visualisation script written by network_builder.py from ProtoMS (www.protoms.org)\n\n")
+        # Module loading and initial setup
+        f.write("import __main__\n__main__.pymol_argv = [ 'pymol']\n")
+        f.write("import pymol\npymol.finish_launching()\nfrom pymol import cmd\nimport os\n\n\n")
+        # Read in PDB files
+        f.write("# Read in cluster centres\ncmd.load('../clusts.pdb')\n")
+        f.write("# Read in protein - change this to look for protein_scoop.pdb before using protein.pdb\n")
+        f.write("cmd.load('../protein.pdb')\ninputfiles = os.listdir('..')\n\n")
+        f.write("for x in inputfiles:\n    if len(x) == 7:\n        if x[3:] == '.pdb':\n")
+        f.write("            # This is probably the ligand file\n")
+        f.write("            cmd.load('../{}'.format(x))\n            ligname = x[0:3]\n\n")
+        # Format visualisation of protein, ligand & waters
+        f.write("cmd.hide('lines')  # Remove lines\n\n# Format ligand\ncmd.show('sticks', ligname)\n\n")
+        f.write("# Format protein\ncmd.show('cartoon','protein')\ncmd.set('cartoon_transparency',0.5)\n\n")
+        f.write("# Format water clusters\ncmd.show('spheres','clusts')\ncmd.set('sphere_scale',0.2)\n")
+        f.write("cmd.spectrum('b','blue_red','clusts')\ncmd.label('clusts','resi')\ncmd.orient('clusts')\n\n")
+        # Draw correlation lines
+        f.write("# Draw positive and negative correlations\npos = {}\nneg = {}\n\n".format(pos, neg))
+        f.write("for pair in pos:\n")
+        f.write("    cmd.distance('pos', 'clusts and i. {}'.format(pair[0]), 'clusts and i. {}'.format(pair[1]))\n")
+        f.write("    cmd.color('green','pos')\n\n")
+        f.write("for pair in neg:\n")
+        f.write("    cmd.distance('neg', 'clusts and i. {}'.format(pair[0]), 'clusts and i. {}'.format(pair[1]))\n")
+        f.write("    cmd.color('red','neg')\n\n")
+        f.write("# Hide distance labels on correlation 'bonds'\ncmd.hide('labels','pos')\ncmd.hide('labels','neg')\n")
+    return None
+
+
 def get_args():
     """
     Parse command line arguments
@@ -181,6 +224,7 @@ if __name__ == "__main__":
     args = get_args()
     
     # Read PDB input data - only water molecules
+    reading_time = time.time()  # Measure time spent reading data
     pdbfiles = simulationobjects.PDBSet()
     pdbfiles.read(args.input, resname=args.molecule, skip=args.skip, readmax=9999)
     n_frames = len(pdbfiles.pdbs)
@@ -198,16 +242,21 @@ if __name__ == "__main__":
                     coord_list.append(atom.coords)
             frame_wat_ids[i].append(len(wat_list)-1)
     total_wats = len(wat_list)
+    reading_time = time.time() - reading_time
 
     # Calculate a 1D distance matrix between all water observations
+    dist_time = time.time()
     dist_list = get_distances(frame_wat_ids, coord_list)
+    dist_time = time.time() - dist_time
     
     # Cluster waters into discrete hydration sites
+    cluster_time = time.time()
     print("Clustering water sites...")
     tree = hierarchy.linkage(dist_list, method=args.linkage)
     clust_ids = hierarchy.fcluster(tree, t=args.distance, criterion='distance')
     n_clusts = max(clust_ids)
     print("\n{} clusters identified:".format(n_clusts))
+    cluster_time = time.time() - cluster_time
 
     # Renumber clusters based on occupancy
     clust_ids_sorted, clust_occs = sort_clusters(clust_ids)
@@ -220,7 +269,7 @@ if __name__ == "__main__":
         clust_wat_ids[clust].append(i)
 
     # this prints out the average of each cluster
-    clust_centres = write_average_clusts("{}-clusts.pdb".format(args.output), clust_wat_ids,
+    clust_centres = write_average_clusts("clusts.pdb".format(args.output), clust_wat_ids,
                                          n_clusts, n_frames, clust_occs)
 
     # Check which clusters are observed in each frame
@@ -234,31 +283,28 @@ if __name__ == "__main__":
                     clust_frame_ids[i].append(j)
                     frame_clust_ids[j].append(i)
 
-    # this finds the waters for which to do correlation analysis. Those that are on less than 100% of the time, and more than 25% of the time
-    pos = []
-    neg = []
-    correlation_water_set = [i for i in range(1, n_clusts+1) if 0.25*n_frames <= clust_occs[i-1] < n_frames]
-    # starting with pairwise, maybe possibility for n-body...
+    # Carry out the correlation analysis
+    # We consider waters that are on less than 100% of the time, and more than the cutoff occupancy specified
+    correl_time = time.time()
+    positives = []
+    negatives = []
+    correlation_water_set = [i for i in range(1, n_clusts+1) if args.cutoff * n_frames <= clust_occs[i-1] < n_frames]
+    # Starting with pairwise correlations - may figure out n-body later...
     for x, y in itertools.combinations(correlation_water_set, 2):
         phi_coef = calc_phi(x, y, frame_clust_ids)
         if phi_coef > 0.5:
             print("Positive correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
-            pos.append([x,y])
+            positives.append([x,y])
         elif phi_coef < -0.5:
             print("Negative correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
-            neg.append([x, y])
+            negatives.append([x, y])
+    correl_time = time.time() - correl_time
 
     # Write PyMOL visualisation script
-    with open('test.py', 'r') as i, open('good.py', 'w') as o:
-        for line in i:
-            if line[0:3] == 'pos':
-                o.write('pos = '+str(pos)+'\n\n')
-            elif line[0:3] == 'neg':
-                o.write('neg = '+str(neg)+'\n\n')
-            else:
-                o.write(line)
+    write_pymol("{}-pymol.py".format(args.output), positives, negatives)
 
     # Build a set of networks starting with the most occupied sites
+    network_time = time.time()
     rep_networks = []
     left_out = [i for i in range(1, n_clusts+1) if clust_occs[i-1] > args.cutoff * n_frames]
     while len(left_out) > 0:
@@ -309,11 +355,13 @@ if __name__ == "__main__":
                 min_rmsd = rmsd
                 best_frame = j
         network_rep_frames.append(best_frame)
+    network_time = time.time() - network_time
     
     # Print out networks
     print("\n{} representative network(s) built.".format(len(rep_networks)))
    
     # Write out representative frames to PDB files..
+    writing_time = time.time()
     print("Writing PDB output...")
     for i, j in enumerate(network_rep_frames):
         # Write out water only for rep. frames
@@ -322,6 +370,13 @@ if __name__ == "__main__":
         pdbfiles2 = simulationobjects.PDBSet()
         pdbfiles2.read(args.input, skip=args.skip+j, readmax=1)
         pdbfiles2.pdbs[0].write("{}-{:02d}-all.pdb".format(args.output, i+1))
+    writing_time = time.time() - writing_time
 
-    print("\nNetwork analysis completed in {} seconds\n".format(time.time()-start))
-
+    # Print out timings of analysis - for testing and reference
+    print("\nNetwork analysis completed in {} seconds".format(np.round(time.time()-start, 1)))
+    print("\tReading data:          {:7.1f} seconds".format(np.round(reading_time, 1)))
+    print("\tDistance calculations: {:7.1f} seconds".format(np.round(dist_time, 1)))
+    print("\tClustering:            {:7.1f} seconds".format(np.round(cluster_time, 1)))
+    print("\tCorrelation analysis:  {:7.1f} seconds".format(np.round(correl_time, 1)))
+    print("\tNetwork construction:  {:7.1f} seconds".format(np.round(network_time, 1)))
+    print("\tWriting data:          {:7.1f} seconds\n".format(np.round(writing_time, 1)))
