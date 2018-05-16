@@ -345,40 +345,73 @@ if __name__ == "__main__":
     # Starting with pairwise correlations - may figure out n-body later...
     for x, y in itertools.combinations(correlation_water_set, 2):
         phi_coef = calc_phi(x, y, frame_clust_ids)
-        if phi_coef > 0.5:
-            print("Positive correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
+        if phi_coef > 0.35:
+            print("Positive correlation between clusters {:2d} and {:2d} (phi = {})".format(x, y, np.round(phi_coef, 2)))
             positives.append([x, y])
-        elif phi_coef < -0.5:
-            print("Negative correlation between clusters {} and {} (phi = {})".format(x, y, np.round(phi_coef, 2)))
+        elif phi_coef < -0.35:
+            print("Negative correlation between clusters {:2d} and {:2d} (phi = {})".format(x, y, np.round(phi_coef, 2)))
             negatives.append([x, y])
     correl_time = time.time() - correl_time
     # Write PyMOL visualisation script
     write_pymol("{}-pymol.py".format(args.output), positives, negatives)
 
-    # Build a set of networks starting with the most occupied sites
+    # Build a set of networks based on the correlation data calculated
+    # Want to exclude negative correlations and include positive correlations
     network_time = time.time()
-    rep_networks = []
-    left_out = [i for i in range(1, n_clusts+1) if clust_occs[i-1] > args.cutoff * n_frames]
-    while len(left_out) > 0:
-        network = [] 
-        # Start the network by including those which have been left out..
-        for i in left_out + [j+1 for j in range(n_clusts)]:
-            if i in network:
-                continue  # Make sure not to include the same water twice...
-            suitable = False  # Checks that all waters in the network have been observed together at least once
-            # Check that all waters are observed in the same frame at least once
-            for frame in frame_clust_ids:
-                if i in frame and np.all([j in frame for j in network]):
-                    suitable = True
-            if suitable:
-                network.append(i)
-        # Add this network to the list
-        rep_networks.append([i for i in range(1, n_clusts+1) if i in network])  # Sort the cluster IDs in the network
-        left_out = []
-        # Check which occupied sites have not been yet included in a network.
-        for i in range(1, n_clusts+1):
-            if clust_occs[i-1] > args.cutoff * n_frames and np.all([i not in net for net in rep_networks]):
-                left_out.append(i)
+    print("\nBuilding networks...")
+    neg_wats = []  # Build a list of waters involved in negative correlations
+    for i in range(1, n_clusts+1):
+        for pair in negatives:
+            if i in pair:
+                neg_wats.append(i)
+                break
+    seeds = []  # Use 'seeds' to start network building
+    for wat_i in neg_wats:
+        add = True  # Indicates whether to use this water as a seed (if neg. correlated with all other seeds)
+        for wat_j in seeds:
+            # Check if this water is negatively correlated with each seed
+            if not np.any([wat_i in pair and wat_j in pair for pair in negatives]):
+                # If water is positively or not correlated with any of the seeds, it doesn't need to be added
+                add = False
+        if add:
+            seeds.append(wat_i)
+    print("Seeds: {}".format(seeds))
+    # For each seed, start building networks by adding in positively correlated waters
+    networks = [[seed] for seed in seeds]
+    for i, seed in enumerate(seeds):
+        for wat in correlation_water_set:
+            if wat == seed:
+                continue
+            # Check if each water is positively correlated with the seed
+            if not np.any([seed in pair and wat in pair for pair in positives]):
+                continue
+            for otherwat in networks[i]:
+                if np.any([wat in pair and otherwat in pair for pair in negatives]):
+                    raise Exception("{} and {} are positively correlated with the seed and negatively with each other!".format(wat, otherwat))
+            networks[i].append(wat)
+    print("Networks (start):")
+    for net in networks:
+        print("\t{}".format(net))
+    # Now want to build in uncorrelated waters
+    for i in range(len(networks)):
+        for j in range(1, n_clusts+1):
+            # Check if cluster is already in network
+            if j in networks[i]:
+                continue
+            # Check if cluster is negatively correlated with any of the waters already in the network
+            if not np.any([np.any([(j in pair and k in pair) and j != k for pair in negatives]) for k in networks[i]]):
+                # Check if there is at least one frame with the whole network present
+                suitable = False
+                for frame in frame_clust_ids:
+                    if j in frame and np.all([k in frame for k in networks[i]]):
+                        suitable = True
+                if suitable:
+                    networks[i].append(j)
+    print("Networks (finish):")
+    for net in networks:
+        print("\t{}".format(net))
+
+    rep_networks = networks
 
     # Generate a representative frame for each network
     network_rep_frames = get_rep_frames(rep_networks, frame_clust_ids, frame_wat_ids,
@@ -386,7 +419,7 @@ if __name__ == "__main__":
     network_time = time.time() - network_time
     
     # Print number of networks
-    print("\n{} representative network(s) built.".format(len(rep_networks)))
+    print("{} representative network(s) built.".format(len(rep_networks)))
    
     # Write out representative frames to PDB files..
     writing_time = time.time()
@@ -394,7 +427,7 @@ if __name__ == "__main__":
     for i, j in enumerate(network_rep_frames):
         # Write out water only for rep. frames
         pdbfiles.pdbs[j].write("{}-{:02d}-wat.pdb".format(args.output, i+1))
-        # Read in whole system - only want to read a single frame to save time/memory
+        # Read in whole system - only want to read a single frame to save time & memory
         pdbfiles2 = simulationobjects.PDBSet()
         pdbfiles2.read(args.input, skip=args.skip+j, readmax=1)
         pdbfiles2.pdbs[0].write("{}-{:02d}-all.pdb".format(args.output, i+1))
