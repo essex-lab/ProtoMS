@@ -243,12 +243,19 @@ def get_rep_frames(rep_networks, frame_clust_ids, frame_wat_ids, clust_wat_ids, 
     network_frame_ids = [[] for net in rep_networks]
     for i, network in enumerate(rep_networks):
         for j, frame in enumerate(frame_clust_ids):
-            # Check that the network and frame contain the same clusters
+            # Check that the network and frame contain the same clusters - ideally want the whole network
             if len(network) == len(frame) and np.all([wat in frame for wat in network]):
                 network_frame_ids[i].append(j)
-        # Make sure that the network is present in at least one frame
+        # The whole network may not be represented by any frames, so we could look for frames which contain the network
         if len(network_frame_ids[i]) == 0:
-            raise RuntimeError("Network {} is not present in any frame".format(i+1))
+            print("\tCan't find an exact frame match for network {}, using frames containing the network".format(i+1))
+            for j, frame in enumerate(frame_clust_ids):
+                # Checking less strictly now - the rep. network and frame need not be exactly identical
+                if np.all([wat in frame for wat in network]):
+                    network_frame_ids[i].append(j)
+        # If there are still no frames then something is wrong and we raise an exception
+        if len(network_frame_ids[i]) == 0:
+            raise RuntimeError("Network {} is not present or included in any frame".format(i+1))
     # Now want to find the representative frames
     network_rep_frames = []
     for i, network in enumerate(rep_networks):
@@ -427,8 +434,6 @@ if __name__ == "__main__":
     # sure not to add any negative correlations to the network
     for i in range(len(networks)):
         for j in range(1, n_clusts+1):
-            if i == 0:
-                print("{} + {} ?".format(networks[i], j))
             # Check if cluster is already in network
             if j in networks[i]:
                 continue
@@ -446,13 +451,14 @@ if __name__ == "__main__":
     print("{} network(s) built.".format(len(networks)))
 
     # Generate a representative frame for each network
+    print("\nFinding representative frames...")
     network_rep_frames = get_rep_frames(networks, frame_clust_ids, frame_wat_ids,
                                         clust_wat_ids, clust_centres)
     network_time = time.time() - network_time
    
     # Write out representative frames to PDB files..
     writing_time = time.time()
-    print("Writing PDB output...")
+    print("\nWriting PDB output...")
     for i, j in enumerate(network_rep_frames):
         # Write out water only for rep. frames
         pdbfiles.pdbs[j].write("{}-{:02d}-wat.pdb".format(args.output, i+1))
