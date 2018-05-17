@@ -28,6 +28,7 @@ def get_args():
     parser.add_argument('-d', '--distance', type=float, help='Distance cutoff for clustering. Default=3.0 Angs', default=3.0)
     parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering', default='average')
     parser.add_argument('-c', '--cutoff', type=float, help='Occupancy cutoffs for waters to be considered. Between 0 and 1.', default=0.0)
+    parser.add_argument('-p', '--phi', type=float, help='Magnitude of phi to indicate correlation. Between 0 and 1.', default=0.35)
     parser.add_argument('-o', '--output', help='Stem for the PDB output', default='network')
     args = parser.parse_args()
     return args
@@ -339,24 +340,30 @@ if __name__ == "__main__":
     # Carry out the correlation analysis
     # We consider waters that are on less than 100% of the time, and more than the cutoff occupancy specified
     correl_time = time.time()
-    positives = []
-    negatives = []
+    positives = []  # Store all positives
+    pos_close = []  # Store close positives - within 5 A currently
+    negatives = []  # Store all negatives
+    neg_close = []  # Store close negatives - within 5 A currently
     correlation_water_set = [i for i in range(1, n_clusts+1) if args.cutoff * n_frames <= clust_occs[i-1] < n_frames]
     # Starting with pairwise correlations - may figure out n-body later...
     print("Analysing water-water correlations...")
     for x, y in itertools.combinations(correlation_water_set, 2):
         phi_coef = calc_phi(x, y, frame_clust_ids)
-        if phi_coef > 0.35:
+        if phi_coef > args.phi:
             print("\tPositive correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
             positives.append([x, y])
-        elif phi_coef < -0.35:
+            if np.linalg.norm(clust_centres[x] - clust_centres[y]) < 5.0:
+                pos_close.append([x, y])
+        elif phi_coef < -args.phi:
             print("\tNegative correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
             negatives.append([x, y])
+            if np.linalg.norm(clust_centres[x] - clust_centres[y]) < 5.0:
+                neg_close.append([x, y])
     print("{} positive and {} negative correlations found".format(len(positives), len(negatives)))
     correl_time = time.time() - correl_time
 
-    # Write PyMOL visualisation script
-    write_pymol("{}-pymol.py".format(args.output), positives, negatives)
+    # Write PyMOL visualisation script - showing close correlations
+    write_pymol("{}-pymol.py".format(args.output), pos_close, neg_close)
 
     # Build a set of networks based on the correlation data calculated
     # Want to exclude negative correlations and include positive correlations
@@ -404,9 +411,11 @@ if __name__ == "__main__":
             if not np.any([seed in pair and wat in pair for pair in positives]):
                 continue
             # Check if the water is negatively correlated with any waters already added
+            # Could potentially cause issues, so if so, we use this water as a new seed
             for otherwat in networks[i]:
                 if np.any([wat in pair and otherwat in pair for pair in negatives]):
                     if wat in seeds:
+                        # If this water is already a seed, something has gone wrong and we raise an exception
                         raise Exception("Correlation issue between {}, {} and {}".format(seed, wat, otherwat))
                     else:
                         seeds.append(wat)
@@ -418,6 +427,8 @@ if __name__ == "__main__":
     # sure not to add any negative correlations to the network
     for i in range(len(networks)):
         for j in range(1, n_clusts+1):
+            if i == 0:
+                print("{} + {} ?".format(networks[i], j))
             # Check if cluster is already in network
             if j in networks[i]:
                 continue
@@ -429,8 +440,8 @@ if __name__ == "__main__":
                 for frame in frame_clust_ids:
                     if j in frame and np.all([k in frame for k in networks[i]]):
                         suitable = True
-                if suitable:
-                    networks[i].append(j)
+                        networks[i].append(j)
+                        break
 
     print("{} network(s) built.".format(len(networks)))
 
