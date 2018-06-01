@@ -1,5 +1,5 @@
 """Collection of classes to form the basis of a replacement for the current
-free energy calculation framework. """
+free energy calculation framework."""
 
 from copy import copy
 from glob import glob
@@ -64,13 +64,15 @@ class Series(object):
         Parameters
         ----------
         axes : matplotlib Axes object
-            axes onto which the figure will be drawn
+          axes onto which the figure will be drawn
+        show_error : boolean
+          if True, plot error bars
         xlabel : string
-            label for x-axis
+          label for x-axis
         ylabel : string
-            label for y-axis
+          label for y-axis
         **kwargs :
-            additional keyword arguments to be passed to axes.plot
+          additional keyword arguments to be passed to axes.plot
         """
         y = np.array([fe.value for fe in self.values])
         err = np.array([fe.error for fe in self.values])
@@ -227,6 +229,12 @@ class Estimator(object):
         ----------
         lambdas: list of numbers
             lambda values used in a calculation
+        results_name : string
+          Filename of the ProtoMS results file to use
+        subdir_glob : string
+          The glob string to use when seaching for result subdirectories
+        **kwargs :
+          Additional keyword arguments are ignored
         """
         self.data = []
         self.lambdas = lambdas
@@ -628,6 +636,8 @@ def get_base_arg_parser():
 
 
 def get_alchemical_arg_parser():
+    """Returns an argument parser suitable for use with alchemical
+    simulation methods e.g. free energy perturbation."""
     parser = FEArgumentParser(add_help=False, parents=[get_base_arg_parser()])
     parser.add_argument(
         '--subdir', default='',

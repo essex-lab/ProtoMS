@@ -20,14 +20,6 @@ tools.build_template module
     :undoc-members:
     :show-inheritance:
 
-tools.calc_bar module
----------------------
-
-.. automodule:: tools.calc_bar
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 tools.calc_clusters module
 ---------------------------
 
@@ -52,10 +44,10 @@ tools.calc_dg module
     :undoc-members:
     :show-inheritance:
 
-tools.calc_gcsingle module
----------------------------
+tools.calc_dg_cycle module
+--------------------
 
-.. automodule:: tools.calc_gcsingle
+.. automodule:: tools.calc_dg_cycle
     :members:
     :undoc-members:
     :show-inheritance:
@@ -92,10 +84,10 @@ tools.calc_series module
     :undoc-members:
     :show-inheritance:
 
-tools.calc_ti module
+tools.calc_ti_decomposed module
 --------------------
 
-.. automodule:: tools.calc_ti
+.. automodule:: tools.calc_ti_decomposed
     :members:
     :undoc-members:
     :show-inheritance:
@@ -149,10 +141,10 @@ tools.free_energy_base module
     :undoc-members:
     :show-inheritance:
 
-tools.gc_free_energy_base module
+tools.gcmc_free_energy_base module
 -----------------------------
        
-.. automodule:: tools.gc_free_energy_base
+.. automodule:: tools.gcmc_free_energy_base
     :special-members: __init__
     :members:
     :undoc-members:

@@ -6,8 +6,22 @@ from gcmc_free_energy_base import GCMCMBAR
 
 
 def state_data_table(results, directories, signs, states, estimator):
-    """Returns a table containing the free energy differences for the
-    individual states i.e. bound, free and gas."""
+    """Returns a Table object containing the free energy differences for the
+    individual states i.e. bound, free and gas.
+
+    Parameters
+    ----------
+    results: dict such that results[root][state][estimator] = Result object
+      The free energy results to tabulate
+    directories: list of strings
+      List of root directories containing calculation data
+    signs: list of '+' or '-'
+      The signs to use when calculating the free energy cycle
+    states: list of strings
+      The thermodynamic states simulated
+    estimator: Estimator Class
+      The estimator to tabulate results of
+    """
     table = Table(estimator.__name__,
                   fmts=["%s:", "%.3f", "%.3f", "%.3f"],
                   headers=['', 'dG gas', 'dG free', 'dG bound'])
@@ -28,7 +42,22 @@ def state_data_table(results, directories, signs, states, estimator):
 
 
 def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
-    """Returns a table containing"""
+    """Returns a Table object containing free energies of solvation and
+    binding.
+
+    Parameters
+    ----------
+    dG_solvs: dictionary[root][estimator] = Result object
+      Calculated solvation free energy results
+    dG_binds: dictionary[root][estimator] = Result object
+      Calculated binding free energy results
+    directories: list of strings
+      List of root directories containing calculation data
+    signs: list of '+' or '-'
+      The signs to use when calculating the free energy cycle
+    estimator: Estimator Class
+      The estimator to tabulate results of
+    """
     table = Table('',
                   fmts=["%s:", "%.3f", "%.3f"],
                   headers=['', 'ddG Solvation', 'ddG Binding'])
@@ -50,8 +79,20 @@ def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
 
 
 class CycleCalculation(feb.FreeEnergyCalculation):
+    """Perform multiple free energy calculations and combine the
+    results to calculate a cycle.
+    """
     def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR], volume=None,
                  results_name='results'):
+        """Parameters
+        ---------
+        estimators: list of estimator classes, optional
+          The estimators to use
+        volume: float, optional
+          Volume the GCMC region
+        results_name: string, optional
+          Filename of the ProtoMS results file to use
+        """
         self.estimators = estimators
         self.figures = {}
         self.tables = []
@@ -61,7 +102,13 @@ class CycleCalculation(feb.FreeEnergyCalculation):
         self.footer = ''
 
     def _body(self, args):
+        """Calculation business logic.
 
+        Parameters
+        ----------
+        args: argparse.Namespace object
+            Namespace from argumentparser
+        """
         if len(args.directories) != len(args.signs):
             raise Exception(
                 "Please give exactly one sign for each provided directory.")
@@ -139,7 +186,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
 
 
 def get_arg_parser():
-    """Add custom options for this script"""
+    """Returns the custom argument parser for this script"""
     parser = feb.FEArgumentParser(
         description="High level script that attempts to use data from multiple"
                     " calculations to provide free energies of solvation and "
@@ -186,6 +233,7 @@ def get_arg_parser():
 
 
 def run_script(cmdline):
+    """Execute the script, allows for straight-forward testing."""
     class_map = {'ti': feb.TI, 'mbar': feb.MBAR,
                  'bar': feb.BAR, 'gcap': GCMCMBAR}
     args = get_arg_parser().parse_args(cmdline)

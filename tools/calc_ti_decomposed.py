@@ -22,6 +22,17 @@ class TI_decomposed(feb.Estimator):
     """
     def __init__(self, lambdas, results_name='results',
                  subdir_glob='./', **kwargs):
+        """Parameters
+        ---------
+        lambdas: list of numbers
+            lambda values used in a calculation
+        results_name : string, optional
+          Filename of the ProtoMS results file to use
+        subdir_glob : string, optional
+          The glob string to use when seaching for result subdirectories
+        **kwargs :
+          Additional keyword arguments are ignored
+        """
         self.estimators = defaultdict(
             lambda: feb.TI(lambdas, results_name, subdir_glob))
         self.lambdas = lambdas
@@ -30,7 +41,14 @@ class TI_decomposed(feb.Estimator):
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object
-        for later calculation"""
+        for later calculation. Return the length of the data series added.
+
+        Parameters
+        ----------
+        series: SnapshotResults.series
+            free energy simulation data for a particular lambda value
+
+        """
         dlam = series.lamf[0]-series.lamb[0]
         min_len = 10E20
         for name, term in series.interaction_energies.iteritems():
@@ -54,12 +72,16 @@ class TI_decomposed(feb.Estimator):
                 for term in self.estimators}
 
     def __getitem__(self, val):
+        """Return a new class instance with series[val] applied to each
+        individual data series.
+        """
         new_est = self.__class__(self.lambdas)
         for term in self.estimators:
             new_est.estimators[term] = self.estimators[term][val]
         return new_est
 
     def __len__(self):
+        """Return the number of data points contained in the data series."""
         lengths = [dat.shape[-1] for term in self.estimators
                    for dat in self.estimators[term].data]
         if len(lengths) == 0:
@@ -70,7 +92,23 @@ class TI_decomposed(feb.Estimator):
 
 
 class DecomposedCalculation(feb.FreeEnergyCalculation):
+    """Calculate an alchemical free energy difference using Thermodynamic
+    Integration individually with difference components of the system
+    energy. This decomposition is additive and, although not formally
+    meaningful, can be helpful to identify the dominant driving forces
+    or to debug problems in a free energy calculation."""
     def __init__(self, root_paths, subdir=''):
+        """Parameters
+        ----------
+        root_paths: a list of lists of strings
+            Paths to ProtoMS output directories. Each list of strings specifies
+            the output directory(s) that make up multiple repeats of a single
+             'leg' of the calculation. The result for each leg is a mean over
+            constituent repeats. Results from each leg are then summed together
+            to give a total free energy difference for the calculation.
+        subdir: string
+            subdirectory within each lambda folder to search for output
+        """
         # temperature can be given as zero as TI estimators do
         # not make use of it
         feb.FreeEnergyCalculation.__init__(
@@ -81,6 +119,13 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
             estimators={feb.TI, TI_decomposed})
 
     def calculate(self, subset=(0., 1., 1.)):
+        """For each estimator return the evaluated potential of mean force.
+
+        Parameters
+        ----------
+        subset: tuple of two floats and an int
+            specify the subset of data to use in the calculation
+        """
         results = {}
 
         leg_result = feb.Result()
@@ -90,7 +135,7 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
                  for rep in leg])
         results[feb.TI] = leg_result
 
-        # dealing with the decomposed estimator is a little more difficult
+        # dealing with the decomposed estimator is a little more difficult.
         # repeats for the same term need to be grouped together into a
         # single Results object
         # start by pulling out all the data
@@ -110,6 +155,13 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         return results
 
     def _body(self, args):
+        """Calculation business logic.
+
+        Parameters
+        ----------
+        args: argparse.Namespace object
+            Namespace from argumentparser
+        """
         subset = (args.lower_bound, args.upper_bound)
         results = self.calculate(subset=subset)
         decomp = results[TI_decomposed]
@@ -139,7 +191,7 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
                 results[feb.TI] = -results[feb.TI]
 
         if args.dualtopology:
-            consolidate_terms(decomp)
+            _consolidate_terms(decomp)
         self.figures['decomposed'] = plot_terms(decomp)
 
         if args.pmf:
@@ -156,7 +208,9 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         return results
 
 
-def consolidate_terms(data):
+def _consolidate_terms(data):
+    """If using the dual topology flag this function sums corresponding
+    energy terms from the two transformed ligands."""
     # this is a little better than the previous iteration, copes with
     # gcsolutes at least, set operations are still not ideal though
     components = {'protein1', 'solvent', 'GCS'}
@@ -180,6 +234,14 @@ def consolidate_terms(data):
 
 
 def plot_terms(data):
+    """Convenience function to plot a bar chart for individual
+    terms that make up the calculated free energy difference.
+
+    Parameters
+    ----------
+    data: dictionary of string-Result object pairs
+      the free energy data to plot
+    """
     fig, ax = plt.subplots()
     fig.subplots_adjust(bottom=0.3)
 
@@ -201,6 +263,14 @@ def plot_terms(data):
 
 
 def plot_pmfs(data):
+    """Convenience function to plot the pmfs of the individual
+    terms that make up the calculated free energy difference.
+
+    Parameters
+    ----------
+    data: dictionary of string-Result object pairs
+      the free energy data to plot
+    """
     fig, ax = plt.subplots()
     for term in data:
         if data[term].dG.value != 0.:
@@ -212,7 +282,7 @@ def plot_pmfs(data):
 
 
 def get_arg_parser():
-    """Add custom options for this script"""
+    """Returns the custom argument parser for this script"""
     parser = feb.FEArgumentParser(
         description="Calculate individual contributions of different terms "
                     "to the total free energy difference. Although terms are "
@@ -247,6 +317,7 @@ def get_arg_parser():
 
 
 def run_script(cmdline):
+    """Execute the script, allows for straight-forward testing."""
     args = get_arg_parser().parse_args(cmdline)
     calc = DecomposedCalculation(args.directories, subdir=args.subdir)
     calc.run(args)

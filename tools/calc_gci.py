@@ -21,46 +21,73 @@ import matplotlib.pyplot as plt
 
 
 class TitrationCalculation(feb.FreeEnergyCalculation):
+    """Calculate free energy differences using the Grand Canonical Integration
+    method. Collates water occupancy data from simulations carried out at
+    diferent chemical potentials and gives NVT binding free energies."""
     def __init__(self, root_paths, temperature, volume, steps=None, **kwargs):
+        """Parameters
+        ---------
+        root_paths: a list of strings
+          Paths to ProtoMS output directories. Each string specifies an
+          the output directory containing a different repeat of a
+          calculation. Reported results are averaged over the given repeats.
+        temperature: float
+          Simulation temperature in degrees Kelvin
+        volume: float
+          The volume of the simulated GCMC region
+        steps: integer, optional
+          Number of steps to use in fitting the GCI neural network. The default
+          value of None attempts to guess the required number of steps.
+        **kwargs:
+            Additional keyword arguments are passed to Estimator classes
+            during initialisation.
+        """
         self.subdir = ''
         feb.FreeEnergyCalculation.__init__(
             self,
-            root_paths=root_paths,
+            root_paths=[root_paths],
             temperature=temperature,
             estimators=[GCI],
+            volume=volume,
+            steps=steps,
             **kwargs)
-        self.volume = volume
-        self.steps = steps
 
     def _path_constructor(self, root_path):
+        """Given a root_path (string) construct a full path
+        suitable for globbing to find output directories."""
         return os.path.join(root_path, "b_*", self.subdir)
 
     def _get_lambda(self, path):
+        """Given a path (string) extract the contained lambda value"""
         return float(path.split('/')[-2].split('_')[1])
 
     def calculate(self, subset=(0., 1., 1)):
         """For each estimator return the evaluated potential of mean force.
 
-        Returns
-        -------
-        dict:
-          results of calculation stored in the below structure:
-          return_val[estimator_class][i] = PMF instance
-          where i is an list index indicating a repeat
+        Parameters
+        ----------
+        subset: tuple of two floats and an int
+            specify the subset of data to use in the calculation
         """
         results = {}
         for est, legs in self.estimators.items():
             leg_result = GCMCResult()
             for i, leg in enumerate(legs):
                 leg_result += GCMCResult([
-                    rep.subset(*subset).calculate(self.temperature,
-                                                  self.volume, self.steps)
+                    rep.subset(*subset).calculate(self.temperature)
                     for rep in leg
                 ])
             results[est] = leg_result
         return results[GCI]
 
     def _body(self, args):
+        """The business logic of the calculation.
+
+        Parameters
+        ----------
+        args: argparse.Namespace object
+            Namespace from argumentparser
+        """
         results = self.calculate(subset=(args.lower_bound, args.upper_bound))
 
         fig, ax = plt.subplots()
@@ -88,12 +115,14 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
 
 
 def plot_titration(results, ax, dot_fmt='b'):
+    """Convenience function to plot the titration data from repeats."""
     for rep in results.data[0]:
         ax.plot(rep.coordinate, rep.values, 'o')
     results.model.plot(ax, xlabel='B Value', ylabel='Occupancy', color='black')
 
 
 def plot_insertion_pmf(results, title=''):
+    """Convenience function to plot the insertion pmf data from repeats"""
     table = Table(
         title,
         fmts=['%d', '%.3f', '%.3f', '%.3f'],
@@ -116,7 +145,7 @@ def plot_insertion_pmf(results, title=''):
 
 
 def get_arg_parser():
-    """Add custom options for this script"""
+    """Add custom argument parser for this script"""
     parser = feb.FEArgumentParser(
         description="Calculate water binding free energies using Grand "
                     "Canonical Integration.",
@@ -138,9 +167,10 @@ def get_arg_parser():
 
 
 def run_script(cmdline):
+    """Execute the script, allows for straight-forward testing."""
     args = get_arg_parser().parse_args(cmdline)
     tc = TitrationCalculation(
-        [args.directories],
+        args.directories,
         args.temperature,
         args.volume,
         args.nsteps,

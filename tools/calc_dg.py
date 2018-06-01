@@ -220,6 +220,7 @@ def get_arg_parser():
 
 
 def run_script(cmdline):
+    """Execute the script, allows for straight-forward testing."""
     class_map = {'ti': feb.TI, 'mbar': feb.MBAR,
                  'bar': feb.BAR, 'gcap': GCMCMBAR}
     args = get_arg_parser().parse_args(cmdline)
