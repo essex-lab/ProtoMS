@@ -1,6 +1,6 @@
 from copy import copy
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+# from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from operator import add
 import pymbar
@@ -39,68 +39,13 @@ class GCMCPMF(feb.Series):
         self.volume = volume
         self.temperature = temperature
         self.model = model
-        self.pmf = feb.PMF(range(len(pmf)), pmf)
+        self.pmf = pmf
 
     @property
     def equilibrium_B(self):
         """Returns the value of B equating to equilibrium with bulk water."""
         beta = 1 / (self.temperature * kB)
         return beta * tip4p_excess + np.log(self.volume / standard_volume)
-
-
-class GCMCPMF2D(GCMCPMF):
-    """A potential of mean force object alchemical simulations performed
-    in the Grand Canonical ensemble at multiple B values.
-    """
-    def __init__(self, lambdas, Bs, volume, temperature, *args):
-        """Parameters
-        ----------
-        lambdas : list of floats
-          The lambda values used in a calculation
-        Bs : list of floats
-          The B values used in a calculation
-        volume: float
-          the volume of the gcmc region in a calculation
-        temperature : float
-          The temperature used in a calculation
-        *args : An arbitrary number of iterables containing numbers
-                or Quantity objects
-            All arguments after coordinate are iterated simultaneously,
-            the first entry of each is used to construct the first Quantity
-            object in self.values and so on.
-        """
-        self.coordinate = lambdas
-        self.coordinate2 = Bs
-        self.volume = volume
-        self.temperature = temperature
-        self.values = []
-        for dat in zip(*args):
-            self.values.append(feb.PMF(self.coordinate2, *dat))
-
-    @property
-    def dG(self):
-        """The free energy difference at the PMF end points for the
-        equilibrium B value."""
-        eqb_B = self.equilibrium_B
-        closest = np.argmin([abs(B - eqb_B) for B in self.coordinate2])
-        return self.values[-1].values[closest] - self.values[0].values[closest]
-
-    def plot(self, axes, show_error=True,  **kwargs):
-        """Plot this PMF onto the provided figure axes.
-
-        Parameters
-        ----------
-        axes : matplotlib Axes3D object
-          axes onto which the figure will be drawn
-        show_error : boolean
-          if True, plot error bars
-        **kwargs :
-          additional keyword arguments to be passed to axes.plot"""
-
-        lambdas, Bs = np.meshgrid(self.coordinate2, self.coordinate)
-        values = np.array([[col.value for col in row] for row in self.values])
-        axes.plot_surface(lambdas, Bs, values, cstride=1, rstride=1)
-        return axes
 
 
 class GCMCResult(feb.BaseResult):
@@ -143,20 +88,10 @@ class GCMCResult(feb.BaseResult):
         return feb.Series(rep.model.x, *model_ys)
 
 
-class GCMCResult2D(feb.Result):
-    """"""
-    @property
-    def pmf(self):
-        pmfs = [GCMCPMF2D(self.lambdas, dat[0].coordinate2,
-                          dat[0].volume, dat[0].temperature, *dat)
-                for dat in self.data]
-        return reduce(add, pmfs)
-
-
 class GCI(feb.Estimator):
     """Estimate insertion free energies using Grand Canonical Integration."""
     def __init__(self, B_values, volume, results_name='results',
-                 steps=None, **kwargs):
+                 nsteps=None, nmin=None, nmax=None, nfits=10, **kwargs):
         """Parameters
         ----------
         B_values: list of floats
@@ -165,9 +100,13 @@ class GCI(feb.Estimator):
           The volume of the GCMC region used in a calculation
         results_name: string, optional
           Filename of the ProtoMS results file to use
-        steps: int, optional
+        nsteps: int, optional
           The number of steps to fit in the titration curve.
           By default the number of steps is automatically selected.
+        nfits: int, optional
+          The number of independent fitting attempts for the neural network
+          occupancy model. Increasing the number of fits may help improve
+          results for noisy data.
         **kwargs:
           Additional keyword arguments are ignored
         """
@@ -176,7 +115,10 @@ class GCI(feb.Estimator):
         self.subdir_glob = ''
         self.results_name = results_name
         self.volume = volume
-        self.steps = steps
+        self.nsteps = nsteps
+        self.nmin = nmin
+        self.nmax = nmax
+        self.nfits = nfits
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object for later
@@ -190,6 +132,16 @@ class GCI(feb.Estimator):
         self.data.append(series.solventson)
         return self.data[-1].shape[-1]
 
+    @property
+    def N_min(self):
+        Ns = np.array(self.data).mean(axis=1)
+        return self.nmin if self.nmin is not None else int(round(min(Ns)))
+
+    @property
+    def N_max(self):
+        Ns = np.array(self.data).mean(axis=1)
+        return self.nmax if self.nmax is not None else int(round(max(Ns)))
+
     def calculate(self, temp):
         """Calculate the free energy difference and return a GCMCPMF object.
 
@@ -199,35 +151,25 @@ class GCI(feb.Estimator):
           Temperature of calculation
         """
         Ns = np.array(self.data).mean(axis=1)
-        if self.steps is None:
-            steps = int(max(Ns))
-            if max(Ns) - steps > 0.9:
-                steps += 1
-        else:
-            steps = self.steps
 
-        model_steps = steps if steps != 0 else 1
+        if self.nsteps is None:
+            if self.nmin is not None or self.nmax is not None:
+                raise ValueError(
+                    'If manually specifying the maximum or minimum number of'
+                    ' waters, nsteps must be manually specified as well.')
+            else:
+                nsteps = self.N_max - self.N_min
+        else:
+            nsteps = self.nsteps
+
+        model_steps = nsteps if nsteps != 0 else 1
         model = fit_ensemble(
             x=np.array(self.B_values), y=Ns, size=model_steps,
-            verbose=False)[0]
+            repeats=self.nfits, verbose=False)[0]
 
-        return GCMCPMF(self.B_values, Ns, self.volume, temp, model,
-                       insertion_pmf(np.arange(steps + 1), model, self.volume))
-
-    def __getitem__(self, val):
-        """Return a new class instance with series[val] applied to each
-        individual data series.
-        """
-        # new_est = self.__class__(self.B_values)
-        new_est = copy(self)
-        self.data = []
-        # add data series to the new estimator that have been sliced by val
-        # want to always apply slice to last dimension, so transpose array
-        # apply slice to first dimension and then transpose back
-        for dat in self.data:
-            reordered_dat = dat.T[val]
-            new_est.data.append(reordered_dat.T)
-        return new_est
+        steps = np.arange(self.N_min, self.N_max+1)
+        pmf = feb.PMF(steps, insertion_pmf(steps, model, self.volume))
+        return GCMCPMF(self.B_values, Ns, self.volume, temp, model, pmf)
 
 
 # Functions specific to grand canonical integration and neural network fitting
@@ -804,8 +746,6 @@ class GCMCMBAR(feb.MBAR):
     ratio for alchemical simulations performed in the Grand Canonical ensemble
     at multiple B values.
     """
-    result_class = GCMCResult2D
-
     def __init__(self, lambdas, volume, **kwargs):
         """Parameters
         ----------
@@ -868,8 +808,13 @@ class GCMCMBAR(feb.MBAR):
         """Return the B value used for this calculation."""
         return sorted(set(self._data_Bs))
 
+    def equilibrium_B(self, temperature):
+        """Returns the value of B equating to equilibrium with bulk water."""
+        beta = 1 / (temperature * kB)
+        return beta * tip4p_excess + np.log(self.volume / standard_volume)
+
     def calculate(self, temp=300.):
-        """Calculate the free energy difference and return a PMF2D object.
+        """Calculate the free energy difference and return a PMF object.
 
         Parameters
         ----------
@@ -904,26 +849,8 @@ class GCMCMBAR(feb.MBAR):
             compute_uncertainty=False, return_theta=False)[0] / beta
 
         # free energy order seems to be reversed with respect to B values
-        return GCMCPMF2D(self.lambdas, self.Bs[::-1], self.volume, temp,
-                         free_energies[0].reshape([N_lams, N_Bs]))
+        closest = np.argmin([abs(B - self.equilibrium_B(temp))
+                             for B in self.Bs[::-1]])
 
-
-def plot_surface(lambdas, Bs, Z):
-    """Utility function to plot a 2D free energy surface.
-
-    Parameters
-    ----------
-    lambdas: list-like of numbers
-      the simulated lambda values
-    Bs: list-like of numbers
-      the simulated B values
-    Z: 2D list-like of numbers
-      the heights of the free energy surface
-    """
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    lambdas, Bs = np.meshgrid(Bs, lambdas)
-
-    ax.plot_surface(lambdas, Bs, Z,
-                    cstride=1, rstride=1)
-    return fig
+        return feb.PMF(
+            self.lambdas, free_energies[0].reshape([N_lams, N_Bs])[:, closest])

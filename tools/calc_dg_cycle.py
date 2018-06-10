@@ -89,7 +89,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
         estimators: list of estimator classes, optional
           The estimators to use
         volume: float, optional
-          Volume the GCMC region
+          Volume of the GCMC region
         results_name: string, optional
           Filename of the ProtoMS results file to use
         """

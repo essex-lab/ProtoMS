@@ -57,6 +57,11 @@ class Series(object):
     def __iter__(self):
         return iter(self.values)
 
+    def as_floats(self):
+        """Return a numpy array containing the values of the data
+        series as floats without error values."""
+        return np.array([v.value for v in self.values])
+
     def plot(self, axes, show_error=True, fmt='-', xlabel='Lambda Value',
              ylabel='Free Energy (kcal)', **kwargs):
         """Plot this PMF onto the provided figure axes.
@@ -258,7 +263,7 @@ class Estimator(object):
         Parameters
         ----------
         temp: float, optional
-              temperature of calculation
+          temperature of calculation
         """
         pass
 
@@ -439,6 +444,7 @@ class FreeEnergyCalculation(object):
             Additional keyword arguments are passed to Estimator classes
             during initialisation.
         """
+
         self.root_paths = root_paths
         self.temperature = temperature
         self.estimator_classes = estimators

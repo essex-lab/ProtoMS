@@ -1,5 +1,4 @@
 import matplotlib
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import os
 import sys
@@ -13,8 +12,7 @@ import matplotlib.pyplot as plt
 
 
 class FreeEnergyCalculation(feb.FreeEnergyCalculation):
-    """Perform a basic free energy calculation.
-    """
+    """Perform a basic free energy calculation."""
     def test_equilibration(self, discard_limit):
         """Perform a series of calculations discarding increasing portions
         from the start of the loaded data series. This assesses whether
@@ -75,10 +73,7 @@ class FreeEnergyCalculation(feb.FreeEnergyCalculation):
             results = self.calculate(subset=(args.lower_bound,
                                              args.upper_bound))
             if args.pmf:
-                if GCMCMBAR in self.estimators:
-                    self.figures['pmf_2d'] = plot_pmfs_2d(results)
-                if len(self.estimators) > 1 or GCMCMBAR not in self.estimators:
-                    self.figures['pmf'] = plot_pmfs(results)
+                self.figures['pmf'] = plot_pmfs(results)
 
             self.tables.extend(make_result_tables(args.directories, results))
         return results
@@ -115,7 +110,7 @@ def plot_fractional_dataset_results(results, estimators):
     results : dict of float-(dict of Estimator class-Result object pairs)
       results to plot, keys are used as the x-values
     estimators : list (or other sequence) of Estimator classes
-      Estimator classes used to store 
+      Estimator classes used to store
     """
     fig, ax = plt.subplots()
     for estimator in estimators:
@@ -137,25 +132,8 @@ def plot_pmfs(results):
       the results to plot"""
     fig, ax = plt.subplots()
     for estimator in sorted(results):
-        if estimator != GCMCMBAR:
-            results[estimator].pmf.plot(ax, label=estimator.__name__)
+        results[estimator].pmf.plot(ax, label=estimator.__name__)
     ax.legend(loc='best')
-    return fig
-
-
-def plot_pmfs_2d(results):
-    """Plot average potentials of mean force for all (2d) estimators
-
-    Parameters
-    ----------
-    results : list (or other sequence) of results objects
-      the results to plot"""
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    results[GCMCMBAR].pmf.plot(ax)
-    ax.set_xlabel('B')
-    ax.set_ylabel('lambda')
-    ax.set_zlabel('dG (kcal/mol)')
     return fig
 
 

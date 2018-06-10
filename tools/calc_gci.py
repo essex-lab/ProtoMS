@@ -1,4 +1,3 @@
-# Author: Gregory Ross
 """
 Routines to calculate free energies with GCMC as outlined in
 J. Am. Chem. Soc., 2015, 137 (47), pp 14930-14943
@@ -24,7 +23,8 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
     """Calculate free energy differences using the Grand Canonical Integration
     method. Collates water occupancy data from simulations carried out at
     diferent chemical potentials and gives NVT binding free energies."""
-    def __init__(self, root_paths, temperature, volume, steps=None, **kwargs):
+    def __init__(self, root_paths, temperature, volume, nsteps=None,
+                 nmin=None, nmax=None, nfits=5, **kwargs):
         """Parameters
         ---------
         root_paths: a list of strings
@@ -35,9 +35,19 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
           Simulation temperature in degrees Kelvin
         volume: float
           The volume of the simulated GCMC region
-        steps: integer, optional
-          Number of steps to use in fitting the GCI neural network. The default
-          value of None attempts to guess the required number of steps.
+        nsteps: integer, optional
+          Number of steps to use in fitting the GCI neural network. The
+          default value of None attempts to guess the required number of steps.
+        nmin: integer, optional
+          Lowest number of waters to include when reporting network binding
+          free energies
+        nmin: integer, optional
+          Highest number of waters to include when reporting network binding
+          free energies
+        nfits: int, optional
+          The number of independent fitting attempts for the neural network
+          occupancy model. Increasing the number of fits may help improve
+          results for noisy data.
         **kwargs:
             Additional keyword arguments are passed to Estimator classes
             during initialisation.
@@ -49,7 +59,10 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
             temperature=temperature,
             estimators=[GCI],
             volume=volume,
-            steps=steps,
+            nsteps=nsteps,
+            nmin=nmin,
+            nmax=nmax,
+            nfits=nfits,
             **kwargs)
 
     def _path_constructor(self, root_path):
@@ -73,10 +86,11 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
         for est, legs in self.estimators.items():
             leg_result = GCMCResult()
             for i, leg in enumerate(legs):
-                leg_result += GCMCResult([
+                tmp = GCMCResult([
                     rep.subset(*subset).calculate(self.temperature)
                     for rep in leg
                 ])
+                leg_result += tmp
             results[est] = leg_result
         return results[GCI]
 
@@ -88,6 +102,12 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
         args: argparse.Namespace object
             Namespace from argumentparser
         """
+
+        if args.nmin is not None or args.nmax is not None:
+            self.header += '\nWARNING! Manually setting the maximum or ' \
+                           'minimum number of waters. For free energies to ' \
+                           'be meaningful ensure that observed simulation ' \
+                           'occupancies cover a sufficient range.\n'
         results = self.calculate(subset=(args.lower_bound, args.upper_bound))
 
         fig, ax = plt.subplots()
@@ -108,8 +128,10 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
         self.footer += 'Occupancy at %.3f is %s\n' % \
                        (closest_B, results.occupancies.values[eqb_index])
 
-        min_index = np.argmin(results.insertion_pmf.values)
-        self.footer += "\nOccupancy at insertion PMF minimum is %.3f\n" % \
+        min_index = np.argmin([
+            v.value - i*tip4p_excess
+            for i, v in enumerate(results.insertion_pmf.values)])
+        self.footer += "\nOccupancy at binding PMF minimum is %.3f\n" % \
                        results.insertion_pmf.coordinate[min_index]
         return results
 
@@ -134,9 +156,9 @@ def plot_insertion_pmf(results, title=''):
     steps = results.data[0][0].pmf.coordinate
     pmf = feb.PMF(steps, *[rep.pmf for rep in results.data[0]])
     prev_fe = 0.0
-    for i, fe in enumerate(pmf):
+    for i, (fe, step) in enumerate(zip(pmf, steps)):
         bind_fe = fe - i*tip4p_excess
-        table.add_row([i, fe, bind_fe, bind_fe - prev_fe])
+        table.add_row([step, fe, bind_fe, bind_fe - prev_fe])
         prev_fe = bind_fe.value
 
     fig, ax = plt.subplots()
@@ -161,8 +183,21 @@ def get_arg_parser():
         help="Volume of the calculations GCMC region.")
     parser.add_argument(
         '-n', '--nsteps', type=int,
+        help='Override automatic guessing of the number of steps to fit for '
+             'titration curve fitting.')
+    parser.add_argument(
+        '--nmin', type=int,
+        help='Override automatic guessing of the minimum number of waters for '
+             'tittration curve fitting.')
+    parser.add_argument(
+        '--nmax', type=int,
         help='Override automatic guessing of maximum number of waters for '
              'titration curve fitting.')
+    parser.add_argument(
+        '--nfits', type=int, default=10,
+        help='The number of independent fitting attempts for the neural '
+             'network occupancy model. Increasing the number of fits may '
+             'help improve results for noisy data.')
     return parser
 
 
@@ -174,6 +209,9 @@ def run_script(cmdline):
         args.temperature,
         args.volume,
         args.nsteps,
+        args.nmin,
+        args.nmax,
+        args.nfits,
         results_name=args.name)
     tc.run(args)
 

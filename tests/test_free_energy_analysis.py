@@ -10,10 +10,11 @@ import framework
 
 sys.path.append(os.path.join(os.environ['PROTOMSHOME'], 'tools'))
 
-import calc_dg2
+import calc_dg
 import calc_ti_decomposed
 import calc_dg_cycle
 import calc_gci
+import calc_gcap_surface
 from free_energy_base import BAR, MBAR, TI, get_alchemical_arg_parser
 from free_energy_base import PMF, Quantity, Result
 from simulationobjects import boltz, SnapshotResults
@@ -109,7 +110,7 @@ class TestArgumentParsers(unittest.TestCase):
         get_alchemical_arg_parser()
 
     def test_dg2_parser(self):
-        calc_dg2.get_arg_parser()
+        calc_dg.get_arg_parser()
 
     def test_ti_decomposed(self):
         calc_ti_decomposed.get_arg_parser()
@@ -258,7 +259,7 @@ class testCalcDg(framework.BaseTest):
                 "Expected output file {0} is missing".format(filename))
 
     def test(self):
-        calc_dg2.run_script(self.cmdline.split())
+        calc_dg.run_script(self.cmdline.split())
 
 
 class testCalcDgCycleDual(testCalcDg):
@@ -299,7 +300,7 @@ class testCalcTiDecomposedDual(testCalcTiDecomposed):
 
 class testCalcDgGCAP(testCalcDg):
     input_files = ['gcap/out1_bnd']
-    output_files = ['results.pkl', 'pref_pmf_2d.pdf', 'pref_pmf.pdf']
+    output_files = ['results.pkl', 'pref_pmf.pdf']
     cmdline = (
         "-d gcap/out1_bnd --est gcap bar --pmf --subdir b_-9.700 --name"
         " results_inst --no-show --pickle results.pkl --save-figures pref"
@@ -316,7 +317,7 @@ class testCalcDgGCAPNoVol(testCalcDgGCAP):
 
     def test(self):
         with self.assertRaises(TypeError):
-            calc_dg2.run_script(self.cmdline.split())
+            calc_dg.run_script(self.cmdline.split())
 
 
 class testCalcDgCycleGCAP(testCalcDgCycleDual):
@@ -355,6 +356,19 @@ class testCalcGCIZero(testCalcGCI):
     cmdline = ("-d gcap/out1_bnd/lam-0.000 --save-figures pref --no-show"
                " --pickle results.pkl --name results_inst -v 30.")
 
+
+class testCalcGCAPSurface(testCalcDg):
+    input_files = ['gcap/out1_bnd']
+    output_files = ['results.pkl', 'pref_pmf2d_TI.pdf', 'pref_pmf2d_BAR.pdf',
+                    'pref_pmf2d_MBAR.pdf', 'pref_occupancy2d.pdf']
+    cmdline = (
+        "-d gcap/out1_bnd --est ti bar mbar --name"
+        " results_inst --no-show --pickle results.pkl --save-figures pref"
+        " -v 30."
+    )
+
+    def test(self):
+        calc_gcap_surface.run_script(self.cmdline.split())
 
 if __name__ == '__main__':
     unittest.main()
