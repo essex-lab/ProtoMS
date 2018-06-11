@@ -214,6 +214,9 @@ add_test(NAME Jaws1SetupTest
 add_test(NAME Jaws1SimulationTest
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_jaws1.py Jaws1SimulationTest)
 
+  add_test(NAME FreeEnergyAnalysis
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_free_energy_analysis.py)
+  
 # Skip MPI tests is not using MPI
 if(MPI_Fortran_FOUND AND NOT AVOID_MPI)
     add_test(NAME test_mpi

@@ -64,6 +64,7 @@ def find_equilibration(x,y,atleast=EQUIL_LIMIT,threshold=0.05,nperm=0) :
   int
     the length of the equilibration period
   """
+  x, y = np.array(x), np.array(y)
   for i in range(0,y.shape[0]-atleast) :
     if nperm == 0 : # Performs an assymptotic test, fast
       tau,p = kendalltau(x[i:],y[i:])
