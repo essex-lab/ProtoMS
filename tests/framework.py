@@ -6,6 +6,7 @@ import os
 import shutil
 import itertools
 import string
+import six
 import filecmp
 import errno
 import functools
@@ -309,7 +310,7 @@ class CompareTools:
             raise Exception("Text diff cannot be used with both 'ign_white' and 'number_rel_error'")
 
         with open(file1) as f1, open(file2) as f2:
-            for l1, l2 in itertools.izip_longest(f1, f2):
+            for l1, l2 in six.moves.zip_longest(f1, f2):
                 if l1 == l2:
                     continue
 
@@ -325,7 +326,8 @@ class CompareTools:
                 if ign_white:
                     l1 = l1.translate(None, string.whitespace)
                     l2 = l2.translate(None, string.whitespace)
-                elif decimal_rel_err is not None and CompareTools._compare_decimals(l1, l2, decimal_rel_err):
+                elif decimal_rel_err is not None and \
+                     CompareTools._compare_decimals(l1, l2, decimal_rel_err):
                     # _compare_decimals implicitly skips whitespace anyway
                     continue
 
@@ -340,9 +342,10 @@ class CompareTools:
     @staticmethod
     def _compare_decimals(l1, l2, decimal_rel_err):
         """
-        Check whether two lines match accounting for a relative error in any numbers.
-        Also accounts for equivalent representations (e.g. 1 vs 1.0) of a number.
-        
+        Check whether two lines match accounting for a relative error in any
+        numbers. Also accounts for equivalent representations (e.g. 1 vs 1.0)
+        of a number.
+
         Parameters
         ----------
         l1 : First line
@@ -355,7 +358,7 @@ class CompareTools:
             Whether lines match
 
         """
-        for a, b in itertools.izip_longest(l1.split(), l2.split()):
+        for a, b in six.moves.zip_longest(l1.split(), l2.split()):
             if a == b:
                 # Strings match (includes numbers that match textually)
                 continue

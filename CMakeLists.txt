@@ -53,7 +53,7 @@ endif()
 
 
 # Find Python and create dynamic include files
-find_package(PythonInterp 2.7 REQUIRED)
+find_package(PythonInterp REQUIRED)
 message("-- Generating compilation info...")
 execute_process(COMMAND ${PYTHON_EXECUTABLE}
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/getid.py

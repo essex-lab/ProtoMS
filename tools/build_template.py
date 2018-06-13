@@ -3,7 +3,6 @@
 #          Chris Cave-Ayland
 #          Samuel Genheden
 #          Gregory Ross
-
 """
 Routines to build a ProtoMS template file
 
@@ -14,277 +13,292 @@ make_zmat
 Can be executed from the command line as a stand-alone program
 
 """
-
-import sys
+from __future__ import print_function
 import os
 import logging
 
-import simulationobjects as sim
+if __name__ != "__main__":
+    from . import simulationobjects as sim
 
 logger = logging.getLogger('protoms')
 
-class PrepiAtom :
+
+class PrepiAtom:
+    """
+    Class to encapsulate an atom in an Amber prepi file
+    and its connectivity
+
+    Attributes
+    ----------
+    atype : string
+      the atom type
+    bondidx : int
+      the index of the atom this atom is bonded to in the prepi z-matrix
+    bonds : list
+      names of all atoms this atom is bonded to
+    charge : float
+      the charge
+    index : int
+      the serial number in the prepi file
+    is_on_loop : dictionary
+      a flag for each atom in bonds indicating if the bond is part of a loop
+    loop_closure : dictionary
+      a flag for each atom in bonds indicating if the bond was part of a loop
+      statement in the prepi file
+    name : string
+      the atom name
+    traversed : dictionary
+      a flag for each atom in bonds indicating if the bond has been traversed
+    zmat : list
+      atom names of the atoms defined to this atom in the z-matrix
   """
-  Class to encapsulate an atom in an Amber prepi file
-  and its connectivity
-  
-  Attributes
-  ----------
-  atype : string
-    the atom type
-  bondidx : int
-    the index of the atom this atom is bonded to in the prepi z-matrix
-  bonds : list
-    names of all atoms this atom is bonded to
-  charge : float
-  	the charge
-  index : int
-    the serial number in the prepi file
-  is_on_loop : dictionary
-    a flag for each atom in bonds indicating if the bond is part of a loop
-  loop_closure : dictionary
-    a flag for each atom in bonds indicating if the bond was part of a loop statement in the prepi file
-  name : string
-    the atom name
-  traversed : dictionary
-    a flag for each atom in bonds indicating if the bond has been traversed
-  zmat : list
-    atom names of the atoms defined to this atom in the z-matrix
-  """
-  def __init__(self) :
-    self.charge = 0.0
-    self.name = ""
-    self.index = 0
-    self.atype = ""
-    self.bondidx = -1
-    self.bonds = []
-    self.loop_closure = {}
-    self.traversed = {}
-    self.zmat = []
-    self.is_on_loop = {}
-  def read(self,record,atomlist) :
-    """
-    Read a line from an Amber prepi-file
-    """
-    cols = record.strip().split()
-    self.name = cols[1]
-    self.index = int ( cols[0] )
-    self.atype = cols[2]
-    self.bondidx = int(cols[4])
-    if self.bondidx >= 4 :
-      self.add_bond(atomlist[self.bondidx-1])
-    self.charge = float ( cols[10] )
-  def add_bond(self,atomname,loop_closure=False) :
-    """
-    Add a bond to this atom
-    """
-    self.bonds.append(atomname)
-    self.loop_closure[atomname] = loop_closure
-    self.is_on_loop[atomname] = False
-    self.traversed[atomname] = False
-  def sort_bonds(self,metric) :
-    """
-    Sort the bonds based on some metric
-    """
-    self.bonds = sorted(self.bonds,key = lambda x : metric[x])[::-1]
-  def next_bond(self,defined,update=True) :
-    """
-    Find an atom, bonded to this atom that 
-    has not been defined and where the bond has not been traversed
-    """
-    next = None
-    for bond in self.bonds :
-      if not defined[bond] and not self.traversed[bond] and self.is_on_loop[bond]: #and not self.loop_closure[bond] :
-        if update : self.traversed[bond] = True
-        next = bond
-        break
- 
-    if next == None :
-      for bond in self.bonds :
-        if not defined[bond] and not self.traversed[bond] and not self.is_on_loop[bond]: #and not self.loop_closure[bond] :
-          if update : self.traversed[bond] = True
-          next = bond
-          break
-    return next
-  def backward_bond(self,exclude,defined) :
-    """
+
+    def __init__(self):
+        self.charge = 0.0
+        self.name = ""
+        self.index = 0
+        self.atype = ""
+        self.bondidx = -1
+        self.bonds = []
+        self.loop_closure = {}
+        self.traversed = {}
+        self.zmat = []
+        self.is_on_loop = {}
+
+    def read(self, record, atomlist):
+        """Read a line from an Amber prepi-file"""
+        cols = record.strip().split()
+        self.name = cols[1]
+        self.index = int(cols[0])
+        self.atype = cols[2]
+        self.bondidx = int(cols[4])
+        if self.bondidx >= 4:
+            self.add_bond(atomlist[self.bondidx - 1])
+        self.charge = float(cols[10])
+
+    def add_bond(self, atomname, loop_closure=False):
+        """Add a bond to this atom"""
+        self.bonds.append(atomname)
+        self.loop_closure[atomname] = loop_closure
+        self.is_on_loop[atomname] = False
+        self.traversed[atomname] = False
+
+    def sort_bonds(self, metric):
+        """Sort the bonds based on some metric"""
+        self.bonds = sorted(self.bonds, key=lambda x: metric[x])[::-1]
+
+    def next_bond(self, defined, update=True):
+        """Find an atom, bonded to this atom that
+        has not been defined and where the bond has not been traversed
+        """
+        next = None
+        for bond in self.bonds:
+            if not defined[bond] and not self.traversed[bond] and \
+               self.is_on_loop[bond]:
+                if update:
+                    self.traversed[bond] = True
+                next = bond
+                break
+
+        if next is None:
+            for bond in self.bonds:
+                if not defined[bond] and not self.traversed[bond] and \
+                   not self.is_on_loop[bond]:
+                    if update:
+                        self.traversed[bond] = True
+                    next = bond
+                    break
+        return next
+
+    def backward_bond(self, exclude, defined):
+        """
     Find an atom, bonded to this atom that has
     already been defined but is not in the list of excluded atoms
     """
-    back = None
-    for bond in self.bonds :
-      if bond not in exclude and defined[bond] :
-        back = bond
-        break
-    return back
-  def improper_dihedral(self,exclude,defined) :
-    """
+        back = None
+        for bond in self.bonds:
+            if bond not in exclude and defined[bond]:
+                back = bond
+                break
+        return back
+
+    def improper_dihedral(self, exclude, defined):
+        """
     Look for the definition of an improper dihedral:
-    see if at least two bonds to this atom has been defined, 
+    see if at least two bonds to this atom has been defined,
     excluding the bond in the exclude list
     """
-    a1 = None
-    a2 = None
-    for bond in self.bonds : 
-      if bond in exclude : continue
-      if defined[bond] :
-        if a1 == None :
-          a1 = bond
-        elif a2 == None :
-          a2 = bond
-          return (a1,a2)
-    return (a1,a2) 
+        a1 = None
+        a2 = None
+        for bond in self.bonds:
+            if bond in exclude:
+                continue
+            if defined[bond]:
+                if a1 is None:
+                    a1 = bond
+                elif a2 is None:
+                    a2 = bond
+                    return (a1, a2)
+        return (a1, a2)
 
-def _find_cycles(atoms) :
 
-  # Create a simple, unweighted, molecular graph
-  graph = {}
-  for atom in atoms :
-    graph[atom] = {}
-    for bond in atoms[atom].bonds : graph[atom][bond] = {}
+def _find_cycles(atoms):
 
-  gnodes=set(graph)
-  cycles=[]
-  root = None
-  while gnodes:  # loop over connected components
-      if root is None:
-          root=gnodes.pop()
-      stack=[root]
-      pred={root:root}
-      used={root:set()}
-      while stack:  # walk the spanning tree finding cycles
-          z=stack.pop()  # use last-in so cycles easier to find
-          zused=used[z]
-          for nbr in graph[z]:
-              if nbr not in used:   # new node
-                  pred[nbr]=z
-                  stack.append(nbr)
-                  used[nbr]=set([z])
-              elif nbr == z:        # self loops
-                  cycles.append([z])
-              elif nbr not in zused:# found a cycle
-                  pn=used[nbr]
-                  cycle=[nbr,z]
-                  p=pred[z]
-                  while p not in pn:
-                      cycle.append(p)
-                      p=pred[p]
-                  cycle.append(p)
-                  cycles.append(cycle)
-                  used[nbr].add(z)
-      gnodes-=set(pred)
-      root=None
-  return cycles
+    # Create a simple, unweighted, molecular graph
+    graph = {}
+    for atom in atoms:
+        graph[atom] = {}
+        for bond in atoms[atom].bonds:
+            graph[atom][bond] = {}
 
-def _read_prepi(filename) :
-  """
+    gnodes = set(graph)
+    cycles = []
+    root = None
+    while gnodes:  # loop over connected components
+        if root is None:
+            root = gnodes.pop()
+        stack = [root]
+        pred = {root: root}
+        used = {root: set()}
+        while stack:  # walk the spanning tree finding cycles
+            z = stack.pop()  # use last-in so cycles easier to find
+            zused = used[z]
+            for nbr in graph[z]:
+                if nbr not in used:  # new node
+                    pred[nbr] = z
+                    stack.append(nbr)
+                    used[nbr] = set([z])
+                elif nbr == z:  # self loops
+                    cycles.append([z])
+                elif nbr not in zused:  # found a cycle
+                    pn = used[nbr]
+                    cycle = [nbr, z]
+                    p = pred[z]
+                    while p not in pn:
+                        cycle.append(p)
+                        p = pred[p]
+                    cycle.append(p)
+                    cycles.append(cycle)
+                    used[nbr].add(z)
+        gnodes -= set(pred)
+        root = None
+    return cycles
+
+
+def _read_prepi(filename):
+    """
   Read an prepi-file from Antechamber
   """
 
-  atomlist = "DUM DUM DUM".split()
-  atoms = {}
-  impropers = []
+    atomlist = "DUM DUM DUM".split()
+    atoms = {}
+    impropers = []
 
-  lines = open(filename,"r").readlines()
-  i = 0
-  while lines[i].find("CORRECT     OMIT") == -1 : i = i +1
-  i = i + 5
+    lines = open(filename, "r").readlines()
+    i = 0
+    while lines[i].find("CORRECT     OMIT") == -1:
+        i = i + 1
+    i = i + 5
 
-  while len(lines[i]) > 4 :
-    atom = PrepiAtom()
-    atom.read(lines[i],atomlist)
-    #graph.add_node(atom.name)
-    atoms[atom.name] = atom
-    atomlist.append(atom.name)
-    if atom.bondidx >= 4 :
-      atoms[atom.bonds[-1]].add_bond(atom.name)
+    while len(lines[i]) > 4:
+        atom = PrepiAtom()
+        atom.read(lines[i], atomlist)
+        atoms[atom.name] = atom
+        atomlist.append(atom.name)
+        if atom.bondidx >= 4:
+            atoms[atom.bonds[-1]].add_bond(atom.name)
+        i = i + 1
+
+    while lines[i].find("LOOP") == -1:
+        i = i + 1
     i = i + 1
+    while len(lines[i]) > 4:
+        atom1, atom2 = lines[i].strip().split()
+        atoms[atom1].add_bond(atom2, loop_closure=True)
+        atoms[atom2].add_bond(atom1)
+        i = i + 1
 
-  while lines[i].find("LOOP") == -1 : i = i + 1
-  i = i +1
-  while len(lines[i]) > 4 : 
-    atom1,atom2 = lines[i].strip().split()
-    atoms[atom1].add_bond(atom2,loop_closure=True)
-    atoms[atom2].add_bond(atom1)
-    i = i + 1
-    
-  # Find cycles in the atom graph
-  cycles = _find_cycles(atoms)
-  for cycle in cycles :
-    for atom1,atom2 in zip(cycle[:-1],cycle[1:])  :
-      atoms[atom1].is_on_loop[atom2] = True
-      atoms[atom2].is_on_loop[atom1] = True
-    atoms[cycle[0]].is_on_loop[cycle[-1]] = True
-    atoms[cycle[-1]].is_on_loop[cycle[0]] = True
+    # Find cycles in the atom graph
+    cycles = _find_cycles(atoms)
+    for cycle in cycles:
+        for atom1, atom2 in zip(cycle[:-1], cycle[1:]):
+            atoms[atom1].is_on_loop[atom2] = True
+            atoms[atom2].is_on_loop[atom1] = True
+        atoms[cycle[0]].is_on_loop[cycle[-1]] = True
+        atoms[cycle[-1]].is_on_loop[cycle[0]] = True
 
-  while lines[i].find("IMPROPER") == -1 : i += 1
-  while True:
-    i += 1
-    cols = lines[i].split ()
-    if len ( cols ) != 4:
-      break
+    while lines[i].find("IMPROPER") == -1:
+        i += 1
+    while True:
+        i += 1
+        cols = lines[i].split()
+        if len(cols) != 4:
+            break
 
-    impropers.append ( cols )
+        impropers.append(cols)
 
-    
-  return atomlist,atoms,impropers
+    return atomlist, atoms, impropers
+
 
 #
 # Calculate closeness centrality of all atoms in the molecular graph
 #
-def _closeness_centrality(graph) :
-  # Return the length of the shortest path from node to all other nodes
-  def shortest_path(graph,node) :
-    seen={}
-    level=0
-    nextlevel={node:1}
-    while nextlevel:
-      thislevel=nextlevel
-      nextlevel={} 
-      for v in thislevel:
-        if v not in seen:
-          seen[v]=level
-          nextlevel.update(graph[v])
-      level=level+1
-    return seen 
-    
-  c = {}
-  for node in graph :
-    sp = shortest_path(graph,node) 
-    spsum = sum(sp.values())
-    # I don't believe the normalization is necessary since every atom can be reached from evert other atom
-    #norm = (len(sp)-1.0) / (len(graph) - 1.0)
-    c[node] = (len(sp) - 1.0) / spsum
-  return c
+def _closeness_centrality(graph):
+    # Return the length of the shortest path from node to all other nodes
+    def shortest_path(graph, node):
+        seen = {}
+        level = 0
+        nextlevel = {node: 1}
+        while nextlevel:
+            thislevel = nextlevel
+            nextlevel = {}
+            for v in thislevel:
+                if v not in seen:
+                    seen[v] = level
+                    nextlevel.update(graph[v])
+            level = level + 1
+        return seen
+
+    c = {}
+    for node in graph:
+        sp = shortest_path(graph, node)
+        spsum = sum(sp.values())
+        c[node] = (len(sp) - 1.0) / spsum
+    return c
+
 
 #
 # Compute the closeness of all atoms, sort
 # their bonds on closeness and return of sorted list of atoms
 #
-def _compute_closeness(atoms,verbose=False) :
+def _compute_closeness(atoms, verbose=False):
 
-  # Create a simple, unweighted, molecular graph
-  graph = {}
-  for atom in atoms :
-    graph[atom] = {}
-    for bond in atoms[atom].bonds : graph[atom][bond] = {}
+    # Create a simple, unweighted, molecular graph
+    graph = {}
+    for atom in atoms:
+        graph[atom] = {}
+        for bond in atoms[atom].bonds:
+            graph[atom][bond] = {}
 
-  # Calculate the closeness of all atoms
-  closeness = _closeness_centrality(graph)
+    # Calculate the closeness of all atoms
+    closeness = _closeness_centrality(graph)
 
-  # Create a sorted list based on the closeness of all atoms
-  atomlist = sorted(closeness,key=closeness.get)[::-1]
+    # Create a sorted list based on the closeness of all atoms
+    atomlist = sorted(closeness, key=closeness.get)[::-1]
 
-  # Sort the bonds for each atom by the closeness and set all atoms to undefined
-  for atom in atomlist :
-    atoms[atom].sort_bonds(closeness)
-    if verbose : print "%s %.3f"%(atom,closeness[atom])
-  if verbose : print ""
-    
-  return atomlist
+    # Sort the bonds for each atom by the closeness and set all atoms to undefined
+    for atom in atomlist:
+        atoms[atom].sort_bonds(closeness)
+        if verbose:
+            print("%s %.3f" % (atom, closeness[atom]))
+    if verbose:
+        print()
+
+    return atomlist
+
 
 def make_zmat(prepifile):
-  """ Make a ProtoMS z-matrix for a solute
+    """ Make a ProtoMS z-matrix for a solute
   
   Parameters
   ----------   
@@ -298,188 +312,214 @@ def make_zmat(prepifile):
   all_zmat : list
     a list of atoms with their z-matrix atoms
   """
-    
-  # ----------------
-  # Helper routines
-  # ----------------
 
-  def define_atom(current,previous,atoms,defined,all_zmat,terminal,verbose=False) :
-    """
-    Define a new atom in the z-matrix
-    """
-  # Make a proper dihedral for the current atom
-    def make_proper() :
-      # If we a dealing with the first three atoms, just include less and less dummies
-      if len(all_zmat) < 2 or (len(all_zmat) == 2 and not terminal) : 
-        atoms[current].zmat = atoms[previous].zmat[:2]
-        atoms[current].zmat.insert(0,previous)
-      # if not, we traverse backwards on the molecular graph, looking for two atoms to
-      # form an angle and dihedral
-      else :
-        a2 = atoms[previous].backward_bond([current,previous],defined)
-        if len(all_zmat) > 2 :
-          a3 = atoms[a2].backward_bond([previous,a2],defined)
-        else :
-          a3 = "DM3"
-        atoms[current].zmat = ("%s %s %s"%(previous,a2,a3)).split()
-      
-    # Make an improper dihedral for the current atom
-    def make_improper(a2,a3) :
-      # This two lines were the previous default definition, now they are supplied as arguments
-      #a2 = atoms[previous].bonds[0]
-      #a3 = atoms[previous].bonds[1]
-      atoms[current].zmat = ("%s %s %s"%(previous,a2,a3)).split()
-          
-    defined[current] = True
-    if previous != None :
-    
-      if len(all_zmat) <= 2 : 
-        make_proper()
-      else :
-  
-        # This was the previous rule:
-        # If the current atom is the second or more bonded atom to the previous,
-        # let's define it with an improper so that it moves with the first atom
-        # bonded to the previous atom
-        #if atoms[previous].bonds.index(current) > 1 :
-    
-        # Now, we let the previous atom make the decision:
-        # simply return two previously defined atoms, or None
-        a2,a3 = atoms[previous].improper_dihedral(current,defined)
-        if a2 != None and a3 != None :
-          make_improper(a2,a3)
-        else :
-          make_proper()
- 
-    # This will only happens for the very first atom
-    else :
-      atoms[current].zmat = "DM3 DM2 DM1".split()
-    if verbose : print " ",current,
-    all_zmat.append(current+" "+" ".join(atoms[current].zmat))
+    # ----------------
+    # Helper routines
+    # ----------------
 
-  def traverse_graph(atomlist,atoms,verbose=False) :
-    """
+    def define_atom(current,
+                    previous,
+                    atoms,
+                    defined,
+                    all_zmat,
+                    terminal,
+                    verbose=False):
+        """Define a new atom in the z-matrix"""
+
+        # Make a proper dihedral for the current atom
+        def make_proper():
+            # If we a dealing with the first three atoms, just
+            # include less and less dummies
+            if len(all_zmat) < 2 or (len(all_zmat) == 2 and not terminal):
+                atoms[current].zmat = atoms[previous].zmat[:2]
+                atoms[current].zmat.insert(0, previous)
+            # if not, we traverse backwards on the molecular graph, looking
+            # for two atoms to form an angle and dihedral
+            else:
+                a2 = atoms[previous].backward_bond([current, previous],
+                                                   defined)
+                if len(all_zmat) > 2:
+                    a3 = atoms[a2].backward_bond([previous, a2], defined)
+                else:
+                    a3 = "DM3"
+                atoms[current].zmat = ("%s %s %s" % (previous, a2, a3)).split()
+
+        # Make an improper dihedral for the current atom
+        def make_improper(a2, a3):
+            # This two lines were the previous default definition,
+            # now they are supplied as arguments
+            atoms[current].zmat = ("%s %s %s" % (previous, a2, a3)).split()
+
+        defined[current] = True
+        if previous is not None:
+
+            if len(all_zmat) <= 2:
+                make_proper()
+            else:
+
+                # This was the previous rule:
+                # If the current atom is the second or more bonded atom to
+                # the previous, let's define it with an improper so that
+                # it moves with the first atom bonded to the previous atom
+                # if atoms[previous].bonds.index(current) > 1 :
+
+                # Now, we let the previous atom make the decision:
+                # simply return two previously defined atoms, or None
+                a2, a3 = atoms[previous].improper_dihedral(current, defined)
+                if a2 is not None and a3 is not None:
+                    make_improper(a2, a3)
+                else:
+                    make_proper()
+
+        # This will only happens for the very first atom
+        else:
+            atoms[current].zmat = "DM3 DM2 DM1".split()
+        if verbose:
+            print(" ", current, end="")
+        all_zmat.append(current + " " + " ".join(atoms[current].zmat))
+
+    def traverse_graph(atomlist, atoms, verbose=False):
+        """
     Traverse the molecule graph based on the closeness of the atoms
     and define the z-matrix
     """
-    defined = {}
-    for atom in atoms : defined[atom] = False
-    all_zmat = []
-  
-    if verbose : print "Traversal of the molecular graph:"
-  
-    # Start with the most central atom
-    branch_atom = atomlist[0]
-    terminal_flag = False
-    define_atom(branch_atom,None,atoms,defined,all_zmat,terminal_flag,verbose)
-  
-    while True :
-      # Traverse a branch from an atom with at least two bonds
-      previous = branch_atom
-      next = atoms[branch_atom].next_bond(defined)
-      atoms[next].traversed[branch_atom] = True
-      while next != None : 
-        define_atom(next,previous,atoms,defined,all_zmat,terminal_flag,verbose)
-        previous = next
-        next = atoms[previous].next_bond(defined)
-        if next != None : 
-          atoms[next].traversed[previous] = True
-        terminal_flag = next == None
-      if verbose : print ".",
-    
-      # Check if we have more branches to traverse
-      if atoms[branch_atom].next_bond(defined,update=False) == None :
-        if verbose : print " : ",
-        # Tries to find a new atom to branch off from
-        found = False
-        for atom  in atomlist :
-          if not defined[atom] :
-            branch_atom = atom
-            terminal_flag = False
-            define_atom(branch_atom,atoms[atom].bonds[0],atoms,defined,all_zmat,terminal_flag,verbose)
-            # If the found atom has more than one bonds, we can traverse its branches
-            if len(atoms[branch_atom].bonds) > 1 :
-              found = True
-              break
-            else :
-              if verbose : print "; ",
-        # If we could not find any more atoms to branch off from we are done!      
-        if not found : break 
-    if verbose : print ""
-  
-    return all_zmat
+        defined = {}
+        for atom in atoms:
+            defined[atom] = False
+        all_zmat = []
 
-  logger.debug("Running make_zmat with arguments: ")
-  logger.debug("\tprepifile = %s"%prepifile) 
-  logger.debug("This will generate a ProtoMS compatible z-matrix for a solute")
+        if verbose:
+            print("Traversal of the molecular graph:")
 
-  # Parse the prepi-file into a list of atom names and a dictionary of Atom objects
-  atomnames,atoms, impropers = _read_prepi(prepifile) # MOD
-  h,t = os.path.splitext(prepifile)	
+        # Start with the most central atom
+        branch_atom = atomlist[0]
+        terminal_flag = False
+        define_atom(branch_atom, None, atoms, defined, all_zmat, terminal_flag,
+                    verbose)
 
-  # Compute closeness of all atoms and sort their bonds based on this  
-  atomlist_closeness = _compute_closeness(atoms,verbose=False) # MOD
-  # Traverse the molecular graph and define the z-matrix
-  all_zmat = traverse_graph(atomlist_closeness,atoms,verbose=False)	# MOD
-    
-  #with open ( '%s.zmat' % h, 'w' ) as f:
-  #  f.write ( '\n'.join ( all_zmat ) )
-        
-  return atoms,all_zmat,impropers
+        while True:
+            # Traverse a branch from an atom with at least two bonds
+            previous = branch_atom
+            next = atoms[branch_atom].next_bond(defined)
+            atoms[next].traversed[branch_atom] = True
+            while next is not None:
+                define_atom(next, previous, atoms, defined, all_zmat,
+                            terminal_flag, verbose)
+                previous = next
+                next = atoms[previous].next_bond(defined)
+                if next is not None:
+                    atoms[next].traversed[previous] = True
+                terminal_flag = next is None
+            if verbose:
+                print(".", end="")
+
+            # Check if we have more branches to traverse
+            if atoms[branch_atom].next_bond(defined, update=False) is None:
+                if verbose:
+                    print(" : ", end="")
+                # Tries to find a new atom to branch off from
+                found = False
+                for atom in atomlist:
+                    if not defined[atom]:
+                        branch_atom = atom
+                        terminal_flag = False
+                        define_atom(branch_atom, atoms[atom].bonds[0], atoms,
+                                    defined, all_zmat, terminal_flag, verbose)
+                        # If the found atom has more than one bonds,
+                        # we can traverse its branches
+                        if len(atoms[branch_atom].bonds) > 1:
+                            found = True
+                            break
+                        else:
+                            if verbose:
+                                print("; ", end="")
+                # If we could not find any more atoms to branch off
+                # from we are done!
+                if not found:
+                    break
+        if verbose:
+            print()
+
+        return all_zmat
+
+    logger.debug("Running make_zmat with arguments: ")
+    logger.debug("\tprepifile = %s" % prepifile)
+    logger.debug(
+        "This will generate a ProtoMS compatible z-matrix for a solute")
+
+    # Parse the prepi-file into a list of atom names and
+    # a dictionary of Atom objects
+    atomnames, atoms, impropers = _read_prepi(prepifile)  # MOD
+    h, t = os.path.splitext(prepifile)
+
+    # Compute closeness of all atoms and sort their bonds based on this
+    atomlist_closeness = _compute_closeness(atoms, verbose=False)  # MOD
+    # Traverse the molecular graph and define the z-matrix
+    all_zmat = traverse_graph(atomlist_closeness, atoms, verbose=False)  # MOD
+
+    return atoms, all_zmat, impropers
+
 
 def _readfrcmod(filename):
     """ Read an Amber frcmod file from disc
-   
+
     readfrcmod(filename)
-  
+
     Parameters
-    ----------   
+    ----------
     filename - the filename of the Amber frcmod file
-    
+
     Returns
     -------
     a list of bond, angle and dihedral parameters
     """
-    with open ( filename ) as f:
-        #Find start of bond region
-        while not f.next().startswith ( 'BOND' ):
+    with open(filename) as f:
+        # Find start of bond region
+        while not f.next().startswith('BOND'):
             pass
 
         bonds = []
         for line in f:
-            cols = line.split ()
+            cols = line.split()
             if not cols:
                 break
-            bonds.append ( [ cols[0].split ( '-' ) ] + map ( float, cols[1:3] ) )
+            bonds.append([cols[0].split('-')] + map(float, cols[1:3]))
         f.next()
 
         angles = []
-        for line in f:        
-            cols = line.replace(" -","-").split ()
+        for line in f:
+            cols = line.replace(" -", "-").split()
             if not cols:
                 break
-            angles.append ( [ cols[0].split ( '-' ) ] + map ( float, cols[1:3] ) )
+            angles.append([cols[0].split('-')] + map(float, cols[1:3]))
 
         f.next()
 
         dihedrals = []
         for line in f:
-            cols = line.replace(" -","-").split ()
+            cols = line.replace(" -", "-").split()
             if not cols:
                 break
-            dihedrals.append ( [ cols[0].split ( '-' ) ] + map ( float, cols[1:5] ) )
+            dihedrals.append([cols[0].split('-')] + map(float, cols[1:5]))
 
         f.next()
-            
+
     return bonds, angles, dihedrals
 
 
+def build_template(temfile,
+                   prepifile,
+                   translate=0.1,
+                   rotate=1.0,
+                   zmatfile=None,
+                   frcmodfile=None,
+                   resname="UNK",
+                   alldihs=False,
+                   gaffversion="gaff16"):
+    """ Build a ProtoMS template file
 
-def build_template ( temfile, prepifile, translate=0.1, rotate=1.0, zmatfile=None, frcmodfile=None, resname="UNK", alldihs = False, gaffversion="gaff16" ) :
-    """ Build a ProtoMS template file 
-  
     Parameters
-    ----------   
+    ----------
     temfile : string
       the filename to save the template file to
     prepifile : string
@@ -504,47 +544,47 @@ def build_template ( temfile, prepifile, translate=0.1, rotate=1.0, zmatfile=Non
     TemplateFile
       the created template file
     """
-    
+
     logger.debug("Running build_template with arguments: ")
-    logger.debug("\ttemfile     = %s"%temfile) 
-    logger.debug("\tprepifile   = %s"%prepifile) 
-    logger.debug("\ttranslate   = %f"%translate)
-    logger.debug("\trotate      = %f"%rotate)
-    logger.debug("\tzmatfile    = %s"%zmatfile)
-    logger.debug("\tfrcmodfile  = %s"%frcmodfile)
-    logger.debug("\tresname     = %s"%resname)
-    logger.debug("\tgaffversion = %s"%gaffversion)
+    logger.debug("\ttemfile     = %s" % temfile)
+    logger.debug("\tprepifile   = %s" % prepifile)
+    logger.debug("\ttranslate   = %f" % translate)
+    logger.debug("\trotate      = %f" % rotate)
+    logger.debug("\tzmatfile    = %s" % zmatfile)
+    logger.debug("\tfrcmodfile  = %s" % frcmodfile)
+    logger.debug("\tresname     = %s" % resname)
+    logger.debug("\tgaffversion = %s" % gaffversion)
     logger.debug("This will generate a ProtoMS template file for a solute")
-    
-    if zmatfile is None :
-        atoms,zmat,impropers = make_zmat(prepifile)
-    else :
-        with open ( zmatfile ) as f:
+
+    if zmatfile is None:
+        atoms, zmat, impropers = make_zmat(prepifile)
+    else:
+        with open(zmatfile) as f:
             zmat = f.readlines()
-        atoms,impropers = _read_prepi ( prepifile )[1:]
+        atoms, impropers = _read_prepi(prepifile)[1:]
 
-    centralities = _compute_closeness ( atoms, verbose = False )
+    centralities = _compute_closeness(atoms, verbose=False)
 
-    if frcmodfile is None :
-      frcbonds = frcangles = frcdihedrals = None
-    else :  
-      frcbonds, frcangles, frcdihedrals = _readfrcmod ( frcmodfile )
+    if frcmodfile is None:
+        frcbonds = frcangles = frcdihedrals = None
+    else:
+        frcbonds, frcangles, frcdihedrals = _readfrcmod(frcmodfile)
 
     gaff_file = sim.standard_filename(gaffversion + ".ff", "parameter")
-    angle_params = sim.ParameterSet ('angle', gaff_file )
-    dihedral_params = sim.ParameterSet ( 'dihedral', gaff_file )
+    angle_params = sim.ParameterSet('angle', gaff_file)
+    dihedral_params = sim.ParameterSet('dihedral', gaff_file)
 
     if gaffversion == "gaff14":
         gaffversion = "gaff"
-    with open ( sim.standard_filename(gaffversion + ".types","parameter") ) as f:
-        at_params = [ line.split() for line in f ]
+    with open(sim.standard_filename(gaffversion + ".types", "parameter")) as f:
+        at_params = [line.split() for line in f]
 
-    kBT = 0.0019872041 * 300 #Boltzmann constant at 300 kelvin in kcal/mol
+    kBT = 0.0019872041 * 300  # Boltzmann constant at 300 kelvin in kcal/mol
     move_scale = 0.5
 
     dummynames = ["DM3", "DM2", "DM1"]
-    aromatic_types = ( "ca cp cq ce cf cc cd nb ne nf pb pe pf px py sx sy"
-                       "CA CB CC CK CM CN CQ CR CV CW C* NA NB NC" ).split()
+    aromatic_types = ("ca cp cq ce cf cc cd nb ne nf pb pe pf px py sx sy"
+                      "CA CB CC CK CM CN CQ CR CV CW C* NA NB NC").split()
     template = sim.TemplateFile()
     template.templates.append(sim.MolTemplate())
     template.templates[0].atomclass = sim.TemplateSoluteAtom
@@ -553,278 +593,351 @@ def build_template ( temfile, prepifile, translate=0.1, rotate=1.0, zmatfile=Non
     moltem.name = resname
     moltem.translate = translate
     moltem.rotate = rotate
-    
-    def get_resname ( s ):
+
+    def get_resname(s):
         if s in dummynames:
             return 'DUM'
         else:
             return resname
 
     out = ''
-    if frcbonds is not None :
+    if frcbonds is not None:
         out += """mode bond
 # U(r) = k(r-r0)**2
 #parameter k(kcal mol-1 A-2) r0(A) comment\n"""
-        for i, bond in enumerate ( frcbonds, 4500 ):
-            #out += "par %4d %.3f %.3f\n" % ( i, bond[1], bond[2] )
-            template.bondparams.append(sim.ForceFieldParameter(record="par %4d %.3f %.3f\n" % ( i, bond[1], bond[2] )))
+        for i, bond in enumerate(frcbonds, 4500):
+            template.bondparams.append(
+                sim.ForceFieldParameter(record="par %4d %.3f %.3f\n" %
+                                        (i, bond[1], bond[2])))
         if not frcbonds:
             out += '\n'
         out += "#atm atm1 atm2 parameter\n"
-        for i, bond in enumerate ( frcbonds, 4500 ):
-            out += "atm %s %s %4d\n" % ( bond[0][0], bond[0][1], i )
-            template.bondatoms.append(sim.AtomSet(record="atm %s %s %4d\n" % ( bond[0][0], bond[0][1], i )))
+        for i, bond in enumerate(frcbonds, 4500):
+            out += "atm %s %s %4d\n" % (bond[0][0], bond[0][1], i)
+            template.bondatoms.append(
+                sim.AtomSet(record="atm %s %s %4d\n" % (bond[0][0], bond[0][1],
+                                                        i)))
         if not frcbonds:
             out += '\n'
 
-    if frcangles is not None :
+    if frcangles is not None:
         out += """mode angle
 # U(theta) = k(theta-theta0)**2
 #parameter k(kcal mol-1 deg-2) theta0(deg) comment\n"""
-        for i, angle in enumerate ( frcangles, 4700 ):
-            out += "par %4d %.3f %.3f\n" % ( i, angle[1], angle[2] )
-            template.angleparams.append(sim.ForceFieldParameter(record="par %4d %.3f %.3f\n" % ( i, angle[1], angle[2] )))
+        for i, angle in enumerate(frcangles, 4700):
+            out += "par %4d %.3f %.3f\n" % (i, angle[1], angle[2])
+            template.angleparams.append(
+                sim.ForceFieldParameter(record="par %4d %.3f %.3f\n" %
+                                        (i, angle[1], angle[2])))
         if not frcangles:
             out += '\n'
         out += "#atm atm1 atm2 parameter\n"
-        for i, angle in enumerate ( frcangles, 4700 ):
-            out += "atm %s %s %s %4d\n" % ( angle[0][0], angle[0][1], angle[0][2], i )
-            template.angleatoms.append(sim.AtomSet(record="atm %s %s %s %4d\n" % ( angle[0][0], angle[0][1], angle[0][2], i )))
+        for i, angle in enumerate(frcangles, 4700):
+            out += "atm %s %s %s %4d\n" % (angle[0][0], angle[0][1],
+                                           angle[0][2], i)
+            template.angleatoms.append(
+                sim.AtomSet(record="atm %s %s %s %4d\n" %
+                            (angle[0][0], angle[0][1], angle[0][2], i)))
         if not frcangles:
             out += '\n'
 
-    if frcdihedrals is not None :
+    if frcdihedrals is not None:
         out += """mode dihedral
 # U(phi) = k1*( 1.0 + k2*(cos[k3*phi + k4]) )
 #term k1(kcal mol-1) k2 k3 k4(deg) #comment\n"""
-        fmt = ( 4600, 0.0, 0.0, 0.0, 0.0 )
+        fmt = (4600, 0.0, 0.0, 0.0, 0.0)
         out += "term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt
-        template.dihedralterms.append(sim.ForceFieldParameter(record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt))
-        for i, di in enumerate ( frcdihedrals, 4601 ):
-            fmt = ( i, di[2], di[1], di[4], di[3] )
+        template.dihedralterms.append(
+            sim.ForceFieldParameter(
+                record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt))
+        for i, di in enumerate(frcdihedrals, 4601):
+            fmt = (i, di[2], di[1], di[4], di[3])
             out += "term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt
-            template.dihedralterms.append(sim.ForceFieldParameter(record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt))
+            template.dihedralterms.append(
+                sim.ForceFieldParameter(
+                    record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt))
         out += "#par  term1  term2 etc..  #comment\n"
 
-        #Loop through unique dihedral terms
+        # Loop through unique dihedral terms
         done = []
-        for i, di in enumerate ( frcdihedrals, 4600 ):
+        for i, di in enumerate(frcdihedrals, 4600):
             if di[0] not in done:
-                #Get all terms with matching atom groups from dihedral list
-                terms = [ ( j, term ) 
-                          for j, term in enumerate ( frcdihedrals, 4601 ) 
-                          if term[0] == di[0] ]
-                #Start par entry
+                # Get all terms with matching atom groups from dihedral list
+                terms = [(j, term)
+                         for j, term in enumerate(frcdihedrals, 4601)
+                         if term[0] == di[0]]
+                # Start par entry
                 out += "par  %4d" % i
                 record = "par  %4d" % i
-                #Loop through all 5 terms of full dihedral
-                for j in xrange ( 5 ):
-                    #Pull out term with values of k3 == j
-                    ref = [ term for term in terms if int ( term[1][4] ) == j ]
+                # Loop through all 5 terms of full dihedral
+                for j in range(5):
+                    # Pull out term with values of k3 == j
+                    ref = [term for term in terms if int(term[1][4]) == j]
                     if ref:
                         out += "   %4d" % ref[0][0]
                         record += "   %4d" % ref[0][0]
                     else:
-                        #If no k3 == j give default zero parameters
+                        # If no k3 == j give default zero parameters
                         out += "   %4d" % 4600
                         record += "   %4d" % 4600
                 out += '\n'
-                template.dihedralparams.append(sim.ForceFieldParameter(record=record))
-            done += [ di[0] ]
+                template.dihedralparams.append(
+                    sim.ForceFieldParameter(record=record))
+            done += [di[0]]
         if not frcdihedrals:
             out += '\n'
         out += "#atm atm1 atm2 atm3 atm4 parameter #comment\n"
 
         done = []
-        for i, di in enumerate ( frcdihedrals, 4600 ):
+        for i, di in enumerate(frcdihedrals, 4600):
             if di[0] not in done:
-                fmt = ( di[0][0], di[0][1], di[0][2], di[0][3], i )
+                fmt = (di[0][0], di[0][1], di[0][2], di[0][3], i)
                 out += "atm %4s %4s %4s %4s %4d\n" % fmt
-                template.dihedralatoms.append(sim.AtomSet(record="atm %4s %4s %4s %4s %4d\n" % fmt))
-            done += [ di[0] ]
+                template.dihedralatoms.append(
+                    sim.AtomSet(record="atm %4s %4s %4s %4s %4d\n" % fmt))
+            done += [di[0]]
         if not frcdihedrals:
             out += '\n'
 
     out += """mode clj
 #parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1)\n"""
-    # Here we need to iterate over the atom order in the z-matrix, so this is modified
-    for i, atom in enumerate ( [atoms[zatms.split()[0]] for zatms in zmat], 3000 ):
-        params = [ j for j in at_params if j[0] == atom.atype ][0]
-        fmt = ( i, atom.atype, int ( params[6] ), 
-                atom.charge, float ( params[2] ), float ( params[4] ) )
+    # Here we need to iterate over the atom order in the z-matrix,
+    # so this is modified
+    for i, atom in enumerate([atoms[zatms.split()[0]] for zatms in zmat],
+                             3000):
+        params = [j for j in at_params if j[0] == atom.atype][0]
+        fmt = (i, atom.atype, int(params[6]), atom.charge, float(params[2]),
+               float(params[4]))
         out += "par  %4d %4s   %02d %10.5f %10.5f %10.5f\n" % fmt
-        template.cljparams.append(sim.ForceFieldParameter(record="par  %4d %4s   %02d %10.5f %10.5f %10.5f\n" % fmt))
+        template.cljparams.append(
+            sim.ForceFieldParameter(
+                record="par  %4d %4s   %02d %10.5f %10.5f %10.5f\n" % fmt))
     # out += '\n'
 
-    #out += zmat
     out += """mode template
 solute %s
-info translate %f rotate %f\n""" % ( resname, translate, rotate )
+info translate %f rotate %f\n""" % (resname, translate, rotate)
 
-    logger.info("Before running a simulation, ensure that the first line of %s.pdb reads 'HEADER %s'." %  ( os.path.splitext(temfile)[0], resname))
+    logger.info(
+        "Before running a simulation, ensure that the first line of %s.pdb "
+        "reads 'HEADER %s'." % (os.path.splitext(temfile)[0], resname))
 
     # Print out the atoms
-    for i, line in enumerate ( zmat, 3000 ):
+    for i, line in enumerate(zmat, 3000):
         atms = line.split()
-        fmt = ( atms[0], resname, i, i, 
-                atms[1], get_resname ( atms[1] ), 
-                atms[2], get_resname ( atms[2] ), 
-                atms[3], get_resname ( atms[3] ) )
+        fmt = (atms[0], resname, i, i, atms[1], get_resname(atms[1]), atms[2],
+               get_resname(atms[2]), atms[3], get_resname(atms[3]))
         out += "atom  %4s %4s %4i %4i %4s %4s %4s %4s %4s %4s\n" % fmt
-        moltem.atoms.append(sim.TemplateSoluteAtom(record="atom  %4s %4s %4i %4i %4s %4s %4s %4s %4s %4s\n" % fmt))
-        
+        moltem.atoms.append(
+            sim.TemplateSoluteAtom(
+                record="atom  %4s %4s %4i %4i %4s %4s %4s %4s %4s %4s\n" %
+                fmt))
+
     # Print out the bonds
     taken_bonds = []
     for line in zmat[1:]:
         atom = line.split()[:2]
-        taken_bonds.append((atom[0],atom[1]))
-        taken_bonds.append((atom[1],atom[0]))
-        out += "bond %4s %3s %4s %3s\n" % (atom[0],resname,atom[1],resname)
-        moltem.connectivity.append(sim.TemplateConnectivity(record="bond %4s %3s %4s %3s\n" % (atom[0],resname,atom[1],resname)))
-        
+        taken_bonds.append((atom[0], atom[1]))
+        taken_bonds.append((atom[1], atom[0]))
+        out += "bond %4s %3s %4s %3s\n" % (atom[0], resname, atom[1], resname)
+        moltem.connectivity.append(
+            sim.TemplateConnectivity(record="bond %4s %3s %4s %3s\n" %
+                                     (atom[0], resname, atom[1], resname)))
+
     # Also need to do bonds that close loops
-    for atom1 in atoms :
-      for atom2 in atoms[atom1].bonds :
-        if (atom1,atom2) not in taken_bonds :
-          taken_bonds.append((atom1,atom2))
-          taken_bonds.append((atom2,atom1))
-          out += "bond %4s %3s %4s %3s\n" % (atom1,resname,atom2,resname)
-          moltem.connectivity.append(sim.TemplateConnectivity(record="bond %4s %3s %4s %3s\n" % (atom1,resname,atom2,resname)))
-          
+    for atom1 in atoms:
+        for atom2 in atoms[atom1].bonds:
+            if (atom1, atom2) not in taken_bonds:
+                taken_bonds.append((atom1, atom2))
+                taken_bonds.append((atom2, atom1))
+                out += "bond %4s %3s %4s %3s\n" % (atom1, resname, atom2,
+                                                   resname)
+                moltem.connectivity.append(
+                    sim.TemplateConnectivity(record="bond %4s %3s %4s %3s\n" %
+                                             (atom1, resname, atom2, resname)))
+
     # Print out the angles:
     for line in zmat[2:]:
         angle = line.split()[:3]
-        if "DM3" in angle : continue
+        if "DM3" in angle:
+            continue
 
-        #if this is a loop angle then exclude it
+        # if this is a loop angle then exclude it
         if atoms[angle[1]].is_on_loop[angle[0]] and atoms[angle[1]].is_on_loop[angle[2]]:
-          continue
-        atypes = [ atoms[i].atype for i in angle ]
+            continue
+        atypes = [atoms[i].atype for i in angle]
         try:
-            k = angle_params.get_params ( atypes ).k
+            k = angle_params.get_params(atypes).k
         except KeyError:
-            #parameter not in gaff.ff try frcmod params
+            # parameter not in gaff.ff try frcmod params
             try:
-                k = [ i for i in frcangles
-                      if atypes in ( i[0], i[0][::-1] ) ][0][1]
+                k = [i for i in frcangles
+                     if atypes in (i[0], i[0][::-1])][0][1]
             except IndexError:
-                logger.warning("Unable to find angle parameters for %s-%s-%s" % tuple ( atypes ))
-                logger.warning("For now the flexibility of this angle will be set to zero.")
-                logger.warning("To correct this consider manually adding a term to the frcmod file\n")
-                k = 10**10 #make k huge so max_move is zero
-            except TypeError :
-                k = 10*10
+                logger.warning("Unable to find angle parameters for %s-%s-%s" %
+                               tuple(atypes))
+                logger.warning(
+                    "For now the flexibility of this angle will be set to zero"
+                )
+                logger.warning(
+                    "To correct this consider manually adding a term to the "
+                    "frcmod file\n"
+                )
+                k = 10**10  # make k huge so max_move is zero
+            except TypeError:
+                k = 10 * 10
 
-        max_move = move_scale * 2 * ( 1 / ( kBT * k ) )**0.5
-        if False in [ i in aromatic_types for i in atypes ]:
-            fmt = ( angle[0], resname, 
-                    angle[1], resname, 
-                    angle[2], resname, max_move ) 
+        max_move = move_scale * 2 * (1 / (kBT * k))**0.5
+        if False in [i in aromatic_types for i in atypes]:
+            fmt = (angle[0], resname, angle[1], resname, angle[2], resname,
+                   max_move)
             out += "angle %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt
-            moltem.connectivity.append(sim.TemplateConnectivity(record="angle %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt))
-            
+            moltem.connectivity.append(
+                sim.TemplateConnectivity(
+                    record="angle %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt))
+
     min_flex = 2.0
     max_flex = 10.0
-    for line in zmat[3:]: #First 3 lines contain dummies
+    for line in zmat[3:]:  # First 3 lines contain dummies
         # The first 4 atoms in the z matrix corresponds to the dihedrals.
         dihedral = line.split()[:4]
-        atypes = [ atoms[i].atype for i in dihedral ]
+        atypes = [atoms[i].atype for i in dihedral]
         # Check matching parameters exist in gaff.ff
         missing = False
         try:
-            dihedral_params.get_params ( atypes )
+            dihedral_params.get_params(atypes)
         except KeyError:
             # If not in gaff.ff then check frcmod
             try:
-                [ i for i in frcdihedrals
-                  if atypes in ( i[0], i[0][::-1] ) ]
+                [i for i in frcdihedrals if atypes in (i[0], i[0][::-1])]
             except IndexError:
-                logger.warning("Unable to find dihedral parameters for %s-%s-%s-%s" % tuple ( atypes ))
-                logger.warning("For now the flexibility of this angle will be set to zero.")
-                logger.warning("To correct this consider manually adding a term to the frcmod file\n")
-                k = 10**10 #make k huge so max_move is zero
+                logger.warning(
+                    "Unable to find dihedral parameters for %s-%s-%s-%s" %
+                    tuple(atypes))
+                logger.warning(
+                    "For now the flexibility of this angle will be set to zero"
+                )
+                logger.warning(
+                    "To correct this consider manually adding a term to the"
+                    " frcmod file\n"
+                )
+                k = 10**10  # make k huge so max_move is zero
                 missing = True
 
         skip = False
-        # Ensure improper dihedrals are removed, if desired, by checking the last 
-        # atom in the dihedral is bonded to the previous atom in the list.
+        # Ensure improper dihedrals are removed, if desired, by checking the
+        # last atom in the dihedral is bonded to the previous atom in the list.
         if alldihs:
-          # even if we're sampling improper dihedrals we should not sample those that maintain
-          # in-plane geometries as ProtoMS does not evaluate these energies. These appear as impropers in the prepi file
-          for imp in impropers:
-            if dihedral[0] in imp and dihedral[1] in imp and dihedral[2] in imp and dihedral[3] in imp:
-              skip = True
-              break
+            # even if we're sampling improper dihedrals we should not sample
+            # those that maintain in-plane geometries as ProtoMS does not
+            # evaluate these energies. These appear as impropers in the
+            # prepi file
+            for imp in impropers:
+                if dihedral[0] in imp and dihedral[1] in imp and \
+                   dihedral[2] in imp and dihedral[3] in imp:
+                    skip = True
+                    break
 
         else:
-          if not dihedral[2] in atoms[dihedral[3]].bonds:
-            skip = True
+            if not dihedral[2] in atoms[dihedral[3]].bonds:
+                skip = True
 
         if skip:
-          continue
+            continue
 
         # If central bond is part of a loop
         if atoms[dihedral[1]].is_on_loop[dihedral[2]]:
             # Ensure rotations around aromatic dihedrals are excluded
             if atypes[1] in aromatic_types and atypes[2] in aromatic_types:
                 continue
-            
+
             # If this is a dihedral of all loop atoms then exclude it as well
-            if atoms[dihedral[0]].is_on_loop[dihedral[1]] and atoms[dihedral[2]].is_on_loop[dihedral[3]]:
+            if atoms[dihedral[0]].is_on_loop[dihedral[1]] and \
+               atoms[dihedral[2]].is_on_loop[dihedral[3]]:
                 continue
-              
-            fmt = ( dihedral[0], resname, 
-                    dihedral[1], resname, 
-                    dihedral[2], resname, 
-                    dihedral[3], resname, min_flex )
+
+            fmt = (dihedral[0], resname, dihedral[1], resname, dihedral[2],
+                   resname, dihedral[3], resname, min_flex)
             out += "dihedral %4s %4s %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt
-            moltem.connectivity.append(sim.TemplateConnectivity(record="dihedral %4s %4s %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt))
+            moltem.connectivity.append(
+                sim.TemplateConnectivity(
+                    record="dihedral %4s %4s %4s %4s %4s %4s %4s %4s "
+                           "flex %.3f\n" % fmt))
         else:
             # Not part of loop so base flexibility on centrality
-            av_rank = ( centralities.index ( dihedral[1] ) + centralities.index ( dihedral[2] ) ) / float ( 2 * len ( centralities ) )
-            flex = ( av_rank ) * ( max_flex - min_flex ) + min_flex
-            # print centralities.index ( dihedral[1] ) + centralities.index ( dihedral[2] ), av_rank
+            av_rank = (centralities.index(dihedral[1]) + centralities.index(
+                dihedral[2])) / float(2 * len(centralities))
+            flex = (av_rank) * (max_flex - min_flex) + min_flex
             if missing:
                 flex = 0.0
-            fmt = ( dihedral[0], resname, 
-                    dihedral[1], resname, 
-                    dihedral[2], resname, 
-                    dihedral[3], resname,flex)
+            fmt = (dihedral[0], resname, dihedral[1], resname, dihedral[2],
+                   resname, dihedral[3], resname, flex)
             out += "dihedral %4s %4s %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt
-            moltem.connectivity.append(sim.TemplateConnectivity(record="dihedral %4s %4s %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt))
-            
-    #with open ( temfile, 'w' ) as f:
-    #    f.write ( out )
-    #template.write(temfile)
+            moltem.connectivity.append(
+                sim.TemplateConnectivity(
+                    record="dihedral %4s %4s %4s %4s %4s %4s %4s %4s"
+                           " flex %.3f\n" % fmt))
+
     return template
 
-def get_arg_parser ():
+
+def get_arg_parser():
     import argparse
 
     # Setup a parser of the command-line arguments
-    parser = argparse.ArgumentParser(description="Program to build a ProtoMS template file")
-    parser.add_argument('-p','--prepi',help="the name of the leap prepi-file")
-    parser.add_argument('-o','--out',help="the name of the template file",default="lig.tem")
-    parser.add_argument('-z','--zmat',help="the name of the zmatrix-file, if it exists")
-    parser.add_argument('-f','--frcmod',help="the name of the frcmod-file, if it exists")
-    parser.add_argument('-n','--name',help="the name of the solute",default='UNK')
-    parser.add_argument('-t','--translate',help="maxmium size for translation moves in Angstroms", default=0.1, type=float)
-    parser.add_argument('-r','--rotate',help="maxmium size for rotation moves in degrees", default=1.0, type=float)
-    parser.add_argument('--alldihs',help='sample improper dihedrals',default=False,action='store_true')
-    parser.add_argument('--gaff',help='gaff version to use, gaff14 or gafff16',default='gaff16')
+    parser = argparse.ArgumentParser(
+        description="Program to build a ProtoMS template file")
+    parser.add_argument(
+        '-p', '--prepi', help="the name of the leap prepi-file")
+    parser.add_argument(
+        '-o', '--out', help="the name of the template file", default="lig.tem")
+    parser.add_argument(
+        '-z', '--zmat', help="the name of the zmatrix-file, if it exists")
+    parser.add_argument(
+        '-f', '--frcmod', help="the name of the frcmod-file, if it exists")
+    parser.add_argument(
+        '-n', '--name', help="the name of the solute", default='UNK')
+    parser.add_argument(
+        '-t',
+        '--translate',
+        help="maxmium size for translation moves in Angstroms",
+        default=0.1,
+        type=float)
+    parser.add_argument(
+        '-r',
+        '--rotate',
+        help="maxmium size for rotation moves in degrees",
+        default=1.0,
+        type=float)
+    parser.add_argument(
+        '--alldihs',
+        help='sample improper dihedrals',
+        default=False,
+        action='store_true')
+    parser.add_argument(
+        '--gaff',
+        help='gaff version to use, gaff14 or gafff16',
+        default='gaff16')
     return parser
-  
-if __name__ == '__main__':
 
+
+if __name__ == '__main__':
+    import simulationobjects as sim
     args = get_arg_parser().parse_args()
-    
+
     # Setup the logger
     logger = sim.setup_logger("build_template_py.log")
-    
-    tem = build_template ( temfile=args.out, prepifile=args.prepi, zmatfile=args.zmat, frcmodfile=args.frcmod,
-                           resname=args.name, translate=args.translate, rotate=args.rotate, alldihs=args.alldihs,
-                           gaffversion=args.gaff) 
+
+    tem = build_template(
+        temfile=args.out,
+        prepifile=args.prepi,
+        zmatfile=args.zmat,
+        frcmodfile=args.frcmod,
+        resname=args.name,
+        translate=args.translate,
+        rotate=args.rotate,
+        alldihs=args.alldihs,
+        gaffversion=args.gaff)
     tem.write(args.out)
-    if args.zmat is None :      
-      tem.templates[0].write_zmat(os.path.splitext(args.out)[0]+".zmat")
-    
+    if args.zmat is None:
+        tem.templates[0].write_zmat(os.path.splitext(args.out)[0] + ".zmat")
