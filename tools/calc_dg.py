@@ -2,16 +2,16 @@ import matplotlib
 import numpy as np
 import os
 import sys
-import free_energy_base as feb
-from table import Table
-from gcmc_free_energy_base import GCMCMBAR
+from protomslib import free_energy as fe
+
+# from gcmc_free_energy_base import GCMCMBAR
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-class FreeEnergyCalculation(feb.FreeEnergyCalculation):
+class FreeEnergyCalculation(fe.FreeEnergyCalculation):
     """Perform a basic free energy calculation."""
     def test_equilibration(self, discard_limit):
         """Perform a series of calculations discarding increasing portions
@@ -113,8 +113,8 @@ def plot_fractional_dataset_results(results, estimators):
       Estimator classes used to store
     """
     fig, ax = plt.subplots()
+    x = sorted(results, key=lambda i: i.__name__)
     for estimator in estimators:
-        x = sorted(results)
         dat = [results[prop][estimator] for prop in x]
         plot_results(x, dat, ax, label=estimator.__name__)
     ax.legend(loc='best')
@@ -131,7 +131,7 @@ def plot_pmfs(results):
     results : dict of Estimator class-Result object pairs
       the results to plot"""
     fig, ax = plt.subplots()
-    for estimator in sorted(results):
+    for estimator in sorted(results, key=lambda i: i.__name__):
         results[estimator].pmf.plot(ax, label=estimator.__name__)
     ax.legend(loc='best')
     return fig
@@ -149,13 +149,13 @@ def make_result_tables(directories, results):
     """
     tables = []
     for estimator in sorted(results, key=lambda x: x.__name__):
-        table = Table(estimator.__name__, ['%s', "%.2f"])
+        table = fe.Table(estimator.__name__, ['%s', "%.2f"])
         for i, result in enumerate(results[estimator].data):
             dGs = []
             for j, pmf in enumerate(result):
                 dGs.append(pmf.dG)
                 table.add_row([directories[i][j], pmf.dG.value])
-            table.add_row(['Mean', feb.Quantity.fromData(dGs)])
+            table.add_row(['Mean', fe.Quantity.fromData(dGs)])
             table.add_blank_row()
         table.add_row(['Total Mean', results[estimator].dG])
         tables.append(table)
@@ -164,10 +164,10 @@ def make_result_tables(directories, results):
 
 def get_arg_parser():
     """Returns the custom argument parser for this script"""
-    parser = feb.FEArgumentParser(
+    parser = fe.FEArgumentParser(
         description="Calculate free energy differences using a range of"
                     " estimators",
-        parents=[feb.get_alchemical_arg_parser()])
+        parents=[fe.get_alchemical_arg_parser()])
     parser.add_argument(
         '--pmf', action='store_true', default=False,
         help="Make graph of potential of mean force",
@@ -199,14 +199,14 @@ def get_arg_parser():
 
 def run_script(cmdline):
     """Execute the script, allows for straight-forward testing."""
-    class_map = {'ti': feb.TI, 'mbar': feb.MBAR,
-                 'bar': feb.BAR, 'gcap': GCMCMBAR}
+    class_map = {'ti': fe.TI, 'mbar': fe.MBAR,
+                 'bar': fe.BAR, 'gcap': fe.GCMCMBAR}
     args = get_arg_parser().parse_args(cmdline)
     calc = FreeEnergyCalculation(
         root_paths=args.directories,
         temperature=args.temperature,
         subdir=args.subdir,
-        estimators=map(class_map.get, args.estimators),
+        estimators=list(map(class_map.get, args.estimators)),
         volume=args.volume,
         results_name=args.name)
     calc.run(args)

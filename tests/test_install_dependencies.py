@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env
 
 """
 Tests for checking whether Python and Ambertools dependencies are installed.
@@ -16,16 +16,21 @@ class TestDependInstallation(unittest.TestCase):
         import numpy
         import scipy
         import matplotlib
+        import six
+        import pymbar
 
     def test_ambertools_dependencies(self):
         """Checking for AmberTools installation dependencies."""
         self.assertTrue(os.getenv("AMBERHOME"), "AMBERHOME is not set.")
 
-        self.assertTrue(os.path.exists(os.path.join(os.environ["AMBERHOME"], "bin/antechamber")),
+        self.assertTrue(os.path.exists(os.path.join(os.environ["AMBERHOME"],
+                                                    "bin/antechamber")),
                         "Antechamber AMBERTOOLS module doesn't exist.")
 
-        self.assertTrue(os.path.exists(os.path.join(os.environ["AMBERHOME"], "bin/parmchk")),
+        self.assertTrue(os.path.exists(os.path.join(os.environ["AMBERHOME"],
+                                                    "bin/parmchk")),
                         "Parmchk AMBERTOOLS module doesn't exist.")
+
 
 # Entry point for nosetests or unittests
 if __name__ == '__main__':

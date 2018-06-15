@@ -1,4 +1,4 @@
-"""Execute with 'python2.7 test_free_energy.py'"""
+"""Execute with 'python test_free_energy.py'"""
 
 import pymbar
 import numpy as np
@@ -7,6 +7,9 @@ import shutil
 import sys
 import unittest
 import framework
+from protomslib.simulationobjects import boltz, SnapshotResults
+from protomslib.free_energy import BAR, MBAR, TI, get_alchemical_arg_parser
+from protomslib.free_energy import PMF, Quantity, Result
 
 sys.path.append(os.path.join(os.environ['PROTOMSHOME'], 'tools'))
 
@@ -15,9 +18,6 @@ import calc_ti_decomposed
 import calc_dg_cycle
 import calc_gci
 import calc_gcap_surface
-from free_energy_base import BAR, MBAR, TI, get_alchemical_arg_parser
-from free_energy_base import PMF, Quantity, Result
-from simulationobjects import boltz, SnapshotResults
 
 
 class TestBAR(unittest.TestCase):
@@ -123,7 +123,7 @@ class TestPMF(unittest.TestCase):
     def setUp(self):
         self.pmf_values = np.linspace(0., 5., 16)
         self.lambdas = np.linspace(0., 1., 16)
-        self.pmfs = [list(self.pmf_values*i*0.05) for i in xrange(1, 3)]
+        self.pmfs = [list(self.pmf_values*i*0.05) for i in (1, 2)]
         self.single = PMF(self.lambdas, self.pmfs[0])
         self.double = PMF(self.lambdas, *self.pmfs)
 
@@ -168,9 +168,9 @@ class TestResult(unittest.TestCase):
         self.pmf_values = np.linspace(0., 5., 16)
         lambdas = np.linspace(0., 1., 16)
         self.pmfs = [PMF(lambdas, list(self.pmf_values*i*0.05))
-                     for i in xrange(1, 4)]
+                     for i in (1, 2, 3)]
         self.pmfs2 = [PMF(lambdas, list(self.pmf_values*2*i*0.05))
-                      for i in xrange(1, 4)]
+                      for i in (1, 2, 3)]
         self.single_result = Result(self.pmfs)
         self.double_result = Result(self.pmfs, self.pmfs2)
 
@@ -369,6 +369,7 @@ class testCalcGCAPSurface(testCalcDg):
 
     def test(self):
         calc_gcap_surface.run_script(self.cmdline.split())
+
 
 if __name__ == '__main__':
     unittest.main()

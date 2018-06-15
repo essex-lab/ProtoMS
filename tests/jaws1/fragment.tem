@@ -78,7 +78,7 @@ bond   H6 XDK   C6 XDK
 bond  H7A XDK  C7A XDK
 bond  H3A XDK  C3A XDK
 bond  C1A XDK  C5A XDK
-bond   C5 XDK   C4 XDK
+bond   C4 XDK   C5 XDK
 angle   H5 XDK   C5 XDK   C4 XDK flex 0.187
 angle  H1A XDK  C1A XDK  C5A XDK flex 0.186
 angle   H9 XDK   C9 XDK  C5A XDK flex 0.187
@@ -89,4 +89,4 @@ angle   H6 XDK   C6 XDK   C5 XDK flex 0.186
 angle  H7A XDK  C7A XDK   C9 XDK flex 0.186
 angle  H3A XDK  C3A XDK  C7A XDK flex 0.186
 dihedral   C9 XDK  C5A XDK   C4 XDK   N3 XDK flex 2.190
-dihedral  H72 XDK   N7 XDK   C2 XDK   N3 XDK flex 5.810
+dihedral  H72 XDK   N7 XDK   C2 XDK   N3 XDK flex 5.619

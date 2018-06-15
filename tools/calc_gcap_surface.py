@@ -1,4 +1,3 @@
-import gcmc_free_energy_base as gcmc
 from glob import glob
 import numpy as np
 import matplotlib
@@ -6,19 +5,18 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 from scipy import optimize
 import sys
-from calc_gci import TitrationCalculation
-import free_energy_base as feb
+from protomslib import free_energy as fe
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-class SurfaceCalculation(feb.FreeEnergyCalculation):
+class SurfaceCalculation(fe.FreeEnergyCalculation):
     """Calculate the free energy surface arising from a two-dimensional
     GCAP simulation.
     """
     def __init__(self, root_path, temperature, volume, results_name='results',
-                 estimators=[feb.TI, feb.BAR, feb.MBAR]):
+                 estimators=[fe.TI, fe.BAR, fe.MBAR]):
         """Parameters
         ---------
         root_path: string
@@ -32,18 +30,18 @@ class SurfaceCalculation(feb.FreeEnergyCalculation):
         estimators:  list of estimator classes, optional
           The estimators to use to calculate pmfs across lambda
         """
-        feb.FreeEnergyCalculation.__init__(
+        fe.FreeEnergyCalculation.__init__(
             self, [root_path], temperature,
             extract_data=False, volume=volume)
         self.paths = self.paths[0][0]
 
         # determine simulation B values and store them
-        self.B_values = map(self._get_bvalue,
-                            glob('%s/*' % self.paths[0]))
+        self.B_values = list(map(self._get_bvalue,
+                                 glob('%s/*' % self.paths[0])))
         self.B_values.sort()
 
         self.gci_calculations = [
-            TitrationCalculation(
+            fe.TitrationCalculation(
                 ['%s/lam-%.3f' % (root_path[0], lam)],
                 temperature,
                 volume,
@@ -54,7 +52,7 @@ class SurfaceCalculation(feb.FreeEnergyCalculation):
         ]
 
         self.fep_calculations = [
-            feb.FreeEnergyCalculation(
+            fe.FreeEnergyCalculation(
                 [root_path],
                 temperature,
                 subdir='b_%.3f' % B,
@@ -84,9 +82,9 @@ class SurfaceCalculation(feb.FreeEnergyCalculation):
             pmf = []
             N_min = min(result.occupancies.as_floats())
             for n in result.occupancies.as_floats():
-                trans_nrg = gcmc.insertion_pmf(
+                trans_nrg = fe.insertion_pmf(
                     np.array([N_min, n]), model, args.volume)[1]
-                pmf.append(trans_nrg - n*gcmc.tip4p_excess)
+                pmf.append(trans_nrg - n*fe.tip4p_excess)
             gci_pmfs.append(pmf)
         gci_pmfs = np.array(gci_pmfs)
 
@@ -126,8 +124,8 @@ def _obj_func(x, y, z):
     """
     x = x.reshape(y.shape)
     tot = 0
-    for i in xrange(x.shape[0]):
-        for j in xrange(x.shape[1]):
+    for i in range(x.shape[0]):
+        for j in range(x.shape[1]):
             if i == 0 and j == 0:
                 pass
             elif i == 0:
@@ -167,10 +165,10 @@ def plot_surface(lambdas, Bs, Z, zlabel='', title=''):
 
 def get_arg_parser():
     """Returns the custom argument parser for this script"""
-    parser = feb.FEArgumentParser(
+    parser = fe.FEArgumentParser(
         description="Calculate free energy differences using a range of"
                     " estimators",
-        parents=[feb.get_alchemical_arg_parser()])
+        parents=[fe.get_alchemical_arg_parser()])
     parser.add_argument(
         '-v', '--volume', type=float, default=None,
         help="Volume of GCMC region")
@@ -185,12 +183,12 @@ def get_arg_parser():
 
 def run_script(cmdline):
     """Execute the script, allows for straight-forward testing."""
-    class_map = {'ti': feb.TI, 'mbar': feb.MBAR, 'bar': feb.BAR}
+    class_map = {'ti': fe.TI, 'mbar': fe.MBAR, 'bar': fe.BAR}
     args = get_arg_parser().parse_args(cmdline)
     calc = SurfaceCalculation(
         args.directories[0],
         args.temperature,
-        estimators=map(class_map.get, args.estimators),
+        estimators=list(map(class_map.get, args.estimators)),
         volume=args.volume,
         results_name=args.name,
     )

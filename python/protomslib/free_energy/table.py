@@ -1,6 +1,6 @@
 """Collection of classes to handle output table formatting"""
 
-from itertools import izip_longest
+import six
 
 
 class Table(object):
@@ -24,7 +24,7 @@ class Table(object):
 
         self.columns = [
             Column(head, fmt, fmt)
-            for fmt, head in izip_longest(fmts, headers, fillvalue='')
+            for fmt, head in six.moves.zip_longest(fmts, headers, fillvalue='')
         ]
         self.spacer = " " * space
 

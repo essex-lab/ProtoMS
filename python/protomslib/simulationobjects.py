@@ -334,7 +334,7 @@ class PDBFile:
                     atom.coords[0], atom.coords[1], atom.coords[2])
                 f.write(s)
             if i < len(self.residues.keys()) and \
-               not self.residues[self.residues.keys()[i]].isAminoacid():
+               not self.residues[list(self.residues.keys())[i]].isAminoacid():
                 f.write("TER \n")
         if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 \
            and solvents:
@@ -469,11 +469,11 @@ class PDBSet:
           the pdb-file to split
         """
         self.pdbs = []
-        for resi, res in pdbfile.residues.iteritems():
+        for resi, res in six.iteritems(pdbfile.residues):
             self.pdbs.append(PDBFile())
             self.pdbs[-1].residues[resi] = res
             self.pdbs[-1].header = pdbfile.header
-        for soli, sol in pdbfile.solvents.iteritems():
+        for soli, sol in six.iteritems(pdbfile.solvents):
             self.pdbs.append(PDBFile())
             self.pdbs[-1].solvents[soli] = sol
             self.pdbs[-1].header = pdbfile.header
@@ -790,7 +790,7 @@ class ParameterSet:
 
         with open(param_file) as f:
             # wind through file until we reach the section we want
-            while not f.next().startswith('mode %s' % self.ptype):
+            while not next(f).startswith('mode %s' % self.ptype):
                 pass
 
             for line in f:
@@ -2275,24 +2275,28 @@ class MyArgumentParser(argparse.ArgumentParser):
     help for most common options and full help that list all arguments
     """
 
-    def __init__(self,
-                 prog=None,
-                 usage=None,
-                 description=None,
-                 epilog=None,
-                 version=None,
-                 parents=[],
-                 formatter_class=argparse.HelpFormatter,
-                 prefix_chars='-',
-                 fromfile_prefix_chars=None,
-                 argument_default=None,
-                 conflict_handler='error',
-                 add_help=True,
-                 add_fullhelp=True):
-        super(MyArgumentParser, self).__init__(
-            prog, usage, description, epilog, version, parents,
-            formatter_class, prefix_chars, fromfile_prefix_chars,
-            argument_default, conflict_handler, add_help)
+    # def __init__(self,
+    #              prog=None,
+    #              usage=None,
+    #              description=None,
+    #              epilog=None,
+    #              parents=[],
+    #              formatter_class=argparse.HelpFormatter,
+    #              prefix_chars='-',
+    #              fromfile_prefix_chars=None,
+    #              argument_default=None,
+    #              conflict_handler='error',
+    #              add_help=True,
+    #              add_fullhelp=True):
+    #     super(MyArgumentParser, self).__init__(
+    #         prog, usage, description, epilog, parents,
+    #         formatter_class, prefix_chars, fromfile_prefix_chars,
+    #         argument_default, conflict_handler, add_help)
+
+    # need to review if this works properly...
+    # any calls to MyArgumentParser must not have positional arguments
+    def __init__(self, prefix_chars="-", add_fullhelp=True, **kwargs):
+        super(MyArgumentParser, self).__init__(**kwargs)
 
         self.add_fullhelp = add_fullhelp
         self.register('action', 'fullhelp', _FullHelpAction)

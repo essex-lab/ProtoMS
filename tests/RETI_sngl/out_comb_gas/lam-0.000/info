@@ -1,4 +1,4 @@
-protoms3 started at 11:04:35 on the 14/ 2/2017
+protoms3 started at 21:15:30 on the 14/ 6/2018
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
@@ -49,8 +49,8 @@ Variable bond for atom h06 -eth  starting from       1.0900 going to       0.960
 Variable angle for atom h06 -eth  starting from     109.9760 going to     108.4190
 Variable bond for atom h07 -eth  starting from       1.0900 going to       0.2000
 Variable bond for atom h08 -eth  starting from       1.0900 going to       0.2000
-Variable angle for atom h02 -eth  starting from     110.3730 going to     110.3660
 Variable angle for atom h03 -eth  starting from     113.7420 going to     113.7420
+Variable angle for atom h02 -eth  starting from     110.3730 going to     110.3660
 Loaded    1 templates,    0 override templates,   16 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
@@ -73,7 +73,7 @@ Got initial random number seed       100000
 ###########################################
 Sanitised random number seed =       209999
 ###########################################
-Starting simulation at 11:04:35 on the 14/ 2/2017
+Starting simulation at 21:15:30 on the 14/ 6/2018
 ######################################################################
 Running simulation in lambda window    0.000 <--    0.000 -->    0.001
 ######################################################################
@@ -108,4 +108,4 @@ Resetting free energy average to zero.
 Data collection complete. Attempted/accepted moves           10          10
 Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
 Simulation shutting down...
-protoms3 completed at 11:04:35 on the 14/ 2/2017
+protoms3 completed at 21:15:30 on the 14/ 6/2018

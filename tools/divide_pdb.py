@@ -17,7 +17,7 @@ Can be executed from the command line as a stand-alone program
 """
 
 import os
-from . import simulationobjects
+from protomslib import simulationobjects
 
 
 def _get_prefix(filename):

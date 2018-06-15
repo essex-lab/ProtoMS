@@ -1,6 +1,7 @@
 """Collection of classes to form the basis of a replacement for the current
 free energy calculation framework."""
 
+from __future__ import print_function
 from copy import copy
 from glob import glob
 from operator import add
@@ -10,9 +11,10 @@ import numpy as np
 import pickle
 import pymbar
 from scipy.integrate import trapz
+import six
 import warnings
-import simulationobjects as sim
-from free_energy_argument_parser import FEArgumentParser
+from .. import simulationobjects as sim
+from .free_energy_argument_parser import FEArgumentParser
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
@@ -152,7 +154,7 @@ class Result(BaseResult):
     def pmf(self):
         """The potential of mean force for this result"""
         pmfs = [PMF(self.lambdas, *dat) for dat in self.data]
-        return reduce(add, pmfs)
+        return six.moves.reduce(add, pmfs)
 
 
 class Quantity(object):
@@ -341,7 +343,7 @@ class TI(Estimator):
         """
         gradients = [gradient_data.mean() for gradient_data in self.data]
         pmf_values = [trapz(gradients[:i], self.lambdas[:i])
-                      for i in xrange(1, len(self.lambdas) + 1)]
+                      for i in range(1, len(self.lambdas) + 1)]
         return PMF(self.lambdas, pmf_values)
 
 
@@ -412,7 +414,7 @@ class MBAR(TI):
                            [len(dat[0]) for dat in self.data])
         FEs = mbar.getFreeEnergyDifferences(compute_uncertainty=False)[0]/beta
         return PMF(self.lambdas,
-                   [FEs[0, i] for i in xrange(len(self.data))])
+                   [FEs[0, i] for i in range(len(self.data))])
 
 
 class FreeEnergyCalculation(object):
@@ -459,7 +461,7 @@ class FreeEnergyCalculation(object):
                 paths = glob(self._path_constructor(root_path))
                 paths.sort(key=self._get_lambda)
                 self.paths[-1].append(paths)
-                self.lambdas[-1].append(map(self._get_lambda, paths))
+                self.lambdas[-1].append(list(map(self._get_lambda, paths)))
 
         self.estimators = {
             estimator: [[estimator(l, subdir_glob=subdir, **kwargs)
@@ -562,13 +564,13 @@ class FreeEnergyCalculation(object):
         results = self._body(args)
 
         if args.pickle is not None:
-            with open(args.pickle, 'w') as f:
+            with open(args.pickle, 'wb') as f:
                 pickle.dump(results, f, protocol=2)
 
-        print self.header
+        print(self.header)
         for table in self.tables:
-            print "%s\n" % table
-        print self.footer
+            print("%s\n" % table)
+        print(self.footer)
 
         if args.save_figures is not None:
             # flag provided so save figures
@@ -599,6 +601,8 @@ class FreeEnergyCalculation(object):
             Namespace from argumentparser
         """
         return self.calculate(subset=(args.lower_bound, args.upper_bound))
+
+
 
 
 def get_base_arg_parser():

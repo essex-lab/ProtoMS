@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 # Authors: Richard Bradshaw
 #          Ana Cabedo Martinez
 #          Chris Cave-Ayland
@@ -17,49 +17,10 @@ import logging
 
 import numpy as np
 
-if __name__ != "__main__":
-    from . import simulationobjects
+from protomslib import simulationobjects
+from protomslib.gcmc import make_gcmcbox, print_bequil
 
 logger = logging.getLogger('protoms')
-
-
-def make_gcmcbox(pdb, filename, padding=2.0):
-    """
-    Make a GCMC/JAWS-1 simulation box around a PDB-structure
-
-    Parameters
-    ----------
-    pdb : PDBFile object
-      the PDB structure
-    filename : string
-      the name of the output file
-    padding : float, optional
-      the amount of extra space around the ligand to add
-    """
-
-    logger.debug("Running make_gcmcbox with arguments: ")
-    logger.debug("\tpdb      = %s" % pdb)
-    logger.debug("\tfilename = %s" % filename)
-    logger.debug("\tpadding  = %d" % padding)
-    logger.debug("This will make a simulation box for GCMC/JAWS-1")
-
-    # Create a box around the solute and pad it with two Angstromgs
-    box = pdb.getBox()
-    box["origin"] = box["origin"] - padding
-    box["len"] = box["len"] + 2.0 * padding
-
-    print_bequil(box["len"])
-
-    # Save it to disc
-    simulationobjects.write_box(filename, box)
-
-
-def print_bequil(boxlen):
-    betamu = -10.47
-    boxvolume = boxlen[0] * boxlen[1] * boxlen[2]
-    bequil = betamu + np.log(boxvolume / 30.0)
-    print("Volume of GCMC box:", np.round(boxvolume, 2))
-    print("Bequil:", np.round(bequil, 2))
 
 
 def get_arg_parser():
@@ -97,7 +58,6 @@ def get_arg_parser():
 
 
 if __name__ == "__main__":
-    import simulationobjects
     args = get_arg_parser().parse_args()
 
     # Setup the logger
@@ -109,7 +69,7 @@ if __name__ == "__main__":
     if args.box is None:
         pdbobj = simulationobjects.PDBFile()
         pdbobj.read(args.solute)
-        make_gcmcbox(pdbobj, args.out, args.padding)
+        box = make_gcmcbox(pdbobj, args.out, args.padding)
     elif len(args.box) == 3:
         box = {
             "center":
@@ -120,8 +80,6 @@ if __name__ == "__main__":
             "len":
             np.array([args.padding * 2] * 3)
         }
-        print_bequil(box["len"])
-        simulationobjects.write_box(args.out, box)
     elif len(args.box) == 6:
         box = {
             "center":
@@ -135,9 +93,11 @@ if __name__ == "__main__":
                  float(args.box[4]),
                  float(args.box[5])])
         }
-        print_bequil(box["len"])
-        simulationobjects.write_box(args.out, box)
     else:
         print("\nError with 'box' arguement. Please specify either three "
               "arguments for the centre of the box, or six arguements for "
               "the centre of the box AND the lengths of the sides.\n")
+
+    # Save it to disc
+    simulationobjects.write_box(args.out, box)
+    print_bequil(box["len"])

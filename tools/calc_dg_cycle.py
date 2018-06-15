@@ -1,8 +1,6 @@
 from glob import glob
 import sys
-import free_energy_base as feb
-from table import Table
-from gcmc_free_energy_base import GCMCMBAR
+from protomslib import free_energy as fe
 
 
 def state_data_table(results, directories, signs, states, estimator):
@@ -22,11 +20,11 @@ def state_data_table(results, directories, signs, states, estimator):
     estimator: Estimator Class
       The estimator to tabulate results of
     """
-    table = Table(estimator.__name__,
-                  fmts=["%s:", "%.3f", "%.3f", "%.3f"],
-                  headers=['', 'dG gas', 'dG free', 'dG bound'])
+    table = fe.Table(estimator.__name__,
+                     fmts=["%s:", "%.3f", "%.3f", "%.3f"],
+                     headers=['', 'dG gas', 'dG free', 'dG bound'])
 
-    closures = {state: feb.Quantity(0., 0.) for state in states}
+    closures = {state: fe.Quantity(0., 0.) for state in states}
     for root, sign in zip(directories, signs):
         root_dGs = (root,)
         for state in states:
@@ -58,12 +56,12 @@ def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
     estimator: Estimator Class
       The estimator to tabulate results of
     """
-    table = Table('',
-                  fmts=["%s:", "%.3f", "%.3f"],
-                  headers=['', 'ddG Solvation', 'ddG Binding'])
+    table = fe.Table('',
+                     fmts=["%s:", "%.3f", "%.3f"],
+                     headers=['', 'ddG Solvation', 'ddG Binding'])
 
-    closure_solv = feb.Quantity(0., 0.)
-    closure_bind = feb.Quantity(0., 0.)
+    closure_solv = fe.Quantity(0., 0.)
+    closure_bind = fe.Quantity(0., 0.)
     for root, sign in zip(directories, signs):
         dG_solv = dG_solvs[root][estimator]
         dG_bind = dG_binds[root][estimator]
@@ -78,11 +76,11 @@ def solv_bind_table(dG_solvs, dG_binds, directories, signs, estimator):
     return table
 
 
-class CycleCalculation(feb.FreeEnergyCalculation):
+class CycleCalculation(fe.FreeEnergyCalculation):
     """Perform multiple free energy calculations and combine the
     results to calculate a cycle.
     """
-    def __init__(self, estimators=[feb.TI, feb.BAR, feb.MBAR], volume=None,
+    def __init__(self, estimators=[fe.TI, fe.BAR, fe.MBAR], volume=None,
                  results_name='results'):
         """Parameters
         ---------
@@ -128,7 +126,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
 
         # perform calculations
         # end up with results dictionary structured as -
-        # results[root][state][estimator] == feb.Quantity object
+        # results[root][state][estimator] == fe.Quantity object
         # thus we have one free energy difference for each root
         # directory, for each state (gas, free or bound), calculated
         # with each of the estimators
@@ -137,11 +135,11 @@ class CycleCalculation(feb.FreeEnergyCalculation):
         for root in args.directories:
             results[root] = {}
             for state in states:
-                state_dGs = {est: feb.Quantity(0., 0.)
+                state_dGs = {est: fe.Quantity(0., 0.)
                              for est in self.estimators}
                 for mid in midfixes:
                     output_dir = output_dir_format % (root, mid, state)
-                    calc = feb.FreeEnergyCalculation(
+                    calc = fe.FreeEnergyCalculation(
                         root_paths=[glob(output_dir)],
                         temperature=args.temperature,
                         subdir=args.subdir,
@@ -187,7 +185,7 @@ class CycleCalculation(feb.FreeEnergyCalculation):
 
 def get_arg_parser():
     """Returns the custom argument parser for this script"""
-    parser = feb.FEArgumentParser(
+    parser = fe.FEArgumentParser(
         description="High level script that attempts to use data from multiple"
                     " calculations to provide free energies of solvation and "
                     "binding. Also calculates cycle closures for all data. "
@@ -200,7 +198,7 @@ def get_arg_parser():
                     "Reported free energies are averages "
                     "over all repeats found. Reported errors are single "
                     "standard errors calculated from repeats.",
-        parents=[feb.get_alchemical_arg_parser()], conflict_handler='resolve')
+        parents=[fe.get_alchemical_arg_parser()], conflict_handler='resolve')
     parser.add_argument(
         '-d', '--directories', nargs='+', required=True,
         help="Location of folders containing ProtoMS output directories.")
@@ -234,10 +232,10 @@ def get_arg_parser():
 
 def run_script(cmdline):
     """Execute the script, allows for straight-forward testing."""
-    class_map = {'ti': feb.TI, 'mbar': feb.MBAR,
-                 'bar': feb.BAR, 'gcap': GCMCMBAR}
+    class_map = {'ti': fe.TI, 'mbar': fe.MBAR,
+                 'bar': fe.BAR, 'gcap': fe.GCMCMBAR}
     args = get_arg_parser().parse_args(cmdline)
-    calc = CycleCalculation(estimators=map(class_map.get, args.estimators),
+    calc = CycleCalculation(estimators=list(map(class_map.get, args.estimators)),
                             volume=args.volume,
                             results_name=args.name)
     calc.run(args)

@@ -3,16 +3,16 @@ from itertools import chain
 import matplotlib
 import numpy as np
 import os
+import six
 import sys
-import free_energy_base as feb
-from table import Table
+from protomslib import free_energy as fe
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-class TI_decomposed(feb.Estimator):
+class TI_decomposed(fe.Estimator):
     """Estimate free differences using ThermodynamicIntegration. The class
     performs individual calculations for each component of the system
     interaction and internal energies. Results from each component
@@ -34,7 +34,7 @@ class TI_decomposed(feb.Estimator):
           Additional keyword arguments are ignored
         """
         self.estimators = defaultdict(
-            lambda: feb.TI(lambdas, results_name, subdir_glob))
+            lambda: fe.TI(lambdas, results_name, subdir_glob))
         self.lambdas = lambdas
         self.subdir_glob = subdir_glob
         self.results_name = results_name
@@ -51,13 +51,13 @@ class TI_decomposed(feb.Estimator):
         """
         dlam = series.lamf[0]-series.lamb[0]
         min_len = 10E20
-        for name, term in series.interaction_energies.iteritems():
+        for name, term in six.iteritems(series.interaction_energies):
             for energy in term[:-1]:
                 dat = (energy.forw-energy.back) / dlam
                 min_len = len(dat) if len(dat) < min_len else min_len
                 self.estimators["%s_%s" % (name, energy.type)].data.append(dat)
 
-        for name, term in series.internal_energies.iteritems():
+        for name, term in six.iteritems(series.internal_energies):
             for energy in term[:-1]:
                 dat = (energy.forw-energy.back) / dlam
                 min_len = len(dat) if len(dat) < min_len else min_len
@@ -91,7 +91,7 @@ class TI_decomposed(feb.Estimator):
         return lengths[0]
 
 
-class DecomposedCalculation(feb.FreeEnergyCalculation):
+class DecomposedCalculation(fe.FreeEnergyCalculation):
     """Calculate an alchemical free energy difference using Thermodynamic
     Integration individually with difference components of the system
     energy. This decomposition is additive and, although not formally
@@ -111,12 +111,12 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         """
         # temperature can be given as zero as TI estimators do
         # not make use of it
-        feb.FreeEnergyCalculation.__init__(
+        fe.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
             temperature=0.,
             subdir=subdir,
-            estimators={feb.TI, TI_decomposed})
+            estimators={fe.TI, TI_decomposed})
 
     def calculate(self, subset=(0., 1., 1.)):
         """For each estimator return the evaluated potential of mean force.
@@ -128,12 +128,12 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         """
         results = {}
 
-        leg_result = feb.Result()
-        for leg in self.estimators[feb.TI]:
-            leg_result += feb.Result(
+        leg_result = fe.Result()
+        for leg in self.estimators[fe.TI]:
+            leg_result += fe.Result(
                 [rep.subset(*subset).calculate(self.temperature)
                  for rep in leg])
-        results[feb.TI] = leg_result
+        results[fe.TI] = leg_result
 
         # dealing with the decomposed estimator is a little more difficult.
         # repeats for the same term need to be grouped together into a
@@ -147,9 +147,9 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         # results[TI_decomposed][term] = Results object
         results[TI_decomposed] = {}
         for term in data[0][0]:
-            result = feb.Result()
+            result = fe.Result()
             for leg in data:
-                result += feb.Result([rep[term] for rep in leg])
+                result += fe.Result([rep[term] for rep in leg])
             results[TI_decomposed][term] = result
 
         return results
@@ -185,10 +185,10 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
                     decomp[term] = -decomp[term]
 
             # update standard TI result as well
-            results[feb.TI] -= results2[feb.TI]
+            results[fe.TI] -= results2[fe.TI]
             # swap the sign if this is a binding calculation
             if args.bound is not None:
-                results[feb.TI] = -results[feb.TI]
+                results[fe.TI] = -results[fe.TI]
 
         if args.dualtopology:
             _consolidate_terms(decomp)
@@ -197,12 +197,12 @@ class DecomposedCalculation(feb.FreeEnergyCalculation):
         if args.pmf:
             self.figures['decomposed_pmfs'] = plot_pmfs(decomp)
 
-        table = Table('', fmts=["%s:", "%.3f"])
-        table.add_row(["FDTI", results[feb.TI].dG])
+        table = fe.Table('', fmts=["%s:", "%.3f"])
+        table.add_row(["FDTI", results[fe.TI].dG])
         table.add_blank_row()
         for term in sorted(decomp):
             table.add_row([term, decomp[term].dG])
-        table.add_row(['sum of terms', np.sum(decomp.values()).dG])
+        table.add_row(['sum of terms', np.sum(list(decomp.values())).dG])
         self.tables.append(table)
 
         return results
@@ -283,14 +283,14 @@ def plot_pmfs(data):
 
 def get_arg_parser():
     """Returns the custom argument parser for this script"""
-    parser = feb.FEArgumentParser(
+    parser = fe.FEArgumentParser(
         description="Calculate individual contributions of different terms "
                     "to the total free energy difference. Although terms are "
                     "guaranteed to be additive with TI, the decomposition "
                     "is not strictly well defined. That said, it can be "
                     "illustrative to consider the dominant contributions of "
                     "a calculation.",
-        parents=[feb.get_alchemical_arg_parser()])
+        parents=[fe.get_alchemical_arg_parser()])
     parser.add_argument(
         "-b", "--bound", nargs="+", action='append',
         help="Output directory(s) of additional bound phase calculation(s). "

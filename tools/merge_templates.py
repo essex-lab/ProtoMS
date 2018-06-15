@@ -13,49 +13,10 @@ Can be executed from the command line as a stand-alone program
 """
 
 import logging
-
-from . import simulationobjects
+from protomslib import simulationobjects
+from protomslib.templates import merge_templates
 
 logger = logging.getLogger('protoms')
-
-
-def merge_templates(templates):
-    """
-    Merge a series of ProtoMS template files
-
-    Parameters
-    ----------
-    templates : list of string
-      the names of the template file
-
-    Returns
-    -------
-    TemplateFile
-      the merged template file
-    or
-      string
-    the filename of the single unique template
-    """
-
-    logger.debug("Running merge_templates with arguments: ")
-    logger.debug("\ttemplates = %s" % " ".join(templates))
-    logger.debug(
-        "This will merge all templates, renumbering force field parameters")
-
-    # Make it a unique list
-    templates2 = []
-    for t in templates:
-        if t not in templates2:
-            templates2.append(t)
-
-    if len(templates2) == 1:
-        return templates2[0]
-
-    temfile = simulationobjects.TemplateFile(templates2[0])
-    for t in templates2[1:]:
-        temfile2 = simulationobjects.TemplateFile(t)
-        temfile.append(temfile2)
-    return temfile
 
 
 def get_arg_parser():

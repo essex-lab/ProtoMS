@@ -4,7 +4,7 @@
 #          Samuel Genheden
 #          Gregory Ross
 
-from . import simulationobjects
+from protoms import simulationobjects
 
 from .ambertools import run_antechamber,run_parmchk
 from .convertatomnames import pdb2pms

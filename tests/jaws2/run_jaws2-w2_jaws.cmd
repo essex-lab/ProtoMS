@@ -27,7 +27,7 @@ parfile $PROTOMSHOME/data/gcmc_tip4p.tem
 solvent2 jaws2_not2.pdb
 grand1 jaws2_wat2.pdb
 originx 59.271
-originy 33.21
+originy 33.210
 originz 21.691
 x 3.0
 y 3.0

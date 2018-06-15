@@ -1,21 +1,20 @@
 import matplotlib
 import numpy as np
 import os
-import free_energy_base as feb
 import calc_gci as gci
 import pymbar
+from protomslib import free_energy as fe
 import simulationobjects as sim
-from table import Table
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-class GCSEnergies(feb.Estimator):
+class GCSEnergies(fe.Estimator):
     def __init__(self, lambdas, subdir_glob, **kwargs):
-        feb.Estimator.__init__(self, lambdas, subdir_glob=subdir_glob,
-                               results_name='results_inst', **kwargs)
+        fe.Estimator.__init__(self, lambdas, subdir_glob=subdir_glob,
+                              results_name='results_inst', **kwargs)
 
     def add_data(self, series):
         tmp = []
@@ -29,14 +28,14 @@ class GCSEnergies(feb.Estimator):
 class GCSLongEnergies(GCSEnergies):
     # results_name = 'results_long'
     def __init__(self, lambdas, subdir_glob, **kwargs):
-        feb.Estimator.__init__(self, lambdas, subdir_glob=subdir_glob,
-                               results_name='results_long', **kwargs)
+        fe.Estimator.__init__(self, lambdas, subdir_glob=subdir_glob,
+                              results_name='results_long', **kwargs)
 
 
 class ReweightedTitration(gci.TitrationCalculation):
     def __init__(self, root_paths, temperature, volume, steps,
                  filename, longname, subdir=''):
-        feb.FreeEnergyCalculation.__init__(
+        fe.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
             temperature=temperature,
@@ -79,8 +78,8 @@ class ReweightedTitration(gci.TitrationCalculation):
             N = ns.shape[1]
             Nsims = len(mus)
             u_kn = np.zeros(shape=(2*Nsims, N*Nsims))
-            for i in xrange(Nsims):
-                for j in xrange(Nsims):
+            for i in range(Nsims):
+                for j in range(Nsims):
                     u_kn[i, j*N: (j+1)*N] = beta*(es[j] + ns[j] * mus[i])
                     u_kn[i+Nsims, j*N: (j+1)*N] = \
                         beta*(les[j] + ns[j] * mus[i])
@@ -96,7 +95,7 @@ class ReweightedTitration(gci.TitrationCalculation):
 
             # also do reweighting with conventional umbrella result
             umbrella_ns = np.zeros_like(mus)
-            for i in xrange(Nsims):
+            for i in range(Nsims):
                 exps = np.exp(beta*(es[i]-les[i]))
                 umbrella_ns[i] = (exps*ns[i]).mean() / exps.mean()
 
@@ -143,11 +142,11 @@ class ReweightedTitration(gci.TitrationCalculation):
 
         # print out binding free energies in table format
         for key in keys:
-            table = Table(
+            table = fe.Table(
                 key.upper(), fmts=['%d', '%.3f'],
                 headers=['Number of Waters', 'Binding Free Energy'])
-            for i, fe in enumerate(results[key].insertion_pmf):
-                table.add_row([i, fe])
+            for i, dA in enumerate(results[key].insertion_pmf):
+                table.add_row([i, dA])
             self.tables.append(table)
         return results
 
@@ -160,7 +159,7 @@ def B_to_chemical_potential(B, volume, temperature):
 
 def get_arg_parser():
     """Add custom options for this script"""
-    parser = feb.FEArgumentParser(
+    parser = fe.FEArgumentParser(
         description="Calculate water binding free energies using Grand "
                     "Canonical Integration and incorporating rigorous "
                     "corrections for long-range electrostatics and "

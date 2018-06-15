@@ -16,7 +16,7 @@ import logging
 
 import numpy as np
 
-from . import simulationobjects
+from protomslib import simulationobjects
 import six
 
 logger = logging.getLogger('protoms')

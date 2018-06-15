@@ -9,12 +9,13 @@ import site
 # Ligand Setup test
 # ---------------------------------------------
 
+from protomslib import simulationobjects
+from protomslib.prepare import _load_ligand_pdb, _prep_ligand
+from protomslib.utils import _get_prefix
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 
 site.addsitedir(proto_env)
-from protoms import _get_prefix, _load_ligand_pdb, _prep_ligand
-from tools import simulationobjects
 
 
 class MockArgs:
@@ -40,16 +41,18 @@ class TestLigSetup(unittest.TestCase):
             self.prefix = _get_prefix("dcb.pdb")
             self.ligands.append(self.prefix)
 
-            self.ligfiles[self.prefix] = {}
+            pref_lig = {}
+            pref_lig["pdb"], pref_lig["obj"] = \
+                _load_ligand_pdb(self.prefix,
+                                 [os.path.join(proto_env, "tests/setup")])
+            self.ligfiles[self.prefix] = pref_lig
 
-            self.ligfiles[self.prefix]["pdb"], self.ligfiles[self.prefix]["obj"] = _load_ligand_pdb(self.prefix, [os.path.join(proto_env, "tests/setup")])
-
-            self.ligobj = self.ligfiles[self.ligands[0]]["obj"]  # Unmerged pdb object for single ligand
+            # Unmerged pdb object for single ligand
+            self.ligobj = self.ligfiles[self.ligands[0]]["obj"]
 
             args = MockArgs()
-            _prep_ligand(self.ligfiles[self.prefix], 0, 0, self.ligobj, [" "], self.tarlist, args)
-
-            print(self.tarlist)
+            _prep_ligand(self.ligfiles[self.prefix], 0, 0, self.ligobj,
+                         [" "], self.tarlist, args)
 
         except ImportError as e:
             print(e)
