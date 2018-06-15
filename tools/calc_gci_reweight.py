@@ -1,10 +1,9 @@
 import matplotlib
 import numpy as np
 import os
-import calc_gci as gci
 import pymbar
 from protomslib import free_energy as fe
-import simulationobjects as sim
+from protomslib import simulationobjects as sim
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
@@ -32,21 +31,21 @@ class GCSLongEnergies(GCSEnergies):
                               results_name='results_long', **kwargs)
 
 
-class ReweightedTitration(gci.TitrationCalculation):
+class ReweightedTitration(fe.TitrationCalculation):
     def __init__(self, root_paths, temperature, volume, steps,
                  filename, longname, subdir=''):
         fe.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
             temperature=temperature,
-            estimators=[gci.GCI, GCSEnergies, GCSLongEnergies],
+            estimators=[fe.GCI, GCSEnergies, GCSLongEnergies],
             subdir=subdir,
             extract_data=False)
         self.volume = volume
         self.steps = steps
         # adjust estimator instance attributes so that the
         # correct filenames are read, this is a bit ugly
-        for est in self.estimators[gci.GCI][0]:
+        for est in self.estimators[fe.GCI][0]:
             est.results_name = filename
         for est in self.estimators[GCSEnergies][0]:
             est.results_name = filename
@@ -58,7 +57,7 @@ class ReweightedTitration(gci.TitrationCalculation):
         GCI_estimators = {'raw': [], 'umbrella': [], 'mbar': []}
         beta = 1/(sim.boltz*self.temperature)
 
-        for i, rep in enumerate(self.estimators[gci.GCI][0]):
+        for i, rep in enumerate(self.estimators[fe.GCI][0]):
             # get relevant quantities into nice numpy arrays
             # occupancy data
             ns = np.array(rep.subset(*subset).data)
@@ -105,11 +104,11 @@ class ReweightedTitration(gci.TitrationCalculation):
             # create GCI estimators to calculate binding free energies
             # from reweighted occupancy data
             # for some reason reweighted data comes out of MBAR in reverse
-            mbar = gci.GCI(Bs)
+            mbar = fe.GCI(Bs)
             mbar.data = mbar_ns[Nsims:][::-1].reshape((Nsims, 1))
             GCI_estimators['mbar'].append(mbar)
 
-            umbrella = gci.GCI(Bs)
+            umbrella = fe.GCI(Bs)
             umbrella.data = umbrella_ns.reshape((Nsims, 1))
             GCI_estimators['umbrella'].append(umbrella)
 
@@ -117,7 +116,7 @@ class ReweightedTitration(gci.TitrationCalculation):
         # GCIResult objects for different reweighting methods.
         results = {}
         for key in 'raw', 'mbar', 'umbrella':
-            results[key] = gci.GCMCResult(
+            results[key] = fe.GCMCResult(
                 [rep.calculate(self.temperature, self.volume, self.steps)
                  for rep in GCI_estimators[key]])
         return results
@@ -165,7 +164,7 @@ def get_arg_parser():
                     "corrections for long-range electrostatics and "
                     "dispersion. Reweighting is carried out using both "
                     "an umbrella sampling result and MBAR.",
-        parents=[gci.get_arg_parser()], conflict_handler='resolve')
+        parents=[fe.get_gci_arg_parser()], conflict_handler='resolve')
     parser.add_argument(
         '-f', '--filename', default='results_inst',
         help="Name of file containing simulation energies with short cutoff."

@@ -11,6 +11,7 @@ solvate
 
 Can be executed from the command line as a stand-alone program
 """
+from __future__ import print_function
 import numpy as np
 import six
 from protomslib import simulationobjects

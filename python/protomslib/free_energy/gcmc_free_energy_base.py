@@ -7,6 +7,7 @@ from scipy import optimize
 from scipy import integrate
 from . import free_energy_base as feb
 from .table import Table
+from .free_energy_argument_parser import FEArgumentParser
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -1004,3 +1005,35 @@ def plot_insertion_pmf(results, title=''):
     fig, ax = plt.subplots()
     pmf.plot(ax, xlabel="Occupancy")
     return fig, table
+
+
+def get_gci_arg_parser():
+    parser = feb.FEArgumentParser(
+        parents=[feb.get_base_arg_parser()],
+        conflict_handler='resolve')
+    parser.add_argument(
+        '-d', '--directories', nargs='+', required=True,
+        help="Location of folders containing ProtoMS output subdirectories. "
+             "Multiple directories can be supplied to this flag and indicate "
+             "repeats of the same calculation.")
+    parser.add_argument(
+        '-v', '--volume', required=True, type=float,
+        help="Volume of the calculations GCMC region.")
+    parser.add_argument(
+        '-n', '--nsteps', type=int,
+        help='Override automatic guessing of the number of steps to fit for '
+             'titration curve fitting.')
+    parser.add_argument(
+        '--nmin', type=int,
+        help='Override automatic guessing of the minimum number of waters for '
+             'tittration curve fitting.')
+    parser.add_argument(
+        '--nmax', type=int,
+        help='Override automatic guessing of maximum number of waters for '
+             'titration curve fitting.')
+    parser.add_argument(
+        '--nfits', type=int, default=10,
+        help='The number of independent fitting attempts for the neural '
+             'network occupancy model. Increasing the number of fits may '
+             'help improve results for noisy data.')
+    return parser

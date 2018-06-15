@@ -14,33 +14,8 @@ def get_arg_parser():
     parser = fe.FEArgumentParser(
         description="Calculate water binding free energies using Grand "
                     "Canonical Integration.",
-        parents=[fe.get_base_arg_parser()],
+        parents=[fe.get_gci_arg_parser()],
         conflict_handler='resolve')
-    parser.add_argument(
-        '-d', '--directories', nargs='+', required=True,
-        help="Location of folders containing ProtoMS output subdirectories. "
-             "Multiple directories can be supplied to this flag and indicate "
-        "repeats of the same calculation.")
-    parser.add_argument(
-        '-v', '--volume', required=True, type=float,
-        help="Volume of the calculations GCMC region.")
-    parser.add_argument(
-        '-n', '--nsteps', type=int,
-        help='Override automatic guessing of the number of steps to fit for '
-             'titration curve fitting.')
-    parser.add_argument(
-        '--nmin', type=int,
-        help='Override automatic guessing of the minimum number of waters for '
-             'tittration curve fitting.')
-    parser.add_argument(
-        '--nmax', type=int,
-        help='Override automatic guessing of maximum number of waters for '
-             'titration curve fitting.')
-    parser.add_argument(
-        '--nfits', type=int, default=10,
-        help='The number of independent fitting attempts for the neural '
-             'network occupancy model. Increasing the number of fits may '
-             'help improve results for noisy data.')
     return parser
 
 

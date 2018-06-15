@@ -603,8 +603,6 @@ class FreeEnergyCalculation(object):
         return self.calculate(subset=(args.lower_bound, args.upper_bound))
 
 
-
-
 def get_base_arg_parser():
     """Returns a generic argparser for all free energy calculation scripts"""
     parser = FEArgumentParser(add_help=False)
