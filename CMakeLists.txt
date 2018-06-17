@@ -155,7 +155,6 @@ endif()
 
 
 set(PYTHON_STAGING_DIR "${CMAKE_CURRENT_BINARY_DIR}/python/")
-message(${PYTHON_STAGING_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/python" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 add_custom_target(PythonInstall
   COMMAND "${CMAKE_COMMAND} ${PYTHON_EXECUTABLE} setup.py install"
@@ -169,7 +168,7 @@ set(PYTHON_INSTALL_OPTIONS "" CACHE STRING "Additional options for setup.py")
 install(TARGETS protoms3
   RUNTIME DESTINATION "./")
 install(CODE "execute_process(COMMAND python setup.py install ${PYTHON_INSTALL_OPTIONS}
- WORKING_DIRECTORY ${PYTHON_STAGING_DIR})")           
+ WORKING_DIRECTORY ${PYTHON_STAGING_DIR})")
 if(COVERAGE)
     #Enabling creation and submission of dashboard
     ##configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
