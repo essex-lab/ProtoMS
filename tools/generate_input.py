@@ -497,7 +497,8 @@ class DualTopology(ProteinLigandSimulation) :
                     lambdaval=None,
                     outfolder="out",
                     restrained=[],
-                    softcore='mixed') :  
+                    softcore='mixed',
+                    spec_softcore='') :  
     """
     Parameters
     ----------
@@ -543,35 +544,51 @@ class DualTopology(ProteinLigandSimulation) :
     if lambdaval is None or len(lambdaval) < 2 :
       raise sim.SetupError("Must give at least two lambda values")
 
-    if softcore not in ('all', 'none', 'mixed'):
-      raise sim.SetupError("softcore argument must be one of 'all', 'none' or 'mixed'")
+    if softcore not in ('all', 'none', 'auto', 'manual'):
+      raise sim.SetupError(
+        "softcore argument must be one of 'all', 'none', 'auto' or 'manual'")
+
+    if softcore in ('all', 'none') and spec_softcore is not None:
+      logger.warning(
+        "Softcore argument is %s, ignoring value of spec_softcore" % softcore)
+
+    if softcore == 'manual' and spec_softcore is None:
+      raise sim.SetupError(
+        "Softcore argument is 'manual' but no spec_softcore supplied.")
 
     self.setParameter("printfe","mbar")
     self.setParameter("dualtopology1","1 2 synctrans syncrot")
 
     if softcore != 'none':
       softcore_options1, softcore_options2 = "solute 1", "solute 2"
-      if softcore == 'mixed':
+      if softcore in ('auto', 'manual'):
         softcore_options1 += " atoms "
         softcore_options2 += " atoms "
 
-        tem_file = sim.TemplateFile(filename=templates[0])
         cmap = {}
-        make_single._auto_map(tem_file.templates[0], tem_file.templates[1],
-                              sim.PDBFile(filename=solutes[0]),
-                              sim.PDBFile(filename=solutes[1]),
-                              cmap)
+        tem_file = sim.TemplateFile(filename=templates[0])
+        if softcore == 'auto':
+          make_single._auto_map(tem_file.templates[0], tem_file.templates[1],
+                                sim.PDBFile(filename=solutes[0]),
+                                sim.PDBFile(filename=solutes[1]),
+                                cmap)
+          lig1_not_softcore = list(cmap.keys())
+          lig2_not_softcore = list(cmap.values())
+        else:
+          lig1_not_softcore = [at.name for at in tem_file.templates[0].atoms]
+          lig2_not_softcore = [at.name for at in tem_file.templates[1].atoms]
 
+        self._process_spec_softcore(lig1_not_softcore, lig2_not_softcore, spec_softcore)
         atom_names = []
         for i, atom in enumerate(tem_file.templates[0].atoms):
-          if atom.name not in cmap:
+          if atom.name not in lig1_not_softcore:
             softcore_options1 += "%d " % (i+1)
             atom_names.append(atom.name)
         logger.info("Applying softcore potentials to solute: 1, atoms: " + ' '.join(atom_names))
 
         atom_names = []
         for i, atom in enumerate(tem_file.templates[1].atoms):
-          if atom.name not in cmap.values():
+          if atom.name not in lig2_not_softcore:
             softcore_options2 += "%d " % (i+1)
             atom_names.append(atom.name)
         logger.info("Applying softcore potentials to solute: 2, atoms: " + ' '.join(atom_names))
@@ -608,6 +625,33 @@ class DualTopology(ProteinLigandSimulation) :
     moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
+
+
+  def _process_spec_softcore(self, not_softcore_atoms1, not_softcore_atoms2, spec_softcore):
+      if spec_softcore is not None:
+          print(spec_softcore)
+          for block in spec_softcore.split(' '):
+              print(block)
+              lig_no, at_list = block.split(":")
+              if lig_no == '1':
+                  not_softcore = not_softcore_atoms1
+              elif lig_no == '2':
+                  not_softcore = not_softcore_atoms2
+              else:
+                  raise ValueError(
+                    'Invalid ligand number in softcore specification')
+              for at in at_list.split(','):
+                  if at.startswith('-'):
+                      not_softcore.append(at[1:])
+                  else:
+                      try:
+                          not_softcore.remove(at)
+                      except ValueError:
+                          raise ValueError(
+                            'Atom "%s" in softcore specification not found' % at)
+
+    
+
 
 class SingleTopology(ProteinLigandSimulation) :
   """ 
@@ -1152,7 +1196,9 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
     cmdcls = {"dualtopology":DualTopology,"singletopology":SingleTopology}
     extra_kwargs = {}
     if settings.simulation == "dualtopology":
-      extra_kwargs['softcore'] = settings.softcore
+      extra_kwargs.update({'softcore': settings.softcore,
+                          'spec_softcore': settings.spec_softcore})
+      
       
     if ligands is None :
       raise tools.SetupError("No ligands loaded, cannot do dual-topology simulations.")
@@ -1277,13 +1323,24 @@ def get_arg_parser():
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   parser.add_argument('--ranseed',help="the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None",default=None)
   parser.add_argument('--tune',action='store_true',help=argparse.SUPPRESS,default=False)
-  parser.add_argument('--softcore', type=str, default='mixed', 
-                      choices=('mixed', 'all', 'none'),
-                      help="determine which atoms to apply softcore potentials to.\n "
-                           "'all'=softcores applied to all atoms of both solutes, "
-                           "'none'=softcores not applied to any atoms\n "
-                           "'mixed'=softcores will be applied only to non matching "
-                           "atoms within ligand structures")
+  parser.add_argument(
+    '--softcore', type=str, default='auto',
+    choices=('auto', 'all', 'none', 'manual'),
+    help="determine which atoms to apply softcore potentials to. If 'all' "
+         "softcores are applied to all atoms of both solutes. If 'none' "
+         "softcores are not applied to any atoms. If 'auto', softcores are "
+         "applied to atoms based on matching coordinates between ligand "
+         "structures. The selected softcore atoms can be amended using the "
+         "--spec-softcore flag. If 'manual' only those atoms specified by "
+         "the --spec-softcore flag are softcore.")
+  parser.add_argument(
+    '--spec-softcore', type=str,
+    help='Specify atoms to add or remove from softcore selections. Can be '
+         'up to two, space separated, strings of the form "N:AT1,AT2,-AT3". '
+         'N should be either "1" or "2" indicating the corresponding ligand. '
+         'The comma separated list of atom names are added to the softcore '
+         'selection. A preceding dash for an atom name specifies it should be'
+         ' removed from the softcore selection.')
   return parser
 
 if __name__ == "__main__":
