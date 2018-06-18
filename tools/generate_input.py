@@ -1416,7 +1416,7 @@ def get_arg_parser():
          'The comma separated list of atom names are added to the softcore '
          'selection. A preceding dash for an atom name specifies it should be'
          ' removed from the softcore selection. The special value "auto" '
-         'indictates that automatic softcore assignments sholud be accepted '
+         'indictates that automatic softcore assignments should be accepted '
          'without amendment.')
   return parser
 
