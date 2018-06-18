@@ -94,54 +94,7 @@ def _make_map(tem1,tem2,pdb1,pdb2,cmap) :
     if dummies in cmap.keys()
   """
  
-  # Create a list of atom names in both templates
-  # The purpose of the routine is then to empty these lists!
-  not_taken1 = [atom.name.strip().upper() for atom in tem1.templates[0].atoms]
-  not_taken2 = [atom.name.strip().upper() for atom in tem2.templates[0].atoms]
-
-  # First we will look in the given cmap to see if we already have some maps given
-  for atom1 in cmap :
-    atom2 = cmap[atom1]
-    if atom1.startswith("DUM") :
-      sim.SetupError("Do not support dummies in V0 at the moment.")  
-    if atom1 in not_taken1 :
-      if atom2 != "DUM" :
-        if atom2 in not_taken2 :
-          not_taken1.remove(atom1)
-          not_taken2.remove(atom2)    
-        else :
-          logger.warning("Warning: Could not find atom %s in the second template file, will ignore this map."%atom2)
-          del cmap[atom1]
-      else :
-        not_taken1.remove(atom1)     
-    else :
-      logger.warning("Warning: Could not find atom %s in the first template file, will ignore this map."%atom2)
-      del cmap[atom1]
-  logger.info("Pre-defined maps:\n%s"%" ".join("%s-%s"%(atom1,cmap[atom1]) for atom1 in sorted(cmap.keys())))
-
-  # Next we will calculate pair-wise distance from the given pdb structures,
-  # use a cut-off of 0.02 A^2 to determine possible pair and then use atom type as the final filter
-  if not_taken1 or not_taken2 :
-    objdict1 = _make_dict(not_taken1,tem1.templates[0],pdb1.residues[1])
-    objdict2 = _make_dict(not_taken2,tem2.templates[0],pdb2.residues[1])
-    found = {}
-    for atom1 in not_taken1 :
-      if objdict1[atom1]["pdb"] is None : continue
-      for atom2 in not_taken2 :
-        if objdict2[atom2]["pdb"] is None : continue
-        dist2 = objdict1[atom1]["pdb"].coords-objdict2[atom2]["pdb"].coords
-        dist2 = np.sum(dist2*dist2)
-        type1 = objdict1[atom1]["tem"].param0.params[0] # The atom type is the 0:th parameter of a clj parameter
-        type2 = objdict2[atom2]["tem"].param0.params[0]
-        if dist2 < 0.02 and type1 == type2 :
-          found[atom1] = atom2
-          break
-    logger.info("Distance/atom type maps:\n%s"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys())))
-    for atom1 in found :
-      atom2 = found[atom1] 
-      not_taken1.remove(atom1)
-      not_taken2.remove(atom2)
-      cmap[atom1] = atom2
+  not_taken1, not_taken2 = _auto_map(tem1.templates[0], tem2.templates[0], pdb1, pdb2,cmap)
 
   # Now we have gotten so-far that we have to ask the user for the rest...
 
@@ -188,6 +141,87 @@ def _make_map(tem1,tem2,pdb1,pdb2,cmap) :
       if atom2 != "DUM": 
         not_taken2.remove(atom2)
       cmap[atom1] = atom2  
+
+def _auto_map(tem1,tem2,pdb1,pdb2,cmap):
+  """
+  As far as possible update cmap based on atom matching
+  between templates and pbs according to the below criteria:
+  1) squared inter-atom distances < 0.02 A**2
+  2) atom type
+  
+  
+  The cmap dictionary will be populated with key value pairs:
+  cmap[atom1] = atom2,
+  where atom1 belongs to tem1 and atom2 belongs to tem2
+  atom2 can be dum, in case non-correspondance is assumed
+  
+  Parameters
+  ----------
+  tem1 : MolTemplate
+    first template 
+  tem2 : MolTemplate
+    second template file
+  pdb1 : PDBFile
+    structure template for tem1
+  pdb2 : PDBFile
+    structure template for tem2
+  cmap : dictionary of string
+    full, partial or empty map of correspondance
+
+  Raises
+  ------
+  SetupError
+    if dummies in cmap.keys()
+  """
+  # Create a list of atom names in both templates
+  # The purpose of the routine is then to empty these lists!
+  not_taken1 = [atom.name.strip().upper() for atom in tem1.atoms]
+  not_taken2 = [atom.name.strip().upper() for atom in tem2.atoms]
+
+  # First we will look in the given cmap to see if we already have some maps given
+  for atom1 in cmap :
+    atom2 = cmap[atom1]
+    if atom1.startswith("DUM") :
+      sim.SetupError("Do not support dummies in V0 at the moment.")  
+    if atom1 in not_taken1 :
+      if atom2 != "DUM" :
+        if atom2 in not_taken2 :
+          not_taken1.remove(atom1)
+          not_taken2.remove(atom2)    
+        else :
+          logger.warning("Warning: Could not find atom %s in the second template file, will ignore this map."%atom2)
+          del cmap[atom1]
+      else :
+        not_taken1.remove(atom1)     
+    else :
+      logger.warning("Warning: Could not find atom %s in the first template file, will ignore this map."%atom2)
+      del cmap[atom1]
+  logger.info("Pre-defined maps:\n%s"%" ".join("%s-%s"%(atom1,cmap[atom1]) for atom1 in sorted(cmap.keys())))
+  return not_taken1, not_taken2
+
+  # Next we will calculate pair-wise distance from the given pdb structures,
+  # use a cut-off of 0.02 A^2 to determine possible pair and then use atom type as the final filter
+  if not_taken1 or not_taken2 :
+    objdict1 = _make_dict(not_taken1,tem1,pdb1.residues[1])
+    objdict2 = _make_dict(not_taken2,tem2,pdb2.residues[1])
+    found = {}
+    for atom1 in not_taken1 :
+      if objdict1[atom1]["pdb"] is None : continue
+      for atom2 in not_taken2 :
+        if objdict2[atom2]["pdb"] is None : continue
+        dist2 = objdict1[atom1]["pdb"].coords-objdict2[atom2]["pdb"].coords
+        dist2 = np.sum(dist2*dist2)
+        type1 = objdict1[atom1]["tem"].param0.params[0] # The atom type is the 0:th parameter of a clj parameter
+        type2 = objdict2[atom2]["tem"].param0.params[0]
+        if dist2 < 0.02 and type1 == type2 :
+          found[atom1] = atom2
+          break
+    logger.info("Distance/atom type maps:\n%s\n"%" ".join("%s-%s"%(atom1,found[atom1]) for atom1 in sorted(found.keys())))
+    for atom1 in found :
+      atom2 = found[atom1] 
+      not_taken1.remove(atom1)
+      not_taken2.remove(atom2)
+      cmap[atom1] = atom2
 
 def _make_ele_tem(tem1,tem2,cmap) :
   """

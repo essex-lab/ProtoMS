@@ -1,4 +1,4 @@
-      subroutine writeRestart
+      subroutine writeRestart(nummove,final)
       include 'dimensions.inc'
       include 'printer.inc'
       include 'proteins.inc'
@@ -19,9 +19,11 @@ c########################################################
 
       integer i,j,k,ires,iat
       integer isvn,igcs
+      integer nummove
       character*4 inam
       character*4 iresnam
       double precision savenrg,inrgb,inrgf,ienew,totalEnergy
+      logical final
 c     The restart file is just a list of all proteins,
 c     then solutes, then solvent coordinates. The aim
 c     still is that the next simulation loads up the same
@@ -36,6 +38,10 @@ c      PRINT*, "GCSCavity-nwrite",GCSCavity
 c      write(printstring,10) "Simulation B factor" ,B
 c      call printLine(DETAIL,printstring)
 c     now write out the number of proteins,solutes,solvents
+      write(printstring,"(a11,L8)") "COMPLETED=", final
+      call printLine(RESTART,printstring)
+      write(printstring,13) "NMOVES=", nummove
+      call printLine(RESTART,printstring)
       write(printstring,10) "NPROTEINS= ",NProteins
       call printLine(RESTART,printstring)
       write(printstring,10) "NSOLUTES= ",NSolutes
@@ -46,7 +52,8 @@ c     now write out the number of proteins,solutes,solvents
       call printLine(RESTART,printstring)
  
 10    format(a11,i8)
-
+13    format(a11,i16)
+      
        write(printstring,91) GCSCavity
        call printLine(RESTART,printstring)
 91     format('GCSCavity= ',i8)

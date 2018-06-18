@@ -9,6 +9,9 @@
       include 'enums.inc'
       include 'stacks.inc'
       include 'pressure.inc'
+      include 'splitter.inc'
+      include 'moves.inc'
+      include 'parameters.inc'
 c######################################################
 c
 c     This subroutine reads the restart information
@@ -23,11 +26,12 @@ c######################################################
       integer FILE,itmp,i,j,inats,ires,iat,ires2,gcs
       double precision ix,iy,iz,theta
       character*(*) restartfile
-      character*300 tmpnam,tmpstr
+      character*300 tmpnam,tmpstr,line
       integer lineLength,lgth,lgth2
       character*4 inam,inam2
       character*4 iresnam,iresnam2
-      logical allok
+      logical allok, getLogical
+      integer getInt
       parameter(FILE=40)
 
       lgth = lineLength(restartfile)
@@ -43,11 +47,49 @@ c     can only open this restart file for reading if it is not already open for 
      .          err=9600)
      
       rewind(FILE)
+
+      allok = .true.
+      nwords = 0
+c     first line may contain NProteins= or Completed=
+c     need slightly more sophisticated text parsing for this
+      read(FILE,"(a300)",err=9700,end=9900) line
+      call split(line)
+      call lowercase(words(1))
+      if (words(1)(1:10).eq."completed=") then
+         completed = getLogical(words(2),.true.)
+         read(FILE,"(11x,i16)",err=9700,end=9900) itmp
+         if (.not.completed) then
+c     restarting a simulation that did not finish previously
+c     adjust starting point of simulation and print details to INFO            
+            startstep = itmp
+            write(printstring,*) "Restarting simulation that did not complete previously."
+            call printLine(INFO,printstring)
+            write(printstring,*) "Equilibration will not be performed and simulation step",
+     .           " count will begin at ", startstep
+            call printLine(INFO,printstring)
+
+c     don't want to resuse the same random seed from the start as with 
+c     frequent restarts this could lead to artifacts
+c     update the random seed based on the new starting step so its reproducible
+            ranseed = ranseed + startstep
+            if (ranseed.lt.0) ranseed = -ranseed
+            if (mod(ranseed,2).eq.0) ranseed = ranseed - 1
+            if (ranseed.lt.100000) ranseed = ranseed+110000
+            write(printstring,"(a, i12)") "Random number seed updated based on restart file to ", ranseed
+            call prettyLine(INFO,printstring)
+            call sgrnd(ranseed)
+         endif
+      else
+c     assume it must have been an NProteins line, grab the integer
+c     value and move on to the next bit of logic.
+         itmp = getInt(words(2),-1)
+         goto 1000
+      endif
+
       
 c     read the number of proteins
-      allok = .true.
       read(FILE,10,ERR=9700,END=9900) itmp
-      if (itmp.ne.NProteins) then
+ 1000 if (itmp.ne.NProteins) then
         write(printstring,*) "The restart file contains the wrong number ",
      .         "of proteins! - ",itmp," vs. ",NProteins
         call printLine(FATAL,printstring)

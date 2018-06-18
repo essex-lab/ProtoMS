@@ -404,9 +404,9 @@ c     lj
           enddo
 
           write(printstring,20) 'LJ ',AllAvgGCSSvnLJ,sqrt(var),AllAvgGCSSvnLJF,sqrt(varf),
-     .         AllAvgGCSSvnCB,sqrt(varb)
+     .         AllAvgGCSSvnLJB,sqrt(varb)
           call printLine(RESULTS,printstring)
-          write(printstring,21) AllAvgGCSSvnCF-AllAvgGCSSvnC,AllAvgGCSSvnCB-AllAvgGCSSvnC
+          write(printstring,21) AllAvgGCSSvnLJF-AllAvgGCSSvnLJ,AllAvgGCSSvnLJB-AllAvgGCSSvnLJ
           call printLine(RESULTS,printstring)
           
 c$$$c     lj

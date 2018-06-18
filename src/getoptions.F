@@ -17,6 +17,7 @@
       include 'keyset.inc'
       include 'parallel.inc'
       include 'stacks.inc'
+      include 'templates.inc'
 c#######################################################
 c     
 c     This subroutine gets the values of most of the
@@ -710,14 +711,60 @@ c     A softcore is applied if either atom is part of a softcore residue
          endif
          call lowercase(words(1))
          if (words(1) .eq. 'solute') then
+
             if (imol .eq. -1) then
+               if (nwords .gt. 3) then
+                  call printLine(Warning,"cannot set individual softcore atoms for multiple solutes")
+               endif
                do j=1,NSolutes
                   SoluteSoftCore(j) = .true.
+                  do k=1,NSolAtoms(j)
+                     SoluteAtomSoftCore(imol,j) = .true.
+                  enddo
                enddo
+               call printLine(INFO,'Turning softcore on for all atoms of all solutes')
             else
                SoluteSoftCore(imol) = .true.
+               if (nwords .gt. 3) then
+                  write(printstring,'(a,i4,a)') 'Turning softcore on for atoms of solute', imol, ' listed below'
+                  call printLine(INFO,printstring)
+                  do j=4,nwords
+                     SoluteAtomSoftCore(imol,getInt(words(j),0)) = .true.
+                     write(printstring,'(a)') SolAtomNam(imol,getInt(words(j),0))
+                     call printLine(INFO,printstring)
+                  enddo
+               else
+                  do j=1,NsolAtoms(imol)
+                     SoluteAtomSoftCore(imol,j) = .true.
+                  enddo
+                  write(printstring,*) 'Turning softcore on for all atoms of solute', imol
+                  call printLine(INFO,printstring)
+               endif
             endif
-            write(printstring,"(2a)") 'Turning softcore on for Solute ',words(2)  
+c$$$c           if there are more words these specify atom numbers
+c$$$            if (nwords .gt. 2) then
+c$$$c           check for presence of 'atoms' tag
+c$$$               if (nwords(3) .eq. 'atoms') then
+c$$$                  if (imol .eq. -1) then
+c$$$                     call printLine(Warning,"cannot set individual softcore atoms for multiple solutes")
+c$$$                  else
+c$$$                     SoluteSoftCore(imol) = .true.
+c$$$c                    loop over the rest of the words
+c$$$                     do j=4,nwords
+c$$$                        SoluteAtomSoftCore(imol,j) = .true.
+c$$$                     enddo
+c$$$                  endif
+c$$$               endif
+c$$$            else
+c$$$            endif
+c$$$            if (imol .eq. -1) then
+c$$$               do j=1,NSolutes
+c$$$                  SoluteSoftCore(j) = .true.
+c$$$               enddo
+c$$$            else
+c$$$               SoluteSoftCore(imol) = .true.
+c$$$            endif
+c$$$            write(printstring,"(2a)") 'Turning softcore on for Solute ',words(2)  
          else if (words(1) .eq. 'gcsolute') then
             if (imol .eq. -1) then
                do j=1,NSolutes
@@ -739,7 +786,7 @@ c     A softcore is applied if either atom is part of a softcore residue
             goto 210
          endif
 
-         call printLine(INFO,printstring)
+c$$$         call printLine(INFO,printstring)
          goto 210
       endif
 c     end of do-while loop

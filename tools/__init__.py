@@ -21,4 +21,3 @@ from make_gcmcbox import make_gcmcbox
 from split_jawswater import split_waters,set_jaws2_box
 from divide_pdb import divide_print
 from distribute_waters import distribute_particles
-from calc_ti import ti

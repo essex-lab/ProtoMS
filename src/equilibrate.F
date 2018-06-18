@@ -2,6 +2,7 @@
       include 'dimensions.inc'
       include 'enums.inc'
       include 'printer.inc'
+      include 'moves.inc'
 c###########################################################
 c
 c     This routine performs the equilibration of the 
@@ -24,6 +25,13 @@ c###########################################################
 c     return if there are no configurations
       if (nconfig.le.0) return
 
+c     do not carry out equilibration if restarting
+      if (completed.eqv..false.) then
+         write(printstring,*) "Skipping equilibration chunk as this is a restarted simulation."
+         call printLine(INFO,printstring)
+         return
+      endif 
+      
 c     check that the initial total energy has been calculated
       call checkGotTotal
       

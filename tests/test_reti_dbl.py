@@ -22,7 +22,7 @@ class RetiDblSetupTest(framework.BaseTest):
         "--ranseed", "100000",
         "--dumpfreq", "1",
         "--cleanup",
-        "--gaff", "gaff14"
+        "--gaff", "gaff14",
     ]
 
     output_files = [
@@ -61,12 +61,12 @@ class RetiDblSimulationTest(framework.BaseTest):
     output_files = [
         "accept",
         "all.pdb",
-        "info",
         "restart",
         "restart.prev",
         "results",
         "results_inst",
-        "warning"
+        "warning",
+        "info"
     ]
 
 

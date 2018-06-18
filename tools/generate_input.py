@@ -27,7 +27,8 @@ import numpy as np
 
 import random
 
-import simulationobjects
+import simulationobjects as sim
+import make_single
 
 logger = logging.getLogger('protoms')
 
@@ -66,13 +67,13 @@ def _assignMoveProbabilities(protein,solute,solvent,moveset,isperiodic) :
   addto = 1000.0					# Move proportion add up to this number. This is just for clarity.
 
   if protein is not None:
-    protobj = simulationobjects.PDBFile(filename=protein)
+    protobj = sim.PDBFile(filename=protein)
     numprot = float(len(protobj.residues))*accel_prot
   if solute is not None:
-    soluobj =  simulationobjects.PDBFile(filename=solute[0])
+    soluobj =  sim.PDBFile(filename=solute[0])
     numsolu = float(len(soluobj.residues))*accel_solu
   if solvent is not None:
-    solvobj =  simulationobjects.PDBFile(filename=solvent)
+    solvobj =  sim.PDBFile(filename=solvent)
     numsolv = float(len(solvobj.solvents))
   
   numtot = numprot + numsolu + numsolv
@@ -495,7 +496,9 @@ class DualTopology(ProteinLigandSimulation) :
                     ranseed=None,
                     lambdaval=None,
                     outfolder="out",
-                    restrained=[]) :  
+                    restrained=[],
+                    softcore='mixed',
+                    spec_softcore='') :  
     """
     Parameters
     ----------
@@ -519,6 +522,13 @@ class DualTopology(ProteinLigandSimulation) :
       the folder for all output files
     restrained : string, optional
       the solutes on which restrains should be applied
+    sofcore : string, optional
+      determine which atoms to apply softcore potentials to
+      can have value of 'all', 'none', 'mixed'
+      'all' - softcores applied to all atoms of both solutes
+      'none' - softcores not applied to any atoms
+      'mixed' - softcores will be applied only to non matching 
+                atoms within ligand structures
     
     Raises
     ------
@@ -529,16 +539,39 @@ class DualTopology(ProteinLigandSimulation) :
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
 
     if len(solutes) < 2 and restrained is [] :
-      raise simulationobjects.SetupError("Cannot do dual topology with less than 2 solutes")
+      raise sim.SetupError("Cannot do dual topology with less than 2 solutes")
       
     if lambdaval is None or len(lambdaval) < 2 :
-      raise simulationobjects.SetupError("Must give at least two lambda values")
+      raise sim.SetupError("Must give at least two lambda values")
+
+    if softcore not in ("all", "none", "auto", "manual"):
+      raise sim.SetupError(
+        "Softcore argument must be one of 'all', 'none', 'auto' or 'manual'")
+
+    if softcore in ('all', 'none') and spec_softcore is not None:
+      logger.warning(
+        "Softcore argument is %s, ignoring value of spec_softcore" % softcore)
+
+    if softcore == "manual" and spec_softcore == "auto":
+      raise sim.SetupError("Cannot use special value 'auto' for spec_softcore")
 
     self.setParameter("printfe","mbar")
     self.setParameter("dualtopology1","1 2 synctrans syncrot")
-    self.setParameter("softcore1","solute 1")
-    self.setParameter("softcore2","solute 2")
-    self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6 soft66")
+
+    if softcore != 'none':
+      if softcore in ('auto', 'manual'):
+        # softcore_options1 += " atoms "
+        # softcore_options2 += " atoms "
+        softcore_options1, softcore_options2 = \
+          self.make_softcore(softcore, spec_softcore, templates, solutes)
+      else:
+        softcore_options1, softcore_options2 = "solute 1", "solute 2"
+        logger.info("Applying softcore potentials to solute: 1, atoms: all")
+        logger.info("Applying softcore potentials to solute: 2, atoms: all")
+
+      self.setParameter("softcore1", softcore_options1)
+      self.setParameter("softcore2", softcore_options2)
+      self.setParameter("softcoreparams","coul 1 delta 0.2 deltacoul 2.0 power 6 soft66")
     self.setParameter("dlambda","0.001")
     self.setParameter("lambdare","%d %s"%(2*dumpfreq," ".join("%.3f"%l for l in lambdaval)))
 
@@ -550,9 +583,9 @@ class DualTopology(ProteinLigandSimulation) :
 
     if protein is not None :
       for restsol in restrained :
-        pdbobj = simulationobjects.PDBFile(filename=solutes[restsol])
+        pdbobj = sim.PDBFile(filename=solutes[restsol])
         for ind,tem in enumerate(templates) :
-          temobj = simulationobjects.TemplateFile(filename=templates[ind])
+          temobj = sim.TemplateFile(filename=templates[ind])
           for mol_template in temobj.templates :
             if mol_template.name in pdbobj.header :
               resname = pdbobj.residues[1].name
@@ -565,6 +598,135 @@ class DualTopology(ProteinLigandSimulation) :
     moves = _assignMoveProbabilities(protein,solutes,solvent,"standard",self.periodic)
     self.setChunk("equilibrate %d %s"%(nequil,moves))        
     self.setChunk("simulate %d %s"%(nprod,moves))
+
+
+  def _process_spec_softcore(self, not_softcore_atoms1, not_softcore_atoms2, spec_softcore):
+      if spec_softcore is not None:
+          for block in spec_softcore.split(' '):
+              try:
+                lig_no, at_list = block.split(":")
+              except ValueError:
+                raise sim.SetupError(
+                  'Unable to parse spec_softcore argument.')
+              if lig_no == '1':
+                  not_softcore = not_softcore_atoms1
+              elif lig_no == '2':
+                  not_softcore = not_softcore_atoms2
+              else:
+                  raise ValueError(
+                    'Invalid ligand number in softcore specification')
+              for at in at_list.split(','):
+                  if at.startswith('-'):
+                      not_softcore.append(at[1:])
+                  else:
+                      try:
+                          not_softcore.remove(at)
+                      except ValueError:
+                          raise sim.SetupError(
+                            'Atom "%s" in softcore specification not found' % at)
+
+  def make_softcore(self, softcore, spec_softcore, templates, solutes):
+    softcore_options1, softcore_options2 = "solute 1", "solute 2"
+    cmap = {}
+    tem_file = sim.TemplateFile(filename=templates[0])
+    pdb1 = sim.PDBFile(filename=solutes[0])
+    pdb2 = sim.PDBFile(filename=solutes[1])
+    tem1 = tem_file.templates[0]
+    tem2 = tem_file.templates[1]
+    if softcore == 'auto':
+      make_single._auto_map(tem1, tem2, pdb1, pdb2, cmap)
+      lig1_not_softcore = list(cmap.keys())
+      lig2_not_softcore = list(cmap.values())
+    else:
+      lig1_not_softcore = [at.name for at in tem1.atoms]
+      lig2_not_softcore = [at.name for at in tem2.atoms]
+
+    if spec_softcore is not None:
+      if spec_softcore != 'auto' or softcore == 'manual':
+        self._process_spec_softcore(lig1_not_softcore, lig2_not_softcore,
+                                    spec_softcore)
+    else:
+      # Print out useful information
+      logger.info("")
+      logger.info("Current softcore atoms of ligand 1: %s" %
+                  " ".join([at.name for at in tem1.atoms
+                            if at.name not in lig1_not_softcore]))
+      logger.info("Current softcore atoms of ligand 2: %s" %
+                  " ".join([at.name for at in tem2.atoms
+                            if at.name not in lig2_not_softcore]))
+
+      atom_names1 = [at.name for at in tem1.atoms]
+      atom_names2 = [at.name for at in tem2.atoms]
+      res1 = list(pdb1.residues.values())[0]
+      res2 = list(pdb2.residues.values())[0]
+      lig1_dict = make_single._make_dict(atom_names1, tem1, res1)
+      lig2_dict = make_single._make_dict(atom_names2, tem2, res2)
+      logger.info("")
+      logger.info("Atom-atom distances between ligands 1 and 2 (A): ")
+      logger.info("%8s%s"%("","".join("%8s"%atom for atom in atom_names1)))
+      for atom2 in atom_names2 :
+        outstr = "%8s"%atom2
+        for atom1 in atom_names1 :
+          dist = np.linalg.norm(lig1_dict[atom1]["pdb"].coords -
+                                lig2_dict[atom2]["pdb"].coords)
+          outstr = outstr +  "%8.3f"%dist
+        logger.info(outstr)
+      logger.info("")
+
+      if softcore == 'auto':
+        logger.info("Automatic detection was used to create the above lists "
+                    "of softcore atoms. These selections may now be manually "
+                    "admended.\n")
+      else:
+        logger.info("Please specify softcore atoms.")
+      spec1 = self.spec_string_from_user_input('1')
+      spec2 = self.spec_string_from_user_input('2')
+      if spec1 and spec2:
+        full_spec = spec1 + " " + spec2
+      else:
+        full_spec = spec1 or spec2
+
+      if full_spec:
+        self._process_spec_softcore(lig1_not_softcore,
+                                    lig2_not_softcore,
+                                    full_spec)
+
+    atom_names = []
+    if len(set(lig1_not_softcore)) != tem1.atoms:
+      softcore_options1 += " atoms "
+    for i, atom in enumerate(tem1.atoms):
+      if atom.name not in lig1_not_softcore:
+        softcore_options1 += "%d " % (i+1)
+        atom_names.append(atom.name)
+    logger.info("Applying softcore potentials to solute: 1, atoms: " + ' '.join(atom_names))
+
+    atom_names = []
+    if len(set(lig2_not_softcore)) != tem2.atoms:
+      softcore_options2 += " atoms "
+    for i, atom in enumerate(tem2.atoms):
+      if atom.name not in lig2_not_softcore:
+        softcore_options2 += "%d " % (i+1)
+        atom_names.append(atom.name)
+    logger.info("Applying softcore potentials to solute: 2, atoms: " + ' '.join(atom_names))
+    return softcore_options1, softcore_options2
+
+  def spec_string_from_user_input(self, N):
+    logger.info("Please provide atom names to treat as softcore, one atom name"
+                " per line. Preceding an atom name with a '-' will remove it "
+                "from the current softcore selection. Enter a blank line when "
+                "completed.")
+    logger.info("Enter for ligand %s:" % N)
+    ats = []
+    while True:
+      instr = raw_input().strip().upper()
+      if not instr:
+        break
+      else:
+        ats.append(instr)
+    if len(ats) > 0:
+      return "%s:%s" % (N, ','.join(ats))
+    else:
+      return ""
 
 class SingleTopology(ProteinLigandSimulation) :
   """ 
@@ -618,7 +780,7 @@ class SingleTopology(ProteinLigandSimulation) :
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if lambdaval is None or len(lambdaval) < 2 :
-      raise simulationobjects.SetupError("Must give at least two lambda values")
+      raise sim.SetupError("Must give at least two lambda values")
 
     self.setParameter("printfe","mbar")
     self.setParameter("dlambda","0.001")
@@ -684,7 +846,7 @@ class RestraintRelease(ProteinLigandSimulation) :
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if lambdaval is None or len(lambdaval) < 2 :
-      raise simulationobjects.SetupError("Must give at least two lambda values")
+      raise sim.SetupError("Must give at least two lambda values")
 
     self.setParameter("printfe","mbar")
     self.setParameter("dlambda","0.001")
@@ -697,9 +859,9 @@ class RestraintRelease(ProteinLigandSimulation) :
     self.setDump("averages reset",dumpfreq)
     
     for restsol in restrained :
-      pdbobj = simulationobjects.PDBFile(filename=solutes[restsol])
+      pdbobj = sim.PDBFile(filename=solutes[restsol])
       for ind,tem in enumerate(templates) :
-        temobj = simulationobjects.TemplateFile(filename=templates[ind])
+        temobj = sim.TemplateFile(filename=templates[ind])
         for mol_template in temobj.templates :
           if mol_template.name in pdbobj.header :
             resname = pdbobj.residues[1].name
@@ -720,13 +882,13 @@ class RestraintRelease(ProteinLigandSimulation) :
 
 def _setbox(simulation,waters,inbox) :
 
-  waters = simulationobjects.PDBFile(filename=waters)
-  headerbox = simulationobjects.find_box(waters)
+  waters = sim.PDBFile(filename=waters)
+  headerbox = sim.find_box(waters)
       
   if headerbox is None :
     if inbox is None :
-      raise simulationobjects.SetupError("Cannot setup simulation without a box")
-    pdbobj = simulationobjects.PDBFile(filename=inbox) 
+      raise sim.SetupError("Cannot setup simulation without a box")
+    pdbobj = sim.PDBFile(filename=inbox) 
     outbox = pdbobj.getBox()    
   else :
     outbox = headerbox
@@ -799,13 +961,13 @@ class GCMC(ProteinLigandSimulation) :
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if adamval is None :
-      raise simulationobjects.SetupError("Must give at least one Adam value")
+      raise sim.SetupError("Must give at least one Adam value")
 
     if protein is None :
-      raise simulationobjects.SetupError("Cannot setup GCMC without protein")
+      raise sim.SetupError("Cannot setup GCMC without protein")
 
     if gcmcwater is None  :
-      raise simulationobjects.SetupError("Cannot setup GCMC without any GCMC water")
+      raise sim.SetupError("Cannot setup GCMC without any GCMC water")
  
     self.setParameter("#"," GCMC specific parameters")
     self.setParameter("gcmc","0")
@@ -890,10 +1052,10 @@ class Jaws1(ProteinLigandSimulation) :
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if protein is None :
-      raise simulationobjects.SetupError("Cannot setup GCMC without protein")
+      raise sim.SetupError("Cannot setup GCMC without protein")
 
     if jawswater is None  :
-      raise simulationobjects.SetupError("Cannot setup JAWS-1 without any JAWS water")
+      raise sim.SetupError("Cannot setup JAWS-1 without any JAWS water")
  
     self.setParameter("#"," JAWS-1 specific parameters")
     self.setParameter("jaws1","0")
@@ -970,10 +1132,10 @@ class Jaws2(ProteinLigandSimulation) :
     ProteinLigandSimulation.__init__(self,protein=protein,solutes=solutes,solvent=solvent,templates=templates,outfolder=outfolder,ranseed=ranseed)
      
     if protein is None :
-      raise simulationobjects.SetupError("Cannot setup GCMC without protein")
+      raise sim.SetupError("Cannot setup GCMC without protein")
 
     if jawswater is None  :
-      raise simulationobjects.SetupError("Cannot setup JAWS-2 without any JAWS water")
+      raise sim.SetupError("Cannot setup JAWS-2 without any JAWS water")
  
     self.setParameter("#"," JAWS-2 specific parameters")
     self.setParameter("jaws2","1")
@@ -989,7 +1151,7 @@ class Jaws2(ProteinLigandSimulation) :
       self.setForceField(os.path.join("$PROTOMSHOME","data","gcmc_tip3p.tem"))
     self.setSolvent(2,jawssolvent)
     self.setParameter("grand1",jawswater)
-    watobj = simulationobjects.PDBFile(filename=jawswater)
+    watobj = sim.PDBFile(filename=jawswater)
     ocoord = watobj.residues[1].atoms[0].coords
     for i,param in enumerate(["x","y","z"]) :
       self.setParameter("origin"+param,ocoord[i]-1.5)
@@ -1107,7 +1269,12 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
   elif settings.simulation in ["dualtopology","singletopology"] :
   
     cmdcls = {"dualtopology":DualTopology,"singletopology":SingleTopology}
-   
+    extra_kwargs = {}
+    if settings.simulation == "dualtopology":
+      extra_kwargs.update({'softcore': settings.softcore,
+                          'spec_softcore': settings.spec_softcore})
+      
+      
     if ligands is None :
       raise tools.SetupError("No ligands loaded, cannot do dual-topology simulations.")
 
@@ -1118,7 +1285,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
       lambdavals = settings.lambdas
       nlambdas = len(lambdavals)
     logger.info("")
-    logger.info("Will simulate with %s lambda values"%nlambdas)
+    logger.info("Will simulate with %s lambda values\n"%nlambdas)
   
     if hasattr(settings,"outfolder") and settings.outfolder != "" :
       outfolder = settings.outfolder
@@ -1134,7 +1301,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
       gas_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                               templates=templates,solvent=None,
                               lambdaval=lambdavals,nequil=settings.nequil,ranseed=ranseed,
-                              nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_gas",restrained=rest_solutes)
+                                            nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_gas")
     elif settings.simulation == "dualtopology" and settings.absolute:
       #make use of the unused gas_cmd to produce a cmd file to calculate the effect of introducing a harmonic restraint
       gas_cmd = RestraintRelease(protein=protein,solutes=ligands[:1],templates=templates[:1],solvent=protein_water,
@@ -1144,13 +1311,13 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
     free_cmd = cmdcls[settings.simulation](protein=None,solutes=ligands[:min(len(ligands),2)], 
                             templates=templates,solvent=ligand_water,
                             lambdaval=lambdavals,nequil=settings.nequil,ranseed=ranseed,
-                            nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_free",restrained=rest_solutes)
+                            nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_free",restrained=rest_solutes,**extra_kwargs)
       
     if protein is not None :
       bnd_cmd = cmdcls[settings.simulation](protein=protein,solutes=ligands, 
                              templates=templates,solvent=protein_water,
                              lambdaval=lambdavals,nequil=settings.nequil,ranseed=ranseed,
-                             nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_bnd",restrained=rest_solutes)
+                             nprod=settings.nprod,dumpfreq=settings.dumpfreq,outfolder=outfolder+"_bnd",restrained=rest_solutes,**extra_kwargs)
 
   elif settings.simulation == "gcmc" :
   
@@ -1164,7 +1331,7 @@ def generate_input(protein,ligands,templates,protein_water,ligand_water,ranseed,
         if len(settings.adamsrange) not in ( 2, 3 ):
           msg = "If using --adamsrange, please specify exactly two Adams values and optionally the number of desired values "
           logger.error(msg)
-          raise simulationobjects.SetupError(msg)
+          raise sim.SetupError(msg)
         else:
           adams1 = settings.adamsrange[0]
           adams2 = settings.adamsrange[1]
@@ -1231,6 +1398,26 @@ def get_arg_parser():
   parser.add_argument('--absolute',action='store_true',help="whether an absolute free energy calculation is to be run. Default=False",default=False)
   parser.add_argument('--ranseed',help="the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None",default=None)
   parser.add_argument('--tune',action='store_true',help=argparse.SUPPRESS,default=False)
+  parser.add_argument(
+    '--softcore', type=str, default='all',
+    choices=('auto', 'all', 'none', 'manual'),
+    help="determine which atoms to apply softcore potentials to. If 'all' "
+         "softcores are applied to all atoms of both solutes. If 'none' "
+         "softcores are not applied to any atoms. If 'auto', softcores are "
+         "applied to atoms based on matching coordinates between ligand "
+         "structures. The selected softcore atoms can be amended using the "
+         "--spec-softcore flag. If 'manual' only those atoms specified by "
+         "the --spec-softcore flag are softcore.")
+  parser.add_argument(
+    '--spec-softcore', type=str,
+    help='Specify atoms to add or remove from softcore selections. Can be '
+         'up to two, space separated, strings of the form "N:AT1,AT2,-AT3". '
+         'N should be either "1" or "2" indicating the corresponding ligand. '
+         'The comma separated list of atom names are added to the softcore '
+         'selection. A preceding dash for an atom name specifies it should be'
+         ' removed from the softcore selection. The special value "auto" '
+         'indictates that automatic softcore assignments should be accepted '
+         'without amendment.')
   return parser
 
 if __name__ == "__main__":
@@ -1238,7 +1425,7 @@ if __name__ == "__main__":
   args = get_arg_parser().parse_args()
 
   # Setup the logger
-  logger = simulationobjects.setup_logger("generate_input_py.log")
+  logger = sim.setup_logger("generate_input_py.log")
   
   free_cmd,bnd_cmd,gas_cmd = generate_input(args.protein,args.ligands,args.templates,args.protwater,args.ligwater,args.ranseed,args) 
 
