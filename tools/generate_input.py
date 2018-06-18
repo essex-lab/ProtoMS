@@ -544,55 +544,28 @@ class DualTopology(ProteinLigandSimulation) :
     if lambdaval is None or len(lambdaval) < 2 :
       raise sim.SetupError("Must give at least two lambda values")
 
-    if softcore not in ('all', 'none', 'auto', 'manual'):
+    if softcore not in ("all", "none", "auto", "manual"):
       raise sim.SetupError(
-        "softcore argument must be one of 'all', 'none', 'auto' or 'manual'")
+        "Softcore argument must be one of 'all', 'none', 'auto' or 'manual'")
 
     if softcore in ('all', 'none') and spec_softcore is not None:
       logger.warning(
         "Softcore argument is %s, ignoring value of spec_softcore" % softcore)
 
-    if softcore == 'manual' and spec_softcore is None:
-      raise sim.SetupError(
-        "Softcore argument is 'manual' but no spec_softcore supplied.")
+    if softcore == "manual" and spec_softcore == "auto":
+      raise sim.SetupError("Cannot use special value 'auto' for spec_softcore")
 
     self.setParameter("printfe","mbar")
     self.setParameter("dualtopology1","1 2 synctrans syncrot")
 
     if softcore != 'none':
-      softcore_options1, softcore_options2 = "solute 1", "solute 2"
       if softcore in ('auto', 'manual'):
-        softcore_options1 += " atoms "
-        softcore_options2 += " atoms "
-
-        cmap = {}
-        tem_file = sim.TemplateFile(filename=templates[0])
-        if softcore == 'auto':
-          make_single._auto_map(tem_file.templates[0], tem_file.templates[1],
-                                sim.PDBFile(filename=solutes[0]),
-                                sim.PDBFile(filename=solutes[1]),
-                                cmap)
-          lig1_not_softcore = list(cmap.keys())
-          lig2_not_softcore = list(cmap.values())
-        else:
-          lig1_not_softcore = [at.name for at in tem_file.templates[0].atoms]
-          lig2_not_softcore = [at.name for at in tem_file.templates[1].atoms]
-
-        self._process_spec_softcore(lig1_not_softcore, lig2_not_softcore, spec_softcore)
-        atom_names = []
-        for i, atom in enumerate(tem_file.templates[0].atoms):
-          if atom.name not in lig1_not_softcore:
-            softcore_options1 += "%d " % (i+1)
-            atom_names.append(atom.name)
-        logger.info("Applying softcore potentials to solute: 1, atoms: " + ' '.join(atom_names))
-
-        atom_names = []
-        for i, atom in enumerate(tem_file.templates[1].atoms):
-          if atom.name not in lig2_not_softcore:
-            softcore_options2 += "%d " % (i+1)
-            atom_names.append(atom.name)
-        logger.info("Applying softcore potentials to solute: 2, atoms: " + ' '.join(atom_names))
+        # softcore_options1 += " atoms "
+        # softcore_options2 += " atoms "
+        softcore_options1, softcore_options2 = \
+          self.make_softcore(softcore, spec_softcore, templates, solutes)
       else:
+        softcore_options1, softcore_options2 = "solute 1", "solute 2"
         logger.info("Applying softcore potentials to solute: 1, atoms: all")
         logger.info("Applying softcore potentials to solute: 2, atoms: all")
 
@@ -629,10 +602,12 @@ class DualTopology(ProteinLigandSimulation) :
 
   def _process_spec_softcore(self, not_softcore_atoms1, not_softcore_atoms2, spec_softcore):
       if spec_softcore is not None:
-          print(spec_softcore)
           for block in spec_softcore.split(' '):
-              print(block)
-              lig_no, at_list = block.split(":")
+              try:
+                lig_no, at_list = block.split(":")
+              except ValueError:
+                raise sim.SetupError(
+                  'Unable to parse spec_softcore argument.')
               if lig_no == '1':
                   not_softcore = not_softcore_atoms1
               elif lig_no == '2':
@@ -647,11 +622,111 @@ class DualTopology(ProteinLigandSimulation) :
                       try:
                           not_softcore.remove(at)
                       except ValueError:
-                          raise ValueError(
+                          raise sim.SetupError(
                             'Atom "%s" in softcore specification not found' % at)
 
-    
+  def make_softcore(self, softcore, spec_softcore, templates, solutes):
+    softcore_options1, softcore_options2 = "solute 1", "solute 2"
+    cmap = {}
+    tem_file = sim.TemplateFile(filename=templates[0])
+    pdb1 = sim.PDBFile(filename=solutes[0])
+    pdb2 = sim.PDBFile(filename=solutes[1])
+    tem1 = tem_file.templates[0]
+    tem2 = tem_file.templates[1]
+    if softcore == 'auto':
+      make_single._auto_map(tem1, tem2, pdb1, pdb2, cmap)
+      lig1_not_softcore = list(cmap.keys())
+      lig2_not_softcore = list(cmap.values())
+    else:
+      lig1_not_softcore = [at.name for at in tem1.atoms]
+      lig2_not_softcore = [at.name for at in tem2.atoms]
 
+    if spec_softcore is not None:
+      if spec_softcore != 'auto' or softcore == 'manual':
+        self._process_spec_softcore(lig1_not_softcore, lig2_not_softcore,
+                                    spec_softcore)
+    else:
+      # Print out useful information
+      logger.info("")
+      logger.info("Current softcore atoms of ligand 1: %s" %
+                  " ".join([at.name for at in tem1.atoms
+                            if at.name not in lig1_not_softcore]))
+      logger.info("Current softcore atoms of ligand 2: %s" %
+                  " ".join([at.name for at in tem2.atoms
+                            if at.name not in lig2_not_softcore]))
+
+      atom_names1 = [at.name for at in tem1.atoms]
+      atom_names2 = [at.name for at in tem2.atoms]
+      res1 = list(pdb1.residues.values())[0]
+      res2 = list(pdb2.residues.values())[0]
+      lig1_dict = make_single._make_dict(atom_names1, tem1, res1)
+      lig2_dict = make_single._make_dict(atom_names2, tem2, res2)
+      logger.info("")
+      logger.info("Atom-atom distances between ligands 1 and 2 (A): ")
+      logger.info("%8s%s"%("","".join("%8s"%atom for atom in atom_names1)))
+      for atom2 in atom_names2 :
+        outstr = "%8s"%atom2
+        for atom1 in atom_names1 :
+          dist = np.linalg.norm(lig1_dict[atom1]["pdb"].coords -
+                                lig2_dict[atom2]["pdb"].coords)
+          outstr = outstr +  "%8.3f"%dist
+        logger.info(outstr)
+      logger.info("")
+
+      if softcore == 'auto':
+        logger.info("Automatic detection was used to create the above lists "
+                    "of softcore atoms. These selections may now be manually "
+                    "admended.\n")
+      else:
+        logger.info("Please specify softcore atoms.")
+      spec1 = self.spec_string_from_user_input('1')
+      spec2 = self.spec_string_from_user_input('2')
+      if spec1 and spec2:
+        full_spec = spec1 + " " + spec2
+      else:
+        full_spec = spec1 or spec2
+
+      if full_spec:
+        self._process_spec_softcore(lig1_not_softcore,
+                                    lig2_not_softcore,
+                                    full_spec)
+
+    atom_names = []
+    if len(set(lig1_not_softcore)) != tem1.atoms:
+      softcore_options1 += " atoms "
+    for i, atom in enumerate(tem1.atoms):
+      if atom.name not in lig1_not_softcore:
+        softcore_options1 += "%d " % (i+1)
+        atom_names.append(atom.name)
+    logger.info("Applying softcore potentials to solute: 1, atoms: " + ' '.join(atom_names))
+
+    atom_names = []
+    if len(set(lig2_not_softcore)) != tem2.atoms:
+      softcore_options2 += " atoms "
+    for i, atom in enumerate(tem2.atoms):
+      if atom.name not in lig2_not_softcore:
+        softcore_options2 += "%d " % (i+1)
+        atom_names.append(atom.name)
+    logger.info("Applying softcore potentials to solute: 2, atoms: " + ' '.join(atom_names))
+    return softcore_options1, softcore_options2
+
+  def spec_string_from_user_input(self, N):
+    logger.info("Please provide atom names to treat as softcore, one atom name"
+                " per line. Preceding an atom name with a '-' will remove it "
+                "from the current softcore selection. Enter a blank line when "
+                "completed.")
+    logger.info("Enter for ligand %s:" % N)
+    ats = []
+    while True:
+      instr = raw_input().strip().upper()
+      if not instr:
+        break
+      else:
+        ats.append(instr)
+    if len(ats) > 0:
+      return "%s:%s" % (N, ','.join(ats))
+    else:
+      return ""
 
 class SingleTopology(ProteinLigandSimulation) :
   """ 
@@ -1340,7 +1415,9 @@ def get_arg_parser():
          'N should be either "1" or "2" indicating the corresponding ligand. '
          'The comma separated list of atom names are added to the softcore '
          'selection. A preceding dash for an atom name specifies it should be'
-         ' removed from the softcore selection.')
+         ' removed from the softcore selection. The special value "auto" '
+         'indictates that automatic softcore assignments sholud be accepted '
+         'without amendment.')
   return parser
 
 if __name__ == "__main__":

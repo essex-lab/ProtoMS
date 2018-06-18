@@ -876,13 +876,21 @@ if __name__ == "__main__":
   simgroup.add_argument('--testrun',action='store_true',help="setup a short test run. Default=False",default=False)
   simgroup.add_argument('--cleanup',action='store_true',help="Clean up extra files. Default=False",default=False)
   simgroup.add_argument('--tune',action='store_true',help='Carry out dihedral tuning simulation',default=False)
-  simgroup.add_argument('--softcore', type=str, default='mixed', 
-                        choices=('mixed', 'all', 'none'),
+  simgroup.add_argument('--softcore', type=str, default='auto', 
+                        choices=('auto', 'all', 'none', 'manual'),
                         help="determine which atoms to apply softcore potentials to.\n "
                              "'all'=softcores applied to all atoms of both solutes, "
                              "'none'=softcores not applied to any atoms\n "
                              "'mixed'=softcores will be applied only to non matching "
                              "atoms within ligand structures")
+  parser.add_argument(
+    '--spec-softcore', type=str,
+    help='Specify atoms to add or remove from softcore selections. Can be '
+         'up to two, space separated, strings of the form "N:AT1,AT2,-AT3". '
+         'N should be either "1" or "2" indicating the corresponding ligand. '
+         'The comma separated list of atom names are added to the softcore '
+         'selection. A preceding dash for an atom name specifies it should be'
+         ' removed from the softcore selection.')
   args = parser.parse_args()
  
   print r"""
@@ -1069,7 +1077,6 @@ if __name__ == "__main__":
     args.outfolder = outfolder + repeat
     #setattr(args,"outfolder","out"+repeat)
     if not args.simulation in ["singletopology","jaws2"] or "_ele" in repeat :
-      
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems,water_file,ligand_water,ranseed,args)
     elif args.simulation == "singletopology" and "_vdw" in repeat :
       free_cmd,bnd_cmd,gas_cmd = tools.generate_input(protein_file,ligpdbs,ligtems2,water_file,ligand_water,ranseed,args)
