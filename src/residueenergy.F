@@ -229,11 +229,11 @@ c           this is the high solute
      .                icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,mindist,
      .                scl,sclf,sclb)
      
-          if (Solutesoftcore(i)) then
-            icnrg = icnrg * (scl)**CoulSoftPower
-            icnrgf = icnrgf * (sclf)**CoulSoftPower
-            icnrgb = icnrgb * (sclb)**CoulSoftPower
-          endif         
+c$$$          if (Solutesoftcore(i)) then
+c$$$            icnrg = icnrg * (scl)**CoulSoftPower
+c$$$            icnrgf = icnrgf * (sclf)**CoulSoftPower
+c$$$            icnrgb = icnrgb * (sclb)**CoulSoftPower
+c$$$          endif         
           
           residueEnergy = residueEnergy + scl*icnrg + scl * iljnrg
           cnrg = cnrg + icnrg*scl

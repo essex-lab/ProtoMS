@@ -63,11 +63,15 @@ c       4 in the line below stands for the lenght of 'dump'
         endif
       enddo
 
+#ifdef WITH_MPI_
+      call checksamestart
+#endif
+
       append = .TRUE.
 
       NAcceptedMoves = 0
       NTotalMoves = 0
-      do i=1,nconfig
+      do i=startstep+1,nconfig
         NTotalMoves = NTotalMoves + 1
 
 c       obtain the move type based on probabilities entered by the user
@@ -117,7 +121,7 @@ c       taking care of dumping with the right frequency
             call split(values(kdumps(j)))
             call join(2,nwords,tempstring)
             numb = int(i/fdumps(j))
-            call dump(tempstring,append,numb)
+            call dump(tempstring,append,numb,i,nconfig)
           endif
         enddo
 

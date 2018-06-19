@@ -178,7 +178,6 @@ c     the cut the interaction
       if (dist2 .gt. (cut+SolRadius(isol1)+SolRadius(isol2))**2) return
 
 c     Are we going to use a softcore ? 
-      if (SoluteSoftCore(isol1) .or. SoluteSoftCore(isol2)) softcore = .true.
       if (QuickMove .and. DDDon ) ddd = .true.
       funcisol1 = isol1
       funcisol2 = isol2
@@ -186,6 +185,12 @@ c     Are we going to use a softcore ?
         funcat1 = i
         do j=1,nat2
           funcat2 = j
+          if ((SoluteSoftCore(isol1).and.SoluteAtomSoftCore(isol1,i)).or.
+     .        (SoluteSoftCore(isol2).and.SoluteAtomSoftCore(isol2,j))) then
+             softcore = .true.
+          else
+             softcore = .false.
+          endif
           
 c         initialise the calculation
           include 'nbinitial.inc'
@@ -252,12 +257,12 @@ c     the energies are already scaled
         ljnrgf = ljnrgf * sclf
         cnrgb = cnrgb * sclb
         ljnrgb = ljnrgb * sclb
-c       If softcore, the coulombic if scaled further
-        if (Solutesoftcore(isol1) .or. SoluteSoftCore(isol2)) then
-          cnrg = cnrg * (scl)**CoulSoftPower
-          cnrgf = cnrgf * (sclf)**CoulSoftPower
-          cnrgb = cnrgb * (sclb)**CoulSoftPower
-        endif 
+c$$$c       If softcore, the coulombic if scaled further
+c$$$        if (Solutesoftcore(isol1) .or. SoluteSoftCore(isol2)) then
+c$$$          cnrg = cnrg * (scl)**CoulSoftPower
+c$$$          cnrgf = cnrgf * (sclf)**CoulSoftPower
+c$$$          cnrgb = cnrgb * (sclb)**CoulSoftPower
+c$$$        endif 
       endif    
       
       if (doREST) then

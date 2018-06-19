@@ -17,7 +17,7 @@ import six
 from protomslib import simulationobjects
 from protomslib.prepare import _get_prefix, _load_ligand_pdb, _prep_ligand
 from protomslib.prepare import _prep_gcmc, _prep_protein, _prep_singletopology
-from protomslib.prepare import _merge_templates, _prep_jaws2
+from protomslib.prepare import _merge_templates, _prep_jaws2, make_dummy
 from protomslib.command import generate_input
 from protomslib.utils import _cleanup
 
@@ -123,46 +123,31 @@ if __name__ == "__main__":
     parser = simulationobjects.MyArgumentParser(
         description="Program setup and run a ProtoMS simulations")
     parser.add_argument(
-        '-s',
-        '--simulation',
-        choices=[
-            "none", "equilibration", "sampling", "dualtopology",
-            "singletopology", "gcmc", "jaws1", "jaws2"
-        ],
-        help="the kind of simulation to setup",
-        default="none")
+        '-s', '--simulation', default="none",
+        choices=["none", "equilibration", "sampling", "dualtopology",
+                 "singletopology", "gcmc", "jaws1", "jaws2"],
+        help="the kind of simulation to setup")
     parser.add_argument(
-        '-f',
-        '--folders',
-        nargs="+",
-        help="folders to search for files ",
-        default=["."])
+        '-f', '--folders', nargs="+", default=["."],
+        help="folders to search for files ")
     parser.add_argument('-p', '--protein', help="the prefix of the protein")
     parser.add_argument(
         '-l', '--ligand', nargs="+", help="the prefix of the ligand(s)")
     parser.add_argument(
-        '-w',
-        '--water',
-        help="the prefix of the water/solvent",
-        default="water")
+        '-w', '--water', default="water",
+        help="the prefix of the water/solvent")
     parser.add_argument(
-        '-c',
-        '--cmdfile',
-        help="the prefix of the command file",
-        default="run")
+        '-c', '--cmdfile', default="run",
+        help="the prefix of the command file")
     parser.add_argument(
         '-sc', '--scoop', help="the name of your protein scoop")
     parser.add_argument(
-        '-t',
-        '--template',
-        nargs="+",
+        '-t', '--template', nargs="+",
         help="the template files for your ligands")
     parser.add_argument(
-        '-r',
-        '--repeats',
+        '-r', '--repeats', default="",
         help="the number of repeats to be run (if more than 1) or a name"
-        " for your repeat",
-        default="")
+             " for your repeat")
     # General control variables
     cntrlgroup = parser.add_argument_group("General control variables")
     cntrlgroup.add_argument(
@@ -170,52 +155,39 @@ if __name__ == "__main__":
     cntrlgroup.add_argument(
         '--atomnames', help="a file with atom name conversions")
     cntrlgroup.add_argument(
-        '--watmodel',
-        help="the name of the water model. Default = tip4p",
-        choices=['tip3p', 'tip4p'],
-        default='tip4p')
+        '--watmodel', choices=['tip3p', 'tip4p'], default='tip4p',
+        help="the name of the water model. Default = tip4p")
     cntrlgroup.add_argument(
         '--waterbox', help="a file with pre-equilibrated water molecules")
     cntrlgroup.add_argument(
-        '--setupseed',
-        help="optional seed for random number generators in setup",
-        default=None,
-        type=int)
+        '--setupseed', type=int, default=None,
+        help="optional seed for random number generators in setup")
     # Ligand setup variables
     liggroup = parser.add_argument_group("Ligand setup variables")
     liggroup.add_argument(
-        '--charge',
-        nargs="+",
-        type=float,
+        '--charge', nargs="+", type=float,
         help="the net charge of each ligand")
     liggroup.add_argument(
         '--singlemap', help="the correspondance map for single-topology")
     liggroup.add_argument(
-        '--gaff',
-        help="the version of GAFF to use for ligand",
-        default="gaff16")
+        '--gaff', default="gaff16",
+        help="the version of GAFF to use for ligand")
     # Protein setup variables
     protgroup = parser.add_argument_group("Protein setup variables")
     protgroup.add_argument(
-        '--center',
+        '--center', default=None,
         help="the center of the scoop, if ligand is not available, either "
-             " a string or a file with the coordinates",
-        default=None)
+             "a string or a file with the coordinates")
     protgroup.add_argument(
-        '--innercut',
-        type=float,
-        help="maximum distance from ligand defining inner region of the scoop",
-        default=16.0)
+        '--innercut', type=float, default=16.0,
+        help="maximum distance from ligand defining inner region of the scoop")
     protgroup.add_argument(
-        '--outercut',
-        type=float,
-        help="maximum distance from ligand defining outer region of the scoop",
-        default=20.0)
+        '--outercut', type=float, default=20.0,
+        help="maximum distance from ligand defining outer region of the scoop")
     protgroup.add_argument(
-        '--flexin',
+        '--flexin', default="flexible",
         choices=['sidechain', 'flexible', 'rigid'],
-        help="the flexibility of the inner region",
-        default="flexible")
+        help="the flexibility of the inner region")
     protgroup.add_argument(
         '--flexout',
         choices=['sidechain', 'flexible', 'rigid'],
@@ -227,10 +199,8 @@ if __name__ == "__main__":
              "and scoop for scoop to be retained",
         default=10)
     protgroup.add_argument(
-        '--capradius',
-        type=float,
-        help="the radius of the droplet around the protein",
-        default=30.0)
+        '--capradius', type=float, default=30.0,
+        help="the radius of the droplet around the protein")
     # Simulation parameters
     simgroup = parser.add_argument_group("Simulatiom parameters")
     simgroup.add_argument(
@@ -246,77 +216,69 @@ if __name__ == "__main__":
         help="the Adam/B values for the GCMC",
         default=0)
     simgroup.add_argument(
-        '--adamsrange',
-        nargs="+",
-        type=float,
+        '--adamsrange', nargs="+", type=float, default=None,
         help="the upper and lower Adam/B values for the GCMC and, optionally"
              ", the number of values desired (default value every 1.0), e.g."
-             " -1 -16 gives all integers between and including -1 and -16",
-        default=None)
+             " -1 -16 gives all integers between and including -1 and -16")
     simgroup.add_argument(
         '--gcmcwater',
         help="a pdb file with a box of water to do GCMC on or an integer "
              "corresponding to the number of water molecules to add"
     )
     simgroup.add_argument(
-        '--gcmcbox',
-        nargs="+",
+        '--gcmcbox', nargs="+",
         help="a pdb file with box dimensions for the GCMC box, or a list "
              "of origin(x,y,z) and length(x,y,z) coordinates"
     )
     simgroup.add_argument(
-        '--jawsbias',
-        type=float,
-        nargs="+",
-        help="the bias in JAWS-2",
-        default=[6.5])
+        '--jawsbias', nargs="+", type=float, default=[6.5],
+        help="the bias in JAWS-2")
     simgroup.add_argument(
-        '--nequil',
-        type=float,
-        help="the number of equilibration steps",
-        default=5E6)
+        '--nequil', type=float, default=5E6,
+        help="the number of equilibration steps")
     simgroup.add_argument(
-        '--nprod',
-        type=float,
-        help="the number of production steps",
-        default=40E6)
+        '--nprod', type=float, default=40E6,
+        help="the number of production steps")
     simgroup.add_argument(
-        '--dumpfreq',
-        type=float,
-        help="the output dump frequency",
-        default=1E5)
+        '--dumpfreq', type=float, default=1E5,
+        help="the output dump frequency")
     simgroup.add_argument(
-        '--ranseed',
+        '--ranseed', default=None,
         help="the value of the random seed you wish to simulate with. "
-             "If None, then a seed is randomly generated. Default=None",
-        default=None)
+             "If None, then a seed is randomly generated. Default=None")
     simgroup.add_argument(
-        '--absolute',
-        action='store_true',
+        '--absolute', action='store_true', default=False,
         help="whether an absolute free energy calculation is to be run. "
-             "Default=False",
-        default=False)
+             "Default=False")
     simgroup.add_argument(
-        '--dovacuum',
-        action='store_true',
+        '--dovacuum', action='store_true', default=False,
         help="turn on vacuum simulation for simulation types equilibration"
-             " and sampling",
-        default=False)
+             " and sampling")
     simgroup.add_argument(
-        '--testrun',
-        action='store_true',
-        help="setup a short test run. Default=False",
-        default=False)
+        '--testrun', action='store_true', default=False,
+        help="setup a short test run. Default=False")
     simgroup.add_argument(
-        '--cleanup',
-        action='store_true',
-        help="Clean up extra files. Default=False",
-        default=False)
+        '--cleanup', action='store_true', default=False,
+        help="Clean up extra files. Default=False")
     simgroup.add_argument(
-        '--tune',
-        action='store_true',
-        help='Carry out dihedral tuning simulation',
-        default=False)
+        '--tune', action='store_true', default=False,
+        help='Carry out dihedral tuning simulation')
+    simgroup.add_argument(
+        '--softcore', type=str, default='all',
+        choices=('auto', 'all', 'none', 'manual'),
+        help="determine which atoms to apply softcore potentials to.\n "
+             "'all'=softcores applied to all atoms of both solutes, "
+             "'none'=softcores not applied to any atoms\n "
+             "'mixed'=softcores will be applied only to non matching "
+             "atoms within ligand structures")
+    parser.add_argument(
+      '--spec-softcore', type=str,
+      help='Specify atoms to add or remove from softcore selections. Can be '
+           'up to two, space separated, strings of the form "N:AT1,AT2,-AT3". '
+           'N should be either "1" or "2" indicating the corresponding ligand.'
+           ' The comma separated list of atom names are added to the softcore '
+           'selection. A preceding dash for an atom name specifies it should '
+           'be removed from the softcore selection.')
     args = parser.parse_args()
 
     print(r"""
@@ -400,7 +362,7 @@ if __name__ == "__main__":
                     _get_prefix(prefix0)) + "_dummy.pdb"
                 ligand_files["*dummy"] = {}
                 ligand_files["*dummy"]["pdb"] = dummy_name
-                ligand_files["*dummy"]["obj"] = tools.make_dummy(
+                ligand_files["*dummy"]["obj"] = make_dummy(
                     ligand_files[prefix0]["obj"])
                 ligand_files["*dummy"]["obj"].write(
                     ligand_files["*dummy"]["pdb"])

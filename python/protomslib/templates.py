@@ -865,6 +865,7 @@ def build_template(temfile,
 
     return template
 
+
 def _make_dict(atoms, moltem, pdbres, objdict=None, onlypdb=False):
     """
     Finds a TemplateAtom and an Atom object for each atom in atoms
@@ -1057,6 +1058,70 @@ def _make_map(tem1, tem2, pdb1, pdb2, cmap):
             if atom2 != "DUM":
                 not_taken2.remove(atom2)
             cmap[atom1] = atom2
+
+
+def _auto_map(tem1, tem2, pdb1, pdb2, cmap):
+    """
+    As far as possible update cmap based on atom matching
+    between templates and pbs according to the below criteria:
+    1) squared inter-atom distances < 0.02 A**2
+    2) atom type
+
+    The cmap dictionary will be populated with key value pairs:
+    cmap[atom1] = atom2,
+    where atom1 belongs to tem1 and atom2 belongs to tem2
+    atom2 can be dum, in case non-correspondance is assumed
+
+    Parameters
+    ----------
+    tem1 : MolTemplate
+      first template
+    tem2 : MolTemplate
+      second template file
+    pdb1 : PDBFile
+      structure template for tem1
+    pdb2 : PDBFile
+      structure template for tem2
+    cmap : dictionary of string
+      full, partial or empty map of correspondance
+
+    Raises
+    ------
+    SetupError
+      if dummies in cmap.keys()
+    """
+    # Create a list of atom names in both templates
+    # The purpose of the routine is then to empty these lists!
+    not_taken1 = [atom.name.strip().upper() for atom in tem1.atoms]
+    not_taken2 = [atom.name.strip().upper() for atom in tem2.atoms]
+
+    # First we will look in the given cmap to see if we already
+    # have some maps given
+    for atom1 in cmap:
+        atom2 = cmap[atom1]
+        if atom1.startswith("DUM"):
+            sim.SetupError("Do not support dummies in V0 at the moment.")
+        if atom1 in not_taken1:
+            if atom2 != "DUM":
+                if atom2 in not_taken2:
+                    not_taken1.remove(atom1)
+                    not_taken2.remove(atom2)
+                else:
+                    logger.warning(
+                        "Warning: Could not find atom %s in the second "
+                        "template file, will ignore this map." % atom2)
+                    del cmap[atom1]
+            else:
+                not_taken1.remove(atom1)
+        else:
+            logger.warning(
+                "Warning: Could not find atom %s in the first template file, "
+                "will ignore this map." % atom2)
+            del cmap[atom1]
+    logger.info(
+        "Pre-defined maps:\n%s" % " ".join(
+            "%s-%s" % (atom1, cmap[atom1]) for atom1 in sorted(cmap.keys())))
+    return not_taken1, not_taken2
 
 
 def _make_ele_tem(tem1, tem2, cmap):

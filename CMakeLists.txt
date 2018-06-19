@@ -214,6 +214,14 @@ add_test(NAME EnergiesSimulationTip3pTest
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies.py EnergiesSimulationTip3pTest)
 add_test(NAME EnergiesSimulationTip4pTest
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_energies.py EnergiesSimulationTip4pTest)
+add_test(NAME EnergiesSimulationSoftSolventTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_soft_energies.py EnergiesSimulationSoftSolventTest)
+add_test(NAME EnergiesSimulationSoftProteinTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_soft_energies.py EnergiesSimulationSoftProteinTest)
+add_test(NAME EnergiesSimulationSoftGcsoluteTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_soft_energies.py EnergiesSimulationSoftGcsoluteTest)
+add_test(NAME EnergiesSimulationSoftSoluteTest
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_soft_energies.py EnergiesSimulationSoftSoluteTest)
 
 add_test(NAME SamplingSetupTest
     COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_sampling.py SamplingSetupTest)

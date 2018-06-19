@@ -133,6 +133,26 @@ def get_arg_parser():
         default=None)
     parser.add_argument(
         '--tune', action='store_true', help=argparse.SUPPRESS, default=False)
+    parser.add_argument(
+        '--softcore', type=str, default='all',
+        choices=('auto', 'all', 'none', 'manual'),
+        help="determine which atoms to apply softcore potentials to. If 'all' "
+             "softcores are applied to all atoms of both solutes. If 'none' "
+             "softcores are not applied to any atoms. If 'auto', softcores are"
+             " applied to atoms based on matching coordinates between ligand "
+             "structures. The selected softcore atoms can be amended using the"
+             " --spec-softcore flag. If 'manual' only those atoms specified by"
+             " the --spec-softcore flag are softcore.")
+    parser.add_argument(
+        '--spec-softcore', type=str,
+        help='Specify atoms to add or remove from softcore selections. Can be '
+             'up to two, space separated, strings of the form "N:AT1,AT2,-AT3"'
+             '. N should be either "1" or "2" indicating the corresponding '
+             'ligand. The comma separated list of atom names are added to the'
+             ' softcore selection. A preceding dash for an atom name specifies'
+             ' it should be removed from the softcore selection. The special '
+             'value "auto" indictates that automatic softcore assignments '
+             'should be accepted without amendment.')
     return parser
 
 

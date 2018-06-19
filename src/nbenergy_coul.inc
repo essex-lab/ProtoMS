@@ -147,14 +147,23 @@ c       calculate the distances for variable geometry (if necessary)
 c***********************************************************
 c       Now calculate the energies
 c***********************************************************
-        funccnrg = qiqj * invfuncdist
+        if (softcore) then
+           funccnrg = qiqj * invfuncdist * (scl)**CoulSoftPower
+        else
+           funccnrg = qiqj * invfuncdist
+        endif
         funcljnrg = ZERO
         if (DifferentLambdas) then
-c         *** Forwards/Backwards state coulombic and LJ energies *** 
-          funccnrgf = qiqjf * invfuncdistf       
-          funccnrgb = qiqjb * invfuncdistb
-          funcljnrgf = ZERO
-          funcljnrgb = ZERO
+c     *** Forwards/Backwards state coulombic and LJ energies *** 
+           if (softcore) then
+              funccnrgf = qiqjf * invfuncdistf * (sclf)**CoulSoftPower
+              funccnrgb = qiqjb * invfuncdistb * (sclb)**CoulSoftPower
+           else
+              funccnrgf = qiqjf * invfuncdistf
+              funccnrgb = qiqjb * invfuncdistb
+           endif
+           funcljnrgf = ZERO
+           funcljnrgb = ZERO
         else
           funccnrgf = funccnrg
           funcljnrgf = ZERO

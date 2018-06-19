@@ -183,12 +183,12 @@ c     solute-protein energy
           nrg = proteinSoluteEnergy(SAVENRG,i,isol,
      .              icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,
      .              scl,sclf,sclb)
-c         If the soft-core is on, the coulombic is scaled further here
-          if (Solutesoftcore(isol)) then
-            icnrg = icnrg * (scl)**CoulSoftPower
-            icnrgf = icnrgf * (sclf)**CoulSoftPower
-            icnrgb = icnrgb * (sclb)**CoulSoftPower
-          endif                
+c$$$c         If the soft-core is on, the coulombic is scaled further here
+c$$$          if (Solutesoftcore(isol)) then
+c$$$            icnrg = icnrg * (scl)**CoulSoftPower
+c$$$            icnrgf = icnrgf * (sclf)**CoulSoftPower
+c$$$            icnrgb = icnrgb * (sclb)**CoulSoftPower
+c$$$          endif                
           cnrg = cnrg + icnrg*scl
           ljnrg = ljnrg + iljnrg*scl
           cnrgf = cnrgf + icnrgf*sclf
@@ -224,13 +224,13 @@ c    solute-gcs energy
      .               icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,
      .               scl,sclf,sclb)
 
-!       SG
-c       If the soft-core is on, the coulombic is scaled further here
-        if (Solutesoftcore(isol)) then
-          icnrg = icnrg * (scl)**CoulSoftPower
-          icnrgf = icnrgf * (sclf)**CoulSoftPower
-          icnrgb = icnrgb * (sclb)**CoulSoftPower
-        endif   
+c$$$!       SG
+c$$$c       If the soft-core is on, the coulombic is scaled further here
+c$$$        if (Solutesoftcore(isol)) then
+c$$$          icnrg = icnrg * (scl)**CoulSoftPower
+c$$$          icnrgf = icnrgf * (sclf)**CoulSoftPower
+c$$$          icnrgb = icnrgb * (sclb)**CoulSoftPower
+c$$$        endif   
       
         cnrg = cnrg + icnrg*scl
         ljnrg = ljnrg + iljnrg*scl
@@ -264,11 +264,11 @@ c     solute-solvent energy
      .               icnrg,iljnrg,icnrgb,iljnrgb,icnrgf,iljnrgf,imindist,
      .               scl,sclf,sclb)
 c       If the soft-core is on, the coulombic is scaled further here
-        if (Solutesoftcore(isol)) then
-          icnrg = icnrg * (scl)**CoulSoftPower
-          icnrgf = icnrgf * (sclf)**CoulSoftPower
-          icnrgb = icnrgb * (sclb)**CoulSoftPower
-        endif         
+c$$$        if (Solutesoftcore(isol)) then
+c$$$          icnrg = icnrg * (scl)**CoulSoftPower
+c$$$          icnrgf = icnrgf * (sclf)**CoulSoftPower
+c$$$          icnrgb = icnrgb * (sclb)**CoulSoftPower
+c$$$        endif         
         cnrg = cnrg + icnrg*scl
         ljnrg = ljnrg + iljnrg*scl
         cnrgf = cnrgf + icnrgf*sclf

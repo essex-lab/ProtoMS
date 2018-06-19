@@ -36,13 +36,10 @@ molecule type in ProtoMS are required.
 """
 
 import os
-import sys
 import unittest
 
 import framework
-
-sys.path.append(os.path.join(os.environ['PROTOMSHOME'], 'tools'))
-import simulationobjects as sim
+from protomslib import simulationobjects as sim
 
 
 class EnergiesSimulationSoftSolventTest(framework.BaseTest):
@@ -94,7 +91,6 @@ class EnergiesSimulationSoftSolventTest(framework.BaseTest):
         mixed_energies = self.get_result_energies(out_files[1])
         energies = self.get_result_energies(out_files[2])
         for se, me, e in zip(soft_energies, mixed_energies, energies):
-            print se, me, e
             self.assertAlmostEqual((se+e)/2, me, 2)
 
     def get_result_energies(self, filename):

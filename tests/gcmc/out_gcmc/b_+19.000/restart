@@ -1,3 +1,5 @@
+ COMPLETED=       T
+    NMOVES=            1000
 NPROTEINS=        1
  NSOLUTES=        0
 NSOLVENTS=     2126

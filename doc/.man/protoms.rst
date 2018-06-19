@@ -1013,7 +1013,12 @@ This turns on the dual topology method of calculating relative free energies, wh
 
   softcoreint solute integer
 
-This causes the intermolecular energy of solute integer to be softened. Alternatively, you can write ``all`` instead of the solute index and all solutes will have their non bonded energy softened. The softcore is only supported for solutes. 
+This causes the intermolecular energy of solute integer to be softened. Alternatively, you can write ``all`` instead of the solute index and all solutes will have their non bonded energy softened. The softcore is only supported for solutes. May alternatively be used as below. ::
+
+  softcoreint solute integer atoms int1 int2 int3...
+
+The atoms keyword indicates that the interactions of only a subset of atoms within a solute should have their interactions softened. Whilst int1, int2, e.t.c. provide indices specifying atoms based on their ordering within the solute template. In principle, superior numerical convergence can be achieved by applying softcores to only the smallest subset of atoms required to prevent singularities.
+  
 
 .. index::
   single: softcoreparams
