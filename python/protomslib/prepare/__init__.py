@@ -513,7 +513,10 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
     """
 
     def pdb2box(pdbobj, padding=2.0):
-        boxpdb = "%s_box.pdb" % settings.simulation
+        if settings.simulation not in ["gcap_single","gcap_dual"]:
+          boxpdb = "%s_box.pdb" % settings.simulation
+	else:
+          boxpdb = "gcmc_box.pdb" 
         box = make_gcmcbox(pdbobj, boxpdb, padding)
         simulationobjects.write_box(boxpdb, box)
         logger.info("")
@@ -596,8 +599,10 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
                 len(settings.gcmcbox), " ".join(settings.gcmcbox))
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
-
-    ghost_name = "%s_wat.pdb" % settings.simulation
+    if settings.simulation not in ["gcap_single","gcap_dual"]:
+      ghost_name = "%s_wat.pdb" % settings.simulation
+    else:
+      ghost_name = "gcmc_wat.pdb" 
     write = True
 
     # If the gcmcbox has been set as a file
