@@ -1,11 +1,11 @@
-protoms3 started at 21:12:12 on the 14/ 6/2018
+protoms3 started at  9:53:05 on the 21/ 6/2018
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
 Using protein-residue/solute-molecule/solvent-molecule cut-off
-######################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/amber14SB.ff
-######################################################################
+#######################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/amber14SB.ff
+#######################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -14,9 +14,9 @@ Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,  797 clj parameters
 and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#####################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/solvents.ff
-#####################################################################
+######################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/solvents.ff
+######################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
@@ -24,15 +24,15 @@ Found solvent template with TIP3p optimization
 Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###############################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/amber14SB-residues.ff
-###############################################################################
+################################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/amber14SB-residues.ff
+################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###################################################################
-Reading parameter file /home/chris/protoms-dev//parameter/gaff14.ff
-###################################################################
+####################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/gaff14.ff
+####################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -89,7 +89,7 @@ Got initial random number seed       100006
 ###########################################
 Sanitised random number seed =       100005
 ###########################################
-Starting simulation at 21:12:12 on the 14/ 6/2018
+Starting simulation at  9:53:05 on the 21/ 6/2018
 ######################################################################
 Running simulation in lambda window    0.999 <--    1.000 -->    1.000
 ######################################################################
@@ -121,10 +121,10 @@ Redirecting PDB to all.pdb
 Writing restart file
 ####################
 Resetting free energy average to zero.
-Data collection complete. Attempted/accepted moves           10           8
-Attempted/successful lambda swaps for lambdaladder   1 :      8     8 ( 100.000%)
+Data collection complete. Attempted/accepted moves           10           7
+Attempted/successful lambda swaps for lambdaladder   1 :     14    13 (  92.857%)
 ###############################
 Final volume =   13851.6664 A^3
 ###############################
 Simulation shutting down...
-protoms3 completed at 21:12:13 on the 14/ 6/2018
+protoms3 completed at  9:53:05 on the 21/ 6/2018
