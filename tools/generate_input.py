@@ -1526,7 +1526,7 @@ def get_arg_parser():
 if __name__ == "__main__":
 
   args = get_arg_parser().parse_args()
-  print args.simulation
+
   # Setup the logger
   logger = simulationobjects.setup_logger("generate_input_py.log")
   
