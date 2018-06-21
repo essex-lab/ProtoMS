@@ -515,7 +515,7 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
     def pdb2box(pdbobj, padding=2.0):
         if settings.simulation not in ["gcap_single","gcap_dual"]:
           boxpdb = "%s_box.pdb" % settings.simulation
-	else:
+        else:
           boxpdb = "gcmc_box.pdb" 
         box = make_gcmcbox(pdbobj, boxpdb, padding)
         simulationobjects.write_box(boxpdb, box)
