@@ -1,4 +1,4 @@
-protoms3 started at 11:54:28 on the  2/11/2017
+protoms3 started at  9:53:14 on the 21/ 6/2018
 Using whatever boundary conditions the solvent desires
 Non-bonded cutoff =      10.0000 angstroms.
 Non-bonded cutoff feathered over the last =       0.5000 angstroms.
@@ -6,9 +6,9 @@ Using protein-residue/solute-molecule/solvent-molecule cut-off
 SoftCore Parameters for this simulation :
 Coul    1 LJ    1 GB    1 Delta       0.2000 DeltaCoul       2.0000 (      64.0000 ) Power    6
 Using 6-6 soft-core potential
-##################################################################################
-Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/amber14SB.ff
-##################################################################################
+#######################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/amber14SB.ff
+#######################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -17,9 +17,9 @@ Using a 1-4 LJ scaling factor of   0.5000
 Loaded    0 templates,    0 override templates,  797 clj parameters
 and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-#################################################################################
-Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/solvents.ff
-#################################################################################
+######################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/solvents.ff
+######################################################################
 Found solvent template with TIP3p optimization
 Found solvent template with TIP4p optimization
 Found solvent template with TIP3p optimization
@@ -27,15 +27,15 @@ Found solvent template with TIP3p optimization
 Loaded   16 templates,    0 override templates,   23 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###########################################################################################
-Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/amber14SB-residues.ff
-###########################################################################################
+################################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/amber14SB-residues.ff
+################################################################################
 Loaded  102 templates,    0 override templates,    0 clj parameters
 and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
 and    0/   0 surface/born parameters.
-###############################################################################
-Reading parameter file /home/cica1d14/Software/protoms-dev//parameter/gaff14.ff
-###############################################################################
+####################################################################
+Reading parameter file /home/mls2g13/protoms-dev/parameter/gaff14.ff
+####################################################################
 ##############################################################
 Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
 ##############################################################
@@ -96,7 +96,7 @@ Got initial random number seed       100006
 ###########################################
 Sanitised random number seed =       100005
 ###########################################
-Starting simulation at 11:54:28 on the  2/11/2017
+Starting simulation at  9:53:14 on the 21/ 6/2018
 ######################################################################
 Running simulation in lambda window    0.999 <--    1.000 -->    1.000
 ######################################################################
@@ -131,9 +131,9 @@ Writing restart file
 ####################
 Resetting free energy average to zero.
 Data collection complete. Attempted/accepted moves           10           7
-Attempted/successful lambda swaps for lambdaladder   1 :      7     7 ( 100.000%)
+Attempted/successful lambda swaps for lambdaladder   1 :     12    12 ( 100.000%)
 ###############################
 Final volume =   13851.6664 A^3
 ###############################
 Simulation shutting down...
-protoms3 completed at 11:54:28 on the  2/11/2017
+protoms3 completed at  9:53:15 on the 21/ 6/2018
