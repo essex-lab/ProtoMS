@@ -1038,7 +1038,7 @@ def _make_map(tem1, tem2, pdb1, pdb2, cmap):
             dummy = False
             while atom2 not in not_taken2 and not dummy:
                 print("Enter the corresponding atom for %s: " % atom1, end="")
-                test = six.input().strip().upper()
+                test = six.moves.input().strip().upper()
                 if len(test) == 0 or test.startswith("DUM"):
                     dummy = True
                     atom2 = ""
