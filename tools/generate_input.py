@@ -27,7 +27,7 @@ import numpy as np
 
 import random
 
-import simulationobjects
+from protomslib import simulationobjects
 
 logger = logging.getLogger('protoms')
 
