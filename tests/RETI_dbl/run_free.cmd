@@ -28,7 +28,7 @@ softcore1 solute 1
 softcore2 solute 2
 softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 6 soft66
 dlambda 0.001
-lambdare 2 0.000 0.330 0.670 1.000
+lambdare 1 0.000 0.330 0.670 1.000
 dump 1 results write results
 dump 1 results writeinst results_inst
 dump 1 pdb all solvent=all file=all.pdb standard
