@@ -731,8 +731,8 @@ def build_template(temfile,
                                      (atom[0], resname, atom[1], resname)))
 
     # Also need to do bonds that close loops
-    for atom1 in atoms:
-        for atom2 in atoms[atom1].bonds:
+    for atom1 in sorted(atoms):
+        for atom2 in sorted(atoms[atom1].bonds):
             if (atom1, atom2) not in taken_bonds:
                 taken_bonds.append((atom1, atom2))
                 taken_bonds.append((atom2, atom1))
