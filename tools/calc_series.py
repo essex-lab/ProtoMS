@@ -24,6 +24,7 @@ from __future__ import print_function
 import logging
 import matplotlib
 import numpy as np
+import six
 import os
 from scipy.stats import spearmanr
 from scipy.stats import kendalltau
@@ -548,7 +549,7 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
         if "DISPLAY" in os.environ and os.environ["DISPLAY"] != "":
             currfig.show()
             print("\nType enter to quit\n>", end="")
-            raw_input()
+            six.moves.input()
 
 
 def write_series(ys, yprop, labels, offset, filekind, outprefix):
