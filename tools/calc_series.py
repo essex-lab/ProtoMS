@@ -667,11 +667,11 @@ def _select_series(results):
         print("(type e.g. feenergy or feenergy/0.000,1.000)")
 
     print("\n> ", end="")
-    instr = raw_input()
+    instr = six.moves.input()
     while len(instr) > 0:
         selection.append(instr)
         print("> ", end="")
-        instr = raw_input()
+        instr = six.moves.input()
     return selection
 
 
@@ -691,7 +691,7 @@ def _select_plot():
     print("4) Single plot + subtract first snapshot")
     print("5) Single plot + subtract last snapshot")
     print("\n> ", end="")
-    instr = raw_input()
+    instr = six.moves.input()
     if instr == "2":
         return "sub"
     elif instr == "3":
