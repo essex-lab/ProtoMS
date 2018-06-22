@@ -110,6 +110,10 @@ def scoop(protein,
                         kill_list[res - 1] = False
                     if distance < innercut:
                         in_kill_list[res - 1] = False
+    n_kill = sum(kill_list)  # Number of residues to scoop out
+    if sum(kill_list) < scooplimit:
+        kill_list = [False] * len(pdb_out.residues)
+    for res in pdb_out.residues:
         if not kill_list[res - 1] and \
            in_kill_list[res - 1] and res not in excluded:
             outer.append(res)
@@ -151,7 +155,7 @@ def scoop(protein,
 
     # Constrain outer residues only if the number of discarded
     # residues is less than scooplimit.
-    if kill_list.sum() > scooplimit:
+    if n_kill > scooplimit:
         if flexout in ['rigid', 'sidechain']:
             backBoneRigid += [res for res in outer]
         if flexout == 'rigid':
@@ -198,7 +202,7 @@ def scoop(protein,
 
     # Purge residues outside the outer scoop from the protein pdb and save it
     # Only do it if the number of discarded residues is less than scooplimit.
-    if kill_list.sum() > scooplimit:
+    if n_kill > scooplimit:
         for res in list(pdb_out.residues.keys()):
             if res not in both:
                 pdb_out.residues.pop(res)
@@ -209,7 +213,7 @@ def scoop(protein,
         # print "Not scooping, lower than limit."
         logger.info(
             "Not scooping. Number of residues removed from the protein is"
-            " too small (%s less than %s)" % (kill_list.sum(), scooplimit))
+            " too small (%s less than %s)" % (n_kill, scooplimit))
 
     # Check of terminal residue
     headerscoop = False
@@ -253,7 +257,7 @@ def scoop(protein,
                     cres.atoms.remove(atom)
 
     header = "REMARK Original file: %s\n" % pdb_out
-    if kill_list.sum() > scooplimit:
+    if n_kill > scooplimit:
         header += "REMARK Scoop of %s was made\n" % pdb_out
         header += "REMARK Inner Region : %8.2f Angstrom radius\n" % innercut
         header += "REMARK Outer Region : %8.2f Angstrom radius\n" % outercut
@@ -281,7 +285,7 @@ def scoop(protein,
         print("REMARK chunk fixresidues line is too long for ProtoMS, "
               "please split over two lines")
 
-    if kill_list.sum() > scooplimit:
+    if n_kill > scooplimit:
         header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
         header += "REMARK of the ligand\n"
         if headerscoop:
