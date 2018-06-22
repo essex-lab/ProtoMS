@@ -189,7 +189,7 @@ def scoop(protein,
     outSC = ''
     for k, g in itertools.groupby(
             enumerate(rigidSC), key=lambda x: x[0] - x[1]):
-        r = map(operator.itemgetter(1), g)
+        r = list(map(operator.itemgetter(1), g))
         if len(r) > 1:
             outSC += '%d-%d, ' % (min(r), max(r))
         else:
