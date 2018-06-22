@@ -525,6 +525,7 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
             color=simulationobjects.color(i))
 
         if not plotkind.startswith("single"):
+            ax.set_xlim([0, max(x)])
             ax.set_ylim([ymin, ymax])
             ax.set_xlabel("Snapshot")
             ax.set_ylabel(label)
@@ -533,6 +534,7 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
                 outprefix + "_" + _label0(label) + ".png", format="png")
 
     if plotkind.startswith("single"):
+        ax.set_xlim([0, max(x)])
         ax.set_ylim([ymin, ymax])
         ax.set_xlabel("Snapshot")
         if ys.shape[0] == 1:
