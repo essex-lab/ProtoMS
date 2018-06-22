@@ -73,7 +73,7 @@ To view a movie of the simulation, you can use VMD:
 
 All there is to see is a lot of atoms wiggling and jiggling. What we're really interested in is how the energies of the system change as the simulation progresses. For instance, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f results -s total inter/protein1-solvent/sum inter/solvent-solvent/sum inter/prz-solvent/sum -p sub </pre>
+<pre>python $PROTOMSHOME/tools/calc_series.py -f out_bnd/results -s total inter/protein1-solvent/sum inter/solvent-solvent/sum inter/prz-solvent/sum -p sub </pre>
 
 which, due to the <code>-s</code> flag, will analyse the total energy (<code>total</code>), solvent-solvent interaction energy (<code>inter/solvent-solvent/sum</code>), protein-solvent interaction energy (<code>inter/protein1-solvent/sum</code>), and the ligand-solvent interaction energy (<code>inter/prz-solvent/sum</code>). The <code>-p sub</code> flag indicates we'd like the plots of energies printed as sub-plots, which, for our 80M move simulation look like <br>
 <img src="Series1.png" width="%" height="80%" alt="" /><br>
@@ -87,7 +87,7 @@ What about equilibration? A necessary, but often insufficient, condition for equ
 
 Therefore, it appears as if the system composed of water, MUP-I and the ligand PRZ does not reach equilibrium until around 70M moves. Will this energy drift affect free energy calculations? Some insight can be gained by looking at the plots of the other energies we produced, namely the protein-solvent interaction energy (yellow, bottom left). This quantity accounts for much for the decrease in the total energy. The solvent-solvent energy also appears, by eye, to also decrease with time. In contrast, the ligand-solvent energy appears roughly constant over the entirety of the simulation. Before reaching any conclusions about the equilibration of the ligand, let's have a look at the ligand-protein interaction energy. So that you can gain some experience with the interactive mode of <code>calc_series</code>, type
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f results</pre>
+<pre>python $PROTOMSHOME/tools/calc_series.py -f results</pre>
 
 and, type <code>inter/protein1-prz1/sum</code> and hit the enter key. (Note that you can analyse the Lennard-Jones (<code>lj</code>) and Coulomb (<code>cou</code>) energies separately.) This will produce the ligand-protein interaction energy. In our simulation, we find <br>
 <img src="Series2.png" width="%" height="50%" alt="" /><br>
@@ -97,7 +97,7 @@ Like the ligand-solvent energy, this quantity appears to vary around a constant 
 <p>
 We can also have a look at internal energies of the protein and ligand
 
-<pre>python2.7 $PROTOMSHOME/tools/calc_series.py -f results -s intra/protein1/sum intra/prz/sum -p sub </pre>
+<pre>python $PROTOMSHOME/tools/calc_series.py -f results -s intra/protein1/sum intra/prz/sum -p sub </pre>
 
 <br><img src="Series3.png" width="%" height="50%" alt="" /><br>
 
@@ -149,59 +149,59 @@ We can be extra careful in the way we set up our system when we use the tools lo
 To solvate the protein with a sphere of water, enter
 
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/solvate.py -pr protein.pdb -g droplet -b $PROTOMSHOME/data/wbox_tip4p.pdb -o water.pdb</pre>
+<pre>python $PROTOMSHOME/tools/solvate.py -pr protein.pdb -g droplet -b $PROTOMSHOME/data/wbox_tip4p.pdb -o water.pdb</pre>
 <p>
 to make the sphere of solvent in <code>water.pdb</code>. The default radius of the sphere is 30 &#8491;, which is fine in this case. A different radius can be specified by the <code>-r</code> flag.
 <p>
 It is important to consider that <code>solvate.py</code>, which is also called by <code>protoms.py</code>, adds water molecules randomly to the system based on a pre-equilibrated box of water. Water molecules that have been added but sterically clash with the protein or ligand are automatically removed. While this works okay in most situations, MUP-I has a very hydrophobic cavity, meaning that one should think very carefully about if and where one should add waters. With MUP-I, it is prudent to remove all the waters that have been added by <code>solvate.py</code> that are in the binding site. To do so, we will start by creating a box around the ligand that is at least 3 &#8491; away from it
 
 <pre>
-python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s prz.pdb -p 3 -o box.pdb
+python $PROTOMSHOME/tools/make_gcmcbox.py -s prz.pdb -p 3 -o box.pdb
 </pre>
 creating <code>box.pdb</code>, which can be visualsed in a molecular viewer, such as VMD. Any water molecules in <code>water.pdb</code> that are inside <code>box.pdb</code> can be removed 
 
 <pre>
-python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b box.pdb -s water.pdb -o water_clr.pdb
+python $PROTOMSHOME/tools/clear_gcmcbox.py -b box.pdb -s water.pdb -o water_clr.pdb
 </pre>
 
 creating <code>water_clr.pdb</code>.
+
+<h5>Preparing the ligand and protein</h5>
+
 <p>
 To set-up the ligand from scratch, we use the GAFF forcefield and AMBERTOOLS. These are called via
 
 <pre>
-python2.7 $PROTOMSHOME/tools/ambertools.py -f prz.pdb -c 0
+python $PROTOMSHOME/tools/ambertools.py -f prz.pdb -c 0
 </pre>
 
 where <code>-c 0</code> tells AMBERTOOLS that PRZ has no net charge. This has created <code>prz.prepi</code> and <code>prz.frcmod</code>. To use these to generate the template file for ProtoMS, type
 
 <pre>
-python2.7  $PROTOMSHOME/tools/build_template.py -n prz -p prz.prepi -f prz.frcmod -o prz.tem
+python  $PROTOMSHOME/tools/build_template.py -n PRZ -p prz.prepi -f prz.frcmod -o prz.tem
 </pre>
 which creates <code>prz.tem</code>.
 <p>
 Before proceeding, the protein atom names have to be adapted to the ProtoMS convention. This is done with the command
 <pre>
-python2.7 $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -c $PROTOMSHOME/data/atomnamesmap.dat
+python $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -c $PROTOMSHOME/data/atomnamesmap.dat
 </pre>
 The files above need to be reference by the ProtoMS command file, created using
 
 <pre>
-python2.7 $PROTOMSHOME/tools/generate_input.py -p protein_pms.pdb -l prz.pdb -t prz.tem -pw water_clr.pdb -s sampling -o run_bnd.cmd --outfolder out_bnd --nprod 80000000 --nequil 5000000 
+python $PROTOMSHOME/tools/generate_input.py -p protein_pms.pdb -l prz.pdb -t prz.tem -pw water_clr.pdb -s sampling -o run_bnd.cmd --outfolder out_bnd --nprod 80000000 --nequil 5000000 
 </pre>
 
 creating <code>run_bnd.cmd</code>. Note that here we specify how long we want our equilibration and simulation time to be. If you recall, the data from the equilibration moves are not recorded. In the above, we specified that we want 5M moves of equilibration, and 80M moves for the production step. Given that it took roughly 70M moves for the total energy to equilibrate, if that were our quantity of interest, a much longer equilibration run would be necessary.
 
 <p>
-Finally, becuase there is a cysteine bridge in MUP-I, we need to add
+Finally, because there is a cysteine bridge in MUP-I, we need to add
 
-<pre>
-chunk fixresidues 1 64 157
-chunk fixbackbone 1 63 65 156
+<pre>REMARK chunk fixbackbone 1 63, 65, 156
+REMARK chunk fixresidues 1 64, 157
 </pre>
 
-to the top of the <code>chunk</code> commands in <code>run_bnd.cmd</code>.
-
-creating <code>run_bnd.cmd</code>.
+to the <code>REMARK</code> section of the <code>protein_pms.pdb</code> file.
 
 
 </BODY>
