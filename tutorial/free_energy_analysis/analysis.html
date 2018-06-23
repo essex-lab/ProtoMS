@@ -4,9 +4,7 @@
 <link href="../style.css" rel="stylesheet" type="text/css">
 </HEAD>
 <BODY>
-  <H1>
-    Free Energy Analysis Tools
-  </H1>
+  <H1>Free Energy Analysis Tools</H1>
   <H2>Standard Behaviours</H2>
   
   <H2>Individual Free Energy Differences</H2>
@@ -44,11 +42,11 @@ sum of terms:   -13.350 +- 0.000
 
   <p>Whilst we've gained some understanding of the free energy change in solvent this is of limited value due to some of the artificial contributions. We can include the gas phase of the calculation within the analysis to gain direct insight into the relative hydration free energy difference.
 
-  <pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -d out?_comb_free -g out?_comb_gas</pre>
+    <pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -d out?_comb_free -g out?_comb_gas</pre>
 
-  <p>The majority of the intramolecular terms have from the solvent and gas phase have cancelled with one another leaving only those that contribute to the relative free energy difference. As with calc_dg.py you can provide multiple instances of the -d and -g flags to combine multiple legs of an individual calculation. All of the data from a two-step (electrostatics then van der Waals calculation) single topology calculation can easily be analysed with.
+  <p>The majority of the intramolecular terms from the solvent and gas phase have cancelled with one another leaving only those that contribute to the relative free energy difference. As with calc_dg.py you can provide multiple instances of the -d and -g flags to combine multiple legs of an individual calculation. All of the data from a two-step (electrostatics then van der Waals calculation) single topology calculation can easily be analysed with.
 
-  <pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -d out?_ele_free -d out?_vdw_free -g out?_ele_gas -g out?_vdw_gas</pre>
+    <pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -d out?_ele_free -d out?_vdw_free -g out?_ele_gas -g out?_vdw_gas</pre>
 
   <H4>Dual Topology Analysis</H4>
   
@@ -56,14 +54,37 @@ sum of terms:   -13.350 +- 0.000
 
   <pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -d out?_comb_free</pre>
 
-
   <p>You'll that notice, unlike the single topology data, there are no intramolecular terms. Instead large contributions of opposite sign come from the interaction of each solute with the surrounding system. This is because with dual topology an entire ligand is decoupled from the system whilst another is coupled in. A handy option here is the --dual flag to the script, which attempts to combine these large terms together leaving only the net effect, that is a lot easier to understand.
 
-  <pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -d out?_comb_free --dual</pre>
+    <pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -d out?_comb_free --dual</pre>
 
   <H2>Combined Free Energy Differences</H2>
   <H3>Using output pickles</H3>
-  <H3>calc_dg_cycle.py</H3>
+  
+  <p>All of the ProtoMS free energy scripts facilitate further analysis by providing the option to save their output in a convenient format. Specifically, each script may be given the --pickle flag with a file name, to save the result as a pickle. A pickle is a serialisation format that allows python objects to be written directly to a file and recovered later. The practical upshot is that users can combine the results of different free energy scripts without needing to resort to spreadsheets or copy pasting data from terminals.
+
+  <p>For more information on pickles see the python documentation <a href="https://docs.python.org/3/library/pickle.html">here</a>. A convenience script is provided in the tools directory to load and inspect pickles and provides a good starting point for users wanting to write their own scripts using pickled results. First lets run a simple calculation with calc_dg.py and pickle the output.
+
+    <pre>python $PROTOMSHOME/tools/calc_dg.py -d ... --pickle results.pkl</pre>
+
+  <p>Then we can inspect the output interactively with load_pickle.py. The recommended way to invoke this is:
+
+    <pre>ipython -i $PROTOMSHOME/tools/load_pickle.py -- results.pkl</pre>
+
+  <p>If you don't have ipython available then the standard python equivalent is:
+
+    <pre>python -i $PROTOMSHOME/tools/load_pickle.py results.pkl</pre>
+
+  <p>Either way, this should drop you into a python shell with a namespace containing the variable "data" that contains the loaded data from the pickle. The contents of the protomslib module have also been dumped into the global namespace, this is required so that python can find the required class definitions when unpickling. The below output shows a simple exploration of the contents of data to give a feel for how to work with the data structures of protomslib. Output may differ slightly between python 2 and 3.
+
+    <pre>> print(data)
+it is a data
+> print(data[TI])
+    </pre>
+  
+    <H3>calc_dg_cycle.py</H3>
+
+  <p>
 
 </BODY>
 </HTML>
