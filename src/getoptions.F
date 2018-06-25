@@ -725,7 +725,7 @@ c     A softcore is applied if either atom is part of a softcore residue
                call printLine(INFO,'Turning softcore on for all atoms of all solutes')
             else
                SoluteSoftCore(imol) = .true.
-               if (nwords .gt. 3) then
+               if (nwords .gt. 2) then
                   write(printstring,'(a,i4,a)') 'Turning softcore on for atoms of solute', imol, ' listed below'
                   call printLine(INFO,printstring)
                   do j=4,nwords

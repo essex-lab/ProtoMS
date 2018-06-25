@@ -704,8 +704,14 @@ class DualTopology(ProteinLigandSimulation):
         pdb2 = sim.PDBFile(filename=solutes[1])
         tem1 = tem_file.templates[0]
         tem2 = tem_file.templates[1]
+        res1 = list(pdb1.residues.values())[0]
+        res2 = list(pdb2.residues.values())[0]
+        atom_names1 = [at.name for at in tem1.atoms]
+        atom_names2 = [at.name for at in tem2.atoms]
+        lig1_dict = _make_dict(atom_names1, tem1, res1)
+        lig2_dict = _make_dict(atom_names2, tem2, res2)
         if softcore == 'auto':
-            _auto_map(tem1, tem2, pdb1, pdb2, cmap)
+            _auto_map(tem1, tem2, lig1_dict, lig2_dict, cmap)
             lig1_not_softcore = list(cmap.keys())
             lig2_not_softcore = list(cmap.values())
         else:
@@ -727,24 +733,18 @@ class DualTopology(ProteinLigandSimulation):
                         " ".join([at.name for at in tem2.atoms
                                   if at.name not in lig2_not_softcore]))
 
-            atom_names1 = [at.name for at in tem1.atoms]
-            atom_names2 = [at.name for at in tem2.atoms]
-            res1 = list(pdb1.residues.values())[0]
-            res2 = list(pdb2.residues.values())[0]
-            lig1_dict = _make_dict(atom_names1, tem1, res1)
-            lig2_dict = _make_dict(atom_names2, tem2, res2)
-            logger.info("")
-            logger.info("Atom-atom distances between ligands 1 and 2 (A): ")
-            logger.info("%8s%s" %
-                        ("", "".join("%8s" % atom for atom in atom_names1)))
-            for atom2 in atom_names2:
-                outstr = "%8s" % atom2
-                for atom1 in atom_names1:
-                    dist = np.linalg.norm(lig1_dict[atom1]["pdb"].coords -
-                                          lig2_dict[atom2]["pdb"].coords)
-                    outstr = outstr + "%8.3f" % dist
-            logger.info(outstr)
-            logger.info("")
+            # logger.info("")
+            # logger.info("Atom-atom distances between ligands 1 and 2 (A): ")
+            # logger.info("%8s%s" %
+            #             ("", "".join("%8s" % atom for atom in atom_names1)))
+            # for atom2 in atom_names2:
+            #     outstr = "%8s" % atom2
+            #     for atom1 in atom_names1:
+            #         dist = np.linalg.norm(lig1_dict[atom1]["pdb"].coords -
+            #                               lig2_dict[atom2]["pdb"].coords)
+            #         outstr = outstr + "%8.3f" % dist
+            # logger.info(outstr)
+            # logger.info("")
 
             if softcore == 'auto':
                 logger.info("Automatic detection was used to create the above "

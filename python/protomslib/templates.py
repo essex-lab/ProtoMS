@@ -941,71 +941,15 @@ def _make_map(tem1, tem2, pdb1, pdb2, cmap):
       if dummies in cmap.keys()
     """
 
-    # Create a list of atom names in both templates
-    # The purpose of the routine is then to empty these lists!
-    not_taken1 = [
-        atom.name.strip().upper() for atom in tem1.templates[0].atoms
-    ]
-    not_taken2 = [
-        atom.name.strip().upper() for atom in tem2.templates[0].atoms
-    ]
+    moltem1 = tem1.templates[0]
+    moltem2 = tem2.templates[0]
+    objdict1 = _make_dict([at.name for at in moltem1.atoms],
+                          moltem1, pdb1.residues[1])
+    objdict2 = _make_dict([at.name for at in moltem2.atoms],
+                          moltem2, pdb2.residues[1])
 
-    # First we will look in the given cmap to see if we already
-    # have some maps given
-    for atom1 in cmap:
-        atom2 = cmap[atom1]
-        if atom1.startswith("DUM"):
-            sim.SetupError("Do not support dummies in V0 at the moment.")
-        if atom1 in not_taken1:
-            if atom2 != "DUM":
-                if atom2 in not_taken2:
-                    not_taken1.remove(atom1)
-                    not_taken2.remove(atom2)
-                else:
-                    logger.warning(
-                        "Warning: Could not find atom %s in the second "
-                        "template file, will ignore this map." % atom2)
-                    del cmap[atom1]
-            else:
-                not_taken1.remove(atom1)
-        else:
-            logger.warning(
-                "Warning: Could not find atom %s in the first template file"
-                ", will ignore this map." % atom2)
-            del cmap[atom1]
-    logger.info(
-        "Pre-defined maps:\n%s" % " ".join("%s-%s" % (atom1, cmap[atom1])
-                                           for atom1 in sorted(cmap.keys())))
-
-    # Next we will calculate pair-wise distance from the given pdb structures,
-    # use a cut-off of 0.02 A^2 to determine possible pair and
-    # then use atom type as the final filter
-    if not_taken1 or not_taken2:
-        objdict1 = _make_dict(not_taken1, tem1.templates[0], pdb1.residues[1])
-        objdict2 = _make_dict(not_taken2, tem2.templates[0], pdb2.residues[1])
-        found = {}
-        for atom1 in not_taken1:
-            if objdict1[atom1]["pdb"] is None:
-                continue
-            for atom2 in not_taken2:
-                if objdict2[atom2]["pdb"] is None:
-                    continue
-                dist2 = objdict1[atom1]["pdb"].coords - \
-                    objdict2[atom2]["pdb"].coords
-                dist2 = np.sum(dist2 * dist2)
-                # The atom type is the 0:th parameter of a clj parameter
-                type1 = objdict1[atom1]["tem"].param0.params[0]
-                type2 = objdict2[atom2]["tem"].param0.params[0]
-                if dist2 < 0.02 and type1 == type2:
-                    found[atom1] = atom2
-                    break
-        logger.info("Distance/atom type maps:\n%s" % " ".join(
-            "%s-%s" % (atom1, found[atom1]) for atom1 in sorted(found.keys())))
-        for atom1 in found:
-            atom2 = found[atom1]
-            not_taken1.remove(atom1)
-            not_taken2.remove(atom2)
-            cmap[atom1] = atom2
+    not_taken1, not_taken2 = _auto_map(moltem1, moltem2,
+                                       objdict1, objdict2, cmap)
 
     # Now we have gotten so-far that we have to ask the user for the rest...
 
@@ -1060,7 +1004,7 @@ def _make_map(tem1, tem2, pdb1, pdb2, cmap):
             cmap[atom1] = atom2
 
 
-def _auto_map(tem1, tem2, pdb1, pdb2, cmap):
+def _auto_map(tem1, tem2, objdict1, objdict2, cmap):
     """
     As far as possible update cmap based on atom matching
     between templates and pbs according to the below criteria:
@@ -1084,6 +1028,13 @@ def _auto_map(tem1, tem2, pdb1, pdb2, cmap):
       structure template for tem2
     cmap : dictionary of string
       full, partial or empty map of correspondance
+
+    Returns
+    -------
+    not_taken1 : list of strings
+      list of unpaired atom names from ligand 1
+    not_taken2 : list of strings
+      list of unpaired atom names from ligand 2
 
     Raises
     ------
@@ -1121,6 +1072,34 @@ def _auto_map(tem1, tem2, pdb1, pdb2, cmap):
     logger.info(
         "Pre-defined maps:\n%s" % " ".join(
             "%s-%s" % (atom1, cmap[atom1]) for atom1 in sorted(cmap.keys())))
+
+    # Next we will calculate pair-wise distance from the given pdb structures,
+    # use a cut-off of 0.02 A^2 to determine possible pair and
+    # then use atom type as the final filter
+    if not_taken1 or not_taken2:
+        found = {}
+        for atom1 in not_taken1:
+            if objdict1[atom1]["pdb"] is None:
+                continue
+            for atom2 in not_taken2:
+                if objdict2[atom2]["pdb"] is None:
+                    continue
+                dist2 = objdict1[atom1]["pdb"].coords - \
+                    objdict2[atom2]["pdb"].coords
+                dist2 = np.sum(dist2 * dist2)
+                # The atom type is the 0:th parameter of a clj parameter
+                type1 = objdict1[atom1]["tem"].param0.params[0]
+                type2 = objdict2[atom2]["tem"].param0.params[0]
+                if dist2 < 0.02 and type1 == type2:
+                    found[atom1] = atom2
+                    break
+        logger.info("Distance/atom type maps:\n%s" % " ".join(
+            "%s-%s" % (atom1, found[atom1]) for atom1 in sorted(found.keys())))
+        for atom1 in found:
+            atom2 = found[atom1]
+            not_taken1.remove(atom1)
+            not_taken2.remove(atom2)
+            cmap[atom1] = atom2
     return not_taken1, not_taken2
 
 
