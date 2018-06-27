@@ -201,7 +201,10 @@ class DecomposedCalculation(fe.FreeEnergyCalculation):
         table.add_row(["FDTI", results[fe.TI].dG])
         table.add_blank_row()
         for term in sorted(decomp):
-            table.add_row([term, decomp[term].dG])
+	    if args.full and decomp[term].dG.value == 0.0:
+		continue
+	    else:
+                table.add_row([term, decomp[term].dG])
         table.add_row(['sum of terms', np.sum(list(decomp.values())).dG])
         self.tables.append(table)
 
@@ -313,6 +316,8 @@ def get_arg_parser():
              "rigorous and can be spuriously large.")
     parser.add_argument("--pmf", action='store_true', default=False,
                         help="Plot the Potential of Mean Force for all terms.")
+    parser.add_argument("--full", action='store_false', default=True,
+                        help="Prevents printing out of zero contribution energies.")
     return parser
 
 
