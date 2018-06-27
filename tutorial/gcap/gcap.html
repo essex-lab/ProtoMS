@@ -1,0 +1,163 @@
+<HTML>
+<HEAD>
+<TITLE>Grand canonical alchemical perturbations (GCAP) of two ligands to Scytalone Dehydratase</TITLE>
+<link href="../style.css" rel="stylesheet" type="text/css">
+</HEAD>
+<BODY>
+<H1>Grand canonical alchemical perturbations (GCAP) of two ligands to Scytalone Dehydratase</H1>
+In this tutorial, you will set up, run and analyse the calculation of the relative binding free energy of two ligands to Scytalone Dehydratase (SD), using GCAP. The grand canonical ensemble allows for the dynamic sampling of hydration states of a protein-ligand complex, as the ligand changes.
+<p>To come back to the tutorial index, click <a href="../tutorials.html">here</a>.
+<H3>Prerequisites</H3>
+<ul>
+	<li><code>ONE.pdb</code> - the structure of the first ligand molecule in PDB format</li>
+	<li><code>THR.pdb</code> - the structure of the second ligand molecule in PDB format</li>
+	<li><code>protein_scoop.pdb</code> - the structure of the SD protein in PDB format</li>
+</ul>
+Both the ligands and protein need to be prepared before they are used with ProtoMS. For instance, you must make sure that they are correctly protonated. You can read more about setting up structures <a href="../prep_struct.html">here</a>. Here, the protein has been set up in advance, with correct protonation states and scooping.
+<p>
+<hr align="center"/>
+<h3>Setup</h3>
+<h5>Defining the grand canonical region</h5>
+First, we are going to set up the GCMC region of the system. This is the region where grand canonical insertions and deletions are attempted. The region is user defined, and can be chosen depending on the region of interest. Here, we are interested in the displacement of a single active site water molecule on perturbation of the ligand. A cubic box with lengths of 4 &#8491; will be set up over the region using the following command.
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -b 26.1 13.2 34.9 -p 2.</pre>
+<p>
+<code>26.1 13.2 34.9</code> is the centre of the box, with a padding of 2 &#8491; around the center. Other options are possible, setting up the box around a given ligand, or with varying dimensions of the box. To explore the options of the <code>make_gcmcbox.py</code> script, use the <code> -h</code> flag. Note the output of this script.
+<p>
+<pre>Volume of GCMC box: 64.0
+Bequil: -9.71</pre>
+<p>
+This is telling us the volume of the GCMC box is 64.0 &#8491;&sup3;. The Bequil is the Adams' value at which we need to simulate to correspond to equilibrium with bulk water. This is calculated using:
+<p>
+<pre>Bequil = &beta;&mu;' + ln(V<sup>gcmc</sup>/V<sup>o</sup>)</pre> 
+<p>
+Where &beta; is thermodynamic beta, &beta;' is the excess chemical potential of the water model. V<sup>gcmc</sup> is the volume of the GCMC region (64.0 &#8491;&sup3; here) and V<sup>o</sup> is the volume of a single water molecule in bulk (30.0 &#8491;&sup3; here). More details of these can be found in the publications at the bottom of the page. 
+<p>
+It is a good idea to visualise this, even before all of the system is set up, to get an idea that the GCMC box is where you expect it to be. 
+<pre>
+vmd -m ONE.pdb THR.pdb protein_scoop.pdb gcmc_box.pdb
+</pre>
+<img src="setup_one.png" width="350" height="350" alt="" /> &nbsp;&nbsp; <img src="setup_thr.png" width="350" height="350" alt="" />
+</p
+<p> 
+<h5>Single topology perturbations</h5>
+Now to set up the alchemical perturbation, we will first set up the single-topology transformation. For single topology simulations we need to correspond all of the atoms in one ligand, either to atoms in the other ligand or to dummy atoms, and will be asked about this during the set up.
+<pre>python $PROTOMSHOME/protoms.py -s gcap_single -sc protein_scoop.pdb -l THR.pdb ONE.pdb
+--gcmcbox gcmc_box.pdb --adams  -9.71</pre>
+<p>
+<code>gcap_single</code> informs protoms that we are performing a single-topology GCAP simulation. <code>-sc protein_scoop.pdb</code> is the pre-generated protein file appropriate for simulation. <code>-l THR.pdb ONE.pdb</code> are the two ligands that we are comparing. For single topology, the larger ligand needs to be written first, and protoms will throw an error if the first ligand is smaller. The <code>--adams -9.71</code> tells protoms what Adams' value to simulate it. This is the value that was output using the <code>make_gcmcbox.py</code> script earlier. This will change depending on the volume of the GCMC box. <code>--gcmcbox gcmc_box.pdb</code> is the GCMC box file that we generated previously. If this flag is not used, and there is no <code>gcmc_box.pdb</code> file in the directory, protoms will set up a GCMC box, that will cover the entire ligand, with a padding of 2 &#8491;. ProtoMS will try work out the atom mapping between the two ligands, but for the C-H group that is being perturbed, user input is required. You will see:
+
+<pre>These are the distances (A): 
+              C8     H29
+     N19   0.000   1.078
+
+Enter the corresponding atom for C8:</pre>
+<p>
+Type in N19 and press enter. Atoms C8 of ligand THR.pdb, and N19 of ONE.pdb are 0.000 &#8491; apart. Next you will see:
+<pre>
+Enter the corresponding atom for H29:
+</pre>
+<p>
+Now there is no atom in ligand ONE.pdb that corresponds to this, so we want to perturb it to a dummy atom. Press enter, and protoms will complete its single-topology set up. This will generate several files, including a <code>water.pdb</code> and a <code>water_clr.pdb</code> file. The <code>water_clr.pdb</code> will be used in the simulation, as it has had any bulk water removed from inside the specified GCMC region. Various <code>.cmd</code> files are generated, which contain the simulation details. These will be for a two-step simulation, where the electrostatics and van der Waal's interactions are perturbed seperately, and comb files, where both are perturbed simultaneously. There are files generated for a gas phase, bulk solvent phase, and protein bound phase of each of these. These can be run using the following command.
+<p>
+<pre>mpirun -np 16 $PROTOMSHOME/protoms3 run_comb_free.cmd
+mpirun -np 16 $PROTOMSHOME/protoms3 run_comb_gcap.cmd
+</pre>
+<p>
+This is most conveniently done on a computer cluster. The calculations will take approximately 12 h to complete. The gas phase simulations are required to calculate the relative free energy of solvation (see the tutorial on calculating relative free energy of solvation for details XXXXlink to relative free energyXXXX) and will not be looked at here. Here, only the comb simulations will be analysed, but feel free to simulate the <code>vdw</code> and <code>ele</code> simulations too. 
+<p>
+<h5>Dual topology perturbations</h5>
+In a single-topology simulation, one ligand is perturbed into another across an alchemical pathway. In dual-topology simulations, two ligands are simulated, but one is gradually turned off while the other is turned on. As single-topology requires atom mapping, some pairs of ligands can only reasonably be simulated using dual-topology. It is also easier to set up. Making a new directory, and copying the ligand files, protein_scoop.pdb and gcmc_box.pdb over, run:
+<pre>
+python $PROTOMSHOME/protoms.py -s gcap_dual -sc protein_scoop.pdb -l THR.pdb ONE.pdb --gcmcbox gcmc_box.pdb --adams -9.71</pre>
+This time you will not be asked for any user input, and only two files will be generated. <code>run_free.cmd</code> and <code>run_gcap.cmd</code>. Again, run using the following command.
+<pre>
+mpirun -np 16 $PROTOMSHOME/protoms3 run_free.cmd
+mpirun -np 16 $PROTOMSHOME/protoms3 run_gcap.cmd
+</pre>
+As there are two copies of the ligand, these simulations are slower, and will take approximately XXX hours. 
+<h5>Surface GCAP simulations</h5>
+These simulations have been performed at the equilibrium B value, -9.71, however it is possible to do a GCMC `titration' at each stage of the ligand perturbation. This is known as a surface-GCAP simulation. This can be performed with either the single or dual topology set up, but here single will be used.
+<pre>
+python $PROTOMSHOME/protoms.py -s gcap_single -sc protein_scoop.pdb -l THR.pdb ONE.pdb --gcmcbox gcmc_box.pdb --adamsrange -17.71 -8.71 10 
+</pre>
+This is the same command as before, and will run through the same set up as before, but now instead of using the <code>--adams</code> flag with the equilibrium B value, now we have used <code>--adamsrange</code>. 
+<h3>Analysis</h3>
+Once the simulations are finished, the results can be analysed. The free energy difference between the two ligands can be calculated using TI, BAR and MBAR. To calculate the perturbation from ligand THR to ligand ONE (this will depend on which ligand was written first in the <code>protoms.py</code> set up), the free leg needs to be subtracted from the bound leg. 
+<pre>
+python $PROTOMSHOME/tools/calc_dg.py -d out_comb_free -l 0.25 --pmf --estimators mbar
+python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gcap -l 0.25 --pmf --estimators mbar
+</pre>
+Try the above commands with a combination of 'ti', 'bar' and 'mbar' and see how consistent the different methods are.
+<pre>
+MBAR
+                                 
+out_comb_free   -90.18
+out_comb_gcap   -94.20
+</pre>
+The free energy values are very large, but the bound minus the free leg corresponds to a free energy difference of -4.0 kcal mol<sup>-1</sup>. This is in very good agreement with the experimental value of -3.8 kcal mol<sup>-1</sup>.
+<p>
+The pmf of the free energy can be calculated using TI, BAR and MBAR, and are plotted below. All three are shown, but as they are very consistent, only one is visible, with the other two perfectly behind. As the profiles are both smooth and consistent, this indicates that the perturbation is converged. 
+<p>
+<img src="free_energy_profile.png" width="350" height="350" alt="" /> 
+<p>
+While this good experimental agreement is promising, it is useful to understand where the favourable energetics that make ligand ONE higher affinity than ligand THR come from, as this can be useful for SAR information and drug design. 
+<pre>python $PROTOMSHOME/tools/calc_ti_decomposed.py -b out_comb_gcap -d out_comb_free -l 0.25 </pre>
+The <code>-b</code> flag shows what is the bound leg, and <code>-d</code> flag indicates the free leg of the simulation. This will calculate the free energy difference of ligand THR and ONE by each energetic contribution.
+<p>
+<pre>
+             FDTI:   -4.234 +- 0.000
+                                    
+protein1-thr1_COU:   -2.926 +- 0.000
+ protein1-thr1_LJ:   -0.339 +- 0.000
+      thr-GCS_COU:   -2.983 +- 0.000
+       thr-GCS_LJ:   -0.517 +- 0.000
+  thr-solvent_COU:    1.102 +- 0.000
+   thr-solvent_LJ:    0.316 +- 0.000
+          thr_ANG:    0.077 +- 0.000
+          thr_BND:   -0.001 +- 0.000
+          thr_DIH:   -0.000 +- 0.000
+          thr_NBC:    0.812 +- 0.000
+          thr_NBL:    0.224 +- 0.000
+     sum of terms:   -4.235 +- 0.000
+
+</pre>
+The top-most and bottom-most numbers show the free energy perturbation for the bound and free leg combined, calculated from the total energy, and the sum of all individual energies respectively. The relative free energy is 0.2 kcal mol<sup>-1</sup> different calculate by TI than MBAR. Three of the contributions contribute over 1 kcal mol<sup>-1</sup>, <code>protein1-thr1_COU</code>, <code>thr-GCS_COU</code> and <code>thr-solvent_COU</code>.
+<p>
+First considering <code>protein1-thr1_COU</code>, this shows that the coulombic interaction between ligand ONE and the protein is 3 kcal mol<sup>-1</sup> more favourable than ligand THR, which is a large energetic contribution for the pertubration of a few atoms.
+<p>
+The other contributing energetic contributions are the interactions between the ligand and water. <code>thr-solvent_COU</code> shows an unfavourable 1 kcal mol<sup>-1</sup> contribution to the free energy when ligand THR is perturbed to ligand ONE. The other energy, <code>thr-GCS_COU</code>, shows a 3 kcal mol<sup>-1</sup> FAVOURABLE contribution for the same perturbation. The <code>thr-GCS_COU</code> energy is the free energy difference between the ligand and the grand canonical solute (the GCMC water molecule), which are the water molecules that are placed within the GCMC region throughout the simulation. This shows that ligand 1 has a much more favourable interaction with water in the 64.0 &#8491;<sup>3</sup> GCMC region set up at the beginning. So lets look at what this means.
+<p>
+GCMC attempts to insert and delete water molecules within the defined region, throughout the simulation. This allows the water molecule to be inserted or displaced, according to the equilibrium state of the protein-ligand complex. 
+<p>
+Now lets look at the sampling of the GCMC water molecule at different &lambda; values.
+<pre>
+python $PROTOMSHOME/tools/calc_series.py -f out_comb_gcap/lam-0.000/results -s solventson
+python $PROTOMSHOME/tools/calc_series.py -f out_comb_gcap/lam-0.533/results -s solventson
+python $PROTOMSHOME/tools/calc_series.py -f out_comb_gcap/lam-1.000/results -s solventson
+</pre>
+This will show the water occupancy of the GCMC box through the simulation for the two ligands; ONE, and intermediate ligand between ONE and THR, and ligand THR. 
+<p>
+<img src="ligone.png" width="200" height="200" alt="" /> &nbsp;&nbsp; <img src="half.png" width="200" height="200" alt="" /> &nbsp;&nbsp; <img src="ligthr.png" width="200" height="200" alt="" />
+<p>
+This shows that the water occupancy with ligand ONE is one, and ligand THR is zero, although this value samples due to the insertion and deletion moves. For the intermediate ligand, the water occupancy exchanges frequently, and samples both occupancies well.  
+<p>
+This can be visualised by taking a bit of each simulation and stitching it together to view as a trajectory. This can be done using the command below. 
+<pre>
+for file in out_*/lam-*/all.pdb ; do sed "/MODEL       31/q" $file >> simulation.pdb; done
+</pre>
+For a longer or shorter trajectory, increase or decrease the number following MODEL. pymol can handle the trajectory as it is, but vmd needs a constant number of water molecules in each frame to read in the trajectory.
+<pre>
+python ../../tools/make_gcmc_traj.py -i simulation.pdb -o vmd_simulation.pdb -n 2
+vmd vmd_simulation.pdb
+</pre>
+Where <code>-n</code> is the maximum number of water molecules expected, which has been determined from the solventson plots above.
+<p>
+This trajectory should show the perturbation from ligand THR to ligand ONE, with the C-H group shrinking in. The carbon atom will be perturbed to a nitrogen, but as it is the atom parameters and not the atom name that is updated, the atom does not appear to change to nitrogen. This trajectory should show that as the group is shrunk, the GCMC water molecule (resname WA1) inserts as the group becomes smaller.
+<p>
+
+<h5>surface-GCAP</h5>
+XXXXX
+
+</BODY>
+</HTML>
