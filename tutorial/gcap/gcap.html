@@ -75,13 +75,18 @@ This time you will not be asked for any user input, and only two files will be g
 mpirun -np 16 $PROTOMSHOME/protoms3 run_free.cmd
 mpirun -np 16 $PROTOMSHOME/protoms3 run_gcap.cmd
 </pre>
-As there are two copies of the ligand, these simulations are slower, and will take approximately XXX hours. 
+As there are two copies of the ligand, these simulations are slower, and will take approximately 24 hours. 
 <h5>Surface GCAP simulations</h5>
 These simulations have been performed at the equilibrium B value, -9.71, however it is possible to do a GCMC `titration' at each stage of the ligand perturbation. This is known as a surface-GCAP simulation. This can be performed with either the single or dual topology set up, but here single will be used.
 <pre>
 python $PROTOMSHOME/protoms.py -s gcap_single -sc protein_scoop.pdb -l THR.pdb ONE.pdb --gcmcbox gcmc_box.pdb --adamsrange -17.71 -8.71 10 
 </pre>
 This is the same command as before, and will run through the same set up as before, but now instead of using the <code>--adams</code> flag with the equilibrium B value, now we have used <code>--adamsrange</code>. 
+<p>
+The simulation requires 16 &lambda; values and 10 B values, which is 160 replicas. This can be run with the following command. These simulations require a lot of compute resources, and should be run on a suitable machine, with available disk space.
+<pre>
+mpirun -np 160 $PROTOMSHOME/protoms3 run_comb_gcap.cmd
+</pre>
 <h3>Analysis</h3>
 Once the simulations are finished, the results can be analysed. The free energy difference between the two ligands can be calculated using TI, BAR and MBAR. To calculate the perturbation from ligand THR to ligand ONE (this will depend on which ligand was written first in the <code>protoms.py</code> set up), the free leg needs to be subtracted from the bound leg. 
 <pre>
@@ -157,7 +162,47 @@ This trajectory should show the perturbation from ligand THR to ligand ONE, with
 <p>
 
 <h5>surface-GCAP</h5>
-XXXXX
-
+The surface-GCAP simulation should take a similar amount of time as the single or dual topology simulation, but will require more processors to run and output more files.
+<p>
+The free energy of the perturbation from the surface can be calculated. As there are multiple B values, the volume is required.
+<pre>
+ python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gcap/ -l 0.25 --estimators gcap --volume 64.
+</pre>
+This gives a free energy difference of -94.14 kcal mol<sup>-1</sup>. This can be combined with the free leg of the single topology leg of the simulation from the previous section (-90.18) to give a relative binding free energy of -4.0 kcal mol<sup>-1</sup>. This is consistent with the result calculated with only a single B value.
+<p>
+The free energy surface and the water occupancy surface can be generated using the following command.
+<pre>
+python $PROTOMSHOME/tools/calc_gcap_surface.py -d out_comb_gcap/ -l 0.25 -v 64. 
+</pre>
+Again, other esimators can be used. These are the two-dimensional form of the free energy surface generated in the previous section. The water occupancy surface can show us the occupancy of the GCMC region at various combinations of &lambda; and B values. Looking at the equilibrium B value (-9.7) we can see again the water occupancy is 1 for ligand ONE, and ~0 for ligand THR.
+<p>
+<img src="free_energy_2d.png" width="350" alt="" /> &nbsp;&nbsp; <img src="water_2d.png" width="350" alt="" />
+<p>
+To calculate the free energy only at a particular B value, this can be done using:
+<pre>
+python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gcap/ -l 0.25 --subdir b_-9.710 --estimators mbar
+python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gcap/ -l 0.25 --subdir b_-17.710 --estimators mbar
+</pre>
+Or any other one-dimensional free energy method. The <code>--subdir</code> points to the directory containing the B value of interest. The first command should give results consistent to the surface-GCAP results, and the results from the previous section, where the protein-ligand complex should be correctly hydrated at each stage. This gives a result of -94.28 kcal mol<sup>-1</sup>.
+<p>
+The second command is looking athe lowest B value, where looking at the water occupancy surface at B=-17.71, the GCMC region will be empty of waters. This gives a free energy of -91.43, which when combined with the free energy leg gives a relative binding free energy of -1.3 kcal mol<sup>-1</sup>. This shows that ligand ONE is more tightly bound, even without the water molecule, but the water molecule is able to stabilise its binding relative to ligand THR by 2.7 kcal mol<sup>-1</sup>.  
+<p>
+The binding free energy of the water molecule itself can be calculated using GCI at &lambda;=0 and &lambda;=1.
+<pre>
+python $PROTOMSHOME/tools/calc_gci.py -l 0.25 -v 64. -d lam-0.000/
+python $PROTOMSHOME/tools/calc_gci.py -l 0.25 -v 64. -d lam-1.000/
+</pre>
+<p>
+This calculates the binding free energy of the water molecule with ligand ONE (&lambda; = 0):
+<p>
+<pre>
+Number of Waters   Insertion Free Energy   Network Binding Free Energy   Water Binding Free Energy   
+0                   0.000 +- 0.000          0.000 +- 0.000                0.000 +- 0.000          
+1                  -8.883 +- 0.000         -2.683 +- 0.000               -2.683 +- 0.000  
+</pre>
+<p>
+Where the binding free energy of the water molecule is -2.683 kcal mol<sup>-1</sup>, which is consistent with the 2.7 stabilisation of ligand ONE on inclusion of the water molecule.
+<p>
+<img src="one_titration.png" width="350" alt="" /> 
 </BODY>
 </HTML>
