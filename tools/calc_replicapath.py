@@ -146,6 +146,7 @@ if __name__ == '__main__':
             plt.plot(x, path, color=simulationobjects.color(i))
     psorted = sorted(args.plot)
     prange = max(psorted) - min(psorted)
+    plt.xlim([0, max(x)])
     plt.ylim([min(psorted) - 0.1 * prange, max(psorted) + 0.1 * prange])
     plt.yticks(labels)
     plt.ylabel(args.kind.capitalize())
