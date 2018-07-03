@@ -979,9 +979,9 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
 
 def plot_titration(results, ax, dot_fmt='b'):
     """Convenience function to plot the titration data from repeats."""
+    results.model.plot(ax, xlabel='B Value', ylabel='Occupancy', color='black', lw=2.0)
     for rep in results.data[0]:
         ax.plot(rep.coordinate, rep.values, 'o')
-    results.model.plot(ax, xlabel='B Value', ylabel='Occupancy', color='black')
 
 
 def plot_insertion_pmf(results, title=''):
@@ -1003,7 +1003,13 @@ def plot_insertion_pmf(results, title=''):
         prev_fe = bind_fe.value
 
     fig, ax = plt.subplots()
-    pmf.plot(ax, xlabel="Occupancy")
+    #pmf.plot(ax, xlabel="Occupancy")
+    water_nums = [i for i, v in enumerate(results.insertion_pmf.values)]
+    network_fe = [v.value - i*tip4p_excess
+            for i, v in enumerate(results.insertion_pmf.values)]
+    ax.plot(water_nums, network_fe)
+    ax.set_xlabel('Occupancy')
+    ax.set_ylabel('Free energy (kcal/mol)')
     return fig, table
 
 
