@@ -20,7 +20,7 @@ Both the ligands and protein need to be prepared before they are used with Proto
 <h5>Defining the grand canonical region</h5>
 First, we are going to set up the GCMC region of the system. This is the region where grand canonical insertions and deletions are attempted. The region is user defined, and can be chosen depending on the region of interest. Here, we are interested in the displacement of a single active site water molecule on perturbation of the ligand. A cubic box with lengths of 4 &#8491; will be set up over the region using the following command.
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -b 26.1 13.2 34.9 -p 2.</pre>
+<pre>python $PROTOMSHOME/tools/make_gcmcbox.py -b 26.1 13.2 34.9 -p 2.</pre>
 <p>
 <code>26.1 13.2 34.9</code> is the centre of the box, with a padding of 2 &#8491; around the center. Other options are possible, setting up the box around a given ligand, or with varying dimensions of the box. To explore the options of the <code>make_gcmcbox.py</code> script, use the <code> -h</code> flag. Note the output of this script.
 <p>
@@ -42,10 +42,9 @@ vmd -m ONE.pdb THR.pdb protein_scoop.pdb gcmc_box.pdb
 <p> 
 <h5>Single topology perturbations</h5>
 Now to set up the alchemical perturbation, we will first set up the single-topology transformation. For single topology simulations we need to correspond all of the atoms in one ligand, either to atoms in the other ligand or to dummy atoms, and will be asked about this during the set up.
-<pre>python $PROTOMSHOME/protoms.py -s gcap_single -sc protein_scoop.pdb -l THR.pdb ONE.pdb
---gcmcbox gcmc_box.pdb --adams  -9.71</pre>
+<pre>python $PROTOMSHOME/protoms.py -s gcap_single -sc protein_scoop.pdb -l THR.pdb ONE.pdb --gcmcbox gcmc_box.pdb --adams -9.71</pre>
 <p>
-<code>gcap_single</code> informs protoms that we are performing a single-topology GCAP simulation. <code>-sc protein_scoop.pdb</code> is the pre-generated protein file appropriate for simulation. <code>-l THR.pdb ONE.pdb</code> are the two ligands that we are comparing. For single topology, the larger ligand needs to be written first, and protoms will throw an error if the first ligand is smaller. The <code>--adams -9.71</code> tells protoms what Adams' value to simulate it. This is the value that was output using the <code>make_gcmcbox.py</code> script earlier. This will change depending on the volume of the GCMC box. <code>--gcmcbox gcmc_box.pdb</code> is the GCMC box file that we generated previously. If this flag is not used, and there is no <code>gcmc_box.pdb</code> file in the directory, protoms will set up a GCMC box, that will cover the entire ligand, with a padding of 2 &#8491;. ProtoMS will try work out the atom mapping between the two ligands, but for the C-H group that is being perturbed, user input is required. You will see:
+<code>gcap_single</code> informs ProtoMS that we are performing a single-topology GCAP simulation. <code>-sc protein_scoop.pdb</code> is the pre-generated protein file appropriate for simulation. <code>-l THR.pdb ONE.pdb</code> are the two ligands that we are comparing. For single topology, the larger ligand needs to be written first, and ProtoMS will throw an error if the first ligand is smaller. The <code>--adams -9.71</code> tells ProtoMS what Adams' value to simulate it. This is the value that was output using the <code>make_gcmcbox.py</code> script earlier. This will change depending on the volume of the GCMC box. <code>--gcmcbox gcmc_box.pdb</code> is the GCMC box file that we generated previously. If this flag is not used, and there is no <code>gcmc_box.pdb</code> file in the directory, ProtoMS will set up a GCMC box, that will cover the entire ligand, with a padding of 2 &#8491;. ProtoMS will try work out the atom mapping between the two ligands, but for the C-H group that is being perturbed, user input is required. You will see:
 
 <pre>These are the distances (A): 
               C8     H29
@@ -58,13 +57,13 @@ Type in N19 and press enter. Atoms C8 of ligand THR.pdb, and N19 of ONE.pdb are 
 Enter the corresponding atom for H29:
 </pre>
 <p>
-Now there is no atom in ligand ONE.pdb that corresponds to this, so we want to perturb it to a dummy atom. Press enter, and protoms will complete its single-topology set up. This will generate several files, including a <code>water.pdb</code> and a <code>water_clr.pdb</code> file. The <code>water_clr.pdb</code> will be used in the simulation, as it has had any bulk water removed from inside the specified GCMC region. Various <code>.cmd</code> files are generated, which contain the simulation details. These will be for a two-step simulation, where the electrostatics and van der Waal's interactions are perturbed seperately, and comb files, where both are perturbed simultaneously. There are files generated for a gas phase, bulk solvent phase, and protein bound phase of each of these. These can be run using the following command.
+Now there is no atom in ligand ONE.pdb that corresponds to this, so we want to perturb it to a dummy atom. Press enter, and ProtoMS will complete its single-topology set up. This will generate several files, including a <code>water.pdb</code> and a <code>water_clr.pdb</code> file. The <code>water_clr.pdb</code> will be used in the simulation, as it has had any bulk water removed from inside the specified GCMC region. Various <code>.cmd</code> files are generated, which contain the simulation details. These will be for a two-step simulation, where the electrostatics and van der Waal's interactions are perturbed seperately, and comb files, where both are perturbed simultaneously. There are files generated for a gas phase, bulk solvent phase, and protein bound phase of each of these. These can be run using the following command.
 <p>
 <pre>mpirun -np 16 $PROTOMSHOME/protoms3 run_comb_free.cmd
 mpirun -np 16 $PROTOMSHOME/protoms3 run_comb_gcap.cmd
 </pre>
 <p>
-This is most conveniently done on a computer cluster. The calculations will take approximately 12 h to complete. The gas phase simulations are required to calculate the relative free energy of solvation (see the tutorial on calculating relative free energy of solvation for details XXXXlink to relative free energyXXXX) and will not be looked at here. Here, only the comb simulations will be analysed, but feel free to simulate the <code>vdw</code> and <code>ele</code> simulations too. 
+This is most conveniently done on a computer cluster. The calculations will take approximately 12 h to complete. The gas phase simulations are required to calculate the relative free energy of solvation (see the tutorial on <a href="../rel_solvation/rel_solv.html">calculating relative free energy of solvation</a> for details) and will not be looked at here. Here, only the comb simulations will be analysed, but feel free to simulate the <code>vdw</code> and <code>ele</code> simulations too. 
 <p>
 <h5>Dual topology perturbations</h5>
 In a single-topology simulation, one ligand is perturbed into another across an alchemical pathway. In dual-topology simulations, two ligands are simulated, but one is gradually turned off while the other is turned on. As single-topology requires atom mapping, some pairs of ligands can only reasonably be simulated using dual-topology. It is also easier to set up. Making a new directory, and copying the ligand files, protein_scoop.pdb and gcmc_box.pdb over, run:
@@ -102,7 +101,7 @@ out_comb_gcap   -94.20
 </pre>
 The free energy values are very large, but the bound minus the free leg corresponds to a free energy difference of -4.0 kcal mol<sup>-1</sup>. This is in very good agreement with the experimental value of -3.8 kcal mol<sup>-1</sup>.
 <p>
-The pmf of the free energy can be calculated using TI, BAR and MBAR, and are plotted below. All three are shown, but as they are very consistent, only one is visible, with the other two perfectly behind. As the profiles are both smooth and consistent, this indicates that the perturbation is converged. 
+The PMF of the free energy can be calculated using TI, BAR and MBAR, and are plotted below. All three are shown, but as they are very consistent, only one is visible, with the other two perfectly behind. As the profiles are both smooth and consistent, this indicates that the perturbation is converged. 
 <p>
 <img src="free_energy_profile.png" width="350" height="350" alt="" /> 
 <p>
@@ -127,7 +126,7 @@ protein1-thr1_COU:   -2.926 +- 0.000
      sum of terms:   -4.235 +- 0.000
 
 </pre>
-The top-most and bottom-most numbers show the free energy perturbation for the bound and free leg combined, calculated from the total energy, and the sum of all individual energies respectively. The relative free energy is 0.2 kcal mol<sup>-1</sup> different calculate by TI than MBAR. Three of the contributions contribute over 1 kcal mol<sup>-1</sup>, <code>protein1-thr1_COU</code>, <code>thr-GCS_COU</code> and <code>thr-solvent_COU</code>.
+The top-most and bottom-most numbers show the free energy perturbation for the bound and free leg combined, calculated from the total energy, and the sum of all individual energies respectively. The relative free energy is 0.2 kcal mol<sup>-1</sup> different calculated by TI than MBAR. Three of the contributions contribute over 1 kcal mol<sup>-1</sup>, <code>protein1-thr1_COU</code>, <code>thr-GCS_COU</code> and <code>thr-solvent_COU</code>.
 <p>
 First considering <code>protein1-thr1_COU</code>, this shows that the coulombic interaction between ligand ONE and the protein is 3 kcal mol<sup>-1</sup> more favourable than ligand THR, which is a large energetic contribution for the pertubration of a few atoms.
 <p>
@@ -151,9 +150,9 @@ This can be visualised by taking a bit of each simulation and stitching it toget
 <pre>
 for file in out_*/lam-*/all.pdb ; do sed "/MODEL       31/q" $file >> simulation.pdb; done
 </pre>
-For a longer or shorter trajectory, increase or decrease the number following MODEL. pymol can handle the trajectory as it is, but vmd needs a constant number of water molecules in each frame to read in the trajectory.
+For a longer or shorter trajectory, increase or decrease the number following MODEL. PyMOL can handle the trajectory as it is, but VMD needs a constant number of water molecules in each frame to read in the trajectory, so we need to modify the input before visualising:
 <pre>
-python ../../tools/make_gcmc_traj.py -i simulation.pdb -o vmd_simulation.pdb -n 2
+python $PROTOMSHOME/tools/make_gcmc_traj.py -i simulation.pdb -o vmd_simulation.pdb -n 2
 vmd vmd_simulation.pdb
 </pre>
 Where <code>-n</code> is the maximum number of water molecules expected, which has been determined from the solventson plots above.
@@ -166,7 +165,7 @@ The surface-GCAP simulation should take a similar amount of time as the single o
 <p>
 The free energy of the perturbation from the surface can be calculated. As there are multiple B values, the volume is required.
 <pre>
- python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gcap/ -l 0.25 --estimators gcap --volume 64.
+python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gcap/ -l 0.25 --estimators gcap --volume 64.
 </pre>
 This gives a free energy difference of -94.14 kcal mol<sup>-1</sup>. This can be combined with the free leg of the single topology leg of the simulation from the previous section (-90.18) to give a relative binding free energy of -4.0 kcal mol<sup>-1</sup>. This is consistent with the result calculated with only a single B value.
 <p>
@@ -185,15 +184,15 @@ python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gcap/ -l 0.25 --subdir b_-17.71
 </pre>
 Or any other one-dimensional free energy method. The <code>--subdir</code> points to the directory containing the B value of interest. The first command should give results consistent to the surface-GCAP results, and the results from the previous section, where the protein-ligand complex should be correctly hydrated at each stage. This gives a result of -94.28 kcal mol<sup>-1</sup>.
 <p>
-The second command is looking athe lowest B value, where looking at the water occupancy surface at B=-17.71, the GCMC region will be empty of waters. This gives a free energy of -91.43, which when combined with the free energy leg gives a relative binding free energy of -1.3 kcal mol<sup>-1</sup>. This shows that ligand ONE is more tightly bound, even without the water molecule, but the water molecule is able to stabilise its binding relative to ligand THR by 2.7 kcal mol<sup>-1</sup>.  
+The second command is looking at the lowest B value, where looking at the water occupancy surface at B=-17.71, the GCMC region will be empty of waters. This gives a free energy of -91.43, which when combined with the free energy leg gives a relative binding free energy of -1.3 kcal mol<sup>-1</sup>. This shows that ligand ONE is more tightly bound, even without the water molecule, but the water molecule is able to stabilise its binding relative to ligand THR by 2.7 kcal mol<sup>-1</sup>.  
 <p>
 The binding free energy of the water molecule itself can be calculated using GCI at &lambda;=0 and &lambda;=1.
 <pre>
-python $PROTOMSHOME/tools/calc_gci.py -l 0.25 -v 64. -d lam-0.000/
-python $PROTOMSHOME/tools/calc_gci.py -l 0.25 -v 64. -d lam-1.000/
+python $PROTOMSHOME/tools/calc_gci.py -l 0.25 -v 64. -d out_comb_gcap/lam-0.000/
+python $PROTOMSHOME/tools/calc_gci.py -l 0.25 -v 64. -d out_comb_gcap/lam-1.000/
 </pre>
 <p>
-This calculates the binding free energy of the water molecule with ligand ONE (&lambda; = 0):
+This calculates the binding free energy of the water molecule with ligand ONE (&lambda; = 1):
 <p>
 <pre>
 Number of Waters   Insertion Free Energy   Network Binding Free Energy   Water Binding Free Energy   
