@@ -61,13 +61,13 @@ python $PROTOMSHOME/tools/calc_replicapath.py -f out_free/lam-*/results -p 0.0 0
 <p>to plot the path of the first few &lambda;-values. It should look something like this.<br> <img src="replica_path_free.png" width="33%" height="40%" alt="" /><br> as is clear, these replicas were not able to traverse the full &lambda;-space within the simulation time. Also the replicas starting with &lambda;=1.0 or 0.0 did not exchange very much at all. Hence, the replica exchange was not fully efficient.</p>
 <p>Now, we will estimate the free energy. We will do this both with thermodynamic integration, Bennett's acceptance ratio (BAR) and multistate BAR (MBAR). To do this you can type</p>
 <pre>
-python $PROTOMSHOME/tools/calc_dg.py -d out_free/ -s 10
+python $PROTOMSHOME/tools/calc_dg.py -d out_free/ -l 0.025
 </pre>
-<p>A typical result is between 0 and 1 kcal/mol. Notice that only 10 snapshots are removed from the 400 snapshots when calculating the free energy, because the analysis with <code>calc_series.py</code> indicated that the simulation was equilibrated very much from the start.</p>
+<p>A typical result is between 0 and 1 kcal/mol. Notice that only 10 snapshots are removed from the 400 snapshots (2.5 % of the simulation) when calculating the free energy, because the analysis with <code>calc_series.py</code> indicated that the simulation was equilibrated very much from the start.</p>
 <p>It is important to study the gradient of the TI calculation. It should be smooth in order for the TI to work properly. For the free leg it should look something like this <br>
 <img src="gradients.png" width="%" height="33%" alt="" /></p>
 
-<p>Now, we need to repeat the analysis for the bound leg. You will notice that the equilibration of this simulation is much slower. The computed free energy should be between 6.5 and 7.5 kcal/mol (depending on TI or BAR and how much equilibration is removed). </p>This gives a relative binding free energy of about -0.5 kcal/mol. </p>
+<p>Now, we need to repeat the analysis for the bound leg. You will notice that the equilibration of this simulation is much slower. The computed free energy should be between 1 and 2 kcal/mol (depending on TI or BAR and how much equilibration is removed). </p>This gives a relative binding free energy of about +0.5 kcal/mol. </p>
 <p>
 <hr align="center"/>
 <p> 
