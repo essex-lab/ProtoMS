@@ -137,8 +137,10 @@ def write_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wa
             # Find the closest observation to the centre and use these coordinates as a representative
             min_dist = 1E6
             for i in clust_wat_ids[n]:
-                if np.linalg.norm(coord_list[i]-av_coords) < min_dist:
+                dist = np.linalg.norm(coord_list[i]-av_coords)
+                if dist < min_dist:
                     rep_wat = all_wats[i]
+                    min_dist = dist
             # Write to file
             for i, atom in enumerate(rep_wat.atoms):
                 atom_id = (n - 1) * len(rep_wat.atoms) + i + 1
