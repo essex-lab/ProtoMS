@@ -1,6 +1,6 @@
 """
 calc_clusters2.py
-Script to cluster water observations from a GCMC simulation.
+Script to cluster water observations from a JAWS/GCMC simulation.
 Intended to replace calc_clusters.py
 
 Marley Samways
@@ -22,13 +22,13 @@ def get_args():
     Parse command line arguments
     """
     parser = argparse.ArgumentParser('calc_clusters2.py')
-    parser.add_argument('-i', '--input', help='PDB file containing input frames. Currently accepts only one file', default='all.pdb')
-    parser.add_argument('-m', '--molecule', help='Residue name of water molecules', default='WA1')
-    parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates', default='O00')
-    parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip', default=0)
-    parser.add_argument('-c', '--cutoff', type=float, help='Distance cutoff for clustering. Default=3.0 Angs', default=3.0)
-    parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering', default='average')
-    parser.add_argument('-o', '--output', help='Filename for the PDB output', default='clusts.pdb')
+    parser.add_argument('-i', '--input', help='PDB file containing input frames. Default=\'all.pdb\'', default='all.pdb')
+    parser.add_argument('-m', '--molecule', help='Residue name of water molecules. Default=\'WA1\'', default='WA1')
+    parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates. Default=\'O00\'', default='O00')
+    parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip. Default=0', default=0)
+    parser.add_argument('-c', '--cutoff', type=float, help='Distance cutoff for clustering. Default=2.4 Angs', default=2.4)
+    parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering. Default=\'average\'', default='average')
+    parser.add_argument('-o', '--output', help='Filename for the PDB output. Default=\'clusters.pdb\'', default='clusters.pdb')
     args = parser.parse_args()
     return args
 
@@ -171,7 +171,7 @@ if __name__ == "__main__":
         for j, wat in six.iteritems(pdbfiles.pdbs[i].residues):
             wat_list.append(wat)
             for atom in wat.atoms:
-                if atom.name == args.atom:
+                if atom.name.lower() == args.atom.lower():
                     coord_list.append(atom.coords)
             frame_wat_ids[i].append(len(wat_list)-1)
     total_wats = len(wat_list)
