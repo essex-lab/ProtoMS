@@ -1,311 +1,202 @@
-# Authors: Richard Bradshaw
-#          Ana Cabedo Martinez
-#          Chris Cave-Ayland
-#          Samuel Genheden
-#          Gregory Ross
 """
-Routines to cluster molecules from simulations.
+calc_clusters.py
+Script to cluster water observations from a JAWS/GCMC simulation.
 
-Can be executed from the command line as a stand-alone program
+Marley Samways
+Hannah Bruce Macdonald
+Chris Cave-Ayland
+Gregory Ross
 """
-from __future__ import print_function
-import logging
+
+import argparse
 import numpy as np
-from scipy.cluster import hierarchy
-from scipy.spatial import distance
 import six
+from scipy.cluster import hierarchy
+
 from protomslib import simulationobjects
 
-logger = logging.getLogger('protoms')
 
-
-def get_coords(pdbfiles, molname, atomname):
+def get_args():
     """
-    Finds the coordinates of a specified molecule name or a named atom
-    from supplied PDB files.
+    Parse command line arguments
+    """
+    parser = argparse.ArgumentParser('calc_clusters2.py')
+    parser.add_argument('-i', '--input', help='PDB file containing input frames. Default=\'all.pdb\'', default='all.pdb')
+    parser.add_argument('-m', '--molecule', help='Residue name of water molecules. Default=\'WA1\'', default='WA1')
+    parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates. Default=\'O00\'', default='O00')
+    parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip. Default=0', default=0)
+    parser.add_argument('-c', '--cutoff', type=float, help='Distance cutoff for clustering. Default=2.4 Angs', default=2.4)
+    parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering. Default=\'average\'', default='average')
+    parser.add_argument('-o', '--output', help='Filename for the PDB output. Default=\'clusters.pdb\'', default='clusters.pdb')
+    args = parser.parse_args()
+    return args
+
+
+def get_distances(frame_wat_ids, coord_list):
+    """
+    Calculate the distances between all water observations as a flatted 1D distance matrix
 
     Parameters
     ----------
-    pdbfiles : PDBSet
-      the PDB files
-    residue : string
-      the residue to extract
-    atom : string
-      the name of the atom to extract (optional)
+    frame_wat_ids : list
+        List of lists containing the water IDs present in each frame
+    coord_list : list
+        List of oxygen coordinates for each water molecule observed
 
     Returns
     -------
-    NumpyArray of coordinates
-      the x,y,z coordinates of the specified molecule or atom
-    Integer
-       the number of molecules or atoms matching the names.
+    dist_list : list
+        List of distances between water molecules as a 1D matrix (flattened from 2D)
     """
-    # Extract coordinates from PDB-files
-    mol_xyz = []
-    atm_xyz = []
-    molsizes = []
-    mol_found = 0
-    atm_found = 0
-    for pdb in pdbfiles.pdbs:
-        # First, trying to locate the molecule in the list of residues
-        # (which is everything but water).
-        for i, res in six.iteritems(pdb.residues):
-            if res.name.lower() != molname.lower():
-                continue
-            mol_found = mol_found + 1
-            for atom in res.atoms:
-                if atomname is not None:
-                    if atom.name.strip().lower() == atomname.lower():
-                        atm_xyz.append(atom.coords)
-                        atm_found = atm_found + 1
-                else:
-                    mol_xyz.append(atom.coords)
-                    molsizes.append(len(res.atoms))
-        # Second, trying to locate the molecule in the list of solvents.
-        for i, sol in six.iteritems(pdb.solvents):
-            if sol.name.lower() != molname.lower():
-                continue
-            mol_found = mol_found + 1
-            for iatom in sol.atoms:
-                if atomname is not None:
-                    if iatom.name.strip().lower() == atomname.lower():
-                        atm_xyz.append(iatom.coords)
-                        atm_found = atm_found + 1
-                else:
-                    mol_xyz.append(iatom.coords)
-                    molsizes.append(len(sol.atoms))
-    if not mol_xyz:
-        raise simulationobjects.SetupError(
-            "No molecule with residue name %s has been found." % molname)
-    if atomname is not None:
-        conformations = np.array(atm_xyz)
-        return conformations, atm_found
-    else:
-        mols = np.array(molsizes)
-        if np.std(mols) > 1E-6:
-            print("\nInconistent number of atoms for molecule %s. "
-                  "They must all be the same molecule to be able to compute "
-                  " RMSDs. Aborting clustering.\n" % molname)
-            quit()
-        conformations = np.array(mol_xyz).reshape(mol_found, molsizes[0], 3)
-        return conformations, mol_found
+    print("Calculating water-water distances...")
+    n_wats = len(coord_list)
+    dist_list = []
+    for i in range(n_wats):
+        frame_last = True  # Check if last water was in the same frame
+        for j in range(i+1, n_wats):
+            same_frame = False
+            if frame_last:
+                for frame in frame_wat_ids:
+                    if i in frame and j in frame:
+                        same_frame = True
+                        break
+            if same_frame:
+                dist_list.append(1E8)
+            else:
+                dist_list.append(np.linalg.norm(coord_list[i]-coord_list[j]))
+                frame_last = False  # Stops checking if subsequent j values are in the same frame
+    return dist_list
 
 
-def cluster_coords(confs, clustmethod='average', cutoff=2.0):
+def sort_clusters(clust_ids):
     """
-    Clusters the supplied conformations in a hierarchical fasion
+    Calculate cluster occupancies and order them based on these values
 
     Parameters
     ----------
-    conformations : Numpy array
-      Array of the coordinates of the different conformations
-    method : String
-      the hierarchical clustering method
-    cutoff : Float
-      the RMSD cutoff that specifies whether conformations are in the same cluster.
+    clust_ids : list
+        List indicating which cluster each observation belongs to
 
     Returns
     -------
-    NumpyArray
-      the coordinates of the cluster representatives
-    NumpyArray
-      the coordinates of the cluster centroids
+    clust_ids_sorted : list
+        Cluster IDs sorted by occupancy
+    clust_occ : list
+        List of occupancies for each cluster
     """
-    # Calculate the pairwise RMSDs between the conformations.
-    RMSDs = np.zeros((confs.shape[0], confs.shape[0]))
-    for i in range(confs.shape[0]):
-        x = confs - confs[i]
-        y = np.sum(x**2, axis=2)
-        RMSDs[i, :] = np.mean(y, axis=1)**(1. / 2)
-    RMSDs = distance.squareform(
-        RMSDs)  # Correcting the formating for clustering.
-
-    # The clustering bit.
-    z = hierarchy.linkage(RMSDs, method=clustmethod, metric='euclidean')
-    Clusts = hierarchy.fcluster(z, t=cutoff, criterion='distance')
-
-    # Getting cluster representatives
-    Occ = range(Clusts.max())  # Pre-assigning the occupancy (number in each cluster).
-    ClustReps = np.zeros((Clusts.max(), confs.shape[1], 3))  # Pre-assigning the cluster representatives.
-    ClustMeans = np.zeros((Clusts.max(), confs.shape[1], 3))  # Pre-assigning the atomic position means of each cluster. These are NOT the same as the cluster representatives.
-    MSD = np.zeros((confs.shape[1], Clusts.max()))  # To hold the atomic mean deviations of the cluster representatives.
-    for i in np.arange(1, Clusts.max() + 1):  # Looping over the clusters and saving the conformations with the smallest distance from the atomic centroids.
-        Occ[i - 1] = np.sum(Clusts == i)
-        if Occ[i - 1] == 1:  # If there is only one molecule in the cluster, no need to average over a bunch as it is its own representative.
-            ClustReps[i - 1] = confs[np.where(Clusts == i)]  # (Note that MSD is zero here, as in the pre-assignment).
-            ClustMeans[i - 1] = confs[np.where(Clusts == i)]
-        elif Occ[i - 1] == 2:  # If there are two in a cluster, the mean is equidistant from them both, so simply outputing the first in the cluster.
-            InClusters = confs[np.where(Clusts == i)]
-            ClustMeans[i - 1] = InClusters.mean(axis=0)
-            AtomicSrdDists = ((ClustMeans[i - 1] - InClusters)**2).sum(axis=2)  # The squared distance of each atom to centroid.
-            MSD[:, i - 1] = (AtomicSrdDists[0]).round(decimals=2)  # = Ave(dist^2)
-            ClustReps[i - 1] = confs[np.where(Clusts == i)][0]  # Choosing the first cluster member as the representative of the two. The Bfactor quantifies the uncertainty in this.
-        else:  # More than two in a cluster means that is it is meaningful to pick the closest to the mean as a representative.
-            InClusters = confs[np.where(Clusts == i)]
-            ClustMeans[i - 1] = InClusters.mean(axis=0)  # The centroid of each atom of the cluster.
-            AtomicSrdDists = ((ClustMeans[i - 1] - InClusters)**2).sum(axis=2)  # The squared distance of each atom to centroid.
-            SqrdDists = AtomicSrdDists.sum(axis=1)  # The squared distance of each conformation to centroid.
-            ClustReps[i - 1] = InClusters[np.where(SqrdDists == SqrdDists.min())][0]  # Picking the cluster representative closest to centroids. If there is a tie, pick the first.
-            MSD[:, i - 1] = (AtomicSrdDists[np.where(
-                SqrdDists == SqrdDists.min())][0]).round(
-                    decimals=2)  # = Ave(dist^2).
-    # Sorting in the order of cluster occupancy, from highest to lowest.
-    #SortByOcc = sorted(zip(Occ,range(Clusts.max())),reverse=True)
-    #SortByOcc = [y for (x,y) in SortByOcc]
-    return ClustReps, np.array(Occ)
+    n_clusts = max(clust_ids)
+    # Count occupancy of each cluster
+    clust_occ = [[i, list(clust_ids).count(i)] for i in range(1, n_clusts+1)]
+    clust_occ = sorted(clust_occ, key=lambda x:-x[1])
+    # Renumber the clusters based on this
+    old_order = [x[0] for x in clust_occ]
+    clust_occs = [x[1] for x in clust_occ]
+    # This renumbers the cluster ids for each water so that 1 is the most occupied...
+    clust_ids_sorted = np.asarray([old_order.index(x)+1 for x in clust_ids])
+    return clust_ids_sorted, clust_occs
 
 
-#
-# Helper routines
-#
-
-
-def _GetMolTemplate(FileName, MolName):
+def write_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wats):
     """
-    Extracts the pdb of the molecule of interest. This is then used as a
-    template for printing out coordinates of that molecule.
-    FileLines: a pdb file which is the output from a molecular simulation,
-    and which may contain the coordinates of many other molecules.
-    molname: the residue name of the molecule one wishes to extract
-    theta values for, eg "wa1".
+    Write the average oxygen positions of each cluster to a PDB file
+
+    Parameters
+    ----------
+    filename : str
+        Name of PDB output file
+    clust_wat_ids : dict
+        Dictionary indicating which water observations are present in each cluster
+    n_clusts : int
+        Total number of clusters
+    n_frames : int
+        Total number of frames
+    clust_occs : list
+        List containing occupancies of each cluster
+    all_wats : list
+        List of all water observations, each an instance of 
+
+    Returns
+    -------
+    centres : dict
+        Dictionary containing the average coordinates of each cluster
     """
-    FileLines = open(FileName, "r").readlines()
-    molpdb = []
-    for i in range(len(FileLines)):  # Looping over all lines in pdb.
-        line = FileLines[i]
-        if line[0:4] == "ATOM" or line[0:6] == "HETATM":
-            if line[16:20].strip().lower() == MolName.lower():  # Finding the atoms that match the name of the molcule.
-                molpdb.append(line)
-        elif (line[0:3] == 'TER' or line[0:3] == 'END') and len(molpdb) > 0:
-            molpdb.append('TER')  # At the end of the first molecule, this program stops as
-            break  # a complete pdb of the molecule has been extracted.
-    return molpdb
-
-
-def _printpdb(coords, molpdb, resid, theta, filename):
-    """
-    Prints the coordinates of a molecule in a pdb format,
-    using a template pdb file.
-    coords: the coordinates of the molcule one wishes to print in pdb format.
-    molpdb: the template pdb file of the molecule.
-        """
-    for i in range(len(molpdb)):
-        template = bytearray(molpdb[i]).replace('\n', '')
-        if i < (len(molpdb) - 1):  # Altering only the coordinates, and leaving the TER line untouched.
-            template[30:55] = ' ' * 25  # Clearing the protoms junk.
-            template[30:54] = '{:>8}{:>8}{:>8}'.format(
-                coords[i][0], coords[i][1], coords[i][2])
-            template[22:26] = '{:>4}'.format(
-                resid)  # Residue id by order of appearance.
-            template[56:76] = ' ' * 20  # Clearing the protoms junk.
-            template[56:60] = '{:<4}'.format(
-                round(theta, 2)
-            )  # Printing the molecules theta value in the occupancy column.
-        print(template, file=filename)
-
-
-def get_arg_parser():
-    import argparse
-
-    # Setup a parser of the command-line arguments
-    parser = argparse.ArgumentParser(
-        description="Program to cluster molecules")
-    parser.add_argument('-f', '--files', nargs="+", help="the input PDB-files")
-    parser.add_argument(
-        '-o',
-        '--out',
-        help="the name of the output pdb that contains the cluster "
-             "representatives, default='clusters.pdb'",
-        default="clusters.pdb")
-    parser.add_argument(
-        '-m',
-        '--molecule',
-        help="the name of the molecule to extract, default='wa1'",
-        default="wa1")
-    parser.add_argument(
-        '-a',
-        '--atom',
-        help="the name of the atom to extract. If left blank, the "
-             "entire molecule will be clustered, default=None",
-        default=None)
-    parser.add_argument(
-        '-t',
-        '--type',
-        choices=["average", "single", "complete", "weighted", "centroid"],
-        help="the type of hierarchical clustering method, default='average'",
-        default="average")
-    parser.add_argument(
-        '-c',
-        '--cutoff',
-        type=float,
-        help="the distance cutoff that defines whether conformations "
-             "belong to a cluster, default=2.0",
-        default=2.0)
-    parser.add_argument(
-        '--skip',
-        type=int,
-        help="the number of blocks to skip to calculate the clusters. "
-             "default is 0. Skip must be greater or equal to 0",
-        default=0)
-    parser.add_argument(
-        '--max',
-        type=int,
-        help="the upper block to use. default is 99999 which should make sure "
-             "you will use all the available blocks. max must be greater"
-             " or equal to 0",
-        default=99999)
-    return parser
+    # Print cluster occupancy data to screen
+    for i in range(1, n_clusts+1):
+        print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
+    print("")
+    # Calculate representative coordinates and write to PDB
+    with open(filename, 'w') as f:
+        f.write("REMARK Average cluster locations written by calc_clusters2.py\n")
+        for n in range(1, n_clusts+1):
+            # Calculate average coordinates
+            av_coords = np.zeros(3)
+            for i in clust_wat_ids[n]:
+                av_coords += coord_list[i]
+            av_coords /= len(clust_wat_ids[n])
+            # Find the closest observation to the centre and use these coordinates as a representative
+            min_dist = 1E6
+            for i in clust_wat_ids[n]:
+                dist = np.linalg.norm(coord_list[i]-av_coords)
+                if dist < min_dist:
+                    rep_wat = all_wats[i]
+                    min_dist = dist
+            # Write to file
+            for i, atom in enumerate(rep_wat.atoms):
+                atom_id = (n - 1) * len(rep_wat.atoms) + i + 1
+                f.write('ATOM  {0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.2f}\n'.format(atom_id, atom.name, 'WA1', n,
+                                                                                                                      atom.coords[0], atom.coords[1], atom.coords[2],
+                                                                                                                      clust_occs[n-1]/float(n_frames), clust_occs[n-1]))
+            f.write('TER\n')
+        f.write('END')
+    return None
 
 
 if __name__ == "__main__":
+    # Read command line arguments
+    args = get_args()
+    
+    # Read PDB input data - only water molecules
+    print('\nReading PDB data...')
+    pdbfiles = simulationobjects.PDBSet()
+    pdbfiles.read(args.input, resname=args.molecule, skip=args.skip, readmax=9999)
+    n_frames = len(pdbfiles.pdbs)
+    print('{} frames of PDB data read in.\n'.format(n_frames))
+    
+    # Store all water molecules and oxygen coordinates
+    wat_list = []
+    coord_list = []
+    frame_wat_ids = [[] for i in range(n_frames)]
+    for i in range(n_frames):
+        for j, wat in six.iteritems(pdbfiles.pdbs[i].residues):
+            wat_list.append(wat)
+            for atom in wat.atoms:
+                if atom.name.lower() == args.atom.lower():
+                    coord_list.append(atom.coords)
+            frame_wat_ids[i].append(len(wat_list)-1)
+    total_wats = len(wat_list)
 
-    args = get_arg_parser().parse_args()
+    # Calculate a 1D distance matrix between all water observations
+    dist_list = get_distances(frame_wat_ids, coord_list)
+    
+    # Cluster waters into discrete hydration sites
+    print("Clustering water sites...")
+    tree = hierarchy.linkage(dist_list, method=args.linkage)
+    clust_ids = hierarchy.fcluster(tree, t=args.cutoff, criterion='distance')
+    n_clusts = max(clust_ids)
+    print("\n{} clusters identified:".format(n_clusts))
 
-    if not args.files:
-        print("No input files! Nothing to do, so exit.")
-        quit()
+    # Renumber clusters based on occupancy
+    clust_ids_sorted, clust_occs = sort_clusters(clust_ids)
 
-    # Fix negative values of skip and max
-    if args.max < 0:
-        args.max = 99999
-    if args.skip <= 0:
-        args.skip = -1
+    # Identify which water observations are present in each cluster
+    clust_wat_ids = {}  # Store water IDs for each cluster
+    for i in range(1, n_clusts+1):
+        clust_wat_ids[i] = []
+    for i in range(total_wats):
+        clust = clust_ids_sorted[i]
+        clust_wat_ids[clust].append(i)
 
-    # Read in PDB files
-    if len(args.files) == 1:
-        pdbfiles = simulationobjects.PDBSet()
-        pdbfiles.read(args.files[0], skip=args.skip, readmax=args.max)
-    else:
-        pdbfiles = simulationobjects.PDBSet()
-        for filename in args.files[args.skip:args.max + 1]:
-            pdb = simulationobjects.PDBFile(filename=filename)
-            pdbfiles.pdbs.append(pdb)
+    # Prints out the representative of each cluster to PDB
+    write_clusts("{}".format(args.output), clust_wat_ids,
+                 n_clusts, n_frames, clust_occs, wat_list)
 
-    print("\nPDB data has been read. Clustering...\n")
-
-    # Find the molecule and cluster.
-    confs, numconfs = get_coords(pdbfiles, args.molecule, args.atom)
-    molpdb = []
-    filenum = 0
-    while len(molpdb) == 0:
-        molpdb = _GetMolTemplate(args.files[filenum], args.molecule)
-        filenum += 1
-
-    if numconfs == 0 and args.atom is None:
-        print("\n Molecule '%s' not found in supplied file(s). "
-              "Please check input. \n" % args.molecule)
-        quit()
-    elif numconfs == 0 and args.atom is not None:
-        print("\n Atom '%s' in molecule '%s' not found in supplied file(s)."
-              " Please check input. \n" % (args.atom, args.molecule))
-        quit()
-
-    clusts, occupancies = cluster_coords(
-        confs, clustmethod=args.type, cutoff=args.cutoff)
-    occ_order = np.argsort(occupancies)
-
-    outfile = open(args.out, "w")
-    resid = 1
-    for i in occ_order[::-1]:
-        _printpdb(clusts[i], molpdb, resid, occupancies[i], outfile)
-        resid += 1
