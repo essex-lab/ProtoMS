@@ -4,6 +4,7 @@ pre {
 	border-style: solid;
 	border-color: #d3d3d3;
 	border-width: 1px;
+	white-space: pre-wrap;
    color: #003300;
 }
 code {

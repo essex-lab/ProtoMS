@@ -24,7 +24,9 @@ import numpy as np
 import os
 import sys
 import matplotlib
-from protomslib import *
+from protomslib import simulationobjects
+from protomslib.free_energy import *
+
 # from free_energy_base import *
 # from calc_ti_decomposed import TI_decomposed
 # from gcmc_free_energy_base import GCMCMBAR, GCMCResult, GCMCPMF

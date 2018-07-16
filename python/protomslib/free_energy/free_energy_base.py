@@ -65,7 +65,7 @@ class Series(object):
         return np.array([v.value for v in self.values])
 
     def plot(self, axes, show_error=True, fmt='-', xlabel='Lambda Value',
-             ylabel='Free Energy (kcal)', **kwargs):
+             ylabel='Free Energy (kcal/mol)', **kwargs):
         """Plot this PMF onto the provided figure axes.
 
         Parameters
