@@ -24,3 +24,20 @@ h1 {
 h5 {
 	color: #1b4a99;
 }
+
+* {
+    box-sizing: border-box;
+}
+
+.column {
+    float: left;
+    width: 50.00%;
+    padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+    content: "";
+    clear: both;
+    display: table;h
+}
