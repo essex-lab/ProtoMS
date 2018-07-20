@@ -140,15 +140,15 @@ python $PROTOMSHOME/tools/calc_series.py -f out_comb_gcap/lam-0.000/results -s s
 python $PROTOMSHOME/tools/calc_series.py -f out_comb_gcap/lam-0.533/results -s solventson
 python $PROTOMSHOME/tools/calc_series.py -f out_comb_gcap/lam-1.000/results -s solventson
 </pre>
-This will show the water occupancy of the GCMC box through the simulation for the two ligands; ONE, and intermediate ligand between ONE and THR, and ligand THR. 
+This will show the water occupancy of the GCMC box through the simulation for the two ligands; ONE, an intermediate ligand between ONE and THR, and ligand THR. 
 <p>
-<img src="ligone.png" width="200" height="200" alt="" /> &nbsp;&nbsp; <img src="half.png" width="200" height="200" alt="" /> &nbsp;&nbsp; <img src="ligthr.png" width="200" height="200" alt="" />
+<img src="ligone.png" width="300" alt="" /> &nbsp;&nbsp; <img src="half.png" width="300" alt="" /> &nbsp;&nbsp; <img src="ligthr.png" width="300" alt="" />
 <p>
 This shows that the water occupancy with ligand ONE is one, and ligand THR is zero, although this value samples due to the insertion and deletion moves. For the intermediate ligand, the water occupancy exchanges frequently, and samples both occupancies well.  
 <p>
 This can be visualised by taking a bit of each simulation and stitching it together to view as a trajectory. This can be done using the command below. 
 <pre>
-for file in out_*/lam-*/all.pdb ; do sed "/MODEL       31/q" $file >> simulation.pdb; done
+for file in out_comb_gcap/lam-*/all.pdb; do sed "/MODEL       31/q" $file; done > simulation.pdb
 </pre>
 For a longer or shorter trajectory, increase or decrease the number following MODEL. PyMOL can handle the trajectory as it is, but VMD needs a constant number of water molecules in each frame to read in the trajectory, so we need to modify the input before visualising:
 <pre>
