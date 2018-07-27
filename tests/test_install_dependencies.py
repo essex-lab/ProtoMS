@@ -28,7 +28,7 @@ class TestDependInstallation(unittest.TestCase):
                         "Antechamber AMBERTOOLS module doesn't exist.")
 
         self.assertTrue(os.path.exists(os.path.join(os.environ["AMBERHOME"],
-                                                    "bin/parmchk")),
+                                                    "bin/parmchk2")),
                         "Parmchk AMBERTOOLS module doesn't exist.")
 
 

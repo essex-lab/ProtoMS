@@ -30,6 +30,8 @@ class Jaws2SetupTest(framework.BaseTest):
     ]
 
     output_files = [
+        "fragment.prepi",
+        "fragment.frcmod",
         "fragment.tem",
         "fragment.zmat",
         "fragment_box.pdb",
