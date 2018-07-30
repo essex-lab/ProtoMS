@@ -26,3 +26,4 @@ make install
 RUN chown -R protoms:protoms /home/protoms/protoms-3.4
 USER protoms
 
+CMD /bin/bash

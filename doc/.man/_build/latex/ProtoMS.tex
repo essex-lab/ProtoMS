@@ -55,7 +55,7 @@
 
 
 \title{ProtoMS Documentation}
-\date{Jul 27, 2018}
+\date{Jul 30, 2018}
 \release{3.4}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and H. Bruce-Macdonald, \and J. Graham, \and Marley Samways}
 \newcommand{\sphinxlogo}{\sphinxincludegraphics{logo.png}\par}
@@ -1893,7 +1893,14 @@ Does the same as above, but redirects the RESULTS stream to myfile.txt before th
 \PYG{n}{chunk} \PYG{n}{results} \PYG{n}{writeinst} \PYG{n}{myfile}\PYG{o}{.}\PYG{n}{txt}
 \end{sphinxVerbatim}
 
-Does the same av \sphinxtitleref{write} but instead write instantaneous energies (the energies of the current snapshot) rather than average energies. This can be useful for some analyses.
+Does the same as \sphinxtitleref{write} but instead writes instantaneous energies (the energies of the current snapshot) rather than average energies. This can be useful for some analyses.
+
+Note that all the \sphinxtitleref{chunk averages} lines above are equally valid, if \sphinxtitleref{results} is written instead of \sphinxtitleref{averages}:
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{chunk} \PYG{n}{results} \PYG{n}{write} \PYG{n}{myfile}\PYG{o}{.}\PYG{n}{txt}
+\end{sphinxVerbatim}
 
 \index{restart command}\ignorespaces 
 \def\sphinxLiteralBlockLabel{\label{\detokenize{protoms:index-74}}}
@@ -1916,14 +1923,7 @@ Does the same as above, but redirects the RESTART stream to myfile.txt before th
 \PYG{n}{chunk} \PYG{n}{restart} \PYG{n}{read} \PYG{n}{myfile}\PYG{o}{.}\PYG{n}{txt}
 \end{sphinxVerbatim}
 
-Read in a restart file from the file myfile.txt.
-
-Note that all the \sphinxtitleref{chunk averages} lines above are equally valid, if \sphinxtitleref{results} is written instead of \sphinxtitleref{averages}:
-
-\fvset{hllines={, ,}}%
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n}{chunk} \PYG{n}{results} \PYG{n}{write} \PYG{n}{myfile}\PYG{o}{.}\PYG{n}{txt}
-\end{sphinxVerbatim}
+Read in a restart file from the file myfile.txt. The expected behaviour of ProtoMS varies depending on the restart file provided. If the restart file was written from a simulation that DID NOT complete it’s target number of Monte Carlo steps then reading the restart file will cause ProtoMS to attempt to complete the remaining number of required simulation steps. This is ideal for completing simulations that have been inadvertently stopped before completion. This will only work for restart files written by ProtoMS 3.4. To force the simulation step count to start from zero you can edit the restart file and change the value of the entry on the first line to a T. If the restart file was written from a simulation that DID complete it’s target number of Monte Carlo steps then the restart data will simply override the data from the pdb inputs and the simulation step count will start from zero.
 
 
 \subsection{PDB Output}

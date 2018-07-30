@@ -1377,8 +1377,11 @@ Does the same as above, but redirects the RESULTS stream to myfile.txt before th
 
   chunk results writeinst myfile.txt
 
-Does the same av `write` but instead write instantaneous energies (the energies of the current snapshot) rather than average energies. This can be useful for some analyses. 
+Does the same as `write` but instead writes instantaneous energies (the energies of the current snapshot) rather than average energies. This can be useful for some analyses. 
 
+Note that all the `chunk averages` lines above are equally valid, if `results` is written instead of `averages`::
+
+  chunk results write myfile.txt
 
 .. index::
   single: restart command
@@ -1395,11 +1398,7 @@ Does the same as above, but redirects the RESTART stream to myfile.txt before th
 
   chunk restart read myfile.txt
   
-Read in a restart file from the file myfile.txt.
-
-Note that all the `chunk averages` lines above are equally valid, if `results` is written instead of `averages`::
-
-  chunk results write myfile.txt
+Read in a restart file from the file myfile.txt. The expected behaviour of ProtoMS varies depending on the restart file provided. If the restart file was written from a simulation that DID NOT complete it's target number of Monte Carlo steps then reading the restart file will cause ProtoMS to attempt to complete the remaining number of required simulation steps. This is ideal for completing simulations that have been inadvertently stopped before completion. This will only work for restart files written by ProtoMS 3.4. To force the simulation step count to start from zero you can edit the restart file and change the value of the entry on the first line to a T. If the restart file was written from a simulation that DID complete it's target number of Monte Carlo steps then the restart data will simply override the data from the pdb inputs and the simulation step count will start from zero.
 
 -----------
 PDB Output
