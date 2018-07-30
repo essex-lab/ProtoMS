@@ -9,7 +9,7 @@ par 4600    4600    4600    4601    4600    4600
 par 4601    4600    4600    4602    4600    4600
 #atm atm1 atm2 atm3 atm4 parameter #comment
 atm cp cp nb ca    4600
-atm ca nb cp ca    4601
+atm ca cp nb ca    4601
 mode clj
 #parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1) 
 par 3000    cp    06    0.53880    3.39967    0.08600

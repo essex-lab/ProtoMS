@@ -532,8 +532,8 @@ def _readfrcmod(filename):
             cols = line.replace(" -", "-").split()
             if not cols:
                 break
-            dihedrals.append([cols[0].split('-')] +
-                             list(map(float, cols[1:5])))
+            div, k, n, phi = map(float, cols[1:5])
+            dihedrals.append([cols[0].split('-'), 1., k / div, n, phi])
 
         next(f)
 

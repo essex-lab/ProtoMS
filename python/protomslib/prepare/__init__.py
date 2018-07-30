@@ -924,13 +924,13 @@ def run_parmchk(lig):
     else:
         name = lig.name
 
-    parm_exe = _get_executable_path('parmchk')
+    parm_exe = _get_executable_path('parmchk2')
 
     # Remove the extension from the filename
     out_name = os.path.splitext(name)[0]
     cmd = '%s -i %s.prepi -f prepi -o %s.frcmod' % (parm_exe, out_name,
                                                     out_name)
-    _run_program('parmchk', cmd)
+    _run_program('parmchk2', cmd)
     return "%s.frcmod" % out_name
 
 

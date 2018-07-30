@@ -139,6 +139,7 @@ if(NOT MPI_Fortran_FOUND OR AVOID_MPI)
         "assignlambdare.F"
         "assigntemperaturere.F"
         "assignadamre.F"
+	"checksamestart.F"
         "lambdare.F"
         "gcmcre.F"
         "temperaturere.F")
@@ -155,20 +156,17 @@ endif()
 
 
 set(PYTHON_STAGING_DIR "${CMAKE_CURRENT_BINARY_DIR}/python/")
+file(GLOB PYTHON_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/python/*/*.py")
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/python" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(PythonInstall
-  COMMAND "${CMAKE_COMMAND} ${PYTHON_EXECUTABLE} setup.py install"
-  WORKING_DIRECTORY "${PYTHON_STAGING_DIR}"
-  COMMENT "comment ${PYTHON_STAGING_DIR}"
-)
-
 set(PYTHON_INSTALL_OPTIONS "" CACHE STRING "Additional options for setup.py")
+
 # Setup install directory
 # Optional 'make install' step
 install(TARGETS protoms3
   RUNTIME DESTINATION "./")
 install(CODE "execute_process(COMMAND python setup.py install ${PYTHON_INSTALL_OPTIONS}
  WORKING_DIRECTORY ${PYTHON_STAGING_DIR})")
+
 if(COVERAGE)
     #Enabling creation and submission of dashboard
     ##configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CTestConfig.cmake" 
