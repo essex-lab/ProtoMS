@@ -24,13 +24,16 @@ import numpy as np
 import os
 import sys
 import matplotlib
-from free_energy_base import *
-from calc_ti_decomposed import TI_decomposed
-from gcmc_free_energy_base import GCMCMBAR, GCMCResult, GCMCPMF
+from protomslib import *
+from protomslib import simulationobjects
+from protomslib.free_energy import *
+# from free_energy_base import *
+# from calc_ti_decomposed import TI_decomposed
+# from gcmc_free_energy_base import GCMCMBAR, GCMCResult, GCMCPMF
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-with open(sys.argv[1]) as f:
+with open(sys.argv[1], 'rb') as f:
     data = pickle.load(f)

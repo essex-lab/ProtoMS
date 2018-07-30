@@ -113,7 +113,7 @@ def plot_fractional_dataset_results(results, estimators):
       Estimator classes used to store
     """
     fig, ax = plt.subplots()
-    x = sorted(results, key=lambda i: i.__name__)
+    x = sorted(results)
     for estimator in estimators:
         dat = [results[prop][estimator] for prop in x]
         plot_results(x, dat, ax, label=estimator.__name__)
