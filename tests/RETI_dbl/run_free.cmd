@@ -34,5 +34,5 @@ dump 1 results writeinst results_inst
 dump 1 pdb all solvent=all file=all.pdb standard
 dump 1 restart write restart
 dump 1 averages reset
-chunk equilibrate 0 solvent=854 protein=0 solute=143 volume=3
-chunk simulate 10 solvent=854 protein=0 solute=143 volume=3
+chunk equilibrate 0 solvent=920 protein=0 solute=77 volume=3
+chunk simulate 10 solvent=920 protein=0 solute=77 volume=3

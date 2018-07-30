@@ -11,7 +11,7 @@ logger = logging.getLogger('protoms')
 FORCE_CONSTANT = 1
 
 
-def _assignMoveProbabilities(protein, solute, solvent, moveset, isperiodic):
+def _assignMoveProbabilities(protein, solute, solvent, moveset, isperiodic, dual=False):
     """
     Assigns move probabilities for protein, solute, solvent and box
     Does this by some "heuristic" rule
@@ -39,7 +39,10 @@ def _assignMoveProbabilities(protein, solute, solvent, moveset, isperiodic):
     pgcsolu = 0.0
 
     accel_prot = 5  # Factor by which the protein is accelerated w.r.t solvent
-    accel_solu = 50  # Factor by which the solute is accelerated w.r.t solvent
+    if dual == False:
+        accel_solu = 50  # Factor by which the solute is accelerated w.r.t solvent
+    else:
+        accel_solu = 25  # Half as many ligand moves for dual topology sims with 2 ligands 
     addto = 1000.0  # Move proportion add up to this number
 
     if protein is not None:
@@ -662,7 +665,7 @@ class DualTopology(ProteinLigandSimulation):
                      FORCE_CONSTANT))
 
         moves = _assignMoveProbabilities(protein, solutes, solvent, "standard",
-                                         self.periodic)
+                                         self.periodic,dual=True)
         self.setChunk("equilibrate %d %s" % (nequil, moves))
         self.setChunk("simulate %d %s" % (nprod, moves))
 
@@ -1115,7 +1118,7 @@ class GCAPDual(ProteinLigandSimulation):
                      FORCE_CONSTANT))
 
         moves = _assignMoveProbabilities(protein, solutes, solvent, "gcmc",
-                                         self.periodic)
+                                         self.periodic,dual=True)
         self.setChunk(
             "equilibrate %d solvent=0 protein=0 solute=0 insertion=333"
             " deletion=333 gcsolute=333" % nequil)
@@ -1433,7 +1436,7 @@ class RestraintRelease(ProteinLigandSimulation):
                    FORCE_CONSTANT))
 
         moves = _assignMoveProbabilities(protein, solutes, solvent, "standard",
-                                         self.periodic)
+                                         self.periodic,dual=True)
         self.setChunk("equilibrate %d %s" % (nequil, moves))
         self.setChunk("simulate %d %s" % (nprod, moves))
 
