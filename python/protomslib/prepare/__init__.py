@@ -627,7 +627,7 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
 
     # If the dimensions of the gcmc box have been provided
     elif settings.gcmcbox is not None and len(settings.gcmcbox) is 6 and [
-            _is_float(value) for value in settings.gcmcbox
+            isinstance(value, float) for value in settings.gcmcbox
     ]:
         # Generate the box pdb
         boxpdb = "%s_box.pdb" % settings.simulation

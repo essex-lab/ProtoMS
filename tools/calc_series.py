@@ -597,11 +597,11 @@ def write_series(ys, yprop, labels, offset, filekind, outprefix):
                 "#Equilibration time: %s\n" % "\t".join("%d" % prop["equil"]
                                                         for prop in yprop))
             f.write(
-                "#Independent samples: %s\n" % "\t".join("%d" % prop["neff"]
-                                                         for prop in yprop))
+                "#Independent samples: %s\n" % "\t".join("{}".format(prop["neff"]
+                                                         for prop in yprop)))
             f.write(
-                "#Production period g: %s\n" % "\t".join("%d" % prop["g"]
-                                                         for prop in yprop))
+                "#Production period g: %s\n" % "\t".join("%d".format(prop["g"]
+                                                         for prop in yprop)))
             f.write("#Snapshot when independent samples are optimized: %s\n" %
                     "\t".join("%d" % prop["t_opt"] for prop in yprop))
             f.write("#Minimum g: %s\n" % "\t".join("%d" % prop["g_min"]
