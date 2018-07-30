@@ -170,7 +170,6 @@ class GCI(feb.Estimator):
         model = fit_ensemble(
             x=np.array(self.B_values), y=Ns, size=model_steps,
             repeats=self.nfits, verbose=False)[0]
-
         steps = np.arange(self.N_min, self.N_max+1)
         pmf = feb.PMF(steps, insertion_pmf(steps, model, self.volume))
         return GCMCPMF(self.B_values, Ns, self.volume, temp, model, pmf)
@@ -865,7 +864,7 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
     method. Collates water occupancy data from simulations carried out at
     diferent chemical potentials and gives NVT binding free energies."""
     def __init__(self, root_paths, temperature, volume, nsteps=None,
-                 nmin=None, nmax=None, nfits=5, **kwargs):
+                 nmin=None, nmax=None, nfits=5, pin_min=None,**kwargs):
         """Parameters
         ---------
         root_paths: a list of strings
@@ -904,6 +903,7 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
             nmin=nmin,
             nmax=nmax,
             nfits=nfits,
+	    pin_min=pin_min,
             **kwargs)
 
     def _path_constructor(self, root_path):
@@ -1042,4 +1042,9 @@ def get_gci_arg_parser():
         help='The number of independent fitting attempts for the neural '
              'network occupancy model. Increasing the number of fits may '
              'help improve results for noisy data.')
+    parser.add_argument(
+        '--pin_min', type=float, default=None,
+        help='The minimum value when fitting the neural '
+             'network occupancy model. Setting this may '
+             'help improve models which are poorly fit at low values')
     return parser
