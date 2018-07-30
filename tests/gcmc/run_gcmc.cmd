@@ -22,7 +22,7 @@ pdbparams on
 gcmc 0
 parfile $PROTOMSHOME/data/gcmc_tip4p.tem
 grand1 gcmc_wat.pdb
-multigcmc 200 19.000 20.000 
+multigcmc 100 19.000 20.000 
 originx 30.024
 originy 1.952
 originz 8.033

@@ -1,23 +1,28 @@
 # This Dockerfile can be used to create a production ready protoms environment
 # suitable for distribution
-# It is derived from the protoms-environment image defined in Dockerfile_test
+# It is derived from the protoms-test-environment image defined in Dockerfile_test
 # that sets up the necessary environment. This container simply copies across
 # the repository and triggers compilation of the code. It should be run from
 # a freshly cloned code repository.
 
 # A container can be built from this file by running the below command in $PROTOMSHOME:
-# docker build -t protoms .
+# docker build -t protoms:3.4 .
 
-# An interactive image can then be started with
-# docker run -it protoms /bin/bash
+# An interactive container can then be started with
+# docker run -it protoms:3.4 /bin/bash
 
-From protoms-environment
+From protoms-test-environment
 
-WORKDIR /protoms-dev
+RUN useradd --create-home --home-dir /home/protoms --shell /bin/bash --user-group protoms
+WORKDIR /home/protoms/protoms-3.4
+ADD . /home/protoms/protoms-3.4
+ENV PROTOMSHOME /home/protoms/protoms-3.4
 
-ADD . /protoms-dev
-
+RUN rm -rf build
 RUN mkdir build
 RUN cd build; \
 cmake ..; \
 make install
+RUN chown -R protoms:protoms /home/protoms/protoms-3.4
+USER protoms
+

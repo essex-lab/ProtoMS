@@ -4,18 +4,17 @@ Attempt/accept/% moves for solute 1 eth
 #######################################
 Attempt/accept/% moves for solute 2 meo
 #######################################
-Residue    1 MEO         1/       1( 100.000%)
-Total        1/       1( 100.000%)
 ######################################
 Attempt/accept/% moves for the solvent
 ######################################
-Solvent    65 T4P         1/       1( 100.000%)
-Solvent    68 T4P         0/       1(   0.000%)
-Solvent   123 T4P         0/       1(   0.000%)
-Solvent   127 T4P         1/       1( 100.000%)
-Solvent   136 T4P         1/       1( 100.000%)
-Solvent   158 T4P         0/       1(   0.000%)
-Solvent   159 T4P         1/       1( 100.000%)
-Solvent   187 T4P         0/       1(   0.000%)
-Solvent   200 T4P         1/       1( 100.000%)
-Total        5/       9(  55.556%)
+Solvent     8 T4P         1/       1( 100.000%)
+Solvent    59 T4P         1/       1( 100.000%)
+Solvent    67 T4P         1/       1( 100.000%)
+Solvent    75 T4P         1/       1( 100.000%)
+Solvent    78 T4P         0/       1(   0.000%)
+Solvent   101 T4P         0/       1(   0.000%)
+Solvent   154 T4P         1/       1( 100.000%)
+Solvent   225 T4P         0/       1(   0.000%)
+Solvent   243 T4P         1/       1( 100.000%)
+Solvent   279 T4P         1/       1( 100.000%)
+Total        7/      10(  70.000%)

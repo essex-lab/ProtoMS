@@ -14,6 +14,7 @@ Can be executed from the command line as a stand-alone program
 
 import logging
 import numpy as np
+import six
 from protomslib import simulationobjects
 
 logger = logging.getLogger('protoms')
@@ -45,7 +46,7 @@ def calc_rmsd(ref, structures, resname, atomname=None):
 
     centers = []
     for pdb in structures.pdbs:
-        for i, res in pdb.residues.iteritems():
+        for i, res in six.iteritems(pdb.residues):
             if res.name.lower() != resname:
                 continue
             center = np.zeros(3)
@@ -59,7 +60,7 @@ def calc_rmsd(ref, structures, resname, atomname=None):
             centers.append(center)
 
     refcent = np.zeros(3)
-    for i, res in ref.residues.iteritems():
+    for i, res in six.iteritems(ref.residues):
         if res.name.lower() == resname:
             for atom in res.atoms:
                 if atomname is not None and \

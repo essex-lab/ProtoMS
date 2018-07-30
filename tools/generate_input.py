@@ -37,7 +37,7 @@ def get_arg_parser():
         '--simulation',
         choices=[
             "sampling", "equilibration", "dualtopology", "singletopology",
-            "gcmc", "jaws1", "jaws2"
+            "gcap_single","gcap_dual","gcmc", "jaws1", "jaws2"
         ],
         help="the kind of simulation to setup",
         default="equilibration")
@@ -180,3 +180,4 @@ if __name__ == "__main__":
             bnd_cmd.writeCommandFile(args.out + "_bnd.cmd")
     if gas_cmd is not None:
         gas_cmd.writeCommandFile(args.out + "_gas.cmd")
+

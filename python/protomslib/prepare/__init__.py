@@ -513,7 +513,10 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
     """
 
     def pdb2box(pdbobj, padding=2.0):
-        boxpdb = "%s_box.pdb" % settings.simulation
+        if settings.simulation not in ["gcap_single","gcap_dual"]:
+          boxpdb = "%s_box.pdb" % settings.simulation
+        else:
+          boxpdb = "gcmc_box.pdb" 
         box = make_gcmcbox(pdbobj, boxpdb, padding)
         simulationobjects.write_box(boxpdb, box)
         logger.info("")
@@ -596,8 +599,10 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
                 len(settings.gcmcbox), " ".join(settings.gcmcbox))
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
-
-    ghost_name = "%s_wat.pdb" % settings.simulation
+    if settings.simulation not in ["gcap_single","gcap_dual"]:
+      ghost_name = "%s_wat.pdb" % settings.simulation
+    else:
+      ghost_name = "gcmc_wat.pdb" 
     write = True
 
     # If the gcmcbox has been set as a file
@@ -622,7 +627,7 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
 
     # If the dimensions of the gcmc box have been provided
     elif settings.gcmcbox is not None and len(settings.gcmcbox) is 6 and [
-            _is_float(value) for value in settings.gcmcbox
+            isinstance(value, float) for value in settings.gcmcbox
     ]:
         # Generate the box pdb
         boxpdb = "%s_box.pdb" % settings.simulation
@@ -919,13 +924,13 @@ def run_parmchk(lig):
     else:
         name = lig.name
 
-    parm_exe = _get_executable_path('parmchk')
+    parm_exe = _get_executable_path('parmchk2')
 
     # Remove the extension from the filename
     out_name = os.path.splitext(name)[0]
     cmd = '%s -i %s.prepi -f prepi -o %s.frcmod' % (parm_exe, out_name,
                                                     out_name)
-    _run_program('parmchk', cmd)
+    _run_program('parmchk2', cmd)
     return "%s.frcmod" % out_name
 
 

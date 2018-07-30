@@ -150,7 +150,7 @@ def solvate(box,
                 solute["atoms"].append(
                     prot_pdb.residues[i].atoms[j].element.lower())
                 solute["xyz"].append(prot_pdb.residues[i].atoms[j].coords)
-        for i in prot_pdb.solvents:
+        for i in sorted(prot_pdb.solvents):
             xyz = []
             for j in range(len(prot_pdb.solvents[i].atoms)):
                 prot_pdb.solvents[i].atoms[j].getElement()

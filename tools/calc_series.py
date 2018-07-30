@@ -24,6 +24,7 @@ from __future__ import print_function
 import logging
 import matplotlib
 import numpy as np
+import six
 import os
 from scipy.stats import spearmanr
 from scipy.stats import kendalltau
@@ -525,6 +526,7 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
             color=simulationobjects.color(i))
 
         if not plotkind.startswith("single"):
+            ax.set_xlim([0, max(x)])
             ax.set_ylim([ymin, ymax])
             ax.set_xlabel("Snapshot")
             ax.set_ylabel(label)
@@ -533,6 +535,7 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
                 outprefix + "_" + _label0(label) + ".png", format="png")
 
     if plotkind.startswith("single"):
+        ax.set_xlim([0, max(x)])
         ax.set_ylim([ymin, ymax])
         ax.set_xlabel("Snapshot")
         if ys.shape[0] == 1:
@@ -546,7 +549,7 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
         if "DISPLAY" in os.environ and os.environ["DISPLAY"] != "":
             currfig.show()
             print("\nType enter to quit\n>", end="")
-            raw_input()
+            six.moves.input()
 
 
 def write_series(ys, yprop, labels, offset, filekind, outprefix):
@@ -594,11 +597,11 @@ def write_series(ys, yprop, labels, offset, filekind, outprefix):
                 "#Equilibration time: %s\n" % "\t".join("%d" % prop["equil"]
                                                         for prop in yprop))
             f.write(
-                "#Independent samples: %s\n" % "\t".join("%d" % prop["neff"]
-                                                         for prop in yprop))
+                "#Independent samples: %s\n" % "\t".join("{}".format(prop["neff"]
+                                                         for prop in yprop)))
             f.write(
-                "#Production period g: %s\n" % "\t".join("%d" % prop["g"]
-                                                         for prop in yprop))
+                "#Production period g: %s\n" % "\t".join("%d".format(prop["g"]
+                                                         for prop in yprop)))
             f.write("#Snapshot when independent samples are optimized: %s\n" %
                     "\t".join("%d" % prop["t_opt"] for prop in yprop))
             f.write("#Minimum g: %s\n" % "\t".join("%d" % prop["g_min"]
@@ -664,11 +667,11 @@ def _select_series(results):
         print("(type e.g. feenergy or feenergy/0.000,1.000)")
 
     print("\n> ", end="")
-    instr = raw_input()
+    instr = six.moves.input()
     while len(instr) > 0:
         selection.append(instr)
         print("> ", end="")
-        instr = raw_input()
+        instr = six.moves.input()
     return selection
 
 
@@ -688,7 +691,7 @@ def _select_plot():
     print("4) Single plot + subtract first snapshot")
     print("5) Single plot + subtract last snapshot")
     print("\n> ", end="")
-    instr = raw_input()
+    instr = six.moves.input()
     if instr == "2":
         return "sub"
     elif instr == "3":

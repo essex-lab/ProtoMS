@@ -1,8 +1,8 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 
 import sys
 import os
-import string
+# import string
 import re
 
 #dictionary of all of the functions
@@ -52,7 +52,7 @@ class Variable:
         """Expand this parameter's value"""
         if (self.value.isdigit()): return self.value
         
-        echo = "%s %s" % (string.join(bcstr," "),self.value.lower().replace("**","^"))
+        echo = "%s %s" % (" ".join(bcstr),self.value.lower().replace("**","^"))
 
         #if (echo.lstrip().rstrip() == ""):
         #    return 1.0
@@ -116,7 +116,7 @@ class Variable:
             else:
                 dims.append("%s" % (dim))
 
-        return string.join(dims,", ")
+        return ", ".join(dims)
 
     def numberDimensions(self):
         dims = []
@@ -145,7 +145,7 @@ class Variable:
 
                 dims.append(tmp)
                 
-        return string.join(dims,", ")
+        return ", ".join(dims)
 
 class Routine:
     """This class holds all of the information about a function or subroutine
@@ -199,13 +199,13 @@ class Routine:
                 return "%s function %s()" % (self.__returns,self.__name)
             else:
                 return "%s function %s(%s)" % (self.__returns,self.__name, \
-                                                string.join(self.__args,",").rstrip(","))
+                                               ",".join(self.__args).rstrip(","))
         else:
             if (len(self.__args) == 0):
                 return "subroutine %s()" % (self.__name)
             else:
                 return "subroutine %s(%s)" % (self.__name, \
-                                                string.join(self.__args,",").rstrip(","))
+                                              ",".join(self.__args).rstrip(","))
     
     def calledBy(self):
         return self.__calledby
@@ -301,7 +301,7 @@ def readFile(f):
         lines = open(f,"r").readlines()
         return lines;
     except IOError:
-        print "Cannot open %s" % f
+        print("Cannot open %s" % f)
         return []
 
 def isComment(line):
@@ -376,7 +376,7 @@ def parseInclude(f):
                     strt = 2
                     
                 #get all of the variables on the line
-                line = string.join(words[strt:]," ")
+                line = " ".join(words[strt:])
                 #split by ')' - this splits arrays up by arrays
                 mvals = line.split(")")
                 for mval in mvals:
@@ -395,11 +395,11 @@ def parseInclude(f):
                     variables[val.lower()].setDimensions(dims)
                         
         except IndexError:
-            print "Index error!"
+            print("Index error!")
             return
-        except KeyError, (e):
-            print "Key error for line ",line.rstrip()
-            print e,e.args
+        except KeyError as e:
+            print("Key error for line ",line.rstrip())
+            print(e,e.args)
             continue
         
 
@@ -423,7 +423,7 @@ if (__name__ == "__main__"):
     #now print out the memory usage
     total = 0.0    
     totals = {}
-    print "There are %d variables" % len(variables)
+    print("There are %d variables" % len(variables))
     for v in variables:
         variable = variables[v]
         sz = variable.size()/(1024*8.0)
@@ -443,12 +443,12 @@ if (__name__ == "__main__"):
             else:
                 totals[sz] = tmp
 
-    keys = totals.keys()
+    keys = list(totals.keys())
     keys.sort()
     for key in keys:
-        print totals[key]
+        print(totals[key])
                                          
     total = total / (1024.0)
-    print "\nNote that the above values are estimates. Based on these\n" \
-          "values, ProtoMS would require %4.0f MB if fully loaded." % total
+    print("\nNote that the above values are estimates. Based on these\n"
+          "values, ProtoMS would require %4.0f MB if fully loaded." % total)
 

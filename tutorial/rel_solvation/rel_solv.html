@@ -24,7 +24,7 @@ However, for more complex molecules you may need to take additional care in prep
 <h5>Setup</h5>
 <p>
 We will start with a single topology approach. While conceptually this may be simpler, there are some careful choices that need to be made in setup, as you will see. The simplest way to start the setup of the simulation is by typing the following:</p>
-<pre>python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb </pre>
+<pre>python $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb </pre>
 <p>
 <i>How to choose corresponding atoms</i></p>
 <p>
@@ -61,12 +61,12 @@ This is most conveniently done on a computer cluster. If you run all 6 calculati
 <h5>Analysis</h5>
 When the simulations are finished you need to analyse the simulation and extract the free energy of the free and gas phase legs. We will start with looking at some energy series to investigate whether the simulations are converged. Type
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_series.py -f out_comb_free/lam-0.000/results
+python $PROTOMSHOME/tools/calc_series.py -f out_comb_free/lam-0.000/results
 </pre>
 to look at time series for the free leg at &lambda;=0.0. In the wizard that appears you can type <code>total</code> followed by enter twice. This will plot the total energy as a function of simulation snapshot. It should look something like this:</p>
 <img src="comb_free_total.png" width="406" height="306" alt="Combined total" />
 <p>The program will also give you some indicating on the statistical equilibration of this time series. You should see equilibration fairly early on - in fact in this case we can see that the average total energy is fairly flat throughout, and the simulation is treated as equilibrated all the way through. 
-Thus, we have to discard very little of the simulation when we compute the free energy. If you wish, you can check this by visualising a running or moving average too - type <code>python2.7 $PROTOMSHOME/tools/calc_series.py -h</code> 
+Thus, we have to discard very little of the simulation when we compute the free energy. If you wish, you can check this by visualising a running or moving average too - type <code>python $PROTOMSHOME/tools/calc_series.py -h</code> 
 to see instructions for using the options to do this.</p>
 <p>Finally, we said we would compare the combined, ele and vdw protocols so perform the same analysis on the results files in <code>out_ele_free</code> and <code>out_vdw_free</code>. You should again see equilibration very near the beginning of the simulation - this perturbation is fairly 'well behaved'.</p>
 <p>Next, we will analyse how effective the &lambda; replica exchange was. Open up the simulation info file in your favourite text editor, e.g.:</p>
@@ -75,12 +75,12 @@ nano out_comb_free/lam-0.000/info
 </pre>
 <p>
 Somewhere near the bottom of the file you will find a line that looks something like this:</p>
-<pre>Attempted/successful lambda swaps:   1502  1139 (  75.832%)</pre>
+<pre>Attempted/successful lambda swaps for lambdaladder   1 :   2986  2304 (  77.160%)</pre>
 <p>
 Indicating that the overall acceptance rate for the &lambda; swaps was around 75% - quite high, indicating a good overlap between neighbouring &lambda;-windows. If you find the same statistics for the separate ele and vdw perturbations 
 you may find that they show even higher ratios (though to be certain of this we would need to run more repeats). Now let's have a look at the paths of individual replicas during the simulation:</p>
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_replicapath.py -f out_comb_free/lam-*/results -p 1.0 0.8 0.533 0.2 0.0 -o replica_path_comb.png
+python $PROTOMSHOME/tools/calc_replicapath.py -f out_comb_free/lam-*/results -p 1.0 0.8 0.533 0.2 0.0 -o replica_path_comb.png
 </pre>
 <p>
 You'll see something like this:<br>
@@ -94,22 +94,23 @@ Finally, let's estimate the free energy. We will do this using a variety of meth
 Remember that with the a single topology protocol we need to evaluate the free energy change for both the free leg and the gas phase leg, plugging the results into the sum identified by the thermodynamic cycle below:</p>
 <img src="thermo_cycle.png" width="416" height="291" alt="Thermodynamic cycle" />
 <p>
-For the calculations, let's start with the combined protocol. As we've seen, the simulation equilibrates fairly rapidly, so let's skip only the first 10 blocks of data:</p>
+For the calculations, let's start with the combined protocol. As we've seen, the simulation equilibrates fairly rapidly, so let's skip only the first 10 blocks of data, (corresponding to 2.5 % of the simulation):</p>
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_comb_free/ -s 10
-python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_comb_gas/ -s 10
+python $PROTOMSHOME/tools/calc_dg.py -d out_comb_free/ -l 0.025
+python $PROTOMSHOME/tools/calc_dg.py -d out_comb_gas/ -l 0.025
 </pre>
 <p>
-We end up with a &Delta;G for the free leg of roughly -3.1 kcal mol<sup>-1</sup>, and for the gas leg of +3.1 kcal mol<sup>-1</sup>, giving a total &Delta;&Delta;G between methanol and ethane of -6.2 kcal mol<sup>-1</sup>. Repeat the same calculations for the separate ele and vdw protocols:</p>
+We end up with a &Delta;G for the free leg of roughly -3.0 kcal mol<sup>-1</sup>, and for the gas leg of +2.9 kcal mol<sup>-1</sup>, giving a total &Delta;&Delta;G between methanol and ethane of -5.9 kcal mol<sup>-1</sup>. Repeat the same calculations for the separate ele and vdw protocols:</p>
 <pre>
-python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_ele_free/ -s 10
-python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_vdw_free/ -s 10
-python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_ele_gas/ -s 10
-python2.7 $PROTOMSHOME/tools/calc_dg.py -d out_vdw_gas/ -s 10
+python $PROTOMSHOME/tools/calc_dg.py -d out_ele_free/ -l 0.025 
+python $PROTOMSHOME/tools/calc_dg.py -d out_vdw_free/ -l 0.025 
+python $PROTOMSHOME/tools/calc_dg.py -d out_ele_gas/ -l 0.025
+python $PROTOMSHOME/tools/calc_dg.py -d out_vdw_gas/ -l 0.025
 </pre>
 <p>
-This time the free legs (the sum of the ele and vdw contributions) have a &Delta;G of -2.8 kcal mol<sup>-1</sup> and the gas legs of +3.1 kcal mol<sup>-1</sup>, giving a total &Delta;&Delta;G of -5.9 kcal mol<sup>-1</sup>. 
-So you can see that although the end results are very similar, there are some slight differences between the protocols, particularly in the solvated (free) leg.</p>
+Again, we observe &Delta;G values of -3.0 kcal mol<sup>-1</sup> and +2.9 kcal mol<sup>-1</sup> for the free and gas legs (by summing the electrostatic and van der Waals contributions), respectively.
+This results in a total &Delta;&Delta;G value of -5.9 kcal mol<sup>-1</sup>, which is in agreement with the result obtained from the combined path.
+The agreement between individual observations may vary, hence it is strongly recommended to analyse multiple repeats, rather than the single simulation analysed here.</p>
 <p>Now, let's try the equivalent dual topology simulation, which you should find simpler to set up.</p>
 <hr align="center"/>
 <p> 
@@ -121,7 +122,7 @@ However, this does not always mean that results will be more accurate or more pr
 <h5>Setup</h5>
 <p>
 To set up the dual topology simulation type:</p>
-<pre>python2.7 $PROTOMSHOME/protoms.py -s dualtopology -l ethane.pdb methanol.pdb </pre>
+<pre>python $PROTOMSHOME/protoms.py -s dualtopology -l ethane.pdb methanol.pdb </pre>
 <p>
 You'll notice that only a single <code>run_free.cmd</code> input file is produced, as we no longer need gas phase simulations.
 </p>
@@ -132,14 +133,14 @@ Running the simulation will take approximately 2-3 hours on a cluster. Like the 
 mpirun -np 16 $PROTOMSHOME/protoms3 run_free.cmd
 </pre>
 <p>
-After the runs are complete you should carry out the analysis similarly to the single topology simulation above. You'll obtain a free energy change for the free leg of roughly -6.9 kcal mol<sup>-1</sup>. Remember that for dual topology this corresponds directly to the &Delta;&Delta;G between the two solutes.</p>
+After the runs are complete you should carry out the analysis similarly to the single topology simulation above. You'll obtain a free energy change for the free leg of roughly -6.1 kcal mol<sup>-1</sup>. Remember that for dual topology this corresponds directly to the &Delta;&Delta;G between the two solutes.</p>
 <p>
-Our value of -6.9 kcal mol<sup>-1</sup> is also remarkably close to the experimental &Delta;&Delta;G for these solutes, which is 6.90 kcal mol<sup>-1</sup>. However, to be certain of our results and obtain reliable error bars we need to perform more repeats, and potentially investigate other protocols.</p>
+It should be noted that the experimental &Delta;&Delta;G for these solutes is -6.90 kcal mol<sup>-1</sup>. However, to be certain of our results and obtain reliable error bars we need to perform more repeats, and potentially investigate other protocols.</p>
 <hr align="center"/>
 <p>
 <h3>Exploring more options</h3>
 Above, we've simply chose to set up our simulation with the default options chosen by protoms.py. If you type:
-<pre>python2.7 $PROTOMSHOME/protoms.py --fullhelp</pre>
+<pre>python $PROTOMSHOME/protoms.py --fullhelp</pre>
 ...you can see that there are <i>many</i> different options you can define manually to explore your simulation further! A few examples are given below.
 
 <h5>Running longer simulations</h5>
@@ -150,18 +151,18 @@ There are two arguments that you can invoke to run a longer simulation
 </ul>  
 by typing for instance
 <pre>
-python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --nequil 50E6 --nprod 100E6
+python $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --nequil 50E6 --nprod 100E6
 </pre>
 you will run 50 m equilibration steps and 100 m production steps (instead of the 5 m and 40 m that is default). This may be useful to see if our simulation really is equilibrated after a short number of moves, as it seems above.
 <p>
 <h5>Running with more (or fewer) &lambda;-values</h5>
 We seem to have good overlap between our &lambda;-windows based on the acceptance rates of the replica exchange swaps. Perhaps you'd like to see if we could get equivalent results with fewer windows in order to make our use of CPU time more efficient?
 The argument that controls the number of &lambda;-values is called <code>--lambdas</code>. By typing (for instance):
-<pre>python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --lambdas 12</pre>
+<pre>python $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --lambdas 12</pre>
 
 you will initiate 12 &lambda;-values rather than default 16. You can also give individual &lambda;-values to the argument. For instance:
 <p>
-<pre>python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --lambdas 0.00 0.05 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 0.95 1.00</pre>
+<pre>python $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --lambdas 0.00 0.05 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 0.95 1.00</pre>
 <p> 
 will create a total of 13 lambda windows using the spacing defined.
 <p>
@@ -169,13 +170,13 @@ will create a total of 13 lambda windows using the spacing defined.
 Usually it is wise to run several independent repeats of your calculation to check for convergence and to obtain a good estimate of the statistical uncertainty. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
 <p>
 by typing for instance:
-<pre>python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb -r 5</pre>
+<pre>python $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb -r 5</pre>
 you will create 5 input files that will create 5 output folders. But remember, you also need to execute ProtoMS 5 times with the different input files. The output folders will be named e.g. <code>out1_comb_free</code>, <code>out2_comb_free</code>...
 <p>
 </p>
 <h5>Running with a different water model</h5>
 <p>By default, protoms.py solvates systems using the TIP4P water model. Simulations can also be performed with the TIP3P model by using the <code>--watmodel</code> flag:</p>
-<pre>python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --watmodel tip3p</pre>
+<pre>python $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --watmodel tip3p</pre>
 Alternatively you may wish to solvate the solute using a different pre-equilibrated water box, or create a box of different dimensions. This can be done using the individual solvate script in the <a href="#tools">tools</a> section.
 <p>
 <hr align="center"/>
@@ -213,10 +214,10 @@ softcoreparams coul 1 delta 0.2 deltacoul 2.0 power 6 soft66
 this section sets up a dual topology simulation with appropriate soft-core parameters. It could be worth trying to optimize the soft-core parameters if your simulation is not performing well. 
 <p>  
 <pre>
-lambdare 200000 0.000 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 1.000
+lambdare 100000 0.000 0.067 0.133 0.200 0.267 0.333 0.400 0.467 0.533 0.600 0.667 0.733 0.800 0.867 0.933 1.000
 </pre>
 <br>
-this section sets up the &lambda;-replica exchange every 200000 steps. You can add more &lambda;-values manually if there are regions where the simulation is not performing well.
+this section sets up the &lambda;-replica exchange every 100,000 steps. You can add more &lambda;-values manually if there are regions where the simulation is not performing well.
 <hr align="center"/>
 <p> 
 <h3><a name="tools">Setting up the simulation with individual tools</a></h3>
@@ -230,26 +231,26 @@ We will start setting up the solute.
 <p>
 <li>Thereafter, we will create the force field for the ethane molecule using AmberTools, the GAFF force field and AM1-BCC charges. Type:
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/ambertools.py -f ethane.pdb -n ETH</pre>
+<pre>python $PROTOMSHOME/tools/ambertools.py -f ethane.pdb -n ETH</pre>
 <p>
 This will execute the AmberTools programs <code>antechamber</code> and <code>parmchk</code>, creating the files <code>ethane.prepi</code> and <code>ethane.frcmod</code>, respectively. If the ligand was charged, we could specify that here using the <code>-c</code> flag.
 <p>
 <li>These files are in Amber format and in order to use them in ProtoMS we need to reformat them into a ProtoMS template file. This file will also contain a z-matrix that describes how ethane will be sampled during the simulation. This is what we checked earlier to identify which atoms we should mutate to dummies. To do this, you can type
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/build_template.py -p ethane.prepi -f ethane.frcmod -o ethane.tem -n ETH</pre>
+<pre>python $PROTOMSHOME/tools/build_template.py -p ethane.prepi -f ethane.frcmod -o ethane.tem -n ETH</pre>
 <p>
 This will create the files <code>ethane.tem</code> (the ProtoMS template file) and <code>ethane.zmat</code> (the ProtoMS z-matrix). It is a good idea to check the latter to see if the script has defined the molecule properly.
 <p>
 <li>The next thing we will do is to solvate the solute in a box of TIP4P water molecules. Type:
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s ethane.pdb -o ethane_box.pdb</pre>
+<pre>python $PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s ethane.pdb -o ethane_box.pdb</pre>
 <p> 
 As standard this will create a box of mimimum 10 A distance between the solute and the edge of the box. The padding of the box from the solute can be increased using the <code>--padding</code> or <code>-p</code> option.
 Likewise a different pre-equilibrated box can be used by specifying the location using the <code>-b</code> flag. The output is written to the file <code>ethane_box.pdb</code>. As only one box is needed for our simulation, we don't need a <code>methanol_box.pdb</code>, but if you make one then ensure it is identical to that for ethane.
 <p> 
 <li>Now we have set up ethane, repeat the relevant steps for methanol. Finally, we need to combine the template file of ethane with the template file of methanol, and make combined templates for the single topology protocols. Type:
 <p> 
-<pre>python2.7 $PROTOMSHOME/tools/make_single.py -t0 ethane.tem -t1 methanol.tem -p0 ethane.pdb -p1 methanol.pdb -m single_cmap.dat -o ethtmeo</pre>
+<pre>python $PROTOMSHOME/tools/make_single.py -t0 ethane.tem -t1 methanol.tem -p0 ethane.pdb -p1 methanol.pdb -m single_cmap.dat -o ethtmeo</pre>
 <p> 
 creating <code>ethtmeo_comb.tem</code>, <code>ethtmeo_ele.tem</code> and <code>ethtmeo_vdw.tem</code>. Note that this also requires the <code>single_cmap.dat</code> text file, which contains a table (2 columns, n rows) of corresponding ethane atoms in methanol. Dummies are denoted by DUM.</p>
 <p>
@@ -257,7 +258,7 @@ Now we have all the files except the ProtoMS input file itself. As you may have 
 <h5>Making ProtoMS input files</h5>
 To make the input files for ProtoMS type
 <p>
-<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s singletopology -l ethane.pdb methanol.pdb -t ethtmeo_comb.tem -lw ethane_box.pdb -o run_comb</pre>
+<pre>python $PROTOMSHOME/tools/generate_input.py -s singletopology -l ethane.pdb methanol.pdb -t ethtmeo_comb.tem -lw ethane_box.pdb -o run_comb</pre>
 <p> 
 creating <code>run_comb_free.cmd</code> and <code>run_comb_gas.cmd</code>. You will need to run <code>generate_input.py</code> again to create equivalent inputs for the separate ele and vdw perturbations.
 </BODY>

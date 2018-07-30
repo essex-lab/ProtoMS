@@ -16,6 +16,7 @@ Can be executed from the command line as a stand-alone program
 import logging
 
 import numpy as np
+import six
 from scipy.stats import norm
 
 from protomslib import simulationobjects
@@ -238,14 +239,14 @@ def calc_density(pdbfiles,
     nfound = []
     for pdb in pdbfiles.pdbs:
         found = 0
-        for i, res in pdb.residues.iteritems():
+        for i, res in six.iteritems(pdb.residues):
             if res.name.lower() != molname:
                 continue
             for atom in res.atoms:
                 if atom.name.strip().lower() == atomname:
                     xyz.append(atom.coords)
                     found = found + 1
-        for i, sol in pdb.solvents.iteritems():
+        for i, sol in six.iteritems(pdb.solvents):
             if sol.name.lower() != molname:
                 continue
             for iatom in sol.atoms:

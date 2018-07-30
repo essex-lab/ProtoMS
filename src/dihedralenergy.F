@@ -23,7 +23,7 @@ c#######################################################
       integer iparb,iparf
       double precision ang
       double precision dihedralEnergyF,dihedralEnergyB
-      double precision dihEnergy
+      double precision dihEnergy, dihEnergyPrint
       double precision angf,angb,nrg0,nrg1
       double precision perturbForceField
 
@@ -77,9 +77,7 @@ c       this is a null dihedral - return 0.0
         dihedralEnergyB = ZERO
         return
       else if (iparam.gt.0) then
-        
-        dihedralEnergy = dihEnergy(iparam,ang)
-        
+         dihedralEnergy = dihEnergy(iparam,ang)
 c       if all values of lambda are the same then forwards and backwards energies
 c       are same as calculated energy
         if (DifferentLambdas) then

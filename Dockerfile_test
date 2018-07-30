@@ -7,19 +7,18 @@
 
 # An interactive image can then be started with
 # docker run -it protoms-test-environment /bin/bash
-From python:2.7.13
+From python:3.6.6
 
 WORKDIR /
 
 # set environment variables to replace function of amber.sh
-ENV AMBERHOME /amber17
-ENV PYTHONPATH /amber17/lib/python2.7/site-packages/
-ENV PROTOMSHOME /protoms-dev
+ENV AMBERHOME /amber18
+ENV PYTHONPATH /amber18/lib/python3.6/site-packages/
+ENV PATH "/amber18/bin/:$PATH"
 
-# due to dependency issues numpy and six must be install before pymbar
 RUN apt-get update
 RUN apt-get install -y cmake gfortran openmpi-bin libopenmpi-dev
-# due to dependency issues numpy and six must be install before pymbar
+# due to dependency issues numpy and six must be installed before pymbar
 RUN pip install --trusted-host pypi.python.org numpy six scipy matplotlib nose
 RUN pip install --trusted-host pypi.python.org pymbar
 RUN wget http://ambermd.org/downloads/install_ambertools.sh

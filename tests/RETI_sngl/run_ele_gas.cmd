@@ -19,7 +19,7 @@ ranseed 100000
 chunk transrot 1 0.0 0.0
 printfe mbar
 dlambda 0.001
-lambdare 2 0.000 0.330 0.670 1.000
+lambdare 1 0.000 0.330 0.670 1.000
 dump 1 results write results
 dump 1 results writeinst results_inst
 dump 1 pdb all solvent=all file=all.pdb standard

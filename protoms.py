@@ -37,10 +37,12 @@ def _wizard(settings):
     print("\t3) Dual topology free energy")
     print("\t4) Single topology free energy")
     print("\t5) Grand-canonical Monte Carlo (GCMC)")
-    print("\t6) JAWS stage 1 (Just Add Waters)")
-    print("\t7) JAWS stage 2 (Just Add Waters)")
+    print("\t6) Grand-canonical Alchemical Perturbation single (GCAP_single)")
+    print("\t7) Grand-canonical Alchemical Perturbation dual (GCAP_dual)")
+    print("\t8) JAWS stage 1 (Just Add Waters)")
+    print("\t9) JAWS stage 2 (Just Add Waters)")
     print(">", end="")
-    valid = ["", "1", "2", "3", "4", "5", "6", "7"]
+    valid = ["", "1", "2", "3", "4", "5", "6", "7","8","9"]
     instr = six.moves.input()
     if instr in ["jon", "dev"]:
         import matplotlib.pylab as plt
@@ -50,7 +52,7 @@ def _wizard(settings):
         plt.show()
         return
     while instr not in valid:
-        print("Please type a number between 1 and 7!")
+        print("Please type a number between 1 and 9!")
         print(">", end="")
         instr = six.moves.input()
     if instr == "":
@@ -58,7 +60,7 @@ def _wizard(settings):
     val = int(instr)
     vals = [
         "equilibration", "sampling", "dualtopology", "singletopology", "gcmc",
-        "jaws1", "jaws2"
+        "gcap_single","gcap_dual","jaws1", "jaws2"
     ]
     settings.simulation = vals[val - 1]
 
@@ -70,7 +72,7 @@ def _wizard(settings):
         settings.protein = instr
 
     print("\nDo you have a ligand that you would like to setup and simulate?")
-    if settings.simulation not in ["dualtopology", "singletopology"]:
+    if settings.simulation not in ["dualtopology", "singletopology","gcap_dual","gcap_single"]:
         print("\tPlease enter the ligand name or a PDB filename.")
         print("\tPress enter if you don't have a ligand.\n>", end="")
         instr = six.moves.input()
@@ -125,7 +127,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '-s', '--simulation', default="none",
         choices=["none", "equilibration", "sampling", "dualtopology",
-                 "singletopology", "gcmc", "jaws1", "jaws2"],
+                 "singletopology", "gcmc","gcap_single","gcap_dual", "jaws1", "jaws2"],
         help="the kind of simulation to setup")
     parser.add_argument(
         '-f', '--folders', nargs="+", default=["."],
@@ -411,7 +413,7 @@ if __name__ == "__main__":
         ligand_water = ligand_files[ligands[0]]["wat"]
 
         # Here we need to make single topology templates, if requested
-        if args.simulation == "singletopology":
+        if args.simulation in ["singletopology","gcap_single"] :
             ligtems, ligtems2, ligtems3 = _prep_singletopology(
                 ligpdbs, ligtems, tarlist, args)
 
@@ -419,7 +421,7 @@ if __name__ == "__main__":
         if len(ligtems) > 1:
             logger.info("")
             ligtems = _merge_templates(ligtems, tarlist)
-            if args.simulation == "singletopology":
+            if args.simulation in ["singletopology","gcap_single"] :
                 ligtems2 = _merge_templates(ligtems2, tarlist)
                 ligtems3 = _merge_templates(ligtems3, tarlist)
 
@@ -431,9 +433,9 @@ if __name__ == "__main__":
             args.protein, ligobjs, args.water, args.folders, tarlist, args)
 
     # Extra preparation for GCMC or JAWS-1
-    if args.simulation in ["gcmc", "jaws1"]:
+    if args.simulation in ["gcmc","gcap_dual","gcap_single", "jaws1"]:
         if water_file is None:
-            msg = "GCMC and JAWS1 not supported without protein or scoop"
+            msg = "GCMC, GCAP and JAWS1 not supported without protein or scoop"
             logger.error(msg)
             raise simulationobjects.SetupError(msg)
         args.gcmcwater, water_file = _prep_gcmc(ligands, ligand_files,
@@ -457,7 +459,7 @@ if __name__ == "__main__":
 
     # Create ProtoMS command files
     ranseed = args.ranseed
-    if args.simulation == "singletopology":
+    if args.simulation in ["singletopology","gcap_single"]:
         postfix = ["_ele", "_vdw", "_comb"]
     elif args.simulation == "jaws2":
         postfix = ["_jaws2-w%d" % (i + 1) for i in range(len(single_wat.pdbs))]
@@ -486,17 +488,16 @@ if __name__ == "__main__":
 
     for repeat in repeats:
         args.outfolder = outfolder + repeat
-        if args.simulation not in ["singletopology", "jaws2"] or \
+        if args.simulation not in ["singletopology","gcap_single", "jaws2"] or \
            "_ele" in repeat:
-
             free_cmd, bnd_cmd, gas_cmd = generate_input(
                 protein_file, ligpdbs, ligtems, water_file, ligand_water,
                 ranseed, args)
-        elif args.simulation == "singletopology" and "_vdw" in repeat:
+        elif args.simulation in ["singletopology","gcap_single"] and "_vdw" in repeat:
             free_cmd, bnd_cmd, gas_cmd = generate_input(
                 protein_file, ligpdbs, ligtems2, water_file, ligand_water,
                 ranseed, args)
-        elif args.simulation == "singletopology" and "_comb" in repeat:
+        elif args.simulation in ["singletopology","gcap_single"] and "_comb" in repeat:
             free_cmd, bnd_cmd, gas_cmd = generate_input(
                 protein_file, ligpdbs, ligtems3, water_file, ligand_water,
                 ranseed, args)
@@ -517,6 +518,8 @@ if __name__ == "__main__":
                 bnd_cmd.writeCommandFile(args.cmdfile + repeat + "_gcmc.cmd")
             elif args.simulation in ["jaws1", "jaws2"]:
                 bnd_cmd.writeCommandFile(args.cmdfile + repeat + "_jaws.cmd")
+            elif args.simulation in ["gcap_dual", "gcap_single"]:
+                bnd_cmd.writeCommandFile(args.cmdfile + repeat + "_gcap.cmd")               
             else:
                 bnd_cmd.writeCommandFile(args.cmdfile + repeat + "_bnd.cmd")
         if gas_cmd is not None:
@@ -530,3 +533,4 @@ if __name__ == "__main__":
 
     if args.cleanup:
         _cleanup(tarlist)
+

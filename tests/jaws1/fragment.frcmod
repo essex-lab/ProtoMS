@@ -1,4 +1,4 @@
-remark goes here
+Remark line goes here
 MASS
 
 BOND
@@ -6,18 +6,18 @@ BOND
 ANGLE
 
 DIHE
-cp-cp-nb-ca   1    4.800       180.000           2.000      same as X -ca-nb-X 
-ca-nb-cp-ca   1    4.800       180.000           2.000      same as X -ca-nb-X 
+cp-cp-nb-ca   2    9.600       180.000           2.000      same as X -ca-nb-X , penalty score=418.5
+ca-cp-nb-ca   2    9.600       180.000           2.000      same as X -ca-nb-X , penalty score=418.5
 
 IMPROPER
-cp-h4-ca-nb         1.1          180.0         2.0          Using default value
-ca-h4-ca-nb         1.1          180.0         2.0          Using default value
-ca-ca-ca-ha         1.1          180.0         2.0          General improper torsional angle (2 general atom types)
-ca-cp-ca-ha         1.1          180.0         2.0          General improper torsional angle (2 general atom types)
-ca-ca-cp-cp         1.1          180.0         2.0          Using default value
-ca-cp-cp-nb         1.1          180.0         2.0          Using default value
-nb-nb-ca-nh         1.1          180.0         2.0          Using default value
-ca-hn-nh-hn         1.1          180.0         2.0          Using default value
+cp-h4-ca-nb         1.1          180.0         2.0          Using the default value
+ca-h4-ca-nb         1.1          180.0         2.0          Using the default value
+ca-ca-ca-ha         1.1          180.0         2.0          Using general improper torsional angle  X- X-ca-ha, penalty score=  6.0)
+ca-cp-ca-ha         1.1          180.0         2.0          Using general improper torsional angle  X- X-ca-ha, penalty score=  6.0)
+ca-ca-cp-cp         1.1          180.0         2.0          Using the default value
+ca-cp-cp-nb         1.1          180.0         2.0          Using the default value
+nb-nb-ca-nh         1.1          180.0         2.0          Using the default value
+ca-hn-nh-hn         1.1          180.0         2.0          Same as X -X -na-hn, penalty score= 41.2 (use general term))
 
 NONBON
 
