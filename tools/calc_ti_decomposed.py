@@ -201,17 +201,10 @@ class DecomposedCalculation(fe.FreeEnergyCalculation):
         table.add_row(["FDTI", results[fe.TI].dG])
         table.add_blank_row()
         for term in sorted(decomp):
-<<<<<<< /home/mls2g13/protoms-dev/tools/calc_ti_decomposed.py
             if args.full and decomp[term].dG.value == 0.0:
                 continue
             else:
                 table.add_row([term, decomp[term].dG])
-=======
-	    if args.full and decomp[term].dG.value == 0.0:
-		continue
-	    else:
-                table.add_row([term, decomp[term].dG])
->>>>>>> /tmp/calc_ti_decomposed.py~other.kFNo6_
         table.add_row(['sum of terms', np.sum(list(decomp.values())).dG])
         self.tables.append(table)
 
