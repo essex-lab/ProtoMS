@@ -19,7 +19,7 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0,os.path.abspath('../../'))
+sys.path.insert(0,os.path.abspath('../../tools/'))
 
 # -- General configuration ------------------------------------------------
 
@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ProtoMS'
-copyright = u'2017, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H Bruce-Macdonald, J. Graham, M. Samways'
+copyright = u'2018, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H Bruce-Macdonald, J. Graham, M. Samways'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

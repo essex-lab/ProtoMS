@@ -12,7 +12,7 @@ In the ``$PROTOMSHOME/tools`` folder we have collect a range of useful scripts t
 ambertools.py
 ----------------------------
 .. argparse::
-   :module: tools.ambertools
+   :module: ambertools
    :func: get_arg_parser
    :prog: ambertools.py
 
@@ -39,7 +39,7 @@ The ``antechamber`` and ``parmchk`` program should exist in the system path or t
 build_template.py
 -----------------------
 .. argparse::
-   :module: tools.build_template
+   :module: build_template
    :func: get_arg_parser
    :prog: build_template.py
 
@@ -66,7 +66,7 @@ The default translational and rotational displacements are based on experience a
 calc_bar.py
 -----------------------
 .. argparse::
-   :module: tools.calc_bar
+   :module: calc_bar
    :func: get_arg_parser
    :prog: calc_bar.py
 
@@ -100,7 +100,7 @@ Block estimates can be constructed by combining ``nskip`` and ``nmax``. For inst
 calc_clusters.py
 -----------------------
 .. argparse::
-   :module: tools.calc_clusters
+   :module: calc_clusters
    :func: get_arg_parser
    :prog: calc_clusters.py
 
@@ -123,7 +123,7 @@ It will extract the coordinates of all atoms with name equal to ``atom`` in resi
 calc_density.py
 -----------------------
 .. argparse::
-   :module: tools.calc_density
+   :module: calc_density
    :func: get_arg_parser
    :prog: calc_density.py
 
@@ -154,7 +154,7 @@ The produced density can be visualized with most programs, e.g. ::
 calc_dg.py
 -----------------------
 .. argparse::
-   :module: tools.calc_dg
+   :module: calc_dg
    :func: get_arg_parser
    :prog: calc_dg.py
 
@@ -182,7 +182,7 @@ The MBAR estimator only works if PyMBAR is properly installed and can be loaded 
 calc_gci.py
 -----------------------
 .. argparse::
-   :module: tools.calc_gci
+   :module: calc_gci
    :func: get_arg_parser
    :prog: calc_gci.py
 
@@ -222,7 +222,7 @@ The flag ``--fit_options`` allows one to pass commands into the ANN fitting tool
 calc_gcsingle.py
 -----------------------
 .. argparse::
-   :module: tools.calc_gcsingle
+   :module: calc_gcsingle
    :func: get_arg_parser
    :prog: calc_gcsingle.py
 
@@ -243,7 +243,7 @@ This tool analyses and plots free energies from GCMC simulations on sites that c
 calc_replicapath.py
 -----------------------
 .. argparse::
-   :module: tools.calc_replicapath
+   :module: calc_replicapath
    :func: get_arg_parser
    :prog: calc_replicapath.py
 
@@ -267,7 +267,7 @@ If the kind of replicas is from REST or temperature replica exchange the ``repli
 calc_rmsd.py
 -----------------------
 .. argparse::
-   :module: tools.calc_rmsd
+   :module: calc_rmsd
    :func: get_arg_parser
    :prog: calc_rmsd.py
 
@@ -290,7 +290,7 @@ A force constant to keep the ligand restrained for free energy calculations is e
 calc_series.py
 -----------------------
 .. argparse::
-   :module: tools.calc_series
+   :module: calc_series
    :func: get_arg_parser
    :prog: calc_series.py
 
@@ -305,7 +305,7 @@ Typically only a single ProtoMS results file will be analysed and plotted. Howev
 calc_ti.py
 -----------------------
 .. argparse::
-   :module: tools.calc_ti
+   :module: calc_ti
    :func: get_arg_parser
    :prog: calc_ti.py
 
@@ -340,7 +340,7 @@ Rather than manually specifying snapshots to skip with ``nskip`` you can also si
 clear_gcmcbox.py
 -----------------------
 .. argparse::
-   :module: tools.clear_gcmcbox
+   :module: clear_gcmcbox
    :func: get_arg_parser
    :prog: clear_gcmcbox.py
 
@@ -363,7 +363,7 @@ The ``boxfile`` is typically created by ``make_gcmcbox.py`` and the ``waterfile`
 convertatomnames.py
 -----------------------
 .. argparse::
-   :module: tools.convertatomnames
+   :module: convertatomnames
    :func: get_arg_parser
    :prog: convertatomnames.py
 
@@ -388,7 +388,7 @@ A file containing conversion instructions for amber and charmm is available in t
 convertwater.py
 -----------------------
 .. argparse::
-   :module: tools.convertwater
+   :module: convertwater
    :func: get_arg_parser
    :prog: convertwater.py
 
@@ -413,7 +413,7 @@ If the ``--ignoreh`` flag is given, the script will discard the hydrogen atoms f
 distribute_waters.py
 -----------------------
 .. argparse::
-   :module: tools.distribute_waters
+   :module: distribute_waters
    :func: get_arg_parser
    :prog: distribute_waters.py
 
@@ -437,7 +437,7 @@ It can place molecules in random positions and orientations with their geometry 
 divide_pdb.py
 -----------------------
 .. argparse::
-   :module: tools.divide_pdb
+   :module: divide_pdb
    :func: get_arg_parser
    :prog: divide_pdb.py
 
@@ -457,7 +457,7 @@ This tool splits up a PDB file with multiple models (the keyword END defines the
 generate_input.py
 -----------------------
 .. argparse::
-   :module: tools.generate_input
+   :module: generate_input
    :func: get_arg_parser
    :prog: generate_input.py
 
@@ -484,7 +484,7 @@ The tool will create at most two ProtoMS command files, one for the protein simu
 make_dummy.py
 -----------------------
 .. argparse::
-   :module: tools.make_dummy
+   :module: make_dummy
    :func: get_arg_parser
    :prog: make_dummy.py
 
@@ -506,7 +506,7 @@ The dummy particle will be placed at the centre of the solute.
 make_gcmcbox.py
 -----------------------
 .. argparse::
-   :module: tools.make_gcmcbox
+   :module: make_gcmcbox
    :func: get_arg_parser
    :prog: make_gcmcbox.py
 
@@ -536,7 +536,7 @@ When an appropriate box has been made, it can be used by ``solvate.py`` to fill 
 make_single.py
 -----------------------
 .. argparse::
-   :module: tools.make_single
+   :module: make_single
    :func: get_arg_parser
    :prog: make_single.py
 
@@ -568,7 +568,7 @@ A summary of the charges and van der Waals parameters in the four states will be
 merge_templates.py
 -----------------------
 .. argparse::
-   :module: tools.merge_templates
+   :module: merge_templates
    :func: get_arg_parser
    :prog: make_templates.py
 
@@ -589,7 +589,7 @@ The force field parameters in ``file2`` will be re-numbered so that they do not 
 plot_theta.py
 -----------------------
 .. argparse::
-   :module: tools.plot_theta
+   :module: plot_theta
    :func: get_arg_parser
    :prog: plot_theta.py
 	  
@@ -613,7 +613,7 @@ Two different histograms will be generated. One in which all different copies of
 pms2pymbar.py
 -----------------------
 .. argparse::
-   :module: tools.pms2pymbar
+   :module: pms2pymbar
    :func: get_arg_parser
    :prog: pms2pymbar.py
 
@@ -642,7 +642,7 @@ Alternatively, if PyMBAR is properly installed and can be loaded as a python lib
 scoop.py
 -----------------------
 .. argparse::
-   :module: tools.scoop
+   :module: scoop
    :func: get_arg_parser
    :prog: scoop.py
 
@@ -679,7 +679,7 @@ The PDB file will contain specific instructions for ProtoMS to automatically enf
 solvate.py
 -----------------------
 .. argparse::
-   :module: tools.solvate
+   :module: solvate
    :func: get_arg_parser
    :prog: solvate.py
 
@@ -714,7 +714,7 @@ The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulati
 split_jawswater.py
 -----------------------
 .. argparse::
-   :module: tools.split_jawswater
+   :module: split_jawswater
    :func: get_arg_parser
    :prog: split_jawswater.py
 

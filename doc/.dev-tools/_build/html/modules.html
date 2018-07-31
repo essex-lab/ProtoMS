@@ -4,27 +4,18 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>&lt;no title&gt; &#8212; ProtoMS 3.0 documentation</title>
+    <title>&lt;no title&gt; &#8212; ProtoMS 3.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '3.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
-  </head>
-  <body>
+  </head><body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
 <a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
@@ -59,12 +50,14 @@
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -78,55 +71,22 @@
   <p>==</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tools.html">tools package</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">protomslib package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.ambertools">tools.ambertools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.build_template">tools.build_template module</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-protomslib.command">Command</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.calc_clusters">tools.calc_clusters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.calc_density">tools.calc_density module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.calc_dg">tools.calc_dg module</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-protomslib.free_energy.free_energy_argument_parser">FreeEnergy</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-calc-dg-cycle-module">tools.calc_dg_cycle module</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-protomslib.gcmc">GCMC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-protomslib.prepare">Prepare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-protomslib.simulationobjects">Simulation Objects</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.calc_gci">tools.calc_gci module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.calc_replicapath">tools.calc_replicapath module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.calc_rmsd">tools.calc_rmsd module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.calc_series">tools.calc_series module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-calc-ti-decomposed-module">tools.calc_ti_decomposed module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.clear_gcmcbox">tools.clear_gcmcbox module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.convertatomnames">tools.convertatomnames module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.convertwater">tools.convertwater module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.distribute_waters">tools.distribute_waters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.divide_pdb">tools.divide_pdb module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.free_energy_base">tools.free_energy_base module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#tools-gcmc-free-energy-base-module">tools.gcmc_free_energy_base module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.generate_input">tools.generate_input module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.make_dummy">tools.make_dummy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.make_gcmcbox">tools.make_gcmcbox module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.make_single">tools.make_single module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.merge_templates">tools.merge_templates module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.pms2pymbar">tools.pms2pymbar module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.scoop">tools.scoop module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.simulationobjects">tools.simulationobjects module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.solvate">tools.solvate module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools.split_jawswater">tools.split_jawswater module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#module-tools">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-protomslib.solvate">Solvate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#template">Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#module-protomslib.utils">Utils</a></li>
 </ul>
 </li>
 </ul>
@@ -154,7 +114,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014, Richard Bradshaw, Ana Cabedo Martinez, Chris Cave-Ayland, Samuel Genheden, Gregory Ross.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.
     </div>
   </body>
 </html>

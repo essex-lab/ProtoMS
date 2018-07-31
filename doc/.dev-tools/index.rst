@@ -11,7 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-This documents the Python tools in ProtoMS3.0. 
+This documents the python library components in ProtoMS3.4
 
 Click on Index or ModuleIndex below to browse the documentation.
 

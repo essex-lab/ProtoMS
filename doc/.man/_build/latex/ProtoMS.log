@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.6.18)  30 JUL 2018 19:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.6.18)  31 JUL 2018 08:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -139,7 +139,8 @@ File: babel.def 2018/02/14 3.18 Babel common definitions
 ))
 (/usr/share/texmf-dist/tex/latex/psnfss/times.sty
 Package: times 2005/04/12 PSNFSS-v9.2a (SPQR) 
-) (./fncychap.sty
+)
+(/usr/local/share/texmf/tex/latex/fncychap/fncychap.sty
 Package: fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
 \RW=\skip46
 \mylen=\skip47
@@ -150,10 +151,10 @@ Package: fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
 \pxx=\skip52
 \c@AlphaCnt=\count103
 \c@AlphaDecCnt=\count104
-)
-(./sphinx.sty
+) (./sphinx.sty
 Package: sphinx 2018/03/11 v1.7.2 LaTeX package (Sphinx markup)
- (/usr/share/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
 Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
 )
 (/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
@@ -361,8 +362,9 @@ Package: titlesec 2016/03/21 v2.10.2 Sectioning titles
 \titlewidth=\dimen117
 \titlewidthlast=\dimen118
 \titlewidthfirst=\dimen119
-) (./tabulary.sty
-Package: tabulary 2008/12/01 v0.9 tabulary package (DPC)
+)
+(/usr/local/share/texmf/tex/latex/tabulary/tabulary.sty
+Package: tabulary 2014/06/11 v0.10 tabulary package (DPC)
 
 (/usr/share/texmf-dist/tex/latex/tools/array.sty
 Package: array 2018/04/07 v2.4g Tabular extension package (FMi)
@@ -669,7 +671,71 @@ Package: hypcap 2016/05/16 v1.12 Adjusting the anchors of captions (HO)
 
 
 Writing index file ProtoMS.idx
-(./ProtoMS.aux)
+(./ProtoMS.aux
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+
+LaTeX Warning: Label `tools:Named Arguments' multiply defined.
+
+)
 \openout1 = `ProtoMS.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 65.
@@ -1006,35 +1072,40 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/it' in size <10> not available
 Chapter 7.
 [61
 
-] [62] [63] [64] [65] [66] [67] [68] [69] [70] [71] [72]
+] [62] [63] [64] [65] [66] [67] [68] [69] [70] [71] [72] [73] [74] [75]
+[76] [77] [78] [79] [80] [81] [82] [83] [84] [85] [86
+
+]
 Chapter 8.
-[73
+[87] [88] [89] [90] (./ProtoMS.ind [91] [92
 
-] [74] [75] [76] (./ProtoMS.ind [77] [78
+] [93
 
-] [79
-
-] [80
+] [94
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 4441.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 4441.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 5368.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 5368.
  (./ProtoMS.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 4441.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 4441.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 5368.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 5368.
 
 Package rerunfilecheck Info: File `ProtoMS.out' has not changed.
 (rerunfilecheck)             Checksum: 8E467E6D58645FDC8CE632C1B0B3E48D;8383.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 4441.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 5368.
  ) 
 Here is how much of TeX's memory you used:
- 13856 strings out of 492649
- 191877 string characters out of 6135778
- 385866 words of memory out of 5000000
- 17136 multiletter control sequences out of 15000+600000
+ 13895 strings out of 492649
+ 192616 string characters out of 6135778
+ 385955 words of memory out of 5000000
+ 17137 multiletter control sequences out of 15000+600000
  62534 words of font info for 83 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 37i,19n,51p,2295b,497s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,19n,51p,2295b,520s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/
@@ -1052,10 +1123,10 @@ helvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></u
 sr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on ProtoMS.pdf (84 pages, 657603 bytes).
+Output written on ProtoMS.pdf (98 pages, 685236 bytes).
 PDF statistics:
- 1181 PDF objects out of 1200 (max. 8388607)
- 1059 compressed objects within 11 object streams
- 304 named destinations out of 1000 (max. 500000)
+ 1270 PDF objects out of 1440 (max. 8388607)
+ 1133 compressed objects within 12 object streams
+ 340 named destinations out of 1000 (max. 500000)
  520 words of extra memory for PDF output out of 10000 (max. 10000000)
 
