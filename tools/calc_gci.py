@@ -30,6 +30,7 @@ def run_script(cmdline):
         args.nmin,
         args.nmax,
         args.nfits,
+        args.pin_min,
         results_name=args.name)
     tc.run(args)
 
