@@ -1014,7 +1014,6 @@ def plot_insertion_pmf(results, title=''):
 
 
 def get_gci_arg_parser():
-    print 'here'
     parser = feb.FEArgumentParser(
         parents=[feb.get_base_arg_parser()],
         conflict_handler='resolve')
