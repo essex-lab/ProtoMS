@@ -1,7 +1,5 @@
 *****************************
-
 Compilation and Installation
-
 *****************************
 
 
@@ -43,9 +41,7 @@ The ProtoMS package supplies the following files and directories;
 
 
 ====================
-
 Programming Language
-
 ====================
 
 
@@ -74,9 +70,7 @@ ProtoMS is written in slightly extended Fortran 77. The extensions used are
 
 
 =================
-
 Requirements
-
 =================
 
 
@@ -123,9 +117,7 @@ A docker image that contains all of the installation dependencies is available. 
 
 
 ==================
-
 Installing ProtoMS
-
 ==================
 
 
@@ -170,9 +162,7 @@ All tests should be expected to pass and the above command will provide detailed
 
 
 ======================
-
 Customising the Build
-
 ======================
 
 
@@ -218,9 +208,7 @@ The most frequently useful options are ``--user``, that requests an installation
 
 
 ============
-
 Using Docker
-
 ============
 
 

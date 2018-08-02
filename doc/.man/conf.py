@@ -201,7 +201,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'ProtoMS.tex', u'ProtoMS Documentation',
-   u'C. J. Woods, \\and J. Michel, \\and M. Bodnarchuk, \\and S. Genheden, \\and R. Bradshaw, \\and G. Ross, \\and C. Cave-Ayland, \\and A. I. Cabedo Martinez, \\and H. Bruce-Macdonald, \\and J. Graham, \\and Marley Samways', 'manual'),
+   u'C. J. Woods, \\and J. Michel, \\and M. Bodnarchuk, \\and S. Genheden, \\and R. Bradshaw, \\and G. Ross, \\and C. Cave-Ayland, \\and A. I. Cabedo Martinez, \\and H. Bruce-Macdonald, \\and J. Graham, \\and M. Samways', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

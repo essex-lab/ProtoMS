@@ -13,6 +13,7 @@ ProtoMS documentation
    :maxdepth: 2
 
    introduction
+   changelog
    compilation
    protoms
    protomspy
