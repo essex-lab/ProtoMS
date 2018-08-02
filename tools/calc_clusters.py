@@ -152,7 +152,7 @@ def write_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wa
 
 if __name__ == "__main__":
     # Read command line arguments
-    args = get_arg_parser.parse_args()
+    args = get_arg_parser().parse_args()
     
     # Read PDB input data - only water molecules
     print('\nReading PDB data...')
