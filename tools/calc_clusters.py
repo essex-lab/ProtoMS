@@ -16,7 +16,7 @@ from scipy.cluster import hierarchy
 from protomslib import simulationobjects
 
 
-def get_args():
+def get_arg_parser():
     """
     Parse command line arguments
     """
@@ -28,8 +28,7 @@ def get_args():
     parser.add_argument('-c', '--cutoff', type=float, help='Distance cutoff for clustering. Default=2.4 Angs', default=2.4)
     parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering. Default=\'average\'', default='average')
     parser.add_argument('-o', '--output', help='Filename for the PDB output. Default=\'clusters.pdb\'', default='clusters.pdb')
-    args = parser.parse_args()
-    return args
+    return parser
 
 
 def get_distances(frame_wat_ids, coord_list):
@@ -153,7 +152,7 @@ def write_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wa
 
 if __name__ == "__main__":
     # Read command line arguments
-    args = get_args()
+    args = get_arg_parser.parse_args()
     
     # Read PDB input data - only water molecules
     print('\nReading PDB data...')
