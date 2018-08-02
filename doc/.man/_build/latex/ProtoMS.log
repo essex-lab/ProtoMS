@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.9.22)  2 AUG 2018 08:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.9.22)  2 AUG 2018 09:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1176,7 +1176,7 @@ Chapter 3.
 Chapter 4.
 [9
 
-] <backbone.png, id=440, 1246.6575pt x 487.8225pt>
+] <backbone.png, id=441, 1246.6575pt x 487.8225pt>
 File: backbone.png Graphic file (type png)
  <use backbone.png>
 Package pdftex.def Info: backbone.png used on input line 431.
@@ -1358,7 +1358,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 4423.
 Here is how much of TeX's memory you used:
  14203 strings out of 492995
  197769 string characters out of 6132704
- 384772 words of memory out of 5000000
+ 384768 words of memory out of 5000000
  17118 multiletter control sequences out of 15000+600000
  63448 words of font info for 86 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
@@ -1383,7 +1383,7 @@ pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/
 local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/local/tex
 live/2017/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/
 texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ProtoMS.pdf (86 pages, 658315 bytes).
+Output written on ProtoMS.pdf (86 pages, 658368 bytes).
 PDF statistics:
  1222 PDF objects out of 1440 (max. 8388607)
  1095 compressed objects within 11 object streams
