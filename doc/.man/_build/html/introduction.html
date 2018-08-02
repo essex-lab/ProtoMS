@@ -4,20 +4,29 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Introduction &#8212; ProtoMS 3.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Compilation and Installation" href="compilation.html" />
+    <link rel="next" title="Changelog" href="compilation.html" />
     <link rel="prev" title="ProtoMS documentation" href="index.html" /> 
-  </head><body>
+  </head>
+  <body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
 <a href="index.html"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
@@ -30,7 +39,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="compilation.html" title="Compilation and Installation"
+          <a href="compilation.html" title="Changelog"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="ProtoMS documentation"
@@ -59,17 +68,15 @@
                         title="previous chapter">ProtoMS documentation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="compilation.html"
-                        title="next chapter">Compilation and Installation</a></p>
+                        title="next chapter">Changelog</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -82,17 +89,17 @@
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p>ProtoMS is short for “Prototype Molecular Simulation”, and is a software package that was originally designed by Dr. Christopher Woods to perform protein-ligand binding free energy calculations during his PhD. Dr. Julien Michel and Dr. Michael Bodnarchuk latter added numerous features and used the program extensively during their PhDs. Dr. Samuel Genheden, Dr. Richard Bradshaw, Dr. Gregory Ross, Dr. Chris Cave-Ayland, Dr. Ana Cabedo Martinez, Hannah Bruce-Macdonald and James Graham have since then made numerous additions to the code among them a complete revision of the tools used to setup and analyse the simulation results.</p>
+<p>ProtoMS is short for “Prototype Molecular Simulation”, and is a software package that was originally designed by Dr. Christopher Woods to perform protein-ligand binding free energy calculations during his PhD. Dr. Julien Michel and Dr. Michael Bodnarchuk latter added numerous features and used the program extensively during their PhDs. Dr. Samuel Genheden, Dr. Richard Bradshaw, Dr. Gregory Ross, Dr. Chris Cave-Ayland, Dr. Ana Cabedo Martinez, Hannah Bruce-Macdonald, James Graham and Marley Samways have since then made numerous additions to the code among them a complete revision of the tools used to setup and analyse the simulation results.</p>
 <p>The program is routinely used by several members of the research group of Professor Jonathan Essex for the development of new techniques to perform free energy calculations. This document has been written to try and explain how to use ProtoMS.</p>
 <p>The user manual has been written as a reference manual, with extensive hyperlinking to allow you to quickly dip in and out to find the information you need. While you could read it from start to end, it would be a boring and repetitive read and you probably wouldn’t learn much! We recommend that you engage with the tutorials that come with ProtoMS. You can then use the links in those descriptions to dip in and out of the user manual, thus obtaining a more detailed knowledge of how the examples, and thus ProtoMS, work.</p>
 <div class="section" id="formatting">
 <h2>Formatting<a class="headerlink" href="#formatting" title="Permalink to this headline">¶</a></h2>
 <p>The following formats are used throughout this document. Program commands or contents of files will be written in monotype, e.g.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="nb">float</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="nb">float</span>
 </pre></div>
 </div>
 <p>where float is a floating point option to the command. If this option is given a value (e.g. 25.0), then it is written like this</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="mf">25.0</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="mf">25.0</span>
 </pre></div>
 </div>
 <p>The following options are standard to many commands</p>
@@ -118,7 +125,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="compilation.html" title="Compilation and Installation"
+          <a href="compilation.html" title="Changelog"
              >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="ProtoMS documentation"
@@ -130,7 +137,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H Bruce-Macdonald, J. Graham, M. Samways.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

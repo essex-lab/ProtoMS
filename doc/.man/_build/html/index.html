@@ -4,19 +4,28 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>ProtoMS documentation &#8212; ProtoMS 3.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Introduction" href="introduction.html" /> 
-  </head><body>
+  </head>
+  <body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
 <a href="#"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
@@ -47,14 +56,12 @@
                         title="next chapter">Introduction</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
-    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -71,14 +78,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#formatting">Formatting</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation and Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="compilation.html#programming-language">Programming Language</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compilation.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compilation.html#installing-protoms">Installing ProtoMS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compilation.html#customising-the-build">Customising the Build</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compilation.html#using-docker">Using Docker</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="protoms.html">Design of ProtoMS</a><ul>
@@ -111,16 +110,15 @@
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#ambertools-py">ambertools.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#build-template-py">build_template.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-bar-py">calc_bar.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#calc-clusters-py">calc_clusters.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#calc-density-py">calc_density.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#calc-dg-py">calc_dg.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-gci-py">calc_gci.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-gcsingle-py">calc_gcsingle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-dg-cycle-py">calc_dg_cycle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-gcap-surface-py">calc_gcap_surface.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#calc-replicapath-py">calc_replicapath.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#calc-rmsd-py">calc_rmsd.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#calc-series-py">calc_series.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-ti-py">calc_ti.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-ti-decomposed-py">calc_ti_decomposed.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#clear-gcmcbox-py">clear_gcmcbox.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#convertatomnames-py">convertatomnames.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#convertwater-py">convertwater.py</a></li>
@@ -132,7 +130,6 @@
 <li class="toctree-l2"><a class="reference internal" href="tools.html#make-single-py">make_single.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#merge-templates-py">merge_templates.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#plot-theta-py">plot_theta.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tools.html#pms2pymbar-py">pms2pymbar.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#scoop-py">scoop.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#solvate-py">solvate.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tools.html#split-jawswater-py">split_jawswater.py</a></li>
@@ -170,7 +167,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H Bruce-Macdonald, J. Graham, M. Samways.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>
