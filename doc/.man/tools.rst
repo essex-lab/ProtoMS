@@ -137,11 +137,9 @@ calc_dg.py
 
 **Description:**
 
-This tool calculates free energies using the method of thermodynamic integration (TI), Bennet's Acceptance Ratio (BAR), multi state BAR (MBAR) and grand canonical alchemical perturbation (GCAP).
+This tool calculates free energies using the method of thermodynamic integration (TI), Bennett's Acceptance Ratio (BAR), multi state BAR (MBAR) and grand canonical alchemical perturbation (GCAP).
 
-The program expects that in the ``directory``, ``directory2`` etc. there exist an output folder for each :math:`\lambda`-value, eg. ``lam-0.000`` and ``lam-1.000``
-
-The MBAR and GCAP estimators only works if PyMBAR is properly installed and can be loaded as a python library. 
+The program expects that in the ``directory``, ``directory2`` etc. there exists an output folder for each :math:`\lambda`-value, eg. ``lam-0.000`` and ``lam-1.000`` (unless the ``--subdir`` argument is used.)
 
 -----------------------
 calc_dg_cycle.py
@@ -160,7 +158,7 @@ calc_dg_cycle.py
 
 **Description:**
 
-Calculates thermodynamic cycle closure for a set of simulations. This can be performed either for dual topology results, or single topology results. With single topology simulations, the electrostatic and van der Waals results can either be considered seperately ``--singletopology sep`` or together, ``--singletopology comb``. 
+Calculates thermodynamic cycle closure for a set of simulations. This can be performed either for dual topology results, or single topology results. With single topology simulations, the electrostatic and van der Waals results can either be considered separately ``--singletopology sep`` or together, ``--singletopology comb``. 
 
 -----------------------
 calc_gcap_surface.py
@@ -180,7 +178,8 @@ calc_gcap_surface.py
 
 **Description:**
 
-Calculates the free energy from a surface-GCAP simulation. The volume of the GCMC region must be given using the ``-v`` flag. To calculate the free energy at a single B value, use the ``--subdir`` flag, and the energy can be calculated with any one dimensional free energy method.  
+Calculates the free energy from a surface-GCAP simulation. The volume of the GCMC region must be given using the ``-v`` flag. To calculate the free energy at a single B value, use the ``--subdir`` flag with calc_dg.py, and the energy can be calculated with any one dimensional free energy method.
+
 -----------------------
 calc_gci.py
 -----------------------
@@ -631,13 +630,13 @@ solvate.py
 
 **Description:**
 
-This tool solvates a ligand in either a droplet or a box of water. It can also flood a GCMC or JAWS-1 simulatios box with waters.
+This tool solvates a ligand in either a droplet or a box of water. It can also flood a GCMC or JAWS-1 simulations box with waters.
 
 Pre-equilibrated boxes to use can be found in the ``$PROTOMSHOME/data`` folder.
 
-To solvate small molecule it is sufficient to give the ``solutefile`` as in the first example above. This produces a box with at least 10 A between the solute and the edge of the water box, which should be sufficient in most situation. Use ``padding`` to increase or decreas the box size as in the second example. The solvation box is created by replicating the pre-equilibrated box in all dimensions and then removing waters that overlap with solute atoms.
+To solvate small molecule it is sufficient to give the ``solutefile`` as in the first example above. This produces a box with at least 10 A between the solute and the edge of the water box, which should be sufficient in most situation. Use ``padding`` to increase or decrease the box size as in the second example. The solvation box is created by replicating the pre-equilibrated box in all dimensions and then removing waters that overlap with solute atoms.
 
-To solvate a protein in a droplet, specify ``proteinfile`` and ``droplet`` as in the third example above. This produces a droplet with radius of 30 A, which was choosen to work well with the default options in ``scoop.py``. Use ``radius`` to obtain a smaller or larger droplet as in the fourth example. The centre of the droplet can be on a ligand if ``ligandfile`` is specified. Otherwise, the ``center``argument is used. This argument can be either ``cent`` (the default) that places the droplet at the centre of the protein. It can also take a single number as in the fifth example above in case it is placed at this coordinate in all dimensions. It can also take a string with three numbers which is the origin of the droplet in x, y, and z dimensions, see the sixth example above. If two numbers are given as in the seventh example above, it is assumed that this is an atom range and the droplet will be placed at the centre of these atoms. The droplet is created by putting random waters from the pre-equilibrated box on a grid, displacing them slightly in a random fashion.
+To solvate a protein in a droplet, specify ``proteinfile`` and ``droplet`` as in the third example above. This produces a droplet with radius of 30 A, which was chosen to work well with the default options in ``scoop.py``. Use ``radius`` to obtain a smaller or larger droplet as in the fourth example. The centre of the droplet can be on a ligand if ``ligandfile`` is specified. Otherwise, the ``center``argument is used. This argument can be either ``cent`` (the default) that places the droplet at the centre of the protein. It can also take a single number as in the fifth example above in case it is placed at this coordinate in all dimensions. It can also take a string with three numbers which is the origin of the droplet in x, y, and z dimensions, see the sixth example above. If two numbers are given as in the seventh example above, it is assumed that this is an atom range and the droplet will be placed at the centre of these atoms. The droplet is created by putting random waters from the pre-equilibrated box on a grid, displacing them slightly in a random fashion.
 
 The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulations, similar to ``distribute_waters.py``. In this case the solute is typically a box created by ``make_gcmcbox.py`` and ``flood`` needs to be specified, see the last example above. This gives a box filled with the bulk number of waters.
 

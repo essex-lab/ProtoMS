@@ -1,6 +1,6 @@
-*************
-Change Log
-*************
+************************
+Changes and New Features 
+************************
 
 This section describess the new and updated functionality present in version 3.4.0 of ProtoMS.
 
@@ -14,7 +14,7 @@ ProtoMS is now able to perform grand canonical alchemical perturbation (GCAP) si
 Grand Canonical Integration
 ===========================
 
-More automation has been introduced to ``calc_gci.py`` to calculate the appropriate number of steps for the titration fit. The water occupancy at the equilibrium :math:`B` value is also returned. 
+More automation has been introduced to ``calc_gci.py`` to calculate the appropriate number of steps for the titration fit. The water occupancy at the equilibrium :math:`B` value is also returned. Considerable reduction in the noise of gcmc calculations has been achieved thanks to replica exchange allowing the removal of the absolute and pseudo-huber error functions. Error reporting for model ensembles has also been removed.
 
 ===========================
 Free Energy Calculations
@@ -27,12 +27,14 @@ Additionally, a 'partial' implementation of dual topology calculations is now av
 ===========================
 protomslib
 ===========================
+
 The underlying class structures and many of the fundamental functions of the Python layer of ProtoMS have now been restructured into an importable module, ``protomslib``. This also allows for support of Python :math:`\geq` 3.5 (retaining support for Python 2.7) with the setup and analysis scripts.
 
 ===========================
 Restarting Simulations
 ===========================
-The writing of restart files in ProtoMS has now been significantly improved, such that manual editing of the ``.cmd`` file is no longer required to restart a simulation which was terminated early or did not complete. Now, the simulation can be restarted where it left off by simply re-running the original command (something like ``$PROTOMSHOME/protoms3 run.cmd``). ProtoMS will read the restart file written out and will know where to continue the simulation from.
+
+The writing of restart files in ProtoMS has now been significantly improved. Simulations which were terminated early or did not complete. When restarting from an aborted simulation, ProtoMS will now perform only the necessary Monte Carlo steps to complete the simulation, instead of just using the structural data as the start of a new run.
 
 ===========================
 Water Clustering

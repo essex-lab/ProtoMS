@@ -55,7 +55,7 @@
 
 
 \title{ProtoMS Documentation}
-\date{Aug 02, 2018}
+\date{Aug 03, 2018}
 \release{3.4}
 \author{C. J. Woods, \and J. Michel, \and M. Bodnarchuk, \and S. Genheden, \and R. Bradshaw, \and G. Ross, \and C. Cave-Ayland, \and A. I. Cabedo Martinez, \and H. Bruce-Macdonald, \and J. Graham, \and M. Samways}
 \newcommand{\sphinxlogo}{\sphinxincludegraphics{logo.png}\par}
@@ -71,7 +71,7 @@
 
 
 \chapter{Introduction}
-\label{\detokenize{introduction:introduction}}\label{\detokenize{introduction:protoms-documentation}}\label{\detokenize{introduction::doc}}
+\label{\detokenize{introduction:introduction}}\label{\detokenize{introduction::doc}}
 ProtoMS is short for “Prototype Molecular Simulation”, and is a software package that was originally designed by Dr. Christopher Woods to perform protein-ligand binding free energy calculations during his PhD. Dr. Julien Michel and Dr. Michael Bodnarchuk latter added numerous features and used the program extensively during their PhDs. Dr. Samuel Genheden, Dr. Richard Bradshaw, Dr. Gregory Ross, Dr. Chris Cave-Ayland, Dr. Ana Cabedo Martinez, Hannah Bruce-Macdonald, James Graham and Marley Samways have since then made numerous additions to the code among them a complete revision of the tools used to setup and analyse the simulation results.
 
 The program is routinely used by several members of the research group of Professor Jonathan Essex for the development of new techniques to perform free energy calculations. This document has been written to try and explain how to use ProtoMS.
@@ -112,8 +112,8 @@ The following options are standard to many commands
 \end{itemize}
 
 
-\chapter{Change Log}
-\label{\detokenize{changelog::doc}}\label{\detokenize{changelog:change-log}}
+\chapter{Changes and New Features}
+\label{\detokenize{changelog:changes-and-new-features}}\label{\detokenize{changelog::doc}}
 This section describess the new and updated functionality present in version 3.4.0 of ProtoMS.
 
 
@@ -124,7 +124,7 @@ ProtoMS is now able to perform grand canonical alchemical perturbation (GCAP) si
 
 \section{Grand Canonical Integration}
 \label{\detokenize{changelog:grand-canonical-integration}}
-More automation has been introduced to \sphinxcode{\sphinxupquote{calc\_gci.py}} to calculate the appropriate number of steps for the titration fit. The water occupancy at the equilibrium \(B\) value is also returned.
+More automation has been introduced to \sphinxcode{\sphinxupquote{calc\_gci.py}} to calculate the appropriate number of steps for the titration fit. The water occupancy at the equilibrium \(B\) value is also returned. Considerable reduction in the noise of gcmc calculations has been achieved thanks to replica exchange allowing the removal of the absolute and pseudo-huber error functions. Error reporting for model ensembles has also been removed.
 
 
 \section{Free Energy Calculations}
@@ -141,7 +141,7 @@ The underlying class structures and many of the fundamental functions of the Pyt
 
 \section{Restarting Simulations}
 \label{\detokenize{changelog:restarting-simulations}}
-The writing of restart files in ProtoMS has now been significantly improved, such that manual editing of the \sphinxcode{\sphinxupquote{.cmd}} file is no longer required to restart a simulation which was terminated early or did not complete. Now, the simulation can be restarted where it left off by simply re-running the original command (something like \sphinxcode{\sphinxupquote{\$PROTOMSHOME/protoms3 run.cmd}}). ProtoMS will read the restart file written out and will know where to continue the simulation from.
+The writing of restart files in ProtoMS has now been significantly improved. Simulations which were terminated early or did not complete. When restarting from an aborted simulation, ProtoMS will now perform only the necessary Monte Carlo steps to complete the simulation, instead of just using the structural data as the start of a new run.
 
 
 \section{Water Clustering}
@@ -163,10 +163,10 @@ The ProtoMS package supplies the following files and directories;
 \sphinxstylestrong{doc} This directory contains documentation
 
 \item {} 
-\sphinxstylestrong{README} File that contains brief installation instructions for ProtoMS, and any last minute addendums or errata that arrived too late to make it into the manual!
+\sphinxstylestrong{README} File that contains brief installation instructions for ProtoMS, and any last minute addenda or errata that arrived too late to make it into the manual!
 
 \item {} 
-\sphinxstylestrong{parameter} This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
+\sphinxstylestrong{parameter} This directory contains all of the standard parameter files that describe the standard force fields implemented in ProtoMS.
 
 \item {} 
 \sphinxstylestrong{protoms.py} A tool to setup common ProtoMS calculations
@@ -178,7 +178,7 @@ The ProtoMS package supplies the following files and directories;
 \sphinxstylestrong{src} This directory contains all of the source code for the main program
 
 \item {} 
-\sphinxstylestrong{tools} This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+\sphinxstylestrong{tools} This directory contains numerous useful scripts to setup and analyse ProtoMS simulations.
 
 \item {} 
 \sphinxstylestrong{tutorial} This directory contains a number of examples that demonstrate applications of ProtoMS.
@@ -187,7 +187,7 @@ The ProtoMS package supplies the following files and directories;
 
 
 \section{Programming Language}
-\label{\detokenize{compilation:fortran77}}\label{\detokenize{compilation:programming-language}}
+\label{\detokenize{compilation:programming-language}}\label{\detokenize{compilation:fortran77}}
 ProtoMS is written in slightly extended Fortran 77. The extensions used are
 \begin{itemize}
 \item {} 
@@ -209,7 +209,7 @@ The \sphinxcode{\sphinxupquote{flush}}, \sphinxcode{\sphinxupquote{getarg}} and 
 ProtoMS performs string manipulation using the \sphinxcode{\sphinxupquote{len}} function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.
 
 \item {} 
-The \sphinxcode{\sphinxupquote{Date}} and \sphinxcode{\sphinxupquote{Time}} Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in \sphinxcode{\sphinxupquote{getoptions.F}}, though you will need to provide a random number seed manually.
+The \sphinxcode{\sphinxupquote{Date}} and \sphinxcode{\sphinxupquote{Time}} Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relevant lines in \sphinxcode{\sphinxupquote{getoptions.F}}, though you will need to provide a random number seed manually.
 
 \end{itemize}
 
@@ -306,13 +306,12 @@ All tests should be expected to pass and the above command will provide detailed
 
 
 \section{Customising the Build}
-\label{\detokenize{compilation:custom-build}}\label{\detokenize{compilation:customising-the-build}}
+\label{\detokenize{compilation:customising-the-build}}\label{\detokenize{compilation:custom-build}}
 \sphinxstylestrong{Tips on using cmake}
 
 The job of cmake is to attempt to locate all of the necessary dependencies for the installation and create a Makefile that will compile ProtoMS. It searches your system for the required components and sets a number of internal variables that store their locations. After being run cmake stores its output in the build directory in a file called CMakeCache.txt. This can be useful after the fact to check which dependencies were found but equally if being run subsequently cmake will prefer to use cached values instead of updating dependencies. For this reason it can be a good idea to delete CMakeCache.txt if you find you need to run cmake more than once or cmake does not appear to be behaving as expected.
 
 \sphinxstylestrong{Manually specify cmake variables}
-\begin{quote}
 
 The locations that cmake will search for dependencies are quite comprehensive, however they are also dependent on the system in use and the value of current environment variables. Thus cmake may not be able to find the required libraries even if they’re present in your system or may find the wrong versions. To coerce cmake into finding the relevant dependencies you can try:
 \begin{enumerate}
@@ -326,7 +325,6 @@ Manually setting cmake variables - Whilst cmake attempts to automatically discov
 Manually setting cmake variables on the command line - If you prefer the value of any cmake variable can be specified directly from the command line. The \sphinxcode{\sphinxupquote{-D}} flag to cmake can be used repeatedly for this purpose. For instance - \sphinxcode{\sphinxupquote{cmake -DCMAKE\_Fortran\_COMPILER=gfortran ..}} - sets the value of the  variable CMAKE\_Fortran\_COMPILER to gfortran. You can use \sphinxcode{\sphinxupquote{ccmake}} to determine the names of variables to set.
 
 \end{enumerate}
-\end{quote}
 
 \sphinxstylestrong{Installation of protomslib}
 
@@ -356,7 +354,7 @@ Version 3.4 of ProtoMS is also available via docker. Downloading and running the
 \PYG{n}{docker} \PYG{n}{run} \PYG{o}{\PYGZhy{}}\PYG{n}{it} \PYG{n}{jessexgroup}\PYG{o}{/}\PYG{n}{protoms}\PYG{p}{:}\PYG{l+m+mf}{3.4}
 \end{sphinxVerbatim}
 
-The image is based on the python:3.6.6 image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see \sphinxcode{\sphinxupquote{Dockerfile\_test}} and \sphinxcode{\sphinxupquote{Dockerfile}} in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.
+The image is based on the python:3-slim image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see \sphinxcode{\sphinxupquote{Dockerfile\_test}} and \sphinxcode{\sphinxupquote{Dockerfile}} in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.
 
 
 \chapter{Design of ProtoMS}
@@ -525,7 +523,7 @@ ProtoMS is written using slightly extended Fortran 77 (see {\hyperref[\detokeniz
 \index{Forcefields}\ignorespaces 
 
 \section{Classical forcefields}
-\label{\detokenize{protoms:index-5}}\label{\detokenize{protoms:classical-forcefields}}
+\label{\detokenize{protoms:classical-forcefields}}\label{\detokenize{protoms:index-5}}
 ProtoMS was designed to perform simulations using a range of different molecular mechanics (MM) forcefields. To achieve this aim, a generic forcefield has been implemented, and this can be specialised into a specific, traditional forcefield. Specifically, ProtoMS supports the use of the Amber ff99, ff99SB and ff14SB protein forcefields, along with OPLS 96. The General Amber Forcefield (GAFF) is used for solutes, whilst various solvent forcefield models including TIP3P, TIP4P, SPC and SPC/E can be used.
 
 The forcefield in ProtoMS is comprised of several terms;
@@ -645,7 +643,7 @@ As the name says, the technique approximate the descreening (the extent to which
 \begin{equation*}
 \begin{split}{\frac{1}{B_i}}  = \frac{1}{\alpha _{i}} - Itanh\big( \alpha \psi - \beta \psi^{2} + \gamma \psi^{3}  \big)\end{split}
 \end{equation*}
-where \sphinxstyleemphasis{I} is the summation term from the PDA calculation, \(\psi\), \(\alpha\), \(\beta\) and \(\gamma\) are parameters taken from the litterature.
+where \sphinxstyleemphasis{I} is the summation term from the PDA calculation, \(\psi\), \(\alpha\), \(\beta\) and \(\gamma\) are parameters taken from the literature.
 
 The rescaling option has not been used extensively in ProtoMS and should be used with caution. It appears it may prove useful when simulation buried protein binding sites.
 
@@ -674,7 +672,7 @@ ProtoMS implements this forcefield mostly as described. However there are a few 
 \index{Perturbations}\ignorespaces 
 
 \section{Perturbations}
-\label{\detokenize{protoms:index-14}}\label{\detokenize{protoms:perturbations}}
+\label{\detokenize{protoms:perturbations}}\label{\detokenize{protoms:index-14}}
 ProtoMS is capable of calculating the relative free energy of two systems. ProtoMS does this by perturbing one system into the other through the use of a \(\lambda\)-coordinate. If A and B are the two systems of interest, then the forcefield is constructed such that at \(\lambda\) = 0.0 the forcefield represents system A, at \(\lambda\) = 1.0 the forcefield represents system B, and at \(\lambda\) value inbetween, the forcefield represents a hybrid of A and B.
 
 ProtoMS implements two methods of perturbing between systems A and B;
@@ -795,7 +793,7 @@ If the move is accepted, then the new configuration of the residue is saved. If 
 
 \end{enumerate}
 
-You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section {\hyperref[\detokenize{protoms:misccmd}]{\sphinxcrossref{\DUrole{std,std-ref}{Miscellaneous}}}}. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see {\hyperref[\detokenize{protoms:temref}]{\sphinxcrossref{\DUrole{std,std-ref}{Templates}}}}). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was \(5.0^\circ\) , then the angle will be changed by a random value generated evenly between \(-5.0^\circ\) and \(+5.0^\circ\).
+You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section {\hyperref[\detokenize{protoms:misccmd}]{\sphinxcrossref{\DUrole{std,std-ref}{Miscellaneous}}}}. All residues of all proteins are flexible by default, and have flexible backbones. You control the maximum amounts that the residue moves via the residue template (see {\hyperref[\detokenize{protoms:temref}]{\sphinxcrossref{\DUrole{std,std-ref}{Templates}}}}). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was \(5.0^\circ\) , then the angle will be changed by a random value generated evenly between \(-5.0^\circ\) and \(+5.0^\circ\).
 
 \index{Solute Moves}\ignorespaces 
 \sphinxstylestrong{Solute Moves}
@@ -861,7 +859,7 @@ If the move is accepted then the new system configuration is saved, otherwise th
 \index{GCSolute Moves}\ignorespaces 
 \sphinxstylestrong{GCsolute Moves}
 
-A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolute move comprises the following steps
+A GCsolute move is a Monte Carlo move on a single GCsolute molecule. Each GCsolute move comprises the following steps
 \begin{enumerate}
 \item {} 
 A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of \(\theta\) is examined; if it is set to 0 then another is chosen until the examined \(\theta\) value is 1.  If no GCsolutes with \(\theta=1\) are available then the GCsolute move is counted as rejected.
@@ -1002,7 +1000,7 @@ For replica exchange or ensemble type calculations, you have to execute ProtoMS 
 
 \section{File output}
 \label{\detokenize{protoms:file-output}}\label{\detokenize{protoms:index-27}}
-If you run ProtoMS from the command line you should see that it prints out a lot of information to the screen (on Unix called standard output, STDOUT). If you look closely at the output you should see that each line of output is preceeded by a tag, such as ‘HEADER’ or ‘INFO’. ProtoMS uses streams to output data, and these tags state which stream the line of data came from. Thus the information at the top of the output that gives the license and version details has been printed to the ‘HEADER’ stream, while the lines stating that ProtoMS is closing down because nothing has been loaded have gone to the ‘FATAL’ stream. ProtoMS uses the following streams
+If you run ProtoMS from the command line you should see that it prints out a lot of information to the screen (on Unix called standard output, STDOUT). If you look closely at the output you should see that each line of output is preceded by a tag, such as ‘HEADER’ or ‘INFO’. ProtoMS uses streams to output data, and these tags state which stream the line of data came from. Thus the information at the top of the output that gives the license and version details has been printed to the ‘HEADER’ stream, while the lines stating that ProtoMS is closing down because nothing has been loaded have gone to the ‘FATAL’ stream. ProtoMS uses the following streams
 \begin{itemize}
 \item {} 
 \sphinxstylestrong{HEADER} Used to print the program header.
@@ -1077,7 +1075,7 @@ By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, t
 
 The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section {\hyperref[\detokenize{protoms:misccmd}]{\sphinxcrossref{\DUrole{std,std-ref}{Miscellaneous}}}}.
 
-By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option
+By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already existing files, for instance if you are restarting a simulation, you have to add the option
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -1088,13 +1086,13 @@ This option will turn on append mode for all streams, except the \sphinxstylestr
 
 
 \section{Simulation parameters}
-\label{\detokenize{protoms:parameters}}\label{\detokenize{protoms:simulation-parameters}}
+\label{\detokenize{protoms:simulation-parameters}}\label{\detokenize{protoms:parameters}}
 There are many commands to set parameters that you can use to control your simulation. To make it easier to search for those relevant to your calculations, these will be divided in several subsections.
 
 In the subsections below, unless otherwise specified:
 \begin{itemize}
 \item {} 
-\sphinxcode{\sphinxupquote{locical}} stands for \sphinxstyleemphasis{true} or \sphinxstyleemphasis{false}, \sphinxstyleemphasis{yes} or \sphinxstyleemphasis{no}, \sphinxstyleemphasis{on} or \sphinxstyleemphasis{off} (depending on your personal preference)
+\sphinxcode{\sphinxupquote{logical}} stands for \sphinxstyleemphasis{true} or \sphinxstyleemphasis{false}, \sphinxstyleemphasis{yes} or \sphinxstyleemphasis{no}, \sphinxstyleemphasis{on} or \sphinxstyleemphasis{off} (depending on your personal preference)
 
 \item {} 
 \sphinxcode{\sphinxupquote{integer}} or \sphinxcode{\sphinxupquote{int}} stands for any integer number
@@ -1156,7 +1154,7 @@ Whether or not to perform a dry run of the simulation. If this is true then all 
 \PYG{n}{ranseed} \PYG{n}{integer}
 \end{sphinxVerbatim}
 
-where \sphinxcode{\sphinxupquote{integer}} is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducable simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started.
+where \sphinxcode{\sphinxupquote{integer}} is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducible simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started.
 
 \index{temperature}\ignorespaces 
 \def\sphinxLiteralBlockLabel{\label{\detokenize{protoms:index-33}}}
@@ -1249,7 +1247,7 @@ means that the solvents closest to solute 1 will be moved more frequently than t
 \PYG{n}{prefsampling} \PYG{l+m+mi}{1} \PYG{l+m+mf}{100.0}
 \end{sphinxVerbatim}
 
-will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focussed the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off.
+will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focused the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off.
 
 \index{boundary}\ignorespaces 
 \def\sphinxLiteralBlockLabel{\label{\detokenize{protoms:index-41}}}
@@ -1336,7 +1334,7 @@ As an example:
 
 corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.
 
-The temperature replica-exchange command can be used in conjuction with the \sphinxcode{\sphinxupquote{lambdare}} command, see below, to add temperature ladders to different values of \(\lambda\).
+The temperature replica-exchange command can be used in conjunction with the \sphinxcode{\sphinxupquote{lambdare}} command, see below, to add temperature ladders to different values of \(\lambda\).
 
 \index{solutetempering}\ignorespaces 
 \def\sphinxLiteralBlockLabel{\label{\detokenize{protoms:index-45}}}
@@ -1345,7 +1343,7 @@ The temperature replica-exchange command can be used in conjuction with the \sph
 \PYG{n}{solutetempering} \PYG{l+m+mf}{25.0} \PYG{n}{bndang} \PYG{l+m+mi}{3} \PYG{n}{dih} \PYG{l+m+mi}{1} \PYG{n}{lj} \PYG{l+m+mi}{3} \PYG{n}{coul} \PYG{l+m+mi}{1} \PYG{n}{solu} \PYG{l+m+mi}{2} \PYG{n}{prot} \PYG{l+m+mi}{2} \PYG{n}{solv} \PYG{l+m+mi}{2}
 \end{sphinxVerbatim}
 
-Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see {\hyperref[\detokenize{protoms:temperature-replica-exchange-parameters}]{\sphinxcrossref{Temperature replica-exchange parameters}}}). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the \sphinxcode{\sphinxupquote{temperaturere}} command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; \sphinxcode{\sphinxupquote{bndang}} controls the internal bond-angle energy terms, \sphinxcode{\sphinxupquote{dih}} the internal dihedral energy term, \sphinxcode{\sphinxupquote{lj}} the internal van der Waals energy, \sphinxcode{\sphinxupquote{coul}} the internal Coulomb energy, \sphinxcode{\sphinxupquote{solu}} the interaction with other solutes, \sphinxcode{\sphinxupquote{prot}} the interaction with the protein and \sphinxcode{\sphinxupquote{solv}} the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with \(\beta_i/\beta_0\), where \(\beta_i\) is the effective inverse temperature of the replica (set with the \sphinxcode{\sphinxupquote{temperaturre}} command) and \(\beta_0\) is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with \((\beta_i+\beta_0)/2\beta_0\) and if the argument 3 the energy is unscaled.
+Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see {\hyperref[\detokenize{protoms:temperature-replica-exchange-parameters}]{\sphinxcrossref{Temperature replica-exchange parameters}}}). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the \sphinxcode{\sphinxupquote{temperaturere}} command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; \sphinxcode{\sphinxupquote{bndang}} controls the internal bond-angle energy terms, \sphinxcode{\sphinxupquote{dih}} the internal dihedral energy term, \sphinxcode{\sphinxupquote{lj}} the internal van der Waals energy, \sphinxcode{\sphinxupquote{coul}} the internal Coulomb energy, \sphinxcode{\sphinxupquote{solu}} the interaction with other solutes, \sphinxcode{\sphinxupquote{prot}} the interaction with the protein and \sphinxcode{\sphinxupquote{solv}} the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with \(\beta_i/\beta_0\), where \(\beta_i\) is the effective inverse temperature of the replica (set with the \sphinxcode{\sphinxupquote{temperaturere}} command) and \(\beta_0\) is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with \((\beta_i+\beta_0)/2\beta_0\) and if the argument 3 the energy is unscaled.
 
 \index{sameseeds}\ignorespaces 
 By default ProtoMS will use different random seeds for each replica in a replica exchange simulation. Setting sameseeds to true will prevent this and all replicas will use the random seed provided in the command file. This is primarily available for backwards compatibility:
@@ -1425,7 +1423,7 @@ corresponds to a simulation which runs the \(\lambda\) windowns 0.00 and 1.00 at
 \PYG{n}{lambdaladder} \PYG{n}{temperature} \PYG{n+nb}{float} \PYG{n+nb}{float}
 \end{sphinxVerbatim}
 
-is one of the commands required to proceed with a simulation including both temperature and \(\lambda\) replica exchange, where \sphinxcode{\sphinxupquote{float}} is each of the temperature values where a \(\lambda\) ladder is to be placed. All temperature values must be among those included after the \sphinxcode{\sphinxupquote{temperaturere}} keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of \(\lambda\) ladders and temperature ladders, as well as \(\lambda\) and temperature values per ladder, takind into account the cores shared by each \(\lambda\) ladder with each temperature ladder.
+is one of the commands required to proceed with a simulation including both temperature and \(\lambda\) replica exchange, where \sphinxcode{\sphinxupquote{float}} is each of the temperature values where a \(\lambda\) ladder is to be placed. All temperature values must be among those included after the \sphinxcode{\sphinxupquote{temperaturere}} keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of \(\lambda\) ladders and temperature ladders, as well as \(\lambda\) and temperature values per ladder, taking into account the cores shared by each \(\lambda\) ladder with each temperature ladder.
 
 As an example:
 
@@ -1466,7 +1464,7 @@ where \sphinxcode{\sphinxupquote{float}} is a number between 0.0 and 1.0 (often 
 \PYG{n}{printfe} \PYG{n}{string}
 \end{sphinxVerbatim}
 
-where \sphinxcode{\sphinxupquote{string}} should be either \sphinxcode{\sphinxupquote{off}}, \sphinxcode{\sphinxupquote{bar}} or \sphinxcode{\sphinxupquote{mbar}}. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into acount that this estimates will take some time. Your simulations may run faster when this option is set to off (default).
+where \sphinxcode{\sphinxupquote{string}} should be either \sphinxcode{\sphinxupquote{off}}, \sphinxcode{\sphinxupquote{bar}} or \sphinxcode{\sphinxupquote{mbar}}. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into account that this estimates will take some time. Your simulations may run faster when this option is set to off (default).
 
 In case dual topology is desired, whether it is for a single or multiple \(\lambda\) simulation, the following parameters must be used:
 
@@ -1548,7 +1546,7 @@ In the equation, \(\bar{n}\) is the number density of the GCsolute multiplied by
 \PYG{n}{multigcmc} \PYG{n}{integer} \PYG{n+nb}{float} \PYG{n+nb}{float} \PYG{n+nb}{float}
 \end{sphinxVerbatim}
 
-is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each \sphinxcode{\sphinxupquote{float}} is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel with as many cores as B values. As above the random seed used by each replica can be influenced by the sameseeds command.
+is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each \sphinxcode{\sphinxupquote{float}} is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submitted to run in parallel with as many cores as B values. As above the random seed used by each replica can be influenced by the sameseeds command.
 
 \index{origin}\ignorespaces 
 \def\sphinxLiteralBlockLabel{\label{\detokenize{protoms:index-58}}}
@@ -1868,7 +1866,7 @@ Perform 500 steps of equilibration, printing move and energy information every 1
 \PYG{n}{chunk} \PYG{n}{equilibrate} \PYG{l+m+mi}{100} \PYG{n}{solute}\PYG{o}{=}\PYG{l+m+mi}{500}
 \end{sphinxVerbatim}
 
-Perform 100 steps of equilibration. Because this chunk will inherit from the previous chunk, the move and energy information will still be printed every 10 moves, and still, on average 1 protein move will be made every 1000 solvent moves. However this line has added that on average 500 solute moves should be made for every 1000 solvent moves, thus the probability of a protein move is now 1 in 1501, the probablity of a solute move is 500 in 1501, and the probability of a solvent move is 1000 in 1501.
+Perform 100 steps of equilibration. Because this chunk will inherit from the previous chunk, the move and energy information will still be printed every 10 moves, and still, on average 1 protein move will be made every 1000 solvent moves. However this line has added that on average 500 solute moves should be made for every 1000 solvent moves, thus the probability of a protein move is now 1 in 1501, the probability of a solute move is 500 in 1501, and the probability of a solvent move is 1000 in 1501.
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -2166,7 +2164,7 @@ This is controlled with the alternative key word dump:
 \PYG{n}{dump} \PYG{n}{frequency} \PYG{n}{command}
 \end{sphinxVerbatim}
 
-This manner of output generation can be applied to all commands included in {\hyperref[\detokenize{protoms:results-and-restarts}]{\sphinxcrossref{Results and Restarts}}} secction, as well as {\hyperref[\detokenize{protoms:pdb-output}]{\sphinxcrossref{PDB output}}} section.
+This manner of output generation can be applied to all commands included in {\hyperref[\detokenize{protoms:results-and-restarts}]{\sphinxcrossref{Results and Restarts}}} section, as well as {\hyperref[\detokenize{protoms:pdb-output}]{\sphinxcrossref{PDB output}}} section.
 
 An example of a dump line would be:
 
@@ -2175,9 +2173,9 @@ An example of a dump line would be:
 \PYG{n}{dump} \PYG{l+m+mi}{100000} \PYG{n}{results} \PYG{n}{write} \PYG{n}{results}
 \end{sphinxVerbatim}
 
-This line, given as input for ProtoMS, will append results information to the \sphinxtitleref{results} file every 100000 moves, thoughout the \sphinxtitleref{simulate} part of your simulation.
+This line, given as input for ProtoMS, will append results information to the \sphinxtitleref{results} file every 100000 moves, throughout the \sphinxtitleref{simulate} part of your simulation.
 
-It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently these imput lines:
+It is important to note how the appending behaviour varies. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently, these input lines:
 
 \fvset{hllines={, ,}}%
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -2377,7 +2375,7 @@ they are read.
 
 
 \section{Parameter / Forcefield Files}
-\label{\detokenize{protoms:parfil}}\label{\detokenize{protoms:parameter-forcefield-files}}
+\label{\detokenize{protoms:parameter-forcefield-files}}\label{\detokenize{protoms:parfil}}
 The parameter file is the most powerful, and hence the most complicated of all of the input files read by ProtoMS. The parameter file provides all of the forcefield parameters that are used in a simulation, and it also provides all of the templates that provide the connectivity and z-matrices of all of the loaded molecules. The parameter file uses a word based format, meaning that you can leave as many spaces between words on a line as you like, and you do not have to worry about lining up data into particular columns.
 
 The general format of a parameter file is shown below:
@@ -2530,7 +2528,7 @@ and
 \PYG{n}{atm} \PYG{n}{amb1} \PYG{n}{amb2} \PYG{n}{amb3} \PYG{n+nb}{id}
 \end{sphinxVerbatim}
 
-\sphinxcode{\sphinxupquote{id}} is an indentifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. \sphinxcode{\sphinxupquote{force-constant}} is the force constant (\(k_{angle}\) , see eq \eqref{equation:protoms:angpot}) for the angle parameter, in units of kcal mol-1 degree-2 . \sphinxcode{\sphinxupquote{angle-size}} is the equilibrium angle size (\(\theta_0\)) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999.
+\sphinxcode{\sphinxupquote{id}} is an identifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. \sphinxcode{\sphinxupquote{force-constant}} is the force constant (\(k_{angle}\) , see eq \eqref{equation:protoms:angpot}) for the angle parameter, in units of kcal mol-1 degree-2 . \sphinxcode{\sphinxupquote{angle-size}} is the equilibrium angle size (\(\theta_0\)) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999.
 
 The atm line is again very similar to that in the bond mode, with in this case the angle between atoms with AMBER types \sphinxcode{\sphinxupquote{amb1-amb2-amb3}} being assigned angle parameter id. Angles are also symmetric, so \sphinxcode{\sphinxupquote{amb1-amb2-amb3}} is equivalent to \sphinxcode{\sphinxupquote{amb3-amb2-amb1}}. Like the bond mode, any angle involving dummy atoms (AMBER type ‘DM’) will automatically be set to use the angle parameter 0. It is not possible to use a non-null angle parameter over an angle involving dummy atoms.
 
@@ -3063,7 +3061,7 @@ ProtoMS can only read a single protein chain from a PDB file. This means that yo
 
 
 \section{Solute File}
-\label{\detokenize{protoms:solpdb}}\label{\detokenize{protoms:solute-file}}
+\label{\detokenize{protoms:solute-file}}\label{\detokenize{protoms:solpdb}}
 Solute input files are very similar to protein input files. Solute files are standard PDB format coordinate files. The name of the solute is read from the HEADER line in an identical manner to the name of a protein, e.g.:
 
 \fvset{hllines={, ,}}%
@@ -3081,7 +3079,7 @@ ProtoMS will use the solute name to find the solute template for this molecule, 
 
 
 \section{GCsolute File}
-\label{\detokenize{protoms:gcpdb}}\label{\detokenize{protoms:gcsolute-file}}
+\label{\detokenize{protoms:gcsolute-file}}\label{\detokenize{protoms:gcpdb}}
 GCsolute input files are very similar to protein input files, except that multiple GCsolutes can be loaded at once. GCsolute files are standard PDB format coordinate files. The name of each solvent molecule is taken from the residue name, and it is this name that is used to locate the template for each GCsolute molecule.
 
 
@@ -3537,6 +3535,29 @@ In the \sphinxcode{\sphinxupquote{\$PROTOMSHOME/tools}} folder we have collect a
 
 \section{ambertools.py}
 \label{\detokenize{tools:ambertools-py}}
+
+Program to run antechamber and parmchk for a series of PDB-files
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{ambertools}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FILES} \PYG{p}{[}\PYG{n}{FILES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NAME}\PYG{p}{]}
+                     \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{c} \PYG{n}{CHARGE} \PYG{p}{[}\PYG{n}{CHARGE} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the name of the PDB-files
+\item [-n, -{-}name]  
+the name of the solute
+
+Default: “UNK”
+\item [-c, -{-}charge]  
+the net charge of each PDB-file
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3558,6 +3579,52 @@ The \sphinxcode{\sphinxupquote{antechamber}} and \sphinxcode{\sphinxupquote{parm
 
 \section{build\_template.py}
 \label{\detokenize{tools:build-template-py}}
+
+Program to build a ProtoMS template file
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{build\PYGZus{}template}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PREPI}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{z} \PYG{n}{ZMAT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FRCMOD}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NAME}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TRANSLATE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{r} \PYG{n}{ROTATE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{alldihs}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{gaff} \PYG{n}{GAFF}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-p, -{-}prepi]  
+the name of the leap prepi-file
+\item [-o, -{-}out]  
+the name of the template file
+
+Default: “lig.tem”
+\item [-z, -{-}zmat]  
+the name of the zmatrix-file, if it exists
+\item [-f, -{-}frcmod]  
+the name of the frcmod-file, if it exists
+\item [-n, -{-}name]  
+the name of the solute
+
+Default: “UNK”
+\item [-t, -{-}translate]  
+maxmium size for translation moves in Angstroms
+
+Default: 0.1
+\item [-r, -{-}rotate]  
+maxmium size for rotation moves in degrees
+
+Default: 1.0
+\item [-{-}alldihs]  
+sample improper dihedrals
+
+Default: False
+\item [-{-}gaff]  
+gaff version to use, gaff14 or gafff16
+
+Default: “gaff16”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3581,6 +3648,45 @@ The default translational and rotational displacements are based on experience a
 
 \section{calc\_clusters.py}
 \label{\detokenize{tools:calc-clusters-py}}
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}clusters}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{i} \PYG{n}{INPUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{m} \PYG{n}{MOLECULE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{a} \PYG{n}{ATOM}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{SKIP}\PYG{p}{]}
+                        \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{c} \PYG{n}{CUTOFF}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LINKAGE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUTPUT}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-i, -{-}input]  
+PDB file containing input frames. Default=’all.pdb’
+
+Default: “all.pdb”
+\item [-m, -{-}molecule]  
+Residue name of water molecules. Default=’WA1’
+
+Default: “WA1”
+\item [-a, -{-}atom]  
+Name of atom to take as molecule coordinates. Default=’O00’
+
+Default: “O00”
+\item [-s, -{-}skip]  
+Number of frames to skip. Default=0
+
+Default: 0
+\item [-c, -{-}cutoff]  
+Distance cutoff for clustering. Default=2.4 Angs
+
+Default: 2.4
+\item [-l, -{-}linkage]  
+Linkage method for hierarchical clustering. Default=’average’
+
+Default: “average”
+\item [-o, -{-}output]  
+Filename for the PDB output. Default=’clusters.pdb’
+
+Default: “clusters.pdb”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3600,6 +3706,65 @@ It will extract the coordinates of all atoms with name equal to \sphinxcode{\sph
 
 \section{calc\_density.py}
 \label{\detokenize{tools:calc-density-py}}
+
+Program to discretize atoms on a 3D grid
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}density}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FILES} \PYG{p}{[}\PYG{n}{FILES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{r} \PYG{n}{RESIDUE}\PYG{p}{]}
+                       \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{a} \PYG{n}{ATOM}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PADDING}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{SPACING}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{e} \PYG{n}{EXTENT}\PYG{p}{]}
+                       \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NORM}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{p}{\PYGZob{}}\PYG{n}{sphere}\PYG{p}{,}\PYG{n}{gaussian}\PYG{p}{\PYGZcb{}}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{skip} \PYG{n}{SKIP}\PYG{p}{]}
+                       \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n+nb}{max} \PYG{n}{MAX}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the input PDB-files
+\item [-o, -{-}out]  
+the name of the output grid-file in DX-format, default=’grid.dx’
+
+Default: “grid.dx”
+\item [-r, -{-}residue]  
+the name of the residue to extract, default=’wa1’
+
+Default: “wa1”
+\item [-a, -{-}atom]  
+the name of the atom to extract, default=’o00’
+
+Default: “o00”
+\item [-p, -{-}padding]  
+the amount to increase the minimum box in each direction, default=2 A
+
+Default: 2.0
+\item [-s, -{-}spacing]  
+the grid resolution, default=0.5 A
+
+Default: 0.5
+\item [-e, -{-}extent]  
+the size of the smoothing, i.e. the extent of an atom, default=1A
+
+Default: 1.0
+\item [-n, -{-}norm]  
+number used to normalize the grid, if not specified the number of input files is used
+\item [-t, -{-}type]  
+Possible choices: sphere, gaussian
+
+the type  of coordinate smoothing, should be either ‘sphere’, ‘gaussian’
+
+Default: “sphere”
+\item [-{-}skip]  
+the number of blocks to skip to calculate the density. default is 0. Skip must be greater or equal to 0
+
+Default: 0
+\item [-{-}max]  
+the upper block to use. default is 99999 which should make sure you will use all the available blocks. max must be greater or equal to 0
+
+Default: 99999
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3629,6 +3794,73 @@ The produced density can be visualized with most programs, e.g.
 
 \section{calc\_dg.py}
 \label{\detokenize{tools:calc-dg-py}}
+
+Calculate free energy differences using a range of estimators
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}dg}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{o}{\PYGZhy{}}\PYG{n}{d} \PYG{n}{DIRECTORIES} \PYG{p}{[}\PYG{n}{DIRECTORIES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LOWER\PYGZus{}BOUND}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{u} \PYG{n}{UPPER\PYGZus{}BOUND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TEMPERATURE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pickle} \PYG{n}{PICKLE}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{save}\PYG{o}{\PYGZhy{}}\PYG{n}{figures} \PYG{p}{[}\PYG{n}{SAVE\PYGZus{}FIGURES}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{no}\PYG{o}{\PYGZhy{}}\PYG{n}{show}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NAME}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{subdir} \PYG{n}{SUBDIR}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pmf}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{test}\PYG{o}{\PYGZhy{}}\PYG{n}{equilibration} \PYG{n}{TEST\PYGZus{}EQUILIBRATION}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{test}\PYG{o}{\PYGZhy{}}\PYG{n}{convergence} \PYG{n}{TEST\PYGZus{}CONVERGENCE}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{estimators} \PYG{p}{\PYGZob{}}\PYG{n}{ti}\PYG{p}{,}\PYG{n}{mbar}\PYG{p}{,}\PYG{n}{bar}\PYG{p}{,}\PYG{n}{gcap}\PYG{p}{\PYGZcb{}} \PYG{p}{[}\PYG{p}{\PYGZob{}}\PYG{n}{ti}\PYG{p}{,}\PYG{n}{mbar}\PYG{p}{,}\PYG{n}{bar}\PYG{p}{,}\PYG{n}{gcap}\PYG{p}{\PYGZcb{}} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{v} \PYG{n}{VOLUME}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-d, -{-}directories]  
+Location of folders containing ProtoMS output subdirectories. Multiple directories can be supplied to this flag and indicate repeats of the same calculation. This flag may be given multiple times and each instances is treated as an individual leg making up a single free energy difference e.g. vdw and ele contributions of a single topology calculation.
+\item [-l, -{-}lower-bound]  
+Value between 0 and 1 that determines the proportion to omit from the beginning of the simulation data series.
+
+Default: 0.0
+\item [-u, -{-}upper-bound]  
+Value between 0 and 1 that determines the proportion to omit from the end of the simulation data series.
+
+Default: 1.0
+\item [-t, -{-}temperature]  
+Temperature at which the simulation was run. Default=298.15K
+
+Default: 298.15
+\item [-{-}pickle]  
+Name of file in which to store results as a pickle.
+\item [-{-}save-figures]  
+Save figures produced by script. Takes optional argument that adds a prefix to figure names.
+\item [-{-}no-show]  
+Do not display any figures on screen. Does not interfere with \textendash{}save-figures.
+
+Default: False
+\item [-n, -{-}name]  
+Name of ProtoMS output file containing free energy data. Note that this option will not change the output file used by the gcap estimator from results\_inst.
+
+Default: “results”
+\item [-{-}subdir]  
+Optional sub-directory for each lambda value to search within for simulation output. This is useful in, for instance, processing only the results of a GCAP calculation at a particular B value.
+
+Default: “”
+\item [-{-}pmf]  
+Make graph of potential of mean force
+
+Default: False
+\item [-{-}test-equilibration]  
+Perform free energy calculations 10 times using varying proportions of the total data set provided. Data used will range from 100\% of the dataset down to the proportion provided to this argument
+\item [-{-}test-convergence]  
+Perform free energy calculations 10 times using varying proportions of the total data set provided. Data used will range from 100\% of the dataset up to the proportion provided to this argument
+\item [-{-}estimators]  
+Possible choices: ti, mbar, bar, gcap
+
+Choose free energy estimator to use. By default TI, BAR and MBAR are used. Note that the GCAP estimator assumes a different file structure and ignores the \textendash{}subdir flag.
+
+Default: {[}‘ti’, ‘mbar’, ‘bar’{]}
+\item [-v, -{-}volume]  
+Volume of GCMC region
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3643,15 +3875,84 @@ The produced density can be visualized with most programs, e.g.
 
 \sphinxstylestrong{Description:}
 
-This tool calculates free energies using the method of thermodynamic integration (TI), Bennet’s Acceptance Ratio (BAR), multi state BAR (MBAR) and grand canonical alchemical perturbation (GCAP).
+This tool calculates free energies using the method of thermodynamic integration (TI), Bennett’s Acceptance Ratio (BAR), multi state BAR (MBAR) and grand canonical alchemical perturbation (GCAP).
 
-The program expects that in the \sphinxcode{\sphinxupquote{directory}}, \sphinxcode{\sphinxupquote{directory2}} etc. there exist an output folder for each \(\lambda\)-value, eg. \sphinxcode{\sphinxupquote{lam-0.000}} and \sphinxcode{\sphinxupquote{lam-1.000}}
-
-The MBAR and GCAP estimators only works if PyMBAR is properly installed and can be loaded as a python library.
+The program expects that in the \sphinxcode{\sphinxupquote{directory}}, \sphinxcode{\sphinxupquote{directory2}} etc. there exists an output folder for each \(\lambda\)-value, eg. \sphinxcode{\sphinxupquote{lam-0.000}} and \sphinxcode{\sphinxupquote{lam-1.000}} (unless the \sphinxcode{\sphinxupquote{-{-}subdir}} argument is used.)
 
 
 \section{calc\_dg\_cycle.py}
 \label{\detokenize{tools:calc-dg-cycle-py}}
+
+High level script that attempts to use data from multiple calculations to provide free energies of solvation and binding. Also calculates cycle closures for all data. Assumes standard ProtoMS naming conventions for data output directories. Data should be organised such that each transformation between two ligands should have a single master directory containing output directories for each simulation state (e.g. master/out1\_free). Masterdirectories should be passed to the -d flag. Reported free energies are averages over all repeats found. Reported errors are single standard errors calculated from repeats.
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}dg\PYGZus{}cycle}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LOWER\PYGZus{}BOUND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{u} \PYG{n}{UPPER\PYGZus{}BOUND}\PYG{p}{]}
+                        \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TEMPERATURE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pickle} \PYG{n}{PICKLE}\PYG{p}{]}
+                        \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{save}\PYG{o}{\PYGZhy{}}\PYG{n}{figures} \PYG{p}{[}\PYG{n}{SAVE\PYGZus{}FIGURES}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{no}\PYG{o}{\PYGZhy{}}\PYG{n}{show}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NAME}\PYG{p}{]}
+                        \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{subdir} \PYG{n}{SUBDIR}\PYG{p}{]} \PYG{o}{\PYGZhy{}}\PYG{n}{d} \PYG{n}{DIRECTORIES} \PYG{p}{[}\PYG{n}{DIRECTORIES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]} \PYG{o}{\PYGZhy{}}\PYG{n}{s}
+                        \PYG{p}{\PYGZob{}}\PYG{o}{+}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{p}{\PYGZcb{}} \PYG{p}{[}\PYG{p}{\PYGZob{}}\PYG{o}{+}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{p}{\PYGZcb{}} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}
+                        \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{estimators} \PYG{p}{\PYGZob{}}\PYG{n}{ti}\PYG{p}{,}\PYG{n}{mbar}\PYG{p}{,}\PYG{n}{bar}\PYG{p}{,}\PYG{n}{gcap}\PYG{p}{\PYGZcb{}} \PYG{p}{[}\PYG{p}{\PYGZob{}}\PYG{n}{ti}\PYG{p}{,}\PYG{n}{mbar}\PYG{p}{,}\PYG{n}{bar}\PYG{p}{,}\PYG{n}{gcap}\PYG{p}{\PYGZcb{}} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                        \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{v} \PYG{n}{VOLUME}\PYG{p}{]}
+                        \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{dualtopology} \PYG{o}{\textbar{}} \PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{singletopology} \PYG{p}{\PYGZob{}}\PYG{n}{comb}\PYG{p}{,}\PYG{n}{sep}\PYG{p}{\PYGZcb{}}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-l, -{-}lower-bound]  
+Value between 0 and 1 that determines the proportion to omit from the beginning of the simulation data series.
+
+Default: 0.0
+\item [-u, -{-}upper-bound]  
+Value between 0 and 1 that determines the proportion to omit from the end of the simulation data series.
+
+Default: 1.0
+\item [-t, -{-}temperature]  
+Temperature at which the simulation was run. Default=298.15K
+
+Default: 298.15
+\item [-{-}pickle]  
+Name of file in which to store results as a pickle.
+\item [-{-}save-figures]  
+Save figures produced by script. Takes optional argument that adds a prefix to figure names.
+\item [-{-}no-show]  
+Do not display any figures on screen. Does not interfere with \textendash{}save-figures.
+
+Default: False
+\item [-n, -{-}name]  
+Name of ProtoMS output file containing free energy data. Note that this option will not change the output file used by the gcap estimator from results\_inst.
+
+Default: “results”
+\item [-{-}subdir]  
+Optional sub-directory for each lambda value to search within for simulation output. This is useful in, for instance, processing only the results of a GCAP calculation at a particular B value.
+
+Default: “”
+\item [-d, -{-}directories]  
+Location of folders containing ProtoMS output directories.
+\item [-s, -{-}signs]  
+Possible choices: +, -
+
+List of ‘+’ or ‘-‘ characters, one for each directory provided to the -d flag. Indicates the sign that should be used for each free energy difference when calculating cycle closures.
+\item [-{-}estimators]  
+Possible choices: ti, mbar, bar, gcap
+
+Choose estimators
+
+Default: {[}‘ti’, ‘mbar’, ‘bar’{]}
+\item [-v, -{-}volume]  
+Volume of GCMC region
+\item [-{-}dualtopology]  
+Indicates data is for a dual topology calculation.
+
+Default: False
+\item [-{-}singletopology]  
+Possible choices: comb, sep
+
+Indicates data is for a single topology calculation. Option comb indicates a single step calculation. Option sep indicates separate steps for van der Waals  and electrostatics components.
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3662,11 +3963,68 @@ The MBAR and GCAP estimators only works if PyMBAR is properly installed and can 
 
 \sphinxstylestrong{Description:}
 
-Calculates thermodynamic cycle closure for a set of simulations. This can be performed either for dual topology results, or single topology results. With single topology simulations, the electrostatic and van der Waals results can either be considered seperately \sphinxcode{\sphinxupquote{-{-}singletopology sep}} or together, \sphinxcode{\sphinxupquote{-{-}singletopology comb}}.
+Calculates thermodynamic cycle closure for a set of simulations. This can be performed either for dual topology results, or single topology results. With single topology simulations, the electrostatic and van der Waals results can either be considered separately \sphinxcode{\sphinxupquote{-{-}singletopology sep}} or together, \sphinxcode{\sphinxupquote{-{-}singletopology comb}}.
 
 
 \section{calc\_gcap\_surface.py}
 \label{\detokenize{tools:calc-gcap-surface-py}}
+
+Calculate free energy differences using a range of estimators
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}gcap\PYGZus{}surface}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{o}{\PYGZhy{}}\PYG{n}{d} \PYG{n}{DIRECTORIES} \PYG{p}{[}\PYG{n}{DIRECTORIES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}
+                            \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LOWER\PYGZus{}BOUND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{u} \PYG{n}{UPPER\PYGZus{}BOUND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TEMPERATURE}\PYG{p}{]}
+                            \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pickle} \PYG{n}{PICKLE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{save}\PYG{o}{\PYGZhy{}}\PYG{n}{figures} \PYG{p}{[}\PYG{n}{SAVE\PYGZus{}FIGURES}\PYG{p}{]}\PYG{p}{]}
+                            \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{no}\PYG{o}{\PYGZhy{}}\PYG{n}{show}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NAME}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{subdir} \PYG{n}{SUBDIR}\PYG{p}{]}
+                            \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{v} \PYG{n}{VOLUME}\PYG{p}{]}
+                            \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{estimators} \PYG{p}{\PYGZob{}}\PYG{n}{ti}\PYG{p}{,}\PYG{n}{mbar}\PYG{p}{,}\PYG{n}{bar}\PYG{p}{\PYGZcb{}} \PYG{p}{[}\PYG{p}{\PYGZob{}}\PYG{n}{ti}\PYG{p}{,}\PYG{n}{mbar}\PYG{p}{,}\PYG{n}{bar}\PYG{p}{\PYGZcb{}} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-d, -{-}directories]  
+Location of folders containing ProtoMS output subdirectories. Multiple directories can be supplied to this flag and indicate repeats of the same calculation. This flag may be given multiple times and each instances is treated as an individual leg making up a single free energy difference e.g. vdw and ele contributions of a single topology calculation.
+\item [-l, -{-}lower-bound]  
+Value between 0 and 1 that determines the proportion to omit from the beginning of the simulation data series.
+
+Default: 0.0
+\item [-u, -{-}upper-bound]  
+Value between 0 and 1 that determines the proportion to omit from the end of the simulation data series.
+
+Default: 1.0
+\item [-t, -{-}temperature]  
+Temperature at which the simulation was run. Default=298.15K
+
+Default: 298.15
+\item [-{-}pickle]  
+Name of file in which to store results as a pickle.
+\item [-{-}save-figures]  
+Save figures produced by script. Takes optional argument that adds a prefix to figure names.
+\item [-{-}no-show]  
+Do not display any figures on screen. Does not interfere with \textendash{}save-figures.
+
+Default: False
+\item [-n, -{-}name]  
+Name of ProtoMS output file containing free energy data. Note that this option will not change the output file used by the gcap estimator from results\_inst.
+
+Default: “results”
+\item [-{-}subdir]  
+Optional sub-directory for each lambda value to search within for simulation output. This is useful in, for instance, processing only the results of a GCAP calculation at a particular B value.
+
+Default: “”
+\item [-v, -{-}volume]  
+Volume of GCMC region
+\item [-{-}estimators]  
+Possible choices: ti, mbar, bar
+
+Choose free energy estimator to use. By default TI, BAR and MBAR are used. Note that the GCAP estimator assumes a different file structure and ignores the \textendash{}subdir flag.
+
+Default: {[}‘ti’, ‘mbar’, ‘bar’{]}
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3678,12 +4036,69 @@ Calculates thermodynamic cycle closure for a set of simulations. This can be per
 
 \sphinxstylestrong{Description:}
 
+Calculates the free energy from a surface-GCAP simulation. The volume of the GCMC region must be given using the \sphinxcode{\sphinxupquote{-v}} flag. To calculate the free energy at a single B value, use the \sphinxcode{\sphinxupquote{-{-}subdir}} flag with calc\_dg.py, and the energy can be calculated with any one dimensional free energy method.
 
-\subsection{Calculates the free energy from a surface-GCAP simulation. The volume of the GCMC region must be given using the \sphinxstyleliteralintitle{\sphinxupquote{-v}} flag. To calculate the free energy at a single B value, use the \sphinxstyleliteralintitle{\sphinxupquote{-{-}subdir}} flag, and the energy can be calculated with any one dimensional free energy method.}
-\label{\detokenize{tools:calculates-the-free-energy-from-a-surface-gcap-simulation-the-volume-of-the-gcmc-region-must-be-given-using-the-v-flag-to-calculate-the-free-energy-at-a-single-b-value-use-the-subdir-flag-and-the-energy-can-be-calculated-with-any-one-dimensional-free-energy-method}}
 
-\subsection{calc\_gci.py}
+\section{calc\_gci.py}
 \label{\detokenize{tools:calc-gci-py}}
+
+Calculate water binding free energies using Grand Canonical Integration.
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}gci}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LOWER\PYGZus{}BOUND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{u} \PYG{n}{UPPER\PYGZus{}BOUND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TEMPERATURE}\PYG{p}{]}
+                   \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pickle} \PYG{n}{PICKLE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{save}\PYG{o}{\PYGZhy{}}\PYG{n}{figures} \PYG{p}{[}\PYG{n}{SAVE\PYGZus{}FIGURES}\PYG{p}{]}\PYG{p}{]}
+                   \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{no}\PYG{o}{\PYGZhy{}}\PYG{n}{show}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{name} \PYG{n}{NAME}\PYG{p}{]} \PYG{o}{\PYGZhy{}}\PYG{n}{d} \PYG{n}{DIRECTORIES} \PYG{p}{[}\PYG{n}{DIRECTORIES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}
+                   \PYG{o}{\PYGZhy{}}\PYG{n}{v} \PYG{n}{VOLUME} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NSTEPS}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{nmin} \PYG{n}{NMIN}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{nmax} \PYG{n}{NMAX}\PYG{p}{]}
+                   \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{nfits} \PYG{n}{NFITS}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pin\PYGZus{}min} \PYG{n}{PIN\PYGZus{}MIN}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-l, -{-}lower-bound]  
+Value between 0 and 1 that determines the proportion to omit from the beginning of the simulation data series.
+
+Default: 0.0
+\item [-u, -{-}upper-bound]  
+Value between 0 and 1 that determines the proportion to omit from the end of the simulation data series.
+
+Default: 1.0
+\item [-t, -{-}temperature]  
+Temperature at which the simulation was run. Default=298.15K
+
+Default: 298.15
+\item [-{-}pickle]  
+Name of file in which to store results as a pickle.
+\item [-{-}save-figures]  
+Save figures produced by script. Takes optional argument that adds a prefix to figure names.
+\item [-{-}no-show]  
+Do not display any figures on screen. Does not interfere with \textendash{}save-figures.
+
+Default: False
+\item [-{-}name]  
+Name of ProtoMS output file containing free energy data. Note that this option will not change the output file used by the gcap estimator from results\_inst.
+
+Default: “results”
+\item [-d, -{-}directories]  
+Location of folders containing ProtoMS output subdirectories. Multiple directories can be supplied to this flag and indicate repeats of the same calculation.
+\item [-v, -{-}volume]  
+Volume of the calculations GCMC region.
+\item [-n, -{-}nsteps]  
+Override automatic guessing of the number of steps to fit for titration curve fitting.
+\item [-{-}nmin]  
+Override automatic guessing of the minimum number of waters for tittration curve fitting.
+\item [-{-}nmax]  
+Override automatic guessing of maximum number of waters for titration curve fitting.
+\item [-{-}nfits]  
+The number of independent fitting attempts for the neural network occupancy model. Increasing the number of fits may help improve results for noisy data.
+
+Default: 10
+\item [-{-}pin\_min]  
+The minimum value when fitting the neural network occupancy model. Setting this may help improve models which are poorly fit at low values
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3703,6 +4118,35 @@ Error estimates of free energies and optimal number of waters are based on autom
 
 \section{calc\_replicapath.py}
 \label{\detokenize{tools:calc-replicapath-py}}
+
+Program to analyze and plot a replica paths
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}replicapath}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FILES} \PYG{p}{[}\PYG{n}{FILES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PLOT} \PYG{p}{[}\PYG{n}{PLOT} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                           \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{k} \PYG{p}{\PYGZob{}}\PYG{k}{lambda}\PYG{p}{,}\PYG{n}{temperature}\PYG{p}{,}\PYG{n}{rest}\PYG{p}{,}\PYG{k}{global}\PYG{p}{,}\PYG{n}{B}\PYG{p}{\PYGZcb{}}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the name of the files to analyse
+\item [-p, -{-}plot]  
+the replica values to plot
+\item [-k, -{-}kind]  
+Possible choices: lambda, temperature, rest, global, B
+
+the kind of replica to analyze
+
+Default: “lambda”
+\item [-o, -{-}out]  
+the prefix of the output figure. Default is replica\_path.
+
+Default: “replica\_path.png”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3723,6 +4167,33 @@ If the kind of replicas is from REST or temperature replica exchange the \sphinx
 
 \section{calc\_rmsd.py}
 \label{\detokenize{tools:calc-rmsd-py}}
+
+Program to calculate RMSD of ligand centre
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}rmsd}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{i} \PYG{n}{INITIAL}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FILES} \PYG{p}{[}\PYG{n}{FILES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LIGAND}\PYG{p}{]}
+                    \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{a} \PYG{n}{ATOM}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TEMPERATURE}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-i, -{-}initial]  
+the initial PDB-file of the ligand
+\item [-f, -{-}files]  
+the input PDB-files
+\item [-l, -{-}ligand]  
+the name of the ligand to extract
+\item [-a, -{-}atom]  
+the name of the atom to analyze
+\item [-t, -{-}temperature]  
+the temperature in the simulation
+
+Default: 298.0
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3742,6 +4213,52 @@ A force constant to keep the ligand restrained for free energy calculations is e
 
 \section{calc\_series.py}
 \label{\detokenize{tools:calc-series-py}}
+
+Program to analyze and plot a time series
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}series}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FILE} \PYG{p}{[}\PYG{n}{FILE} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]}
+                      \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{SERIES} \PYG{p}{[}\PYG{n}{SERIES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                      \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{p}{\PYGZob{}}\PYG{n}{sep}\PYG{p}{,}\PYG{n}{sub}\PYG{p}{,}\PYG{n}{single}\PYG{p}{,}\PYG{n}{single\PYGZus{}first0}\PYG{p}{,}\PYG{n}{single\PYGZus{}last0}\PYG{p}{\PYGZcb{}}\PYG{p}{]}
+                      \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{nperm} \PYG{n}{NPERM}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{threshold} \PYG{n}{THRESHOLD}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{average}\PYG{p}{]}
+                      \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{moving} \PYG{n}{MOVING}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-f, -{-}file]  
+the name of the file to analyse. Default is results.
+
+Default: {[}‘results’{]}
+\item [-o, -{-}out]  
+the prefix of the output figure. Default is series.
+
+Default: “series”
+\item [-s, -{-}series]  
+the series to analyze
+\item [-p, -{-}plot]  
+Possible choices: sep, sub, single, single\_first0, single\_last0
+
+the type of plot to generate for several series
+\item [-{-}nperm]  
+if larger than zero, perform a permutation test to determine equilibration, default=0
+
+Default: 0
+\item [-{-}threshold]  
+the significant level of the equilibration test, default=0.05
+
+Default: 0.05
+\item [-{-}average]  
+turns on use of running averaging of series
+
+Default: False
+\item [-{-}moving]  
+turns on use of moving averaging of series, default=None
+\end{optionlist}
+
 The tool will estimate the number of independent samples for a given observable in the production part using the method of statistical inefficiency. The equilibration time will also be estimated from a method that maximizes the number uncorrelated samples as suggested on alchemistry.org.
 
 Apart from the raw series, the tool can also plot the running average if the \sphinxcode{\sphinxupquote{-{-}average}} flag is set or the moving average if the \sphinxcode{\sphinxupquote{-{-}moving}} flag is used.
@@ -3751,6 +4268,72 @@ Typically only a single ProtoMS results file will be analysed and plotted. Howev
 
 \section{calc\_ti\_decomposed.py}
 \label{\detokenize{tools:calc-ti-decomposed-py}}
+
+Calculate individual contributions of different terms to the total free energy difference. Although terms are guaranteed to be additive with TI, the decomposition is not strictly well defined. That said, it can be illustrative to consider the dominant contributions of a calculation.
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{calc\PYGZus{}ti\PYGZus{}decomposed}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{o}{\PYGZhy{}}\PYG{n}{d} \PYG{n}{DIRECTORIES} \PYG{p}{[}\PYG{n}{DIRECTORIES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}
+                             \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LOWER\PYGZus{}BOUND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{u} \PYG{n}{UPPER\PYGZus{}BOUND}\PYG{p}{]}
+                             \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TEMPERATURE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pickle} \PYG{n}{PICKLE}\PYG{p}{]}
+                             \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{save}\PYG{o}{\PYGZhy{}}\PYG{n}{figures} \PYG{p}{[}\PYG{n}{SAVE\PYGZus{}FIGURES}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{no}\PYG{o}{\PYGZhy{}}\PYG{n}{show}\PYG{p}{]}
+                             \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{NAME}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{subdir} \PYG{n}{SUBDIR}\PYG{p}{]}
+                             \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{b} \PYG{n}{BOUND} \PYG{p}{[}\PYG{n}{BOUND} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{g} \PYG{n}{GAS} \PYG{p}{[}\PYG{n}{GAS} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                             \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{dualtopology}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{pmf}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{full}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-d, -{-}directories]  
+Location of folders containing ProtoMS output subdirectories. Multiple directories can be supplied to this flag and indicate repeats of the same calculation. This flag may be given multiple times and each instances is treated as an individual leg making up a single free energy difference e.g. vdw and ele contributions of a single topology calculation.
+\item [-l, -{-}lower-bound]  
+Value between 0 and 1 that determines the proportion to omit from the beginning of the simulation data series.
+
+Default: 0.0
+\item [-u, -{-}upper-bound]  
+Value between 0 and 1 that determines the proportion to omit from the end of the simulation data series.
+
+Default: 1.0
+\item [-t, -{-}temperature]  
+Temperature at which the simulation was run. Default=298.15K
+
+Default: 298.15
+\item [-{-}pickle]  
+Name of file in which to store results as a pickle.
+\item [-{-}save-figures]  
+Save figures produced by script. Takes optional argument that adds a prefix to figure names.
+\item [-{-}no-show]  
+Do not display any figures on screen. Does not interfere with \textendash{}save-figures.
+
+Default: False
+\item [-n, -{-}name]  
+Name of ProtoMS output file containing free energy data. Note that this option will not change the output file used by the gcap estimator from results\_inst.
+
+Default: “results”
+\item [-{-}subdir]  
+Optional sub-directory for each lambda value to search within for simulation output. This is useful in, for instance, processing only the results of a GCAP calculation at a particular B value.
+
+Default: “”
+\item [-b, -{-}bound]  
+Output directory(s) of additional bound phase calculation(s). Using this flag causes data loaded via -d to be considered as solvent phase data. All data is then combined to provide a decomposition of the binding free energy. Behaves identically to -d in treatment of repeats and calculation legs.
+\item [-g, -{-}gas]  
+As -b except data loaded via this flag is treated as gas phase data to provide to provide a decomposed solvation free energy.
+\item [-{-}dualtopology]  
+Indicates provided data is from a dual topology calculation. Attempts to consolidate terms, for clarity, from ligands that can have opposite signs and large magnitudes. Please note that standard errors calculated with this approach are no longer rigorous and can be spuriously large.
+
+Default: False
+\item [-{-}pmf]  
+Plot the Potential of Mean Force for all terms.
+
+Default: False
+\item [-{-}full]  
+Prevents printing out of zero contribution energies.
+
+Default: True
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3780,6 +4363,28 @@ done
 
 \section{clear\_gcmcbox.py}
 \label{\detokenize{tools:clear-gcmcbox-py}}
+
+Program to remove water molecules from a GCMC/JAWS-1 box
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{clear\PYGZus{}gcmcbox}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{b} \PYG{n}{BOX}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{SOLVATION}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-b, -{-}box]  
+the name of the PDB-file containing the box.
+\item [-s, -{-}solvation]  
+the name of the PDB-file containing the solvation waters
+\item [-o, -{-}out]  
+the name of the output PDB-file
+
+Default: “cleared\_box.pdb”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3799,6 +4404,35 @@ The \sphinxcode{\sphinxupquote{boxfile}} is typically created by \sphinxcode{\sp
 
 \section{convertatomnames.py}
 \label{\detokenize{tools:convertatomnames-py}}
+
+Program convert atom names in a protein pdb-file to ProtoMS style
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{convertatomnames}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PROTEIN}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{STYLE}\PYG{p}{]}
+                           \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{c} \PYG{n}{CONVERSIONFILE}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-p, -{-}protein]  
+the protein PDB-file
+\item [-o, -{-}out]  
+the output PDB-file
+
+Default: “protein\_pms.pdb”
+\item [-s, -{-}style]  
+the style of the input PDB-file
+
+Default: “amber”
+\item [-c, -{-}conversionfile]  
+the name of the file with conversion rules
+
+Default: “atomnamesmap.dat”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3819,6 +4453,39 @@ A file containing conversion instructions for amber and charmm is available in t
 
 \section{convertwater.py}
 \label{\detokenize{tools:convertwater-py}}
+
+Program to convert water molecules - with or without hydrogens - in a pdb file to simulation models, such as tip4p. Currently ignores original hydrogen positions.
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{convertwater}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PDB}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{m} \PYG{n}{MODEL}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{i}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{n}{RESNAME}\PYG{p}{]}
+                       \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{setupseed} \PYG{n}{SETUPSEED}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-p, -{-}pdb]  
+the PDF-file containing the waters to be transformed
+\item [-o, -{-}out]  
+the output PDB-file
+
+Default: “convertedwater.pdb”
+\item [-m, -{-}model]  
+the water model,default=tip4p
+
+Default: “tip4p”
+\item [-i, -{-}ignoreh]  
+whether to ignore hydrogens in input water. If no hydrogens are present, waters are randomly orientated. default=No
+
+Default: False
+\item [-n, -{-}resname]  
+the residue name that will be applied to the water molecules. When it is not specified, it is chosen based on the water model
+\item [-{-}setupseed]  
+optional random number seed for generation of water coordinates
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3839,6 +4506,42 @@ If the \sphinxcode{\sphinxupquote{-{-}ignoreh}} flag is given, the script will d
 
 \section{distribute\_waters.py}
 \label{\detokenize{tools:distribute-waters-py}}
+
+Randomly distribute n molecules within box dimensions
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{distribute\PYGZus{}waters}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{b} \PYG{n}{BOX} \PYG{n}{BOX} \PYG{n}{BOX} \PYG{n}{BOX} \PYG{n}{BOX} \PYG{n}{BOX}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{m} \PYG{n}{MOLECULES}\PYG{p}{]}
+                            \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUTFILE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{model} \PYG{n}{MODEL}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{resname} \PYG{n}{RESNAME}\PYG{p}{]}
+                            \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{number} \PYG{n}{NUMBER}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{setupseed} \PYG{n}{SETUPSEED}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-b, -{-}box]  
+Dimensions of the box. Six arguments expected: origin (x,y,z) \& length (x,y,z)
+\item [-m, -{-}molecules]  
+Molecules to distribute in the box. Either the number of waters or a pdb file containing all of them
+\item [-o, -{-}outfile]  
+Name of the pdb file to write the molecules to. Default=’ghostmolecules.pdb’
+
+Default: “ghostmolecules.pdb”
+\item [-{-}model]  
+Water model. Used when only the amount of waters is specified. Options: ‘t4p’,’t3p’. Default=’t4p’
+
+Default: “t4p”
+\item [-{-}resname]  
+Residue name of the molecules writen to output. Default=’WAT’
+
+Default: “WAT”
+\item [-{-}number]  
+Required number of molecules when it differs from the number of residues in the file.
+\item [-{-}setupseed]  
+Optional random number seed for generation of water coordinates
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3857,6 +4560,32 @@ It can place molecules in random positions and orientations with their geometry 
 
 \section{divide\_pdb.py}
 \label{\detokenize{tools:divide-pdb-py}}
+
+Split your multi pdb file into individual files
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{divide\PYGZus{}pdb}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{i} \PYG{n}{INPUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUTPUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PATH}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-i, -{-}input]  
+The name of your multi pdb file. Default = all.pdb
+
+Default: “all.pdb”
+\item [-o, -{-}output]  
+The basename of your individual pdb files. Default = {\color{red}\bfseries{}snapshot\_}
+
+Default: “{\color{red}\bfseries{}snapshot\_}”
+\item [-p, -{-}path]  
+Where the input should be found and the output printed. Default = ./
+
+Default: “./”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 \begin{description}
 \item[{::}] \leavevmode
@@ -3872,6 +4601,116 @@ This tool splits up a PDB file with multiple models (the keyword END defines the
 
 \section{generate\_input.py}
 \label{\detokenize{tools:generate-input-py}}
+
+Program to create a ProtoMS command file
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{generate\PYGZus{}input}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{p}{\PYGZob{}}\PYG{n}{sampling}\PYG{p}{,}\PYG{n}{equilibration}\PYG{p}{,}\PYG{n}{dualtopology}\PYG{p}{,}\PYG{n}{singletopology}\PYG{p}{,}\PYG{n}{gcap\PYGZus{}single}\PYG{p}{,}\PYG{n}{gcap\PYGZus{}dual}\PYG{p}{,}\PYG{n}{gcmc}\PYG{p}{,}\PYG{n}{jaws1}\PYG{p}{,}\PYG{n}{jaws2}\PYG{p}{\PYGZcb{}}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{dovacuum}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PROTEIN}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LIGANDS} \PYG{p}{[}\PYG{n}{LIGANDS} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t} \PYG{n}{TEMPLATES} \PYG{p}{[}\PYG{n}{TEMPLATES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{pw} \PYG{n}{PROTWATER}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{lw} \PYG{n}{LIGWATER}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{outfolder} \PYG{n}{OUTFOLDER}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{gaff} \PYG{n}{GAFF}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{lambdas} \PYG{n}{LAMBDAS} \PYG{p}{[}\PYG{n}{LAMBDAS} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{adams} \PYG{n}{ADAMS} \PYG{p}{[}\PYG{n}{ADAMS} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{adamsrange} \PYG{n}{ADAMSRANGE} \PYG{p}{[}\PYG{n}{ADAMSRANGE} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{jawsbias} \PYG{n}{JAWSBIAS} \PYG{p}{[}\PYG{n}{JAWSBIAS} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{gcmcwater} \PYG{n}{GCMCWATER}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{gcmcbox} \PYG{n}{GCMCBOX}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{watmodel} \PYG{p}{\PYGZob{}}\PYG{n}{tip3p}\PYG{p}{,}\PYG{n}{tip4p}\PYG{p}{\PYGZcb{}}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{nequil} \PYG{n}{NEQUIL}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{nprod} \PYG{n}{NPROD}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{dumpfreq} \PYG{n}{DUMPFREQ}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{absolute}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{ranseed} \PYG{n}{RANSEED}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{softcore} \PYG{p}{\PYGZob{}}\PYG{n}{auto}\PYG{p}{,}\PYG{n+nb}{all}\PYG{p}{,}\PYG{n}{none}\PYG{p}{,}\PYG{n}{manual}\PYG{p}{\PYGZcb{}}\PYG{p}{]}
+                         \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{spec}\PYG{o}{\PYGZhy{}}\PYG{n}{softcore} \PYG{n}{SPEC\PYGZus{}SOFTCORE}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-s, -{-}simulation]  
+Possible choices: sampling, equilibration, dualtopology, singletopology, gcap\_single, gcap\_dual, gcmc, jaws1, jaws2
+
+the kind of simulation to setup
+
+Default: “equilibration”
+\item [-{-}dovacuum]  
+turn on vacuum simulation for simulation types equilibration and sampling
+
+Default: False
+\item [-p, -{-}protein]  
+the name of the protein file
+\item [-l, -{-}ligands]  
+the name of the ligand pdb files
+\item [-t, -{-}templates]  
+the name of ProtoMS template files
+\item [-pw, -{-}protwater]  
+the name of the solvent for protein
+\item [-lw, -{-}ligwater]  
+the name of the solvent for ligand
+\item [-o, -{-}out]  
+the prefix of the name of the command file
+
+Default: “run”
+\item [-{-}outfolder]  
+the ProtoMS output folder
+
+Default: “out”
+\item [-{-}gaff]  
+the version of GAFF to use for ligand
+
+Default: “gaff16”
+\item [-{-}lambdas]  
+the lambda values or the number of lambdas
+
+Default: {[}16{]}
+\item [-{-}adams]  
+the Adam/B values for the GCMC
+
+Default: 0
+\item [-{-}adamsrange]  
+the upper and lower Adam/B values for the GCMC and, optionally, the number of values desired (default value every 1.0), e.g. -1 -16 gives all integers between and including -1 and -16
+\item [-{-}jawsbias]  
+the bias for the JAWS-2
+
+Default: 0
+\item [-{-}gcmcwater]  
+a pdb file with a box of water to do GCMC on
+\item [-{-}gcmcbox]  
+a pdb file with box dimensions for the GCMC box
+\item [-{-}watmodel]  
+Possible choices: tip3p, tip4p
+
+the name of the water model. Default = tip4p
+
+Default: “tip4p”
+\item [-{-}nequil]  
+the number of equilibration steps
+
+Default: 5000000.0
+\item [-{-}nprod]  
+the number of production steps
+
+Default: 40000000.0
+\item [-{-}dumpfreq]  
+the output dump frequency
+
+Default: 100000.0
+\item [-{-}absolute]  
+whether an absolute free energy calculation is to be run. Default=False
+
+Default: False
+\item [-{-}ranseed]  
+the value of the random seed you wish to simulate with. If None, then a seed is randomly generated. Default=None
+\item [-{-}softcore]  
+Possible choices: auto, all, none, manual
+
+determine which atoms to apply softcore potentials to. If ‘all’ softcores are applied to all atoms of both solutes. If ‘none’ softcores are not applied to any atoms. If ‘auto’, softcores are applied to atoms based on matching coordinates between ligand structures. The selected softcore atoms can be amended using the \textendash{}spec-softcore flag. If ‘manual’ only those atoms specified by the \textendash{}spec-softcore flag are softcore.
+
+Default: “all”
+\item [-{-}spec-softcore]  
+Specify atoms to add or remove from softcore selections. Can be up to two, space separated, strings of the form “N:AT1,AT2,-AT3”. N should be either “1” or “2” indicating the corresponding ligand. The comma separated list of atom names are added to the softcore selection. A preceding dash for an atom name specifies it should be removed from the softcore selection. The special value “auto” indictates that automatic softcore assignments should be accepted without amendment.
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3898,6 +4737,26 @@ The tool will create at most two ProtoMS command files, one for the protein simu
 
 \section{make\_dummy.py}
 \label{\detokenize{tools:make-dummy-py}}
+
+Program make a dummy corresponding to a molecule
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{make\PYGZus{}dummy}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FILE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-f, -{-}file]  
+the name of a PDB file
+\item [-o, -{-}out]  
+the name of the dummy PDB file
+
+Default: “dummy.pdb”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3915,6 +4774,33 @@ The dummy particle will be placed at the centre of the solute.
 
 \section{make\_gcmcbox.py}
 \label{\detokenize{tools:make-gcmcbox-py}}
+
+Program to make a PDB-file with box coordinates covering a solute molecules
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{make\PYGZus{}gcmcbox}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{SOLUTE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PADDING}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]}
+                       \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{b} \PYG{n}{BOX} \PYG{p}{[}\PYG{n}{BOX} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-s, -{-}solute]  
+the name of the PDB-file containing the solute.
+\item [-p, -{-}padding]  
+the padding in A,default=2
+
+Default: 2.0
+\item [-o, -{-}out]  
+the name of the box PDB-file
+
+Default: “gcmc\_box.pdb”
+\item [-b, -{-}box]  
+Either the centre of the box (x,y,z), or the centre of box AND length (x,y,z,x,y,z). If the centre is specified and the length isn’t, twice the ‘padding’ will be the lengths of a cubic box.
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3944,6 +4830,39 @@ When an appropriate box has been made, it can be used by \sphinxcode{\sphinxupqu
 
 \section{make\_single.py}
 \label{\detokenize{tools:make-single-py}}
+
+Program to setup template files for single-toplogy perturbations semi-automatically
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{make\PYGZus{}single}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t0} \PYG{n}{TEM0}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{t1} \PYG{n}{TEM1}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p0} \PYG{n}{PDB0}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p1} \PYG{n}{PDB1}\PYG{p}{]}
+                      \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{m} \PYG{n}{MAP}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{gaff} \PYG{n}{GAFF}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-t0, -{-}tem0]  
+Template file for V0
+\item [-t1, -{-}tem1]  
+Template file for V1
+\item [-p0, -{-}pdb0]  
+PDB-file for V0
+\item [-p1, -{-}pdb1]  
+PDB-file for V1
+\item [-m, -{-}map]  
+the correspondance map from V0 to V1
+\item [-o, -{-}out]  
+prefix of the output file
+
+Default: “single”
+\item [-{-}gaff]  
+the version of GAFF to use for ligand
+
+Default: “gaff16”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3970,6 +4889,24 @@ A summary of the charges and van der Waals parameters in the four states will be
 
 \section{merge\_templates.py}
 \label{\detokenize{tools:merge-templates-py}}
+
+Program merge a series of ProtoMS template files
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{make\PYGZus{}templates}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{f} \PYG{n}{FILES} \PYG{p}{[}\PYG{n}{FILES} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-f, -{-}files]  
+the name of the template files
+\item [-o, -{-}out]  
+the name of the merged template file
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -3986,6 +4923,41 @@ The force field parameters in \sphinxcode{\sphinxupquote{file2}} will be re-numb
 
 \section{plot\_theta.py}
 \label{\detokenize{tools:plot-theta-py}}
+
+Program to plot the theta distribution of a given molecule, result from a JAWS simulation
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{plot\PYGZus{}theta}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{r} \PYG{n}{RESULTS}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{RESTART}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{m} \PYG{n}{MOLECULE}\PYG{p}{]}
+                     \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PLOTNAME}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{skip} \PYG{n}{SKIP}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-r, -{-}results]  
+the name of the results file. Deafult=’results’
+
+Default: “results”
+\item [-s, -{-}restart]  
+the replica values to plot. Default=’restart’
+
+Default: “restart”
+\item [-m, -{-}molecule]  
+the residue name of the JAWS molecule. Default=’WAT’
+
+Default: “WAT”
+\item [-p, -{-}plotname]  
+the start of the filename for the plots generated. Default=’theta\_dist’
+
+Default: “theta\_dist”
+\item [-{-}skip]  
+the number of results snapshots to skip, Default = 0
+
+Default: “0”
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -4003,6 +4975,76 @@ Two different histograms will be generated. One in which all different copies of
 
 \section{scoop.py}
 \label{\detokenize{tools:scoop-py}}
+
+Program scoop a protein pdb-file
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{scoop}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PROTEIN}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{l} \PYG{n}{LIGAND}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{center} \PYG{n}{CENTER}\PYG{p}{]}
+                \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{innercut} \PYG{n}{INNERCUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{outercut} \PYG{n}{OUTERCUT}\PYG{p}{]}
+                \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{flexin} \PYG{p}{\PYGZob{}}\PYG{n}{sidechain}\PYG{p}{,}\PYG{n}{flexible}\PYG{p}{,}\PYG{n}{rigid}\PYG{p}{\PYGZcb{}}\PYG{p}{]}
+                \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{flexout} \PYG{p}{\PYGZob{}}\PYG{n}{sidechain}\PYG{p}{,}\PYG{n}{flexible}\PYG{p}{,}\PYG{n}{rigid}\PYG{p}{\PYGZcb{}}\PYG{p}{]}
+                \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{terminal} \PYG{p}{\PYGZob{}}\PYG{n}{keep}\PYG{p}{,}\PYG{n}{doublekeep}\PYG{p}{,}\PYG{n}{neutralize}\PYG{p}{\PYGZcb{}}\PYG{p}{]}
+                \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{excluded} \PYG{n}{EXCLUDED} \PYG{p}{[}\PYG{n}{EXCLUDED} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]}
+                \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{added} \PYG{n}{ADDED} \PYG{p}{[}\PYG{n}{ADDED} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}\PYG{p}{]}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{scooplimit} \PYG{n}{SCOOPLIMIT}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-p, -{-}protein]  
+the protein PDB-file
+\item [-l, -{-}ligand]  
+the ligand PDB-file
+\item [-o, -{-}out]  
+the output PDB-file
+
+Default: “scoop.pdb”
+\item [-{-}center]  
+the center of the scoop, if ligand is not available, either a string or a file with the coordinates
+
+Default: “0.0 0.0 0.0”
+\item [-{-}innercut]  
+maximum distance from ligand defining inner region of the scoop
+
+Default: 16.0
+\item [-{-}outercut]  
+maximum distance from ligand defining outer region of the scoop
+
+Default: 20.0
+\item [-{-}flexin]  
+Possible choices: sidechain, flexible, rigid
+
+the flexibility of the inner region
+
+Default: “flexible”
+\item [-{-}flexout]  
+Possible choices: sidechain, flexible, rigid
+
+the flexibility of the inner region
+
+Default: “sidechain”
+\item [-{-}terminal]  
+Possible choices: keep, doublekeep, neutralize
+
+controls of to deal with charged terminal
+
+Default: “neutralize”
+\item [-{-}excluded]  
+a list of indices for residues to be excluded from scoops
+
+Default: {[}{]}
+\item [-{-}added]  
+a list of indices for residues to be included in outer scoops
+
+Default: {[}{]}
+\item [-{-}scooplimit]  
+the minimum difference between number of residues in protein and scoop for scoop to be retained
+
+Default: 10
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -4033,6 +5075,95 @@ The PDB file will contain specific instructions for ProtoMS to automatically enf
 
 \section{solvate.py}
 \label{\detokenize{tools:solvate-py}}
+
+Program to solvate a solute molecule in either a box or a droplet
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{solvate}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{b} \PYG{n}{BOX}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{s} \PYG{n}{SOLUTE}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{pr} \PYG{n}{PROTEIN}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{g} \PYG{p}{\PYGZob{}}\PYG{n}{box}\PYG{p}{,}\PYG{n}{droplet}\PYG{p}{,}\PYG{n}{flood}\PYG{p}{\PYGZcb{}}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{p} \PYG{n}{PADDING}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{r} \PYG{n}{RADIUS}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{c} \PYG{n}{CENTER}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{n} \PYG{p}{\PYGZob{}}\PYG{n}{Amber}\PYG{p}{,}\PYG{n}{ProtoMS}\PYG{p}{\PYGZcb{}}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{offset} \PYG{n}{OFFSET}\PYG{p}{]}
+                  \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{setupseed} \PYG{n}{SETUPSEED}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-b, -{-}box]  
+a PDB-file containing a pre-equilibrated box of water molcules
+
+Default: “”
+\item [-s, -{-}solute]  
+a PDB-file containing the solute molecule
+\item [-pr, -{-}protein]  
+a PDB-file containing the protein molecule
+\item [-o, -{-}out]  
+the name of the output PDB-file containing the added water, default solvent\_box.pdb
+
+Default: “solvent\_box.pdb”
+\item [-g, -{-}geometry]  
+Possible choices: box, droplet, flood
+
+the geometry of the added water, should be either ‘box’, ‘droplet’ or ‘flood’
+
+Default: “box”
+\item [-p, -{-}padding]  
+the minimum distance between the solute and the box edge, default=10 A
+
+Default: 10.0
+\item [-r, -{-}radius]  
+the radius of the droplet, default=30A
+
+Default: 30.0
+\item [-c, -{-}center]  
+definition of center, default=’cent’
+
+Default: “cent”
+\item [-n, -{-}names]  
+Possible choices: Amber, ProtoMS
+
+the naming convention, should be either Amber or ProtoMS
+
+Default: “ProtoMS”
+\item [-{-}offset]  
+the offset to be added to vdW radii of the atoms to avoid overfilling cavities with water.
+
+Default: 0.89
+\item [-{-}setupseed]  
+optional random number seed for generation of water coordinates..
+\end{optionlist}
+
+\begin{quote}
+
+if -b or -s are not supplied on the command-line, the program will ask for
+them.
+
+-c can be either ‘cent’ or a string containing 1, 2 or 3 numbers. If 1
+number is given it will be used as center of the droplet in x, y, and z.
+If 2 numbers are given this is interpreted as an atom range, such that the
+droplet will be centered on the indicated atoms, and if 3 numbers are
+given this is directly taken as the center of droplet
+\begin{description}
+\item[{Example usages:}] \leavevmode\begin{description}
+\item[{solvate.py -b \$\{PROTOMSHOME\}/tools/sbox1.pdb -s solute.pdb}] \leavevmode\begin{description}
+\item[{(will solvate ‘solute.pdb’ in a box that extends at least 10 A from}] \leavevmode
+the solute)
+
+\end{description}
+
+\item[{solvate.py -b \$\{PROTOMSHOME\}/tools/sbox1.pdb -s protein.pdb -g droplet -r 25.0}] \leavevmode\begin{description}
+\item[{(will solvate ‘protein.pdb’ in a 25 A droplet centered on}] \leavevmode
+all coordinates)
+
+\end{description}
+
+\end{description}
+
+\end{description}
+\end{quote}
+
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -4049,19 +5180,43 @@ solvate.py \PYGZhy{}b \PYGZdl{}PROTOMSHOME/data/wbox\PYGZus{}tip4p.pdb \PYGZhy{}
 
 \sphinxstylestrong{Description:}
 
-This tool solvates a ligand in either a droplet or a box of water. It can also flood a GCMC or JAWS-1 simulatios box with waters.
+This tool solvates a ligand in either a droplet or a box of water. It can also flood a GCMC or JAWS-1 simulations box with waters.
 
 Pre-equilibrated boxes to use can be found in the \sphinxcode{\sphinxupquote{\$PROTOMSHOME/data}} folder.
 
-To solvate small molecule it is sufficient to give the \sphinxcode{\sphinxupquote{solutefile}} as in the first example above. This produces a box with at least 10 A between the solute and the edge of the water box, which should be sufficient in most situation. Use \sphinxcode{\sphinxupquote{padding}} to increase or decreas the box size as in the second example. The solvation box is created by replicating the pre-equilibrated box in all dimensions and then removing waters that overlap with solute atoms.
+To solvate small molecule it is sufficient to give the \sphinxcode{\sphinxupquote{solutefile}} as in the first example above. This produces a box with at least 10 A between the solute and the edge of the water box, which should be sufficient in most situation. Use \sphinxcode{\sphinxupquote{padding}} to increase or decrease the box size as in the second example. The solvation box is created by replicating the pre-equilibrated box in all dimensions and then removing waters that overlap with solute atoms.
 
-To solvate a protein in a droplet, specify \sphinxcode{\sphinxupquote{proteinfile}} and \sphinxcode{\sphinxupquote{droplet}} as in the third example above. This produces a droplet with radius of 30 A, which was choosen to work well with the default options in \sphinxcode{\sphinxupquote{scoop.py}}. Use \sphinxcode{\sphinxupquote{radius}} to obtain a smaller or larger droplet as in the fourth example. The centre of the droplet can be on a ligand if \sphinxcode{\sphinxupquote{ligandfile}} is specified. Otherwise, the \sphinxcode{\sphinxupquote{center{}`{}`argument is used. This argument can be either {}`{}`cent}} (the default) that places the droplet at the centre of the protein. It can also take a single number as in the fifth example above in case it is placed at this coordinate in all dimensions. It can also take a string with three numbers which is the origin of the droplet in x, y, and z dimensions, see the sixth example above. If two numbers are given as in the seventh example above, it is assumed that this is an atom range and the droplet will be placed at the centre of these atoms. The droplet is created by putting random waters from the pre-equilibrated box on a grid, displacing them slightly in a random fashion.
+To solvate a protein in a droplet, specify \sphinxcode{\sphinxupquote{proteinfile}} and \sphinxcode{\sphinxupquote{droplet}} as in the third example above. This produces a droplet with radius of 30 A, which was chosen to work well with the default options in \sphinxcode{\sphinxupquote{scoop.py}}. Use \sphinxcode{\sphinxupquote{radius}} to obtain a smaller or larger droplet as in the fourth example. The centre of the droplet can be on a ligand if \sphinxcode{\sphinxupquote{ligandfile}} is specified. Otherwise, the \sphinxcode{\sphinxupquote{center{}`{}`argument is used. This argument can be either {}`{}`cent}} (the default) that places the droplet at the centre of the protein. It can also take a single number as in the fifth example above in case it is placed at this coordinate in all dimensions. It can also take a string with three numbers which is the origin of the droplet in x, y, and z dimensions, see the sixth example above. If two numbers are given as in the seventh example above, it is assumed that this is an atom range and the droplet will be placed at the centre of these atoms. The droplet is created by putting random waters from the pre-equilibrated box on a grid, displacing them slightly in a random fashion.
 
 The tool can also be used to fill a box with waters for GCMC and JAWS-1 simulations, similar to \sphinxcode{\sphinxupquote{distribute\_waters.py}}. In this case the solute is typically a box created by \sphinxcode{\sphinxupquote{make\_gcmcbox.py}} and \sphinxcode{\sphinxupquote{flood}} needs to be specified, see the last example above. This gives a box filled with the bulk number of waters.
 
 
 \section{split\_jawswater.py}
 \label{\detokenize{tools:split-jawswater-py}}
+
+Program to split JAWS-1 waters to a number of PDB-files for JAWS-2
+
+
+\fvset{hllines={, ,}}%
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{usage}\PYG{p}{:} \PYG{n}{split\PYGZus{}jawswater}\PYG{o}{.}\PYG{n}{py} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{h}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{w} \PYG{n}{WATERS}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{n}{o} \PYG{n}{OUT}\PYG{p}{]} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{o}{\PYGZhy{}}\PYG{n}{jaws2box}\PYG{p}{]}
+\end{sphinxVerbatim}
+
+
+\subsection{Named Arguments}
+\label{\detokenize{tools:Named Arguments}}\begin{optionlist}{3cm}
+\item [-w, -{-}waters]  
+the name of the PDB-file containing the waters.
+\item [-o, -{-}out]  
+the prefix of the output PDB-files
+
+Default: “”
+\item [-{-}jaws2box]  
+whether to apply a header box for jaws2 to the pdb files of individual waters
+
+Default: False
+\end{optionlist}
+
 \sphinxstylestrong{Examples:}
 
 \fvset{hllines={, ,}}%
@@ -4091,7 +5246,7 @@ For instance, if \sphinxcode{\sphinxupquote{waters.pdb}} in the second example a
 
 
 \chapter{Test Suite}
-\label{\detokenize{testsuite::doc}}\label{\detokenize{testsuite:test-suite}}
+\label{\detokenize{testsuite:test-suite}}\label{\detokenize{testsuite::doc}}
 The ProtoMS test suite can be found in the \sphinxcode{\sphinxupquote{\$PROTOMSHOME/tests}} directory. It contains a set of Python scripts and all required input files and reference output files to run a sanity check on the ProtoMS code, both the source (Fortran) code and the (Python) tools. In this page you will find a list of the different tests, a brief indication of which part of ProtoMS each of the tests is checking and instructions to run each of the individual tests separately, or all of them as a whole.
 
 

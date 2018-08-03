@@ -271,7 +271,7 @@ As the name says, the technique approximate the descreening (the extent to which
 
   {\frac{1}{B_i}}  = \frac{1}{\alpha _{i}} - Itanh\big( \alpha \psi - \beta \psi^{2} + \gamma \psi^{3}  \big)
 
-where *I* is the summation term from the PDA calculation, :math:`\psi`, :math:`\alpha`, :math:`\beta` and :math:`\gamma` are parameters taken from the litterature. 
+where *I* is the summation term from the PDA calculation, :math:`\psi`, :math:`\alpha`, :math:`\beta` and :math:`\gamma` are parameters taken from the literature. 
 
 The rescaling option has not been used extensively in ProtoMS and should be used with caution. It appears it may prove useful when simulation buried protein binding sites.
 
@@ -413,7 +413,7 @@ A residue move is a Monte Carlo move on a single protein residue. Obviously, for
 5. If the move is accepted, then the new configuration of the residue is saved. If the move was rejected then the original configuration of the residue is restored.
 
 
-You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section :ref:`misccmd`. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see :ref:`temref`). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was :math:`5.0^\circ` , then the angle will be changed by a random value generated evenly between :math:`-5.0^\circ` and :math:`+5.0^\circ`.
+You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section :ref:`misccmd`. All residues of all proteins are flexible by default, and have flexible backbones. You control the maximum amounts that the residue moves via the residue template (see :ref:`temref`). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was :math:`5.0^\circ` , then the angle will be changed by a random value generated evenly between :math:`-5.0^\circ` and :math:`+5.0^\circ`.
 
 
 .. index::
@@ -472,7 +472,7 @@ A volume move is a Monte Carlo move that changes the volume of the system. This 
 
 **GCsolute Moves**
 
-A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolute move comprises the following steps
+A GCsolute move is a Monte Carlo move on a single GCsolute molecule. Each GCsolute move comprises the following steps
 
 1. A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of :math:`\theta` is examined; if it is set to 0 then another is chosen until the examined :math:`\theta` value is 1.  If no GCsolutes with :math:`\theta=1` are available then the GCsolute move is counted as rejected.
 
@@ -595,7 +595,7 @@ For replica exchange or ensemble type calculations, you have to execute ProtoMS 
 File output
 ===================
 
-If you run ProtoMS from the command line you should see that it prints out a lot of information to the screen (on Unix called standard output, STDOUT). If you look closely at the output you should see that each line of output is preceeded by a tag, such as ‘HEADER’ or ‘INFO’. ProtoMS uses streams to output data, and these tags state which stream the line of data came from. Thus the information at the top of the output that gives the license and version details has been printed to the ‘HEADER’ stream, while the lines stating that ProtoMS is closing down because nothing has been loaded have gone to the ‘FATAL’ stream. ProtoMS uses the following streams
+If you run ProtoMS from the command line you should see that it prints out a lot of information to the screen (on Unix called standard output, STDOUT). If you look closely at the output you should see that each line of output is preceded by a tag, such as ‘HEADER’ or ‘INFO’. ProtoMS uses streams to output data, and these tags state which stream the line of data came from. Thus the information at the top of the output that gives the license and version details has been printed to the ‘HEADER’ stream, while the lines stating that ProtoMS is closing down because nothing has been loaded have gone to the ‘FATAL’ stream. ProtoMS uses the following streams
 
 * **HEADER** Used to print the program header.
 
@@ -648,7 +648,7 @@ By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, t
 
 The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section :ref:`misccmd`.
 
-By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option ::
+By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already existing files, for instance if you are restarting a simulation, you have to add the option ::
 
   appendstreams on
 
@@ -664,7 +664,7 @@ There are many commands to set parameters that you can use to control your simul
 
 In the subsections below, unless otherwise specified:
 
-* ``locical`` stands for *true* or *false*, *yes* or *no*, *on* or *off* (depending on your personal preference)
+* ``logical`` stands for *true* or *false*, *yes* or *no*, *on* or *off* (depending on your personal preference)
 * ``integer`` or ``int`` stands for any integer number
 * ``float`` stands for any floating point number
 * ``string`` stands for a string of characters
@@ -721,7 +721,7 @@ Whether or not to perform a dry run of the simulation. If this is true then all 
 
   ranseed integer
 
-where ``integer`` is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducable simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started. 
+where ``integer`` is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducible simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started. 
 
 .. index::
   single: temperature
@@ -806,7 +806,7 @@ means that the solvents closest to solute 1 will be moved more frequently than t
 
   prefsampling 1 100.0
 
-will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focussed the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off. 
+will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focused the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off. 
 
 .. index::
   single: boundary
@@ -880,7 +880,7 @@ As an example::
 
 corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.
 
-The temperature replica-exchange command can be used in conjuction with the ``lambdare`` command, see below, to add temperature ladders to different values of :math:`\lambda`.
+The temperature replica-exchange command can be used in conjunction with the ``lambdare`` command, see below, to add temperature ladders to different values of :math:`\lambda`.
 
 .. index::
   single: solutetempering
@@ -889,7 +889,7 @@ The temperature replica-exchange command can be used in conjuction with the ``la
 
   solutetempering 25.0 bndang 3 dih 1 lj 3 coul 1 solu 2 prot 2 solv 2
 
-Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see `Temperature replica-exchange parameters`_). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the ``temperaturere`` command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; ``bndang`` controls the internal bond-angle energy terms, ``dih`` the internal dihedral energy term, ``lj`` the internal van der Waals energy, ``coul`` the internal Coulomb energy, ``solu`` the interaction with other solutes, ``prot`` the interaction with the protein and ``solv`` the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with :math:`\beta_i/\beta_0`, where :math:`\beta_i` is the effective inverse temperature of the replica (set with the ``temperaturre`` command) and :math:`\beta_0` is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with :math:`(\beta_i+\beta_0)/2\beta_0` and if the argument 3 the energy is unscaled.
+Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see `Temperature replica-exchange parameters`_). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the ``temperaturere`` command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; ``bndang`` controls the internal bond-angle energy terms, ``dih`` the internal dihedral energy term, ``lj`` the internal van der Waals energy, ``coul`` the internal Coulomb energy, ``solu`` the interaction with other solutes, ``prot`` the interaction with the protein and ``solv`` the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with :math:`\beta_i/\beta_0`, where :math:`\beta_i` is the effective inverse temperature of the replica (set with the ``temperaturere`` command) and :math:`\beta_0` is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with :math:`(\beta_i+\beta_0)/2\beta_0` and if the argument 3 the energy is unscaled.
 
 .. index::
    single: sameseeds
@@ -960,7 +960,7 @@ corresponds to a simulation which runs the :math:`\lambda` windowns 0.00 and 1.0
 
   lambdaladder temperature float float
 
-is one of the commands required to proceed with a simulation including both temperature and :math:`\lambda` replica exchange, where ``float`` is each of the temperature values where a :math:`\lambda` ladder is to be placed. All temperature values must be among those included after the ``temperaturere`` keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of :math:`\lambda` ladders and temperature ladders, as well as :math:`\lambda` and temperature values per ladder, takind into account the cores shared by each :math:`\lambda` ladder with each temperature ladder.
+is one of the commands required to proceed with a simulation including both temperature and :math:`\lambda` replica exchange, where ``float`` is each of the temperature values where a :math:`\lambda` ladder is to be placed. All temperature values must be among those included after the ``temperaturere`` keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of :math:`\lambda` ladders and temperature ladders, as well as :math:`\lambda` and temperature values per ladder, taking into account the cores shared by each :math:`\lambda` ladder with each temperature ladder.
 
 As an example::
 
@@ -996,7 +996,7 @@ where ``float`` is a number between 0.0 and 1.0 (often of the order of 0.001). T
 
   printfe string
 
-where ``string`` should be either ``off``, ``bar`` or ``mbar``. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into acount that this estimates will take some time. Your simulations may run faster when this option is set to off (default).
+where ``string`` should be either ``off``, ``bar`` or ``mbar``. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into account that this estimates will take some time. Your simulations may run faster when this option is set to off (default).
 
 In case dual topology is desired, whether it is for a single or multiple :math:`\lambda` simulation, the following parameters must be used:
 
@@ -1071,7 +1071,7 @@ In the equation, :math:`\bar{n}` is the number density of the GCsolute multiplie
 
   multigcmc integer float float float
 
-is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each ``float`` is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel with as many cores as B values. As above the random seed used by each replica can be influenced by the sameseeds command.
+is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each ``float`` is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submitted to run in parallel with as many cores as B values. As above the random seed used by each replica can be influenced by the sameseeds command.
 
 .. index::
   single: origin
@@ -1324,7 +1324,7 @@ Perform 500 steps of equilibration, printing move and energy information every 1
 
   chunk equilibrate 100 solute=500
 
-Perform 100 steps of equilibration. Because this chunk will inherit from the previous chunk, the move and energy information will still be printed every 10 moves, and still, on average 1 protein move will be made every 1000 solvent moves. However this line has added that on average 500 solute moves should be made for every 1000 solvent moves, thus the probability of a protein move is now 1 in 1501, the probablity of a solute move is 500 in 1501, and the probability of a solvent move is 1000 in 1501. ::
+Perform 100 steps of equilibration. Because this chunk will inherit from the previous chunk, the move and energy information will still be printed every 10 moves, and still, on average 1 protein move will be made every 1000 solvent moves. However this line has added that on average 500 solute moves should be made for every 1000 solvent moves, thus the probability of a protein move is now 1 in 1501, the probability of a solute move is 500 in 1501, and the probability of a solvent move is 1000 in 1501. ::
 
   chunk simulate 500 printmove=1 newprob volume=1 solvent=300
   
@@ -1554,15 +1554,15 @@ This is controlled with the alternative key word dump::
 
   dump frequency command
   
-This manner of output generation can be applied to all commands included in `Results and Restarts`_ secction, as well as `PDB output`_ section.
+This manner of output generation can be applied to all commands included in `Results and Restarts`_ section, as well as `PDB output`_ section.
 
 An example of a dump line would be::
 
   dump 100000 results write results
 
-This line, given as input for ProtoMS, will append results information to the `results` file every 100000 moves, thoughout the `simulate` part of your simulation.
+This line, given as input for ProtoMS, will append results information to the `results` file every 100000 moves, throughout the `simulate` part of your simulation.
 
-It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently these imput lines::
+It is important to note how the appending behaviour varies. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently, these input lines::
 
   dump 100 results write results
   dump 100 pdb all file=all.pdb
@@ -1867,7 +1867,7 @@ and ::
 
   atm amb1 amb2 amb3 id
 
-``id`` is an indentifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. ``force-constant`` is the force constant (:math:`k_{angle}` , see eq :eq:`angpot`) for the angle parameter, in units of kcal mol-1 degree-2 . ``angle-size`` is the equilibrium angle size (:math:`\theta_0`) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999. 
+``id`` is an identifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. ``force-constant`` is the force constant (:math:`k_{angle}` , see eq :eq:`angpot`) for the angle parameter, in units of kcal mol-1 degree-2 . ``angle-size`` is the equilibrium angle size (:math:`\theta_0`) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999. 
 
 The atm line is again very similar to that in the bond mode, with in this case the angle between atoms with AMBER types ``amb1-amb2-amb3`` being assigned angle parameter id. Angles are also symmetric, so ``amb1-amb2-amb3`` is equivalent to ``amb3-amb2-amb1``. Like the bond mode, any angle involving dummy atoms (AMBER type ‘DM’) will automatically be set to use the angle parameter 0. It is not possible to use a non-null angle parameter over an angle involving dummy atoms.
 

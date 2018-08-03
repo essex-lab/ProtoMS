@@ -273,7 +273,7 @@ if __name__ == "__main__":
              "'none'=softcores not applied to any atoms\n "
              "'mixed'=softcores will be applied only to non matching "
              "atoms within ligand structures")
-    parser.add_argument(
+    simgroup.add_argument(
       '--spec-softcore', type=str,
       help='Specify atoms to add or remove from softcore selections. Can be '
            'up to two, space separated, strings of the form "N:AT1,AT2,-AT3". '
@@ -488,16 +488,16 @@ if __name__ == "__main__":
 
     for repeat in repeats:
         args.outfolder = outfolder + repeat
-        if args.simulation not in ["singletopology","gcap_single", "jaws2"] or \
-           "_ele" in repeat:
+        if args.simulation not in ["singletopology", "gcap_single", "jaws2"] \
+           or "_ele" in repeat:
             free_cmd, bnd_cmd, gas_cmd = generate_input(
                 protein_file, ligpdbs, ligtems, water_file, ligand_water,
                 ranseed, args)
-        elif args.simulation in ["singletopology","gcap_single"] and "_vdw" in repeat:
+        elif args.simulation in ["singletopology", "gcap_single"] and "_vdw" in repeat:
             free_cmd, bnd_cmd, gas_cmd = generate_input(
                 protein_file, ligpdbs, ligtems2, water_file, ligand_water,
                 ranseed, args)
-        elif args.simulation in ["singletopology","gcap_single"] and "_comb" in repeat:
+        elif args.simulation in ["singletopology", "gcap_single"] and "_comb" in repeat:
             free_cmd, bnd_cmd, gas_cmd = generate_input(
                 protein_file, ligpdbs, ligtems3, water_file, ligand_water,
                 ranseed, args)
@@ -523,7 +523,7 @@ if __name__ == "__main__":
             else:
                 bnd_cmd.writeCommandFile(args.cmdfile + repeat + "_bnd.cmd")
         if gas_cmd is not None:
-            if args.absolute:
+            if args.absolute and bnd_cmd is not None:
                 # in this case, gas_cmd contains a cmd file to account for
                 # introduction of the harmonic restraint
                 gas_cmd.writeCommandFile(args.cmdfile + repeat +

@@ -560,7 +560,9 @@ class FreeEnergyCalculation(object):
         ----------
         args
         """
-        self.header += 'All free energy quantities are given in kcal/mol\n'
+        self.header += 'All free energy quantities are given in kcal/mol.\n' \
+            'All error values show a single standard error assuming ' \
+            'independent repeats\n'
         results = self._body(args)
 
         if args.pickle is not None:

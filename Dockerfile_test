@@ -3,23 +3,27 @@
 # production environment or with Bitbucket Pipelines for automated testing.
 
 # A container can be built from this file by running the below command in $PROTOMSHOME:
-# docker build -t protoms-test-environment -f Dockerfile_test .
+# docker build -t protoms-test-environment:3.4 -f Dockerfile_test .
 
 # An interactive image can then be started with
-# docker run -it protoms-test-environment /bin/bash
-From python:3.6.6
+# docker run -it protoms-test-environment:3.4 /bin/bash
+
+# This image is pinned to python 3.6 as this is currently the highest version
+# supported by AmberTools
+From python:3.6-slim
 
 WORKDIR /
 
 # set environment variables to replace function of amber.sh
+# this will need to be updated when AmberTools 20 is released
 ENV AMBERHOME /amber18
 ENV PYTHONPATH /amber18/lib/python3.6/site-packages/
 ENV PATH "/amber18/bin/:$PATH"
 
 RUN apt-get update
-RUN apt-get install -y cmake gfortran openmpi-bin libopenmpi-dev
-# due to dependency issues numpy and six must be installed before pymbar
-RUN pip install --trusted-host pypi.python.org numpy six scipy matplotlib nose
-RUN pip install --trusted-host pypi.python.org pymbar
+RUN apt-get install -y cmake gfortran openmpi-bin libopenmpi-dev wget lbzip2 ssh-client
+# for dependency issues with python2.7 numpy and six must be installed before pymbar
+RUN pip install --no-cache-dir --trusted-host pypi.python.org numpy six scipy matplotlib nose
+RUN pip install --no-cache-dir --trusted-host pypi.python.org pymbar
 RUN wget http://ambermd.org/downloads/install_ambertools.sh
-RUN bash install_ambertools.sh -v 2 --non-conda -p /
+RUN bash install_ambertools.sh --non-conda --prefix /

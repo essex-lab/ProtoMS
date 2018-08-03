@@ -1957,7 +1957,8 @@ def generate_input(protein, ligands, templates, protein_water, ligand_water,
                 dumpfreq=settings.dumpfreq,
                 outfolder=outfolder + "_gas",
                 restrained=rest_solutes)
-        elif settings.simulation == "dualtopology" and settings.absolute:
+        elif settings.simulation == "dualtopology" \
+             and settings.absolute and bnd_cmd is not None:
             # make use of the unused gas_cmd to produce a cmd file to calculate
             # the effect of introducing a harmonic restraint
             gas_cmd = RestraintRelease(

@@ -9,14 +9,14 @@
     <title>Compilation and Installation &#8212; ProtoMS 3.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Design of ProtoMS" href="protoms.html" />
-    <link rel="prev" title="Change Log" href="changelog.html" /> 
+    <link rel="prev" title="Changes and New Features" href="changelog.html" /> 
   </head><body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
@@ -33,7 +33,7 @@
           <a href="protoms.html" title="Design of ProtoMS"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="changelog.html" title="Change Log"
+          <a href="changelog.html" title="Changes and New Features"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>
@@ -60,7 +60,7 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="changelog.html"
-                        title="previous chapter">Change Log</a></p>
+                        title="previous chapter">Changes and New Features</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="protoms.html"
                         title="next chapter">Design of ProtoMS</a></p>
@@ -91,12 +91,12 @@
 <li><strong>CMakeLists.txt</strong> This file configures ProtoMS prior to compiling.</li>
 <li><strong>data</strong> This directory contains a number of useful files, e.g. pre-equilibrated boxes and some template files</li>
 <li><strong>doc</strong> This directory contains documentation</li>
-<li><strong>README</strong> File that contains brief installation instructions for ProtoMS, and any last minute addendums or errata that arrived too late to make it into the manual!</li>
-<li><strong>parameter</strong> This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.</li>
+<li><strong>README</strong> File that contains brief installation instructions for ProtoMS, and any last minute addenda or errata that arrived too late to make it into the manual!</li>
+<li><strong>parameter</strong> This directory contains all of the standard parameter files that describe the standard force fields implemented in ProtoMS.</li>
 <li><strong>protoms.py</strong> A tool to setup common ProtoMS calculations</li>
 <li><strong>python</strong> This directory contains the python library component of ProtoMS</li>
 <li><strong>src</strong> This directory contains all of the source code for the main program</li>
-<li><strong>tools</strong> This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.</li>
+<li><strong>tools</strong> This directory contains numerous useful scripts to setup and analyse ProtoMS simulations.</li>
 <li><strong>tutorial</strong> This directory contains a number of examples that demonstrate applications of ProtoMS.</li>
 </ul>
 <div class="section" id="programming-language">
@@ -109,7 +109,7 @@
 <li>Fortran <code class="docutils literal notranslate"><span class="pre">include</span></code> is used to include the contents of other files.</li>
 <li>The <code class="docutils literal notranslate"><span class="pre">flush</span></code>, <code class="docutils literal notranslate"><span class="pre">getarg</span></code> and <code class="docutils literal notranslate"><span class="pre">getenv</span></code> non-standard intrinsic functions are used.</li>
 <li>ProtoMS performs string manipulation using the <code class="docutils literal notranslate"><span class="pre">len</span></code> function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.</li>
-<li>The <code class="docutils literal notranslate"><span class="pre">Date</span></code> and <code class="docutils literal notranslate"><span class="pre">Time</span></code> Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in <code class="docutils literal notranslate"><span class="pre">getoptions.F</span></code>, though you will need to provide a random number seed manually.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">Date</span></code> and <code class="docutils literal notranslate"><span class="pre">Time</span></code> Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relevant lines in <code class="docutils literal notranslate"><span class="pre">getoptions.F</span></code>, though you will need to provide a random number seed manually.</li>
 </ul>
 </div>
 <div class="section" id="requirements">
@@ -168,9 +168,9 @@
 <p><strong>Tips on using cmake</strong></p>
 <p>The job of cmake is to attempt to locate all of the necessary dependencies for the installation and create a Makefile that will compile ProtoMS. It searches your system for the required components and sets a number of internal variables that store their locations. After being run cmake stores its output in the build directory in a file called CMakeCache.txt. This can be useful after the fact to check which dependencies were found but equally if being run subsequently cmake will prefer to use cached values instead of updating dependencies. For this reason it can be a good idea to delete CMakeCache.txt if you find you need to run cmake more than once or cmake does not appear to be behaving as expected.</p>
 <p><strong>Manually specify cmake variables</strong></p>
+<p>The locations that cmake will search for dependencies are quite comprehensive, however they are also dependent on the system in use and the value of current environment variables. Thus cmake may not be able to find the required libraries even if they’re present in your system or may find the wrong versions. To coerce cmake into finding the relevant dependencies you can try:</p>
 <blockquote>
-<div><p>The locations that cmake will search for dependencies are quite comprehensive, however they are also dependent on the system in use and the value of current environment variables. Thus cmake may not be able to find the required libraries even if they’re present in your system or may find the wrong versions. To coerce cmake into finding the relevant dependencies you can try:</p>
-<ol class="arabic simple">
+<div><ol class="arabic simple">
 <li>Setting environment variables - The $PATH environment variable is checked by cmake for relevant executables e.g. gfortran, mpirun. Prepending to or rearranging entries in the PATH makes dependencies discoverable by cmake. The FC environment variable is a standard method for manually specifying the Fortran compiler.</li>
 <li>Manually setting cmake variables - Whilst cmake attempts to automatically discover correct values for dependencies you may find that setting them manually is easier. This can be performed interactively using the <code class="docutils literal notranslate"><span class="pre">ccmake</span></code> utility. If you execute <code class="docutils literal notranslate"><span class="pre">ccmake</span> <span class="pre">..</span></code> from the build directory you will be presented with a interface showing the current value of cmake variables. Press <code class="docutils literal notranslate"><span class="pre">t</span></code> to see more values. You can edit values from this menu before pressing <code class="docutils literal notranslate"><span class="pre">c</span></code> to configure (any problems should be flagged by cmake here) and <code class="docutils literal notranslate"><span class="pre">g</span></code> to generate a new Makefile and exit.</li>
 <li>Manually setting cmake variables on the command line - If you prefer the value of any cmake variable can be specified directly from the command line. The <code class="docutils literal notranslate"><span class="pre">-D</span></code> flag to cmake can be used repeatedly for this purpose. For instance - <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-DCMAKE_Fortran_COMPILER=gfortran</span> <span class="pre">..</span></code> - sets the value of the  variable CMAKE_Fortran_COMPILER to gfortran. You can use <code class="docutils literal notranslate"><span class="pre">ccmake</span></code> to determine the names of variables to set.</li>
@@ -193,7 +193,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="n">jessexgroup</span><span class="o">/</span><span class="n">protoms</span><span class="p">:</span><span class="mf">3.4</span>
 </pre></div>
 </div>
-<p>The image is based on the python:3.6.6 image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see <code class="docutils literal notranslate"><span class="pre">Dockerfile_test</span></code> and <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.</p>
+<p>The image is based on the python:3-slim image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see <code class="docutils literal notranslate"><span class="pre">Dockerfile_test</span></code> and <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.</p>
 </div>
 </div>
 
@@ -213,7 +213,7 @@
           <a href="protoms.html" title="Design of ProtoMS"
              >next</a> |</li>
         <li class="right" >
-          <a href="changelog.html" title="Change Log"
+          <a href="changelog.html" title="Changes and New Features"
              >previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>
@@ -222,7 +222,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H Bruce-Macdonald, J. Graham, M. Samways.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.
     </div>
   </body>
 </html>

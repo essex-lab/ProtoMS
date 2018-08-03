@@ -15,10 +15,10 @@ The ProtoMS package supplies the following files and directories;
 * **doc** This directory contains documentation
 
 
-* **README** File that contains brief installation instructions for ProtoMS, and any last minute addendums or errata that arrived too late to make it into the manual!
+* **README** File that contains brief installation instructions for ProtoMS, and any last minute addenda or errata that arrived too late to make it into the manual!
 
 
-* **parameter** This directory contains all of the standard parameter files that describe the standard forcefields implemented in ProtoMS.
+* **parameter** This directory contains all of the standard parameter files that describe the standard force fields implemented in ProtoMS.
 
 
 * **protoms.py** A tool to setup common ProtoMS calculations
@@ -30,7 +30,7 @@ The ProtoMS package supplies the following files and directories;
 * **src** This directory contains all of the source code for the main program
 
 
-* **tools** This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+* **tools** This directory contains numerous useful scripts to setup and analyse ProtoMS simulations.
 
 
 * **tutorial** This directory contains a number of examples that demonstrate applications of ProtoMS.
@@ -66,7 +66,7 @@ ProtoMS is written in slightly extended Fortran 77. The extensions used are
 * ProtoMS performs string manipulation using the ``len`` function. In addition, the string manipulation assumes the same string handling behaviour as the GNU Fortran compiler (g77), so there is the possibility of strange formatting bugs when using different compilers.
 
 
-* The ``Date`` and ``Time`` Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relavant lines in ``getoptions.F``, though you will need to provide a random number seed manually.
+* The ``Date`` and ``Time`` Fortran 90 intrinsic subroutine is used to get the current time. This is used to provide a default seed to the random number generator. This can be removed by commenting out the relevant lines in ``getoptions.F``, though you will need to provide a random number seed manually.
 
 
 =================
@@ -175,7 +175,7 @@ The job of cmake is to attempt to locate all of the necessary dependencies for t
 **Manually specify cmake variables**
 
 
- The locations that cmake will search for dependencies are quite comprehensive, however they are also dependent on the system in use and the value of current environment variables. Thus cmake may not be able to find the required libraries even if they're present in your system or may find the wrong versions. To coerce cmake into finding the relevant dependencies you can try:
+The locations that cmake will search for dependencies are quite comprehensive, however they are also dependent on the system in use and the value of current environment variables. Thus cmake may not be able to find the required libraries even if they're present in your system or may find the wrong versions. To coerce cmake into finding the relevant dependencies you can try:
 
 
  1. Setting environment variables - The $PATH environment variable is checked by cmake for relevant executables e.g. gfortran, mpirun. Prepending to or rearranging entries in the PATH makes dependencies discoverable by cmake. The FC environment variable is a standard method for manually specifying the Fortran compiler.
@@ -218,4 +218,4 @@ Version 3.4 of ProtoMS is also available via docker. Downloading and running the
   docker run -it jessexgroup/protoms:3.4
 
 
-The image is based on the python:3.6.6 image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see ``Dockerfile_test`` and ``Dockerfile`` in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.
+The image is based on the python:3-slim image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see ``Dockerfile_test`` and ``Dockerfile`` in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.

@@ -1,7 +1,7 @@
-\select@language {english}
+\babel@toc {english}{}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Formatting}{1}{section.1.1}
-\contentsline {chapter}{\numberline {2}Change Log}{3}{chapter.2}
+\contentsline {chapter}{\numberline {2}Changes and New Features}{3}{chapter.2}
 \contentsline {section}{\numberline {2.1}GCAP Simulations}{3}{section.2.1}
 \contentsline {section}{\numberline {2.2}Grand Canonical Integration}{3}{section.2.2}
 \contentsline {section}{\numberline {2.3}Free Energy Calculations}{3}{section.2.3}
@@ -49,50 +49,75 @@
 \contentsline {chapter}{\numberline {7}protoms.py}{59}{chapter.7}
 \contentsline {chapter}{\numberline {8}Tools}{63}{chapter.8}
 \contentsline {section}{\numberline {8.1}ambertools.py}{63}{section.8.1}
-\contentsline {section}{\numberline {8.2}build\_template.py}{63}{section.8.2}
-\contentsline {section}{\numberline {8.3}calc\_clusters.py}{64}{section.8.3}
-\contentsline {section}{\numberline {8.4}calc\_density.py}{64}{section.8.4}
-\contentsline {section}{\numberline {8.5}calc\_dg.py}{64}{section.8.5}
-\contentsline {section}{\numberline {8.6}calc\_dg\_cycle.py}{65}{section.8.6}
-\contentsline {section}{\numberline {8.7}calc\_gcap\_surface.py}{65}{section.8.7}
-\contentsline {subsection}{\numberline {8.7.1}Calculates the free energy from a surface-GCAP simulation. The volume of the GCMC region must be given using the \sphinxstyleliteralintitle {\sphinxupquote {-v}} flag. To calculate the free energy at a single B value, use the \sphinxstyleliteralintitle {\sphinxupquote {-{-}subdir}} flag, and the energy can be calculated with any one dimensional free energy method.}{65}{subsection.8.7.1}
-\contentsline {subsection}{\numberline {8.7.2}calc\_gci.py}{65}{subsection.8.7.2}
-\contentsline {section}{\numberline {8.8}calc\_replicapath.py}{66}{section.8.8}
-\contentsline {section}{\numberline {8.9}calc\_rmsd.py}{66}{section.8.9}
-\contentsline {section}{\numberline {8.10}calc\_series.py}{67}{section.8.10}
-\contentsline {section}{\numberline {8.11}calc\_ti\_decomposed.py}{67}{section.8.11}
-\contentsline {section}{\numberline {8.12}clear\_gcmcbox.py}{67}{section.8.12}
-\contentsline {section}{\numberline {8.13}convertatomnames.py}{68}{section.8.13}
-\contentsline {section}{\numberline {8.14}convertwater.py}{68}{section.8.14}
-\contentsline {section}{\numberline {8.15}distribute\_waters.py}{68}{section.8.15}
-\contentsline {section}{\numberline {8.16}divide\_pdb.py}{68}{section.8.16}
-\contentsline {section}{\numberline {8.17}generate\_input.py}{69}{section.8.17}
-\contentsline {section}{\numberline {8.18}make\_dummy.py}{69}{section.8.18}
-\contentsline {section}{\numberline {8.19}make\_gcmcbox.py}{69}{section.8.19}
-\contentsline {section}{\numberline {8.20}make\_single.py}{70}{section.8.20}
-\contentsline {section}{\numberline {8.21}merge\_templates.py}{70}{section.8.21}
-\contentsline {section}{\numberline {8.22}plot\_theta.py}{71}{section.8.22}
-\contentsline {section}{\numberline {8.23}scoop.py}{71}{section.8.23}
-\contentsline {section}{\numberline {8.24}solvate.py}{71}{section.8.24}
-\contentsline {section}{\numberline {8.25}split\_jawswater.py}{72}{section.8.25}
-\contentsline {chapter}{\numberline {9}Test Suite}{75}{chapter.9}
-\contentsline {section}{\numberline {9.1}Dependencies}{75}{section.9.1}
-\contentsline {section}{\numberline {9.2}Running all tests}{75}{section.9.2}
-\contentsline {section}{\numberline {9.3}Individual tests}{75}{section.9.3}
-\contentsline {subsection}{\numberline {9.3.1}List of tests}{76}{subsection.9.3.1}
-\contentsline {subsection}{\numberline {9.3.2}test\_install\_dependencies.py}{76}{subsection.9.3.2}
-\contentsline {subsection}{\numberline {9.3.3}test\_ligand\_setup.py}{76}{subsection.9.3.3}
-\contentsline {subsection}{\numberline {9.3.4}test\_parameters\_ff.py}{76}{subsection.9.3.4}
-\contentsline {subsection}{\numberline {9.3.5}test\_path.py}{77}{subsection.9.3.5}
-\contentsline {subsection}{\numberline {9.3.6}test\_tools\_protoms.py}{77}{subsection.9.3.6}
-\contentsline {subsection}{\numberline {9.3.7}test\_prot\_setup.py}{77}{subsection.9.3.7}
-\contentsline {subsection}{\numberline {9.3.8}test\_equil\_prot.py}{77}{subsection.9.3.8}
-\contentsline {subsection}{\numberline {9.3.9}test\_energies.py}{77}{subsection.9.3.9}
-\contentsline {subsection}{\numberline {9.3.10}test\_sampling.py}{77}{subsection.9.3.10}
-\contentsline {subsection}{\numberline {9.3.11}test\_jaws1.py}{78}{subsection.9.3.11}
-\contentsline {subsection}{\numberline {9.3.12}test\_mpi\_install.py}{78}{subsection.9.3.12}
-\contentsline {subsection}{\numberline {9.3.13}test\_gcmc.py}{78}{subsection.9.3.13}
-\contentsline {subsection}{\numberline {9.3.14}test\_jaws2.py}{78}{subsection.9.3.14}
-\contentsline {subsection}{\numberline {9.3.15}test\_reti\_sngl.py}{78}{subsection.9.3.15}
-\contentsline {subsection}{\numberline {9.3.16}test\_reti\_dbl.py}{79}{subsection.9.3.16}
-\contentsline {chapter}{Index}{81}{section*.62}
+\contentsline {subsection}{\numberline {8.1.1}Named Arguments}{63}{subsection.8.1.1}
+\contentsline {section}{\numberline {8.2}build\_template.py}{64}{section.8.2}
+\contentsline {subsection}{\numberline {8.2.1}Named Arguments}{64}{subsection.8.2.1}
+\contentsline {section}{\numberline {8.3}calc\_clusters.py}{65}{section.8.3}
+\contentsline {subsection}{\numberline {8.3.1}Named Arguments}{65}{subsection.8.3.1}
+\contentsline {section}{\numberline {8.4}calc\_density.py}{65}{section.8.4}
+\contentsline {subsection}{\numberline {8.4.1}Named Arguments}{66}{subsection.8.4.1}
+\contentsline {section}{\numberline {8.5}calc\_dg.py}{67}{section.8.5}
+\contentsline {subsection}{\numberline {8.5.1}Named Arguments}{67}{subsection.8.5.1}
+\contentsline {section}{\numberline {8.6}calc\_dg\_cycle.py}{68}{section.8.6}
+\contentsline {subsection}{\numberline {8.6.1}Named Arguments}{69}{subsection.8.6.1}
+\contentsline {section}{\numberline {8.7}calc\_gcap\_surface.py}{70}{section.8.7}
+\contentsline {subsection}{\numberline {8.7.1}Named Arguments}{70}{subsection.8.7.1}
+\contentsline {section}{\numberline {8.8}calc\_gci.py}{71}{section.8.8}
+\contentsline {subsection}{\numberline {8.8.1}Named Arguments}{71}{subsection.8.8.1}
+\contentsline {section}{\numberline {8.9}calc\_replicapath.py}{72}{section.8.9}
+\contentsline {subsection}{\numberline {8.9.1}Named Arguments}{72}{subsection.8.9.1}
+\contentsline {section}{\numberline {8.10}calc\_rmsd.py}{73}{section.8.10}
+\contentsline {subsection}{\numberline {8.10.1}Named Arguments}{73}{subsection.8.10.1}
+\contentsline {section}{\numberline {8.11}calc\_series.py}{74}{section.8.11}
+\contentsline {subsection}{\numberline {8.11.1}Named Arguments}{74}{subsection.8.11.1}
+\contentsline {section}{\numberline {8.12}calc\_ti\_decomposed.py}{75}{section.8.12}
+\contentsline {subsection}{\numberline {8.12.1}Named Arguments}{75}{subsection.8.12.1}
+\contentsline {section}{\numberline {8.13}clear\_gcmcbox.py}{76}{section.8.13}
+\contentsline {subsection}{\numberline {8.13.1}Named Arguments}{76}{subsection.8.13.1}
+\contentsline {section}{\numberline {8.14}convertatomnames.py}{77}{section.8.14}
+\contentsline {subsection}{\numberline {8.14.1}Named Arguments}{77}{subsection.8.14.1}
+\contentsline {section}{\numberline {8.15}convertwater.py}{77}{section.8.15}
+\contentsline {subsection}{\numberline {8.15.1}Named Arguments}{78}{subsection.8.15.1}
+\contentsline {section}{\numberline {8.16}distribute\_waters.py}{78}{section.8.16}
+\contentsline {subsection}{\numberline {8.16.1}Named Arguments}{78}{subsection.8.16.1}
+\contentsline {section}{\numberline {8.17}divide\_pdb.py}{79}{section.8.17}
+\contentsline {subsection}{\numberline {8.17.1}Named Arguments}{79}{subsection.8.17.1}
+\contentsline {section}{\numberline {8.18}generate\_input.py}{80}{section.8.18}
+\contentsline {subsection}{\numberline {8.18.1}Named Arguments}{80}{subsection.8.18.1}
+\contentsline {section}{\numberline {8.19}make\_dummy.py}{82}{section.8.19}
+\contentsline {subsection}{\numberline {8.19.1}Named Arguments}{82}{subsection.8.19.1}
+\contentsline {section}{\numberline {8.20}make\_gcmcbox.py}{82}{section.8.20}
+\contentsline {subsection}{\numberline {8.20.1}Named Arguments}{82}{subsection.8.20.1}
+\contentsline {section}{\numberline {8.21}make\_single.py}{83}{section.8.21}
+\contentsline {subsection}{\numberline {8.21.1}Named Arguments}{83}{subsection.8.21.1}
+\contentsline {section}{\numberline {8.22}merge\_templates.py}{84}{section.8.22}
+\contentsline {subsection}{\numberline {8.22.1}Named Arguments}{84}{subsection.8.22.1}
+\contentsline {section}{\numberline {8.23}plot\_theta.py}{84}{section.8.23}
+\contentsline {subsection}{\numberline {8.23.1}Named Arguments}{85}{subsection.8.23.1}
+\contentsline {section}{\numberline {8.24}scoop.py}{85}{section.8.24}
+\contentsline {subsection}{\numberline {8.24.1}Named Arguments}{85}{subsection.8.24.1}
+\contentsline {section}{\numberline {8.25}solvate.py}{87}{section.8.25}
+\contentsline {subsection}{\numberline {8.25.1}Named Arguments}{87}{subsection.8.25.1}
+\contentsline {section}{\numberline {8.26}split\_jawswater.py}{88}{section.8.26}
+\contentsline {subsection}{\numberline {8.26.1}Named Arguments}{89}{subsection.8.26.1}
+\contentsline {chapter}{\numberline {9}Test Suite}{91}{chapter.9}
+\contentsline {section}{\numberline {9.1}Dependencies}{91}{section.9.1}
+\contentsline {section}{\numberline {9.2}Running all tests}{91}{section.9.2}
+\contentsline {section}{\numberline {9.3}Individual tests}{91}{section.9.3}
+\contentsline {subsection}{\numberline {9.3.1}List of tests}{92}{subsection.9.3.1}
+\contentsline {subsection}{\numberline {9.3.2}test\_install\_dependencies.py}{92}{subsection.9.3.2}
+\contentsline {subsection}{\numberline {9.3.3}test\_ligand\_setup.py}{92}{subsection.9.3.3}
+\contentsline {subsection}{\numberline {9.3.4}test\_parameters\_ff.py}{92}{subsection.9.3.4}
+\contentsline {subsection}{\numberline {9.3.5}test\_path.py}{93}{subsection.9.3.5}
+\contentsline {subsection}{\numberline {9.3.6}test\_tools\_protoms.py}{93}{subsection.9.3.6}
+\contentsline {subsection}{\numberline {9.3.7}test\_prot\_setup.py}{93}{subsection.9.3.7}
+\contentsline {subsection}{\numberline {9.3.8}test\_equil\_prot.py}{93}{subsection.9.3.8}
+\contentsline {subsection}{\numberline {9.3.9}test\_energies.py}{93}{subsection.9.3.9}
+\contentsline {subsection}{\numberline {9.3.10}test\_sampling.py}{93}{subsection.9.3.10}
+\contentsline {subsection}{\numberline {9.3.11}test\_jaws1.py}{94}{subsection.9.3.11}
+\contentsline {subsection}{\numberline {9.3.12}test\_mpi\_install.py}{94}{subsection.9.3.12}
+\contentsline {subsection}{\numberline {9.3.13}test\_gcmc.py}{94}{subsection.9.3.13}
+\contentsline {subsection}{\numberline {9.3.14}test\_jaws2.py}{94}{subsection.9.3.14}
+\contentsline {subsection}{\numberline {9.3.15}test\_reti\_sngl.py}{94}{subsection.9.3.15}
+\contentsline {subsection}{\numberline {9.3.16}test\_reti\_dbl.py}{95}{subsection.9.3.16}
+\contentsline {chapter}{Index}{97}{section*.62}

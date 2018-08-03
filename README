@@ -1,11 +1,11 @@
 ########################
-##   ProtoMS 3.3      ##
+##   ProtoMS 3.4      ##
 ########################
 
 --------------------------------
  Prototype Molecular Simulation
 
-Version 3.3
+Version 3.4
 
 (C) Christopher Woods, Julien Michel, Michael Bodnarchuk, Samuel Genheden, Richard Bradshaw, Gregory Ross, Chris Cave-Ayland, Ana I. Cabedo Martinez, Hannah Bruce-Macdonald, James Graham, Marley Samways 2002-2018
       
@@ -28,14 +28,14 @@ Optional:
 Set the environmental variable $PROTOMSHOME to the installation directory of ProtoMS.
 
 The ProtoMS tools have the following requirements:
-* Python, version 2.7
+* Python, version 2.7 or >= 3.5
 * NumPy (http://www.numpy.org/)
 * SciPy (http://www.scipy.org/)
 * Matplotlib (http://www.matplotlib.org/)
+* pymbar (https://github.com/choderalab/pymbar)
 
 Optional:
 * AmberTools (http://www.ambermd.org/)          : Required to parameterise small molecules (and for the test suite)
-* pymbar (https://github.com/choderalab/pymbar) : Required to perform MBAR calculations
 * Nose (https://nose.readthedocs.org/en/latest/): Required to run the test suite
 
 The environmental variable $AMBERHOME is required to run various components of the tools and test suite.
@@ -60,9 +60,11 @@ Contents of directory:
 
 * protoms.py	    : A tool to setup common ProtoMS calculations
 
+* python	    : The python library component of ProtoMS
+
 * src 		    : This directory contains all of the source code for the main program
 
-* tools 	    : This directory contains numerous useful scripts to setup and analyse ProtoMS simualtions.
+* tools 	    : This directory contains numerous useful scripts to setup and analyse ProtoMS simulations.
 
 * tutorial 	    : This directory contains a number of examples that demonstrate applications of ProtoMS.
 

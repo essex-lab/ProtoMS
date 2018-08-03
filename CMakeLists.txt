@@ -164,7 +164,7 @@ set(PYTHON_INSTALL_OPTIONS "" CACHE STRING "Additional options for setup.py")
 # Optional 'make install' step
 install(TARGETS protoms3
   RUNTIME DESTINATION "./")
-install(CODE "execute_process(COMMAND python setup.py install ${PYTHON_INSTALL_OPTIONS}
+install(CODE "execute_process(COMMAND ${PYTHON_EXECUTABLE} setup.py install ${PYTHON_INSTALL_OPTIONS}
  WORKING_DIRECTORY ${PYTHON_STAGING_DIR})")
 
 if(COVERAGE)

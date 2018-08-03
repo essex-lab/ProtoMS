@@ -11,11 +11,11 @@
 # An interactive container can then be started with
 # docker run -it protoms:3.4 /bin/bash
 
-From protoms-test-environment
+From protoms-test-environment:3.4
 
 RUN useradd --create-home --home-dir /home/protoms --shell /bin/bash --user-group protoms
 WORKDIR /home/protoms/protoms-3.4
-ADD . /home/protoms/protoms-3.4
+COPY . /home/protoms/protoms-3.4
 ENV PROTOMSHOME /home/protoms/protoms-3.4
 
 RUN rm -rf build

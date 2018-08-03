@@ -9,14 +9,14 @@
     <title>Design of ProtoMS &#8212; ProtoMS 3.4 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="protoms.py" href="protomspy.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="compilation.html" /> 
+    <link rel="prev" title="Compilation and Installation" href="compilation.html" /> 
   </head><body>
 
 <!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
@@ -33,7 +33,7 @@
           <a href="protomspy.html" title="protoms.py"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="compilation.html" title="&lt;no title&gt;"
+          <a href="compilation.html" title="Compilation and Installation"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>
@@ -94,7 +94,7 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="compilation.html"
-                        title="previous chapter">&lt;no title&gt;</a></p>
+                        title="previous chapter">Compilation and Installation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="protomspy.html"
                         title="next chapter">protoms.py</a></p>
@@ -207,7 +207,7 @@ Proteins are loaded into ProtoMS via PDB files (see section <a class="reference 
 </tbody>
 </table>
 <p><strong>Limits</strong></p>
-<p>ProtoMS is written using slightly extended Fortran 77 (see <span class="xref std std-ref">fortran77</span>). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 1.0 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.</p>
+<p>ProtoMS is written using slightly extended Fortran 77 (see <a class="reference internal" href="compilation.html#fortran77"><span class="std std-ref">Programming Language</span></a>). This means that the maximum numbers of loaded proteins, solutes and solvents has to be set at compile time. Table 1.0 gives the default values for the maximum number of proteins, solutes and solvents. Please note that you may change these numbers to fit the system that you are interested in, e.g. if you were investigating a single protein in a lipid bilayer then you may choose to model the lipid as a solute (thus requiring a large increase in the number of solute molecules, but a decrease in the number of solute residues), and you could reduce the maximum number of protein molecules to one. By balancing the numbers of protein, solutes and solvents you should find that you are able to load up the system that you want to simulate.</p>
 </div>
 <div class="section" id="classical-forcefields">
 <span id="index-5"></span><h2>Classical forcefields<a class="headerlink" href="#classical-forcefields" title="Permalink to this headline">¶</a></h2>
@@ -294,7 +294,7 @@ U_{ij} &amp;= r_{ij} + S_{j}\alpha_{j} \quad if \quad \alpha{i} &lt;  r_{ij} + S
 <p>As the name says, the technique approximate the descreening (the extent to which a nearby atom j displaces a volume that would have otherwise been occupied by solvent) by a fast summation of pairwise terms. It is however not rigorous and has to be parameterised carefully to yield robust performance. The PDA method tend to systematically underestimate the Born radius of buried atoms because it incorrectly assign high dielectric constants to numerous small voids and crevices that exist between atoms in a protein and are not occupied by water. To increase accuracy, a re-scaling technique has been implemented.</p>
 <div class="math">
 <p><img src="_images/math/38644656d4f27cc2ede9bcf1812c076bd97a36b3.png" alt="{\frac{1}{B_i}}  = \frac{1}{\alpha _{i}} - Itanh\big( \alpha \psi - \beta \psi^{2} + \gamma \psi^{3}  \big)"/></p>
-</div><p>where <em>I</em> is the summation term from the PDA calculation, <img class="math" src="_images/math/1a52481ac36eb889dcbbdcc0783ba2a755ba3547.png" alt="\psi"/>, <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/>, <img class="math" src="_images/math/8ce03f78ed945f2ef3dac87c8799b55b393527e7.png" alt="\beta"/> and <img class="math" src="_images/math/0ebb67342b546ca42a1c634b1ef03c893c4cdedb.png" alt="\gamma"/> are parameters taken from the litterature.</p>
+</div><p>where <em>I</em> is the summation term from the PDA calculation, <img class="math" src="_images/math/1a52481ac36eb889dcbbdcc0783ba2a755ba3547.png" alt="\psi"/>, <img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/>, <img class="math" src="_images/math/8ce03f78ed945f2ef3dac87c8799b55b393527e7.png" alt="\beta"/> and <img class="math" src="_images/math/0ebb67342b546ca42a1c634b1ef03c893c4cdedb.png" alt="\gamma"/> are parameters taken from the literature.</p>
 <p>The rescaling option has not been used extensively in ProtoMS and should be used with caution. It appears it may prove useful when simulation buried protein binding sites.</p>
 <p>The GBSA force field implemented in ProtoMS was parameterised to be used with the AMBER99 and the GAFF force fields. While alternative force fields could be used, a loss of accuracy could be expected.</p>
 <p>GBSA simulations are order of magnitude more efficient than explicit solvent simulations of small isolated molecules. However, they slow
@@ -372,7 +372,7 @@ A residue move is a Monte Carlo move on a single protein residue. Obviously, for
 <li>The change in energy that results from this move is evaluated, and then tested according to the Metropolis criterion to decide whether or not to accept the move.</li>
 <li>If the move is accepted, then the new configuration of the residue is saved. If the move was rejected then the original configuration of the residue is restored.</li>
 </ol>
-<p>You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section <a class="reference internal" href="#misccmd"><span class="std std-ref">Miscellaneous</span></a>. All residues of all proteins are flexible by default, and have flexible backbones. Note that the backbone move is still experimental and not thouroughly tested. I recommend that you fix the backbone of all residues for production simulations. You control the maximum amounts that the residue moves via the residue template (see <a class="reference internal" href="#temref"><span class="std std-ref">Templates</span></a>). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was <img class="math" src="_images/math/839290a0eceb0f468845447779f2171fcc29f2b3.png" alt="5.0^\circ"/> , then the angle will be changed by a random value generated evenly between <img class="math" src="_images/math/5cd2462f363e224a9f64dcb7e32b3c1b5a25b058.png" alt="-5.0^\circ"/> and <img class="math" src="_images/math/806cbc1f3fb1f66176cc2ce1129e8c45a4a0a4ab.png" alt="+5.0^\circ"/>.</p>
+<p>You can change the flexibility of any residue in any protein by using the fixbackbone and fixresidues commands described in section <a class="reference internal" href="#misccmd"><span class="std std-ref">Miscellaneous</span></a>. All residues of all proteins are flexible by default, and have flexible backbones. You control the maximum amounts that the residue moves via the residue template (see <a class="reference internal" href="#temref"><span class="std std-ref">Templates</span></a>). The actual amount that a residue moves by will be based on random values generated within the limits of the maximum amounts set in the residue template, e.g. if the maximum change of an angle was <img class="math" src="_images/math/839290a0eceb0f468845447779f2171fcc29f2b3.png" alt="5.0^\circ"/> , then the angle will be changed by a random value generated evenly between <img class="math" src="_images/math/5cd2462f363e224a9f64dcb7e32b3c1b5a25b058.png" alt="-5.0^\circ"/> and <img class="math" src="_images/math/806cbc1f3fb1f66176cc2ce1129e8c45a4a0a4ab.png" alt="+5.0^\circ"/>.</p>
 <p id="index-18"><strong>Solute Moves</strong>
 A solute move is a Monte Carlo move on a single solute molecule. Obviously, for a solute move to be performed, at least one solute molecule must be loaded. Each solute move comprises the following steps</p>
 <ol class="arabic simple">
@@ -400,7 +400,7 @@ A solute move is a Monte Carlo move on a single solute molecule. Obviously, for 
 <li>If the move is accepted then the new system configuration is saved, otherwise the original system configuration is restored.</li>
 </ol>
 <p id="index-21"><strong>GCsolute Moves</strong></p>
-<p>A GCsolute move is a Monte Carlo move on a single Gcsolute molecule. Each GCsolute move comprises the following steps</p>
+<p>A GCsolute move is a Monte Carlo move on a single GCsolute molecule. Each GCsolute move comprises the following steps</p>
 <ol class="arabic simple">
 <li>A GCsolute molecule is randomly chosen from the set of loaded GCsolute molecules.  The value of <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/> is examined; if it is set to 0 then another is chosen until the examined <img class="math" src="_images/math/a9cfbeb8ebee1f365919e147a79e242dcb67ee5d.png" alt="\theta"/> value is 1.  If no GCsolutes with <img class="math" src="_images/math/e77512d3ef972b30e4d93113d8db720d2e9cc74c.png" alt="\theta=1"/> are available then the GCsolute move is counted as rejected.</li>
 <li>The GCsolute molecule is randomly translated and rotated around its center of geometry. If it attempts to leave the confines of its predefined cubic region then it experiences a huge energetic penalty, ensuring that the Metropolis move is rejected.</li>
@@ -466,7 +466,7 @@ A solute move is a Monte Carlo move on a single solute molecule. Obviously, for 
 </div>
 <div class="section" id="file-output">
 <span id="index-27"></span><h2>File output<a class="headerlink" href="#file-output" title="Permalink to this headline">¶</a></h2>
-<p>If you run ProtoMS from the command line you should see that it prints out a lot of information to the screen (on Unix called standard output, STDOUT). If you look closely at the output you should see that each line of output is preceeded by a tag, such as ‘HEADER’ or ‘INFO’. ProtoMS uses streams to output data, and these tags state which stream the line of data came from. Thus the information at the top of the output that gives the license and version details has been printed to the ‘HEADER’ stream, while the lines stating that ProtoMS is closing down because nothing has been loaded have gone to the ‘FATAL’ stream. ProtoMS uses the following streams</p>
+<p>If you run ProtoMS from the command line you should see that it prints out a lot of information to the screen (on Unix called standard output, STDOUT). If you look closely at the output you should see that each line of output is preceded by a tag, such as ‘HEADER’ or ‘INFO’. ProtoMS uses streams to output data, and these tags state which stream the line of data came from. Thus the information at the top of the output that gives the license and version details has been printed to the ‘HEADER’ stream, while the lines stating that ProtoMS is closing down because nothing has been loaded have gone to the ‘FATAL’ stream. ProtoMS uses the following streams</p>
 <ul class="simple">
 <li><strong>HEADER</strong> Used to print the program header.</li>
 <li><strong>INFO</strong> Used to print general information.</li>
@@ -502,7 +502,7 @@ A solute move is a Monte Carlo move on a single solute molecule. Obviously, for 
 streams, these two cannot be turned off. These two streams will be directed to STDERR if they have not been directed elsewhere.</p>
 <p>By default, the HEADER, INFO, MOVE and RESULTS streams are directed to STDOUT, the WARNING and FATAL streams are directed to STDERR, and the remaining streams are switched off. Bear this in mind if you think that you should be getting output and you are not - make sure that the stream that contains your output is directed to something!</p>
 <p>The streamSTREAM command is used to specify the direction of the stream at the start of the simulation. It is possible to redirect streams while the simulation is running. This is slightly more complicated than then streamSTREAM command, and is described in section <a class="reference internal" href="#misccmd"><span class="std std-ref">Miscellaneous</span></a>.</p>
-<p>By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already exisiting files, for instance if you are restarting a simulation, you have to add the option</p>
+<p>By default ProtoMS overwrites the files specified by the streamSTREAM command. If you want to append to already existing files, for instance if you are restarting a simulation, you have to add the option</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">appendstreams</span> <span class="n">on</span>
 </pre></div>
 </div>
@@ -513,7 +513,7 @@ streams, these two cannot be turned off. These two streams will be directed to S
 <p>There are many commands to set parameters that you can use to control your simulation. To make it easier to search for those relevant to your calculations, these will be divided in several subsections.</p>
 <p>In the subsections below, unless otherwise specified:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">locical</span></code> stands for <em>true</em> or <em>false</em>, <em>yes</em> or <em>no</em>, <em>on</em> or <em>off</em> (depending on your personal preference)</li>
+<li><code class="docutils literal notranslate"><span class="pre">logical</span></code> stands for <em>true</em> or <em>false</em>, <em>yes</em> or <em>no</em>, <em>on</em> or <em>off</em> (depending on your personal preference)</li>
 <li><code class="docutils literal notranslate"><span class="pre">integer</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code> stands for any integer number</li>
 <li><code class="docutils literal notranslate"><span class="pre">float</span></code> stands for any floating point number</li>
 <li><code class="docutils literal notranslate"><span class="pre">string</span></code> stands for a string of characters</li>
@@ -542,7 +542,7 @@ streams, these two cannot be turned off. These two streams will be directed to S
 <div class="highlight-default notranslate" id="index-32"><div class="highlight"><pre><span></span><span class="n">ranseed</span> <span class="n">integer</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">integer</span></code> is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducable simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started.</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">integer</span></code> is any positive integer. This command is used to set the random number seed to be used by the random number generator. The random number seed can be any positive integer, and you will want to specify a seed if you wish to run reproducible simulations. If you do not specify a random number seed then a seed is generated based on the time and date that the simulation started.</p>
 <div class="highlight-default notranslate" id="index-33"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="nb">float</span>
 </pre></div>
 </div>
@@ -586,7 +586,7 @@ streams, these two cannot be turned off. These two streams will be directed to S
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prefsampling</span> <span class="mi">1</span> <span class="mf">100.0</span>
 </pre></div>
 </div>
-<p>will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focussed the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off.</p>
+<p>will specify a preferential sampling sphere centered on solute 1, with a parameter of 100.0. The larger the parameter, the more highly focused the influence of the sphere around the closest solvent molecules. By default the parameter is 200.0, and preferential sampling is turned off.</p>
 <div class="highlight-default notranslate" id="index-41"><div class="highlight"><pre><span></span><span class="n">boundary</span> <span class="n">none</span>
 </pre></div>
 </div>
@@ -634,11 +634,11 @@ convincingly demonstrated.</p>
 </pre></div>
 </div>
 <p>corresponds to a simulation which will run at three different temperature windows in parallel, and will attempt swaps between the conformations of different temperature windows each 20 moves.</p>
-<p>The temperature replica-exchange command can be used in conjuction with the <code class="docutils literal notranslate"><span class="pre">lambdare</span></code> command, see below, to add temperature ladders to different values of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>.</p>
+<p>The temperature replica-exchange command can be used in conjunction with the <code class="docutils literal notranslate"><span class="pre">lambdare</span></code> command, see below, to add temperature ladders to different values of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/>.</p>
 <div class="highlight-default notranslate" id="index-45"><div class="highlight"><pre><span></span><span class="n">solutetempering</span> <span class="mf">25.0</span> <span class="n">bndang</span> <span class="mi">3</span> <span class="n">dih</span> <span class="mi">1</span> <span class="n">lj</span> <span class="mi">3</span> <span class="n">coul</span> <span class="mi">1</span> <span class="n">solu</span> <span class="mi">2</span> <span class="n">prot</span> <span class="mi">2</span> <span class="n">solv</span> <span class="mi">2</span>
 </pre></div>
 </div>
-<p>Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see <a class="reference internal" href="#temperature-replica-exchange-parameters">Temperature replica-exchange parameters</a>). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the <code class="docutils literal notranslate"><span class="pre">temperaturere</span></code> command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; <code class="docutils literal notranslate"><span class="pre">bndang</span></code> controls the internal bond-angle energy terms, <code class="docutils literal notranslate"><span class="pre">dih</span></code> the internal dihedral energy term, <code class="docutils literal notranslate"><span class="pre">lj</span></code> the internal van der Waals energy, <code class="docutils literal notranslate"><span class="pre">coul</span></code> the internal Coulomb energy, <code class="docutils literal notranslate"><span class="pre">solu</span></code> the interaction with other solutes, <code class="docutils literal notranslate"><span class="pre">prot</span></code> the interaction with the protein and <code class="docutils literal notranslate"><span class="pre">solv</span></code> the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with <img class="math" src="_images/math/6757eba9fce0316545ec8cb52a33899aeef371e4.png" alt="\beta_i/\beta_0"/>, where <img class="math" src="_images/math/af98ebbbe7174c893ed8f4c7fc046767210ce3a6.png" alt="\beta_i"/> is the effective inverse temperature of the replica (set with the <code class="docutils literal notranslate"><span class="pre">temperaturre</span></code> command) and <img class="math" src="_images/math/90acdaf850915294d7ef3bdc540005ee22197903.png" alt="\beta_0"/> is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with <img class="math" src="_images/math/ab167846e454d9e5d6a1452434989ec2eaaa17bb.png" alt="(\beta_i+\beta_0)/2\beta_0"/> and if the argument 3 the energy is unscaled.</p>
+<p>Turns on replica-exchange with solute tempering (REST). It only works if you have specified temperature replica-exchange (see <a class="reference internal" href="#temperature-replica-exchange-parameters">Temperature replica-exchange parameters</a>). In this type of simulation the system is simulated at 25.0 Celsius, or the temperature set with this command, and the temperatures set with the <code class="docutils literal notranslate"><span class="pre">temperaturere</span></code> command are used to scale the solute energies. The level of scaling for the different energy components can be set with the rest of the options; <code class="docutils literal notranslate"><span class="pre">bndang</span></code> controls the internal bond-angle energy terms, <code class="docutils literal notranslate"><span class="pre">dih</span></code> the internal dihedral energy term, <code class="docutils literal notranslate"><span class="pre">lj</span></code> the internal van der Waals energy, <code class="docutils literal notranslate"><span class="pre">coul</span></code> the internal Coulomb energy, <code class="docutils literal notranslate"><span class="pre">solu</span></code> the interaction with other solutes, <code class="docutils literal notranslate"><span class="pre">prot</span></code> the interaction with the protein and <code class="docutils literal notranslate"><span class="pre">solv</span></code> the interaction with solvent molecules. Each argument can be either 1, 2 or 3. If the argument is 1, the energy is scaled with <img class="math" src="_images/math/6757eba9fce0316545ec8cb52a33899aeef371e4.png" alt="\beta_i/\beta_0"/>, where <img class="math" src="_images/math/af98ebbbe7174c893ed8f4c7fc046767210ce3a6.png" alt="\beta_i"/> is the effective inverse temperature of the replica (set with the <code class="docutils literal notranslate"><span class="pre">temperaturere</span></code> command) and <img class="math" src="_images/math/90acdaf850915294d7ef3bdc540005ee22197903.png" alt="\beta_0"/> is the inverse simulation temperature (set with this command). If the argument is 2, the energy is scaled with <img class="math" src="_images/math/ab167846e454d9e5d6a1452434989ec2eaaa17bb.png" alt="(\beta_i+\beta_0)/2\beta_0"/> and if the argument 3 the energy is unscaled.</p>
 <p id="index-46">By default ProtoMS will use different random seeds for each replica in a replica exchange simulation. Setting sameseeds to true will prevent this and all replicas will use the random seed provided in the command file. This is primarily available for backwards compatibility:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sameseeds</span> <span class="n">logical</span>
 </pre></div>
@@ -679,7 +679,7 @@ convincingly demonstrated.</p>
 <div class="highlight-default notranslate" id="index-50"><div class="highlight"><pre><span></span><span class="n">lambdaladder</span> <span class="n">temperature</span> <span class="nb">float</span> <span class="nb">float</span>
 </pre></div>
 </div>
-<p>is one of the commands required to proceed with a simulation including both temperature and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange, where <code class="docutils literal notranslate"><span class="pre">float</span></code> is each of the temperature values where a <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladder is to be placed. All temperature values must be among those included after the <code class="docutils literal notranslate"><span class="pre">temperaturere</span></code> keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladders and temperature ladders, as well as <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> and temperature values per ladder, takind into account the cores shared by each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladder with each temperature ladder.</p>
+<p>is one of the commands required to proceed with a simulation including both temperature and <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> replica exchange, where <code class="docutils literal notranslate"><span class="pre">float</span></code> is each of the temperature values where a <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladder is to be placed. All temperature values must be among those included after the <code class="docutils literal notranslate"><span class="pre">temperaturere</span></code> keyword. In principle, the number of lambda ladders can be as high as the number of temperatures in temperaturere. The number of cores must be calculated based on the number of <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladders and temperature ladders, as well as <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> and temperature values per ladder, taking into account the cores shared by each <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> ladder with each temperature ladder.</p>
 <p>As an example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lambdaladder</span> <span class="n">temperature</span> <span class="mf">25.0</span> <span class="mf">35.0</span>
 </pre></div>
@@ -701,7 +701,7 @@ convincingly demonstrated.</p>
 <div class="highlight-default notranslate" id="index-52"><div class="highlight"><pre><span></span><span class="n">printfe</span> <span class="n">string</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">string</span></code> should be either <code class="docutils literal notranslate"><span class="pre">off</span></code>, <code class="docutils literal notranslate"><span class="pre">bar</span></code> or <code class="docutils literal notranslate"><span class="pre">mbar</span></code>. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into acount that this estimates will take some time. Your simulations may run faster when this option is set to off (default).</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">string</span></code> should be either <code class="docutils literal notranslate"><span class="pre">off</span></code>, <code class="docutils literal notranslate"><span class="pre">bar</span></code> or <code class="docutils literal notranslate"><span class="pre">mbar</span></code>. Whether to print the free energy estimates required to proceed with BAR or MBAR calculations. Take into account that this estimates will take some time. Your simulations may run faster when this option is set to off (default).</p>
 <p>In case dual topology is desired, whether it is for a single or multiple <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> simulation, the following parameters must be used:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dualtopologyint</span> <span class="n">integer1</span> <span class="n">integer2</span> <span class="n">synctrans</span> <span class="n">syncrot</span>
 </pre></div>
@@ -744,7 +744,7 @@ convincingly demonstrated.</p>
 <div class="highlight-default notranslate" id="index-57"><div class="highlight"><pre><span></span><span class="n">multigcmc</span> <span class="n">integer</span> <span class="nb">float</span> <span class="nb">float</span> <span class="nb">float</span>
 </pre></div>
 </div>
-<p>is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each <code class="docutils literal notranslate"><span class="pre">float</span></code> is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submited to run in parallel with as many cores as B values. As above the random seed used by each replica can be influenced by the sameseeds command.</p>
+<p>is the command to run multiple gcmc simulations in parallel with replica exchange between different B values. The integer value sets how often replica exchange moves are attempted, this should be some multiple of how often results files are written. Each <code class="docutils literal notranslate"><span class="pre">float</span></code> is the B value for each replica. In principle, the number of B values is not restricted. The simulation will need to be submitted to run in parallel with as many cores as B values. As above the random seed used by each replica can be influenced by the sameseeds command.</p>
 <div class="highlight-default notranslate" id="index-58"><div class="highlight"><pre><span></span><span class="n">originx</span> <span class="nb">float</span>
 </pre></div>
 </div>
@@ -915,7 +915,7 @@ convincingly demonstrated.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chunk</span> <span class="n">equilibrate</span> <span class="mi">100</span> <span class="n">solute</span><span class="o">=</span><span class="mi">500</span>
 </pre></div>
 </div>
-<p>Perform 100 steps of equilibration. Because this chunk will inherit from the previous chunk, the move and energy information will still be printed every 10 moves, and still, on average 1 protein move will be made every 1000 solvent moves. However this line has added that on average 500 solute moves should be made for every 1000 solvent moves, thus the probability of a protein move is now 1 in 1501, the probablity of a solute move is 500 in 1501, and the probability of a solvent move is 1000 in 1501.</p>
+<p>Perform 100 steps of equilibration. Because this chunk will inherit from the previous chunk, the move and energy information will still be printed every 10 moves, and still, on average 1 protein move will be made every 1000 solvent moves. However this line has added that on average 500 solute moves should be made for every 1000 solvent moves, thus the probability of a protein move is now 1 in 1501, the probability of a solute move is 500 in 1501, and the probability of a solvent move is 1000 in 1501.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">chunk</span> <span class="n">simulate</span> <span class="mi">500</span> <span class="n">printmove</span><span class="o">=</span><span class="mi">1</span> <span class="n">newprob</span> <span class="n">volume</span><span class="o">=</span><span class="mi">1</span> <span class="n">solvent</span><span class="o">=</span><span class="mi">300</span>
 </pre></div>
 </div>
@@ -1079,13 +1079,13 @@ Once you have specified a few ids, you can create restraints using these ids and
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dump</span> <span class="n">frequency</span> <span class="n">command</span>
 </pre></div>
 </div>
-<p>This manner of output generation can be applied to all commands included in <a class="reference internal" href="#results-and-restarts">Results and Restarts</a> secction, as well as <a class="reference internal" href="#pdb-output">PDB output</a> section.</p>
+<p>This manner of output generation can be applied to all commands included in <a class="reference internal" href="#results-and-restarts">Results and Restarts</a> section, as well as <a class="reference internal" href="#pdb-output">PDB output</a> section.</p>
 <p>An example of a dump line would be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dump</span> <span class="mi">100000</span> <span class="n">results</span> <span class="n">write</span> <span class="n">results</span>
 </pre></div>
 </div>
-<p>This line, given as input for ProtoMS, will append results information to the <cite>results</cite> file every 100000 moves, thoughout the <cite>simulate</cite> part of your simulation.</p>
-<p>It is important to note how the appending behaviour variates. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently these imput lines:</p>
+<p>This line, given as input for ProtoMS, will append results information to the <cite>results</cite> file every 100000 moves, throughout the <cite>simulate</cite> part of your simulation.</p>
+<p>It is important to note how the appending behaviour varies. For frequent results and PDB printing, new results will be appended to the existent file. However for the restart generation, the existing file will be overwritten every time and the old restart will be moved to another file. Consistently, these input lines:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dump</span> <span class="mi">100</span> <span class="n">results</span> <span class="n">write</span> <span class="n">results</span>
 <span class="n">dump</span> <span class="mi">100</span> <span class="n">pdb</span> <span class="nb">all</span> <span class="n">file</span><span class="o">=</span><span class="nb">all</span><span class="o">.</span><span class="n">pdb</span>
 <span class="n">dump</span> <span class="mi">100</span> <span class="n">restart</span> <span class="n">write</span> <span class="n">restart</span>
@@ -1279,7 +1279,7 @@ correctly loaded by ProtoMS.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atm</span> <span class="n">amb1</span> <span class="n">amb2</span> <span class="n">amb3</span> <span class="nb">id</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">id</span></code> is an indentifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. <code class="docutils literal notranslate"><span class="pre">force-constant</span></code> is the force constant (<img class="math" src="_images/math/e3bb9085c194dcafbe2a2083c40bb55448882529.png" alt="k_{angle}"/> , see eq <a class="reference internal" href="#equation-angpot">(6)</a>) for the angle parameter, in units of kcal mol-1 degree-2 . <code class="docutils literal notranslate"><span class="pre">angle-size</span></code> is the equilibrium angle size (<img class="math" src="_images/math/8c669a3486252783fe9a20e3b080f7ae97749928.png" alt="\theta_0"/>) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999.</p>
+<p><code class="docutils literal notranslate"><span class="pre">id</span></code> is an identifying number from 1 to MAXANGPARAM (default 5000) that is used to uniquely identify an angle parameters. <code class="docutils literal notranslate"><span class="pre">force-constant</span></code> is the force constant (<img class="math" src="_images/math/e3bb9085c194dcafbe2a2083c40bb55448882529.png" alt="k_{angle}"/> , see eq <a class="reference internal" href="#equation-angpot">(6)</a>) for the angle parameter, in units of kcal mol-1 degree-2 . <code class="docutils literal notranslate"><span class="pre">angle-size</span></code> is the equilibrium angle size (<img class="math" src="_images/math/8c669a3486252783fe9a20e3b080f7ae97749928.png" alt="\theta_0"/>) in units of degrees. Angle ID 0 is the null angle, and the forcefield files supplied with ProtoMS will only use angle IDs from 1 to 2999.</p>
 <p>The atm line is again very similar to that in the bond mode, with in this case the angle between atoms with AMBER types <code class="docutils literal notranslate"><span class="pre">amb1-amb2-amb3</span></code> being assigned angle parameter id. Angles are also symmetric, so <code class="docutils literal notranslate"><span class="pre">amb1-amb2-amb3</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">amb3-amb2-amb1</span></code>. Like the bond mode, any angle involving dummy atoms (AMBER type ‘DM’) will automatically be set to use the angle parameter 0. It is not possible to use a non-null angle parameter over an angle involving dummy atoms.</p>
 <p id="index-96"><strong>mode ureybradley</strong></p>
 <p>This mode is used to read in Urey-Bradley parameters (see eq <a class="reference internal" href="#equation-ubpot">(7)</a>), and its format is identical to that of the angle mode. There are only two valid lines in this mode</p>
@@ -1706,7 +1706,7 @@ restart file is human-readable and editable, I recommend that you do not attempt
           <a href="protomspy.html" title="protoms.py"
              >next</a> |</li>
         <li class="right" >
-          <a href="compilation.html" title="&lt;no title&gt;"
+          <a href="compilation.html" title="Compilation and Installation"
              >previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>
@@ -1715,7 +1715,7 @@ restart file is human-readable and editable, I recommend that you do not attempt
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H Bruce-Macdonald, J. Graham, M. Samways.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.4.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.
     </div>
   </body>
 </html>
