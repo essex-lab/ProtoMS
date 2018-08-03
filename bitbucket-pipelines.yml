@@ -15,4 +15,5 @@ pipelines:
           - cd build
           - cmake ..
           - make install
-          - ctest -V
+          - chown -R protoms:protoms ../build
+          - su -c "ctest -V" protoms

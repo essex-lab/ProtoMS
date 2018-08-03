@@ -27,3 +27,6 @@ RUN pip install --no-cache-dir --trusted-host pypi.python.org numpy six scipy ma
 RUN pip install --no-cache-dir --trusted-host pypi.python.org pymbar
 RUN wget http://ambermd.org/downloads/install_ambertools.sh
 RUN bash install_ambertools.sh --non-conda --prefix /
+RUN useradd --create-home --home-dir /home/protoms --shell /bin/bash --user-group protoms
+
+CMD /bin/bash

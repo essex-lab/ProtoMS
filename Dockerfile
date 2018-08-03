@@ -13,10 +13,10 @@
 
 From protoms-test-environment:3.4
 
-RUN useradd --create-home --home-dir /home/protoms --shell /bin/bash --user-group protoms
-WORKDIR /home/protoms/protoms-3.4
+
 COPY . /home/protoms/protoms-3.4
-ENV PROTOMSHOME /home/protoms/protoms-3.4
+WORKDIR /home/protoms/protoms-3.4
+ENV PROTOMSHOME /home/protoms/protoms-3.4/
 
 RUN rm -rf build
 RUN mkdir build
@@ -24,6 +24,5 @@ RUN cd build; \
 cmake ..; \
 make install
 RUN chown -R protoms:protoms /home/protoms/protoms-3.4
-USER protoms
 
-CMD /bin/bash
+USER protoms
