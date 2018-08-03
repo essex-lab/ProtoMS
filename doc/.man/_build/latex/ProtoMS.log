@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.6.18)  3 AUG 2018 09:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.6.18)  3 AUG 2018 12:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1139,7 +1139,7 @@ helvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></u
 sr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on ProtoMS.pdf (102 pages, 691308 bytes).
+Output written on ProtoMS.pdf (102 pages, 691312 bytes).
 PDF statistics:
  1322 PDF objects out of 1440 (max. 8388607)
  1181 compressed objects within 12 object streams

@@ -218,4 +218,4 @@ Version 3.4 of ProtoMS is also available via docker. Downloading and running the
   docker run -it jessexgroup/protoms:3.4
 
 
-The image is based on the python:3-slim image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see ``Dockerfile_test`` and ``Dockerfile`` in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.
+The image is based on the python:3.6-slim image with additional installation of the relevant python dependencies as well as amber tools 18. To construct your own docker images from scratch see ``Dockerfile_test`` and ``Dockerfile`` in the root ProtoMS directory and the instructions therein. This will allow you to use newer versions of the dependencies than are available via the public image.

@@ -2,7 +2,7 @@
 Changes and New Features 
 ************************
 
-This section describess the new and updated functionality present in version 3.4.0 of ProtoMS.
+This section describes the new and updated functionality present in version 3.4 of ProtoMS.
 
 ===========================
 GCAP Simulations
