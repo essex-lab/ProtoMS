@@ -173,6 +173,43 @@ def calc_phi(a, b, frame_clust_ids):
     phi = (n11*n00 - n01*n10) / ((n11+n01)*(n11+n10)*(n00+n01)*(n00+n10))**0.5
     return phi
 
+def calc_phi_norm(a, b, frame_clust_ids):
+    """
+    Calculate a correlation score for two water sites as the correlation
+    between two binary variables (on/off for each site)
+
+    Parameters
+    ----------
+    a, b : int
+        Cluster IDs of the two water sites
+    frame_clust_ids : list
+        List of lists containing the cluster IDs present in each frame
+
+    Returns
+    -------
+    phi : float
+        Correlation score (phi) between the two sites
+    """
+    n11 = 0.0
+    n01 = 0.0
+    n10 = 0.0
+    n00 = 0.0
+    for frame in frame_clust_ids:
+        if a in frame and b in frame:
+            n11 += 1
+        elif a in frame and b not in frame:
+            n10 += 1
+        elif a not in frame and b in frame:
+            n01 += 1
+        else:
+            n00 += 1
+    na1 = (n10+n11)
+    nb1 = (n01+n11)
+    nb1na1= na1*nb1
+    if na1 >= nb1: 
+   	 return (n11-nb1na1)/(nb1-nb1na1)
+    else:
+   	 return (n11-nb1na1)/(na1-nb1na1)
 
 def write_pymol(filename, pos, neg):
     """
@@ -330,8 +367,8 @@ if __name__ == "__main__":
         clust_wat_ids[clust].append(i)
 
     # Prints out the average of each cluster to PDB
-    clust_centres = write_average_clusts("clusts.pdb".format(args.output), clust_wat_ids,
-                                         n_clusts, n_frames, clust_occs)
+#    clust_centres = write_average_clusts("clusts.pdb".format(args.output), clust_wat_ids,
+#                                         n_clusts, n_frames, clust_occs)
 
     # Check which clusters are observed in each frame
     clust_frame_ids = {}  # Store frame IDs for each cluster
@@ -352,20 +389,25 @@ if __name__ == "__main__":
     negatives = []  # Store all negatives
     neg_close = []  # Store close negatives - within 5 A currently
     correlation_water_set = [i for i in range(1, n_clusts+1) if args.cutoff * n_frames <= clust_occs[i-1] < n_frames]
+    correlation_water_set = [i for i in range(1, n_clusts+1) if 1 <= clust_occs[i-1] < n_frames]
     # Starting with pairwise correlations - may figure out n-body later...
     print("Analysing water-water correlations...")
     for x, y in itertools.combinations(correlation_water_set, 2):
         phi_coef = calc_phi(x, y, frame_clust_ids)
+        phi_norm = calc_phi_norm(x, y, frame_clust_ids)
+        print("\tCorrelation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
+        print("\tCorrelation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_norm, 2)))
         if phi_coef > args.phi:
-            print("\tPositive correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
+      #      print("\tPositive correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
             positives.append([x, y])
             if np.linalg.norm(clust_centres[x] - clust_centres[y]) < 5.0:
                 pos_close.append([x, y])
         elif phi_coef < -args.phi:
-            print("\tNegative correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
+       #     print("\tNegative correlation between clusters {:2d} and {:2d} (phi = {:+5.2f})".format(x, y, np.round(phi_coef, 2)))
             negatives.append([x, y])
             if np.linalg.norm(clust_centres[x] - clust_centres[y]) < 5.0:
                 neg_close.append([x, y])
+    quit()
     print("{} positive and {} negative correlations found".format(len(positives), len(negatives)))
     correl_time = time.time() - correl_time
 

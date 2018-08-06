@@ -214,8 +214,16 @@ def sort_clusters(clust_ids):
     clust_ids_sorted = np.asarray([old_order.index(x)+1 for x in clust_ids])
     return clust_ids_sorted, clust_occs
 
+def write_average_clusts(filename,first_shell, centers, clust_occs):
+    with open(filename, 'w') as f:
+        f.write("REMARK Average cluster locations written by network_builder.py\n")
+        for n in first_shell:
+            # Write to file
+            f.write('HETATM{0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.1f}         {9:>2}  \n'.format(n, 'O00', 'WA1',n, centers[n][0], centers[n][1], centers[n][2], 1., int(clust_occs[n-1]), 'O'))
 
-def write_average_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs):
+    return
+
+def calc_average_clusts(clust_wat_ids, n_clusts, n_frames, clust_occs):
     """
     Write the average oxygen positions of each cluster to a PDB file
 
@@ -238,23 +246,18 @@ def write_average_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs
         Dictionary containing the average coordinates of each cluster
     """
     # Print cluster occupancy data to screen
-    for i in range(1, n_clusts+1):
+    for i in range(1, n_clusts +1):
         print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
     print("")
     # Calculate average coordinates and write to PDB
     centres = {}
-    with open(filename, 'w') as f:
-        f.write("REMARK Average cluster locations written by network_builder.py\n")
-        for n in range(1, n_clusts+1):
-            # Calculate average coordinates
-            av_coords = np.zeros(3)
-            for i in clust_wat_ids[n]:
-                av_coords += coord_list[i]
-            av_coords /= len(clust_wat_ids[n])
-            centres[n] = av_coords.copy()
-            # Write to file
-            f.write('HETATM{0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.1f}         {9:>2}  \n'.format(n, 'O00', 'WA1',n, av_coords[0], av_coords[1], av_coords[2], 1., int(clust_occs[n-1]), 'O'))
-# calculating disorder of each cluster
+    for n in range(1, n_clusts+1):
+        # Calculate average coordinates
+        av_coords = np.zeros(3)
+        for i in clust_wat_ids[n]:
+            av_coords += coord_list[i]
+        av_coords /= len(clust_wat_ids[n])
+        centres[n] = av_coords.copy()
     clust_disorder = {}
     for n in range(1, n_clusts+1):
         # Calculate average coordinates
@@ -513,12 +516,12 @@ def write_pymol(filename, pos, neg, nets):
         	f.write("# Hide distance labels on correlation 'bonds'\ncmd.hide('labels','neg')\n")
 
 	f.write("# Draw networks\n")
-	colors = {1:'yellow', 2:'blue', 3:'orange',4:'purple',5:'cyan'}
+	colors = {1:'yellow', 2:'blue', 3:'orange',4:'purple',5:'cyan',6:'green',7:'green',8:'green',9:'green',10:'green'}
 	for i, net in enumerate(nets,1):
 		f.write("net"+str(i)+" = {}\n\n".format(net))
 		f.write("for pair in net"+str(i)+":\n")
 		f.write("    cmd.distance('net"+str(i)+"', 'clusts and i. {}'.format(pair[0]), 'clusts and i. {}'.format(pair[1]))\n")
-		f.write("    cmd.color('"+colors[i]+"','net"+str(i)+"')\n\n")
+		#f.write("    cmd.color('"+colors[i]+"','net"+str(i)+"')\n\n")
  	f.write("# Hide distance labels on network 'bonds'\ncmd.hide('labels','net*')\n")
 
     return None
@@ -646,9 +649,8 @@ if __name__ == "__main__":
         clust_wat_ids[clust].append(i)
 
     # Prints out the average of each cluster to PDB
-    clust_centres,clust_disorder = write_average_clusts("clusts.pdb".format(args.output), clust_wat_ids,
+    clust_centres,clust_disorder = calc_average_clusts(clust_wat_ids,
                                          n_clusts, n_frames, clust_occs)
-    quit()
     # Check which clusters are observed in each frame
     clust_frame_ids = {}  # Store frame IDs for each cluster
     frame_clust_ids = [[] for i in range(n_frames)]  # Stores clusters present in each frame
@@ -705,7 +707,6 @@ if __name__ == "__main__":
 	
     if args.ligand is not None:	
     	first_shell = first_solvation_shell(args.ligand, clust_centres, disorder_list)
-        first_shell = [i for i in first_shell if 40 <= clust_occs[i-1] ]
         print 'first solvation shell:',first_shell
     else:
 		first_shell = all_sites
@@ -717,7 +718,7 @@ if __name__ == "__main__":
         while len_at_start != len_at_end:
             len_at_start = len(subnet)
             for repeat in range(len(all_sites)): # need to loop through a few times
-                for j in all_sites:
+                for j in first_shell:
                      if j in subnet:
                       		continue
                      if any (mindistance-disorders[x-1][j-1] < d < maxdistance+disorders[x-1][j-1] for d in [distances[x-1][j-1] for x in subnet]):
@@ -739,50 +740,51 @@ if __name__ == "__main__":
     all_subnets = [list(row) for row in all_subnets]
     all_subnets.sort(key=len)
     
-    pairs = []
-    kill_list =[]
-    
-    for net1, net2 in itertools.combinations(all_subnets,2):
-        thesame = [x for x in net1 if x in net2]
-    	if len(thesame) == 0:
-    	    continue
-        difference = [x for x in net1 if x not in thesame]+[x for x in net2 if x not in thesame]
-        len_difference = len(difference)
-        for i,j in itertools.combinations(difference,2):
-            if sorted([i,j]) in equivalent_sites:
-                len_difference -= 2
-        if len_difference == 0:
-            if min(difference) in net1:
-                kill_list.append(all_subnets.index(net2))
-            else:
-                kill_list.append(all_subnets.index(net1))
-        important_diff = [x for x in difference if x not in low_occupancy or x in first_shell]
-        if len(important_diff) == 0:
-            pairs.append([all_subnets.index(net1), all_subnets.index(net2)])
-            kill_list.append(all_subnets.index(net1))
-            
-    kill_list = set(tuple(kill_list))
-    print 'started with:',len(all_subnets)
-    print 'removing:',len(set(tuple(kill_list)))
-    print 'ending with:', len(all_subnets) - len(set(tuple(kill_list)))
-    
-    results = []
-    for i, net in enumerate(all_subnets):
-        if i not in kill_list:
-            results.append(net)
-    print equivalent_sites
+#    pairs = []
+#    kill_list =[]
+#    
+#    for net1, net2 in itertools.combinations(all_subnets,2):
+#        thesame = [x for x in net1 if x in net2]
+#    	if len(thesame) == 0:
+#    	    continue
+#        difference = [x for x in net1 if x not in thesame]+[x for x in net2 if x not in thesame]
+#        len_difference = len(difference)
+#        for i,j in itertools.combinations(difference,2):
+#            if sorted([i,j]) in equivalent_sites:
+#                len_difference -= 2
+#        if len_difference == 0:
+#            if min(difference) in net1:
+#                kill_list.append(all_subnets.index(net2))
+#            else:
+#                kill_list.append(all_subnets.index(net1))
+#        important_diff = [x for x in difference if x not in low_occupancy or x in first_shell]
+#        if len(important_diff) == 0:
+#            pairs.append([all_subnets.index(net1), all_subnets.index(net2)])
+#            kill_list.append(all_subnets.index(net1))
+#            
+#    kill_list = set(tuple(kill_list))
+#    print 'started with:',len(all_subnets)
+#    print 'removing:',len(set(tuple(kill_list)))
+#    print 'ending with:', len(all_subnets) - len(set(tuple(kill_list)))
+#    
+#    results = []
+#    for i, net in enumerate(all_subnets):
+#        if i not in kill_list:
+#            results.append(net)
+#    print equivalent_sites
     all_pairs = []
-    for net in results:
+    for net in all_subnets:
 	pairs = []
 	for i,j in itertools.combinations(net,2):
 	    if 2.4-disorders[i-1][j-1] <= distances[i-1][j-1] <= 3.4+disorders[i-1][j-1]:
                 pairs.append([i,j])
 	all_pairs.append(pairs)
     
-    for i, net in enumerate(results,1):
+    for i, net in enumerate(all_subnets,1):
 		print 'Network ',i,': ', net
 	
     write_pymol("pymol-{}.py".format(args.output), positives, negatives,all_pairs)
+    write_average_clusts("clusts.pdb".format(args.output), first_shell,clust_centres, clust_occs)
     quit()
     print("{} network(s) built.".format(len(networks)))
 
