@@ -178,7 +178,8 @@ def get_distances(frame_wat_ids, coord_list):
                         break
             if same_frame:
                 dist_list.append(1E8)
-                dist_mat[i,j] = dist_mat[j,i] = 1E8
+                dist = np.linalg.norm(coord_list[i]-coord_list[j])
+                dist_mat[i,j] = dist_mat[j,i] = dist
             else:
                 dist = np.linalg.norm(coord_list[i]-coord_list[j])
                 dist_list.append(dist)
@@ -257,7 +258,13 @@ def calc_average_clusts(clust_wat_ids, n_clusts, n_frames, clust_occs):
         for i in clust_wat_ids[n]:
             av_coords += coord_list[i]
         av_coords /= len(clust_wat_ids[n])
-        centres[n] = av_coords.copy()
+        # Find real position closest to cluster centre
+        min_dist = 1E6
+        for i in clust_wat_ids[n]:
+            dist = np.linalg.norm(coord_list[i]-av_coords)
+            if dist < min_dist:
+                centres[n] = coord_list[i].copy()
+                min_dist = dist
     clust_disorder = {}
     for n in range(1, n_clusts+1):
         # Calculate average coordinates
@@ -334,7 +341,7 @@ def get_distance_matrix_hb(centres, coord_list):
     return distance_matrix, disorder_matrix, disorders
 
 
-def get_distance_matrix_framewise(frame_clust_ids, frame_wat_ids, clust_wat_ids, coord_list,centres):
+def get_distance_matrix_framewise(frame_clust_ids, frame_wat_ids, clust_wat_ids, orig_matrix, centres):
 
     """
     Function to calculate a 2D distance matrix between the observations contained in each cluster
@@ -348,7 +355,7 @@ def get_distance_matrix_framewise(frame_clust_ids, frame_wat_ids, clust_wat_ids,
     clust_wat_ids : dict
         List of the water IDs contained by each cluster
     coord_list : list
-        List of coordinates for each water observation
+        List of water oxygen coordinates
 
     Returns
     -------
@@ -360,8 +367,9 @@ def get_distance_matrix_framewise(frame_clust_ids, frame_wat_ids, clust_wat_ids,
     for i in range(n_clusts):
         for j in range(i+1, n_clusts):
             dists = []  # List of observed distances
+            '''
             # Find a list of frames containing both clusters
-            frames = [frame_clust_ids[n] for n, frame in enumerate(frame_clust_ids) if i in frame and j in frame]
+            frames = [frame_wat_ids[n] for n, frame_clusts in enumerate(frame_clust_ids) if (i+1) in frame_clusts and (j+1) in frame_clusts]
             # Get the distance between waters corresponding to these clusters in each frame
             for frame in frames:
                 for wat_i in frame:
@@ -370,9 +378,29 @@ def get_distance_matrix_framewise(frame_clust_ids, frame_wat_ids, clust_wat_ids,
                             dists.append(np.linalg.norm(coord_list[wat_i] - coord_list[wat_j]))
                         elif wat_j in clust_wat_ids[i+1] and wat_i in clust_wat_ids[j+1]:
                             dists.append(np.linalg.norm(coord_list[wat_i] - coord_list[wat_j]))
+            '''
+            for wat_i in clust_wat_ids[i+1]:
+                for frame in frame_wat_ids:
+                    if wat_i not in frame:
+                        continue
+                    for wat_j in clust_wat_ids[j+1]:
+                        if wat_j not in frame:
+                            continue
+                        dists.append(orig_matrix[wat_i, wat_j])
+                        break
+            '''
+            for wat_i in clust_wat_ids[i+1]:
+                for wat_j in clust_wat_ids[j+1]:
+                    for frame in frame_wat_ids:
+                        if wat_i not in frame or wat_j not in frame:
+                            continue
+                        dists.append(orig_matrix[wat_i, wat_j])
+                        break
+            '''
             # If clusters are never observed together, find the distance between the means 
             if len(dists) == 0:
-                matrix[i,j] = matrix[j,i] =  np.linalg.norm(centres[i+1] - centres[j+1])
+                #matrix[i,j] = matrix[j,i] =  np.linalg.norm(centres[i+1] - centres[j+1])
+                matrix[i,j] = matrix[j,i] =  -1
             else:
                 matrix[i,j] = matrix[j,i] = np.mean(dists)
     return matrix
@@ -662,11 +690,16 @@ if __name__ == "__main__":
                     clust_frame_ids[i].append(j)
                     frame_clust_ids[j].append(i)
 
+    clust_dist_time = time.time()
 # calculating the distances between clusters
 #    distances = get_distance_matrix(clust_centres) # distance between cluster means 
-    distances, disorders, disorder_list = get_distance_matrix_hb(clust_centres, coord_list) # distance between cluster means 
-#    distances = get_distance_matrix_framewise(frame_clust_ids, frame_wat_ids, clust_wat_ids, coord_list,clust_centres) # mean framewise distance between waters in cluster
+    #distances, disorders, disorder_list = get_distance_matrix_hb(clust_centres, coord_list) # distance between cluster means 
+    distances = get_distance_matrix_framewise(frame_clust_ids, frame_wat_ids, clust_wat_ids, dist_matrix, clust_centres) # mean framewise distance between waters in cluster
+    clust_dist_time = time.time() - clust_dist_time
 
+    #for i in range(n_clusts):
+    #    for j in range(i+1, n_clusts):
+    #        print('{}-{}  :  {:.2f}'.format(i, j, distances[i,j]))
 
     # Carry out the correlation analysis
     # We consider waters that are on less than 100% of the time, and more than the cutoff occupancy specified
@@ -691,6 +724,7 @@ if __name__ == "__main__":
     print("{} positive and {} negative correlations found".format(len(positives), len(negatives)))
     correl_time = time.time() - correl_time
     
+    network_time = time.time()
 
     equivalent_sites = []
     for i in range(n_clusts):
@@ -712,6 +746,9 @@ if __name__ == "__main__":
 		first_shell = all_sites
     for i in first_shell:
         subnet = [i] 
+        if clust_occs[i-1]/float(n_frames) < args.cutoff:
+            # ignore those with too low occupancy
+            continue
         tally = 0
         len_at_start = 0
         len_at_end = 100000
@@ -721,14 +758,22 @@ if __name__ == "__main__":
                 for j in first_shell:
                      if j in subnet:
                       		continue
-                     if any (mindistance-disorders[x-1][j-1] < d < maxdistance+disorders[x-1][j-1] for d in [distances[x-1][j-1] for x in subnet]):
-                     	if all (d > mindistance-disorders[x-1][j-1] for d in [distances[x-1][j-1] for x in subnet]): # this prevents short range clashes
+                     if clust_occs[j-1]/float(n_frames) < args.cutoff:
+                         # ignore those with too low occupancy
+                         continue
+                     #if any (mindistance-disorders[x-1][j-1] < d < maxdistance+disorders[x-1][j-1] for d in [distances[x-1][j-1] for x in subnet]):
+                     if any (mindistance < d < maxdistance for d in [distances[x-1][j-1] for x in subnet]):
+                     	#if all (d > mindistance-disorders[x-1][j-1] for d in [distances[x-1][j-1] for x in subnet]): # this prevents short range clashes
+                     	if all (d > mindistance for d in [distances[x-1][j-1] for x in subnet]): # this prevents short range clashes
                      		clash = False
                      		for x in subnet:
                      			pair = tuple(sorted([x,j]))
                      			if pair in phidict.keys():
                      				if phidict[pair] < -args.phi: #this prevents negative correlations
                      					clash = True 
+                     		# check if all clusters are in the same frame at least once - won't be necessary when not using phi
+                     		if not any((all(x in frame for x in subnet) and j in frame) for frame in frame_clust_ids):
+                     		        clash = True
                      		if clash == False:
                      			subnet.append(j)
             len_at_end = len(subnet)
@@ -772,6 +817,7 @@ if __name__ == "__main__":
 #        if i not in kill_list:
 #            results.append(net)
 #    print equivalent_sites
+    '''
     all_pairs = []
     for net in all_subnets:
 	pairs = []
@@ -779,14 +825,68 @@ if __name__ == "__main__":
 	    if 2.4-disorders[i-1][j-1] <= distances[i-1][j-1] <= 3.4+disorders[i-1][j-1]:
                 pairs.append([i,j])
 	all_pairs.append(pairs)
+    '''
+
+    networks = []
     
     for i, net in enumerate(all_subnets,1):
 		print 'Network ',i,': ', net
+		networks.append(net)
 	
-    write_pymol("pymol-{}.py".format(args.output), positives, negatives,all_pairs)
+    #write_pymol("pymol-{}.py".format(args.output), positives, negatives,all_pairs)
     write_average_clusts("clusts.pdb".format(args.output), first_shell,clust_centres, clust_occs)
-    quit()
+    #quit()
     print("{} network(s) built.".format(len(networks)))
+
+    print("\nNetwork occupancies:")
+    net_occs = []
+    for i in range(len(networks)):
+        network_occ = 0
+        for frame in frame_clust_ids:
+            if all(wat in frame for wat in networks[i]):
+                network_occ += 1
+        net_occs.append(network_occ)
+        print("\tNetwork {} : {:3d}/{:3d} frames".format(i+1, network_occ, n_frames))
+
+    print("\nNetwork similarities:")
+    net_similarity = np.zeros((len(networks), len(networks)))
+    for i in range(len(networks)):
+        for j in range(i+1, len(networks)):
+            c = float(len([wat for wat in networks[i] if wat in networks[j]]))
+            S = c / (len(networks[i]) + len(networks[j]) - c)
+            net_similarity[i,j] = net_similarity[j,i] = S
+            print("\t{:2d} & {:2d} : S = {:.3f}".format(i+1, j+1, np.round(S, 3)))
+
+    # Filter networks
+    max_similarity = 1.0
+    remove_networks = []
+    network_comparisons = []
+    while True:
+        max_similarity = -1
+        for i in range(len(networks)):
+            if i in remove_networks:
+                continue
+            for j in range(i+1, len(networks)):
+                if j in remove_networks:
+                    continue
+                if [i, j] in network_comparisons or [j, i] in network_comparisons:
+                    continue
+                if net_similarity[i,j] > max_similarity:
+                    max_similarity = net_similarity[i,j]
+                    max_i, max_j = i, j
+        if max_similarity < 0.5:
+            break
+        if net_occs[max_i] > net_occs[max_j]:
+            remove_networks.append(max_j)
+        elif net_occs[max_j] > net_occs[max_i]:
+            remove_networks.append(max_i)
+        elif len(networks[max_i]) > len(networks[max_j]):
+            remove_networks.append(max_j)
+        elif len(networks[max_j]) > len(networks[max_i]):
+            remove_networks.append(max_i)
+        network_comparisons.append([max_i, max_j])
+
+    print('\nFiltered networks: {}'.format([x+1 for x in range(len(networks)) if x not in remove_networks]))
 
     # Generate a representative frame for each network
     print("\nFinding representative frames...")
@@ -797,13 +897,27 @@ if __name__ == "__main__":
     # Write out representative frames to PDB files..
     writing_time = time.time()
     print("\nWriting PDB output...")
-    for i, j in enumerate(network_rep_frames):
-        # Write out water only for rep. frames
-        pdbfiles.pdbs[j].write("{}-{:02d}-wat.pdb".format(args.output, i+1))
+    for net_id, frame in enumerate(network_rep_frames):
+        # Get the representative waters for this frame
+        net_wats = []
+        for clust_id in networks[net_id]:
+            for wat_id in clust_wat_ids[clust_id]:
+                if wat_id in frame_wat_ids[frame]:
+                    net_wats.append(wat_id)
+        # Write out waters only for rep. frame
+        #pdbfiles.pdbs[j].write("{}-{:02d}-wat.pdb".format(args.output, i+1))
+        with open("{}-{:02d}-wat.pdb".format(args.output, net_id+1), 'w') as f:
+            for n, wat_id in zip(networks[net_id], net_wats):
+                for i, atom in enumerate(wat_list[wat_id].atoms):
+                    atom_id = (n - 1) * len(wat_list[wat_id].atoms) + i + 1
+                    f.write('ATOM  {0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.2f}\n'.format(atom_id, atom.name, 'WA1', n, atom.coords[0], atom.coords[1], atom.coords[2], clust_occs[n-1]/float(n_frames), clust_occs[n-1]))
+                f.write('TER\n')
+            f.write('END')
+
         # Read in whole system - only want to read a single frame to save time & memory
         pdbfiles2 = simulationobjects.PDBSet()
-        pdbfiles2.read(args.input, skip=args.skip+j, readmax=1)
-        pdbfiles2.pdbs[0].write("{}-{:02d}-all.pdb".format(args.output, i+1))
+        pdbfiles2.read(args.input, skip=args.skip+frame, readmax=1)
+        pdbfiles2.pdbs[0].write("{}-{:02d}-all.pdb".format(args.output, net_id+1))
     writing_time = time.time() - writing_time
 
     # Print out timings of analysis - for testing and reference
@@ -811,6 +925,8 @@ if __name__ == "__main__":
     print("\tReading data:          {:7.1f} seconds".format(np.round(reading_time, 1)))
     print("\tDistance calculations: {:7.1f} seconds".format(np.round(dist_time, 1)))
     print("\tClustering:            {:7.1f} seconds".format(np.round(cluster_time, 1)))
+    print("\tCluster distances:     {:7.1f} seconds".format(np.round(clust_dist_time, 1)))
     print("\tCorrelation analysis:  {:7.1f} seconds".format(np.round(correl_time, 1)))
     print("\tNetwork construction:  {:7.1f} seconds".format(np.round(network_time, 1)))
     print("\tWriting data:          {:7.1f} seconds\n".format(np.round(writing_time, 1)))
+
