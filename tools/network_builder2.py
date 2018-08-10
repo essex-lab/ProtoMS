@@ -16,30 +16,6 @@ from scipy.cluster import hierarchy
 import simulationobjects
 
 
-def first_solvation_shell(ligand, clust_centers, clust_disorders):
-
-	lig_heavy = []
-
-	with open(ligand, 'r') as f:
-		for line in f:
-			if line.split()[0] == 'HETATM':
-				if line.split()[2][0] != 'H':
-				    lig_heavy.append([float(line[27:38]),float(line[39:47]),float(line[47:55])])
-	lig_heavy = np.asarray(lig_heavy)
-	first_shell_results = []
-
-	for i in range(1, len(clust_centers)+1):
-		first_shell = False
-		for atom in lig_heavy:
-			distance = np.linalg.norm(clust_centers[i] - atom)
-			cutoff = 3.4+clust_disorders[i-1]
-			if distance <= cutoff :
-				first_shell = True
-		first_shell_results. append(first_shell)
-	in_first_shell = [x for x,res in enumerate(first_shell_results,1) if res == True]
-	return in_first_shell
-
-
 def get_args():
     """
     Parse command line arguments
@@ -139,14 +115,27 @@ def sort_clusters(clust_ids):
     clust_ids_sorted = np.asarray([old_order.index(x)+1 for x in clust_ids])
     return clust_ids_sorted, clust_occs
 
-def write_average_clusts(filename, first_shell, centers, clust_occs):
+def write_average_clusts(filename, clust_ids, centres, clust_occs):
+    """
+    Write the centres of a set of clusters to a PDB file
+    
+    Parameters
+    ----------
+    filename : str
+        Name of the output PDB file
+    clust_ids : list
+        List of cluster IDs to write the coordinates for. Counts from 1
+    centres : dict
+        Dictionary containing the coordinates for the centre of each cluster
+    clust_occs : list
+        List containing the number of frames each cluster is present in
+    """
     with open(filename, 'w') as f:
         f.write("REMARK Average cluster locations written by network_builder.py\n")
-        for n in first_shell:
+        for n in clust_ids:
             # Write to file
-            f.write('HETATM{0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.1f}         {9:>2}  \n'.format(n, 'O00', 'WA1',n, centers[n][0], centers[n][1], centers[n][2], 1., int(clust_occs[n-1]), 'O'))
-
-    return
+            f.write('HETATM{0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.1f}         {9:>2}  \n'.format(n, 'O00', 'WA1',n, centres[n][0], centres[n][1], centres[n][2], 1., int(clust_occs[n-1]), 'O'))
+    return None
 
 def calc_average_clusts(clust_wat_ids, n_clusts, n_frames, clust_occs):
     """
@@ -247,7 +236,98 @@ def get_cluster_distances(frame_clust_ids, frame_wat_ids, clust_wat_ids, orig_ma
     return matrix
 
 
+def get_cluster_disorders(centres, coord_list, clust_wat_ids):
+
+    """
+    Function to calculate the disorder associated with the position of each cluster
+
+    Parameters
+    ----------
+    centres : dict
+        Dictionary with keys corresponding to cluster IDs and items corresponding
+        to NumPy arrays of cluster centre coordinates
+    coord_list : list
+        List of coordinates of all water observations
+    clust_wat_ids : list
+        List of water IDs contained by each cluster
+
+    Returns
+    -------
+    disorders : list
+        List of disorders associated with each cluster
+    """
+    n_clusts = len(centres)
+    distance_matrix = np.zeros((n_clusts, n_clusts))
+    disorder_matrix = np.zeros((n_clusts, n_clusts))
+
+    disorders = []
+    for n in range(1, n_clusts+1):
+        # Calculate average coordinates
+        dists = []
+        for i in clust_wat_ids[n]:
+            dists.append(np.linalg.norm(coord_list[i] - centres[n]))
+        disorders.append(np.std(np.array(dists)))
+
+    return disorders
+
+
+def first_solvation_shell(ligand, clust_centers, clust_disorders):
+    """
+    Calculate which waters are present in the first solvation shell around the ligand
+    
+    Parameters
+    ----------
+    ligand : str
+        Filename of the ligand PDB file
+    clust_centres : dict
+        Dictionary containing the centre coordinates of each cluster
+    clust_disorders : list
+        Disorder associated with each cluster's position
+    
+    Returns
+    -------
+    in_first_shell : list
+        List of the cluster IDs which are in the first shell
+    """
+    lig_heavy = []
+    with open(ligand, 'r') as f:
+        for line in f.readlines():
+            if line.startswith('HETATM') or line.startswith('ATOM'):
+                if line.split()[2][0] != 'H':
+                    lig_heavy.append([float(line[27:38]),float(line[39:47]),float(line[47:55])])
+    lig_heavy = np.asarray(lig_heavy)
+    first_shell_results = []
+    for i in range(1, len(clust_centers)+1):
+        first_shell = False
+        for atom in lig_heavy:
+            distance = np.linalg.norm(clust_centers[i] - atom)
+            cutoff = 3.4 + clust_disorders[i-1]
+            if distance <= cutoff :
+                first_shell = True
+        first_shell_results. append(first_shell)
+    in_first_shell = [x for x,res in enumerate(first_shell_results,1) if res == True]
+    return in_first_shell
+
+
 def calc_correlation(a, b, frame_clust_ids):
+    """
+    Calculate the correlation between two water sites.
+    Based on the difference between the percentageof time that they are
+    observed together, and that which would be expected at random
+    
+    Parameters
+    ----------
+    a, b : int
+        IDs of the two clusters
+    frame_clust_ids : list
+        List describing which clusters are observed in each frame
+    
+    Returns
+    -------
+    correlation : float
+        Correlation score (between 0 and 1)
+    """
+    # Count the number of frames containing each water (and both)
     a_on = 0.0
     b_on = 0.0
     both = 0.0
@@ -260,15 +340,30 @@ def calc_correlation(a, b, frame_clust_ids):
             b_on += 1
         if a in frame and b in frame:
             both += 1
+    # Convert counts to occupancies
     a_on /= n_frames
     b_on /= n_frames
     both /= n_frames
+    # Compare observed occupancy to the expected random
     random = a_on * b_on 
     correlation = both - random
     return correlation
 
 
 def tanimoto(list_a, list_b):
+    """
+    Calculate the Tanimoto similarity between two water networks
+    
+    Parameters
+    ----------
+    list_a, list_b : list
+        Lists of the clusters present in networks A & B
+    
+    Returns
+    -------
+    S : float
+        Calculated Tanimoto similarity
+    """
     a = float(len(list_a))
     b = float(len(list_b))
     c = float(len([x for x in list_a if x in list_b]))
@@ -503,11 +598,11 @@ if __name__ == "__main__":
 	if 2.4 <= distances[x-1][y-1] <= 3.4:
             correl = calc_correlation(x, y, frame_clust_ids)
             if correl > args.correlation:
-                print("\tPositive correlation between clusters {:2d} and {:2d} ({:+6.2f})".format(x, y, np.round(100*correl, 2)))
+                print("\tPositive correlation between clusters {:2d} and {:2d} ({:+6.2f} %)".format(x, y, np.round(100*correl, 2)))
                 positives.append([x, y])
     		correl_dict[(x,y)] = correl
             elif correl < -args.correlation:
-                print("\tNegative correlation between clusters {:2d} and {:2d} ({:+6.2f})".format(x, y, np.round(100*correl, 2)))
+                print("\tNegative correlation between clusters {:2d} and {:2d} ({:+6.2f} %)".format(x, y, np.round(100*correl, 2)))
                 negatives.append([x, y])
     		correl_dict[(x,y)] = correl
     print("{} positive and {} negative correlations found".format(len(positives), len(negatives)))
@@ -520,7 +615,8 @@ if __name__ == "__main__":
     # Start building networks    
     network_time = time.time()
     # Separate sites into first shell, if requested
-    if args.ligand is not None:	
+    if args.ligand is not None:
+        disorder_list = get_cluster_disorders(centres, coord_list, clust_wat_ids)	
         net_sites = first_solvation_shell(args.ligand, clust_centres, disorder_list)
         if len(net_sites) == 0:
             raise RuntimeError("No waters are in the first solvation shell")
@@ -618,17 +714,18 @@ if __name__ == "__main__":
         # If they cannot be distinguished, then remove neither & note the comparison
         network_comparisons.append([max_i, max_j])
     filtered_networks = [networks[i] for i in range(len(networks)) if i not in remove_networks]
-    print("Filtered to {} networks".format(len(filtered_networks)))
+    print("Filtered to {} network(s)".format(len(filtered_networks)))
 
     # Print out similarities of networks
-    print("\nNetwork similarities:")
-    for i in range(len(filtered_networks)):
-        for j in range(i+1, len(filtered_networks)):
-            S = tanimoto(filtered_networks[i], filtered_networks[j])
-            print("\t{:2d} & {:2d} : S = {:.3f}".format(i+1, j+1, np.round(S, 3)))
+    if len(filtered_networks) > 1:
+        print("\nNetwork similarities:")
+        for i in range(len(filtered_networks)):
+            for j in range(i+1, len(filtered_networks)):
+                S = tanimoto(filtered_networks[i], filtered_networks[j])
+                print("\t{:2d} & {:2d} : S = {:.3f}".format(i+1, j+1, np.round(S, 3)))
 
     # Generate a representative frame for each network
-    print("\nFinding representative frames...")
+    print("\nFinding representative frame(s)...")
     network_rep_frames = get_rep_frames(filtered_networks, frame_clust_ids, frame_wat_ids,
                                         clust_wat_ids, clust_centres)
     network_time = time.time() - network_time
@@ -647,8 +744,8 @@ if __name__ == "__main__":
 	all_pairs.append(pairs)
 
     # Write clusters to PDB file and also a PyMOL script for visualisation
-    write_average_clusts("clusts.pdb".format(args.output), net_sites, clust_centres, clust_occs)
-    write_pymol("pymol-{}.py".format(args.output), positives, negatives,all_pairs)
+    write_average_clusts("clusts.pdb", net_sites, clust_centres, clust_occs)
+    write_pymol("pymol-network.py", positives, negatives,all_pairs)
 
     # Write out representative frames to PDB files..
     writing_time = time.time()
@@ -661,17 +758,18 @@ if __name__ == "__main__":
                 if wat_id in frame_wat_ids[frame]:
                     net_wats.append(wat_id)
         # Write out waters only for rep. frame
-        with open("{}-{:02d}-wat.pdb".format(args.output, net_id+1), 'w') as f:
+        with open("network-{:02d}-wat.pdb".format(net_id+1), 'w') as f:
+            f.write('HEADER Network {}'.format(net_id+1))
             for n, wat_id in zip(filtered_networks[net_id], net_wats):
                 for i, atom in enumerate(wat_list[wat_id].atoms):
                     atom_id = (n - 1) * len(wat_list[wat_id].atoms) + i + 1
                     f.write('ATOM  {0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.2f}\n'.format(atom_id, atom.name, 'WA1', n, atom.coords[0], atom.coords[1], atom.coords[2], clust_occs[n-1]/float(n_frames), clust_occs[n-1]))
                 f.write('TER\n')
-            f.write('END')
+            f.write('END\n')
         # Read in whole system - only want to read a single frame to save time & memory
         pdbfiles2 = simulationobjects.PDBSet()
         pdbfiles2.read(args.input, skip=args.skip+frame, readmax=1)
-        pdbfiles2.pdbs[0].write("{}-{:02d}-all.pdb".format(args.output, net_id+1))
+        pdbfiles2.pdbs[0].write("network-{:02d}-all.pdb".format(net_id+1))
     writing_time = time.time() - writing_time
 
     # Print out timings of analysis - for testing and reference
