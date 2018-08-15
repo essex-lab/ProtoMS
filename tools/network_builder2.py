@@ -759,7 +759,7 @@ if __name__ == "__main__":
                     net_wats.append(wat_id)
         # Write out waters only for rep. frame
         with open("network-{:02d}-wat.pdb".format(net_id+1), 'w') as f:
-            f.write('HEADER Network {}'.format(net_id+1))
+            f.write('HEADER Network {}\n'.format(net_id+1))
             for n, wat_id in zip(filtered_networks[net_id], net_wats):
                 for i, atom in enumerate(wat_list[wat_id].atoms):
                     atom_id = (n - 1) * len(wat_list[wat_id].atoms) + i + 1
