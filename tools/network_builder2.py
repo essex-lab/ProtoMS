@@ -33,7 +33,7 @@ def get_args():
                         help='Distance cutoff for clustering. Default=3.0 Angs')
     parser.add_argument('--linkage', default='average',
                         help='Linkage method for hierarchical clustering')
-    parser.add_argument('-o', '--occupancy', type=float, default=0.0,
+    parser.add_argument('-o', '--occupancy', type=float, default=0.5,
                         help='Occupancy cutoffs for waters to be considered. Between 0 and 1.')
     parser.add_argument('-c', '--correlation', type=float, default=0.1,
                         help='Percentage correlation (greater than random) deemed significant. Between 0 and 1.')
@@ -41,6 +41,8 @@ def get_args():
                         help='Input PDB file of the ligand. Needed for the first solvation shell')
     parser.add_argument('--firstshell', action='store_true', default=False,
                         help='Only perform network analysis on first solvation shell')
+    parser.add_argument('--subnetworks', action='store_true', default=False,
+                        help='Ensure that all (sub)networks are connected by hydrogen bonds')
     args = parser.parse_args()
     return args
 
@@ -640,7 +642,8 @@ if __name__ == "__main__":
                 if j in sub_net or args.occupancy * n_frames > clust_occs[j-1]:
                     continue
                 # Make sure that water j is H-bonding to at least one water in the network
-                if not any(2.4 <= d <= 3.4 for d in [distances[x-1, j-1] for x in sub_net]):
+                # Only do this if focussing on subnetworks
+                if args.subnetworks and not any(2.4 <= d <= 3.4 for d in [distances[x-1, j-1] for x in sub_net]):
                     continue
                 # Make sure that j does not clash with any waters in the network
                 if any(d < 2.4 for d in [distances[x-1, j-1] for x in sub_net]):
