@@ -1,0 +1,36 @@
+mode bond
+# U(r) = k(r-r0)**2
+#parameter k(kcal mol-1 A-2) r0(A) comment
+
+#atm atm1 atm2 parameter
+
+mode angle
+# U(theta) = k(theta-theta0)**2
+#parameter k(kcal mol-1 deg-2) theta0(deg) comment
+
+#atm atm1 atm2 parameter
+
+mode dihedral
+# U(phi) = k1*( 1.0 + k2*(cos[k3*phi + k4]) )
+#term k1(kcal mol-1) k2 k3 k4(deg) #comment
+
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1)
+par 8003  OW  8  0.000  3.15363  0.1550
+par 8004  HW  1  0.520  0.0      0.0
+par 8005  ??  0 -1.040  0.0      0.0
+
+mode template
+solute WA1
+info translate 0.15 rotate 15
+atom   O00 WA1 8003  8003   DM3 DUM  DM2 DUM  DM1 DUM
+atom   H01 WA1 8004  8004   O00 WA1  DM3 DUM  DM2 DUM   
+atom   H02 WA1 8004  8004   O00 WA1  H01 WA1  DM3 DUM    
+atom   M03 WA1 8005  8005   O00 WA1  H01 WA1  H02 WA1
+bond   H01 WA1 O00 WA1 param 0 0
+bond   H02 WA1 O00 WA1 param 0 0
+bond   M03 WA1 O00 WA1 param 0 0
+angle H01 WA1 O00 WA1 M03 WA1 param 0 0
+angle H02 WA1 O00 WA1 M03 WA1 param 0 0
+angle H01 WA1 O00 WA1 H02 WA1 param 0 0
+

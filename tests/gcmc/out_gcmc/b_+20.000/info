@@ -1,0 +1,130 @@
+protoms3 started at 10:58:13 on the 14/ 2/2017
+Using whatever boundary conditions the solvent desires
+Non-bonded cutoff =      10.0000 angstroms.
+Non-bonded cutoff feathered over the last =       0.5000 angstroms.
+Using protein-residue/solute-molecule/solvent-molecule cut-off
+######################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB.ff
+######################################################################
+##############################################################
+Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
+##############################################################
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
+Loaded    0 templates,    0 override templates,  797 clj parameters
+and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+#####################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/solvents.ff
+#####################################################################
+Found solvent template with TIP3p optimization
+Found solvent template with TIP4p optimization
+Found solvent template with TIP3p optimization
+Found solvent template with TIP3p optimization
+Loaded   16 templates,    0 override templates,   23 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+###############################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/amber14SB-residues.ff
+###############################################################################
+Loaded  102 templates,    0 override templates,    0 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+###################################################################
+Reading parameter file /home/chris/protoms-dev//parameter/gaff14.ff
+###################################################################
+##############################################################
+Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
+##############################################################
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
+Loaded    0 templates,    0 override templates,    1 clj parameters
+and 1582/8142/4050/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+###################################################################
+Reading parameter file /home/chris/protoms-dev//data/gcmc_tip4p.tem
+###################################################################
+Loaded    1 templates,    0 override templates,    3 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+Opening protein file protein.pdb
+Successfully loaded protein protein.pdb, that contains   58 residues
+Using concentration correction
+Opening GC-solute file gcmc_wat.pdb
+Have now loaded        1 GCsolute molecules (       1 from this file)
+Opening solvent file water.pdb
+Have now loaded     2126 solvent molecules (    2126 from this file)
+Spherical cap boundaries have been turned on in agreement with the solvent file
+Simulation consists of    1 protein chains,    0 solute molecules and     2126 solvent molecules
+Fitting amino acids to a template...
+Getting the non-bonded list for protein    1
+Finished getting non-bonded list for protein    1
+#############################################
+Protein  1 has a total charge of      6.00000
+#############################################
+Protein contains      902 atoms,      913 bonds,     1630 angles,     2368 dihedrals and        0 Urey Bradley terms.
+#####################################
+Using solvent cap boundary conditions
+#####################################
+Solvent cap origin = (  27.940,   9.297,   0.550)
+Solvent cap radius =   26.000 A, constant =    1.500 kcal mol-1 A-2
+Calculating solvent axes...
+All axes successfully generated!
+Simulation temperature =      25.0000 C, (    298.1500 K)
+Simulation B value / Adams parameter =      20.0000 AU
+Grid size in X dimension      5.3000
+Grid size in Y dimension      4.7310
+Grid size in Z dimension      4.6450
+Grid origin in X dimension     30.0240
+Grid origin in Y dimension      1.9520
+Grid origin in Z dimension      8.0330
+Running a GCMC sim      0.0000
+#########################
+Running an NVT simulation
+#########################
+Not performing preferential sampling
+Got initial random number seed       100002
+###########################################
+Sanitised random number seed =       100001
+###########################################
+Starting simulation at 10:58:13 on the 14/ 2/2017
+##########################################
+Performing simulation at lambda =    0.000
+##########################################
+There are  191 CLJ parameter types used in this simulation.
+Pre-calculating all the charge and LJ pairs...
+Running chunk    1
+Move probabilies: Protein =        0 Solute =        0 Solvent =        0 Insertion =      333
+                  Titrate =        0 Theta  =        0 Volume  =        0 Deletion  =      333
+                  Rotamer =        0 Sample =        0 GCsolute =      333 SolTheta =        0
+#############################################
+Requested            0 steps of equilibration
+#############################################
+Running chunk    2
+Move probabilies: Protein =       60 Solute =        0 Solvent =      440 Insertion =      167
+                  Titrate =        0 Theta  =        0 Volume  =        0 Deletion  =      167
+                  Rotamer =        0 Sample =        0 GCsolute =      167 SolTheta =        0
+#############################################
+Requested            0 steps of equilibration
+#############################################
+Running chunk    3
+Move probabilies: Protein =       60 Solute =        0 Solvent =      440 Insertion =      167
+                  Titrate =        0 Theta  =        0 Volume  =        0 Deletion  =      167
+                  Rotamer =        0 Sample =        0 GCsolute =      167 SolTheta =        0
+##########################################
+Requested         1000 steps of simulation
+##########################################
+Calculating the initial total energy from scratch...
+Total Energy =     128574.1585 (    128574.1585 |     128574.1585)
+##########################
+Printing PDB of the system
+##########################
+Redirecting PDB to all.pdb
+####################
+Writing restart file
+####################
+Resetting free energy average to zero.
+Data collection complete. Attempted/accepted moves         1000         337
+Attempted/successful GCMC swaps for ID   0 :      4     3 (  75.000%)
+Simulation shutting down...
+protoms3 completed at 10:58:15 on the 14/ 2/2017

@@ -1,0 +1,8 @@
+source leaprc.ff14SB
+
+x = loadPdb protein.pdb
+
+saveamberparm x prmtop prmcrd
+savepdb x leap_out.pdb
+
+quit

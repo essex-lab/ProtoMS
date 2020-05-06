@@ -1,0 +1,21 @@
+ Attempted            1  volume moves. Accepted            1  (   100.00000000000000      %)
+#######################################
+Attempt/accept/% moves for solute 1 eth
+#######################################
+Residue    1 ETH         1/       1( 100.000%)
+Total        1/       1( 100.000%)
+#######################################
+Attempt/accept/% moves for solute 2 meo
+#######################################
+Residue    1 MEO         1/       2(  50.000%)
+Total        1/       2(  50.000%)
+######################################
+Attempt/accept/% moves for the solvent
+######################################
+Solvent   116 T4P         0/       1(   0.000%)
+Solvent   176 T4P         0/       1(   0.000%)
+Solvent   198 T4P         0/       1(   0.000%)
+Solvent   252 T4P         1/       1( 100.000%)
+Solvent   272 T4P         1/       1( 100.000%)
+Solvent   289 T4P         1/       1( 100.000%)
+Total        3/       6(  50.000%)

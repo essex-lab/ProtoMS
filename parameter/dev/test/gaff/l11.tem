@@ -1,0 +1,97 @@
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1) 
+par 3000    ca    06    0.02110    3.39967    0.08600
+par 3001    ca    06    0.09810    3.39967    0.08600
+par 3002    ca    06    0.09310    3.39967    0.08600
+par 3003    ca    06    -0.06700    3.39967    0.08600
+par 3004    ca    06    -0.19160    3.39967    0.08600
+par 3005    ca    06    0.04940    3.39967    0.08600
+par 3006    cl    17    -0.06740    3.47095    0.26500
+par 3007    os    08    -0.34090    3.00002    0.17000
+par 3008    c3    06    0.10770    3.39967    0.10940
+par 3009    h1    01    0.04870    2.47136    0.01570
+par 3010    os    08    -0.31990    3.00002    0.17000
+par 3011    c3    06    0.11970    3.39967    0.10940
+par 3012    h1    01    0.05103    2.47136    0.01570
+par 3013    oh    08    -0.49410    3.06648    0.21040
+par 3014    ho    01    0.44100    0.00000    0.00000
+par 3015    c    06    0.57750    3.39967    0.08600
+par 3016    h4    01    0.01620    2.51056    0.01500
+par 3017    o    08    -0.52210    2.95993    0.21000
+par 3018    ha    01    0.18100    2.59965    0.01500
+par 3019    h1    01    0.04870    2.47136    0.01570
+par 3020    h1    01    0.04870    2.47136    0.01570
+par 3021    h1    01    0.05103    2.47136    0.01570
+par 3022    h1    01    0.05103    2.47136    0.01570
+mode template
+solute L11
+info translate 0.250 rotate 5.000
+atom   C6 L11 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
+atom   C7 L11 3001 3001   C6 L11  DM3 DUM  DM2 DUM
+atom   C2 L11 3002 3002   C7 L11   C6 L11  DM3 DUM
+atom   C3 L11 3003 3003   C2 L11   C7 L11   C6 L11
+atom   C4 L11 3004 3004   C3 L11   C2 L11   C7 L11
+atom   C5 L11 3005 3005   C4 L11   C3 L11   C2 L11
+atom  Cl1 L11 3006 3006   C5 L11   C6 L11   C4 L11
+atom   O3 L11 3007 3007   C6 L11   C7 L11   C5 L11
+atom   C8 L11 3008 3008   O3 L11   C6 L11   C7 L11
+atom   H8 L11 3009 3009   C8 L11   O3 L11   C6 L11
+atom   O1 L11 3010 3010   C2 L11   C7 L11   C3 L11
+atom   C1 L11 3011 3011   O1 L11   C2 L11   C7 L11
+atom   H4 L11 3012 3012   C1 L11   O1 L11   C2 L11
+atom   O2 L11 3013 3013   C7 L11   C2 L11   C6 L11
+atom   H1 L11 3014 3014   O2 L11   C7 L11   C2 L11
+atom   C9 L11 3015 3015   C4 L11   C5 L11   C3 L11
+atom   H9 L11 3016 3016   C9 L11   C4 L11   C5 L11
+atom   O4 L11 3017 3017   C9 L11   C4 L11   H9 L11
+atom   H5 L11 3018 3018   C3 L11   C2 L11   C4 L11
+atom   H7 L11 3019 3019   C8 L11   O3 L11   H8 L11
+atom   H6 L11 3020 3020   C8 L11   O3 L11   H8 L11
+atom   H3 L11 3021 3021   C1 L11   O1 L11   H4 L11
+atom   H2 L11 3022 3022   C1 L11   O1 L11   H4 L11
+bond   C7 L11   C6 L11
+bond   C2 L11   C7 L11
+bond   C3 L11   C2 L11
+bond   C4 L11   C3 L11
+bond   C5 L11   C4 L11
+bond  Cl1 L11   C5 L11
+bond   O3 L11   C6 L11
+bond   C8 L11   O3 L11
+bond   H8 L11   C8 L11
+bond   O1 L11   C2 L11
+bond   C1 L11   O1 L11
+bond   H4 L11   C1 L11
+bond   O2 L11   C7 L11
+bond   H1 L11   O2 L11
+bond   C9 L11   C4 L11
+bond   H9 L11   C9 L11
+bond   O4 L11   C9 L11
+bond   H5 L11   C3 L11
+bond   H7 L11   C8 L11
+bond   H6 L11   C8 L11
+bond   H3 L11   C1 L11
+bond   H2 L11   C1 L11
+bond   C6 L11   C5 L11
+angle  Cl1 L11   C5 L11   C6 L11 flex 0.170
+angle   O3 L11   C6 L11   C7 L11 flex 0.155
+angle   C8 L11   O3 L11   C6 L11 flex 0.164
+angle   H8 L11   C8 L11   O3 L11 flex 0.182
+angle   O1 L11   C2 L11   C7 L11 flex 0.155
+angle   C1 L11   O1 L11   C2 L11 flex 0.164
+angle   H4 L11   C1 L11   O1 L11 flex 0.182
+angle   O2 L11   C7 L11   C2 L11 flex 0.155
+angle   H1 L11   O2 L11   C7 L11 flex 0.185
+angle   C9 L11   C4 L11   C5 L11 flex 0.162
+angle   H9 L11   C9 L11   C4 L11 flex 0.190
+angle   O4 L11   C9 L11   C4 L11 flex 0.156
+angle   H5 L11   C3 L11   C2 L11 flex 0.187
+angle   H7 L11   C8 L11   O3 L11 flex 0.182
+angle   H6 L11   C8 L11   O3 L11 flex 0.182
+angle   H3 L11   C1 L11   O1 L11 flex 0.182
+angle   H2 L11   C1 L11   O1 L11 flex 0.182
+dihedral   C8 L11   O3 L11   C6 L11   C7 L11 flex 3.217
+dihedral   H8 L11   C8 L11   O3 L11   C6 L11 flex 5.478
+dihedral   C1 L11   O1 L11   C2 L11   C7 L11 flex 3.217
+dihedral   H4 L11   C1 L11   O1 L11   C2 L11 flex 5.130
+dihedral   H1 L11   O2 L11   C7 L11   C2 L11 flex 3.739
+dihedral   H9 L11   C9 L11   C4 L11   C5 L11 flex 4.087

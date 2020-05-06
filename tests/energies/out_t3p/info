@@ -1,0 +1,81 @@
+protoms3 started at 17:20:52 on the 16/12/2015
+Using whatever boundary conditions the solvent desires
+Non-bonded cutoff =      10.0000 angstroms.
+Non-bonded cutoff feathered over the last =       0.5000 angstroms.
+Using protein-residue/solute-molecule/solvent-molecule cut-off
+################################################################################
+Reading parameter file /home/cica1v07/scratch/protoms-dev/parameter/amber14SB.ff
+################################################################################
+##############################################################
+Switching to arithmetic (Lorentz-Berthelot) LJ combining rules
+##############################################################
+Using a 1-4 coulomb scaling factor of   0.8333
+Using a 1-4 LJ scaling factor of   0.5000
+Loaded    0 templates,    0 override templates,  797 clj parameters
+and  354/ 986/1884/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+###############################################################################
+Reading parameter file /home/cica1v07/scratch/protoms-dev/parameter/solvents.ff
+###############################################################################
+Found solvent template with TIP3p optimization
+Found solvent template with TIP4p optimization
+Found solvent template with TIP3p optimization
+Found solvent template with TIP3p optimization
+Loaded   16 templates,    0 override templates,   23 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+#########################################################################################
+Reading parameter file /home/cica1v07/scratch/protoms-dev/parameter/amber14SB-residues.ff
+#########################################################################################
+Loaded  102 templates,    0 override templates,    0 clj parameters
+and    0/   0/   0/   0 bond/angle/dihedral/urey-bradley parameters.
+and    0/   0 surface/born parameters.
+Opening protein file protein_scoop.pdb
+Loading protein scoop
+Successfully loaded protein scoop, that contains  116 residues
+Using concentration correction
+Opening solvent file t3p.pdb
+Have now loaded        3 solvent molecules (       3 from this file)
+Spherical cap boundaries have been turned on in agreement with the solvent file
+Simulation consists of    1 protein chains,    0 solute molecules and        3 solvent molecules
+Fitting amino acids to a template...
+Getting the non-bonded list for protein    1
+Finished getting non-bonded list for protein    1
+#############################################
+Protein  1 has a total charge of      4.00000
+#############################################
+Protein contains     1889 atoms,     1906 bonds,     3387 angles,     4866 dihedrals and        0 Urey Bradley terms.
+#####################################
+Using solvent cap boundary conditions
+#####################################
+Solvent cap origin = (  32.714,   8.331,   4.500)
+Solvent cap radius =   30.000 A, constant =    1.500 kcal mol-1 A-2
+Calculating solvent axes...
+All axes successfully generated!
+Simulation temperature =      25.0000 C, (    298.1500 K)
+#########################
+Running an NVT simulation
+#########################
+Not performing preferential sampling
+Got initial random number seed       100000
+###########################################
+Sanitised random number seed =       209999
+###########################################
+Starting simulation at 17:20:52 on the 16/12/2015
+##########################################
+Performing simulation at lambda =    0.000
+##########################################
+There are  188 CLJ parameter types used in this simulation.
+Pre-calculating all the charge and LJ pairs...
+Fixing backbone of protein        1 residues:        1 to        2
+Fixing backbone of protein        1 residues:        4 to        5
+Fixing backbone of protein        1 residues:        8 to        9
+Fixing backbone of protein        1 residues:       12 to       21
+Fixing backbone of protein        1 residues:       23 to       24
+Fixing backbone of protein        1 residues:       95 to       96
+Fixing backbone of protein        1 residue       99
+Fixing backbone of protein        1 residue      114
+Running chunk    1
+Running chunk    2
+Simulation shutting down...
+protoms3 completed at 17:20:52 on the 16/12/2015

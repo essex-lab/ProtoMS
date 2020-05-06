@@ -1,0 +1,13 @@
+This directory contains all of the source code for ProtoMS 3.
+
+Contents:
+
+*.F            : Fortran 77 source files
+*.inc          : Fortran include files - these declare all of the global variables
+getid.py       : Python script used to identify the commit version of the source code.
+                 This is not really useful to non-developers.
+
+sfmakedepend   : Third-party script that calculates the dependancies of each Fortran
+                 source file to each include file. This is only needed by developers, and
+                 is run used via 'make depend'. This will modify the Makefile and leave
+                 a backup in Makefile.old

@@ -1,0 +1,47 @@
+mode clj
+#parameter atm proton-num charge(|e|) sigma(A) epsilon(kcal mol-1) 
+par 3000    ca    06    -0.12100    3.39967    0.08600
+par 3001    ca    06    -0.11700    3.39967    0.08600
+par 3002    ca    06    0.01740    3.39967    0.08600
+par 3003    ca    06    0.01740    3.39967    0.08600
+par 3004    ca    06    -0.11700    3.39967    0.08600
+par 3005    ca    06    -0.12100    3.39967    0.08600
+par 3006    ha    01    0.14100    2.59964    0.01500
+par 3007    ha    01    0.14100    2.59964    0.01500
+par 3008    cl    17    -0.07040    3.47094    0.26500
+par 3009    cl    17    -0.07040    3.47094    0.26500
+par 3010    ha    01    0.15100    2.59964    0.01500
+par 3011    ha    01    0.15100    2.59964    0.01500
+mode template
+solute DCB
+info translate 0.100 rotate 1.000
+atom  CAD DCB 3000 3000  DM3 DUM  DM2 DUM  DM1 DUM
+atom  CAF DCB 3001 3001  CAD DCB  DM3 DUM  DM2 DUM
+atom  CAH DCB 3002 3002  CAF DCB  CAD DCB  DM3 DUM
+atom  CAG DCB 3003 3003  CAH DCB  CAF DCB  CAD DCB
+atom  CAE DCB 3004 3004  CAG DCB  CAH DCB  CAF DCB
+atom  CAC DCB 3005 3005  CAE DCB  CAG DCB  CAH DCB
+atom  HAC DCB 3006 3006  CAC DCB  CAD DCB  CAE DCB
+atom  HAD DCB 3007 3007  CAD DCB  CAF DCB  CAC DCB
+atom  Cl1 DCB 3008 3008  CAG DCB  CAH DCB  CAE DCB
+atom  Cl2 DCB 3009 3009  CAH DCB  CAG DCB  CAF DCB
+atom  HAF DCB 3010 3010  CAF DCB  CAH DCB  CAD DCB
+atom  HAE DCB 3011 3011  CAE DCB  CAC DCB  CAG DCB
+bond  CAF DCB  CAD DCB
+bond  CAH DCB  CAF DCB
+bond  CAG DCB  CAH DCB
+bond  CAE DCB  CAG DCB
+bond  CAC DCB  CAE DCB
+bond  HAC DCB  CAC DCB
+bond  HAD DCB  CAD DCB
+bond  Cl1 DCB  CAG DCB
+bond  Cl2 DCB  CAH DCB
+bond  HAF DCB  CAF DCB
+bond  HAE DCB  CAE DCB
+bond  CAC DCB  CAD DCB
+angle  HAC DCB  CAC DCB  CAD DCB flex 0.186
+angle  HAD DCB  CAD DCB  CAF DCB flex 0.186
+angle  Cl1 DCB  CAG DCB  CAH DCB flex 0.163
+angle  Cl2 DCB  CAH DCB  CAG DCB flex 0.163
+angle  HAF DCB  CAF DCB  CAH DCB flex 0.186
+angle  HAE DCB  CAE DCB  CAC DCB flex 0.186

@@ -1,0 +1,44 @@
+###########################################################
+#                                                         #
+#                 Test for GCMC function                  #
+#                                                         #
+###########################################################
+
+### Purpose ###
+This test is designed to check protoms.py setup and
+protoms3 run of gcmc simulations. It runs over the
+insertion of a water molecule in the defined protein
+cavity.
+
+### Test version ###
+Test created with ProtoMS 3.1.2 release
+(changeset 328:6daeecd68181 - 01-Jul-15 )
+Compiled with gcc 4.4.7 20120313, openmpi 1.6.4 gcc
+
+Reference files have been modified to keep up with changes to the code since this version.
+
+### Input files ###
+protein.pdb
+wat.pdb
+water.pdb
+
+### Command line ###
+python2.7 $PROTOMSHOME/tools/make_gcmcbox.py -s wat.pdb
+
+python2.7 $PROTOMSHOME/protoms.py -sc protein.pdb -s gcmc --gcmcwater wat.pdb --gcmcbox gcmc_box.pdb --adams 20 --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 --capradius 26  -w water.pdb
+
+$PROTOMSHOME/protoms3 run_bnd.cmd
+
+### Outputs ###
+#Files to test/diff:
+gcmc_box.pdb
+gcmc_wat.pdb
+run_bnd.cmd
+out/results
+out/accept
+out/all.pdb
+out/restart
+out/warning
+out/info
+# Note that dates/times in reference info files will differ!
+

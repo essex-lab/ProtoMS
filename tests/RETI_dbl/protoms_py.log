@@ -1,0 +1,101 @@
+DEBUG : Running protoms.py at 08/12/2015 - 12:39:53
+DEBUG : Command line arguments = -s dualtopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup
+DEBUG : Settings = Namespace(absolute=False, adams=0, adamsrange=None, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=True, cmdfile='run', dovacuum=False, dumpfreq=1.0, flexin='flexible', flexout='sidechain', folders=['.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[0.0, 0.33, 0.67, 1.0], ligand=['ethane.pdb', 'methanol.pdb'], nequil=0.0, nprod=10.0, outercut=20.0, outfolder='', protein=None, ranseed='100000', repeats='', scoop=None, scooplimit=10, simulation='dualtopology', singlemap=None, template=None, testrun=False, water='water', waterbox=None, watmodel='tip4p')
+INFO : 
+INFO : Setting up ligand: ethane.pdb...
+INFO : Running antechamber. Please check the output carefully
+DEBUG : Running run_antechamber with arguments: 
+DEBUG : 	lig    = ethane.pdb
+DEBUG : 	charge = 0
+DEBUG : 	resnam = ETH
+DEBUG : This will generate an Amber prepi file with AM1-BCC and GAFF atom types
+INFO : Created prepi-file: ethane.prepi
+INFO : Running parmchk. Please check the output carefully
+DEBUG : Running run_parmchk with arguments: 
+DEBUG : 	lig = ethane.pdb
+DEBUG : This will generate an Amber frcmod file with additional parameters
+INFO : Created frcmod-file: ethane.frcmod
+DEBUG : Running build_template with arguments: 
+DEBUG : 	temfile    = ethane.tem
+DEBUG : 	prepifile  = ethane.prepi
+DEBUG : 	translate  = 0.250000
+DEBUG : 	rotate     = 5.000000
+DEBUG : 	zmatfile   = None
+DEBUG : 	frcmodfile = ethane.frcmod
+DEBUG : 	resname    = ETH
+DEBUG : This will generate a ProtoMS template file for a solute
+DEBUG : Running make_zmat with arguments: 
+DEBUG : 	prepifile = ethane.prepi
+DEBUG : This will generate a ProtoMS compatible z-matrix for a solute
+INFO : Before running a simulation, ensure that the first line of ethane.pdb reads 'HEADER ETH'.
+INFO : Created zmatrix (ethane.zmat) for ligand. Please check the output carefully
+INFO : Created ProtoMS template-file (ethane.tem) for ligand. Please check the output carefully
+DEBUG : Running solvate with arguments: 
+DEBUG : 	box        = /home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/wbox_tip4p.pdb
+DEBUG : 	ligand     = ethane.pdb_methanol.pdb
+DEBUG : 	protein    = None
+DEBUG : 	geometry   = box
+DEBUG : 	padding    = 10.000000
+DEBUG : 	radius     = 30.000000
+DEBUG : 	center     = cent
+DEBUG : 	namescheme = ProtoMS
+DEBUG : This will solvate either a protein or a ligand using a pre-equilibrated box
+INFO : Created waterbox-file: ethane_box.pdb
+INFO : 
+INFO : Setting up ligand: methanol.pdb...
+INFO : Running antechamber. Please check the output carefully
+DEBUG : Running run_antechamber with arguments: 
+DEBUG : 	lig    = methanol.pdb
+DEBUG : 	charge = 0
+DEBUG : 	resnam = MEO
+DEBUG : This will generate an Amber prepi file with AM1-BCC and GAFF atom types
+INFO : Created prepi-file: methanol.prepi
+INFO : Running parmchk. Please check the output carefully
+DEBUG : Running run_parmchk with arguments: 
+DEBUG : 	lig = methanol.pdb
+DEBUG : This will generate an Amber frcmod file with additional parameters
+INFO : Created frcmod-file: methanol.frcmod
+DEBUG : Running build_template with arguments: 
+DEBUG : 	temfile    = methanol.tem
+DEBUG : 	prepifile  = methanol.prepi
+DEBUG : 	translate  = 0.250000
+DEBUG : 	rotate     = 5.000000
+DEBUG : 	zmatfile   = None
+DEBUG : 	frcmodfile = methanol.frcmod
+DEBUG : 	resname    = MEO
+DEBUG : This will generate a ProtoMS template file for a solute
+DEBUG : Running make_zmat with arguments: 
+DEBUG : 	prepifile = methanol.prepi
+DEBUG : This will generate a ProtoMS compatible z-matrix for a solute
+INFO : Before running a simulation, ensure that the first line of methanol.pdb reads 'HEADER MEO'.
+INFO : Created zmatrix (methanol.zmat) for ligand. Please check the output carefully
+INFO : Created ProtoMS template-file (methanol.tem) for ligand. Please check the output carefully
+DEBUG : Running solvate with arguments: 
+DEBUG : 	box        = /home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/wbox_tip4p.pdb
+DEBUG : 	ligand     = ethane.pdb_methanol.pdb
+DEBUG : 	protein    = None
+DEBUG : 	geometry   = box
+DEBUG : 	padding    = 10.000000
+DEBUG : 	radius     = 30.000000
+DEBUG : 	center     = cent
+DEBUG : 	namescheme = ProtoMS
+DEBUG : This will solvate either a protein or a ligand using a pre-equilibrated box
+INFO : Created waterbox-file: methanol_box.pdb
+INFO : 
+DEBUG : Running merge_templates with arguments: 
+DEBUG : 	templates = ethane.tem methanol.tem
+DEBUG : This will merge all templates, renumbering force field parameters
+INFO : Created a re-numbered template files for all ligands: eth-meo.tem
+DEBUG : Running generate_input with arguments: 
+DEBUG : 	protein       = None
+DEBUG : 	ligands       = ethane.pdb methanol.pdb
+DEBUG : 	templates     = eth-meo.tem
+DEBUG : 	protein_water = None
+DEBUG : 	ligand_water  = ethane_box.pdb
+DEBUG : 	settings      = Namespace(absolute=False, adams=0, adamsrange=None, atomnames=None, capradius=30.0, center=None, charge=None, cleanup=True, cmdfile='run', dovacuum=False, dumpfreq=1.0, flexin='flexible', flexout='sidechain', folders=['.', '.'], gcmcbox=None, gcmcwater=None, innercut=16.0, jawsbias=[6.5], lambdas=[0.0, 0.33, 0.67, 1.0], ligand=['ethane.pdb', 'methanol.pdb'], nequil=0.0, nprod=10.0, outercut=20.0, outfolder='out', protein=None, ranseed='100000', repeats=[''], scoop=None, scooplimit=10, simulation='dualtopology', singlemap=None, template=None, testrun=False, water='water', waterbox='/home/rtb1c13/WORK/Hg/ProtoMS-Dev/data/wbox_tip4p.pdb', watmodel='tip4p')
+DEBUG : This will make an input file for ProtoMS
+INFO : 
+INFO : Will simulate with 4 lambda values
+INFO : 
+INFO : Cleaning up and saving extra files to prep_files.tar
+DEBUG : The files are: ethane.prepi ethane.frcmod ethane.zmat methanol.prepi methanol.frcmod methanol.zmat methanol_box.pdb ethane.tem methanol.tem

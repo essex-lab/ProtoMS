@@ -1,0 +1,25 @@
+pre {
+	background: #efefef;
+	padding: 5px;
+	border-style: solid;
+	border-color: #d3d3d3;
+	border-width: 1px;
+   color: #003300;
+}
+code {
+	color: #003300;
+}
+h3 {
+	background: #eceef6;
+	padding: 5px;
+	border-style: solid;
+	border-color: #d3d3d3;
+	border-width: 1px;
+	color: #1b4a99;	
+}
+h1 {
+	color: #1b4a99;
+}
+h5 {
+	color: #1b4a99;
+}

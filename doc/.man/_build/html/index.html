@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ProtoMS documentation &mdash; ProtoMS 3.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ProtoMS 3.3 documentation" href="#" />
+    <link rel="next" title="Introduction" href="introduction.html" /> 
+  </head>
+  <body role="document">
+
+<!--<div style="background-color: white; text-align: center; padding: 10px 10px 15px 15px">
+<a href="#"><img src="_static/logo.png" border="0" alt="py4sci" style="width: 10em"/></a>
+</div>-->
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/dolphin.png" alt="Logo"/>
+            </a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="next chapter">Introduction</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="protoms-documentation">
+<h1>ProtoMS documentation<a class="headerlink" href="#protoms-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#formatting">Formatting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compilation.html">Compilation and Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="compilation.html#programming-language">Programming Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilation.html#building-protoms">Building ProtoMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilation.html#requirements">Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="protoms.html">Design of ProtoMS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#proteins-solutes-solvents-gcsolutes">Proteins / Solutes / Solvents / GCSolutes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#classical-forcefields">Classical forcefields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#perturbations">Perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#generic-moves">Generic Moves</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="protoms.html#executing-protoms">Executing ProtoMS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#file-output">File output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#simulation-parameters">Simulation parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#specifying-input-files">Specifying input files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#running-a-simulation">Running a Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#setup-and-analysis-tools">Setup and analysis tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="protoms.html#input-files">Input Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#parameter-forcefield-files">Parameter / Forcefield Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#templates">Templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#automated-creation-of-parameter-and-template-files">Automated Creation of Parameter and Template Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#protein-file">Protein File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#solute-file">Solute File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#gcsolute-file">GCsolute File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#solvent-file">Solvent File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protoms.html#restart-file">Restart File</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="protomspy.html">protoms.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#ambertools-py">ambertools.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#build-template-py">build_template.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-bar-py">calc_bar.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-clusters-py">calc_clusters.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-density-py">calc_density.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-dg-py">calc_dg.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-gci-py">calc_gci.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-gcsingle-py">calc_gcsingle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-replicapath-py">calc_replicapath.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-rmsd-py">calc_rmsd.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-series-py">calc_series.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#calc-ti-py">calc_ti.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#clear-gcmcbox-py">clear_gcmcbox.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#convertatomnames-py">convertatomnames.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#convertwater-py">convertwater.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#distribute-waters-py">distribute_waters.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#divide-pdb-py">divide_pdb.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#generate-input-py">generate_input.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#make-dummy-py">make_dummy.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#make-gcmcbox-py">make_gcmcbox.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#make-single-py">make_single.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#merge-templates-py">merge_templates.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#plot-theta-py">plot_theta.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#pms2pymbar-py">pms2pymbar.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#scoop-py">scoop.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#solvate-py">solvate.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#split-jawswater-py">split_jawswater.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testsuite.html">Test Suite</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testsuite.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testsuite.html#running-all-tests">Running all tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testsuite.html#individual-tests">Individual tests</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >next</a> |</li>
+        <li><a href="#">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2017, C. J. Woods, J Michel, M. Bodnarchuk, S. Genheden, R. Bradshaw, G. Ross, C. Cave-Ayland, A. I. Cabedo Martinez, H Bruce-Macdonald, J. Graham.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

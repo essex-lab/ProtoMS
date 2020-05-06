@@ -1,0 +1,39 @@
+###########################################################
+#                                                         #
+#                Test for setup function                  #
+#                                                         #
+###########################################################
+
+### Purpose ###
+This test is designed to check protoms.py setup of
+protein and ligand, comparing each of the output files
+produced, hence narrowing down the source of error
+in case of setup issues. As an example, problems with
+zmat generation would generate differences in the zmat file
+while forcefield issues would generate problems with prepi
+and frcmod files.
+
+### Test version ###
+Test created with ProtoMS 3.1.2 release
+(changeset 328:6daeecd68181 - 01-Jul-15 )
+Compiled with gcc 4.4.7 20120313, openmpi 1.6.4 gcc
+
+Reference files have been modified to keep up with changes to the code since this version.
+
+### Input files ###
+dcb.pdb
+protein.pdb
+
+### Command line ###
+python2.7 $PROTOMSHOME/protoms.py -s none -l dcb.pdb -p protein.pdb
+
+### Outputs ###
+#Files to test/diff:
+dcb.prepi
+dcb.frcmod
+dcb.zmat
+dcb.tem
+dcb_box.pdb
+protein_scoop.pdb
+water.pdb
+

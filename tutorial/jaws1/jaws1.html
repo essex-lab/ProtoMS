@@ -1,0 +1,235 @@
+<HTML>
+<HEAD>
+<TITLE>Locating waters in HSP90 binding cavity</TITLE>
+<link href="../style.css" rel="stylesheet" type="text/css">
+</HEAD>
+<BODY>
+<H1>Locating waters in HSP90 binding cavity</H1>
+In this tutorial, you will estimate the position of the waters in the binding cavity of N-terminal domain of HSP90 with a small fragment bound<sup>1</sup>. To achieve this we will use the JAWS<sup>2</sup> technique.
+<p>To come back to the tutorial index, click <a href="../tutorials.html">here</a>.
+<H3>Prerequisites</H3>
+<ul>
+	<li><code>fragment.pdb</code> - the structure of the small fragment molecule in PDB format</li>
+	<li><code>protein.pdb</code> - the structure of the N-terminal domain of HSP90 in PDB format</li>
+</ul>
+Both the fragment and protein have been prepared for use with ProtoMS. For instance, they are correctly protonated. If using your own structures, you must make sure they are prepared correctly prior to simulation. You can read more about setting up structures <a href="../prep_struct.html">here</a>.
+<p>
+<hr align="center"/>
+<h3>Simple setup</h3>
+<h5>Setup</h5>
+The simplest way to set up the simulation is by typing the following
+</p>
+<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb </pre>
+</p>
+this sets up one JAWS stage 1 simulation, to locate the waters which can be placed 2 A around your ligand.<p> The simulations will run 5 m equilibration steps and 40 m production steps. Output will be printed to files every 100 k moves.
+<p>
+the <code>-s jaws1</code> argument tells the script to setup a JAWS stage 1 simulation. The <code>-p</code> and <code>-l</code> arguments specifies the protein and the ligand, respectively.
+</p> 
+You can read more about the files that the setup script creates further down on this <a href="#files">page</a>.
+<p>You can visualise the systems that will be simulated with for instance VMD:
+<pre>vmd -m protein.pdb fragment.pdb water_clr.pdb jaws1_wat.pdb jaws1_box.pdb</pre>
+<p>
+<img src="setup.png"  alt="" />
+</p>
+</p>
+<p> 
+<h5>Execution</h5>
+To run the simulation you need to execute
+<p>
+<pre>$PROTOMSHOME/protoms3 run_jaws.cmd</pre>
+<p>
+The calculations will take approximately 10 h to complete.
+<p>
+<h5>Analysis</h5>
+When the simulations are finished you need to analyse the simulation and conclude on a location for the waters in the binding site. We should start by separating the global pdb of your simulation into individual snapshots. Go to the directory called <code>out_jaws</code> and run:
+<pre>
+python2.7 $PROTOMSHOME/tools/divide_pdb.py
+</pre>
+and then, to visualize the positions of the waters at one given point in the simulation, for example, at the middle of your production run, type:
+<pre>
+vmd snapshot_200.pdb
+</pre>
+and try to see if there was any water in the binding site (the residue name of your jaws waters is "WA1"). Remember that whichever JAWS waters you may find, are the "on" &mdash; fully interacting &mdash; waters (with &#952; > 0.95, where &#952; corresponds to the scaling of their interactions).
+But looking at each snapshot individually is hard to get a whole picture of where your waters were distributed throughout the simulation. To get a more visual picture of this we produce and visualize a water density file. To generate such a file run:
+<pre>
+python2.7 $PROTOMSHOME/tools/calc_density.py -f all.pdb -r wa1
+</pre>
+and the file grid.dx will be produced. Such a file can be visualized in vmd. Try looking at it with:
+<pre>
+vmd -m grid.dx ../protein.pdb ../fragment.pdb
+</pre>
+<p>
+You should be looking at something similar to this (after fiddling a bit with the graphical representation options in VMD):
+</p>
+<img src="density.png"  alt="" />
+<p>
+A different visualization option are the clusters. These can be generated going to your out folder and using the following command</p>
+<pre>
+python2.7 $PROTOMSHOME/tools/calc_clusters.py -f all.pdb -m WA1
+</pre>
+and then visualized with
+<pre>
+vmd -m clusters.pdb ../protein.pdb ../fragment.pdb
+</pre>
+<p>
+You should be looking at something similar to the image below, after tweaking the graphical representation options in VMD. It is probably interesting to display only the most populated clusters by showing only <code> resid 1 to 5 </code>, for example, since clusters are assigned residue ID in order of most populated clusters.
+</p>
+<img src="cluster.png"  alt="" />
+<p> 
+<h3>Exploring more options</h3>
+<p>
+<h5>Running JAWS on different areas of your simulation</h5>
+By running <code>protoms.py</code> as above, protoms will try to locate the waters found in a box with edges at least 2A away from any of your ligand atoms. However, you may wish to find the location of waters in any area of your simulation (though normally it will include your binding site).
+</p>
+<p>
+You can define any desired area (in box shape) of your simulation to run JAWS on, by specifying the box origin and dimentions with the flag <code>--gcmcbox</code>, such as it is done below
+<p><pre>
+python2.7 $PROTOMSHOME/protoms.py -l fragment.pdb -p protein.pdb -s jaws1 -c big --gcmcbox 59 31 23 8 8 8
+</pre></p>
+where the box will be a cube of 8A, with the "lower" corner in x = 59, y = 31, z = 23, and the "higher" corner in x = 67, y = 39, z = 31 (all values in A). The -c flag specifies the base-name of the generated <code>.cmd</code> files; it has been applied in this example to avoid overwriting the previously generated <code>run_jaws.cmd</code> file.
+</p>
+<p>
+<h5>Running JAWS speficying the number of waters</h5>
+When protoms is run such in the initial example (first section in the tutorial), or in the example above, the default is chosen for the amount of water molecules to include inside the box. This can be modified with the flag <code>--gcmcwater</code>. The amount of waters included as JAWS probes can have an effect in the results of your simulation. Feel free to play around with this parameter. It can be specified as shown below </p>
+<p><pre>
+python2.7 $PROTOMSHOME/protoms.py -l fragment.pdb -p protein.pdb -s jaws1 -c big --gcmcbox 59 31 23 8 8 8 --gcmcwater 10
+</pre></p>
+<p>
+<h5>Running longer simulations</h5>
+There are two arguments that you can invoke to run a longer simulation
+<ul>
+	<li><code>--nequil</code> - this controls the number of equilibration steps</li>
+	<li><code>--nprod</code> - this controls the number of production steps</li>
+</ul>  
+by typing for instance
+<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb --nequil 10E6 --nprod 50E6</pre>
+<p>
+you will run 10 m equiliration steps and 50 m production steps (instead of the 5 m and 40 m that is default)
+<p>
+<h5>Running independent repeats</h5>
+Usually it is wise to run several independent repeats of your calculation to check for convergence. The argument that controls the number of independent repeats is called <code>--repeats</code> or just <code>-r</code>.
+<p>
+by typing for instance
+<p>
+<pre>python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb -r 5</pre>
+<p>
+you will create 5 input files for the JAWS calculation. Therefore, you also need to execute ProtoMS 5 times with the different input files. The output will be in 5 different folders, e.g. <code>out1_jaws</code> and <code>out2_jaws</code>.
+<p>
+<hr align="center"/>
+<p> 
+<h3><a name="files">Files created by the setup script</a></h3>
+<h5>Files describing the fragment</h5>
+<ul>
+	<li><code>fragment.prepi </code> = the z-matrix and atom types of the fragment in Amber format</li>
+	<li><code>fragment.frcmod </code> =  additional parameters not in GAFF</li>
+	<li><code>fragment.zmat</code> = the z-matrix of the fragment used to sample it in the MC simulation</li>
+	<li><code>fragment.tem</code> = the complete template (force field) file for the fragment in ProtoMS format</li>
+</ul>
+You can read more about the setup of ligands <a href="../prep_struct.html">here</a>.
+<h5>Files describing the protein</h5>
+<ul>
+	<li><code>protein_scoop.pdb</code> = the truncated protein structure</li>
+</ul>
+You can read more about the setup of proteins <a href="../prep_struct.html">here</a>.
+<p> 
+<h5>Simulation specific files</h5>
+<ul>
+	<li><code>jaws1_water.pdb</code> = the waters that will be treated as JAWS particles (fading solutes)</li>
+	<li><code>jaws1_box.pdb</code> = a visual representation of the dimensions in which your JAWS waters are constrained</li>
+	<li><code>water.pdb</code> = the cap of water solvating the protein-ligand system</li>
+	<li><code>water_clr.pdb</code> = the cap of water solvating the protein-ligand system, minus any water molecule which was overlapping with the JAWS simulation area</li>
+	<li><code>run_jaws.cmd</code> = the ProtoMS input file for the JAWS simulation</li>
+</ul>
+You can read more about the input files in the ProtoMS manual. However, some sections of it is worth mentioning here:
+<pre>
+jaws1 0
+</pre>
+<br>
+The <code>jaws1</code> line indicates the initial value of &theta; for the JAWS waters.
+<p>
+<pre>
+originx 59.774
+originy 31.007
+originz 20.931
+x 13.02
+y 8.188
+z 8.402
+</pre> 
+<br>
+These lines include the dimensions of the JAWS box, to which the JAWS waters are constrained. The <code>originx, originy, originz, x, y, z</code> parameters indicate the origin and length of the JAWS box in each spatial coordinate.
+<p>
+<hr align="center"/>
+<p> 
+<h3><a name="tools">Setting up the simulation with individual tools</a></h3>
+In this advanced section we will go through the setup of the simulations step-by-step using individual setup scripts rather than <code>protoms.py</code>. This is relevant in cases where you are interested in specifying certain parameters which are pre-determined by <code>protoms.py</code>.
+<h5>Setting up the ligand</h5>
+We will start setting up the ligand from the initial <code>fragment.pdb</code>.
+<p>
+<li>First we need to make sure that the very first line of the <code>fragment.pdb</code> contains a directive, telling ProtoMS the name of the solute. The line should read <code>HEADER XDK</code>, where <code>xdk</code> is the residue name in the fragment, and can be added by typing
+<p>
+<pre>sed -i "1iHEADER XDK" fragment.pdb</pre>
+<p>
+<li>Thereafter, we will create the force field for the fragment using AmberTools. The force field will be GAFF with AM1-BCC charge. Type
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/ambertools.py -f fragment.pdb -n XDK</pre>
+<P>
+and this will execute the AmberTools programs <code>antechamber</code> and <code>parmchk</code>, creating the files <code>fragment.prepi</code> and <code>fragment.frcmod</code>, respectively. 
+<p>
+<li>These files are in Amber format and in order to use them in ProtoMS we need to reformat them into a ProtoMS template file. This file will also contain a z-matrix that describes how the ligand will be sampled during the simulation. To do this, you can type
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/build_template.py -p fragment.prepi -f fragment.frcmod -o fragment.tem -n XDK</pre>
+<p>
+this will creates the files <code>fragment.tem</code> containing the ProtoMS template file and <code>fragment.zmat</code>. It is a good idea to check this files to see if the script has defined the molecule properly.
+<p> 
+<li>Now we have setup the fragment, but there is another "ligand" that we have not mentioned: the water molecules used for the JAWS calculation. These are considered by ProtoMS as "grand canonical solutes", and will be generated later, but it is important to mention here that they will, as well, need a template. However, there is no need to generate this template, since it contains some particularities and it can be found in <code>$PROTOMSHOME/data/gcmc_tip4p.tem</code>.
+<p>
+<h5>Setting up the protein</h5>
+<li>First, we will change the name of atom and residue names in the protein PDB-file such that they agree with the ProtoMS naming convention. Type
+<p> 
+<pre>python2.7 $PROTOMSHOME/tools/convertatomnames.py -p protein.pdb -o protein_pms.pdb -s amber -c $PROTOMSHOME/data/atomnamesmap.dat</pre>
+<p> 
+The converted structure will be in <code>protein_pms.pdb</code>. This execution assumes that the Amber naming convention is used in <code>protein.pdb</code>. 
+<p> 
+<li>We have crystallographic water in the protein structure and we need to convert them to the water model we will be using in the simulation (TIP4P). This can be done by 
+<p> 
+<pre>python2.7 $PROTOMSHOME/tools/convertwater.py -p protein_pms.pdb -o protein_pms_t4p.pdb</pre>
+<p>
+creating <code>protein_pms_t4p.pdb</code>. 
+<p>
+<li>Next step is to truncate the protein, creating a scoop. This will enable us to solvate the protein is a droplet and thereby reducing the number of simulated particles. The command is
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/scoop.py -p protein_pms_t4p.pdb -l fragment.pdb -o protein_scoop.pdb</pre> 
+<p> 
+The protein scoop is centred on the fragment molecule and all residue further than 20 A are cut-away. The scoop is written to <code>protein_scoop.pdb</code>
+<p>
+<h5>Setting up the solvation and jaws-waters</h5>
+<li>First we will create a droplet of TIP4P water molecules around both ligand and protein. To this, type:
+<p> 
+<pre>python2.7 $PROTOMSHOME/tools/solvate.py -b $PROTOMSHOME/data/wbox_tip4p.pdb -s fragment.pdb -pr protein_scoop.pdb -o water.pdb -g droplet</pre> 
+<p>
+this will create a droplet with 30 A radius centred on the fragment molecule. The droplet is written to <code>water.pdb</code>
+<p> 
+<li> The <code>solvate.py</code> script adds the crystallographic waters from the scoop to the droplet. Therefore, we need to remove them from the scoop PDB-file, to avoid duplicates.<p> 
+<pre>sed -i -e "/T4P/d" -e "/TER/d" protein_scoop.pdb</pre>
+<p>
+<li>Next we need to create the set of waters that will form our JAWS waters. This can be done by typing:
+<pre>python2.7 $PROTOMSHOME/tools/distribute_waters.py -b 59 31 23 8 8 8 -m 10 -o jaws1_wat.pdb </pre>
+<p>
+with this command, the file <code>jaws1_water.pdb</code> will be generated. It will contain 10 water molecules (flag <code>-m</code>). The box dimensions to which the waters will be constrained are specified with the flag <code>-b</code>, and this information on the box limits is stored in the first line of the <code>jaws1_water.pdb</code> file.
+<li>The last step in this section consists of clearing the water molecules from the solvation droplet which overlap with the JAWS-box. Do this by typing:
+<pre>python2.7 $PROTOMSHOME/tools/clear_gcmcbox.py -b jaws1_wat.pdb -s water.pdb -o water_clr.pdb</pre>
+<p>Feel free to check the difference between <code>water.pdb</code> and <code>water_clr.pdb</code>, there may be a few less waters in the later, but there might be no difference at all.
+Now we have all the files need to run the simulation. As you noticed, there is some difference in the files produced with this step-by-step procedure and those created with <code>protoms.py</code>.
+<h5>Making ProtoMS input files</h5>
+To make the input files for ProtoMS type
+<p>
+<pre>python2.7 $PROTOMSHOME/tools/generate_input.py -s jaws1 -p protein_scoop.pdb -l fragment.pdb -t fragment.tem -pw water_clr.pdb --gcmcwater jaws1_wat.pdb -o run</pre>
+<p> 
+creating <code>run_jaws.cmd</code>.
+<H3>References</H3>
+<p>1. Murray et.al. <i>J. Med. Chem.,</i> 2010, 53(16), pp 5942-5955</p>
+<p>2. Michel et.al. <i>J. Phys. Chem. B,</i> 2009, 113(40), pp 13337-13346</p>
+</BODY>
+</HTML>

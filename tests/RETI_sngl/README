@@ -1,0 +1,49 @@
+###########################################################
+#                                                         #
+#               Test for RETI/MPI function                #
+#                                                         #
+###########################################################
+
+### Purpose ###
+This test is designed to check protoms.py setup of
+simulations with multiple lambda windows and the
+MPI implementation of the protoms3 program. It runs
+the free & gas phase legs of a single topology simulation
+of ethane -> methanol solvation free energy across 4 cores
+
+### Test version ###
+Test created with ProtoMS 3.1.2 release
+(changeset 328:6daeecd68181 - 01-Jul-15 )
+Compiled with GCC gfortran 4.4.7, openmpi 1.6.4
+
+Reference files have been modified to keep up with changes to the code since this version.
+
+### Input files ###
+ethane.pdb
+methanol.pdb
+single_cmap.dat
+
+### Command line ###
+python2.7 $PROTOMSHOME/protoms.py -s singletopology -l ethane.pdb methanol.pdb --nequil 0 --nprod 10 --lambdas 0.00 0.33 0.67 1.00 --ranseed 100000 --dumpfreq 1 --cleanup --singlemap single_cmap.dat
+
+mpirun -np 4 $PROTOMSHOME/protoms3 run_comb_free.cmd
+mpirun -np 4 $PROTOMSHOME/protoms3 run_comb_gas.cmd
+
+### Outputs ###
+#Files to test/diff:
+eth-meo_comb.tem
+eth-meo_ele.tem
+eth-meo_gas.tem
+run_*.cmd
+out_comb_free/lam*/results
+out_comb_free/lam*/accept
+out_comb_free/lam*/all.pdb
+out_comb_free/lam*/restart.prev
+out_comb_free/lam-0.000/warning
+out_comb_free/lam-0.000/info
+out_comb_gas/lam*/results
+out_comb_gas/lam*/accept
+out_comb_gas/lam*/all.pdb
+out_comb_gas/lam*/restart.prev
+# Note that dates/times in reference info files will differ!
+

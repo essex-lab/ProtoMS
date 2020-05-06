@@ -1,0 +1,43 @@
+###########################################################
+#                                                         #
+#                 Test for JAWS1 function                 #
+#                                                         #
+###########################################################
+
+### Purpose ###
+This test is designed to check protoms.py setup and
+protoms3 run of JAWS stage 1 simulations. It runs over the
+increase in theta of a couple of water molecules within 
+the defined protein cavity.
+
+### Test version ###
+Test created with ProtoMS 3.1.2 release
+(changeset 328:6daeecd68181 - 01-Jul-15 )
+Compiled with gcc 4.4.7 20120313, openmpi 1.6.4 gcc
+
+Reference files have been modified to keep up with changes to the code since this version.
+
+### Input files ###
+protein.pdb
+fragment.pdb
+water.pdb
+
+### Command line ###
+python2.7 $PROTOMSHOME/protoms.py -s jaws1 -p protein.pdb -l fragment.pdb --nequil 0 --nprod 100 --ranseed 100000 --dumpfreq 10 -w water.pdb
+
+$PROTOMSHOME/protoms3 run_bnd.cmd
+
+### Outputs ###
+#Files to test/diff:
+water_clr.pdb
+jaws1_box.pdb
+jaws1_wat.pdb
+run_bnd.cmd
+out/results
+out/accept
+out/all.pdb
+out/restart
+out/warning
+out/info
+# Note that dates/times in reference info files will differ!
+

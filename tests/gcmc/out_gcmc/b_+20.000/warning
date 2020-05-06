@@ -1,0 +1,152 @@
+Overwriting dihedral parameter for CT-CX-C -N
+atm     N     C    CX    CT  6167  #
+Overwriting bond parameter for no-os, parameter 1653 with parameter 1654
+atm no os     1654
+Overwriting angle parameter for c -cc-n , parameter 1892 with parameter 1971
+atm  n cc  c    1971
+The PDB file for residue asp -   3 of protein protein.pdb is missing the template atom hd2 . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+Could not find bond parameter between amber atoms DU-O2. Will treat this bond as a dummy. This bond should not be sampled!
+The PDB file for residue cyx -   5 of protein protein.pdb is missing the template atom hg  . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+Could not find bond parameter between amber atoms DU-S . Will treat this bond as a dummy. This bond should not be sampled!
+The PDB file for residue glu -   7 of protein protein.pdb is missing the template atom he2 . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+The PDB file for residue cyx -  14 of protein protein.pdb is missing the template atom hg  . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+The PDB file for residue cyx -  30 of protein protein.pdb is missing the template atom hg  . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+The PDB file for residue cyx -  38 of protein protein.pdb is missing the template atom hg  . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+The PDB file for residue glu -  49 of protein protein.pdb is missing the template atom he2 . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+The PDB file for residue asp -  50 of protein protein.pdb is missing the template atom hd2 . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+The PDB file for residue cyx -  51 of protein protein.pdb is missing the template atom hg  . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+The PDB file for residue cyx -  55 of protein protein.pdb is missing the template atom hg  . Attempting to build it...
+...the atom has been built. Please check that the atom is in the right position
+Could not find angle parameter between amber atoms CO-O2-DU. Will treat this angle as a dummy. This angle should not be sampled!
+Could not find angle parameter between amber atoms 2C-S -DU. Will treat this angle as a dummy. This angle should not be sampled!
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.
+ No spare gcsolutes to insert. This will bias your simulation results.

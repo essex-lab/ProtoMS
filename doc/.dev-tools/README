@@ -1,0 +1,62 @@
+
+This text describes how to compile the developmental document for the python tools.
+
+The document is compiled using Sphinx (www.sphinx-doc.org/). 
+This tool reads in all the python modules in the tools directory and extracts the docstrings.
+It is assumed that the docstrings are in the numpy format.
+
+-------------
+Pre-requisits
+-------------
+
+If python2.7 is not the default Python version, you need to install
+it manually with python2.7
+
+Sphinx:
+git clone https://github.com/sphinx-doc/sphinx.git
+cd sphinx/
+python2.7 setup.py install --user
+
+numpydoc:
+git clone https://github.com/numpy/numpydoc.git
+cd numpydoc/
+python2.7 setup.py install --user
+
+(the latter one is an add-on to Sphinx to correctly parse the docstrings)
+
+------------
+Installation
+-------------
+
+These commands were executed to initiate this folder and the Spinx documentation. 
+They don't have to be performed again.
+
+sphinx-quickstart
+
+Project name: ProtoMS
+Author names: Richard Bradshaw, Ana Cabedo Martinez, Chris Cave-Ayland, Samuel Genheden, Gregory Ross
+Version: 3.0
+autodoc: automatically insert docstrings from modules (y/n) [n]: y
+
+Otherwise defaults
+
+
+make html
+
+insert
+sys.path.insert(0,os.path.abspath('..'))
+in conf.py
+
+sphinx-apidoc -o . ../
+
+Installed numpydoc
+and added
+'numpydoc' to extensions in conf.py
+
+-----------
+Compilation
+-----------
+make html
+
+At the moment the Makefile assumes that sphinx is installed in ~/.local/bin/,
+if that is not the case, please edit the make file.
