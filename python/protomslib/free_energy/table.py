@@ -95,7 +95,9 @@ class Column(object):
 
     def __iter__(self):
         for ll, r in zip(self.left, self.right):
-            stuff = "%s +- %s" % (ll, r) if len(r) != r.count(" ") else "%s" % ll
+            stuff = (
+                "%s +- %s" % (ll, r) if len(r) != r.count(" ") else "%s" % ll
+            )
             yield "%-{}s".format(self.width) % stuff
 
     @property

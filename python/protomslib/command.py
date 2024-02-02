@@ -689,8 +689,7 @@ class DualTopology(ProteinLigandSimulation):
         self.setDump("results write results", dumpfreq)
         self.setDump("results writeinst results_inst", dumpfreq)
         self.setDump("pdb all solvent=all file=all.pdb standard", dumpfreq)
-        self.setDump("resta"
-                     "rt write restart", dumpfreq)
+        self.setDump("resta" "rt write restart", dumpfreq)
         self.setDump("averages reset", dumpfreq)
 
         if protein is not None:
