@@ -523,13 +523,13 @@ if __name__ == "__main__":
         # Create merged pdb objects
         if len(ligands) >= 2:
             ligobj12 = simulationobjects.merge_pdbs(
-                ligand_files[l]["obj"] for l in ligands[:2]
+                ligand_files[ll]["obj"] for ll in ligands[:2]
             )
         else:
             ligobj12 = ligand_files[ligands[0]]["obj"]
         if len(ligands) > 1:
             ligobjs = simulationobjects.merge_pdbs(
-                ligand_files[l]["obj"] for l in ligands
+                ligand_files[ll]["obj"] for ll in ligands
             )
         else:
             ligobjs = ligand_files[ligands[0]]["obj"]
@@ -555,8 +555,8 @@ if __name__ == "__main__":
                 args,
             )
 
-        ligpdbs = [ligand_files[l]["pdb"] for l in ligands]
-        ligtems = [ligand_files[l]["tem"] for l in ligands]
+        ligpdbs = [ligand_files[ll]["pdb"] for ll in ligands]
+        ligtems = [ligand_files[ll]["tem"] for ll in ligands]
         ligand_water = ligand_files[ligands[0]]["wat"]
 
         # Here we need to make single topology templates, if requested

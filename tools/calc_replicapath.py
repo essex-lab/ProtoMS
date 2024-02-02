@@ -83,7 +83,7 @@ def replica_path(filenames, replicakind="lambda"):
 
     # Now find the path for each lambda/temperature value
     rawpaths = np.array(rawpaths, dtype=int)
-    labeled_paths = [[] for l in labels]
+    labeled_paths = [[] for _ in labels]
     # Loop over each possible lambda/temperature value, i.e. label id
     for i in range(rawpaths.shape[0]):
         # We will try to fill up an array that is as long as the simulation

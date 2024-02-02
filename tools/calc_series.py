@@ -283,24 +283,24 @@ def parse_series(series, results):
         cols = series.lower().strip().split("/")
         if len(cols) == 1:
             ys = [
-                results.feenergies[l]
-                for l in sorted(results.feenergies.keys())
+                results.feenergies[_key]
+                for _key in sorted(results.feenergies.keys())
             ]
             labels = [
-                "energy at %.3f [kcal/mol]" % l
-                for l in sorted(results.feenergies.keys())
+                "energy at %.3f [kcal/mol]" % _key
+                for _key in sorted(results.feenergies.keys())
             ]
             return ys, labels
         else:
             ys = [
-                results.feenergies[float(l)]
-                for l in cols[1].split(",")
-                if float(l) in results.feenergies
+                results.feenergies[float(ll)]
+                for ll in cols[1].split(",")
+                if float(ll) in results.feenergies
             ]
             labels = [
-                "energy at %.3f [kcal/mol]" % float(l)
-                for l in cols[1].split(",")
-                if float(l) in results.feenergies
+                "energy at %.3f [kcal/mol]" % float(ll)
+                for ll in cols[1].split(",")
+                if float(ll) in results.feenergies
             ]
             if len(ys) == 0:
                 return None
@@ -334,10 +334,10 @@ def parse_series(series, results):
         else:
             if hasattr(results, s):
                 if s in special_units:
-                    l = s + special_units[s]
+                    ll = s + special_units[s]
                 else:
-                    l = s + " [kcal/mol]"
-                resp = getattr(results, s), l
+                    ll = s + " [kcal/mol]"
+                resp = getattr(results, s), ll
         if resp is not None:
             y, label = resp
             if isinstance(y, list):
@@ -461,9 +461,9 @@ def _label0(label):
     if label.find("[") == -1:
         return label
 
-    l = "_".join(label.split()[:-1])
-    l = l.replace("/", "_")
-    return l
+    _label = "_".join(label.split()[:-1])
+    _label = _label.replace("/", "_")
+    return _label
 
 
 def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
@@ -713,7 +713,7 @@ def _select_series(results):
             "\nEnergies at lambda-values: %s"
             % (
                 ", ".join(
-                    "%.3f" % l for l in sorted(results.feenergies.keys())
+                    "%.3f" % _key for _key in sorted(results.feenergies.keys())
                 )
             )
         )

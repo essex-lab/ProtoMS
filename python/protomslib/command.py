@@ -683,13 +683,14 @@ class DualTopology(ProteinLigandSimulation):
         self.setParameter("dlambda", "0.001")
         self.setParameter(
             "lambdare",
-            "%d %s" % (dumpfreq, " ".join("%.3f" % l for l in lambdaval)),
+            "%d %s" % (dumpfreq, " ".join("%.3f" % ll for ll in lambdaval)),
         )
 
         self.setDump("results write results", dumpfreq)
         self.setDump("results writeinst results_inst", dumpfreq)
         self.setDump("pdb all solvent=all file=all.pdb standard", dumpfreq)
-        self.setDump("restart write restart", dumpfreq)
+        self.setDump("resta"
+                     "rt write restart", dumpfreq)
         self.setDump("averages reset", dumpfreq)
 
         if protein is not None:
@@ -969,7 +970,7 @@ class GCAPSingle(ProteinLigandSimulation):
         self.setParameter("dlambda", "0.001")
         self.setParameter(
             "lambdare",
-            "%d %s" % (dumpfreq, " ".join("%.3f" % l for l in lambdaval)),
+            "%d %s" % (dumpfreq, " ".join("%.3f" % ll for ll in lambdaval)),
         )
 
         if adamval is None:
@@ -1158,7 +1159,7 @@ class GCAPDual(ProteinLigandSimulation):
         self.setParameter("dlambda", "0.001")
         self.setParameter(
             "lambdare",
-            "%d %s" % (dumpfreq, " ".join("%.3f" % l for l in lambdaval)),
+            "%d %s" % (dumpfreq, " ".join("%.3f" % ll for ll in lambdaval)),
         )
 
         if adamval is None:
@@ -1470,7 +1471,7 @@ class SingleTopology(ProteinLigandSimulation):
         self.setParameter("dlambda", "0.001")
         self.setParameter(
             "lambdare",
-            "%d %s" % (dumpfreq, " ".join("%.3f" % l for l in lambdaval)),
+            "%d %s" % (dumpfreq, " ".join("%.3f" % ll for ll in lambdaval)),
         )
 
         self.setDump("results write results", dumpfreq)
@@ -1554,7 +1555,7 @@ class RestraintRelease(ProteinLigandSimulation):
         self.setParameter("dlambda", "0.001")
         self.setParameter(
             "lambdare",
-            "%d %s" % (dumpfreq, " ".join("%.3f" % l for l in lambdaval)),
+            "%d %s" % (dumpfreq, " ".join("%.3f" % ll for ll in lambdaval)),
         )
 
         self.setDump("results write results", dumpfreq)

@@ -137,7 +137,7 @@ def _init_grid(xyz, spacing, padding):
     origin = np.floor(xyz.min(axis=0)) - padding
     tr = np.ceil(xyz.max(axis=0)) + padding
     length = tr - origin
-    shape = np.array([int(l / spacing + 0.5) + 1 for l in length], dtype=int)
+    shape = np.array([int(ll / spacing + 0.5) + 1 for ll in length], dtype=int)
     grid = np.zeros(shape)
     edges = [np.linspace(origin[i], tr[i], shape[i]) for i in range(3)]
     return grid, edges
