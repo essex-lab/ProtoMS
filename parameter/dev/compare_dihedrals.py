@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 home = os.environ['PROTOMSHOME']
 sys.path.append ( os.path.join ( home, 'tools' ) )
 from convertatomnames import read_convfile
