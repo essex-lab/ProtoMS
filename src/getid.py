@@ -59,12 +59,13 @@ with open(filename, "w") as idfile:
         identify = identify.strip("\n ")
         path = os.popen("hg paths default", "r").readline()
         path = path.strip("\n ")
-    except IOError:
-        writeLine("Mercurial information not available.")
-    else:
+
         if identify.startswith("abort") or path == "not found!":
             writeLine("Mercurial information not available.")
         else:
             writeLine("Revision: %s" % identify)
             if "@" in path:
                 writeLine("From: %s" % path[path.find("@") + 1 :])
+
+    except IOError:
+        writeLine("Mercurial information not available.")
