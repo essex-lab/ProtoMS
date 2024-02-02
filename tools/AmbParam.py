@@ -351,7 +351,7 @@ class AmbParameterSet:
             
     def write_protoms_ff ( self, fname ):
 
-        print "Assuming standard Amber scaling for 1-4 nonbonded interactions"
+        print("Assuming standard Amber scaling for 1-4 nonbonded interactions")
 
         s = """mode info
 ljcombine arithmetic
