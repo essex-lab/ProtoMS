@@ -1,6 +1,7 @@
 """Library of classes for dealing with Amber parameter files."""
 
-import os, sys
+import os
+import sys
 from prmtop import chunks
 
 class AmbParameterAtm:
