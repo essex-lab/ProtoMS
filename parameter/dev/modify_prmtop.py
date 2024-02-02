@@ -121,7 +121,7 @@ backbone_impropers = (
 def get_res_info(at):
     """Given an at id find the corresponding residue number
     and name information from the prmtop file"""
-    for i in xrange(len(res_point.vals) - 1, -1, -1):
+    for i in range(len(res_point.vals) - 1, -1, -1):
         if at >= res_point.vals[i]:
             return i + 1, res_names.vals[i].strip()
 
@@ -174,10 +174,10 @@ for i, chnk in enumerate(prmtop.chunks(s.vals + s2.vals, 5)):
 to_pop = sorted(set(to_pop))
 for i in to_pop[::-1]:
     try:
-        for k in xrange(5):
+        for k in range(5):
             s.vals.pop(5 * i)
     except IndexError:
-        for k in xrange(5):
+        for k in range(5):
             s2.vals.pop(5 * i - len(s.vals))
 
 # Adjust values in pointer sections to be consistent
