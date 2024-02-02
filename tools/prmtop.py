@@ -49,7 +49,7 @@ class section:
             return val
         for i in chunks(self.vals, int(self.n)):
             for j in i:
-                if j != None:
+                if j is not None:
                     # val += '%{0}s'.format ( self.nchars ) % j
                     val += self.format_string % j
             val += "\n"
