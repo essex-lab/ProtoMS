@@ -1,0 +1,6 @@
+[tool.black]
+skip-string-normalization = false
+line-length = 79
+
+[tool.ruff]
+line-length = 79

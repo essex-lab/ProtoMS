@@ -848,8 +848,8 @@ class GCMCMBAR(feb.MBAR):
                         beta*(es[i] + ns * mu)
         samples = np.array([N] * N_sims)
         mbar = pymbar.MBAR(u_kn, samples)
-        free_energies = mbar.getFreeEnergyDifferences(
-            compute_uncertainty=False, return_theta=False)[0] / beta
+        free_energies = mbar.compute_free_energy_differences(
+            compute_uncertainty=False, return_theta=False)['Delta_f'] / beta
 
         # free energy order seems to be reversed with respect to B values
         closest = np.argmin([abs(B - self.equilibrium_B(temp))

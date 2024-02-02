@@ -379,8 +379,8 @@ class BAR(Estimator):
         pmf_values = [0.0]
         for low_lam, high_lam in zip(self.data, self.data[1:]):
             pmf_values.append(pmf_values[-1] +
-                              pymbar.BAR(-low_lam[1]*beta,
-                                         -high_lam[0]*beta)[0]/beta)
+                              pymbar.bar(-low_lam[1]*beta,
+                                         -high_lam[0]*beta)['Delta_f']/beta)
         return PMF(self.lambdas, pmf_values)
 
 
@@ -412,7 +412,12 @@ class MBAR(TI):
         beta = 1./(sim.boltz*temp)
         mbar = pymbar.MBAR(np.array(self.data)*beta,
                            [len(dat[0]) for dat in self.data])
-        FEs = mbar.getFreeEnergyDifferences(compute_uncertainty=False)[0]/beta
+#         FEs = mbar.compute_free_energy_differences(compute_uncertainty=False)[0]/beta
+
+	# as of 4.0, now returns dict. Free energy distance has key 'Delta_f'
+        FEs = mbar.compute_free_energy_differences(compute_uncertainty=False)['Delta_f']/beta
+
+
         return PMF(self.lambdas,
                    [FEs[0, i] for i in range(len(self.data))])
 
