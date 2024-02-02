@@ -33,7 +33,7 @@ def writeLine(line):
 
 try:
     filename = sys.argv[1]
-except:
+except IndexError:
     print("USAGE: getid.py outputfile")
     sys.exit(0)
 
