@@ -153,7 +153,7 @@ class AmbParameterSet:
         """Read in data from an Amber .in parameter file, as used with leap.
            Must be read in after .dat files"""
 
-        if term == None or term == 'center':
+        if term is None or term == 'center':
             suffix = ''
         elif term == 'cterm':
             suffix = 'ct'
@@ -528,7 +528,7 @@ class PmsResidue:
 class ResiduesFile:
     def __init__ ( self, fname = None ):
         self.reses = {}
-        if fname != None:
+        if fname is not None:
             self.parse ( fname )
 
     def set_res ( self, name ):
