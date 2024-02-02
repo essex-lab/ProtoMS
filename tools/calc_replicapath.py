@@ -19,11 +19,11 @@ import matplotlib
 from protomslib import simulationobjects
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
-    matplotlib.use('Agg')
+    matplotlib.use("Agg")
 import matplotlib.pylab as plt
 
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def replica_path(filenames, replicakind="lambda"):
@@ -43,7 +43,7 @@ def replica_path(filenames, replicakind="lambda"):
       the labeled replica path
     list
       list of the labels for all input files
-  """
+    """
     if replicakind == "lambda":
         replica_attr = "lambdareplica"
         label_attr = "lam"
@@ -61,7 +61,8 @@ def replica_path(filenames, replicakind="lambda"):
         label_attr = "bvalue"
     else:
         raise simulationobjects.SetupError(
-            "Have not implemented replica path analysis for %s" % replicakind)
+            "Have not implemented replica path analysis for %s" % replicakind
+        )
 
     # Build of list of replica ids in each output file
     # also produce a list of labels, e.g. lambda or temperature
@@ -106,33 +107,38 @@ def get_arg_parser():
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Program to analyze and plot a replica paths")
+        description="Program to analyze and plot a replica paths"
+    )
     parser.add_argument(
-        '-f', '--files', nargs="+", help="the name of the files to analyse")
+        "-f", "--files", nargs="+", help="the name of the files to analyse"
+    )
     parser.add_argument(
-        '-p',
-        '--plot',
+        "-p",
+        "--plot",
         type=float,
         nargs="+",
-        help="the replica values to plot")
+        help="the replica values to plot",
+    )
     parser.add_argument(
-        '-k',
-        '--kind',
+        "-k",
+        "--kind",
         choices=["lambda", "temperature", "rest", "global", "B"],
         help="the kind of replica to analyze",
-        default="lambda")
+        default="lambda",
+    )
     parser.add_argument(
-        '-o',
-        '--out',
+        "-o",
+        "--out",
         help="the prefix of the output figure. Default is replica_path. ",
-        default="replica_path.png")
+        default="replica_path.png",
+    )
     return parser
 
 
 #
 # If this is run from the command-line
 #
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     args = get_arg_parser().parse_args()
 

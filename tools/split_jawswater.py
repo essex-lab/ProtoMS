@@ -17,7 +17,7 @@ import logging
 from protomslib import simulationobjects
 from protomslib.prepare.water import split_waters, set_jaws2_box
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def get_arg_parser():
@@ -26,19 +26,23 @@ def get_arg_parser():
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
         description="Program to split JAWS-1 waters to a number of "
-                    "PDB-files for JAWS-2")
+        "PDB-files for JAWS-2"
+    )
     parser.add_argument(
-        '-w',
-        '--waters',
-        help="the name of the PDB-file containing the waters.")
+        "-w",
+        "--waters",
+        help="the name of the PDB-file containing the waters.",
+    )
     parser.add_argument(
-        '-o', '--out', help="the prefix of the output PDB-files", default="")
+        "-o", "--out", help="the prefix of the output PDB-files", default=""
+    )
     parser.add_argument(
-        '--jaws2box',
-        action='store_true',
+        "--jaws2box",
+        action="store_true",
         help="whether to apply a header box for jaws2 to the pdb "
-             "files of individual waters",
-        default=False)
+        "files of individual waters",
+        default=False,
+    )
     return parser
 
 
@@ -57,11 +61,15 @@ if __name__ == "__main__":
     if args.jaws2box:
         set_jaws2_box(single_waters)
 
-    single_waters.write([
-        args.out + "wat%d.pdb" % (i + 1)
-        for i in range(len(single_waters.pdbs))
-    ])
-    other_waters.write([
-        args.out + "not%d.pdb" % (i + 1)
-        for i in range(len(single_waters.pdbs))
-    ])
+    single_waters.write(
+        [
+            args.out + "wat%d.pdb" % (i + 1)
+            for i in range(len(single_waters.pdbs))
+        ]
+    )
+    other_waters.write(
+        [
+            args.out + "not%d.pdb" % (i + 1)
+            for i in range(len(single_waters.pdbs))
+        ]
+    )

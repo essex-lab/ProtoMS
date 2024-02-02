@@ -69,27 +69,31 @@ def get_arg_parser():
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Split your multi pdb file into individual files")
+        description="Split your multi pdb file into individual files"
+    )
     parser.add_argument(
-        '-i',
-        '--input',
+        "-i",
+        "--input",
         help="The name of your multi pdb file. Default = all.pdb",
-        default="all.pdb")
+        default="all.pdb",
+    )
     parser.add_argument(
-        '-o',
-        '--output',
+        "-o",
+        "--output",
         help="The basename of your individual pdb files. Default = snapshot_",
-        default="snapshot_")
+        default="snapshot_",
+    )
     parser.add_argument(
-        '-p',
-        '--path',
+        "-p",
+        "--path",
         help="Where the input should be found and the output printed. "
-             "Default = ./",
-        default="./")
+        "Default = ./",
+        default="./",
+    )
     return parser
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     args = get_arg_parser().parse_args()
 

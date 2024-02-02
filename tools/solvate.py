@@ -40,73 +40,85 @@ def get_arg_parser():
   """
     parser = argparse.ArgumentParser(
         description="Program to solvate a solute molecule in either a box or "
-                    "a droplet",
+        "a droplet",
         epilog=disclaimer,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument(
-        '-b',
-        '--box',
+        "-b",
+        "--box",
         help="a PDB-file containing a pre-equilibrated box of water molcules",
-        default="")
+        default="",
+    )
     parser.add_argument(
-        '-s',
-        '--solute',
+        "-s",
+        "--solute",
         help="a PDB-file containing the solute molecule",
-        default=None)
+        default=None,
+    )
     parser.add_argument(
-        '-pr',
-        '--protein',
+        "-pr",
+        "--protein",
         help="a PDB-file containing the protein molecule",
-        default=None)
+        default=None,
+    )
     parser.add_argument(
-        '-o',
-        '--out',
+        "-o",
+        "--out",
         help="the name of the output PDB-file containing the added water, "
-             "default solvent_box.pdb",
-        default="solvent_box.pdb")
+        "default solvent_box.pdb",
+        default="solvent_box.pdb",
+    )
     parser.add_argument(
-        '-g',
-        '--geometry',
+        "-g",
+        "--geometry",
         choices=["box", "droplet", "flood"],
         help="the geometry of the added water, should be either 'box',"
-             " 'droplet' or 'flood'",
-        default="box")
+        " 'droplet' or 'flood'",
+        default="box",
+    )
     parser.add_argument(
-        '-p',
-        '--padding',
+        "-p",
+        "--padding",
         type=float,
         help="the minimum distance between the solute and the box edge,"
-             " default=10 A",
-        default=10.0)
+        " default=10 A",
+        default=10.0,
+    )
     parser.add_argument(
-        '-r',
-        '--radius',
+        "-r",
+        "--radius",
         type=float,
         help="the radius of the droplet, default=30A",
-        default=30.0)
+        default=30.0,
+    )
     parser.add_argument(
-        '-c',
-        '--center',
+        "-c",
+        "--center",
         help="definition of center, default='cent'",
-        default="cent")
+        default="cent",
+    )
     parser.add_argument(
-        '-n',
-        '--names',
+        "-n",
+        "--names",
         choices=["Amber", "ProtoMS"],
         help="the naming convention, should be either Amber or ProtoMS",
-        default="ProtoMS")
+        default="ProtoMS",
+    )
     parser.add_argument(
-        '--offset',
+        "--offset",
         type=float,
         help="the offset to be added to vdW radii of the atoms to avoid"
-             " overfilling cavities with water.",
-        default=0.89)
+        " overfilling cavities with water.",
+        default=0.89,
+    )
     parser.add_argument(
-        '--setupseed',
+        "--setupseed",
         type=int,
         help="optional random number seed for generation of water"
-             " coordinates..",
-        default=None)
+        " coordinates..",
+        default=None,
+    )
     return parser
 
 
@@ -115,7 +127,7 @@ def get_arg_parser():
 # If this is run from the command-line
 # -------------------------------------
 #
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     args = get_arg_parser().parse_args()
 
@@ -136,7 +148,8 @@ if __name__ == '__main__':
         if args.solute == "" and args.protein == "":
             print(
                 "You still haven't entered a protein or a solute to solvate!",
-                end='\n\n')
+                end="\n\n",
+            )
             quit()
     if args.box == "":
         print("Enter the filename of a pre-equilibrated water box: ", end="")
@@ -146,7 +159,15 @@ if __name__ == '__main__':
     if args.protein == "":
         args.protein = None
 
-    boxpdb = solvate(args.box, args.solute, args.protein, args.geometry,
-                     args.padding, args.radius, args.center, args.names,
-                     args.offset)
+    boxpdb = solvate(
+        args.box,
+        args.solute,
+        args.protein,
+        args.geometry,
+        args.padding,
+        args.radius,
+        args.center,
+        args.names,
+        args.offset,
+    )
     boxpdb.write(args.out)

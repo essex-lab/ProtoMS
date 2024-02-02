@@ -17,7 +17,7 @@ import numpy as np
 import six
 from protomslib import simulationobjects
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def calc_rmsd(ref, structures, resname, atomname=None):
@@ -39,7 +39,7 @@ def calc_rmsd(ref, structures, resname, atomname=None):
     -------
     float :
       the RMSD in Angstroms
-  """
+    """
     resname = resname.lower()
     if atomname is not None:
         atomname = atomname.lower()
@@ -51,8 +51,10 @@ def calc_rmsd(ref, structures, resname, atomname=None):
                 continue
             center = np.zeros(3)
             for atom in res.atoms:
-                if atomname is not None and \
-                   atom.name.strip().lower() != atomname:
+                if (
+                    atomname is not None
+                    and atom.name.strip().lower() != atomname
+                ):
                     continue
                 center = center + atom.coords
             if atomname is None:
@@ -63,15 +65,17 @@ def calc_rmsd(ref, structures, resname, atomname=None):
     for i, res in six.iteritems(ref.residues):
         if res.name.lower() == resname:
             for atom in res.atoms:
-                if atomname is not None and \
-                   atom.name.strip().lower() != atomname:
+                if (
+                    atomname is not None
+                    and atom.name.strip().lower() != atomname
+                ):
                     continue
                 refcent = refcent + atom.coords
             if atomname is None:
                 refcent = refcent / float(len(res.atoms))
             break
 
-    diff2 = np.sum((centers - refcent)**2, axis=1)
+    diff2 = np.sum((centers - refcent) ** 2, axis=1)
     return np.sqrt(diff2.mean())
 
 
@@ -80,19 +84,23 @@ def get_arg_parser():
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Program to calculate RMSD of ligand centre")
+        description="Program to calculate RMSD of ligand centre"
+    )
     parser.add_argument(
-        '-i', '--initial', help="the initial PDB-file of the ligand")
-    parser.add_argument('-f', '--files', nargs="+", help="the input PDB-files")
+        "-i", "--initial", help="the initial PDB-file of the ligand"
+    )
+    parser.add_argument("-f", "--files", nargs="+", help="the input PDB-files")
     parser.add_argument(
-        '-l', '--ligand', help="the name of the ligand to extract")
-    parser.add_argument('-a', '--atom', help="the name of the atom to analyze")
+        "-l", "--ligand", help="the name of the ligand to extract"
+    )
+    parser.add_argument("-a", "--atom", help="the name of the atom to analyze")
     parser.add_argument(
-        '-t',
-        '--temperature',
+        "-t",
+        "--temperature",
         type=float,
         help="the temperature in the simulation",
-        default=298.0)
+        default=298.0,
+    )
     return parser
 
 
@@ -131,5 +139,7 @@ if __name__ == "__main__":
     # Calculate force constant from equipartition theorem
     k = 3.0 * 1.987 * args.temperature / 1000.0 / (rmsd * rmsd)
     print("\nThis corresponds to a spring constant of %.3f kcal/mol/A2" % k)
-    print("(to use this as an harmonic restraint in ProtoMS, specify %.3f)" %
-          (k * 0.5))
+    print(
+        "(to use this as an harmonic restraint in ProtoMS, specify %.3f)"
+        % (k * 0.5)
+    )

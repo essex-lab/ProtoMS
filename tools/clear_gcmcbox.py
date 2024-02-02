@@ -17,25 +17,30 @@ import logging
 from protomslib import simulationobjects
 from protomslib.gcmc import clear_gcmcbox
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def get_arg_parser():
     import argparse
+
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Program to remove water molecules from a GCMC/JAWS-1 box")
+        description="Program to remove water molecules from a GCMC/JAWS-1 box"
+    )
     parser.add_argument(
-        '-b', '--box', help="the name of the PDB-file containing the box.")
+        "-b", "--box", help="the name of the PDB-file containing the box."
+    )
     parser.add_argument(
-        '-s',
-        '--solvation',
-        help="the name of the PDB-file containing the solvation waters")
+        "-s",
+        "--solvation",
+        help="the name of the PDB-file containing the solvation waters",
+    )
     parser.add_argument(
-        '-o',
-        '--out',
+        "-o",
+        "--out",
         help="the name of the output PDB-file",
-        default="cleared_box.pdb")
+        default="cleared_box.pdb",
+    )
     return parser
 
 

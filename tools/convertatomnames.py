@@ -16,7 +16,7 @@ import logging
 from protomslib import simulationobjects
 from protomslib.prepare import pdb2pms
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def get_arg_parser():
@@ -26,20 +26,24 @@ def get_arg_parser():
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
         description="Program convert atom names in a protein pdb-file to"
-                    " ProtoMS style")
-    parser.add_argument('-p', '--protein', help="the protein PDB-file")
+        " ProtoMS style"
+    )
+    parser.add_argument("-p", "--protein", help="the protein PDB-file")
     parser.add_argument(
-        '-o', '--out', help="the output PDB-file", default="protein_pms.pdb")
+        "-o", "--out", help="the output PDB-file", default="protein_pms.pdb"
+    )
     parser.add_argument(
-        '-s',
-        '--style',
+        "-s",
+        "--style",
         help="the style of the input PDB-file",
-        default="amber")
+        default="amber",
+    )
     parser.add_argument(
-        '-c',
-        '--conversionfile',
+        "-c",
+        "--conversionfile",
         help="the name of the file with conversion rules",
-        default="atomnamesmap.dat")
+        default="atomnamesmap.dat",
+    )
     return parser
 
 

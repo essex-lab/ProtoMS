@@ -13,9 +13,10 @@ def get_arg_parser():
     """Add custom argument parser for this script"""
     parser = fe.FEArgumentParser(
         description="Calculate water binding free energies using Grand "
-                    "Canonical Integration.",
+        "Canonical Integration.",
         parents=[fe.get_gci_arg_parser()],
-        conflict_handler='resolve')
+        conflict_handler="resolve",
+    )
     return parser
 
 
@@ -31,9 +32,10 @@ def run_script(cmdline):
         args.nmax,
         args.nfits,
         args.pin_min,
-        results_name=args.name)
+        results_name=args.name,
+    )
     tc.run(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_script(sys.argv[1:])

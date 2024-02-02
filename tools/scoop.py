@@ -17,7 +17,7 @@ from protomslib import simulationobjects
 from protomslib.prepare import scoop
 
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def get_arg_parser():
@@ -25,58 +25,69 @@ def get_arg_parser():
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Program scoop a protein pdb-file")
-    parser.add_argument('-p', '--protein', help="the protein PDB-file")
-    parser.add_argument('-l', '--ligand', help="the ligand PDB-file")
+        description="Program scoop a protein pdb-file"
+    )
+    parser.add_argument("-p", "--protein", help="the protein PDB-file")
+    parser.add_argument("-l", "--ligand", help="the ligand PDB-file")
     parser.add_argument(
-        '-o', '--out', help="the output PDB-file", default="scoop.pdb")
+        "-o", "--out", help="the output PDB-file", default="scoop.pdb"
+    )
     parser.add_argument(
-        '--center',
+        "--center",
         help="the center of the scoop, if ligand is not available, either a "
-             "string or a file with the coordinates",
-        default="0.0 0.0 0.0")
+        "string or a file with the coordinates",
+        default="0.0 0.0 0.0",
+    )
     parser.add_argument(
-        '--innercut',
+        "--innercut",
         type=float,
         help="maximum distance from ligand defining inner region of the scoop",
-        default=16.0)
+        default=16.0,
+    )
     parser.add_argument(
-        '--outercut',
+        "--outercut",
         type=float,
         help="maximum distance from ligand defining outer region of the scoop",
-        default=20.0)
+        default=20.0,
+    )
     parser.add_argument(
-        '--flexin',
-        choices=['sidechain', 'flexible', 'rigid'],
+        "--flexin",
+        choices=["sidechain", "flexible", "rigid"],
         help="the flexibility of the inner region",
-        default="flexible")
+        default="flexible",
+    )
     parser.add_argument(
-        '--flexout',
-        choices=['sidechain', 'flexible', 'rigid'],
+        "--flexout",
+        choices=["sidechain", "flexible", "rigid"],
         help="the flexibility of the inner region",
-        default="sidechain")
+        default="sidechain",
+    )
     parser.add_argument(
-        '--terminal',
-        choices=['keep', 'doublekeep', 'neutralize'],
+        "--terminal",
+        choices=["keep", "doublekeep", "neutralize"],
         help="controls of to deal with charged terminal",
-        default="neutralize")
+        default="neutralize",
+    )
     parser.add_argument(
-        '--excluded',
+        "--excluded",
         nargs="+",
         type=int,
         help="a list of indices for residues to be excluded from scoops",
-        default=[])
+        default=[],
+    )
     parser.add_argument(
-        '--added',
+        "--added",
         nargs="+",
         type=int,
         help="a list of indices for residues to be included in outer scoops",
-        default=[])
+        default=[],
+    )
     parser.add_argument(
-        '--scooplimit',
+        "--scooplimit",
         help="the minimum difference between number of residues in protein"
-             " and scoop for scoop to be retained",
-        default=10)
+        " and scoop for scoop to be retained",
+        default=10,
+    )
     return parser
 
 
@@ -92,7 +103,16 @@ if __name__ == "__main__":
     else:
         ligand = simulationobjects.PDBFile(filename=args.ligand)
     protein = simulationobjects.PDBFile(filename=args.protein)
-    protein = scoop(protein, ligand, args.innercut, args.outercut, args.flexin,
-                    args.flexout, args.terminal, args.excluded, args.added,
-                    args.scooplimit)
+    protein = scoop(
+        protein,
+        ligand,
+        args.innercut,
+        args.outercut,
+        args.flexin,
+        args.flexout,
+        args.terminal,
+        args.excluded,
+        args.added,
+        args.scooplimit,
+    )
     protein.write(args.out, renumber=True)
