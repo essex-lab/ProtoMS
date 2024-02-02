@@ -23,8 +23,8 @@ import pickle
 import os
 import sys
 import matplotlib
-from protomslib import *
-from protomslib.free_energy import *
+from protomslib import *  # noqa: F403
+from protomslib.free_energy import *  # noqa: F403
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
     matplotlib.use("Agg")
