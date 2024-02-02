@@ -38,31 +38,33 @@ except IndexError:
     sys.exit(0)
 
 # open the include file
-try:
-    idfile = open(filename, "w")
-except:
-    print("Cannot open id file %s for writing" % idfile)
-    sys.exit(0)
+# try:
+#     idfile = open(filename, "w")
+# except:
+#     print("Cannot open id file %s for writing" % idfile)
+#     sys.exit(0)
 
-# now write down the date that this code was compiled, and who has compiled it
-user = pwd.getpwuid(os.getuid())[0]
-today = datetime.datetime.today()
-today = today.replace(microsecond=0)
-host = socket.gethostname()
+with open(filename, "w") as idfile:
 
-writeLine("Compiled on %s by %s at %s." % (host, user, today))
+    # now write down the date that this code was compiled, and who has compiled it
+    user = pwd.getpwuid(os.getuid())[0]
+    today = datetime.datetime.today()
+    today = today.replace(microsecond=0)
+    host = socket.gethostname()
 
-try:
-    identify = os.popen("hg identify", "r").readline()
-    identify = identify.strip("\n ")
-    path = os.popen("hg paths default", "r").readline()
-    path = path.strip("\n ")
-except:
-    writeLine("Mercurial information not available.")
-else:
-    if identify.startswith("abort") or path == "not found!":
+    writeLine("Compiled on %s by %s at %s." % (host, user, today))
+
+    try:
+        identify = os.popen("hg identify", "r").readline()
+        identify = identify.strip("\n ")
+        path = os.popen("hg paths default", "r").readline()
+        path = path.strip("\n ")
+    except:
         writeLine("Mercurial information not available.")
     else:
-        writeLine("Revision: %s" % identify)
-        if "@" in path:
-            writeLine("From: %s" % path[path.find("@") + 1 :])
+        if identify.startswith("abort") or path == "not found!":
+            writeLine("Mercurial information not available.")
+        else:
+            writeLine("Revision: %s" % identify)
+            if "@" in path:
+                writeLine("From: %s" % path[path.find("@") + 1 :])
