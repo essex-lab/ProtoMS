@@ -1,5 +1,5 @@
 import numpy as np
-import sys, os
+import sys
 sys.path.append ( '/home/chris/protoms_tmp/tools' )
 import simulationobjects as sim
 import argparse
