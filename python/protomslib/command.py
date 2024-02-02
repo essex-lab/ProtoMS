@@ -41,7 +41,7 @@ def _assignMoveProbabilities(
     pgcsolu = 0.0
 
     accel_prot = 5  # Factor by which the protein is accelerated w.r.t solvent
-    if dual == False:
+    if dual is False:
         accel_solu = (
             50  # Factor by which the solute is accelerated w.r.t solvent
         )
