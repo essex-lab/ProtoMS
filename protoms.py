@@ -478,8 +478,8 @@ if __name__ == "__main__":
     ligand_water = None  # This will hold the filename of the free-leg waterbox
     if args.ligand is not None:
         # Read in each ligand pdb file and create a pdb object
-        for l in args.ligand:
-            prefix = _get_prefix(l)
+        for _ligand in args.ligand:
+            prefix = _get_prefix(_ligand)
             ligands.append(prefix)
             ligand_files[prefix] = {}
             ligand_files[prefix]["pdb"], ligand_files[prefix]["obj"] = (
@@ -535,8 +535,8 @@ if __name__ == "__main__":
             ligobjs = ligand_files[ligands[0]]["obj"]
 
         # Now do the preparations
-        for i, l in enumerate(args.ligand):
-            if l[0] == "*":
+        for i, _ligand in enumerate(args.ligand):
+            if _ligand[0] == "*":
                 continue  # Skip ligands created in the script, i.e. the dummy
             if args.charge is not None and i < len(args.charge):
                 charge = args.charge[i]
@@ -544,7 +544,7 @@ if __name__ == "__main__":
                 charge = 0
             if i > 1:
                 ligobj12 = None
-            prefix = _get_prefix(l)
+            prefix = _get_prefix(_ligand)
             _prep_ligand(
                 ligand_files[prefix],
                 i == 0,
