@@ -651,7 +651,7 @@ class TnkParameterSet ( object ):
                 
     def write_protoms_ff ( self, fname ):
 
-        print "Assuming standard OPLS scaling for 1-4 nonbonded interactions"
+        print("Assuming standard OPLS scaling for 1-4 nonbonded interactions")
 
         s = """mode info
 ljcombine geometric
