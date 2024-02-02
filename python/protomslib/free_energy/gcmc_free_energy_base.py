@@ -493,7 +493,7 @@ class Slp(object):
                 self.forward_unit(unit)
                 return self.huber(c)
 
-        if type(pin_max) == float or type(pin_max) == int:
+        if isinstance(pin_max, float) or isinstance(pin_max, int):
             betas = np.ma.array(self.weights[:, 2], mask=False)
             betas.mask[unit] = True
             unit_max = pin_max - self.offset - np.sum(betas)
@@ -597,7 +597,7 @@ class Slp(object):
         """
         if pin_min is None:
             self.fit_offset(grad_tol, cost, c)
-        if type(pin_min) == float or type(pin_min) == int:
+        if isinstance(pin_min, float) or isinstance(pin_min, int):
             self.offset = pin_min
         for unit in range(self.size):
             self.fit_unit(unit, grad_tol, pin_max, monotonic, cost, c)

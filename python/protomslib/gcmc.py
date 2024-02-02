@@ -167,7 +167,7 @@ def distribute_particles(
         )
 
     else:
-        if type(particles) is str:
+        if isinstance(particles, str):
             try:
                 pdbobj = simulationobjects.PDBFile()
                 pdbobj.read(particles)
