@@ -473,7 +473,7 @@ scl14lj    0.500\n"""
 
     def write_protoms_types ( self, fname ):
 
-        print "Writing types file with LJ parameters"
+        print("Writing types file with LJ parameters")
 
         s = ""
         # GAFF lower case element definitions
