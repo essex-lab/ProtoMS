@@ -285,7 +285,7 @@ class Routine:
             return
 
         self.__writes.append(val)
-        addReads(self, name)
+        self.addReads(self, name)
 
     def cleanReadWrite(self):
         """Cleans lists, as if writes variable then must also read variable -
