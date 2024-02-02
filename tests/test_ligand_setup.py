@@ -12,6 +12,7 @@ import site
 from protomslib import simulationobjects
 from protomslib.prepare import _load_ligand_pdb, _prep_ligand
 from protomslib.utils import _get_prefix
+
 # Storing PROTOMSHOME environment variable to a python variable.
 proto_env = os.environ["PROTOMSHOME"]
 
@@ -25,9 +26,9 @@ class MockArgs:
 class TestLigSetup(unittest.TestCase):
     def setUp(self):
         super(TestLigSetup, self).setUp()
-        self.tarlist = []   # List of files to be stored
+        self.tarlist = []  # List of files to be stored
         self.prefix = None  # Ligand filename (prefix)
-        self.ligands = []   # List of ligands
+        self.ligands = []  # List of ligands
         self.ligpdb = None  # List of ligand pdb-files
         self.ligtem = None  # List of ligand template files
         self.ligobj = None  # Merged pdb object of all ligand pdb objects
@@ -42,24 +43,31 @@ class TestLigSetup(unittest.TestCase):
             self.ligands.append(self.prefix)
 
             pref_lig = {}
-            pref_lig["pdb"], pref_lig["obj"] = \
-                _load_ligand_pdb(self.prefix,
-                                 [os.path.join(proto_env, "tests/setup")])
+            pref_lig["pdb"], pref_lig["obj"] = _load_ligand_pdb(
+                self.prefix, [os.path.join(proto_env, "tests/setup")]
+            )
             self.ligfiles[self.prefix] = pref_lig
 
             # Unmerged pdb object for single ligand
             self.ligobj = self.ligfiles[self.ligands[0]]["obj"]
 
             args = MockArgs()
-            _prep_ligand(self.ligfiles[self.prefix], 0, 0, self.ligobj,
-                         [" "], self.tarlist, args)
+            _prep_ligand(
+                self.ligfiles[self.prefix],
+                0,
+                0,
+                self.ligobj,
+                [" "],
+                self.tarlist,
+                args,
+            )
 
         except ImportError as e:
             print(e)
             print("Ligand file not found.")
 
 
-if __name__ == '__main__':
-    logger = simulationobjects.setup_logger('protoms_py.log')
+if __name__ == "__main__":
+    logger = simulationobjects.setup_logger("protoms_py.log")
     unittest.main()
     nose.runmodule()

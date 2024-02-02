@@ -4,7 +4,6 @@ import unittest
 import subprocess
 import os
 import shutil
-import itertools
 import string
 import six
 import filecmp
@@ -90,18 +89,34 @@ class BaseTest(unittest.TestCase):
         try:
             protoms_env = os.environ["PROTOMSHOME"]
         except KeyError:
-            raise EnvironmentError("PROTOMSHOME environment variable is not set.")
+            raise EnvironmentError(
+                "PROTOMSHOME environment variable is not set."
+            )
 
         # These are required for every test
-        if None in (cls.ref_dir, cls.input_files, cls.executable, cls.args, cls.output_files):
-            raise TestDefinitionError("Missing required test attributes in definition of test '{0}'. Check framework.py".format(cls.__name__))
+        if None in (
+            cls.ref_dir,
+            cls.input_files,
+            cls.executable,
+            cls.args,
+            cls.output_files,
+        ):
+            raise TestDefinitionError(
+                "Missing required test attributes in definition of test '{0}'. Check framework.py".format(
+                    cls.__name__
+                )
+            )
 
         cls.executable = os.path.join(protoms_env, cls.executable)
 
         cls._all_files = cls.input_files[:]
         cls._full_ref_dir = os.path.join(protoms_env, cls.ref_dir)
 
-        output_files = [os.path.join(d, f) for f in cls.output_files for d in cls.output_directories]
+        output_files = [
+            os.path.join(d, f)
+            for f in cls.output_files
+            for d in cls.output_directories
+        ]
         cls._all_files.extend(output_files)
 
         # Delete files left over from previous test runs and replace them
@@ -140,16 +155,25 @@ class BaseTest(unittest.TestCase):
         compare_tools = CompareTools(self._full_ref_dir, verbose=True)
 
         for filename in output_files:
-            self.assertTrue(os.path.exists(filename),
-                            "Expected output file {0} is missing".format(filename))
-            self.assertTrue(os.path.exists(os.path.join(self._full_ref_dir, filename)),
-                            "Reference output file {0} is missing".format(filename))
+            self.assertTrue(
+                os.path.exists(filename),
+                "Expected output file {0} is missing".format(filename),
+            )
+            self.assertTrue(
+                os.path.exists(os.path.join(self._full_ref_dir, filename)),
+                "Reference output file {0} is missing".format(filename),
+            )
 
         for filename in output_files:
             file_match = compare_tools.compare(filename)
             if not file_match:
                 self._all_files.remove(filename)
-            self.assertTrue(file_match, "Content mismatch between output and reference for file {0}".format(filename))
+            self.assertTrue(
+                file_match,
+                "Content mismatch between output and reference for file {0}".format(
+                    filename
+                ),
+            )
 
     @classmethod
     def _helper_copy_input_files(cls):
@@ -157,7 +181,11 @@ class BaseTest(unittest.TestCase):
             try:
                 shutil.copy(os.path.join(cls._full_ref_dir, filename), ".")
             except IOError:
-                raise IOError("The required reference input file {0} could not be copied".format(filename))
+                raise IOError(
+                    "The required reference input file {0} could not be copied".format(
+                        filename
+                    )
+                )
 
     def test(self):
         # self._helper_copy_input_files()
@@ -169,7 +197,11 @@ class BaseTest(unittest.TestCase):
         self._helper_subprocess_call(args)
 
         print("\nTEST_OUTPUT\n")
-        out_files = [os.path.join(d, f) for f in self.output_files for d in self.output_directories]
+        out_files = [
+            os.path.join(d, f)
+            for f in self.output_files
+            for d in self.output_directories
+        ]
         self._helper_check_output(out_files)
 
 
@@ -192,30 +224,36 @@ class CompareTools:
 
         # Lines beginning with these strings will be ignored when using diff_text_ign_starts_with
         ignore_starts = {
-            "cmd" : {"parfile"},
-            "info": {"#",
-                     "protoms3 started at",
-                     "Reading parameter file",
-                     "Starting simulation at",
-                     "protoms3 completed at",
-                     "These moves took"}
+            "cmd": {"parfile"},
+            "info": {
+                "#",
+                "protoms3 started at",
+                "Reading parameter file",
+                "Starting simulation at",
+                "protoms3 completed at",
+                "These moves took",
+            },
         }
 
         # Which comparison tool to use for each file format
-        diff_text_decimal_rel_err_zero = functools.partial(CompareTools.diff_text, decimal_rel_err=0)
+        diff_text_decimal_rel_err_zero = functools.partial(
+            CompareTools.diff_text, decimal_rel_err=0
+        )
         self._comparetools = {
-            "accept"      : diff_text_decimal_rel_err_zero,
-            "warning"     : diff_text_decimal_rel_err_zero,
-            ".cmd"        : CompareTools.diff_text,  # Use ign_starts_with if paths vary on different systems
-            "info"        : functools.partial(CompareTools.diff_text,
-                                              ign_starts_with=ignore_starts["info"]),
-            ".pdb"        : diff_text_decimal_rel_err_zero,
-            "restart"     : diff_text_decimal_rel_err_zero,
+            "accept": diff_text_decimal_rel_err_zero,
+            "warning": diff_text_decimal_rel_err_zero,
+            ".cmd": CompareTools.diff_text,  # Use ign_starts_with if paths vary on different systems
+            "info": functools.partial(
+                CompareTools.diff_text, ign_starts_with=ignore_starts["info"]
+            ),
+            ".pdb": diff_text_decimal_rel_err_zero,
+            "restart": diff_text_decimal_rel_err_zero,
             "restart.prev": diff_text_decimal_rel_err_zero,
-            "results"     : functools.partial(CompareTools.diff_text,
-                                              decimal_rel_err=0.01),
+            "results": functools.partial(
+                CompareTools.diff_text, decimal_rel_err=0.01
+            ),
             "results_inst": diff_text_decimal_rel_err_zero,
-            None          : CompareTools.diff_filecmp
+            None: CompareTools.diff_filecmp,
         }
 
     def _get_comparison_function(self, filename, verbose=True):
@@ -261,13 +299,25 @@ class CompareTools:
 
         comparison = self._get_comparison_function(filename)
 
-        used_default_comparison = " using strict file comparison" if comparison is CompareTools.diff_filecmp else ""
+        used_default_comparison = (
+            " using strict file comparison"
+            if comparison is CompareTools.diff_filecmp
+            else ""
+        )
         if comparison(filename, reffile, verbose=self.verbose):
             if self.verbose:
-                print("File matched reference{0}: {1}".format(used_default_comparison, filename))
+                print(
+                    "File matched reference{0}: {1}".format(
+                        used_default_comparison, filename
+                    )
+                )
             return True
         else:
-            print("File did not match reference{0}: {1}".format(used_default_comparison, filename))
+            print(
+                "File did not match reference{0}: {1}".format(
+                    used_default_comparison, filename
+                )
+            )
             return False
 
     @staticmethod
@@ -288,8 +338,14 @@ class CompareTools:
         return filecmp.cmp(file1, file2)
 
     @staticmethod
-    def diff_text(file1, file2, verbose=True,
-                  ign_white=False, ign_starts_with=None, decimal_rel_err=None):
+    def diff_text(
+        file1,
+        file2,
+        verbose=True,
+        ign_white=False,
+        ign_starts_with=None,
+        decimal_rel_err=None,
+    ):
         """
         Check whether text file contents match line by line
 
@@ -307,7 +363,9 @@ class CompareTools:
             Whether files match
         """
         if ign_white and decimal_rel_err is not None:
-            raise Exception("Text diff cannot be used with both 'ign_white' and 'number_rel_error'")
+            raise Exception(
+                "Text diff cannot be used with both 'ign_white' and 'number_rel_error'"
+            )
 
         with open(file1) as f1, open(file2) as f2:
             for l1, l2 in six.moves.zip_longest(f1, f2):
@@ -326,8 +384,10 @@ class CompareTools:
                 if ign_white:
                     l1 = l1.translate(None, string.whitespace)
                     l2 = l2.translate(None, string.whitespace)
-                elif decimal_rel_err is not None and \
-                     CompareTools._compare_decimals(l1, l2, decimal_rel_err):
+                elif (
+                    decimal_rel_err is not None
+                    and CompareTools._compare_decimals(l1, l2, decimal_rel_err)
+                ):
                     # _compare_decimals implicitly skips whitespace anyway
                     continue
 

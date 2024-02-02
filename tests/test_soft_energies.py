@@ -52,7 +52,7 @@ class EnergiesSimulationSoftSolventTest(framework.BaseTest):
         "brd.pdb",
         "cld.pdb",
         "soft_solvent.pdb",
-        "brd.tem"
+        "brd.tem",
     ]
 
     executable = "build/protoms3"
@@ -60,18 +60,16 @@ class EnergiesSimulationSoftSolventTest(framework.BaseTest):
     args = [
         ["run_soft_solvent.cmd"],
         ["run_mixed_solvent.cmd"],
-        ["run_solvent.cmd"]
+        ["run_solvent.cmd"],
     ]
 
     output_directories = [
         "out_soft_solvent",
         "out_mixed_solvent",
-        "out_solvent"
+        "out_solvent",
     ]
 
-    output_files = [
-        "results"
-    ]
+    output_files = ["results"]
 
     def test(self):
         self._helper_copy_input_files()
@@ -84,21 +82,23 @@ class EnergiesSimulationSoftSolventTest(framework.BaseTest):
             self._helper_subprocess_call(args)
 
         print("\nTEST_OUTPUT\n")
-        out_files = [os.path.join(d, f)
-                     for f in self.output_files
-                     for d in self.output_directories]
+        out_files = [
+            os.path.join(d, f)
+            for f in self.output_files
+            for d in self.output_directories
+        ]
         soft_energies = self.get_result_energies(out_files[0])
         mixed_energies = self.get_result_energies(out_files[1])
         energies = self.get_result_energies(out_files[2])
         for se, me, e in zip(soft_energies, mixed_energies, energies):
-            self.assertAlmostEqual((se+e)/2, me, 2)
+            self.assertAlmostEqual((se + e) / 2, me, 2)
 
     def get_result_energies(self, filename):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term1 = snapshot.interaction_energies['brd-solvent']
-        term2 = snapshot.interaction_energies['cld-solvent']
+        term1 = snapshot.interaction_energies["brd-solvent"]
+        term2 = snapshot.interaction_energies["cld-solvent"]
         return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
@@ -117,27 +117,27 @@ class EnergiesSimulationSoftProteinTest(EnergiesSimulationSoftSolventTest):
         "cld.pdb",
         "soft_protein.pdb",
         "brd.tem",
-        "t3p.ff"
+        "t3p.ff",
     ]
 
     args = [
         ["run_soft_protein.cmd"],
         ["run_mixed_protein.cmd"],
-        ["run_protein.cmd"]
+        ["run_protein.cmd"],
     ]
 
     output_directories = [
         "out_soft_protein",
         "out_mixed_protein",
-        "out_protein"
+        "out_protein",
     ]
 
     def get_result_energies(self, filename):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term1 = snapshot.interaction_energies['protein1-brd1']
-        term2 = snapshot.interaction_energies['protein1-cld2']
+        term1 = snapshot.interaction_energies["protein1-brd1"]
+        term2 = snapshot.interaction_energies["protein1-cld2"]
         return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
@@ -155,27 +155,27 @@ class EnergiesSimulationSoftGcsoluteTest(EnergiesSimulationSoftSolventTest):
         "brd.pdb",
         "cld.pdb",
         "soft_gcsolute.pdb",
-        "brd.tem"
+        "brd.tem",
     ]
 
     args = [
         ["run_soft_gcsolute.cmd"],
         ["run_mixed_gcsolute.cmd"],
-        ["run_gcsolute.cmd"]
+        ["run_gcsolute.cmd"],
     ]
 
     output_directories = [
         "out_soft_gcsolute",
         "out_mixed_gcsolute",
-        "out_gcsolute"
+        "out_gcsolute",
     ]
 
     def get_result_energies(self, filename):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term1 = snapshot.interaction_energies['brd-GCS']
-        term2 = snapshot.interaction_energies['cld-GCS']
+        term1 = snapshot.interaction_energies["brd-GCS"]
+        term2 = snapshot.interaction_energies["cld-GCS"]
         return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
@@ -194,29 +194,25 @@ class EnergiesSimulationSoftSoluteTest(EnergiesSimulationSoftSolventTest):
         "cld.pdb",
         "soft_solute_t3p.pdb",
         "brd.tem",
-        "t3p.tem"
+        "t3p.tem",
     ]
 
     args = [
         ["run_soft_solute.cmd"],
         ["run_mixed_solute.cmd"],
-        ["run_solute.cmd"]
+        ["run_solute.cmd"],
     ]
 
-    output_directories = [
-        "out_soft_solute",
-        "out_mixed_solute",
-        "out_solute"
-    ]
+    output_directories = ["out_soft_solute", "out_mixed_solute", "out_solute"]
 
     def get_result_energies(self, filename):
         snapshot = sim.SnapshotResults()
         with open(filename) as f:
             snapshot.parse(f)
-        term1 = snapshot.interaction_energies['brd-t3p']
-        term2 = snapshot.interaction_energies['cld-t3p']
+        term1 = snapshot.interaction_energies["brd-t3p"]
+        term2 = snapshot.interaction_energies["cld-t3p"]
         return (term1[0].curr, term1[1].curr, term2[0].curr, term2[1].curr)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
