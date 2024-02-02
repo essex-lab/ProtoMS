@@ -94,8 +94,8 @@ class Column(object):
             self.right.add_data(None)
 
     def __iter__(self):
-        for l, r in zip(self.left, self.right):
-            stuff = "%s +- %s" % (l, r) if len(r) != r.count(" ") else "%s" % l
+        for ll, r in zip(self.left, self.right):
+            stuff = "%s +- %s" % (ll, r) if len(r) != r.count(" ") else "%s" % ll
             yield "%-{}s".format(self.width) % stuff
 
     @property

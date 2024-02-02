@@ -532,7 +532,7 @@ class FreeEnergyCalculation(object):
 
         self.estimators = {
             estimator: [
-                [estimator(l, subdir_glob=subdir, **kwargs) for l in lams]
+                [estimator(ll, subdir_glob=subdir, **kwargs) for ll in lams]
                 for lams in self.lambdas
             ]
             for estimator in estimators
