@@ -20,7 +20,7 @@ with open ( args.accept_file ) as f:
             while not f.next().startswith ( 'Dihedral' ):
                 pass
             f.next()
-            hists.append ( [ float ( f.next() ) for i in xrange ( 20 ) ] )
+            hists.append ( [ float ( f.next() ) for i in range ( 20 ) ] )
             
     except StopIteration:
         pass
@@ -34,10 +34,10 @@ try:
     hists = np.array ( hists )
     for j, hist in enumerate ( hists ):
         c = np.cumsum ( hist )
-        for i in xrange ( len ( c ) ):
+        for i in range ( len ( c ) ):
             c[i] = c[i] / ( i + 1.0 )
 
-        for i in xrange ( len ( c ) ):
+        for i in range ( len ( c ) ):
             if c[i] < (0.6): #**(1/4.)):
                 break
         print ( i + 1 ) * s
