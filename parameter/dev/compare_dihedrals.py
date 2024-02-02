@@ -116,7 +116,7 @@ with open ( 'test/tmp_out' ) as f:
                 pms_dihs[ tuple ( amb_ats ) ] = nterms
                 
 
-print sum ( pms_dihs.values() ), sum ( amb_dihs.values() )
+print(sum(pms_dihs.values()), sum(amb_dihs.values()))
 
 
 all_ats = set ( pms_dihs.keys() + amb_dihs.keys() )
