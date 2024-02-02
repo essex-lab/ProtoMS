@@ -6,7 +6,7 @@ import os
 
 try:
     filename = sys.argv[1]
-except:
+except IndexError:
     print("USAGE: getsep.py outputfile")
     sys.exit(0)
 
