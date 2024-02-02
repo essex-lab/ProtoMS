@@ -3,7 +3,7 @@ import sys
 
 home = os.environ["PROTOMSHOME"]
 sys.path.append(os.path.join(home, "tools"))
-import AmbParam
+import AmbParam  # noqa: E402
 
 ambParm = AmbParam.AmbParameterSet(1001)
 # ambParm2 = AmbParam.AmbParameterSet ()

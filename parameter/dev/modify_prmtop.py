@@ -4,7 +4,7 @@ import argparse
 
 home = os.environ["PROTOMSHOME"]
 sys.path.append(os.path.join(home, "tools"))
-import prmtop
+import prmtop  # noqa: E402
 
 parser = argparse.ArgumentParser(
     description="Script to modify amber topology files to omit dihedral energetic terms not calculated by ProtoMS and rescale atomic charges. The resultant topology file can be used in validation of parameter sets used in ProtoMS."

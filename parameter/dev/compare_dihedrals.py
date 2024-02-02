@@ -3,9 +3,9 @@ import sys
 
 home = os.environ["PROTOMSHOME"]
 sys.path.append(os.path.join(home, "tools"))
-from convertatomnames import read_convfile
-import simulationobjects as sim
-import prmtop
+from convertatomnames import read_convfile  # noqa: E402
+import simulationobjects as sim  # noqa: E402
+import prmtop  # noqa: E402
 
 conv = read_convfile(
     os.path.join(home, "data", "atomnamesmap2.dat"),
