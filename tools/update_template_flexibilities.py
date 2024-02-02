@@ -43,6 +43,6 @@ try:
         print ( i + 1 ) * s
         dihs[j].flex = ( i + 1 ) * s
 except ZeroDivisionError:
-    print 'No Rotatable dihedrals template not modified'
+    print("No Rotatable dihedrals template not modified")
     
-tem.write ( args.output )
+tem.write(args.output)
