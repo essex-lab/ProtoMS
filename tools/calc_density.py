@@ -244,12 +244,12 @@ def calc_density(
     dictionary
       grid properties, keys = spacing, min, and max
     """
-    residue = molname.lower()
-    atom = atomname.lower()
+    # residue = molname.lower() # Unused?
+    # atom = atomname.lower() # Unused?
 
     # Extract coordinates from PDB-files
     xyz = []
-    nextract = 0.0
+    # nextract = 0.0 # Unused?
     nfound = []
     for pdb in pdbfiles.pdbs:
         found = 0

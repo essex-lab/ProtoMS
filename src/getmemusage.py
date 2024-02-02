@@ -420,11 +420,11 @@ def parseInclude(f):
                 and words[1].lower() == "precision"
             ):
                 # this is a global variable (or global variables!)
-                valtyp = words[0].lower()
+                # valtyp = words[0].lower() # Unused?
                 strt = 1
 
                 if words[0].lower() == "double":
-                    valtyp = "double precision"
+                    # valtyp = "double precision" # Unused?
                     strt = 2
 
                 # get all of the variables on the line
@@ -437,7 +437,7 @@ def parseInclude(f):
 
                     for val in vals:
                         val = val.strip().rstrip().lstrip()
-                        var = Variable(val, valtyp, f)
+                        # var = Variable(val, valtyp, f) # Unused?
 
                     # if dims[1] then the last variable was an array
                     if len(dims) == 1:
