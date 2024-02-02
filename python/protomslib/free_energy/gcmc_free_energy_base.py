@@ -7,14 +7,14 @@ from scipy import optimize
 from scipy import integrate
 from . import free_energy_base as feb
 from .table import Table
-from .free_energy_argument_parser import FEArgumentParser
+
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
-    matplotlib.use('Agg')
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 thermal_wavelength = 1.00778365325  # of water, in angstroms
 kB = 0.0019872  # Boltzmann's constant, in kcal.mol^-1.K^-1
-standard_volume = 30.  # Standard volume of a water in bulk water
+standard_volume = 30.0  # Standard volume of a water in bulk water
 tip4p_excess = -6.2  # Excess chemical potential of tip4p in bulk tip4p
 
 
@@ -22,6 +22,7 @@ class GCMCPMF(feb.Series):
     """A potential of mean force object for Grand Canonical calculations.
     Stores occupancy data and PMF for insertion free energies.
     """
+
     def __init__(self, coordinate, values, volume, temperature, model, pmf):
         """Parameters
         ----------
@@ -56,7 +57,8 @@ class GCMCResult(feb.BaseResult):
     def __init__(self, *args):
         if len(args) > 1:
             raise TypeError(
-                'GCMCResult objects do not support multiple data instances')
+                "GCMCResult objects do not support multiple data instances"
+            )
         feb.BaseResult.__init__(self, *args)
 
     @property
@@ -77,8 +79,9 @@ class GCMCResult(feb.BaseResult):
     @property
     def insertion_pmf(self):
         """Return a PMF object containing insertion free energies"""
-        return feb.PMF(self.data[0][0].pmf.coordinate,
-                       *[dat.pmf for dat in self.data[0]])
+        return feb.PMF(
+            self.data[0][0].pmf.coordinate, *[dat.pmf for dat in self.data[0]]
+        )
 
     @property
     def model(self):
@@ -86,7 +89,8 @@ class GCMCResult(feb.BaseResult):
         model_ys = []
         for rep in self.data[0]:
             rep.model.x = np.linspace(
-                min(rep.coordinate), max(rep.coordinate), 100)
+                min(rep.coordinate), max(rep.coordinate), 100
+            )
             rep.model.forward()
             model_ys.append(rep.model.predicted)
         return feb.Series(rep.model.x, *model_ys)
@@ -94,8 +98,18 @@ class GCMCResult(feb.BaseResult):
 
 class GCI(feb.Estimator):
     """Estimate insertion free energies using Grand Canonical Integration."""
-    def __init__(self, B_values, volume, results_name='results',
-                 nsteps=None, nmin=None, nmax=None, nfits=10, **kwargs):
+
+    def __init__(
+        self,
+        B_values,
+        volume,
+        results_name="results",
+        nsteps=None,
+        nmin=None,
+        nmax=None,
+        nfits=10,
+        **kwargs
+    ):
         """Parameters
         ----------
         B_values: list of floats
@@ -116,7 +130,7 @@ class GCI(feb.Estimator):
         """
         self.B_values = B_values
         self.data = []
-        self.subdir_glob = ''
+        self.subdir_glob = ""
         self.results_name = results_name
         self.volume = volume
         self.nsteps = nsteps
@@ -159,8 +173,9 @@ class GCI(feb.Estimator):
         if self.nsteps is None:
             if self.nmin is not None or self.nmax is not None:
                 raise ValueError(
-                    'If manually specifying the maximum or minimum number of'
-                    ' waters, nsteps must be manually specified as well.')
+                    "If manually specifying the maximum or minimum number of"
+                    " waters, nsteps must be manually specified as well."
+                )
             else:
                 nsteps = self.N_max - self.N_min
         else:
@@ -168,9 +183,13 @@ class GCI(feb.Estimator):
 
         model_steps = nsteps if nsteps != 0 else 1
         model = fit_ensemble(
-            x=np.array(self.B_values), y=Ns, size=model_steps,
-            repeats=self.nfits, verbose=False)[0]
-        steps = np.arange(self.N_min, self.N_max+1)
+            x=np.array(self.B_values),
+            y=Ns,
+            size=model_steps,
+            repeats=self.nfits,
+            verbose=False,
+        )[0]
+        steps = np.arange(self.N_min, self.N_max + 1)
         pmf = feb.PMF(steps, insertion_pmf(steps, model, self.volume))
         return GCMCPMF(self.B_values, Ns, self.volume, temp, model, pmf)
 
@@ -193,7 +212,7 @@ def pseudohuber(r, c):
       The pseudo Huber cost for a residual r and parameter c
 
     """
-    return (np.sqrt(1 + (r / c)**2) - 1) * c**2
+    return (np.sqrt(1 + (r / c) ** 2) - 1) * c**2
 
 
 def logistic(params, x):
@@ -239,9 +258,10 @@ def integrated_logistic(params, Bi, Bf):
       the area under the logistic curve between Bi and Bf
 
     """
-    return -(params[2]/params[1]) * \
-        (np.log(1 + np.exp(Bf * params[1]+params[0])) -
-         np.log(1 + np.exp(Bi * params[1]+params[0])))
+    return -(params[2] / params[1]) * (
+        np.log(1 + np.exp(Bf * params[1] + params[0]))
+        - np.log(1 + np.exp(Bi * params[1] + params[0]))
+    )
 
 
 def simplex_sample(size):
@@ -344,7 +364,7 @@ class Slp(object):
         """
         Calculates the mean-squared error of the model and updates the error
         """
-        self.error = np.sum((self.y - self.predicted)**2)
+        self.error = np.sum((self.y - self.predicted) ** 2)
         return self.error
 
     def huber(self, c=2):
@@ -378,21 +398,23 @@ class Slp(object):
         """
         self.offset = self.y.min()
         alpha = np.random.uniform(low=0.0, high=2.0, size=self.size)
-        alpha0 = np.sort(-np.random.uniform(
-            low=self.x.min(), high=self.x.max(), size=self.size))
+        alpha0 = np.sort(
+            -np.random.uniform(
+                low=self.x.min(), high=self.x.max(), size=self.size
+            )
+        )
         if pin_max:
             # The beta weights are sampled uniformally from a simplex,
             # such that they add up to range of y values.
-            beta = simplex_sample(self.size) * (
-                self.y.max() - self.offset
-            )
+            beta = simplex_sample(self.size) * (self.y.max() - self.offset)
         else:
-            beta = np.random.uniform(
-                low=0, high=1, size=self.size) * self.y.max()
+            beta = (
+                np.random.uniform(low=0, high=1, size=self.size) * self.y.max()
+            )
         beta.sort()
         self.weights = np.vstack(
-            (alpha0, alpha,
-             beta)).T  # Each row is an element in the logistic function.
+            (alpha0, alpha, beta)
+        ).T  # Each row is an element in the logistic function.
         self.forward()  # Update the logistic streams
 
     def randsearch(self, samples):
@@ -419,13 +441,15 @@ class Slp(object):
         self.forward()
         self.error = error_old
 
-    def fit_unit(self,
-                 unit,
-                 grad_tol=0.001,
-                 pin_max=None,
-                 monotonic=True,
-                 cost="msd",
-                 c=2.0):
+    def fit_unit(
+        self,
+        unit,
+        grad_tol=0.001,
+        pin_max=None,
+        monotonic=True,
+        cost="msd",
+        c=2.0,
+    ):
         """
         Fits an individual unit of the artificial neural network
 
@@ -449,22 +473,25 @@ class Slp(object):
           the paramater of the Huber loss function
         """
         if cost == "msd":
+
             def residuals(params):
                 self.weights[unit] = params
                 self.forward_unit(unit)
-                return (self.msd())
+                return self.msd()
 
         if cost == "abs":
+
             def residuals(params):
                 self.weights[unit] = params
                 self.forward_unit(unit)
-                return (self.absolute())
+                return self.absolute()
 
         if cost == "huber":
+
             def residuals(params):
                 self.weights[unit] = params
                 self.forward_unit(unit)
-                return (self.huber(c))
+                return self.huber(c)
 
         if type(pin_max) == float or type(pin_max) == int:
             betas = np.ma.array(self.weights[:, 2], mask=False)
@@ -476,19 +503,24 @@ class Slp(object):
             fit = optimize.fmin_l_bfgs_b(
                 residuals,
                 x0=self.weights[unit],
-                bounds=[(-10.0, unit_max), (0.0, unit_max), (self.offset,
-                                                             unit_max)],
+                bounds=[
+                    (-10.0, unit_max),
+                    (0.0, unit_max),
+                    (self.offset, unit_max),
+                ],
                 approx_grad=True,
                 pgtol=grad_tol,
-                disp=0)
+                disp=0,
+            )
             self.weights[unit] = fit[0]
             self.error = fit[1]
         else:
             fit = optimize.minimize(
                 residuals,
                 self.weights[unit],
-                method='BFGS',
-                options={'gtol': grad_tol})
+                method="BFGS",
+                options={"gtol": grad_tol},
+            )
             self.weights[unit] = fit.x
             self.error = fit.fun
 
@@ -508,14 +540,17 @@ class Slp(object):
         """
         diff = self.y - np.sum(np.vstack(self.streams), axis=0)
         if cost == "msd":
+
             def residuals(offset):
-                return np.sum((diff - offset)**2)
+                return np.sum((diff - offset) ** 2)
 
         if cost == "abs":
+
             def residuals(offset):
                 return np.sum(np.abs(diff - offset))
 
         if cost == "huber":
+
             def residuals(offset):
                 return np.sum(pseudohuber(diff - offset, c))
 
@@ -525,17 +560,20 @@ class Slp(object):
             bounds=[(0.0, None)],
             approx_grad=True,
             pgtol=grad_tol,
-            disp=0)
+            disp=0,
+        )
         self.offset = fit[0]
         self.error = fit[1]
 
-    def epoch(self,
-              grad_tol=0.001,
-              pin_min=None,
-              pin_max=None,
-              monotonic=True,
-              cost="msd",
-              c=2.0):
+    def epoch(
+        self,
+        grad_tol=0.001,
+        pin_min=None,
+        pin_max=None,
+        monotonic=True,
+        cost="msd",
+        c=2.0,
+    ):
         """
         Fits each unit and intercept of the artificial neural network once
 
@@ -564,15 +602,17 @@ class Slp(object):
         for unit in range(self.size):
             self.fit_unit(unit, grad_tol, pin_max, monotonic, cost, c)
 
-    def train(self,
-              iterations=100,
-              grad_tol_low=-3,
-              grad_tol_high=1,
-              pin_min=None,
-              pin_max=None,
-              monotonic=True,
-              cost="msd",
-              c=2.0):
+    def train(
+        self,
+        iterations=100,
+        grad_tol_low=-3,
+        grad_tol_high=1,
+        pin_min=None,
+        pin_max=None,
+        monotonic=True,
+        cost="msd",
+        c=2.0,
+    ):
         """
         Iterates over a specified amount of training epochs. After each epoch,
         the fitting tolerance will decrease to gradually refine the fits.
@@ -624,30 +664,32 @@ def inverse_slp(model, y):
     float
       the value of x that produced y in the input ANN
     """
-    dev = (model.predicted - y)**2
+    dev = (model.predicted - y) ** 2
     x_guess = model.x[np.where(dev == dev.min())][0]
 
     def errfunc(x):
-        return (y - model.predict(x))**2
+        return (y - model.predict(x)) ** 2
 
     solution = optimize.minimize(errfunc, x0=x_guess, method="BFGS")
     return solution.x
 
 
-def fit_ensemble(x,
-                 y,
-                 size,
-                 repeats=20,
-                 randstarts=1000,
-                 iterations=100,
-                 grad_tol_low=-3,
-                 grad_tol_high=1,
-                 pin_min=False,
-                 pin_max=None,
-                 monotonic=True,
-                 cost="msd",
-                 c=2.0,
-                 verbose=True):
+def fit_ensemble(
+    x,
+    y,
+    size,
+    repeats=20,
+    randstarts=1000,
+    iterations=100,
+    grad_tol_low=-3,
+    grad_tol_high=1,
+    pin_min=False,
+    pin_max=None,
+    monotonic=True,
+    cost="msd",
+    c=2.0,
+    verbose=True,
+):
     """
     Fits a collection of ANN models to GCMC titration data. Each ANN
     is fitted with different set of initial ANN weights.
@@ -671,7 +713,7 @@ def fit_ensemble(x,
     # A list that contains the fitted single layer perceptrons.
     models = []
     # Initialising the lowest error. The best model that with the lowest error
-    error = 1E5
+    error = 1e5
     for i in range(repeats):
         model = Slp(x=x, y=y, size=size)
         model.randsearch(randstarts)
@@ -683,7 +725,8 @@ def fit_ensemble(x,
             pin_max=pin_max,
             cost=cost,
             c=c,
-            monotonic=True)
+            monotonic=True,
+        )
         if model.error < error:
             single_model = model
         models.append(model)
@@ -733,12 +776,16 @@ def insertion_pmf(N, gcmc_model, volume, T=298.15):
     N_lower = N[0]
     B_lower = inverse_slp(gcmc_model, N_lower)
     for i in range(
-            1,
-            N.size):  # Starting from the second element, as dG=0 at first N.
+        1, N.size
+    ):  # Starting from the second element, as dG=0 at first N.
         B_upper = inverse_slp(gcmc_model, N[i])
-        dG[i] = (nonintegral(N[i], B_upper) - nonintegral(N_lower, B_lower) -
-                 integrate.quad(gcmc_model.predict, a=B_lower, b=B_upper)[0]
-                 )[0]  # This version numerical integration.
+        dG[i] = (
+            nonintegral(N[i], B_upper)
+            - nonintegral(N_lower, B_lower)
+            - integrate.quad(gcmc_model.predict, a=B_lower, b=B_upper)[0]
+        )[
+            0
+        ]  # This version numerical integration.
         correction[i] = (N[i] - N_lower) * np.log(volume / standard_volume)
         dG[i] = dG[i] - correction[i]
     return dG * kT
@@ -749,6 +796,7 @@ class GCMCMBAR(feb.MBAR):
     ratio for alchemical simulations performed in the Grand Canonical ensemble
     at multiple B values.
     """
+
     def __init__(self, lambdas, volume, **kwargs):
         """Parameters
         ----------
@@ -761,16 +809,17 @@ class GCMCMBAR(feb.MBAR):
         self.volume = volume
         self.data = []
         self._data_lambdas = []
-        self.subdir_glob = 'b_*/'
+        self.subdir_glob = "b_*/"
         self._data_Bs = []
-        self.results_name = 'results_inst'
+        self.results_name = "results_inst"
 
         # deals with a gotcha when user forgets the volume flag
         # when using analysis script interface
         if volume is None:
             raise TypeError(
-                'No gcmc volume information passed to GCMCMBAR estimator. '
-                'If using a script you may need the --volume flag.')
+                "No gcmc volume information passed to GCMCMBAR estimator. "
+                "If using a script you may need the --volume flag."
+            )
 
     def add_data(self, series):
         """Save data from a SnapshotResults.series object for later
@@ -781,8 +830,9 @@ class GCMCMBAR(feb.MBAR):
         series: SnapshotResults.series
             free energy simulation data for a particular simulation
         """
-        dat = np.array([series.feenergies[lam]
-                        for lam in sorted(series.feenergies)])
+        dat = np.array(
+            [series.feenergies[lam] for lam in sorted(series.feenergies)]
+        )
         N = dat.shape[-1]
         # add solventson data as the final row of each data entry
         # not an ideal solution but saves the need to rewrite __getitem__
@@ -804,7 +854,7 @@ class GCMCMBAR(feb.MBAR):
           the simulated temperature
         """
         beta = 1 / (temperature * kB)
-        return (B-np.log(self.volume/thermal_wavelength**3)) / beta
+        return (B - np.log(self.volume / thermal_wavelength**3)) / beta
 
     @property
     def Bs(self):
@@ -816,7 +866,7 @@ class GCMCMBAR(feb.MBAR):
         beta = 1 / (temperature * kB)
         return beta * tip4p_excess + np.log(self.volume / standard_volume)
 
-    def calculate(self, temp=300.):
+    def calculate(self, temp=300.0):
         """Calculate the free energy difference and return a PMF object.
 
         Parameters
@@ -830,10 +880,11 @@ class GCMCMBAR(feb.MBAR):
         N_lams = len(self.lambdas)
         beta = 1 / (kB * temp)
 
-        u_kn = np.zeros(shape=(N_sims, N*N_sims))
-        ns = np.zeros(N*N_sims)
+        u_kn = np.zeros(shape=(N_sims, N * N_sims))
+        ns = np.zeros(N * N_sims)
         for dat, B_sim, lam_sim in zip(
-                self.data, self._data_Bs, self._data_lambdas):
+            self.data, self._data_Bs, self._data_lambdas
+        ):
             # due to globbing simulation data will not have been
             # read in a logical order, need the below indices to
             # determine the proper position for each set of data
@@ -844,27 +895,48 @@ class GCMCMBAR(feb.MBAR):
             for i in range(N_lams):
                 for j, B in enumerate(self.Bs):
                     mu = self.B_to_chemical_potential(B, temp)
-                    u_kn[i*N_Bs+j, (i_lam*N_Bs+i_B)*N: (i_lam*N_Bs+i_B+1)*N] =\
-                        beta*(es[i] + ns * mu)
+                    u_kn[
+                        i * N_Bs + j,
+                        (i_lam * N_Bs + i_B)
+                        * N : (i_lam * N_Bs + i_B + 1)
+                        * N,
+                    ] = beta * (es[i] + ns * mu)
         samples = np.array([N] * N_sims)
         mbar = pymbar.MBAR(u_kn, samples)
-        free_energies = mbar.compute_free_energy_differences(
-            compute_uncertainty=False, return_theta=False)['Delta_f'] / beta
+        free_energies = (
+            mbar.compute_free_energy_differences(
+                compute_uncertainty=False, return_theta=False
+            )["Delta_f"]
+            / beta
+        )
 
         # free energy order seems to be reversed with respect to B values
-        closest = np.argmin([abs(B - self.equilibrium_B(temp))
-                             for B in self.Bs[::-1]])
+        closest = np.argmin(
+            [abs(B - self.equilibrium_B(temp)) for B in self.Bs[::-1]]
+        )
 
         return feb.PMF(
-            self.lambdas, free_energies[0].reshape([N_lams, N_Bs])[:, closest])
+            self.lambdas, free_energies[0].reshape([N_lams, N_Bs])[:, closest]
+        )
 
 
 class TitrationCalculation(feb.FreeEnergyCalculation):
     """Calculate free energy differences using the Grand Canonical Integration
     method. Collates water occupancy data from simulations carried out at
     diferent chemical potentials and gives NVT binding free energies."""
-    def __init__(self, root_paths, temperature, volume, nsteps=None,
-                 nmin=None, nmax=None, nfits=5, pin_min=None,**kwargs):
+
+    def __init__(
+        self,
+        root_paths,
+        temperature,
+        volume,
+        nsteps=None,
+        nmin=None,
+        nmax=None,
+        nfits=5,
+        pin_min=None,
+        **kwargs
+    ):
         """Parameters
         ---------
         root_paths: a list of strings
@@ -892,7 +964,7 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
             Additional keyword arguments are passed to Estimator classes
             during initialisation.
         """
-        self.subdir = ''
+        self.subdir = ""
         feb.FreeEnergyCalculation.__init__(
             self,
             root_paths=[root_paths],
@@ -903,8 +975,9 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
             nmin=nmin,
             nmax=nmax,
             nfits=nfits,
-	    pin_min=pin_min,
-            **kwargs)
+            pin_min=pin_min,
+            **kwargs
+        )
 
     def _path_constructor(self, root_path):
         """Given a root_path (string) construct a full path
@@ -913,9 +986,9 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
 
     def _get_lambda(self, path):
         """Given a path (string) extract the contained lambda value"""
-        return float(path.split('/')[-2].split('_')[1])
+        return float(path.split("/")[-2].split("_")[1])
 
-    def calculate(self, subset=(0., 1., 1)):
+    def calculate(self, subset=(0.0, 1.0, 1)):
         """For each estimator return the evaluated potential of mean force.
 
         Parameters
@@ -927,10 +1000,12 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
         for est, legs in self.estimators.items():
             leg_result = GCMCResult()
             for i, leg in enumerate(legs):
-                tmp = GCMCResult([
-                    rep.subset(*subset).calculate(self.temperature)
-                    for rep in leg
-                ])
+                tmp = GCMCResult(
+                    [
+                        rep.subset(*subset).calculate(self.temperature)
+                        for rep in leg
+                    ]
+                )
                 leg_result += tmp
             results[est] = leg_result
         return results[GCI]
@@ -945,106 +1020,144 @@ class TitrationCalculation(feb.FreeEnergyCalculation):
         """
 
         if args.nmin is not None or args.nmax is not None:
-            self.header += '\nWARNING! Manually setting the maximum or ' \
-                           'minimum number of waters. For free energies to ' \
-                           'be meaningful ensure that observed simulation ' \
-                           'occupancies cover a sufficient range.\n'
+            self.header += (
+                "\nWARNING! Manually setting the maximum or "
+                "minimum number of waters. For free energies to "
+                "be meaningful ensure that observed simulation "
+                "occupancies cover a sufficient range.\n"
+            )
         results = self.calculate(subset=(args.lower_bound, args.upper_bound))
 
         fig, ax = plt.subplots()
         plot_titration(results, ax)
-        self.figures['titration'] = fig
+        self.figures["titration"] = fig
 
         fig, table = plot_insertion_pmf(results)
         self.tables.append(table)
-        self.figures['insertion_pmf'] = fig
+        self.figures["insertion_pmf"] = fig
 
         eqb_B = results.equilibrium_B
         eqb_index = np.argmin(
-            [abs(B - eqb_B) for B in results.occupancies.coordinate])
+            [abs(B - eqb_B) for B in results.occupancies.coordinate]
+        )
         closest_B = results.occupancies.coordinate[eqb_index]
 
-        self.footer += 'The equilibrium B value is %.3f\n' % eqb_B
-        self.footer += 'Most similar simulated B value is %.3f\n' % closest_B
-        self.footer += 'Occupancy at %.3f is %s\n' % \
-                       (closest_B, results.occupancies.values[eqb_index])
+        self.footer += "The equilibrium B value is %.3f\n" % eqb_B
+        self.footer += "Most similar simulated B value is %.3f\n" % closest_B
+        self.footer += "Occupancy at %.3f is %s\n" % (
+            closest_B,
+            results.occupancies.values[eqb_index],
+        )
 
-        min_index = np.argmin([
-            v.value - i*tip4p_excess
-            for i, v in enumerate(results.insertion_pmf.values)])
-        self.footer += "\nOccupancy at binding PMF minimum is %.3f\n" % \
-                       results.insertion_pmf.coordinate[min_index]
+        min_index = np.argmin(
+            [
+                v.value - i * tip4p_excess
+                for i, v in enumerate(results.insertion_pmf.values)
+            ]
+        )
+        self.footer += (
+            "\nOccupancy at binding PMF minimum is %.3f\n"
+            % results.insertion_pmf.coordinate[min_index]
+        )
         return results
 
 
-def plot_titration(results, ax, dot_fmt='b'):
+def plot_titration(results, ax, dot_fmt="b"):
     """Convenience function to plot the titration data from repeats."""
-    results.model.plot(ax, xlabel='B Value', ylabel='Occupancy', color='black', lw=2.0)
+    results.model.plot(
+        ax, xlabel="B Value", ylabel="Occupancy", color="black", lw=2.0
+    )
     for rep in results.data[0]:
-        ax.plot(rep.coordinate, rep.values, 'o')
+        ax.plot(rep.coordinate, rep.values, "o")
 
 
-def plot_insertion_pmf(results, title=''):
+def plot_insertion_pmf(results, title=""):
     """Convenience function to plot the insertion pmf data from repeats"""
     table = Table(
         title,
-        fmts=['%d', '%.3f', '%.3f', '%.3f'],
-        headers=['Number of Waters',
-                 'Insertion Free Energy',
-                 'Network Binding Free Energy',
-                 'Water Binding Free Energy'])
+        fmts=["%d", "%.3f", "%.3f", "%.3f"],
+        headers=[
+            "Number of Waters",
+            "Insertion Free Energy",
+            "Network Binding Free Energy",
+            "Water Binding Free Energy",
+        ],
+    )
 
     steps = results.data[0][0].pmf.coordinate
     pmf = feb.PMF(steps, *[rep.pmf for rep in results.data[0]])
     prev_fe = 0.0
     for i, (dA, step) in enumerate(zip(pmf, steps)):
-        bind_fe = dA - i*tip4p_excess
+        bind_fe = dA - i * tip4p_excess
         table.add_row([step, dA, bind_fe, bind_fe - prev_fe])
         prev_fe = bind_fe.value
 
     fig, ax = plt.subplots()
-    #pmf.plot(ax, xlabel="Occupancy")
+    # pmf.plot(ax, xlabel="Occupancy")
     water_nums = [i for i, v in enumerate(results.insertion_pmf.values)]
-    network_fe = [v.value - i*tip4p_excess
-            for i, v in enumerate(results.insertion_pmf.values)]
+    network_fe = [
+        v.value - i * tip4p_excess
+        for i, v in enumerate(results.insertion_pmf.values)
+    ]
     ax.plot(water_nums, network_fe)
-    ax.set_xlabel('Occupancy')
-    ax.set_ylabel('Free energy (kcal/mol)')
+    ax.set_xlabel("Occupancy")
+    ax.set_ylabel("Free energy (kcal/mol)")
     return fig, table
 
 
 def get_gci_arg_parser():
     parser = feb.FEArgumentParser(
-        parents=[feb.get_base_arg_parser()],
-        conflict_handler='resolve')
+        parents=[feb.get_base_arg_parser()], conflict_handler="resolve"
+    )
     parser.add_argument(
-        '-d', '--directories', nargs='+', required=True,
+        "-d",
+        "--directories",
+        nargs="+",
+        required=True,
         help="Location of folders containing ProtoMS output subdirectories. "
-             "Multiple directories can be supplied to this flag and indicate "
-             "repeats of the same calculation.")
+        "Multiple directories can be supplied to this flag and indicate "
+        "repeats of the same calculation.",
+    )
     parser.add_argument(
-        '-v', '--volume', required=True, type=float,
-        help="Volume of the calculations GCMC region.")
+        "-v",
+        "--volume",
+        required=True,
+        type=float,
+        help="Volume of the calculations GCMC region.",
+    )
     parser.add_argument(
-        '-n', '--nsteps', type=int,
-        help='Override automatic guessing of the number of steps to fit for '
-             'titration curve fitting.')
+        "-n",
+        "--nsteps",
+        type=int,
+        help="Override automatic guessing of the number of steps to fit for "
+        "titration curve fitting.",
+    )
     parser.add_argument(
-        '--nmin', type=int,
-        help='Override automatic guessing of the minimum number of waters for '
-             'tittration curve fitting.')
+        "--nmin",
+        type=int,
+        help="Override automatic guessing of the minimum number of waters for "
+        "tittration curve fitting.",
+    )
     parser.add_argument(
-        '--nmax', type=int,
-        help='Override automatic guessing of maximum number of waters for '
-             'titration curve fitting.')
+        "--nmax",
+        type=int,
+        help="Override automatic guessing of maximum number of waters for "
+        "titration curve fitting.",
+    )
     parser.add_argument(
-        '--nfits', type=int, default=10,
-        help='The number of independent fitting attempts for the neural '
-             'network occupancy model. Increasing the number of fits may '
-             'help improve results for noisy data.')
+        "--nfits",
+        type=int,
+        default=10,
+        help="The number of independent fitting attempts for the neural "
+        "network occupancy model. Increasing the number of fits may "
+        "help improve results for noisy data.",
+    )
     parser.add_argument(
-        '--pin_min', type=float, default=None,
-        help='The minimum value when fitting the neural '
-             'network occupancy model. Setting this may '
-             'help improve models which are poorly fit at low values')
+        "--pin_min",
+        type=float,
+        default=None,
+        help="The minimum value when fitting the neural "
+        "network occupancy model. Setting this may "
+        "help improve models which are poorly fit at low values",
+    )
     return parser

@@ -6,18 +6,20 @@ from scipy.spatial.distance import cdist
 
 from . import simulationobjects
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
-def solvate(box,
-            ligand=None,
-            protein=None,
-            geometry="box",
-            padding=10.0,
-            radius=30.0,
-            center="cent",
-            namescheme="ProtoMS",
-            offset=0.89):
+def solvate(
+    box,
+    ligand=None,
+    protein=None,
+    geometry="box",
+    padding=10.0,
+    radius=30.0,
+    center="cent",
+    namescheme="ProtoMS",
+    offset=0.89,
+):
     """
     Function to solvate ligand and/or protein structures using a
     pre-equilibrated box of waters.
@@ -97,65 +99,68 @@ def solvate(box,
 
     def read_solute(sol_pdb, solute):
         """
-    Read a solute pdb-file
+        Read a solute pdb-file
 
-    Parameters
-    ----------
-    sol_pdb : PDBFile
-      a pdb object of the solute
-    solute  : dictionary of lists
-      read solute data
+        Parameters
+        ----------
+        sol_pdb : PDBFile
+          a pdb object of the solute
+        solute  : dictionary of lists
+          read solute data
 
-    Returns
-    -------
-    None
-       solute["atoms"] contains the element of all atoms
-       solute["xyz"] contains all the coordinates (Nx3 NumPy array)
-   """
+        Returns
+        -------
+        None
+           solute["atoms"] contains the element of all atoms
+           solute["xyz"] contains all the coordinates (Nx3 NumPy array)
+        """
         for i in sol_pdb.residues:
             for j in range(len(sol_pdb.residues[i].atoms)):
                 sol_pdb.residues[i].atoms[j].getElement()
                 solute["atoms"].append(
-                    sol_pdb.residues[i].atoms[j].element.lower())
+                    sol_pdb.residues[i].atoms[j].element.lower()
+                )
                 solute["xyz"].append(sol_pdb.residues[i].atoms[j].coords)
 
     def read_protein(prot_pdb, solute, solvent):
         """
-    Read a protein + xtal waters pdb-file
+        Read a protein + xtal waters pdb-file
 
-    Parameters
-    ----------
-    prot_pdb : PDBFile
-      an object of the protein + xtal waters
-    solute  : dictionary of lists
-      read solute data
-    solvent : dictionary of lists
-      read xtal water data
+        Parameters
+        ----------
+        prot_pdb : PDBFile
+          an object of the protein + xtal waters
+        solute  : dictionary of lists
+          read solute data
+        solvent : dictionary of lists
+          read xtal water data
 
-    Returns
-    -------
-     None
-       solute["atoms"]:
-          contains the element of all atoms
-       solute["xyz"]:
-          contains all the coordinates including xtal waters (Nx3 NumPy array)
-       solvent["xyz"]:
-          contains all the coordinates of just the waters (Nx3 NumPy array)
-    """
+        Returns
+        -------
+         None
+           solute["atoms"]:
+              contains the element of all atoms
+           solute["xyz"]:
+              contains all the coordinates including xtal waters (Nx3 NumPy array)
+           solvent["xyz"]:
+              contains all the coordinates of just the waters (Nx3 NumPy array)
+        """
         solvent["atoms"] = []
         solvent["xyz"] = []
         for i in prot_pdb.residues:
             for j in range(len(prot_pdb.residues[i].atoms)):
                 prot_pdb.residues[i].atoms[j].getElement()
                 solute["atoms"].append(
-                    prot_pdb.residues[i].atoms[j].element.lower())
+                    prot_pdb.residues[i].atoms[j].element.lower()
+                )
                 solute["xyz"].append(prot_pdb.residues[i].atoms[j].coords)
         for i in sorted(prot_pdb.solvents):
             xyz = []
             for j in range(len(prot_pdb.solvents[i].atoms)):
                 prot_pdb.solvents[i].atoms[j].getElement()
                 solute["atoms"].append(
-                    prot_pdb.solvents[i].atoms[j].element.lower())
+                    prot_pdb.solvents[i].atoms[j].element.lower()
+                )
                 solute["xyz"].append(prot_pdb.solvents[i].atoms[j].coords)
                 xyz.append(prot_pdb.solvents[i].atoms[j].coords)
             xyz = np.array(xyz)
@@ -163,22 +168,22 @@ def solvate(box,
 
     def read_watbox(filename, watbox):
         """
-    Read a pdb-file and extract water coordinates
+        Read a pdb-file and extract water coordinates
 
-    Parameters
-    ----------
-    filename : string
-      the name of the file to read
-    watbox : dictionary of lists
-      read water data
+        Parameters
+        ----------
+        filename : string
+          the name of the file to read
+        watbox : dictionary of lists
+          read water data
 
-    Returns
-    -------
-    None
-       watbox["xyz"] contains all the coordinates (array of NumPy arrays)
-       watbox["min"] is the origin of water box
-       watbox["len"] is the length of the water box
-    """
+        Returns
+        -------
+        None
+           watbox["xyz"] contains all the coordinates (array of NumPy arrays)
+           watbox["min"] is the origin of water box
+           watbox["len"] is the length of the water box
+        """
         # Take out the water records
         solv_box_pdb = simulationobjects.PDBFile(filename=filename)
 
@@ -199,38 +204,40 @@ def solvate(box,
         watbox["min"] = minxyz
         watbox["len"] = maxxyz - minxyz
 
-# ----------------------------------------------------------------
-#  Routines to remove waters that overlap with solute coordinates
-# ----------------------------------------------------------------
+    # ----------------------------------------------------------------
+    #  Routines to remove waters that overlap with solute coordinates
+    # ----------------------------------------------------------------
 
     def vdw_energy(element, atomxyz, oxyz):
         """
-    Calculate the van der Waals energy between a water oxygen atom
-    and a given atom
+        Calculate the van der Waals energy between a water oxygen atom
+        and a given atom
 
-    Parameters
-    ----------
-    element : string
-      the element of the atom
-    atomxyz : numpy array
-      the coordinate of the atom
-    oxyz : numpy array
-      the coordinate of the water oxygen
+        Parameters
+        ----------
+        element : string
+          the element of the atom
+        atomxyz : numpy array
+          the coordinate of the atom
+        oxyz : numpy array
+          the coordinate of the water oxygen
 
-    Returns
-    -------
-    float :
-      an approximate energy, cut-off at 5 A
-    """
+        Returns
+        -------
+        float :
+          an approximate energy, cut-off at 5 A
+        """
 
         # Return 0 for undefined atoms
         if element not in params:
-            print("Warning: element name `%s' not found, assigning the vdW"
-                  " parameters of a carbon atoms. Please check the names of"
-                  " your PDB file." % element)
-            element = 'c'
+            print(
+                "Warning: element name `%s' not found, assigning the vdW"
+                " parameters of a carbon atoms. Please check the names of"
+                " your PDB file." % element
+            )
+            element = "c"
 
-        r2 = np.sum((atomxyz - oxyz)**2)
+        r2 = np.sum((atomxyz - oxyz) ** 2)
         # Return 0 beyond a 5 A cut-off
         if r2 > 25.0:
             return 0.0
@@ -244,31 +251,32 @@ def solvate(box,
 
     def remove_overlap(water, solute, cutoff):
         """
-    Remove water molecules that overlap with solute coordinates
+        Remove water molecules that overlap with solute coordinates
 
-    Parameters
-    ----------
-    water  : dictionary of lists
-      the added water molecules
-    solute : dictionary of lists
-      the solute molecule
-    cutoff : float
-      the energy cutoff
+        Parameters
+        ----------
+        water  : dictionary of lists
+          the added water molecules
+        solute : dictionary of lists
+          the solute molecule
+        cutoff : float
+          the energy cutoff
 
-    Returns
-    -------
-     none, water argument is modified
-    """
+        Returns
+        -------
+         none, water argument is modified
+        """
 
         saved = []
         # Loop over all added water molecules
         for wat in water["xyz"]:
             # Find the smallest distance between the oxygen and any solute atom
-            i = np.argmin(cdist(wat, solute["xyz"], 'sqeuclidean'), axis=1)[0]
+            i = np.argmin(cdist(wat, solute["xyz"], "sqeuclidean"), axis=1)[0]
             # Calculate an approximate vdW energy and determine
             # if it should be kept
-            ene = vdw_energy(solute["atoms"][i], solute["xyz"][i, :],
-                             wat[0, :])
+            ene = vdw_energy(
+                solute["atoms"][i], solute["xyz"][i, :], wat[0, :]
+            )
             if ene < cutoff:
                 saved.append(np.array(wat, copy=True))
 
@@ -280,58 +288,61 @@ def solvate(box,
 
     def add_template(template, delta, maxbox, container):
         """
-    Add a copy of template box to a container of waters
+        Add a copy of template box to a container of waters
 
-    Parameters
-    ----------
-    template : dictionary of lists
-      the template to be copied
-    delta : float
-      an displacement to add to the template
-    maxbox : numpy array
-      the maximum of the big box
-    container : list
-      the container where the template should be added
+        Parameters
+        ----------
+        template : dictionary of lists
+          the template to be copied
+        delta : float
+          an displacement to add to the template
+        maxbox : numpy array
+          the maximum of the big box
+        container : list
+          the container where the template should be added
 
-    Returns
-    -------
-    None
-      container parameter modified
-    """
+        Returns
+        -------
+        None
+          container parameter modified
+        """
         for wat in template:
             wat2 = wat - delta
-            if np.all(np.max(wat2, axis=0) <= maxbox
-                      ):  # Skip water if it is outside box
+            if np.all(
+                np.max(wat2, axis=0) <= maxbox
+            ):  # Skip water if it is outside box
                 container.append(wat2)
 
     def replicate_box(watbox, solute, padding, flooding, bigbox):
         """
-    Replicate a pre-equilibrated box to cover a solute
+        Replicate a pre-equilibrated box to cover a solute
 
-    Parameters
-    ----------
-    watbox : dictionary
-      the pre-equilibrated box
-    solute : dictionary
-      the solute
-    padding : float
-      the minimum distance between solute and box edge
-    flooding : boolean
-      turn on flooding which defines the bigbox in different way
-    bigbox  : dictionary
-      the added water molecules
+        Parameters
+        ----------
+        watbox : dictionary
+          the pre-equilibrated box
+        solute : dictionary
+          the solute
+        padding : float
+          the minimum distance between solute and box edge
+        flooding : boolean
+          turn on flooding which defines the bigbox in different way
+        bigbox  : dictionary
+          the added water molecules
 
-    Returns
-    -------
-    None
-      bigbox parameter modified
-    """
+        Returns
+        -------
+        None
+          bigbox parameter modified
+        """
         # Define the extent of the solvation box
         if not flooding:
-            bigbox[
-                "min"] = solute["cent"] - np.max(solute["len"]) / 2 - padding
-            bigbox[
-                "max"] = solute["cent"] + np.max(solute["len"]) / 2 + padding
+            bigbox["min"] = (
+                solute["cent"] - np.max(solute["len"]) / 2 - padding
+            )
+            bigbox["max"] = (
+                solute["cent"] + np.max(solute["len"]) / 2 + padding
+            )
         else:
             bigbox["min"] = np.array(solute["min"]) - padding
             bigbox["max"] = np.array(solute["max"]) + padding
@@ -343,8 +354,12 @@ def solvate(box,
         while addxyz[0] < bigbox["max"][0]:
             # Add boxes in the y-dimension
             while addxyz[1] < bigbox["max"][1]:
-                add_template(watbox["xyz"], watbox["min"] - addxyz,
-                             bigbox["max"], bigbox["xy_plane"])
+                add_template(
+                    watbox["xyz"],
+                    watbox["min"] - addxyz,
+                    bigbox["max"],
+                    bigbox["xy_plane"],
+                )
                 addxyz[1] = addxyz[1] + watbox["len"][1]
 
             addxyz[1] = bigbox["min"][1]
@@ -354,8 +369,9 @@ def solvate(box,
         addz = bigbox["min"][2]
         while addz < bigbox["max"][2]:
             delta = np.array([0.0, 0.0, bigbox["min"][2] - addz])
-            add_template(bigbox["xy_plane"], delta, bigbox["max"],
-                         bigbox["xyz"])
+            add_template(
+                bigbox["xy_plane"], delta, bigbox["max"], bigbox["xyz"]
+            )
             addz = addz + watbox["len"][2]
 
     # -------------------------------------------------------------
@@ -364,20 +380,20 @@ def solvate(box,
 
     def define_center(cent, solute):
         """
-    Parse the center argument given by the user and thereby define the center of the droplet
+        Parse the center argument given by the user and thereby define the center of the droplet
 
-    Parameters
-    ----------
-    cent : string
-      the command-line argument
-    solute : numpy array
-      the solute coordinates
+        Parameters
+        ----------
+        cent : string
+          the command-line argument
+        solute : numpy array
+          the solute coordinates
 
-    Returns
-    -------
-    numpy array :
-      the center of the droplet
-    """
+        Returns
+        -------
+        numpy array :
+          the center of the droplet
+        """
         if cent[0:4] == "cent":
             return np.array(solute["cent"], copy=True)
         else:
@@ -395,18 +411,18 @@ def solvate(box,
 
     def rand_sphere(rad):
         """
-    Utility to draw a random vector on a sphere
+        Utility to draw a random vector on a sphere
 
-    Parameters
-    ----------
-    rad : float
-      the radius of the sphere
+        Parameters
+        ----------
+        rad : float
+          the radius of the sphere
 
-    Returns
-    -------
-    numpy array
-      the generated vector
-    """
+        Returns
+        -------
+        numpy array
+          the generated vector
+        """
         x = np.random.uniform(-rad, rad)
         y = np.random.uniform(-rad, rad)
         z = np.random.uniform(-rad, rad)
@@ -418,28 +434,28 @@ def solvate(box,
 
     def make_droplet(watbox, solute, radius, droplet):
         """
-    Create a droplet on top of a solute
+        Create a droplet on top of a solute
 
-    Parameters
-    ----------
-    watbox : dictionary
-      the pre-equilibrated box
-    solute : dictionary
-      the solute
-    radius : float
-      the radius of the droplet
-    droplet : dictionary
-      the added water molecules
+        Parameters
+        ----------
+        watbox : dictionary
+          the pre-equilibrated box
+        solute : dictionary
+          the solute
+        radius : float
+          the radius of the droplet
+        droplet : dictionary
+          the added water molecules
 
-    Returns
-    -------
-    None
-      droplet parameter is modified
-    """
+        Returns
+        -------
+        None
+          droplet parameter is modified
+        """
         # Maximum extent if a box covering the entire droplet
         maxxyz = droplet["cent"] + radius
         # Spacing determined from the theoretical density of pure water
-        delta = (1.0 / 0.0335)**0.3333333
+        delta = (1.0 / 0.0335) ** 0.3333333
 
         rad2 = radius**2
         droplet["xyz"] = []
@@ -450,14 +466,19 @@ def solvate(box,
                 z = droplet["cent"][2] - radius
                 while z <= maxxyz[2]:
                     # Check if we are on the sphere
-                    r2 = (x - droplet["cent"][0])**2 + (
-                        y - droplet["cent"][1])**2 + (
-                            z - droplet["cent"][2])**2
+                    r2 = (
+                        (x - droplet["cent"][0]) ** 2
+                        + (y - droplet["cent"][1]) ** 2
+                        + (z - droplet["cent"][2]) ** 2
+                    )
                     if r2 <= rad2:
                         wi = np.random.randint(0, len(watbox["xyz"]) - 1)
                         randxyz = rand_sphere(1.0)
-                        offset = watbox["xyz"][wi][0, :] - np.array(
-                            [x, y, z]) + randxyz
+                        offset = (
+                            watbox["xyz"][wi][0, :]
+                            - np.array([x, y, z])
+                            + randxyz
+                        )
                         wat = watbox["xyz"][wi] - offset
                         droplet["xyz"].append(wat)
                     z = z + delta
@@ -547,13 +568,20 @@ def solvate(box,
     # Write box or cap information as header
     if geometry == "box" or geometry == "flood":
         new_watbox.header = "HEADER box %.4f %.4f %.4f %.4f %.4f %.4f\n" % (
-            added_water["min"][0] - 0.5, added_water["min"][1] - 0.5,
-            added_water["min"][2] - 0.5, added_water["max"][0] + 0.5,
-            added_water["max"][1] + 0.5, added_water["max"][2] + 0.5)
+            added_water["min"][0] - 0.5,
+            added_water["min"][1] - 0.5,
+            added_water["min"][2] - 0.5,
+            added_water["max"][0] + 0.5,
+            added_water["max"][1] + 0.5,
+            added_water["max"][2] + 0.5,
+        )
     elif geometry == "droplet":
         new_watbox.header = "HEADER cap %.4f %.4f %.4f %.4f 1.5\n" % (
-            added_water["cent"][0], added_water["cent"][1],
-            added_water["cent"][2], radius)
+            added_water["cent"][0],
+            added_water["cent"][1],
+            added_water["cent"][2],
+            radius,
+        )
     try:
         for i in range(len(solvent["xyz"])):
             if len(solvent["xyz"][i]) == len(added_water["xyz"][0]):
@@ -578,13 +606,15 @@ def solvate(box,
         if atmidx >= 100000:
             atmidx = atmidx - 99999
         new_watbox.solvents[residx] = simulationobjects.Residue(
-            name=resname[len(w) - 1], index=resid)
+            name=resname[len(w) - 1], index=resid
+        )
         newatom1 = simulationobjects.Atom(
             index=atmidx,
             name=names[0],
             resindex=resid,
             resname=resname[len(w) - 1],
-            coords=w[0])
+            coords=w[0],
+        )
         atmidx += 1
         new_watbox.solvents[residx].addAtom(atom=newatom1)
         newatom2 = simulationobjects.Atom(
@@ -592,7 +622,8 @@ def solvate(box,
             name=names[1],
             resindex=resid,
             resname=resname[len(w) - 1],
-            coords=w[1])
+            coords=w[1],
+        )
         atmidx += 1
         new_watbox.solvents[residx].addAtom(atom=newatom2)
         newatom3 = simulationobjects.Atom(
@@ -600,7 +631,8 @@ def solvate(box,
             name=names[2],
             resindex=resid,
             resname=resname[len(w) - 1],
-            coords=w[2])
+            coords=w[2],
+        )
         atmidx += 1
         new_watbox.solvents[residx].addAtom(atom=newatom3)
         if len(w) > 3:
@@ -609,7 +641,8 @@ def solvate(box,
                 name=names[3],
                 resindex=resid,
                 resname=resname[len(w) - 1],
-                coords=w[3])
+                coords=w[3],
+            )
             atmidx += 1
             new_watbox.solvents[residx].addAtom(atom=newatom4)
 

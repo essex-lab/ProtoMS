@@ -44,14 +44,29 @@ def is_solvent(name):
       whether the residue name
       is a solvent residue name
     """
-    return name in ['WAT', 'wat', 'HOH', 'hoh', 'DOD', 'dod', 'T3P', 't3p',
-                    'T4P', 't4p', 'SOL', 'sol', 'see', 'SEE']
+    return name in [
+        "WAT",
+        "wat",
+        "HOH",
+        "hoh",
+        "DOD",
+        "dod",
+        "T3P",
+        "t3p",
+        "T4P",
+        "t4p",
+        "SOL",
+        "sol",
+        "see",
+        "SEE",
+    ]
 
 
 class SetupError(Exception):
-    """ A general exception class to be raised by setup code
-    """
+    """A general exception class to be raised by setup code"""
+
     pass
+
 
 # ------------------------------------------
 #  Classes and routines to handle PDB-files
@@ -80,8 +95,9 @@ class Atom(object):
       the element of the atom
     """
 
-    def __init__(self, index=0, name="?", resname="???",
-                 resindex=0, coords=[]):
+    def __init__(
+        self, index=0, name="?", resname="???", resindex=0, coords=[]
+    ):
         self.index = index
         self.resindex = resindex
         self.name = name
@@ -100,9 +116,14 @@ class Atom(object):
         while self.element.isdigit():
             k = k + 1
             self.element = name[k]
-        if len(name) > k+1:
-            if name[k].lower() + name[k+1].lower() in ["cl", "br", "mg", "mn"]:
-                self.element = name[k].lower() + name[k+1].lower()
+        if len(name) > k + 1:
+            if name[k].lower() + name[k + 1].lower() in [
+                "cl",
+                "br",
+                "mg",
+                "mn",
+            ]:
+                self.element = name[k].lower() + name[k + 1].lower()
         else:
             self.element = name[k].lower()
 
@@ -110,9 +131,15 @@ class Atom(object):
         """
         Produces a string representation, viz. a standard ATOM record
         """
-        return "ATOM  %-5d %3s %3s    %4d     %8.3f%8.3f%8.3f  1.00 0.00" % \
-            (self.index, self.name, self.resname, self.resindex,
-             self.coords[0], self.coords[1], self.coords[2])
+        return "ATOM  %-5d %3s %3s    %4d     %8.3f%8.3f%8.3f  1.00 0.00" % (
+            self.index,
+            self.name,
+            self.resname,
+            self.resindex,
+            self.coords[0],
+            self.coords[1],
+            self.coords[2],
+        )
 
 
 class Residue(object):
@@ -154,24 +181,51 @@ class Residue(object):
         Sets the center of coordinates for this residue
         """
         coords = np.array([atom.coords for atom in self.atoms])
-        self.center = coords[:, 0].mean(
-        ), coords[:, 1].mean(), coords[:, 2].mean()
+        self.center = (
+            coords[:, 0].mean(),
+            coords[:, 1].mean(),
+            coords[:, 2].mean(),
+        )
 
     def isAminoacid(self):
         """
         Checks is the residue name is an aminoacid name
         """
         amino_acids = [
-            'GLH', 'ILE', 'GLN', 'GLY', 'GLU', 'HIP', 'HIS', 'SER', 'LYS',
-            'PRO', 'CYX', 'HIE', 'LYN', 'ASH', 'ASN', 'CYS', 'VAL', 'THR',
-            'ASP', 'TRP', 'PHE', 'ALA', 'MET', 'LEU', 'ARG', 'TYR']
+            "GLH",
+            "ILE",
+            "GLN",
+            "GLY",
+            "GLU",
+            "HIP",
+            "HIS",
+            "SER",
+            "LYS",
+            "PRO",
+            "CYX",
+            "HIE",
+            "LYN",
+            "ASH",
+            "ASN",
+            "CYS",
+            "VAL",
+            "THR",
+            "ASP",
+            "TRP",
+            "PHE",
+            "ALA",
+            "MET",
+            "LEU",
+            "ARG",
+            "TYR",
+        ]
         return self.name.upper() in amino_acids
 
     def __str__(self):
         """
         Produces a string representation, viz. lines of ATOM records
         """
-        return '\n'.join(atom.__str__() for atom in self.atoms)
+        return "\n".join(atom.__str__() for atom in self.atoms)
 
 
 class PDBFile:
@@ -276,11 +330,19 @@ class PDBFile:
                 if resnum != prevres:
                     nres = nres + 1
                 prevres = resnum
-                x, y, z = float(line[30:38].strip()), float(
-                    line[38:46].strip()), float(line[46:54].strip())
+                x, y, z = (
+                    float(line[30:38].strip()),
+                    float(line[38:46].strip()),
+                    float(line[46:54].strip()),
+                )
                 coords = [x, y, z]
-                newatom = Atom(index=index, name=atname, resindex=nres,
-                               resname=restype, coords=coords)
+                newatom = Atom(
+                    index=index,
+                    name=atname,
+                    resindex=nres,
+                    resname=restype,
+                    coords=coords,
+                )
                 # If solvent
                 if not is_solvent(restype):
                     try:
@@ -295,7 +357,8 @@ class PDBFile:
                         solvents[nres] = Residue(name=restype, index=nres)
                     if len(solvents[nres].atoms) >= 4:
                         raise BaseException(
-                            "More than one residue with number %d " % nres)
+                            "More than one residue with number %d " % nres
+                        )
                     solvents[nres].addAtom(atom=newatom)
             elif line[:3] == "TER":
                 nres = nres + 1
@@ -320,7 +383,7 @@ class PDBFile:
         header : string, optional
           additional lines to print before the atom records
         solvents : boolean, optional
-          if to write the solvents """
+          if to write the solvents"""
         if header is None:
             f.write(self.header)
         else:
@@ -330,14 +393,27 @@ class PDBFile:
                 if renumber:
                     atom.resindex = i
                 s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f        \n" % (
-                    atom.index, atom.name, atom.resname, atom.resindex,
-                    atom.coords[0], atom.coords[1], atom.coords[2])
+                    atom.index,
+                    atom.name,
+                    atom.resname,
+                    atom.resindex,
+                    atom.coords[0],
+                    atom.coords[1],
+                    atom.coords[2],
+                )
                 f.write(s)
-            if i < len(self.residues.keys()) and \
-               not self.residues[list(self.residues.keys())[i]].isAminoacid():
+            if (
+                i < len(self.residues.keys())
+                and not self.residues[
+                    list(self.residues.keys())[i]
+                ].isAminoacid()
+            ):
                 f.write("TER \n")
-        if len(self.residues.keys()) > 0 and len(self.solvents.keys()) > 0 \
-           and solvents:
+        if (
+            len(self.residues.keys()) > 0
+            and len(self.solvents.keys()) > 0
+            and solvents
+        ):
             f.write("TER \n")
         if solvents:
             keys = sorted(self.solvents.keys())
@@ -346,23 +422,47 @@ class PDBFile:
                     if renumber:
                         atom.resindex = i
                     if atom.resindex < 10000:
-                        s = "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f" \
-                            "        \n" % (
-                                atom.index+1, atom.name, atom.resname,
-                                atom.resindex, atom.coords[0], atom.coords[1],
-                                atom.coords[2])
+                        s = (
+                            "ATOM  %5d %-4s %3s  %4d    %8.3f%8.3f%8.3f"
+                            "        \n"
+                            % (
+                                atom.index + 1,
+                                atom.name,
+                                atom.resname,
+                                atom.resindex,
+                                atom.coords[0],
+                                atom.coords[1],
+                                atom.coords[2],
+                            )
+                        )
                     elif atom.resindex >= 10000 and atom.resindex < 100000:
-                        s = "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f" \
-                            "        \n" % (
-                                atom.index+1, atom.name, atom.resname,
-                                atom.resindex, atom.coords[0], atom.coords[1],
-                                atom.coords[2])
+                        s = (
+                            "ATOM  %5d %-4s %3s  %4d   %8.3f%8.3f%8.3f"
+                            "        \n"
+                            % (
+                                atom.index + 1,
+                                atom.name,
+                                atom.resname,
+                                atom.resindex,
+                                atom.coords[0],
+                                atom.coords[1],
+                                atom.coords[2],
+                            )
+                        )
                     else:
-                        s = "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f" \
-                            "        \n" % (
-                                atom.index+1, atom.name, atom.resname,
-                                atom.resindex, atom.coords[0], atom.coords[1],
-                                atom.coords[2])
+                        s = (
+                            "ATOM  %5d %-4s %3s  %4d  %8.3f%8.3f%8.3f"
+                            "        \n"
+                            % (
+                                atom.index + 1,
+                                atom.name,
+                                atom.resname,
+                                atom.resindex,
+                                atom.coords[0],
+                                atom.coords[1],
+                                atom.coords[2],
+                            )
+                        )
                     f.write(s)
                 if i < len(keys):
                     f.write("TER \n")
@@ -382,7 +482,7 @@ class PDBFile:
         solvents : boolean, optional
           if to write the solvents
         """
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             self._write_text(f, **kwargs)
 
     def getCenter(self):
@@ -399,10 +499,10 @@ class PDBFile:
             self.residues[res].getCenter()
             rescent = self.residues[res].center
             center = center + rescent
-        self.center = center/float(len(self.residues))
+        self.center = center / float(len(self.residues))
         return self.center
 
-    def getBox(self, atomlist='all', reslist='all'):
+    def getBox(self, atomlist="all", reslist="all"):
         """
         Calculate the smallest box to encompass the atoms
 
@@ -418,32 +518,52 @@ class PDBFile:
         dictionary of Numpy arrays
           the center, length and origin of the box
         """
-        if reslist is 'all':
-            reslist = list(set([self.residues[i].name for i in self.residues] +
-                               [self.solvents[i].name for i in self.solvents]))
+        if reslist == "all":
+            reslist = list(
+                set(
+                    [self.residues[i].name for i in self.residues]
+                    + [self.solvents[i].name for i in self.solvents]
+                )
+            )
 
-        if atomlist is 'all':
-            atomlist = list(set([atom.name for i in self.residues
-                                 for atom in self.residues[i].atoms] +
-                                [atom.name for i in self.solvents
-                                 for atom in self.solvents[i].atoms]))
-        minxyz = np.zeros(3)+1E6
-        maxxyz = np.zeros(3)-1E6
+        if atomlist == "all":
+            atomlist = list(
+                set(
+                    [
+                        atom.name
+                        for i in self.residues
+                        for atom in self.residues[i].atoms
+                    ]
+                    + [
+                        atom.name
+                        for i in self.solvents
+                        for atom in self.solvents[i].atoms
+                    ]
+                )
+            )
+        minxyz = np.zeros(3) + 1e6
+        maxxyz = np.zeros(3) - 1e6
         for res in self.residues:
             for atom in self.residues[res].atoms:
-                if atom.name in atomlist and \
-                   self.residues[res].name in reslist:
+                if (
+                    atom.name in atomlist
+                    and self.residues[res].name in reslist
+                ):
                     minxyz = np.minimum(minxyz, atom.coords)
                     maxxyz = np.maximum(maxxyz, atom.coords)
         for res in self.solvents:
             for atom in self.solvents[res].atoms:
-                if atom.name in atomlist and \
-                   self.solvents[res].name in reslist:
+                if (
+                    atom.name in atomlist
+                    and self.solvents[res].name in reslist
+                ):
                     minxyz = np.minimum(minxyz, atom.coords)
                     maxxyz = np.maximum(maxxyz, atom.coords)
-        return {"center": minxyz+(maxxyz-minxyz)/2.0,
-                "len": maxxyz-minxyz,
-                "origin": minxyz}
+        return {
+            "center": minxyz + (maxxyz - minxyz) / 2.0,
+            "len": maxxyz - minxyz,
+            "origin": minxyz,
+        }
 
 
 class PDBSet:
@@ -528,11 +648,11 @@ class PDBSet:
         elif isinstance(filenames, six.string_types) or len(filenames) == 1:
             s = six.StringIO()
             for i, pdb in enumerate(self.pdbs):
-                s.write('MODEL    %5d\n' % i)
+                s.write("MODEL    %5d\n" % i)
                 pdb._write_text(s, solvents=True)
-                s.write('ENDMDL\n')
-            s.write('\n\n')
-            with open(filenames, 'w') as f:
+                s.write("ENDMDL\n")
+            s.write("\n\n")
+            with open(filenames, "w") as f:
                 f.write(s.getvalue())
         else:
             raise SetupError("Invalid number of filenames given")
@@ -607,7 +727,7 @@ def find_box(pdbobj):
     if center is not None and dim is not None:
         return {"center": center, "len": dim}
     elif box is not None:
-        return {"origin": box[:3], "len": box[3:]-box[:3]}
+        return {"origin": box[:3], "len": box[3:] - box[:3]}
     else:
         return None
 
@@ -623,6 +743,7 @@ def write_box(filename, box):
     box : dictionary of Numpy array
       the box specification
     """
+
     def makeBoundary(box_min, box_max):
         c1 = (box_min[0], box_min[1], box_min[2])  # Origin
         c2 = (box_max[0], box_min[1], box_min[2])
@@ -636,33 +757,45 @@ def write_box(filename, box):
         return (c1, c2, c3, c4, c5, c6, c7, c8)
 
     if "center" not in box:
-        box["center"] = box["origin"] + box["len"]/2.0
+        box["center"] = box["origin"] + box["len"] / 2.0
     elif "origin" not in box:
-        box["origin"] = box["center"] - box["len"]/2.0
-    boundary = makeBoundary(box["origin"], box["origin"]+box["len"])
+        box["origin"] = box["center"] - box["len"] / 2.0
+    boundary = makeBoundary(box["origin"], box["origin"] + box["len"])
 
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         f.write("HEADER    CORNERS OF BOX\n")
-        f.write("REMARK    CENTER (X Y Z)   %.3f  %.3f  %.3f\n" %
-                (box["center"][0], box["center"][1], box["center"][2]))
-        f.write("REMARK    DIMENSIONS (X Y Z)   %.3f  %.3f  %.3f\n" %
-                (box["len"][0], box["len"][1], box["len"][2]))
-        f.write("ATOM      1  DUA BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[0])
-        f.write("ATOM      2  DUB BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[1])
-        f.write("ATOM      3  DUC BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[2])
-        f.write("ATOM      4  DUD BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[3])
-        f.write("ATOM      5  DUE BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[4])
-        f.write("ATOM      6  DUF BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[5])
-        f.write("ATOM      7  DUG BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[6])
-        f.write("ATOM      8  DUH BOX     1    %8.3f%8.3f%8.3f\n" %
-                boundary[7])
+        f.write(
+            "REMARK    CENTER (X Y Z)   %.3f  %.3f  %.3f\n"
+            % (box["center"][0], box["center"][1], box["center"][2])
+        )
+        f.write(
+            "REMARK    DIMENSIONS (X Y Z)   %.3f  %.3f  %.3f\n"
+            % (box["len"][0], box["len"][1], box["len"][2])
+        )
+        f.write(
+            "ATOM      1  DUA BOX     1    %8.3f%8.3f%8.3f\n" % boundary[0]
+        )
+        f.write(
+            "ATOM      2  DUB BOX     1    %8.3f%8.3f%8.3f\n" % boundary[1]
+        )
+        f.write(
+            "ATOM      3  DUC BOX     1    %8.3f%8.3f%8.3f\n" % boundary[2]
+        )
+        f.write(
+            "ATOM      4  DUD BOX     1    %8.3f%8.3f%8.3f\n" % boundary[3]
+        )
+        f.write(
+            "ATOM      5  DUE BOX     1    %8.3f%8.3f%8.3f\n" % boundary[4]
+        )
+        f.write(
+            "ATOM      6  DUF BOX     1    %8.3f%8.3f%8.3f\n" % boundary[5]
+        )
+        f.write(
+            "ATOM      7  DUG BOX     1    %8.3f%8.3f%8.3f\n" % boundary[6]
+        )
+        f.write(
+            "ATOM      8  DUH BOX     1    %8.3f%8.3f%8.3f\n" % boundary[7]
+        )
         f.write("CONECT    1    2    4    5\n")
         f.write("CONECT    2    1    3    6\n")
         f.write("CONECT    3    2    4    7\n")
@@ -671,6 +804,7 @@ def write_box(filename, box):
         f.write("CONECT    6    2    5    7\n")
         f.write("CONECT    7    3    6    8\n")
         f.write("CONECT    8    4    5    7\n")
+
 
 # --------------------------------
 #  Classes to hold parameter sets
@@ -747,9 +881,11 @@ class DihTerm:
         self.k1, self.k2, self.k3, self.k4 = map(float, (k1, k2, k3, k4))
 
     def __repr__(self):
-        return "<DihTerm instance: index = %d, k1 = %.3f, k2 = %.3f" \
-               ", k3 = %.3f, k4 = %.3f>" % (
-                   self.index, self.k1, self.k2, self.k3, self.k4)
+        return (
+            "<DihTerm instance: index = %d, k1 = %.3f, k2 = %.3f"
+            ", k3 = %.3f, k4 = %.3f>"
+            % (self.index, self.k1, self.k2, self.k3, self.k4)
+        )
 
 
 class ParameterSet:
@@ -763,19 +899,30 @@ class ParameterSet:
     params : list of Parameter objects
       the parameters in this collection
     """
-    formats = {'bond': {'par': (str, int, float, float),
-                        'atm': (str, str, str, int)},
-               'angle': {'par': (str, int, float, float),
-                         'atm': (str, str, str, str, int)},
-               'dihedral': {'par': (str, int, int, int, int, int, int),
-                            'atm': (str, str, str, str, str, int),
-                            'term': (str, int, float, float, float, float)},
-               'clj': {'par': (str, int, str, int, float, float, float)}}
+
+    formats = {
+        "bond": {"par": (str, int, float, float), "atm": (str, str, str, int)},
+        "angle": {
+            "par": (str, int, float, float),
+            "atm": (str, str, str, str, int),
+        },
+        "dihedral": {
+            "par": (str, int, int, int, int, int, int),
+            "atm": (str, str, str, str, str, int),
+            "term": (str, int, float, float, float, float),
+        },
+        "clj": {"par": (str, int, str, int, float, float, float)},
+    }
 
     def __init__(self, ptype, param_file=None):
 
         self.file_name = param_file
-        assert ptype in ['bond', 'angle', 'dihedral', 'clj', ]
+        assert ptype in [
+            "bond",
+            "angle",
+            "dihedral",
+            "clj",
+        ]
         self.ptype = ptype
         self.pars = []
         self.atms = []
@@ -790,22 +937,23 @@ class ParameterSet:
 
         with open(param_file) as f:
             # wind through file until we reach the section we want
-            while not next(f).startswith('mode %s' % self.ptype):
+            while not next(f).startswith("mode %s" % self.ptype):
                 pass
 
             for line in f:
                 if line.startswith("par"):
-                    pars = self.formats[self.ptype]['par']
-                    self.pars += [tuple(fmt(i)
-                                        for fmt, i in zip(pars, line.split()))]
+                    pars = self.formats[self.ptype]["par"]
+                    self.pars += [
+                        tuple(fmt(i) for fmt, i in zip(pars, line.split()))
+                    ]
                 elif line.startswith("atm"):
-                    atms = self.formats[self.ptype]['atm']
-                    self.atms += [tuple(fmt(i)
-                                        for fmt, i in zip(atms, line.split()))]
+                    atms = self.formats[self.ptype]["atm"]
+                    self.atms += [
+                        tuple(fmt(i) for fmt, i in zip(atms, line.split()))
+                    ]
                 elif line.startswith("term"):
-                    terms = self.formats[self.ptype]['term']
-                    cols = tuple(fmt(i)
-                                 for fmt, i in zip(terms, line.split()))
+                    terms = self.formats[self.ptype]["term"]
+                    cols = tuple(fmt(i) for fmt, i in zip(terms, line.split()))
                     self.terms[cols[1]] = DihTerm(*cols[1:])
                 elif line.startswith("mode"):
                     # only read until the next mode section
@@ -814,7 +962,7 @@ class ParameterSet:
         # combine information from atm and par lines to create Parameter objs
         for at_cols in self.atms:
             par_cols = self.get_par_by_index(at_cols[-1])
-            if self.ptype == 'dihedral':
+            if self.ptype == "dihedral":
                 pterms = [self.terms[i] for i in par_cols[2:7]]
                 ats = at_cols[1:-1]
                 p = DihParameter(par_cols[1], ats, pterms)
@@ -824,7 +972,7 @@ class ParameterSet:
             self.params[tuple(ats)] = p
             self.params[tuple(ats[::-1])] = p
 
-        if self.ptype == 'clj':
+        if self.ptype == "clj":
             for par in self.pars:
                 cols = par.split()
                 self.params[int(cols[1])] = cols[2]
@@ -834,16 +982,19 @@ class ParameterSet:
         for par in self.pars:
             if par[1] == ind:
                 return par
-        raise ValueError("No matching values in gaff paramater file. "
-                         "Parameter file malformed.")
+        raise ValueError(
+            "No matching values in gaff paramater file. "
+            "Parameter file malformed."
+        )
 
     def __getitem__(self, ats):
         try:
             ats = tuple(ats)
         except TypeError:
             raise TypeError(
-                'Must provide sequence specifying atom types, got %s instead' %
-                type(ats))
+                "Must provide sequence specifying atom types, got %s instead"
+                % type(ats)
+            )
 
         try:
             return self.params[ats]
@@ -853,30 +1004,33 @@ class ParameterSet:
             except KeyError:
                 pass
 
-        if self.ptype == 'dihedral':
+        if self.ptype == "dihedral":
             # these first two blocks are required for the opls force field
             try:
-                return self.params[ats[:3] + ('X', )]
+                return self.params[ats[:3] + ("X",)]
             except KeyError:
                 pass
 
             try:
-                return self.params[('X', ) + ats[1:]]
+                return self.params[("X",) + ats[1:]]
             except KeyError:
                 pass
 
             try:
-                return self.params[('X', ) + ats[1:3] + ('X', )]
+                return self.params[("X",) + ats[1:3] + ("X",)]
             except KeyError:
                 pass
 
             try:
-                return self.params[('X',) + tuple(
-                    'N*' if i[0] == 'N' else i for i in ats[1:3]) + ('X',)]
+                return self.params[
+                    ("X",)
+                    + tuple("N*" if i[0] == "N" else i for i in ats[1:3])
+                    + ("X",)
+                ]
             except KeyError:
                 pass
 
-        raise KeyError('Unable to find parameter set for %s' % '-'.join(ats))
+        raise KeyError("Unable to find parameter set for %s" % "-".join(ats))
 
     def get_params(self, ats):
         """
@@ -893,6 +1047,7 @@ class ParameterSet:
           the found parameter
         """
         return self.__getitem__(ats)
+
 
 # --------------------------------------------------
 #  Classes to read and store ProtoMS restart files
@@ -942,19 +1097,20 @@ class RestartFile:
         with open(filename, "r") as f:
             for line in f.readlines():
                 cols = line.strip().split()
-                if 'nsolutes' in cols[0].lower():
+                if "nsolutes" in cols[0].lower():
                     self.nsolutes = int(cols[1])
-                elif 'gcsolutes' in cols[0].lower():
+                elif "gcsolutes" in cols[0].lower():
                     self.ngcsolutes = int(cols[1])
-                elif 'gc-solute' in cols[0].lower():
+                elif "gc-solute" in cols[0].lower():
                     self.gcsolutesdic[int(cols[1])] = cols[3]
-                elif 'solute' in cols[0].lower():
+                elif "solute" in cols[0].lower():
                     self.solutesdic[int(cols[1])] = cols[3]
 
 
 # --------------------------------------------------
 #  Classes to read and store ProtoMS results files
 # --------------------------------------------------
+
 
 class EnergyResults:
     """
@@ -995,29 +1151,41 @@ class EnergyResults:
         try:
             self.curr = float(cols[1])
         except ValueError:
-            self.curr = 10000000000.
-            print("Warning. Energy has value of '%s', setting value"
-                  " to 10000000000" % cols[1])
+            self.curr = 10000000000.0
+            print(
+                "Warning. Energy has value of '%s', setting value"
+                " to 10000000000" % cols[1]
+            )
         try:
             self.forw = float(cols[6])
         except ValueError:
-            self.forw = 10000000000.
-            print("Warning. Energy has value of '%s', setting value"
-                  " to 10000000000" % cols[6])
+            self.forw = 10000000000.0
+            print(
+                "Warning. Energy has value of '%s', setting value"
+                " to 10000000000" % cols[6]
+            )
         try:
             self.back = float(cols[10])
         except ValueError:
-            self.back = 10000000000.
-            print("Warning. Energy has value of '%s', setting value"
-                  " to 10000000000" % cols[10])
+            self.back = 10000000000.0
+            print(
+                "Warning. Energy has value of '%s', setting value"
+                " to 10000000000" % cols[10]
+            )
 
     def __str__(self):
         if isinstance(self.curr, float):
             return "%s %20.10F %20.10F %20.10F" % (
-                self.type, self.curr, self.back, self.forw)
+                self.type,
+                self.curr,
+                self.back,
+                self.forw,
+            )
         else:
             return "%s Numpy array with %d elements" % (
-                self.type, self.curr.shape[0])
+                self.type,
+                self.curr.shape[0],
+            )
 
     def __add__(self, b):
         r = EnergyResults()
@@ -1157,7 +1325,8 @@ class SnapshotResults:
                 self.temperature = float(line.split("=")[1].strip().split()[0])
             if line.startswith("Effective temperature"):
                 self.efftemperature = float(
-                    line.split("=")[1].strip().split()[0])
+                    line.split("=")[1].strip().split()[0]
+                )
             if line.startswith("Solvents,Proteins,GC-solutes"):
                 self.ngcsolutes = int(line.split("=")[1].strip().split()[2])
             if line.startswith("Simulation B factor"):
@@ -1193,18 +1362,21 @@ class SnapshotResults:
                 if cols[4] == "solute":
                     key = cols[6]
                 else:
-                    key = cols[4]+cols[5]
+                    key = cols[4] + cols[5]
                 self.internal_energies[key] = []
                 line = fileobj.readline()  # Dummy line
                 line = fileobj.readline()
                 while line[0] != "#":
                     self.internal_energies[key].append(
-                        EnergyResults(line=line))  # Coul
+                        EnergyResults(line=line)
+                    )  # Coul
                     line = fileobj.readline()  # Dummy line
                     line = fileobj.readline()
             elif line.lower().startswith("average extra energies"):
                 pass
-            elif line.startswith("Average inter-molecular interaction energies"):
+            elif line.startswith(
+                "Average inter-molecular interaction energies"
+            ):
                 pass
             elif line.startswith("Average total extra energy"):
                 line = fileobj.readline()  # Dummy line
@@ -1218,30 +1390,32 @@ class SnapshotResults:
                 if cols[1] in ["solvent-solvent", "GCS-GCS"]:
                     key = cols[1]
                 elif cols[1] == "protein-protein":
-                    key = "protein"+cols[4]+"-protein"+cols[7]
+                    key = "protein" + cols[4] + "-protein" + cols[7]
                 elif cols[1] == "solute-protein":
-                    key = "protein"+cols[4]+"-"+cols[8]+cols[7]
+                    key = "protein" + cols[4] + "-" + cols[8] + cols[7]
                 elif cols[1] == "protein-solvent":
-                    key = "protein"+cols[4]+"-solvent"
+                    key = "protein" + cols[4] + "-solvent"
                 elif cols[1] == "solute-solute":
-                    key = cols[5]+"-"+cols[8]
+                    key = cols[5] + "-" + cols[8]
                 elif cols[1] == "solute-solvent":
-                    key = cols[5]+"-solvent"
+                    key = cols[5] + "-solvent"
                 elif cols[1] == "solute-GCS":
-                    key = cols[5]+"-GCS"
+                    key = cols[5] + "-GCS"
                 elif cols[1] == "GCS-solvent":
                     key = "GCS-solvent"
                 elif cols[1] == "protein-GCS":
-                    key = "protein"+cols[4]+"-GCS"
+                    key = "protein" + cols[4] + "-GCS"
                 else:
                     continue
                 self.interaction_energies[key] = []
                 line = fileobj.readline()  # Dummy line
                 self.interaction_energies[key].append(
-                    EnergyResults(line=fileobj.readline()))  # Coul
+                    EnergyResults(line=fileobj.readline())
+                )  # Coul
                 line = fileobj.readline()  # Dummy line
                 self.interaction_energies[key].append(
-                    EnergyResults(line=fileobj.readline()))  # LJ
+                    EnergyResults(line=fileobj.readline())
+                )  # LJ
             elif line.startswith("FREE ENERGY DATA"):
                 line = fileobj.readline()  # Dummy line
                 line = fileobj.readline()  # Dummy line
@@ -1260,17 +1434,18 @@ class SnapshotResults:
                 if len(cols) > 2:
                     self.agradient = float(cols[2])
             elif line.startswith("Individual theta values"):
-                self.thetavals = [None]*self.ngcsolutes
+                self.thetavals = [None] * self.ngcsolutes
                 line = fileobj.readline()  # Dummy line
                 for i in range(self.ngcsolutes):
-                    self.thetavals[i] = (fileobj.readline().strip().split()[2])
+                    self.thetavals[i] = fileobj.readline().strip().split()[2]
             elif line.startswith("Individual theta solute values"):
                 self.nthetasolutes = int(line[36:39])
-                self.thetasolvals = [None]*self.nthetasolutes
+                self.thetasolvals = [None] * self.nthetasolutes
                 line = fileobj.readline()  # Dummy line
                 for i in range(self.nthetasolutes):
                     self.thetasolvals[i] = (
-                        fileobj.readline().strip().split()[2])
+                        fileobj.readline().strip().split()[2]
+                    )
 
             line = fileobj.readline().strip()
             if line.startswith("-") or line.startswith("RESULTS FILE"):
@@ -1283,20 +1458,20 @@ class SnapshotResults:
             for label in dict:
                 dict[label].append(EnergyResults())
                 for e in dict[label][:-1]:
-                    dict[label][-1] = dict[label][-1]+e
+                    dict[label][-1] = dict[label][-1] + e
                 dict[label][-1].type = "SUM"
 
         if not hasattr(self, "gradient") and hasattr(self, "backfe"):
             dGB = self.backfe
             dGF = self.forwfe
             # Calculate and return the gradient
-            deltalam = max(self.lam-self.lamb, self.lamf-self.lam)
+            deltalam = max(self.lam - self.lamb, self.lamf - self.lam)
             # This is needed for the end-points
-            if (self.lam < 0.0001):
+            if self.lam < 0.0001:
                 dGB = -dGF
-            if (self.lam > 0.9999):
+            if self.lam > 0.9999:
                 dGF = -dGB
-            self.gradient = (dGF - dGB) / (2*deltalam)
+            self.gradient = (dGF - dGB) / (2 * deltalam)
 
         return line
 
@@ -1363,20 +1538,21 @@ class ResultsFile:
                 else:
                     break
             f.close()
-        else:   # Assumes it is a list and read each one of them
+        else:  # Assumes it is a list and read each one of them
             if readmax is None:
-                readmax = 1E10
+                readmax = 1e10
             if len(filename) == 2:
                 if os.path.isdir(filename[0]):
-                    filenames = glob.glob(os.path.join(
-                        filename[0], "%s*" % filename[1]))
+                    filenames = glob.glob(
+                        os.path.join(filename[0], "%s*" % filename[1])
+                    )
                     if len(filenames) > 1:
                         filenames.sort()
                 else:
                     filenames = filename
             else:
                 filenames = filename
-            for filenam in filenames[skip:skip+readmax+1]:
+            for filenam in filenames[skip : skip + readmax + 1]:
                 f = open(filenam, "r")
                 self.snapshots.append(SnapshotResults())
                 line = self.snapshots[-1].parse(f)
@@ -1396,6 +1572,7 @@ class ResultsFile:
         SnapshotResults
           the created object, also stored in self.series
         """
+
         def set_energyresults(obj):
             obj.curr = np.zeros(nsnap)
             obj.forw = np.zeros(nsnap)
@@ -1413,13 +1590,30 @@ class ResultsFile:
         # First replace all float/int in the SnapshotResults
         # object with NumpyArrays
         self.series = copy.deepcopy(self.snapshots[0])
-        for attr in ["lam", "lamb", "lamf", "temperature", "bvalues",
-                     "pressure", "volume", "backfe", "forwfe", "gradient",
-                     "agradient", "capenergy", "solventson"]:
+        for attr in [
+            "lam",
+            "lamb",
+            "lamf",
+            "temperature",
+            "bvalues",
+            "pressure",
+            "volume",
+            "backfe",
+            "forwfe",
+            "gradient",
+            "agradient",
+            "capenergy",
+            "solventson",
+        ]:
             if hasattr(self.snapshots[0], attr):
                 setattr(self.series, attr, np.zeros(nsnap))
-        for attr in ["datastep", "lambdareplica", "globalreplica",
-                     "seed", "gcmcreplica"]:
+        for attr in [
+            "datastep",
+            "lambdareplica",
+            "globalreplica",
+            "seed",
+            "gcmcreplica",
+        ]:
             if hasattr(self.snapshots[0], attr):
                 setattr(self.series, attr, np.zeros(nsnap, dtype=int))
         if hasattr(self.snapshots[0], "total"):
@@ -1438,17 +1632,33 @@ class ResultsFile:
             for elabel in self.series.feenergies:
                 self.series.feenergies[elabel] = np.zeros(nsnap)
         if hasattr(self.snapshots[0], "thetavals"):
-            self.series.thetavals = [np.zeros(nsnap)
-                                     for i in self.snapshots[0].thetavals]
+            self.series.thetavals = [
+                np.zeros(nsnap) for i in self.snapshots[0].thetavals
+            ]
         if hasattr(self.snapshots[0], "harmonic"):
             set_energyresults(self.series.harmonic)
 
         # Then loop over all snapshots and fill the NumpyArrays with data
         for i, snapshot in enumerate(self.snapshots):
-            for attr in ["lam", "lamb", "lamf", "temperature", "bvalues",
-                         "pressure", "volume", "backfe", "forwfe", "gradient",
-                         "agradient", "datastep", "lambdareplica",
-                         "globalreplica", "solventson", "seed", "capenergy"]:
+            for attr in [
+                "lam",
+                "lamb",
+                "lamf",
+                "temperature",
+                "bvalues",
+                "pressure",
+                "volume",
+                "backfe",
+                "forwfe",
+                "gradient",
+                "agradient",
+                "datastep",
+                "lambdareplica",
+                "globalreplica",
+                "solventson",
+                "seed",
+                "capenergy",
+            ]:
                 if hasattr(snapshot, attr):
                     getattr(self.series, attr)[i] = getattr(snapshot, attr)
             if hasattr(snapshot, "total"):
@@ -1458,32 +1668,37 @@ class ResultsFile:
                     if elabel not in self.series.internal_energies:
                         continue
                     for ene1, ene2 in zip(
-                            self.series.internal_energies[elabel],
-                            snapshot.internal_energies[elabel]):
+                        self.series.internal_energies[elabel],
+                        snapshot.internal_energies[elabel],
+                    ):
                         put_energyresults(ene1, ene2, i)
             if hasattr(snapshot, "interaction_energies"):
                 for elabel in snapshot.interaction_energies:
                     if elabel not in self.series.interaction_energies:
                         continue
                     for ene1, ene2 in zip(
-                            self.series.interaction_energies[elabel],
-                            snapshot.interaction_energies[elabel]):
+                        self.series.interaction_energies[elabel],
+                        snapshot.interaction_energies[elabel],
+                    ):
                         put_energyresults(ene1, ene2, i)
             if hasattr(snapshot, "extraenergy"):
-                put_energyresults(self.series.extraenergy,
-                                  snapshot.extraenergy, i)
+                put_energyresults(
+                    self.series.extraenergy, snapshot.extraenergy, i
+                )
             if hasattr(snapshot, "feenergies"):
                 for elabel in snapshot.feenergies:
                     if elabel not in self.series.feenergies:
                         continue
-                    self.series.feenergies[elabel][i] = \
-                        snapshot.feenergies[elabel]
+                    self.series.feenergies[elabel][i] = snapshot.feenergies[
+                        elabel
+                    ]
             if hasattr(snapshot, "thetavals"):
                 for j in range(len(self.series.thetavals)):
                     self.series.thetavals[j][i] = snapshot.thetavals[j]
             if hasattr(snapshot, "harmonic"):
                 put_energyresults(self.series.harmonic, snapshot.harmonic, i)
         return self.series
+
 
 # ---------------------------------------------------------
 #  Classes to read, modify and write ProtoMS template files
@@ -1639,7 +1854,7 @@ class TemplateAtom:
 
 
 class TemplateSoluteAtom(TemplateAtom):
-    """ 
+    """
     Class to hold a solute atom
 
     This is a sub-class that implements functions
@@ -1674,6 +1889,7 @@ class TemplateSoluteAtom(TemplateAtom):
         """
         Produces a correct ProtoMS file line
         """
+
         def make_str(strobj):
             if isinstance(strobj, six.string_types):
                 if strobj in ["DM3", "DM2", "DM1"]:
@@ -1688,10 +1904,16 @@ class TemplateSoluteAtom(TemplateAtom):
                 return param.index
             else:
                 return param
+
         return "atom %4s %s %d %d %s %s %s" % (
-            self.name, self.residue, make_paramstr(self.param0),
-            make_paramstr(self.param1), make_str(self.bondedto),
-            make_str(self.angleto), make_str(self.dihedto))
+            self.name,
+            self.residue,
+            make_paramstr(self.param0),
+            make_paramstr(self.param1),
+            make_str(self.bondedto),
+            make_str(self.angleto),
+            make_str(self.dihedto),
+        )
 
     def zmat(self):
         """
@@ -1702,17 +1924,22 @@ class TemplateSoluteAtom(TemplateAtom):
         returns
           the z-matrix representation, viz. ATOM BONDEDTO ANGLETO DIHEDRALTO
         """
+
         def make_str(strobj):
             if isinstance(strobj, six.string_types):
                 return strobj
             else:
                 return strobj.name
+
         return "%s %s %s %s" % (
-            self.name, make_str(self.bondedto),
-            make_str(self.angleto), make_str(self.dihedto))
+            self.name,
+            make_str(self.bondedto),
+            make_str(self.angleto),
+            make_str(self.dihedto),
+        )
 
 
-class TemplateConnectivity():
+class TemplateConnectivity:
     """
     Class to hold a solute bond, angle or dihedral
 
@@ -1768,11 +1995,11 @@ class TemplateConnectivity():
             nexti = 9
         while nexti < len(cols):
             if cols[nexti] == "flex":
-                self.flex = float(cols[nexti+1])
+                self.flex = float(cols[nexti + 1])
                 nexti = nexti + 2
             elif cols[nexti] == "param":
-                self.param0 = int(cols[nexti+1])
-                self.param1 = int(cols[nexti+2])
+                self.param0 = int(cols[nexti + 1])
+                self.param1 = int(cols[nexti + 2])
                 nexti = nexti + 3
             elif cols[nexti] == "dummy":
                 self.dummy = True
@@ -1782,6 +2009,7 @@ class TemplateConnectivity():
         """
         Produces a correct ProtoMS file line
         """
+
         def make_paramstr(param):
             if isinstance(param, ForceFieldParameter):
                 return param.index
@@ -1793,14 +2021,21 @@ class TemplateConnectivity():
                 return atom
             else:
                 return atom.name
-        strout = "%s %s" % (self.type, " ".join("%4s %s" % (make_atomstr(
-            atm), res) for atm, res in zip(self.atoms, self.residues)))
+
+        strout = "%s %s" % (
+            self.type,
+            " ".join(
+                "%4s %s" % (make_atomstr(atm), res)
+                for atm, res in zip(self.atoms, self.residues)
+            ),
+        )
         if self.flex is not None:
             strout = strout + " flex %.3f" % self.flex
         if self.param0 is not None:
-            strout = strout + \
-                " param %d %d" % (make_paramstr(self.param0),
-                                  make_paramstr(self.param1))
+            strout = strout + " param %d %d" % (
+                make_paramstr(self.param0),
+                make_paramstr(self.param1),
+            )
         if self.dummy:
             strout = strout + " dummy"
         return strout
@@ -1892,22 +2127,28 @@ class MolTemplate:
         """
         fileobj.write("mode template\n")
         fileobj.write("%s %s\n" % (self.type, self.name))
-        fileobj.write("info translate %.3f rotate %.3f\n" %
-                      (self.translate, self.rotate))
+        fileobj.write(
+            "info translate %.3f rotate %.3f\n" % (self.translate, self.rotate)
+        )
         if self.jtheta is not None:
             fileobj.write("jtheta %.3f\n" % self.jtheta)
         if self.jcorr is not None:
             fileobj.write("jcorr %.3f\n" % self.jcorr)
         if self.jpmf is not None:
-            fileobj.write("jpmf %s\n" %
-                          (" ".join("%.4f" % p for p in self.jpmf)))
+            fileobj.write(
+                "jpmf %s\n" % (" ".join("%.4f" % p for p in self.jpmf))
+            )
         for atom in self.atoms:
             fileobj.write("%s\n" % atom)
         for con in self.connectivity:
             # This was added to prevent angles and dihedral with
             # dummy parameters from being sampled
-            if len(con.atoms) > 2 and con.flex is not None and \
-               con.param0 == 0 and con.param1 == 0:
+            if (
+                len(con.atoms) > 2
+                and con.flex is not None
+                and con.param0 == 0
+                and con.param1 == 0
+            ):
                 fileobj.write("#")
             fileobj.write("%s\n" % con)
         for var in self.variables:
@@ -1927,7 +2168,7 @@ class MolTemplate:
                 f.write("%s\n" % atom.zmat())
 
 
-class TemplateFile():
+class TemplateFile:
     """
     Class to hold a ProtoMS template file
 
@@ -1946,7 +2187,7 @@ class TemplateFile():
     dihedralparams : list of ForceFieldParameter objects
       all dihedral parameters
     dihedralatoms : list of AtomSet objects
-      all atoms associated with dihedral parameters 
+      all atoms associated with dihedral parameters
     cljparams : list of ForceFieldParameter objects
       all clj parameters
     templates : list of MolTemplate objects
@@ -1986,7 +2227,8 @@ class TemplateFile():
         if set([t.name for t in other.templates]).issubset(set(templatenames)):
             SetupError(
                 "All molecules in the new template file are "
-                "already in the original template.")
+                "already in the original template."
+            )
             return
 
         if self.bondparams:
@@ -2043,7 +2285,8 @@ class TemplateFile():
             if template.name in templatenames:
                 SetupError(
                     "Appending this template will cause duplicate names: "
-                    "%s. Aborting." % template.name)
+                    "%s. Aborting." % template.name
+                )
             else:
                 self.templates.append(template)
 
@@ -2057,6 +2300,7 @@ class TemplateFile():
         It replaces all atom in templates with references
         to TemplateAtom objects
         """
+
         def assign_con(con, paramlist, tem):
             if not isinstance(con.param0, ForceFieldParameter):
                 for param in paramlist:
@@ -2111,14 +2355,20 @@ class TemplateFile():
                             atom.param1 = param
                             break
                 for atom2 in template.atoms:
-                    if isinstance(atom.bondedto, six.string_types) \
-                       and atom.bondedto == atom2.name:
+                    if (
+                        isinstance(atom.bondedto, six.string_types)
+                        and atom.bondedto == atom2.name
+                    ):
                         atom.bondedto = atom2
-                    if isinstance(atom.angleto, six.string_types) \
-                       and atom.angleto == atom2.name:
+                    if (
+                        isinstance(atom.angleto, six.string_types)
+                        and atom.angleto == atom2.name
+                    ):
                         atom.angleto = atom2
-                    if isinstance(atom.dihedto, six.string_types) \
-                       and atom.dihedto == atom2.name:
+                    if (
+                        isinstance(atom.dihedto, six.string_types)
+                        and atom.dihedto == atom2.name
+                    ):
                         atom.dihedto = atom2
             for con in template.connectivity:
                 if con.type == "bond":
@@ -2145,7 +2395,8 @@ class TemplateFile():
                     while line:
                         if line.startswith("par"):
                             self.bondparams.append(
-                                ForceFieldParameter(record=line))
+                                ForceFieldParameter(record=line)
+                            )
                         elif line.startswith("atm"):
                             self.bondatoms.append(AtomSet(record=line))
                         elif line.startswith("mode"):
@@ -2156,7 +2407,8 @@ class TemplateFile():
                     while line:
                         if line.startswith("par"):
                             self.angleparams.append(
-                                ForceFieldParameter(record=line))
+                                ForceFieldParameter(record=line)
+                            )
                         elif line.startswith("atm"):
                             self.angleatoms.append(AtomSet(record=line))
                         elif line.startswith("mode"):
@@ -2167,10 +2419,12 @@ class TemplateFile():
                     while line:
                         if line.startswith("term"):
                             self.dihedralterms.append(
-                                ForceFieldParameter(record=line))
+                                ForceFieldParameter(record=line)
+                            )
                         elif line.startswith("par"):
                             self.dihedralparams.append(
-                                ForceFieldParameter(record=line))
+                                ForceFieldParameter(record=line)
+                            )
                         elif line.startswith("atm"):
                             self.dihedralatoms.append(AtomSet(record=line))
                         elif line.startswith("mode"):
@@ -2181,7 +2435,8 @@ class TemplateFile():
                     while line:
                         if line.startswith("par"):
                             self.cljparams.append(
-                                ForceFieldParameter(record=line))
+                                ForceFieldParameter(record=line)
+                            )
                         elif line.startswith("mode"):
                             break
                         line = f.readline()
@@ -2235,12 +2490,14 @@ class TemplateFile():
                 f.write("mode clj\n")
                 f.write(
                     "#parameter atm proton-num charge(|e|) sigma(A) epsilon"
-                    "(kcal mol-1) \n")
+                    "(kcal mol-1) \n"
+                )
                 for param in self.cljparams:
                     f.write("%s\n" % param)
             if self.templates:
                 for template in self.templates:
                     template.write_to(f)
+
 
 # ----------------------------
 #  Classes to extend Argparse
@@ -2252,17 +2509,20 @@ class _FullHelpAction(argparse.Action):
     Class to initiate full help action
     """
 
-    def __init__(self,
-                 option_strings,
-                 dest=argparse.SUPPRESS,
-                 default=argparse.SUPPRESS,
-                 help=None):
+    def __init__(
+        self,
+        option_strings,
+        dest=argparse.SUPPRESS,
+        default=argparse.SUPPRESS,
+        help=None,
+    ):
         super(_FullHelpAction, self).__init__(
             option_strings=option_strings,
             dest=dest,
             default=default,
             nargs=0,
-            help=help)
+            help=help,
+        )
 
     def __call__(self, parser, namespace, values, option_string=None):
         parser.print_fullhelp()
@@ -2299,17 +2559,19 @@ class MyArgumentParser(argparse.ArgumentParser):
         super(MyArgumentParser, self).__init__(**kwargs)
 
         self.add_fullhelp = add_fullhelp
-        self.register('action', 'fullhelp', _FullHelpAction)
+        self.register("action", "fullhelp", _FullHelpAction)
 
-        if '-' in prefix_chars:
-            default_prefix = '-'
+        if "-" in prefix_chars:
+            default_prefix = "-"
         else:
             default_prefix = prefix_chars[0]
         if self.add_fullhelp:
             self.add_argument(
-                default_prefix*2+'fullhelp',
-                action='fullhelp', default=argparse.SUPPRESS,
-                help=gettext.gettext('show full help and exit'))
+                default_prefix * 2 + "fullhelp",
+                action="fullhelp",
+                default=argparse.SUPPRESS,
+                help=gettext.gettext("show full help and exit"),
+            )
 
         self._action_groups[1].title = "Most common arguments"
 
@@ -2317,8 +2579,9 @@ class MyArgumentParser(argparse.ArgumentParser):
         formatter = self._get_formatter()
 
         # usage
-        formatter.add_usage(self.usage, self._actions,
-                            self._mutually_exclusive_groups)
+        formatter.add_usage(
+            self.usage, self._actions, self._mutually_exclusive_groups
+        )
 
         # description
         formatter.add_text(self.description)
@@ -2339,8 +2602,9 @@ class MyArgumentParser(argparse.ArgumentParser):
 
         if not fullhelp:
             formatter.add_text(
-                "Type %s --fullhelp for complete list of all arguments" %
-                self.prog)
+                "Type %s --fullhelp for complete list of all arguments"
+                % self.prog
+            )
 
         # determine help from format above
         return formatter.format_help()
@@ -2354,6 +2618,7 @@ class MyArgumentParser(argparse.ArgumentParser):
         if file is None:
             file = sys.stdout
         self._print_message(self.format_help(fullhelp=True), file)
+
 
 # -----------------------
 #  Other useful routines
@@ -2413,15 +2678,15 @@ def setup_logger(filename=None):
     -------
     a reference to the created logger
     """
-    logger = logging.getLogger('protoms')
+    logger = logging.getLogger("protoms")
     logger.setLevel(logging.DEBUG)
-    formatter1 = logging.Formatter('%(message)s')
+    formatter1 = logging.Formatter("%(message)s")
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
     console.setFormatter(formatter1)
     logger.addHandler(console)
     if filename is not None:
-        formatter2 = logging.Formatter('%(levelname)s : %(message)s')
+        formatter2 = logging.Formatter("%(levelname)s : %(message)s")
         logfile = logging.FileHandler(filename, mode="w")
         logfile.setLevel(logging.DEBUG)
         logfile.setFormatter(formatter2)
@@ -2445,7 +2710,7 @@ def angle(v1, v2):
     float
       the angle in radians
     """
-    a = (v1*v2).sum()/(np.sqrt((v1**2).sum())*np.sqrt((v2**2).sum()))
+    a = (v1 * v2).sum() / (np.sqrt((v1**2).sum()) * np.sqrt((v2**2).sum()))
     if a > 1.0:
         a = 0.0
     elif a < -1:
@@ -2497,19 +2762,20 @@ def color(idx):
       the color
     """
     colors = []
-    colors.append((0.0/255.0, 69.0/255.0, 134.0/255.0))
-    colors.append((255.0/255.0, 66.0/255.0, 14.0/255.0))
-    colors.append((255.0/255.0, 211.0/255.0, 32.0/255.0))
-    colors.append((87.0/255.0, 157.0/255.0, 28.0/255.0))
-    colors.append((126.0/255.0, 0.0/255.0, 33.0/255.0))
-    colors.append((131.0/255.0, 202.0/255.0, 255.0/255.0))
-    colors.append((49.0/255.0, 64.0/255.0, 4.0/255.0))
-    colors.append((174.0/255.0, 207.0/255.0, 0.0/255.0))
-    d = int(len(colors)*np.floor(idx / float(len(colors))))
-    return colors[idx-d]
+    colors.append((0.0 / 255.0, 69.0 / 255.0, 134.0 / 255.0))
+    colors.append((255.0 / 255.0, 66.0 / 255.0, 14.0 / 255.0))
+    colors.append((255.0 / 255.0, 211.0 / 255.0, 32.0 / 255.0))
+    colors.append((87.0 / 255.0, 157.0 / 255.0, 28.0 / 255.0))
+    colors.append((126.0 / 255.0, 0.0 / 255.0, 33.0 / 255.0))
+    colors.append((131.0 / 255.0, 202.0 / 255.0, 255.0 / 255.0))
+    colors.append((49.0 / 255.0, 64.0 / 255.0, 4.0 / 255.0))
+    colors.append((174.0 / 255.0, 207.0 / 255.0, 0.0 / 255.0))
+    d = int(len(colors) * np.floor(idx / float(len(colors))))
+    return colors[idx - d]
 
 
 if __name__ == "__main__":
 
     raise SetupError(
-        "This module cannot be executed as a stand-alone program!")
+        "This module cannot be executed as a stand-alone program!"
+    )

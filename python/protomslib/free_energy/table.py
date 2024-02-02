@@ -5,6 +5,7 @@ import six
 
 class Table(object):
     """Output table for displaying data"""
+
     def __init__(self, title, fmts, headers=[], space=3):
         """Parameters
         ----------
@@ -20,11 +21,12 @@ class Table(object):
         self.title = title
         if len(fmts) < len(headers):
             raise ValueError(
-                'Not enough format strings provided for number of headers.')
+                "Not enough format strings provided for number of headers."
+            )
 
         self.columns = [
             Column(head, fmt, fmt)
-            for fmt, head in six.moves.zip_longest(fmts, headers, fillvalue='')
+            for fmt, head in six.moves.zip_longest(fmts, headers, fillvalue="")
         ]
         self.spacer = " " * space
 
@@ -46,22 +48,23 @@ class Table(object):
             col.add_data(None)
 
     def __str__(self):
-        s = ''
+        s = ""
         if self.title:
             s += "%s\n" % self.title
 
         for col in self.columns:
             s += ("%-{}s" + self.spacer).format(col.width) % col.header
-        s += '\n'
+        s += "\n"
 
         for row in zip(*self.columns):
-            s += self.spacer.join(row) + '\n'
+            s += self.spacer.join(row) + "\n"
         return s
 
 
 class Column(object):
     """Table column entry."""
-    def __init__(self, header='', value_fmt="%.4f", error_fmt="%.4f"):
+
+    def __init__(self, header="", value_fmt="%.4f", error_fmt="%.4f"):
         """Parameters
         ----------
         header: string
@@ -107,6 +110,7 @@ class Column(object):
 
 class SubColumn(object):
     """The left or right side of a Column."""
+
     def __init__(self, fmt="%.4f"):
         """Parameters
         ----------
@@ -125,7 +129,7 @@ class SubColumn(object):
         data: number
             entry to add
         """
-        line = self.fmt % data if data is not None else ''
+        line = self.fmt % data if data is not None else ""
         self.values.append(line)
         self.width = max(len(line), self.width)
 

@@ -6,7 +6,7 @@ import numpy as np
 import six
 from . import simulationobjects as sim
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def merge_templates(templates):
@@ -30,7 +30,8 @@ def merge_templates(templates):
     logger.debug("Running merge_templates with arguments: ")
     logger.debug("\ttemplates = %s" % " ".join(templates))
     logger.debug(
-        "This will merge all templates, renumbering force field parameters")
+        "This will merge all templates, renumbering force field parameters"
+    )
 
     # Make it a unique list
     templates2 = []
@@ -76,7 +77,7 @@ class PrepiAtom:
       a flag for each atom in bonds indicating if the bond has been traversed
     zmat : list
       atom names of the atoms defined to this atom in the z-matrix
-  """
+    """
 
     def __init__(self):
         self.charge = 0.0
@@ -118,8 +119,11 @@ class PrepiAtom:
         """
         next = None
         for bond in self.bonds:
-            if not defined[bond] and not self.traversed[bond] and \
-               self.is_on_loop[bond]:
+            if (
+                not defined[bond]
+                and not self.traversed[bond]
+                and self.is_on_loop[bond]
+            ):
                 if update:
                     self.traversed[bond] = True
                 next = bond
@@ -127,8 +131,11 @@ class PrepiAtom:
 
         if next is None:
             for bond in self.bonds:
-                if not defined[bond] and not self.traversed[bond] and \
-                   not self.is_on_loop[bond]:
+                if (
+                    not defined[bond]
+                    and not self.traversed[bond]
+                    and not self.is_on_loop[bond]
+                ):
                     if update:
                         self.traversed[bond] = True
                     next = bond
@@ -137,9 +144,9 @@ class PrepiAtom:
 
     def backward_bond(self, exclude, defined):
         """
-    Find an atom, bonded to this atom that has
-    already been defined but is not in the list of excluded atoms
-    """
+        Find an atom, bonded to this atom that has
+        already been defined but is not in the list of excluded atoms
+        """
         back = None
         for bond in self.bonds:
             if bond not in exclude and defined[bond]:
@@ -149,10 +156,10 @@ class PrepiAtom:
 
     def improper_dihedral(self, exclude, defined):
         """
-    Look for the definition of an improper dihedral:
-    see if at least two bonds to this atom has been defined,
-    excluding the bond in the exclude list
-    """
+        Look for the definition of an improper dihedral:
+        see if at least two bonds to this atom has been defined,
+        excluding the bond in the exclude list
+        """
         a1 = None
         a2 = None
         for bond in self.bonds:
@@ -212,8 +219,8 @@ def _find_cycles(atoms):
 
 def _read_prepi(filename):
     """
-  Read an prepi-file from Antechamber
-  """
+    Read an prepi-file from Antechamber
+    """
 
     atomlist = "DUM DUM DUM".split()
     atoms = {}
@@ -327,7 +334,7 @@ def _compute_closeness(atoms, verbose=False):
 
 
 def make_zmat(prepifile):
-    """ Make a ProtoMS z-matrix for a solute
+    """Make a ProtoMS z-matrix for a solute
 
     Parameters
     ----------
@@ -340,19 +347,15 @@ def make_zmat(prepifile):
       created PrepiAtom objects
     all_zmat : list
       a list of atoms with their z-matrix atoms
-  """
+    """
 
     # ----------------
     # Helper routines
     # ----------------
 
-    def define_atom(current,
-                    previous,
-                    atoms,
-                    defined,
-                    all_zmat,
-                    terminal,
-                    verbose=False):
+    def define_atom(
+        current, previous, atoms, defined, all_zmat, terminal, verbose=False
+    ):
         """Define a new atom in the z-matrix"""
 
         # Make a proper dihedral for the current atom
@@ -365,8 +368,9 @@ def make_zmat(prepifile):
             # if not, we traverse backwards on the molecular graph, looking
             # for two atoms to form an angle and dihedral
             else:
-                a2 = atoms[previous].backward_bond([current, previous],
-                                                   defined)
+                a2 = atoms[previous].backward_bond(
+                    [current, previous], defined
+                )
                 if len(all_zmat) > 2:
                     a3 = atoms[a2].backward_bond([previous, a2], defined)
                 else:
@@ -409,9 +413,9 @@ def make_zmat(prepifile):
 
     def traverse_graph(atomlist, atoms, verbose=False):
         """
-    Traverse the molecule graph based on the closeness of the atoms
-    and define the z-matrix
-    """
+        Traverse the molecule graph based on the closeness of the atoms
+        and define the z-matrix
+        """
         defined = {}
         for atom in atoms:
             defined[atom] = False
@@ -423,8 +427,9 @@ def make_zmat(prepifile):
         # Start with the most central atom
         branch_atom = atomlist[0]
         terminal_flag = False
-        define_atom(branch_atom, None, atoms, defined, all_zmat, terminal_flag,
-                    verbose)
+        define_atom(
+            branch_atom, None, atoms, defined, all_zmat, terminal_flag, verbose
+        )
 
         while True:
             # Traverse a branch from an atom with at least two bonds
@@ -432,8 +437,15 @@ def make_zmat(prepifile):
             next = atoms[branch_atom].next_bond(defined)
             atoms[next].traversed[branch_atom] = True
             while next is not None:
-                define_atom(next, previous, atoms, defined, all_zmat,
-                            terminal_flag, verbose)
+                define_atom(
+                    next,
+                    previous,
+                    atoms,
+                    defined,
+                    all_zmat,
+                    terminal_flag,
+                    verbose,
+                )
                 previous = next
                 next = atoms[previous].next_bond(defined)
                 if next is not None:
@@ -452,8 +464,15 @@ def make_zmat(prepifile):
                     if not defined[atom]:
                         branch_atom = atom
                         terminal_flag = False
-                        define_atom(branch_atom, atoms[atom].bonds[0], atoms,
-                                    defined, all_zmat, terminal_flag, verbose)
+                        define_atom(
+                            branch_atom,
+                            atoms[atom].bonds[0],
+                            atoms,
+                            defined,
+                            all_zmat,
+                            terminal_flag,
+                            verbose,
+                        )
                         # If the found atom has more than one bonds,
                         # we can traverse its branches
                         if len(atoms[branch_atom].bonds) > 1:
@@ -474,7 +493,8 @@ def make_zmat(prepifile):
     logger.debug("Running make_zmat with arguments: ")
     logger.debug("\tprepifile = %s" % prepifile)
     logger.debug(
-        "This will generate a ProtoMS compatible z-matrix for a solute")
+        "This will generate a ProtoMS compatible z-matrix for a solute"
+    )
 
     # Parse the prepi-file into a list of atom names and
     # a dictionary of Atom objects
@@ -490,7 +510,7 @@ def make_zmat(prepifile):
 
 
 def _readfrcmod(filename):
-    """ Read an Amber frcmod file from disc
+    """Read an Amber frcmod file from disc
 
     readfrcmod(filename)
 
@@ -505,7 +525,7 @@ def _readfrcmod(filename):
 
     with open(filename) as f:
         # Find start of bond region
-        while not next(f).startswith('BOND'):
+        while not next(f).startswith("BOND"):
             pass
 
         bonds = []
@@ -513,8 +533,7 @@ def _readfrcmod(filename):
             cols = line.split()
             if not cols:
                 break
-            bonds.append([cols[0].split('-')] +
-                         list(map(float, cols[1:3])))
+            bonds.append([cols[0].split("-")] + list(map(float, cols[1:3])))
         next(f)
 
         angles = []
@@ -522,8 +541,7 @@ def _readfrcmod(filename):
             cols = line.replace(" -", "-").split()
             if not cols:
                 break
-            angles.append([cols[0].split('-')] +
-                          list(map(float, cols[1:3])))
+            angles.append([cols[0].split("-")] + list(map(float, cols[1:3])))
 
         next(f)
 
@@ -533,23 +551,25 @@ def _readfrcmod(filename):
             if not cols:
                 break
             div, k, n, phi = map(float, cols[1:5])
-            dihedrals.append([cols[0].split('-'), 1., k / div, n, phi])
+            dihedrals.append([cols[0].split("-"), 1.0, k / div, n, phi])
 
         next(f)
 
     return bonds, angles, dihedrals
 
 
-def build_template(temfile,
-                   prepifile,
-                   translate=0.1,
-                   rotate=1.0,
-                   zmatfile=None,
-                   frcmodfile=None,
-                   resname="UNK",
-                   alldihs=False,
-                   gaffversion="gaff16"):
-    """ Build a ProtoMS template file
+def build_template(
+    temfile,
+    prepifile,
+    translate=0.1,
+    rotate=1.0,
+    zmatfile=None,
+    frcmodfile=None,
+    resname="UNK",
+    alldihs=False,
+    gaffversion="gaff16",
+):
+    """Build a ProtoMS template file
 
     Parameters
     ----------
@@ -604,8 +624,8 @@ def build_template(temfile,
         frcbonds, frcangles, frcdihedrals = _readfrcmod(frcmodfile)
 
     gaff_file = sim.standard_filename(gaffversion + ".ff", "parameter")
-    angle_params = sim.ParameterSet('angle', gaff_file)
-    dihedral_params = sim.ParameterSet('dihedral', gaff_file)
+    angle_params = sim.ParameterSet("angle", gaff_file)
+    dihedral_params = sim.ParameterSet("dihedral", gaff_file)
 
     if gaffversion == "gaff14":
         gaffversion = "gaff"
@@ -616,8 +636,10 @@ def build_template(temfile,
     move_scale = 0.5
 
     dummynames = ["DM3", "DM2", "DM1"]
-    aromatic_types = ("ca cp cq ce cf cc cd nb ne nf pb pe pf px py sx sy"
-                      "CA CB CC CK CM CN CQ CR CV CW C* NA NB NC").split()
+    aromatic_types = (
+        "ca cp cq ce cf cc cd nb ne nf pb pe pf px py sx sy"
+        "CA CB CC CK CM CN CQ CR CV CW C* NA NB NC"
+    ).split()
     template = sim.TemplateFile()
     template.templates.append(sim.MolTemplate())
     template.templates[0].atomclass = sim.TemplateSoluteAtom
@@ -629,49 +651,64 @@ def build_template(temfile,
 
     def get_resname(s):
         if s in dummynames:
-            return 'DUM'
+            return "DUM"
         else:
             return resname
 
     if frcbonds is not None:
         for i, bond in enumerate(frcbonds, 4500):
             template.bondparams.append(
-                sim.ForceFieldParameter(record="par %4d %.3f %.3f\n" %
-                                        (i, bond[1], bond[2])))
+                sim.ForceFieldParameter(
+                    record="par %4d %.3f %.3f\n" % (i, bond[1], bond[2])
+                )
+            )
         for i, bond in enumerate(frcbonds, 4500):
             template.bondatoms.append(
-                sim.AtomSet(record="atm %s %s %4d\n" % (bond[0][0], bond[0][1],
-                                                        i)))
+                sim.AtomSet(
+                    record="atm %s %s %4d\n" % (bond[0][0], bond[0][1], i)
+                )
+            )
 
     if frcangles is not None:
         for i, angle in enumerate(frcangles, 4700):
             template.angleparams.append(
-                sim.ForceFieldParameter(record="par %4d %.3f %.3f\n" %
-                                        (i, angle[1], angle[2])))
+                sim.ForceFieldParameter(
+                    record="par %4d %.3f %.3f\n" % (i, angle[1], angle[2])
+                )
+            )
         for i, angle in enumerate(frcangles, 4700):
             template.angleatoms.append(
-                sim.AtomSet(record="atm %s %s %s %4d\n" %
-                            (angle[0][0], angle[0][1], angle[0][2], i)))
+                sim.AtomSet(
+                    record="atm %s %s %s %4d\n"
+                    % (angle[0][0], angle[0][1], angle[0][2], i)
+                )
+            )
 
     if frcdihedrals is not None:
         fmt = (4600, 0.0, 0.0, 0.0, 0.0)
         template.dihedralterms.append(
             sim.ForceFieldParameter(
-                record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt))
+                record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt
+            )
+        )
         for i, di in enumerate(frcdihedrals, 4601):
             fmt = (i, di[2], di[1], di[4], di[3])
             template.dihedralterms.append(
                 sim.ForceFieldParameter(
-                    record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt))
+                    record="term  %4d   %.3f   %.3f   %.3f   %.3f\n" % fmt
+                )
+            )
 
         # Loop through unique dihedral terms
         done = []
         for i, di in enumerate(frcdihedrals, 4600):
             if di[0] not in done:
                 # Get all terms with matching atom groups from dihedral list
-                terms = [(j, term)
-                         for j, term in enumerate(frcdihedrals, 4601)
-                         if term[0] == di[0]]
+                terms = [
+                    (j, term)
+                    for j, term in enumerate(frcdihedrals, 4601)
+                    if term[0] == di[0]
+                ]
                 # Start par entry
                 record = "par  %4d" % i
                 # Loop through all 5 terms of full dihedral
@@ -684,7 +721,8 @@ def build_template(temfile,
                         # If no k3 == j give default zero parameters
                         record += "   %4d" % 4600
                 template.dihedralparams.append(
-                    sim.ForceFieldParameter(record=record))
+                    sim.ForceFieldParameter(record=record)
+                )
             done += [di[0]]
 
         done = []
@@ -692,33 +730,55 @@ def build_template(temfile,
             if di[0] not in done:
                 fmt = (di[0][0], di[0][1], di[0][2], di[0][3], i)
                 template.dihedralatoms.append(
-                    sim.AtomSet(record="atm %4s %4s %4s %4s %4d\n" % fmt))
+                    sim.AtomSet(record="atm %4s %4s %4s %4s %4d\n" % fmt)
+                )
             done += [di[0]]
 
     # Here we need to iterate over the atom order in the z-matrix,
     # so this is modified
-    for i, atom in enumerate([atoms[zatms.split()[0]] for zatms in zmat],
-                             3000):
+    for i, atom in enumerate(
+        [atoms[zatms.split()[0]] for zatms in zmat], 3000
+    ):
         params = [j for j in at_params if j[0] == atom.atype][0]
-        fmt = (i, atom.atype, int(params[6]), atom.charge, float(params[2]),
-               float(params[4]))
+        fmt = (
+            i,
+            atom.atype,
+            int(params[6]),
+            atom.charge,
+            float(params[2]),
+            float(params[4]),
+        )
         template.cljparams.append(
             sim.ForceFieldParameter(
-                record="par  %4d %4s   %02d %10.5f %10.5f %10.5f\n" % fmt))
+                record="par  %4d %4s   %02d %10.5f %10.5f %10.5f\n" % fmt
+            )
+        )
 
     logger.info(
         "Before running a simulation, ensure that the first line of %s.pdb "
-        "reads 'HEADER %s'." % (os.path.splitext(temfile)[0], resname))
+        "reads 'HEADER %s'." % (os.path.splitext(temfile)[0], resname)
+    )
 
     # Print out the atoms
     for i, line in enumerate(zmat, 3000):
         atms = line.split()
-        fmt = (atms[0], resname, i, i, atms[1], get_resname(atms[1]), atms[2],
-               get_resname(atms[2]), atms[3], get_resname(atms[3]))
+        fmt = (
+            atms[0],
+            resname,
+            i,
+            i,
+            atms[1],
+            get_resname(atms[1]),
+            atms[2],
+            get_resname(atms[2]),
+            atms[3],
+            get_resname(atms[3]),
+        )
         moltem.atoms.append(
             sim.TemplateSoluteAtom(
-                record="atom  %4s %4s %4i %4i %4s %4s %4s %4s %4s %4s\n" %
-                fmt))
+                record="atom  %4s %4s %4i %4i %4s %4s %4s %4s %4s %4s\n" % fmt
+            )
+        )
 
     # Print out the bonds
     taken_bonds = []
@@ -727,8 +787,11 @@ def build_template(temfile,
         taken_bonds.append((atom[0], atom[1]))
         taken_bonds.append((atom[1], atom[0]))
         moltem.connectivity.append(
-            sim.TemplateConnectivity(record="bond %4s %3s %4s %3s\n" %
-                                     (atom[0], resname, atom[1], resname)))
+            sim.TemplateConnectivity(
+                record="bond %4s %3s %4s %3s\n"
+                % (atom[0], resname, atom[1], resname)
+            )
+        )
 
     # Also need to do bonds that close loops
     for atom1 in sorted(atoms):
@@ -740,8 +803,11 @@ def build_template(temfile,
                 # of templates between python versions for testing
                 at1, at2 = sorted((atom1, atom2))
                 moltem.connectivity.append(
-                    sim.TemplateConnectivity(record="bond %4s %3s %4s %3s\n" %
-                                             (at1, resname, at2, resname)))
+                    sim.TemplateConnectivity(
+                        record="bond %4s %3s %4s %3s\n"
+                        % (at1, resname, at2, resname)
+                    )
+                )
 
     # Print out the angles:
     for line in zmat[2:]:
@@ -750,8 +816,10 @@ def build_template(temfile,
             continue
 
         # if this is a loop angle then exclude it
-        if atoms[angle[1]].is_on_loop[angle[0]] and \
-           atoms[angle[1]].is_on_loop[angle[2]]:
+        if (
+            atoms[angle[1]].is_on_loop[angle[0]]
+            and atoms[angle[1]].is_on_loop[angle[2]]
+        ):
             continue
         atypes = [atoms[i].atype for i in angle]
         try:
@@ -759,11 +827,14 @@ def build_template(temfile,
         except KeyError:
             # parameter not in gaff.ff try frcmod params
             try:
-                k = [i for i in frcangles
-                     if atypes in (i[0], i[0][::-1])][0][1]
+                k = [i for i in frcangles if atypes in (i[0], i[0][::-1])][0][
+                    1
+                ]
             except IndexError:
-                logger.warning("Unable to find angle parameters for %s-%s-%s" %
-                               tuple(atypes))
+                logger.warning(
+                    "Unable to find angle parameters for %s-%s-%s"
+                    % tuple(atypes)
+                )
                 logger.warning(
                     "For now the flexibility of this angle will be set to zero"
                 )
@@ -775,13 +846,22 @@ def build_template(temfile,
             except TypeError:
                 k = 10 * 10
 
-        max_move = move_scale * 2 * (1 / (kBT * k))**0.5
+        max_move = move_scale * 2 * (1 / (kBT * k)) ** 0.5
         if False in [i in aromatic_types for i in atypes]:
-            fmt = (angle[0], resname, angle[1], resname, angle[2], resname,
-                   max_move)
+            fmt = (
+                angle[0],
+                resname,
+                angle[1],
+                resname,
+                angle[2],
+                resname,
+                max_move,
+            )
             moltem.connectivity.append(
                 sim.TemplateConnectivity(
-                    record="angle %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt))
+                    record="angle %4s %4s %4s %4s %4s %4s flex %.3f\n" % fmt
+                )
+            )
 
     min_flex = 2.0
     max_flex = 10.0
@@ -799,8 +879,9 @@ def build_template(temfile,
                 [i for i in frcdihedrals if atypes in (i[0], i[0][::-1])]
             except IndexError:
                 logger.warning(
-                    "Unable to find dihedral parameters for %s-%s-%s-%s" %
-                    tuple(atypes))
+                    "Unable to find dihedral parameters for %s-%s-%s-%s"
+                    % tuple(atypes)
+                )
                 logger.warning(
                     "For now the flexibility of this angle will be set to zero"
                 )
@@ -820,13 +901,17 @@ def build_template(temfile,
             # evaluate these energies. These appear as impropers in the
             # prepi file
             for imp in impropers:
-                if dihedral[0] in imp and dihedral[1] in imp and \
-                   dihedral[2] in imp and dihedral[3] in imp:
+                if (
+                    dihedral[0] in imp
+                    and dihedral[1] in imp
+                    and dihedral[2] in imp
+                    and dihedral[3] in imp
+                ):
                     skip = True
                     break
 
         else:
-            if not dihedral[2] in atoms[dihedral[3]].bonds:
+            if dihedral[2] not in atoms[dihedral[3]].bonds:
                 skip = True
 
         if skip:
@@ -839,29 +924,55 @@ def build_template(temfile,
                 continue
 
             # If this is a dihedral of all loop atoms then exclude it as well
-            if atoms[dihedral[0]].is_on_loop[dihedral[1]] and \
-               atoms[dihedral[2]].is_on_loop[dihedral[3]]:
+            if (
+                atoms[dihedral[0]].is_on_loop[dihedral[1]]
+                and atoms[dihedral[2]].is_on_loop[dihedral[3]]
+            ):
                 continue
 
-            fmt = (dihedral[0], resname, dihedral[1], resname, dihedral[2],
-                   resname, dihedral[3], resname, min_flex)
+            fmt = (
+                dihedral[0],
+                resname,
+                dihedral[1],
+                resname,
+                dihedral[2],
+                resname,
+                dihedral[3],
+                resname,
+                min_flex,
+            )
             moltem.connectivity.append(
                 sim.TemplateConnectivity(
                     record="dihedral %4s %4s %4s %4s %4s %4s %4s %4s "
-                           "flex %.3f\n" % fmt))
+                    "flex %.3f\n" % fmt
+                )
+            )
         else:
             # Not part of loop so base flexibility on centrality
-            av_rank = (centralities.index(dihedral[1]) + centralities.index(
-                dihedral[2])) / float(2 * len(centralities))
+            av_rank = (
+                centralities.index(dihedral[1])
+                + centralities.index(dihedral[2])
+            ) / float(2 * len(centralities))
             flex = (av_rank) * (max_flex - min_flex) + min_flex
             if missing:
                 flex = 0.0
-            fmt = (dihedral[0], resname, dihedral[1], resname, dihedral[2],
-                   resname, dihedral[3], resname, flex)
+            fmt = (
+                dihedral[0],
+                resname,
+                dihedral[1],
+                resname,
+                dihedral[2],
+                resname,
+                dihedral[3],
+                resname,
+                flex,
+            )
             moltem.connectivity.append(
                 sim.TemplateConnectivity(
                     record="dihedral %4s %4s %4s %4s %4s %4s %4s %4s"
-                           " flex %.3f\n" % fmt))
+                    " flex %.3f\n" % fmt
+                )
+            )
 
     return template
 
@@ -908,7 +1019,8 @@ def _make_dict(atoms, moltem, pdbres, objdict=None, onlypdb=False):
         if "pdb" not in objdict[atom]:
             logger.warning(
                 "Warning: Could not find atom %s in the pdb-file, cannot"
-                " look for map for this atom" % atom)
+                " look for map for this atom" % atom
+            )
             objdict[atom]["pdb"] = None
     return objdict
 
@@ -943,13 +1055,16 @@ def _make_map(tem1, tem2, pdb1, pdb2, cmap):
 
     moltem1 = tem1.templates[0]
     moltem2 = tem2.templates[0]
-    objdict1 = _make_dict([at.name for at in moltem1.atoms],
-                          moltem1, pdb1.residues[1])
-    objdict2 = _make_dict([at.name for at in moltem2.atoms],
-                          moltem2, pdb2.residues[1])
+    objdict1 = _make_dict(
+        [at.name for at in moltem1.atoms], moltem1, pdb1.residues[1]
+    )
+    objdict2 = _make_dict(
+        [at.name for at in moltem2.atoms], moltem2, pdb2.residues[1]
+    )
 
-    not_taken1, not_taken2 = _auto_map(moltem1, moltem2,
-                                       objdict1, objdict2, cmap)
+    not_taken1, not_taken2 = _auto_map(
+        moltem1, moltem2, objdict1, objdict2, cmap
+    )
 
     # Now we have gotten so-far that we have to ask the user for the rest...
 
@@ -957,20 +1072,27 @@ def _make_map(tem1, tem2, pdb1, pdb2, cmap):
 
         # Print out useful information
         logger.info("")
-        logger.info("These are the un-matched atoms of template 1: %s" %
-                    " ".join(not_taken1))
-        logger.info("These are the un-matched atoms of template 2: %s" %
-                    " ".join(not_taken2))
+        logger.info(
+            "These are the un-matched atoms of template 1: %s"
+            % " ".join(not_taken1)
+        )
+        logger.info(
+            "These are the un-matched atoms of template 2: %s"
+            % " ".join(not_taken2)
+        )
 
         logger.info("")
         logger.info("These are the distances (A): ")
         logger.info(
-            "%8s%s" % ("", "".join("%8s" % atom for atom in not_taken1)))
+            "%8s%s" % ("", "".join("%8s" % atom for atom in not_taken1))
+        )
         for atom2 in not_taken2:
             outstr = "%8s" % atom2
             for atom1 in not_taken1:
-                dist = objdict1[atom1]["pdb"].coords - \
-                    objdict2[atom2]["pdb"].coords
+                dist = (
+                    objdict1[atom1]["pdb"].coords
+                    - objdict2[atom2]["pdb"].coords
+                )
                 dist = np.sqrt(np.sum(dist * dist))
                 outstr = outstr + "%8.3f" % dist
             logger.info(outstr)
@@ -994,8 +1116,12 @@ def _make_map(tem1, tem2, pdb1, pdb2, cmap):
                 found[atom1] = atom2
         logger.info("")
         logger.info(
-            "User maps:\n%s" % " ".join("%s-%s" % (atom1, found[atom1])
-                                        for atom1 in sorted(found.keys())))
+            "User maps:\n%s"
+            % " ".join(
+                "%s-%s" % (atom1, found[atom1])
+                for atom1 in sorted(found.keys())
+            )
+        )
         for atom1 in found:
             atom2 = found[atom1]
             not_taken1.remove(atom1)
@@ -1060,18 +1186,23 @@ def _auto_map(tem1, tem2, objdict1, objdict2, cmap):
                 else:
                     logger.warning(
                         "Warning: Could not find atom %s in the second "
-                        "template file, will ignore this map." % atom2)
+                        "template file, will ignore this map." % atom2
+                    )
                     del cmap[atom1]
             else:
                 not_taken1.remove(atom1)
         else:
             logger.warning(
                 "Warning: Could not find atom %s in the first template file, "
-                "will ignore this map." % atom2)
+                "will ignore this map." % atom2
+            )
             del cmap[atom1]
     logger.info(
-        "Pre-defined maps:\n%s" % " ".join(
-            "%s-%s" % (atom1, cmap[atom1]) for atom1 in sorted(cmap.keys())))
+        "Pre-defined maps:\n%s"
+        % " ".join(
+            "%s-%s" % (atom1, cmap[atom1]) for atom1 in sorted(cmap.keys())
+        )
+    )
 
     # Next we will calculate pair-wise distance from the given pdb structures,
     # use a cut-off of 0.02 A^2 to determine possible pair and
@@ -1084,8 +1215,10 @@ def _auto_map(tem1, tem2, objdict1, objdict2, cmap):
             for atom2 in not_taken2:
                 if objdict2[atom2]["pdb"] is None:
                     continue
-                dist2 = objdict1[atom1]["pdb"].coords - \
-                    objdict2[atom2]["pdb"].coords
+                dist2 = (
+                    objdict1[atom1]["pdb"].coords
+                    - objdict2[atom2]["pdb"].coords
+                )
                 dist2 = np.sum(dist2 * dist2)
                 # The atom type is the 0:th parameter of a clj parameter
                 type1 = objdict1[atom1]["tem"].param0.params[0]
@@ -1093,8 +1226,13 @@ def _auto_map(tem1, tem2, objdict1, objdict2, cmap):
                 if dist2 < 0.02 and type1 == type2:
                     found[atom1] = atom2
                     break
-        logger.info("Distance/atom type maps:\n%s" % " ".join(
-            "%s-%s" % (atom1, found[atom1]) for atom1 in sorted(found.keys())))
+        logger.info(
+            "Distance/atom type maps:\n%s"
+            % " ".join(
+                "%s-%s" % (atom1, found[atom1])
+                for atom1 in sorted(found.keys())
+            )
+        )
         for atom1 in found:
             atom2 = found[atom1]
             not_taken1.remove(atom1)
@@ -1120,7 +1258,7 @@ def _make_ele_tem(tem1, tem2, cmap):
     -------
     TemplateFile
       the created template file
-  """
+    """
 
     # Make copies of the objects first so we can manipulate them
     # without modifying the original templates
@@ -1164,13 +1302,9 @@ def _make_ele_tem(tem1, tem2, cmap):
     return tem1
 
 
-def _make_vdw_tem(tem1,
-                  tem2,
-                  pdb1,
-                  pdb2,
-                  cmap,
-                  usepdb=True,
-                  gaffversion="gaff16"):
+def _make_vdw_tem(
+    tem1, tem2, pdb1, pdb2, cmap, usepdb=True, gaffversion="gaff16"
+):
     """
     Make new single topology template file for van der Waals leg
 
@@ -1198,7 +1332,7 @@ def _make_vdw_tem(tem1,
     """
 
     def find_param(atoms, temset, gaffset):
-        """ Find force field index and equilibrium value for atom types"""
+        """Find force field index and equilibrium value for atom types"""
         ratoms = atoms[::-1]
         # Try to look in the temset first
         for atoms2 in temset:
@@ -1214,19 +1348,23 @@ def _make_vdw_tem(tem1,
         return -1, -1
 
     def find_pdbparam(atoms, objdict):
-        """ Find bond lengths and angles in pdb files
-    """
+        """Find bond lengths and angles in pdb files"""
         allcoords = [objdict[atom]["pdb"].coords for atom in atoms]
         allcoords = np.array(allcoords)
         if len(atoms) == 2:
-            return np.sqrt(np.sum((allcoords[0, :] - allcoords[1, :])**2))
+            return np.sqrt(np.sum((allcoords[0, :] - allcoords[1, :]) ** 2))
         elif len(atoms) == 3:
-            return sim.angle_atms(allcoords[0, :], allcoords[1, :],
-                                  allcoords[2, :]) * 180.0 / np.pi
+            return (
+                sim.angle_atms(
+                    allcoords[0, :], allcoords[1, :], allcoords[2, :]
+                )
+                * 180.0
+                / np.pi
+            )
         return 0.0
 
     def make_variable(atom):
-        """ Add variable geometry to a molecular template"""
+        """Add variable geometry to a molecular template"""
         # Skip this if the atom is bonded to a dummy atom
         if atom.bondedto in ["DM1", "DM2", "DM3"]:
             return
@@ -1239,28 +1377,32 @@ def _make_vdw_tem(tem1,
             zmatatoms.append(atom.angleto)
         zmatnames1 = [zatom.name.upper() for zatom in zmatatoms]
         zmatnames2 = [cmap[zatom.name.upper()] for zatom in zmatatoms]
-        atomtypes1 = [zatom.param0.params[0]
-                      for zatom in zmatatoms]  # Atom types for template 1
+        atomtypes1 = [
+            zatom.param0.params[0] for zatom in zmatatoms
+        ]  # Atom types for template 1
         if usepdb:  # If we should take the geometry from the pdb-files
             _make_dict(
                 zmatnames1,
                 tem1.templates[0],
                 pdb1.residues[1],
                 objdict1,
-                onlypdb=True)  # Find the Atom object and put in a dictionary
+                onlypdb=True,
+            )  # Find the Atom object and put in a dictionary
             bond1 = find_pdbparam(zmatnames1[:2], objdict1)
         else:  # If we should take the geometry from GAFF
-            dummy, bond1 = find_param(atomtypes1[:2], temsets["bond"],
-                                      gaffsets["bond"])
+            dummy, bond1 = find_param(
+                atomtypes1[:2], temsets["bond"], gaffsets["bond"]
+            )
         if isinstance(
-                atom.param1,
-                int):  # Check if this atom should be perturbed to a dummy
+            atom.param1, int
+        ):  # Check if this atom should be perturbed to a dummy
             tem1.templates[0].variables.append(
-                "# %s to dummy" % "-".join(atomtypes0[:2]))
+                "# %s to dummy" % "-".join(atomtypes0[:2])
+            )
             tem1.templates[0].variables.append(
-                "variable %s %s bond %.3f %.3f" %
-                (atom.name, atom.residue, bond1,
-                 0.200))  # Shrink bond to within vdw-sphere
+                "variable %s %s bond %.3f %.3f"
+                % (atom.name, atom.residue, bond1, 0.200)
+            )  # Shrink bond to within vdw-sphere
         else:  # State V1 has cljparameters
             atomtypes2 = [zatom.param1.params[0] for zatom in zmatatoms]
             if usepdb:
@@ -1269,36 +1411,50 @@ def _make_vdw_tem(tem1,
                     tem2.templates[0],
                     pdb2.residues[1],
                     objdict2,
-                    onlypdb=True)
+                    onlypdb=True,
+                )
                 bond2 = find_pdbparam(zmatnames2[:2], objdict2)
                 if defangle:
                     angle1 = find_pdbparam(zmatnames1, objdict1)
                     angle2 = find_pdbparam(zmatnames2, objdict2)
             else:
-                dummy, bond2 = find_param(atomtypes2[:2], temsets["bond"],
-                                          gaffsets["bond"])
+                dummy, bond2 = find_param(
+                    atomtypes2[:2], temsets["bond"], gaffsets["bond"]
+                )
                 if defangle:
-                    dummy, angle1 = find_param(atomtypes1, temsets["angle"],
-                                               gaffsets["angle"])
-                    dummy, angle2 = find_param(atomtypes2, temsets["angle"],
-                                               gaffsets["angle"])
+                    dummy, angle1 = find_param(
+                        atomtypes1, temsets["angle"], gaffsets["angle"]
+                    )
+                    dummy, angle2 = find_param(
+                        atomtypes2, temsets["angle"], gaffsets["angle"]
+                    )
             # Add variable geometry for bond and angle
             if bond1 != bond2:
                 tem1.templates[0].variables.append(
-                    "# %s to %s at atoms %s" % ("-".join(
-                        atomtypes1[:2]), "-".join(atomtypes2[:2]), "-".join(
-                            zmatnames1[:2])))
+                    "# %s to %s at atoms %s"
+                    % (
+                        "-".join(atomtypes1[:2]),
+                        "-".join(atomtypes2[:2]),
+                        "-".join(zmatnames1[:2]),
+                    )
+                )
                 tem1.templates[0].variables.append(
-                    "variable %s %s bond %.3f %.3f" % (atom.name, atom.residue,
-                                                       bond1, bond2))
+                    "variable %s %s bond %.3f %.3f"
+                    % (atom.name, atom.residue, bond1, bond2)
+                )
             if defangle and angle1 != angle2:
                 tem1.templates[0].variables.append(
-                    "# %s to %s at atoms %s" % ("-".join(atomtypes1),
-                                                "-".join(atomtypes2),
-                                                "-".join(zmatnames1)))
+                    "# %s to %s at atoms %s"
+                    % (
+                        "-".join(atomtypes1),
+                        "-".join(atomtypes2),
+                        "-".join(zmatnames1),
+                    )
+                )
                 tem1.templates[0].variables.append(
-                    "variable %s %s angle %.3f %.3f" %
-                    (atom.name, atom.residue, angle1, angle2))
+                    "variable %s %s angle %.3f %.3f"
+                    % (atom.name, atom.residue, angle1, angle2)
+                )
 
     # MAIN routine
 
@@ -1357,7 +1513,7 @@ def _make_vdw_tem(tem1,
     temsets = {
         "bond": tem1.bondatoms,
         "angle": tem1.angleatoms,
-        "dihedral": tem1.dihedralatoms
+        "dihedral": tem1.dihedralatoms,
     }
 
     # Now loop over all atoms that changes type
@@ -1365,15 +1521,18 @@ def _make_vdw_tem(tem1,
         [atom.name for atom in atomlist],
         tem1.templates[0],
         pdb1.residues[1],
-        onlypdb=True)
+        onlypdb=True,
+    )
     objdict2 = _make_dict(
         [
-            cmap[atom.name.upper()] for atom in atomlist
+            cmap[atom.name.upper()]
+            for atom in atomlist
             if cmap[atom.name.upper()] != "DUM"
         ],
         tem2.templates[0],
         pdb2.residues[1],
-        onlypdb=True)
+        onlypdb=True,
+    )
     variablemade = [False] * len(tem1.templates[0].atoms)
     for atom in atomlist:
         # Add variable geometry to this atom
@@ -1392,18 +1551,25 @@ def _make_vdw_tem(tem1,
             if atom not in con.atoms:
                 continue
             atomtypes0 = [
-                "dum"
-                if isinstance(catom.param0, int) else catom.param0.params[0]
+                (
+                    "dum"
+                    if isinstance(catom.param0, int)
+                    else catom.param0.params[0]
+                )
                 for catom in con.atoms
             ]
             atomtypes1 = [
-                "dum"
-                if isinstance(catom.param1, int) else catom.param1.params[0]
+                (
+                    "dum"
+                    if isinstance(catom.param1, int)
+                    else catom.param1.params[0]
+                )
                 for catom in con.atoms
             ]
-            if isinstance(atom.param1,
-                          int):  # Check if we have inserted a dummy parameter
-                if con.type == 'bond':
+            if isinstance(
+                atom.param1, int
+            ):  # Check if we have inserted a dummy parameter
+                if con.type == "bond":
                     # This connectivity should not be sampled
                     con.param0 = con.param1 = 0
             else:  # Have parameters in cljparams...
@@ -1412,16 +1578,21 @@ def _make_vdw_tem(tem1,
                 con.param0, equil0 = find_param(
                     atomtypes0, temsets[con.type], gaffsets[con.type]
                 )  # Find parameter index and equilibrium value
-                con.param1, equil1 = find_param(atomtypes1, temsets[con.type],
-                                                gaffsets[con.type])
+                con.param1, equil1 = find_param(
+                    atomtypes1, temsets[con.type], gaffsets[con.type]
+                )
                 if con.param0 == -1 or con.param1 == -1:
                     # Warn if it could not be found
                     logger.warning("")
                     logger.warning(
                         "Warning: could not find parameters for %s or %s at"
-                        "atoms %s" % (
-                            "-".join(atomtypes0), "-".join(atomtypes1),
-                            " ".join(catom.name for catom in con.atoms)))
+                        "atoms %s"
+                        % (
+                            "-".join(atomtypes0),
+                            "-".join(atomtypes1),
+                            " ".join(catom.name for catom in con.atoms),
+                        )
+                    )
                     con.param0 = con.param1 = None
 
     return tem1
@@ -1442,7 +1613,7 @@ def _make_comb_tem(eletem, vdwtem):
     -------
     TemplateFile
       the created template file
-  """
+    """
 
     combtem = copy.deepcopy(vdwtem)
     nlj = len(eletem.cljparams)
@@ -1453,8 +1624,9 @@ def _make_comb_tem(eletem, vdwtem):
         combtem.cljparams[i].params = copy.deepcopy(eletem.cljparams[i].params)
 
     # Replaces the V0 param of all the atoms
-    for atom_ele, atom_comb in zip(eletem.templates[0].atoms,
-                                   combtem.templates[0].atoms):
+    for atom_ele, atom_comb in zip(
+        eletem.templates[0].atoms, combtem.templates[0].atoms
+    ):
         if isinstance(atom_ele.param0, int):
             atom_comb.param0 = atom_ele.param0
         else:
@@ -1508,8 +1680,10 @@ def make_single(tem1, tem2, pdb1, pdb2, mapfile=None, gaffversion="gaff16"):
     logger.debug("\tpdb1    = %s" % pdb1)
     logger.debug("\tpdb2    = %s" % pdb2)
     logger.debug("\tmapfile = %s" % mapfile)
-    logger.debug("This will make a ProtoMS template files for "
-                 "single-topology perturbations")
+    logger.debug(
+        "This will make a ProtoMS template files for "
+        "single-topology perturbations"
+    )
 
     if isinstance(tem1, six.string_types):
         tem1 = sim.TemplateFile(filename=tem1)
@@ -1546,7 +1720,8 @@ def make_single(tem1, tem2, pdb1, pdb2, mapfile=None, gaffversion="gaff16"):
     _make_map(tem1, tem2, pdb1, pdb2, cmap)
     eletem = _make_ele_tem(tem1, tem2, cmap)
     vdwtem = _make_vdw_tem(
-        tem1, tem2, pdb1, pdb2, cmap, gaffversion=gaffversion)
+        tem1, tem2, pdb1, pdb2, cmap, gaffversion=gaffversion
+    )
     combtem = _make_comb_tem(eletem, vdwtem)
 
     return eletem, vdwtem, combtem, cmap
@@ -1585,13 +1760,14 @@ def summarize_single(eletem, vdwtem, loggfunc):
       template for van der Waals perturbation
     loggfunc : logger function
       the logger function to use to print the summary
-  """
+    """
     loggfunc("")
     loggfunc(
         "Atom    Ele perturbation                                        ||         Vdw perturbation"
     )
-    for atom1, atom2 in zip(eletem.templates[0].atoms,
-                            vdwtem.templates[0].atoms):
+    for atom1, atom2 in zip(
+        eletem.templates[0].atoms, vdwtem.templates[0].atoms
+    ):
         ele0, ele1 = atom1.param0, atom1.param1
         vdw0, vdw1 = atom2.param0, atom2.param1
 
@@ -1599,26 +1775,41 @@ def summarize_single(eletem, vdwtem, loggfunc):
             if isinstance(param, int):
                 return "%7.3f %7.3f %7.3f" % (0.000, 0.000, 0.000)
             else:
-                return "%7.3f %7.3f %7.3f" % (float(param.params[2]),
-                                              float(param.params[3]),
-                                              float(param.params[4]))
+                return "%7.3f %7.3f %7.3f" % (
+                    float(param.params[2]),
+                    float(param.params[3]),
+                    float(param.params[4]),
+                )
 
         def get_diff(param1, param2):
             if isinstance(param2, int) and not isinstance(param1, int):
                 return "***"
             else:
                 strout = ""
-                if abs(float(param1.params[2]) -
-                       float(param2.params[2])) > 0.000001:
+                if (
+                    abs(float(param1.params[2]) - float(param2.params[2]))
+                    > 0.000001
+                ):
                     strout += "c"
-                if abs(float(param1.params[3]) -
-                       float(param2.params[3])) > 0.000001:
+                if (
+                    abs(float(param1.params[3]) - float(param2.params[3]))
+                    > 0.000001
+                ):
                     strout += "lj"
                 return "%3s" % strout
 
-        loggfunc("%5s : %s ==> %s %s || %s ==> %s %s" % (
-            atom1.name, get_param(ele0), get_param(ele1), get_diff(ele0, ele1),
-            get_param(vdw0), get_param(vdw1), get_diff(vdw0, vdw1)))
+        loggfunc(
+            "%5s : %s ==> %s %s || %s ==> %s %s"
+            % (
+                atom1.name,
+                get_param(ele0),
+                get_param(ele1),
+                get_diff(ele0, ele1),
+                get_param(vdw0),
+                get_param(vdw1),
+                get_diff(vdw0, vdw1),
+            )
+        )
 
     loggfunc("")
     loggfunc("Z-matrix connectivities that changes parameter: ")
@@ -1628,6 +1819,8 @@ def summarize_single(eletem, vdwtem, loggfunc):
 
     loggfunc("")
     loggfunc("Variable geometries: ")
-    for comment, var in zip(vdwtem.templates[0].variables[:-1:2],
-                            vdwtem.templates[0].variables[1::2]):
+    for comment, var in zip(
+        vdwtem.templates[0].variables[:-1:2],
+        vdwtem.templates[0].variables[1::2],
+    ):
         loggfunc("%s %s" % (var, comment))
