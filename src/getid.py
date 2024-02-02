@@ -59,7 +59,7 @@ with open(filename, "w") as idfile:
         identify = identify.strip("\n ")
         path = os.popen("hg paths default", "r").readline()
         path = path.strip("\n ")
-    except:
+    except IOError:
         writeLine("Mercurial information not available.")
     else:
         if identify.startswith("abort") or path == "not found!":
