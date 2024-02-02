@@ -132,5 +132,5 @@ for i in all_ats:
         pmsn = 0
 
     if ambn != pmsn:
-        print i, pmsn, ambn
+        print(i, pmsn, ambn)
                 
