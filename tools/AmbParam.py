@@ -303,12 +303,12 @@ class AmbParameterSet:
 
         #Add/remove additional required atoms
         self.cljs.reses['GLHct']['OXT'] = self.cljs.reses['ALA']['O']
-        for i in xrange ( 1, 4 ):
+        for i in range ( 1, 4 ):
             self.cljs.reses['GLHnt']['H%d' % i] = glh['H']
         self.cljs.reses['GLHnt'].pop ( 'H' )
 
         self.cljs.reses['ASHct']['OXT'] = self.cljs.reses['ALA']['O']
-        for i in xrange ( 1, 4 ):
+        for i in range ( 1, 4 ):
             self.cljs.reses['ASHnt']['H%d' % i] = ash['H']
         self.cljs.reses['ASHnt'].pop ( 'H' )
         
@@ -383,7 +383,7 @@ scl14lj    0.500\n"""
             dih = self.dihs[i]
             s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 0, 0, 0 )
             c += 1
-            for j in xrange ( 1, 5 ):
+            for j in range ( 1, 5 ):
                 try:
                     term = dih.terms[ float ( j ) ]
                     s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, term.k2 / term.k1, 1, j, term.k3 )
@@ -684,7 +684,7 @@ scl14lj    0.500\n"""
             dih = self.dihs[i]
             s += 'term  %4d  %15.8f%8.3f%8.3f%8.3f\n' % ( c, 0, 0, 0, 0 )
             c += 1
-            for j in xrange ( 1, 5 ):
+            for j in range ( 1, 5 ):
                 try:
                     term = dih.terms[ float ( j ) ]
                     pre = -1 if j in (2,4) else 1
