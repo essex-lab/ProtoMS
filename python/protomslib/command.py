@@ -878,7 +878,7 @@ class DualTopology(ProteinLigandSimulation):
         logger.info("Enter for ligand %s:" % N)
         ats = []
         while True:
-            instr = raw_input().strip().upper()
+            instr = input().strip().upper()
             if not instr:
                 break
             else:
@@ -1389,7 +1389,7 @@ class GCAPDual(ProteinLigandSimulation):
         logger.info("Enter for ligand %s:" % N)
         ats = []
         while True:
-            instr = raw_input().strip().upper()
+            instr = input().strip().upper()
             if not instr:
                 break
             else:
