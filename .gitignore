@@ -60,3 +60,5 @@ dmypy.json
 
 # Ruff linting
 /.ruff_cache/
+
+tmp_venv/
