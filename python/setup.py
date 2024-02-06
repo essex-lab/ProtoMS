@@ -7,5 +7,5 @@ setup(
     author="Essex Research Group",
     author_email="jessexgroup@gmail.com",
     packages=["protomslib", "protomslib.prepare", "protomslib.free_energy"],
-    url="http://www.protoms.org",
+    url="https://www.protoms.org",
 )
