@@ -14,7 +14,7 @@ import matplotlib
 import numpy as np
 import pymbar
 import six
-from scipy.integrate import trapz
+from scipy.integrate import trapezoid as trapz
 
 from .. import simulationobjects as sim
 from .free_energy_argument_parser import FEArgumentParser
