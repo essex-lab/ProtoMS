@@ -15,23 +15,27 @@ class EquilSetupTest(framework.BaseTest):
         "dcb_box.pdb",
         "protein.pdb",
         "protein_scoop.pdb",
-        "water.pdb"
+        "water.pdb",
     ]
 
     executable = "protoms.py"
 
     args = [
-        "-s", "equilibration",
-        "-l", "dcb.pdb",
-        "-p", "protein.pdb",
-        "--nequil", "100",
-        "--ranseed", "100000",
-        "--gaff", "gaff14"
+        "-s",
+        "equilibration",
+        "-l",
+        "dcb.pdb",
+        "-p",
+        "protein.pdb",
+        "--nequil",
+        "100",
+        "--ranseed",
+        "100000",
+        "--gaff",
+        "gaff14",
     ]
 
-    output_files = [
-        "run_bnd.cmd"
-    ]
+    output_files = ["run_bnd.cmd"]
 
 
 class EquilSimulationTest(framework.BaseTest):
@@ -47,24 +51,17 @@ class EquilSimulationTest(framework.BaseTest):
         "protein.pdb",
         "protein_scoop.pdb",
         "water.pdb",
-        "run_bnd.cmd"
+        "run_bnd.cmd",
     ]
 
     executable = "build/protoms3"
 
-    args = [
-        "run_bnd.cmd"
-    ]
+    args = ["run_bnd.cmd"]
 
-    output_directories = [
-        "out_bnd"
-    ]
+    output_directories = ["out_bnd"]
 
-    output_files = [
-        "equil_bnd.pdb",
-        "warning"
-    ]
+    output_files = ["equil_bnd.pdb", "warning"]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

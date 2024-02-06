@@ -1,11 +1,14 @@
 from __future__ import print_function
+
 import logging
+
 import numpy as np
 import six
-from . import simulationobjects
-from .prepare.water import convertwater, rotatesolute
 
-logger = logging.getLogger('protoms')
+from protomslib import simulationobjects
+from protomslib.prepare.water import convertwater, rotatesolute
+
+logger = logging.getLogger("protoms")
 
 
 def make_gcmcbox(pdb, filename, padding=2.0):
@@ -44,10 +47,12 @@ def print_bequil(boxlen):
     print("Bequil:", np.round(bequil, 2))
 
 
-def _create_res(atnames=["O00"],
-                resname="sol",
-                positions=[np.array([0.0, 0.0, 0.0])],
-                resind=1):
+def _create_res(
+    atnames=["O00"],
+    resname="sol",
+    positions=[np.array([0.0, 0.0, 0.0])],
+    resind=1,
+):
     """
     Create a residue object
 
@@ -84,11 +89,9 @@ def _create_res(atnames=["O00"],
     return resobj
 
 
-def distribute_particles(box,
-                         particles,
-                         watermodel="t4p",
-                         resname="WA1",
-                         partnumb=None):
+def distribute_particles(
+    box, particles, watermodel="t4p", resname="WA1", partnumb=None
+):
     """
     Randomly distribute molecules in a box
 
@@ -131,22 +134,28 @@ def distribute_particles(box,
         logger.debug("\tparticles %s" % particles.name)
     logger.debug("\twatermodel %s" % watermodel)
     logger.debug("\tpartnumb %s" % partnumb)
-    logger.debug("This will distribute the molecules given in 'particles' "
-                 "randomly in the box given in box. If a number is given in"
-                 " 'particles', it assumes them to be waters.")
+    logger.debug(
+        "This will distribute the molecules given in 'particles' "
+        "randomly in the box given in box. If a number is given in"
+        " 'particles', it assumes them to be waters."
+    )
 
     if isinstance(box, list):
         try:
             box = [float(val) for val in box]
         except Exception:
             raise simulationobjects.SetupError(
-                "The box dimensions %s could not be correctly interpreted" %
-                box)
+                "The box dimensions %s could not be correctly interpreted"
+                % box
+            )
         orig = np.array(box[:3])
         length = np.array(box[3:])
     elif isinstance(box, dict):
-        orig = box['origin']
-        length = box['len']
+        orig = box["origin"]
+        length = box["len"]
+    else:
+        # Ensure error raised for unknown type handling
+        raise TypeError(box)
 
     if isinstance(particles, str) and particles.isdigit():
         watnumb = int(particles)
@@ -154,20 +163,24 @@ def distribute_particles(box,
         for i in range(1, watnumb + 1):
             pad = 0.3  # Water oxygens are at least this far away (in Angs.) from the edge of the box
             oxpos = np.random.rand(len(length)) * np.array(
-                length - 2 * pad) + np.array(orig + pad)
+                length - 2 * pad
+            ) + np.array(orig + pad)
             particles.solvents[i] = _create_res(
-                resname=resname, positions=[oxpos])
+                resname=resname, positions=[oxpos]
+            )
         particles = convertwater(
-            particles, watermodel, "y", watresname=resname)
+            particles, watermodel, True, watresname=resname
+        )
 
     else:
-        if type(particles) is str:
+        if isinstance(particles, str):
             try:
                 pdbobj = simulationobjects.PDBFile()
                 pdbobj.read(particles)
             except Exception:
                 raise simulationobjects.SetupError(
-                    "The pdb file %s could not be found" % particles)
+                    "The pdb file %s could not be found" % particles
+                )
             particles = pdbobj
         if particles.residues:
             parts = particles.residues
@@ -175,7 +188,8 @@ def distribute_particles(box,
             parts = particles.solvents
         else:
             raise simulationobjects.SetupError(
-                "No molecule could be found in %s" % particles)
+                "No molecule could be found in %s" % particles
+            )
         if partnumb is not None:
             particles = simulationobjects.PDBFile()
             for i in range(1, int(partnumb) + 1):
@@ -187,30 +201,39 @@ def distribute_particles(box,
                     resname=parts[parts.keys()[0]].name,
                     positions=allcoords,
                     atnames=allnames,
-                    resind=i)
+                    resind=i,
+                )
             parts = particles.residues
         for ind, keypart in enumerate(parts):
             parts[keypart].getCenter()
             displace = [
-                coord_len * np.random.uniform() + orig[jnd] -
-                parts[keypart].center[jnd]
+                coord_len * np.random.uniform()
+                + orig[jnd]
+                - parts[keypart].center[jnd]
                 for jnd, coord_len in enumerate(length)
             ]
             rotated_coords = rotatesolute(
                 np.array([myat.coords for myat in parts[keypart].atoms]),
-                np.random.uniform(0, 2 * np.pi), np.random.uniform(
-                    0, 2 * np.pi), np.random.uniform(0, 2 * np.pi))
+                np.random.uniform(0, 2 * np.pi),
+                np.random.uniform(0, 2 * np.pi),
+                np.random.uniform(0, 2 * np.pi),
+            )
             for jnd, atom in enumerate(parts[keypart].atoms):
-                atom.coords = np.array([
-                    rotated_coords.item((jnd, i)) + displace[i]
-                    for i in range(3)
-                ])
+                atom.coords = np.array(
+                    [
+                        rotated_coords.item((jnd, i)) + displace[i]
+                        for i in range(3)
+                    ]
+                )
 
     for ind, coord in enumerate(orig):
         h_parts = particles.header.strip().split()
-        particles.header = "%s %.4f %s %.4f " % (" ".join(
-            h_parts[:ind]), coord, " ".join(h_parts[ind:ind * 2]),
-                                                 coord + length[ind])
+        particles.header = "%s %.4f %s %.4f " % (
+            " ".join(h_parts[:ind]),
+            coord,
+            " ".join(h_parts[ind : ind * 2]),
+            coord + length[ind],
+        )
     particles.header = "HEADER box %s\n" % particles.header
     return particles
 
@@ -264,8 +287,9 @@ def clear_gcmcbox(gcmcbox, waters):
     removethese = []
     for soli in waters.solvents:
         xyz = waters.solvents[soli].atoms[0].coords
-        if np.all(xyz < (box_max + extend)) and np.all(xyz >
-                                                       (box_min - extend)):
+        if np.all(xyz < (box_max + extend)) and np.all(
+            xyz > (box_min - extend)
+        ):
             logger.debug("Removing water %d from %s" % (soli, waters))
             nrem = nrem + 1
             removethese.append(soli)
@@ -273,6 +297,7 @@ def clear_gcmcbox(gcmcbox, waters):
         del waters.solvents[soli]
     logger.info(
         "Removed %d water molecules from %s that were inside "
-        "the GCMC/JAWS box %s" % (nrem, waters, gcmcbox))
+        "the GCMC/JAWS box %s" % (nrem, waters, gcmcbox)
+    )
 
     return nrem, waters

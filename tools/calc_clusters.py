@@ -20,14 +20,51 @@ def get_arg_parser():
     """
     Parse command line arguments
     """
-    parser = argparse.ArgumentParser('calc_clusters2.py')
-    parser.add_argument('-i', '--input', help='PDB file containing input frames. Default=\'all.pdb\'', default='all.pdb')
-    parser.add_argument('-m', '--molecule', help='Residue name of water molecules. Default=\'WA1\'', default='WA1')
-    parser.add_argument('-a', '--atom', help='Name of atom to take as molecule coordinates. Default=\'O00\'', default='O00')
-    parser.add_argument('-s', '--skip', type=int, help='Number of frames to skip. Default=0', default=0)
-    parser.add_argument('-c', '--cutoff', type=float, help='Distance cutoff for clustering. Default=2.4 Angs', default=2.4)
-    parser.add_argument('-l', '--linkage', help='Linkage method for hierarchical clustering. Default=\'average\'', default='average')
-    parser.add_argument('-o', '--output', help='Filename for the PDB output. Default=\'clusters.pdb\'', default='clusters.pdb')
+    parser = argparse.ArgumentParser("calc_clusters2.py")
+    parser.add_argument(
+        "-i",
+        "--input",
+        help="PDB file containing input frames. Default='all.pdb'",
+        default="all.pdb",
+    )
+    parser.add_argument(
+        "-m",
+        "--molecule",
+        help="Residue name of water molecules. Default='WA1'",
+        default="WA1",
+    )
+    parser.add_argument(
+        "-a",
+        "--atom",
+        help="Name of atom to take as molecule coordinates. Default='O00'",
+        default="O00",
+    )
+    parser.add_argument(
+        "-s",
+        "--skip",
+        type=int,
+        help="Number of frames to skip. Default=0",
+        default=0,
+    )
+    parser.add_argument(
+        "-c",
+        "--cutoff",
+        type=float,
+        help="Distance cutoff for clustering. Default=2.4 Angs",
+        default=2.4,
+    )
+    parser.add_argument(
+        "-l",
+        "--linkage",
+        help="Linkage method for hierarchical clustering. Default='average'",
+        default="average",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="Filename for the PDB output. Default='clusters.pdb'",
+        default="clusters.pdb",
+    )
     return parser
 
 
@@ -52,7 +89,7 @@ def get_distances(frame_wat_ids, coord_list):
     dist_list = []
     for i in range(n_wats):
         frame_last = True  # Check if last water was in the same frame
-        for j in range(i+1, n_wats):
+        for j in range(i + 1, n_wats):
             same_frame = False
             if frame_last:
                 for frame in frame_wat_ids:
@@ -60,9 +97,9 @@ def get_distances(frame_wat_ids, coord_list):
                         same_frame = True
                         break
             if same_frame:
-                dist_list.append(1E8)
+                dist_list.append(1e8)
             else:
-                dist_list.append(np.linalg.norm(coord_list[i]-coord_list[j]))
+                dist_list.append(np.linalg.norm(coord_list[i] - coord_list[j]))
                 frame_last = False  # Stops checking if subsequent j values are in the same frame
     return dist_list
 
@@ -85,17 +122,19 @@ def sort_clusters(clust_ids):
     """
     n_clusts = max(clust_ids)
     # Count occupancy of each cluster
-    clust_occ = [[i, list(clust_ids).count(i)] for i in range(1, n_clusts+1)]
-    clust_occ = sorted(clust_occ, key=lambda x:-x[1])
+    clust_occ = [[i, list(clust_ids).count(i)] for i in range(1, n_clusts + 1)]
+    clust_occ = sorted(clust_occ, key=lambda x: -x[1])
     # Renumber the clusters based on this
     old_order = [x[0] for x in clust_occ]
     clust_occs = [x[1] for x in clust_occ]
     # This renumbers the cluster ids for each water so that 1 is the most occupied...
-    clust_ids_sorted = np.asarray([old_order.index(x)+1 for x in clust_ids])
+    clust_ids_sorted = np.asarray([old_order.index(x) + 1 for x in clust_ids])
     return clust_ids_sorted, clust_occs
 
 
-def write_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wats):
+def write_clusts(
+    filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wats
+):
     """
     Write the average oxygen positions of each cluster to a PDB file
 
@@ -112,7 +151,7 @@ def write_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wa
     clust_occs : list
         List containing occupancies of each cluster
     all_wats : list
-        List of all water observations, each an instance of 
+        List of all water observations, each an instance of
 
     Returns
     -------
@@ -120,47 +159,65 @@ def write_clusts(filename, clust_wat_ids, n_clusts, n_frames, clust_occs, all_wa
         Dictionary containing the average coordinates of each cluster
     """
     # Print cluster occupancy data to screen
-    for i in range(1, n_clusts+1):
-        print("\tCluster {:2d}:\t{:3d}/{:3d} frames".format(i, len(clust_wat_ids[i]), n_frames))
+    for i in range(1, n_clusts + 1):
+        print(
+            "\tCluster {:2d}:\t{:3d}/{:3d} frames".format(
+                i, len(clust_wat_ids[i]), n_frames
+            )
+        )
     print("")
     # Calculate representative coordinates and write to PDB
-    with open(filename, 'w') as f:
-        f.write("REMARK Average cluster locations written by calc_clusters2.py\n")
-        for n in range(1, n_clusts+1):
+    with open(filename, "w") as f:
+        f.write(
+            "REMARK Average cluster locations written by calc_clusters2.py\n"
+        )
+        for n in range(1, n_clusts + 1):
             # Calculate average coordinates
             av_coords = np.zeros(3)
             for i in clust_wat_ids[n]:
                 av_coords += coord_list[i]
             av_coords /= len(clust_wat_ids[n])
             # Find the closest observation to the centre and use these coordinates as a representative
-            min_dist = 1E6
+            min_dist = 1e6
             for i in clust_wat_ids[n]:
-                dist = np.linalg.norm(coord_list[i]-av_coords)
+                dist = np.linalg.norm(coord_list[i] - av_coords)
                 if dist < min_dist:
                     rep_wat = all_wats[i]
                     min_dist = dist
             # Write to file
             for i, atom in enumerate(rep_wat.atoms):
                 atom_id = (n - 1) * len(rep_wat.atoms) + i + 1
-                f.write('ATOM  {0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.2f}\n'.format(atom_id, atom.name, 'WA1', n,
-                                                                                                                      atom.coords[0], atom.coords[1], atom.coords[2],
-                                                                                                                      clust_occs[n-1]/float(n_frames), clust_occs[n-1]))
-            f.write('TER\n')
-        f.write('END')
+                f.write(
+                    "ATOM  {0:>5} {1:<4} {2:<4} {3:>4}    {4:>8.3f}{5:>8.3f}{6:>8.3f}{7:>6.2f}{8:>6.2f}\n".format(
+                        atom_id,
+                        atom.name,
+                        "WA1",
+                        n,
+                        atom.coords[0],
+                        atom.coords[1],
+                        atom.coords[2],
+                        clust_occs[n - 1] / float(n_frames),
+                        clust_occs[n - 1],
+                    )
+                )
+            f.write("TER\n")
+        f.write("END")
     return None
 
 
 if __name__ == "__main__":
     # Read command line arguments
     args = get_arg_parser().parse_args()
-    
+
     # Read PDB input data - only water molecules
-    print('\nReading PDB data...')
+    print("\nReading PDB data...")
     pdbfiles = simulationobjects.PDBSet()
-    pdbfiles.read(args.input, resname=args.molecule, skip=args.skip, readmax=9999)
+    pdbfiles.read(
+        args.input, resname=args.molecule, skip=args.skip, readmax=9999
+    )
     n_frames = len(pdbfiles.pdbs)
-    print('{} frames of PDB data read in.\n'.format(n_frames))
-    
+    print("{} frames of PDB data read in.\n".format(n_frames))
+
     # Store all water molecules and oxygen coordinates
     wat_list = []
     coord_list = []
@@ -171,16 +228,16 @@ if __name__ == "__main__":
             for atom in wat.atoms:
                 if atom.name.lower() == args.atom.lower():
                     coord_list.append(atom.coords)
-            frame_wat_ids[i].append(len(wat_list)-1)
+            frame_wat_ids[i].append(len(wat_list) - 1)
     total_wats = len(wat_list)
 
     # Calculate a 1D distance matrix between all water observations
     dist_list = get_distances(frame_wat_ids, coord_list)
-    
+
     # Cluster waters into discrete hydration sites
     print("Clustering water sites...")
     tree = hierarchy.linkage(dist_list, method=args.linkage)
-    clust_ids = hierarchy.fcluster(tree, t=args.cutoff, criterion='distance')
+    clust_ids = hierarchy.fcluster(tree, t=args.cutoff, criterion="distance")
     n_clusts = max(clust_ids)
     print("\n{} clusters identified:".format(n_clusts))
 
@@ -189,13 +246,18 @@ if __name__ == "__main__":
 
     # Identify which water observations are present in each cluster
     clust_wat_ids = {}  # Store water IDs for each cluster
-    for i in range(1, n_clusts+1):
+    for i in range(1, n_clusts + 1):
         clust_wat_ids[i] = []
     for i in range(total_wats):
         clust = clust_ids_sorted[i]
         clust_wat_ids[clust].append(i)
 
     # Prints out the representative of each cluster to PDB
-    write_clusts("{}".format(args.output), clust_wat_ids,
-                 n_clusts, n_frames, clust_occs, wat_list)
-
+    write_clusts(
+        "{}".format(args.output),
+        clust_wat_ids,
+        n_clusts,
+        n_frames,
+        clust_occs,
+        wat_list,
+    )

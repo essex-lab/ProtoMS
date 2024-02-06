@@ -21,7 +21,7 @@ from scipy.stats import norm
 
 from protomslib import simulationobjects
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def _fill_gauss(coord, grid, edges, spacing, std):
@@ -42,8 +42,9 @@ def _fill_gauss(coord, grid, edges, spacing, std):
       the sigma of the Gaussian distribution
     """
     # Maximum coordinate
-    maxxyz = np.minimum(coord + 3 * std,
-                        np.array([edges[0][-1], edges[1][-1], edges[2][-1]]))
+    maxxyz = np.minimum(
+        coord + 3 * std, np.array([edges[0][-1], edges[1][-1], edges[2][-1]])
+    )
 
     # Iterater over 3 standard deviations
     x = max(coord[0] - 3 * std, edges[0][0])
@@ -83,10 +84,11 @@ def _fill_sphere(coord, grid, edges, spacing, radius):
       the grid spacing
     radius  : float
       the radius of the smoothing
-  """
+    """
     # Maximum coordinate
-    maxxyz = np.minimum(coord + radius,
-                        np.array([edges[0][-1], edges[1][-1], edges[2][-1]]))
+    maxxyz = np.minimum(
+        coord + radius, np.array([edges[0][-1], edges[1][-1], edges[2][-1]])
+    )
 
     # Iterate over the sphere
     rad2 = radius**2
@@ -97,7 +99,11 @@ def _fill_sphere(coord, grid, edges, spacing, radius):
             z = max(coord[2] - radius, edges[2][0])
             while z <= maxxyz[2]:
                 # Check if we are on the sphere
-                r2 = (x - coord[0])**2 + (y - coord[1])**2 + (z - coord[2])**2
+                r2 = (
+                    (x - coord[0]) ** 2
+                    + (y - coord[1]) ** 2
+                    + (z - coord[2]) ** 2
+                )
                 if r2 <= rad2:
                     # Increase grid with one
                     v = _voxel(np.array([x, y, z]), edges)
@@ -126,12 +132,12 @@ def _init_grid(xyz, spacing, padding):
       the grid
     list of Numpy arrays
       the edges of the grid
-  """
+    """
 
     origin = np.floor(xyz.min(axis=0)) - padding
     tr = np.ceil(xyz.max(axis=0)) + padding
     length = tr - origin
-    shape = np.array([int(l / spacing + 0.5) + 1 for l in length], dtype=int)
+    shape = np.array([int(ll / spacing + 0.5) + 1 for ll in length], dtype=int)
     grid = np.zeros(shape)
     edges = [np.linspace(origin[i], tr[i], shape[i]) for i in range(3)]
     return grid, edges
@@ -142,7 +148,8 @@ def _voxel(coord, edges):
     Wrapper for the numpy digitize function to return the grid coordinates
     """
     return np.array(
-        [np.digitize(coord, edges[i])[i] for i in range(3)], dtype=int)
+        [np.digitize(coord, edges[i])[i] for i in range(3)], dtype=int
+    )
 
 
 def writeDX(grid, origin, spacing, filename):
@@ -159,19 +166,24 @@ def writeDX(grid, origin, spacing, filename):
       the grid spacing
     filename : string
       the name of the DX file
-  """
-    f = open(filename, 'w')
-    f.write("object 1 class gridpositions counts %5d%5d%5d\n" %
-            (grid.shape[0], grid.shape[1], grid.shape[2]))
+    """
+    f = open(filename, "w")
+    f.write(
+        "object 1 class gridpositions counts %5d%5d%5d\n"
+        % (grid.shape[0], grid.shape[1], grid.shape[2])
+    )
     f.write("origin %9.4f%9.4f%9.4f\n" % (origin[0], origin[1], origin[2]))
     f.write("delta %10.7f 0.0 0.0\n" % spacing)
     f.write("delta 0.0 %10.7f 0.0\n" % spacing)
     f.write("delta 0.0 0.0 %10.7f\n" % spacing)
-    f.write("object 2 class gridconnections counts %5d%5d%5d\n" %
-            (grid.shape[0], grid.shape[1], grid.shape[2]))
     f.write(
-        "object 3 class array type double rank 0 items  %10d data follows\n" %
-        (grid.shape[0] * grid.shape[1] * grid.shape[2]))
+        "object 2 class gridconnections counts %5d%5d%5d\n"
+        % (grid.shape[0], grid.shape[1], grid.shape[2])
+    )
+    f.write(
+        "object 3 class array type double rank 0 items  %10d data follows\n"
+        % (grid.shape[0] * grid.shape[1] * grid.shape[2])
+    )
     cnt = 0
     for x in range(grid.shape[0]):
         for y in range(grid.shape[1]):
@@ -191,14 +203,16 @@ def writeDX(grid, origin, spacing, filename):
     f.close()
 
 
-def calc_density(pdbfiles,
-                 molname,
-                 atomname,
-                 padding=2.0,
-                 extent=1.0,
-                 spacing=0.5,
-                 norm=None,
-                 smoothing="sphere"):
+def calc_density(
+    pdbfiles,
+    molname,
+    atomname,
+    padding=2.0,
+    extent=1.0,
+    spacing=0.5,
+    norm=None,
+    smoothing="sphere",
+):
     """
     Calculate the density from a set of PDB files
 
@@ -229,13 +243,13 @@ def calc_density(pdbfiles,
       the 3D density
     dictionary
       grid properties, keys = spacing, min, and max
-  """
-    residue = molname.lower()
-    atom = atomname.lower()
+    """
+    # residue = molname.lower() # Unused?
+    # atom = atomname.lower() # Unused?
 
     # Extract coordinates from PDB-files
     xyz = []
-    nextract = 0.0
+    # nextract = 0.0 # Unused?
     nfound = []
     for pdb in pdbfiles.pdbs:
         found = 0
@@ -287,71 +301,81 @@ def get_arg_parser():
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Program to discretize atoms on a 3D grid", )
-    parser.add_argument('-f', '--files', nargs="+", help="the input PDB-files")
+        description="Program to discretize atoms on a 3D grid",
+    )
+    parser.add_argument("-f", "--files", nargs="+", help="the input PDB-files")
     parser.add_argument(
-        '-o',
-        '--out',
+        "-o",
+        "--out",
         help="the name of the output grid-file in DX-format, "
-             "default='grid.dx'",
-        default="grid.dx")
-    parser.add_argument(
-        '-r',
-        '--residue',
-        help="the name of the residue to extract, default='wa1'",
-        default="wa1")
-    parser.add_argument(
-        '-a',
-        '--atom',
-        help="the name of the atom to extract, default='o00'",
-        default="o00")
-    parser.add_argument(
-        '-p',
-        '--padding',
-        type=float,
-        help="the amount to increase the minimum box in each direction, "
-             "default=2 A",
-        default=2.0)
-    parser.add_argument(
-        '-s',
-        '--spacing',
-        type=float,
-        help="the grid resolution, default=0.5 A",
-        default=0.5)
-    parser.add_argument(
-        '-e',
-        '--extent',
-        type=float,
-        help="the size of the smoothing, i.e. the extent of an atom, "
-             "default=1A",
-        default=1.0)
-    parser.add_argument(
-        '-n',
-        '--norm',
-        type=float,
-        help="number used to normalize the grid, if not specified the "
-             "number of input files is used"
+        "default='grid.dx'",
+        default="grid.dx",
     )
     parser.add_argument(
-        '-t',
-        '--type',
+        "-r",
+        "--residue",
+        help="the name of the residue to extract, default='wa1'",
+        default="wa1",
+    )
+    parser.add_argument(
+        "-a",
+        "--atom",
+        help="the name of the atom to extract, default='o00'",
+        default="o00",
+    )
+    parser.add_argument(
+        "-p",
+        "--padding",
+        type=float,
+        help="the amount to increase the minimum box in each direction, "
+        "default=2 A",
+        default=2.0,
+    )
+    parser.add_argument(
+        "-s",
+        "--spacing",
+        type=float,
+        help="the grid resolution, default=0.5 A",
+        default=0.5,
+    )
+    parser.add_argument(
+        "-e",
+        "--extent",
+        type=float,
+        help="the size of the smoothing, i.e. the extent of an atom, "
+        "default=1A",
+        default=1.0,
+    )
+    parser.add_argument(
+        "-n",
+        "--norm",
+        type=float,
+        help="number used to normalize the grid, if not specified the "
+        "number of input files is used",
+    )
+    parser.add_argument(
+        "-t",
+        "--type",
         choices=["sphere", "gaussian"],
         help="the type  of coordinate smoothing, should be either"
-             " 'sphere', 'gaussian'",
-        default="sphere")
+        " 'sphere', 'gaussian'",
+        default="sphere",
+    )
     parser.add_argument(
-        '--skip',
+        "--skip",
         type=int,
         help="the number of blocks to skip to calculate the density. "
-             "default is 0. Skip must be greater or equal to 0",
-        default=0)
+        "default is 0. Skip must be greater or equal to 0",
+        default=0,
+    )
     parser.add_argument(
-        '--max',
+        "--max",
         type=int,
         help="the upper block to use. default is 99999 which should "
-             "make sure you will use all the available blocks. "
-             "max must be greater or equal to 0",
-        default=99999)
+        "make sure you will use all the available blocks. "
+        "max must be greater or equal to 0",
+        default=99999,
+    )
     return parser
 
 
@@ -378,7 +402,7 @@ if __name__ == "__main__":
         pdbfiles.read(args.files[0], skip=args.skip, readmax=args.max)
     else:
         pdbfiles = simulationobjects.PDBSet()
-        for filename in args.files[args.skip:args.max + 1]:
+        for filename in args.files[args.skip : args.max + 1]:
             pdb = simulationobjects.PDBFile(filename=filename)
             pdbfiles.pdbs.append(pdb)
 
@@ -390,10 +414,13 @@ if __name__ == "__main__":
         extent=args.extent,
         spacing=args.spacing,
         norm=args.norm,
-        smoothing=args.type)
+        smoothing=args.type,
+    )
 
-    print("Extracted atoms in each PDB: %s" % ", ".join("%d" % i
-                                                        for i in nextracted))
+    print(
+        "Extracted atoms in each PDB: %s"
+        % ", ".join("%d" % i for i in nextracted)
+    )
     print("Extracted %.3f on average" % nextracted.mean())
 
     if grid is not None:

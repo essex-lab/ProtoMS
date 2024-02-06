@@ -20,17 +20,14 @@ all objects from free_energy_base are imported in the default namespace
 """
 
 import pickle
-import numpy as np
 import os
 import sys
 import matplotlib
-from protomslib import *
-from protomslib import simulationobjects
-from protomslib.free_energy import *
+from protomslib import *  # noqa: F403
+from protomslib.free_energy import *  # noqa: F403
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
-    matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+    matplotlib.use("Agg")
 
-with open(sys.argv[1], 'rb') as f:
+with open(sys.argv[1], "rb") as f:
     data = pickle.load(f)

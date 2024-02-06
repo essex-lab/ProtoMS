@@ -1,21 +1,27 @@
 import distutils.spawn
 import logging
-import numpy as np
 import os
-import six
 import subprocess
 import tempfile
-from .. import simulationobjects
-from ..gcmc import clear_gcmcbox, distribute_particles
-from ..gcmc import make_gcmcbox, print_bequil
-from ..solvate import solvate
-from ..templates import merge_templates, build_template
-from ..templates import make_single, summarize_single, write_map
-from ..utils import _get_prefix, _locate_file
-from .scoop import scoop
-from .water import convertwater, split_waters, set_jaws2_box
 
-logger = logging.getLogger('protoms')
+import numpy as np
+import six
+
+from .. import simulationobjects
+from ..solvate import solvate
+from ..templates import (
+    build_template,
+    make_single,
+    merge_templates,
+    summarize_single,
+    write_map,
+)
+from ..utils import _get_prefix, _locate_file
+from .gcmc import clear_gcmcbox, distribute_particles, make_gcmcbox, print_bequil
+from .scoop import scoop
+from .water import convertwater, set_jaws2_box, split_waters
+
+logger = logging.getLogger("protoms")
 
 
 def _merge_templates(templates, tarlist):
@@ -36,14 +42,17 @@ def _merge_templates(templates, tarlist):
     """
     for tem in templates:
         tarlist.append(
-            tem)  # All of the original templates can safely be stored away
+            tem
+        )  # All of the original templates can safely be stored away
     temfile = merge_templates(templates)
     if isinstance(temfile, simulationobjects.TemplateFile):
         allnames = "-".join(t.name.lower() for t in temfile.templates)
         templates = [allnames + ".tem"]
         temfile.write(allnames + ".tem")
-        logger.info("Created a re-numbered template files for all ligands: %s"
-                    % templates[0])
+        logger.info(
+            "Created a re-numbered template files for all ligands: %s"
+            % templates[0]
+        )
         return templates
     else:
         return [temfile]
@@ -131,10 +140,12 @@ def _prep_ligand(files, first, charge, ligobj12, folders, tarlist, settings):
         if len(files["obj"].solvents) > 0:
             raise simulationobjects.SetupError(
                 "Your ligand in %s is recognized as solvent. "
-                "Please change the residue name." % files["obj"].name)
+                "Please change the residue name." % files["obj"].name
+            )
         else:
             raise simulationobjects.SetupError(
-                "No residues found in %s." % files["obj"].name)
+                "No residues found in %s." % files["obj"].name
+            )
 
     # Get the ligand name from the pdb header
     if "HEADER" in files["obj"].header:
@@ -166,12 +177,14 @@ def _prep_ligand(files, first, charge, ligobj12, folders, tarlist, settings):
 
     # Check to see if we have a template file
     if files["tem"] is None:
-        resnam = files["obj"].residues[
-            1].name  # Set the prepi name and template name to the residue name
+        resnam = (
+            files["obj"].residues[1].name
+        )  # Set the prepi name and template name to the residue name
         if files["prepi"] is None:
             # Here we need to run Antechamber
             logger.info(
-                "Running antechamber. Please check the output carefully")
+                "Running antechamber. Please check the output carefully"
+            )
             files["prepi"] = run_antechamber(files["pdb"], charge, resnam)
             logger.info("Created prepi-file: %s" % files["prepi"])
             tarlist.append(files["prepi"])
@@ -190,18 +203,21 @@ def _prep_ligand(files, first, charge, ligobj12, folders, tarlist, settings):
             zmatfile=files["zmat"],
             frcmodfile=files["frcmod"],
             resname=resnam,
-            gaffversion=settings.gaff)
+            gaffversion=settings.gaff,
+        )
         tem.write(files["tem"])
         if files["zmat"] is None:
             files["zmat"] = ligprefix + ".zmat"
             tem.templates[0].write_zmat(files["zmat"])
             logger.info(
                 "Created zmatrix (%s) for ligand. Please check the output"
-                " carefully" % files["zmat"])
+                " carefully" % files["zmat"]
+            )
             tarlist.append(files["zmat"])
         logger.info(
             "Created ProtoMS template-file (%s) for ligand."
-            " Please check the output carefully" % files["tem"])
+            " Please check the output carefully" % files["tem"]
+        )
 
     # Check to see if we have solvated the ligand
     if files["wat"] is None:
@@ -221,14 +237,15 @@ def _prep_ligand(files, first, charge, ligobj12, folders, tarlist, settings):
             padding=10.0,
             radius=30.0,
             center="cent",
-            namescheme="ProtoMS")
+            namescheme="ProtoMS",
+        )
 
         boxpdb.write(files["wat"])
         logger.info("Created waterbox-file: %s" % (files["wat"]))
-        if (settings.simulation in ["dualtopology", "singletopology"]
-                and not first) or (settings.simulation in [
-                    "gcmc", "jaws1", "jaws2"
-                ]):
+        if (
+            settings.simulation in ["dualtopology", "singletopology"]
+            and not first
+        ) or (settings.simulation in ["gcmc", "jaws1", "jaws2"]):
             tarlist.append(files["wat"])
 
     return files
@@ -290,11 +307,16 @@ def _prep_protein(protprefix, ligands, watprefix, folders, tarlist, settings):
         msg = "Specified scoop (%s.pdb) could not be found" % scoopprefix
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
-    if protein_orig_file is None and protein_scoop_file is None and \
-       protein_pms_file is None:
-        msg = "Protein file (%s.pdb) and protein scoop file (%s.pdb) and " \
-              "protein pms file (%s_pms.pdb) could not be found" % (
-                  protprefix, scoopprefix, protprefix)
+    if (
+        protein_orig_file is None
+        and protein_scoop_file is None
+        and protein_pms_file is None
+    ):
+        msg = (
+            "Protein file (%s.pdb) and protein scoop file (%s.pdb) and "
+            "protein pms file (%s_pms.pdb) could not be found"
+            % (protprefix, scoopprefix, protprefix)
+        )
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
 
@@ -303,7 +325,8 @@ def _prep_protein(protprefix, ligands, watprefix, folders, tarlist, settings):
 
     if settings.scoop is not None and protein_scoop_file is None:
         logger.info(
-            "Specified scoop (%s.pdb) not found. Ignoring..." % scoopprefix)
+            "Specified scoop (%s.pdb) not found. Ignoring..." % scoopprefix
+        )
 
     protobj = None
     if protein_scoop_file is None and protein_pms_file is None:
@@ -313,12 +336,15 @@ def _prep_protein(protprefix, ligands, watprefix, folders, tarlist, settings):
         # Trying to locate a default conversions file
         if settings.atomnames is None:
             conversionfile = simulationobjects.standard_filename(
-                "atomnamesmap.dat", "data")
+                "atomnamesmap.dat", "data"
+            )
         else:
             conversionfile = settings.atomnames
         if not os.path.isfile(conversionfile):
-            msg = "Could not find file (%s) with atom name conversions" % \
-                conversionfile
+            msg = (
+                "Could not find file (%s) with atom name conversions"
+                % conversionfile
+            )
             logger.error(msg)
             raise simulationobjects.SetupError(msg)
 
@@ -355,7 +381,8 @@ def _prep_protein(protprefix, ligands, watprefix, folders, tarlist, settings):
             outercut=settings.outercut,
             flexin=settings.flexin,
             flexout=settings.flexout,
-            scooplimit=settings.scooplimit)
+            scooplimit=settings.scooplimit,
+        )
 
         nresdiff = len(protobj.residues) - len(protobj_scooped.residues)
         protein_scoop_file = _get_prefix(protein_orig_file) + "_scoop.pdb"
@@ -365,17 +392,22 @@ def _prep_protein(protprefix, ligands, watprefix, folders, tarlist, settings):
                 protein_pms_file = _get_prefix(protein_orig_file) + "_pms.pdb"
                 logger.info("Created %s instead." % protein_pms_file)
                 header = protobj.header
-                header += "REMARK Atoms renamed according to ProtoMS naming" \
+                header += (
+                    "REMARK Atoms renamed according to ProtoMS naming"
                     " standards.\n"
+                )
                 protobj.write(
-                    filename=protein_pms_file, header=header, solvents=False)
+                    filename=protein_pms_file, header=header, solvents=False
+                )
             else:
                 protein_pms_file = protein_orig_file
             tarlist.append(protein_scoop_file)
             protein_scoop_file = None
         else:
-            logger.info("Created scoop-pdb file by removing %d residues: %s" %
-                        (nresdiff, protein_scoop_file))
+            logger.info(
+                "Created scoop-pdb file by removing %d residues: %s"
+                % (nresdiff, protein_scoop_file)
+            )
             protobj.write(protein_scoop_file, renumber=True, solvents=False)
 
     if protein_water is None:
@@ -398,7 +430,8 @@ def _prep_protein(protprefix, ligands, watprefix, folders, tarlist, settings):
             padding=10.0,
             radius=settings.capradius,
             center="cent",
-            namescheme="ProtoMS")
+            namescheme="ProtoMS",
+        )
         cappdb.write(protein_water)
         logger.info("Created water cap-file: %s" % (protein_water))
 
@@ -434,10 +467,12 @@ def _prep_singletopology(pdbs, templates1, tarlist, settings):
         tem1 = simulationobjects.TemplateFile(templates1[0])
         tem2 = simulationobjects.TemplateFile(templates1[1])
     except IndexError:
-        msg = "Single topology calculations require two ligand templates to " \
-              "perturb between.\nYou only have one: %s \nIf you are trying " \
-              "to run an absolute free energy calculation\n(i.e. perturb to" \
-              " nothing), please use dual topology." % templates1[0]
+        msg = (
+            "Single topology calculations require two ligand templates to "
+            "perturb between.\nYou only have one: %s \nIf you are trying "
+            "to run an absolute free energy calculation\n(i.e. perturb to"
+            " nothing), please use dual topology." % templates1[0]
+        )
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
 
@@ -447,14 +482,16 @@ def _prep_singletopology(pdbs, templates1, tarlist, settings):
 
     logger.info("")
     logger.info(
-        "Setting up single-topology correspondance map and templates...")
+        "Setting up single-topology correspondance map and templates..."
+    )
     eletem, vdwtem, combtem, cmap = make_single(
         tem1,
         tem2,
         pdbs[0],
         pdbs[1],
         settings.singlemap,
-        gaffversion=settings.gaff)
+        gaffversion=settings.gaff,
+    )
     summarize_single(eletem, vdwtem, logger.debug)
 
     pdbs.pop(1)
@@ -464,7 +501,8 @@ def _prep_singletopology(pdbs, templates1, tarlist, settings):
 
     prefix = os.path.join(
         os.path.dirname(pdbs[0]),
-        tem1.templates[0].name.lower() + "t" + tem2.templates[0].name.lower())
+        tem1.templates[0].name.lower() + "t" + tem2.templates[0].name.lower(),
+    )
     templates1[0] = prefix + "_ele.tem"
     templates2[0] = prefix + "_vdw.tem"
     templates3[0] = prefix + "_comb.tem"
@@ -473,12 +511,18 @@ def _prep_singletopology(pdbs, templates1, tarlist, settings):
     vdwtem.write(templates2[0])
     combtem.write(templates3[0])
     logger.info("")
-    logger.info("Created template %s for electrostatic perturbation. "
-                "Please check the output carefully." % templates1[0])
-    logger.info("Created template %s for van der Waals-perturbation. "
-                "Please check the output carefully." % templates2[0])
-    logger.info("Created template %s for combined perturbation. "
-                "Please check the output carefully." % templates3[0])
+    logger.info(
+        "Created template %s for electrostatic perturbation. "
+        "Please check the output carefully." % templates1[0]
+    )
+    logger.info(
+        "Created template %s for van der Waals-perturbation. "
+        "Please check the output carefully." % templates2[0]
+    )
+    logger.info(
+        "Created template %s for combined perturbation. "
+        "Please check the output carefully." % templates3[0]
+    )
 
     if settings.singlemap is None:
         settings.singlemap = "single_cmap.dat"
@@ -513,15 +557,17 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
     """
 
     def pdb2box(pdbobj, padding=2.0):
-        if settings.simulation not in ["gcap_single","gcap_dual"]:
-          boxpdb = "%s_box.pdb" % settings.simulation
+        if settings.simulation not in ["gcap_single", "gcap_dual"]:
+            boxpdb = "%s_box.pdb" % settings.simulation
         else:
-          boxpdb = "gcmc_box.pdb" 
+            boxpdb = "gcmc_box.pdb"
         box = make_gcmcbox(pdbobj, boxpdb, padding)
         simulationobjects.write_box(boxpdb, box)
         logger.info("")
-        logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. "
-                    "Please check the output carefully" % boxpdb)
+        logger.info(
+            "Created %s to visualize GCMC/JAWS-1 simulation box. "
+            "Please check the output carefully" % boxpdb
+        )
         return boxpdb
 
     def arrange_wats(box, water_file, out_name):
@@ -529,80 +575,101 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
         waterobj = simulationobjects.PDBFile(filename=water_file)
         if len(waterobj.residues) != 0:
             waterbox = waterobj.getBox(
-                atomlist=[next(six.itervalues(waterobj.residues)).atoms[0].name])
+                atomlist=[
+                    next(six.itervalues(waterobj.residues)).atoms[0].name
+                ]
+            )
         else:
             waterbox = waterobj.getBox(
-                atomlist=[next(six.itervalues(waterobj.solvents)).atoms[0].name])
+                atomlist=[
+                    next(six.itervalues(waterobj.solvents)).atoms[0].name
+                ]
+            )
 
         # check whether the box of the water oxygens is
         # within the box provided as argument
-        box_origen_below = np.all(box['origin'] < waterbox['origin'])
+        box_origen_below = np.all(box["origin"] < waterbox["origin"])
         box_end_avobe = np.all(
-            box['origin'] + box['len'] > waterbox['origin'] + waterbox['len'])
+            box["origin"] + box["len"] > waterbox["origin"] + waterbox["len"]
+        )
         if not (box_origen_below and box_end_avobe) or (
-                np.all(waterbox['len'] < 0.5) and len(waterobj.solvents) > 1):
+            np.all(waterbox["len"] < 0.5) and len(waterobj.solvents) > 1
+        ):
             # re-distribute the waters if required according to provided box
-            logger.info("\nRedistributing your GCMC / JAWS1 waters"
-                        " according to the specified box\n")
+            logger.info(
+                "\nRedistributing your GCMC / JAWS1 waters"
+                " according to the specified box\n"
+            )
             arranged_obj = distribute_particles(box, water_file)
             arranged_obj.write(filename=out_name)
             return arranged_obj, out_name
         else:
             # make sure the header in the waterobj is the box dimensions
             # which will be used in this simulation
-            box_extremes = tuple(box['origin']) + tuple(
-                np.add(box['origin'], box['len']))
-            waterobj.header = "HEADER box %.3f %.3f %.3f %.3f %.3f %.3f \n" \
-                % box_extremes
+            box_extremes = tuple(box["origin"]) + tuple(
+                np.add(box["origin"], box["len"])
+            )
+            waterobj.header = (
+                "HEADER box %.3f %.3f %.3f %.3f %.3f %.3f \n" % box_extremes
+            )
             return waterobj, out_name
 
     def fill_box(settings, boxpdb, box, ghost_name):
         # Fill the box with waters
         if settings.gcmcwater is None:
             # Creating ghost waters with a density 1.5 times that of bulk water
-            box_volume = box['len'][0] * box['len'][1] * box['len'][2]
+            box_volume = box["len"][0] * box["len"][1] * box["len"][2]
             ghostnum = str(
                 int(np.ceil(box_volume * 0.0334 * 1.5))
             )  # 0.0334 waters per Angs.^3 is the number density of bulk water.
             ghostobj = distribute_particles(
-                box=box, particles=ghostnum, watermodel=settings.watmodel)
+                box=box, particles=ghostnum, watermodel=settings.watmodel
+            )
             ghostobj.write(filename=ghost_name)
         elif settings.gcmcwater.isdigit():
             ghostobj = distribute_particles(
-                box, settings.gcmcwater, watermodel=settings.watmodel)
+                box, settings.gcmcwater, watermodel=settings.watmodel
+            )
             ghostobj.write(filename=ghost_name)
         else:
-            ghostobj, ghost_name = arrange_wats(box, settings.gcmcwater,
-                                                ghost_name)
+            ghostobj, ghost_name = arrange_wats(
+                box, settings.gcmcwater, ghost_name
+            )
         return ghostobj, ghost_name
 
     # Check consistency of command-line arguments
     if settings.gcmcwater is not None and not settings.gcmcwater.isdigit():
         gcmcwater = _locate_file(settings.gcmcwater, settings.folders)
         if gcmcwater is None:
-            msg = "File %s given as gcmcwater could not be found." \
+            msg = (
+                "File %s given as gcmcwater could not be found."
                 % settings.gcmcwater
+            )
             logger.error(msg)
             raise simulationobjects.SetupError(msg)
         settings.gcmcwater = gcmcwater
-    if settings.gcmcbox is not None and len(settings.gcmcbox) is 1:
+    if settings.gcmcbox is not None and len(settings.gcmcbox) == 1:
         gcmcbox = _locate_file(settings.gcmcbox[0], settings.folders)
         if gcmcbox is None:
-            msg = "File %s given as gcmcbox could not be found." \
+            msg = (
+                "File %s given as gcmcbox could not be found."
                 % settings.gcmcbox[0]
+            )
             logger.error(msg)
             raise simulationobjects.SetupError(msg)
         settings.gcmcbox = gcmcbox
     elif settings.gcmcbox is not None and len(settings.gcmcbox) < 6:
-        msg = "6 arguments expected to define the GCMC/JAWS1 box dimensions" \
-            ", %d provided: %s" % (
-                len(settings.gcmcbox), " ".join(settings.gcmcbox))
+        msg = (
+            "6 arguments expected to define the GCMC/JAWS1 box dimensions"
+            ", %d provided: %s"
+            % (len(settings.gcmcbox), " ".join(settings.gcmcbox))
+        )
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
-    if settings.simulation not in ["gcap_single","gcap_dual"]:
-      ghost_name = "%s_wat.pdb" % settings.simulation
+    if settings.simulation not in ["gcap_single", "gcap_dual"]:
+        ghost_name = "%s_wat.pdb" % settings.simulation
     else:
-      ghost_name = "gcmc_wat.pdb" 
+        ghost_name = "gcmc_wat.pdb"
     write = True
 
     # If the gcmcbox has been set as a file
@@ -617,45 +684,58 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
         else:
             boxpdb = settings.gcmcbox
         if "center" in box:
-            box['origin'] = np.array([
-                coord - box["len"][ind] / 2
-                for ind, coord in enumerate(box["center"])
-            ])
+            box["origin"] = np.array(
+                [
+                    coord - box["len"][ind] / 2
+                    for ind, coord in enumerate(box["center"])
+                ]
+            )
 
         # Fill the box with waters
         ghostobj, ghost_name = fill_box(settings, boxpdb, box, ghost_name)
 
     # If the dimensions of the gcmc box have been provided
-    elif settings.gcmcbox is not None and len(settings.gcmcbox) is 6 and [
-            isinstance(value, float) for value in settings.gcmcbox
-    ]:
+    elif (
+        settings.gcmcbox is not None
+        and len(settings.gcmcbox) == 6
+        and [isinstance(value, float) for value in settings.gcmcbox]
+    ):
         # Generate the box pdb
         boxpdb = "%s_box.pdb" % settings.simulation
         try:
             box = {}
-            box['origin'] = np.array(
-                [float(value) for value in settings.gcmcbox[:3]])
-            box['len'] = np.array(
-                [float(value) for value in settings.gcmcbox[3:]])
+            box["origin"] = np.array(
+                [float(value) for value in settings.gcmcbox[:3]]
+            )
+            box["len"] = np.array(
+                [float(value) for value in settings.gcmcbox[3:]]
+            )
         except Exception:
             raise simulationobjects.SetupError(
-                "The box dimensions %s could not be correctly interpreted" %
-                settings.gcmcbox)
+                "The box dimensions %s could not be correctly interpreted"
+                % settings.gcmcbox
+            )
         simulationobjects.write_box(boxpdb, box)
         logger.info("")
-        logger.info("Created %s to visualize GCMC/JAWS-1 simulation box. "
-                    "Please check the output carefully" % boxpdb)
+        logger.info(
+            "Created %s to visualize GCMC/JAWS-1 simulation box. "
+            "Please check the output carefully" % boxpdb
+        )
         # Fill the box with waters
         ghostobj, ghost_name = fill_box(settings, boxpdb, box, ghost_name)
 
     # If no box information has been provided but we have a gcmcwater file
-    elif (settings.gcmcbox is None and settings.gcmcwater is not None
-          and not settings.gcmcwater.isdigit()):
+    elif (
+        settings.gcmcbox is None
+        and settings.gcmcwater is not None
+        and not settings.gcmcwater.isdigit()
+    ):
         waterobj = simulationobjects.PDBFile(filename=settings.gcmcwater)
         box = simulationobjects.find_box(waterobj)
         if box is None:
             raise simulationobjects.SetupError(
-                "Cannot set up simulation without a box.")
+                "Cannot set up simulation without a box."
+            )
         else:
             ghostobj = waterobj
             ghost_name = waterobj.name
@@ -668,15 +748,19 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
         gcmcboxobj = simulationobjects.PDBFile(filename=boxpdb)
         box = simulationobjects.find_box(gcmcboxobj)
         if "center" in box:
-            box['origin'] = np.array([
-                coord - box["len"][ind] / 2
-                for ind, coord in enumerate(box["center"])
-            ])
+            box["origin"] = np.array(
+                [
+                    coord - box["len"][ind] / 2
+                    for ind, coord in enumerate(box["center"])
+                ]
+            )
         # Fill the box with waters
         ghostobj, ghost_name = fill_box(settings, boxpdb, box, ghost_name)
     else:
-        msg = "Cannot define a GCMC or JAWS-1 simulation box without a" \
-              " ligand and without the gcmcbox setting"
+        msg = (
+            "Cannot define a GCMC or JAWS-1 simulation box without a"
+            " ligand and without the gcmcbox setting"
+        )
         logger.error(msg)
         simulationobjects.SetupError(msg)
 
@@ -685,8 +769,10 @@ def _prep_gcmc(ligands, ligand_files, waters, tarlist, settings):
     if write:
         ghostobj.write(ghost_name)
         logger.info("")
-        logger.info("Created %s; it contains the GCMC or JAWS-1 simulation "
-                    "waters. Please check the output carefully" % ghost_name)
+        logger.info(
+            "Created %s; it contains the GCMC or JAWS-1 simulation "
+            "waters. Please check the output carefully" % ghost_name
+        )
 
     # Clear the GCMC/JAWS-1 box from solvation waters
     logger.info("")
@@ -737,12 +823,16 @@ def _prep_jaws2(water_file, tarlist, settings):
     single_wat, other_wat = split_waters(settings.gcmcwater)
     single_wat = set_jaws2_box(single_wat)
     logger.info("")
-    logger.info("Creating water PDB-files for JAWS-2 called "
-                "jaws2_wat*.pdb and jaws2_not*.pdb")
+    logger.info(
+        "Creating water PDB-files for JAWS-2 called "
+        "jaws2_wat*.pdb and jaws2_not*.pdb"
+    )
     single_wat.write(
-        ["jaws2_wat%d.pdb" % (i + 1) for i in range(len(single_wat.pdbs))])
+        ["jaws2_wat%d.pdb" % (i + 1) for i in range(len(single_wat.pdbs))]
+    )
     other_wat.write(
-        ["jaws2_not%d.pdb" % (i + 1) for i in range(len(single_wat.pdbs))])
+        ["jaws2_not%d.pdb" % (i + 1) for i in range(len(single_wat.pdbs))]
+    )
 
     nrem = 0
     for count, watobj in enumerate(single_wat.pdbs):
@@ -784,19 +874,24 @@ def _run_program(name, command):
     # Create temporary file to write stdout, stderr of the program
     tmpfile, tmpname = tempfile.mkstemp()
     ret_code = subprocess.call(
-        command, shell=True, stdout=tmpfile, stderr=tmpfile)
+        command, shell=True, stdout=tmpfile, stderr=tmpfile
+    )
     # Catch some error codes
     if ret_code == 127:
-        msg = "Unable to find executable, please make sure this is" \
+        msg = (
+            "Unable to find executable, please make sure this is"
             " present in your PATH or $AMBERHOME/bin."
+        )
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
     if ret_code == 1:
         # Get the error message from the temporary file
         errmsg = "\n".join(line for line in open(tmpname).readlines())
         os.remove(tmpname)
-        msg = "%s was not able to run successfully. Please check output. " \
+        msg = (
+            "%s was not able to run successfully. Please check output. "
             " Error message was:\n%s" % (name, errmsg)
+        )
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
 
@@ -823,7 +918,7 @@ def _get_executable_path(name):
         if the executable could not be found
     """
     try:
-        os.environ['AMBERHOME']
+        os.environ["AMBERHOME"]
     except KeyError:
         raise simulationobjects.SetupError(
             "The environmental variable $AMBERHOME is not set. This is "
@@ -831,18 +926,21 @@ def _get_executable_path(name):
         )
 
     try:
-        exe_path = os.environ['AMBERHOME'] + '/bin/' + name
+        exe_path = os.environ["AMBERHOME"] + "/bin/" + name
         if not os.path.isfile(exe_path):
             raise KeyError
         return exe_path
     except KeyError:
         logger.debug(
-            "Unable to find executable in $AMBERHOME/bin. Looking in PATH.")
+            "Unable to find executable in $AMBERHOME/bin. Looking in PATH."
+        )
 
     exe_path = distutils.spawn.find_executable(name)
     if exe_path is None:
-        msg = "Unable to find %s executable, please make sure this is" \
+        msg = (
+            "Unable to find %s executable, please make sure this is"
             " present in your PATH or $AMBERHOME/bin." % name
+        )
         logger.error(msg)
         raise simulationobjects.SetupError(msg)
 
@@ -887,13 +985,18 @@ def run_antechamber(lig, charge, resnam=None):
     else:
         resnamstr = "-rn " + resnam
 
-    ante_exe = _get_executable_path('antechamber')
+    ante_exe = _get_executable_path("antechamber")
 
     # Remove the extension from the filename
     out_name = os.path.splitext(name)[0]
-    cmd = '%s -i %s -fi pdb -o %s.prepi -fo prepi -c bcc -nc %d %s -pf y' % (
-        ante_exe, name, out_name, charge, resnamstr)
-    _run_program('antechamber', cmd)
+    cmd = "%s -i %s -fi pdb -o %s.prepi -fo prepi -c bcc -nc %d %s -pf y" % (
+        ante_exe,
+        name,
+        out_name,
+        charge,
+        resnamstr,
+    )
+    _run_program("antechamber", cmd)
     subprocess.call("rm sqm.in sqm.out sqm.pdb", shell=True)
     return "%s.prepi" % out_name
 
@@ -916,7 +1019,8 @@ def run_parmchk(lig):
     logger.debug("Running run_parmchk with arguments: ")
     logger.debug("\tlig = %s" % lig)
     logger.debug(
-        "This will generate an Amber frcmod file with additional parameters")
+        "This will generate an Amber frcmod file with additional parameters"
+    )
 
     # Check if it is a string, otherwise assumes it is a pdb object
     if isinstance(lig, six.string_types):
@@ -924,13 +1028,16 @@ def run_parmchk(lig):
     else:
         name = lig.name
 
-    parm_exe = _get_executable_path('parmchk2')
+    parm_exe = _get_executable_path("parmchk2")
 
     # Remove the extension from the filename
     out_name = os.path.splitext(name)[0]
-    cmd = '%s -i %s.prepi -f prepi -o %s.frcmod' % (parm_exe, out_name,
-                                                    out_name)
-    _run_program('parmchk2', cmd)
+    cmd = "%s -i %s.prepi -f prepi -o %s.frcmod" % (
+        parm_exe,
+        out_name,
+        out_name,
+    )
+    _run_program("parmchk2", cmd)
     return "%s.frcmod" % out_name
 
 
@@ -964,20 +1071,20 @@ def read_convfile(file=None, inmode=None, outmode=None):
     if outmode is None:
         raise ValueError("You must specify a mode!")
     conv = {}
-    stream = open(file, 'r')
+    stream = open(file, "r")
     buffer = stream.readlines()
     stream.close()
     for line in buffer:
-        if line.startswith('backbone'):
-            key = 'backbone'
+        if line.startswith("backbone"):
+            key = "backbone"
             conv[key] = {}
             continue
-        if line.startswith('residue'):
+        if line.startswith("residue"):
             elems = line.split()
             key = elems[1]
             conv[key] = {}
             continue
-        if line.startswith('atom'):
+        if line.startswith("atom"):
             elems = line.split()
             # Locate inmode
             found = False
@@ -1024,8 +1131,9 @@ def _checkpdb(pdb_in, pdb_out, conversion):
     for resnum in pdb_in.residues:
         residue = pdb_in.residues[resnum]
 
-        if residue.name.upper(
-        ) == "HID":  # Valid only when the pdb input file is from AMBER.
+        if (
+            residue.name.upper() == "HID"
+        ):  # Valid only when the pdb input file is from AMBER.
             resname = "HIS"
             pdb_out.residues[resnum].name = resname
         else:
@@ -1035,8 +1143,10 @@ def _checkpdb(pdb_in, pdb_out, conversion):
             atomname = residue.atoms[atomnum].name.upper()
             # Check if the atom name is either in the backbone
             # or a sidechain residue
-            if not (atomname in conversion["backbone"].values()
-                    or atomname in conversion[resname].values()):
+            if not (
+                atomname in conversion["backbone"].values()
+                or atomname in conversion[resname].values()
+            ):
                 return False
     return True
 
@@ -1066,21 +1176,26 @@ def pdb2pms(pdb_in, forcefield, conversion_file):
     logger.debug("\tpdb_in          = %s" % pdb_in)
     logger.debug("\tforcefield      = %s" % forcefield)
     logger.debug("\tconversion_file = %s" % conversion_file)
-    logger.debug("This will rename atoms in a PDB-file to match "
-                 "ProtoMS naming convention")
+    logger.debug(
+        "This will rename atoms in a PDB-file to match "
+        "ProtoMS naming convention"
+    )
 
     pdb_out = pdb_in.copy()
     conversion = read_convfile(
-        conversion_file, inmode=forcefield, outmode="protoms")
+        conversion_file, inmode=forcefield, outmode="protoms"
+    )
     if _checkpdb(pdb_in, pdb_out, conversion):
         logger.info(
             "It seems that %s already contains the correct ProtoMS names."
-            " Aborting the conversion." % pdb_in.name)
+            " Aborting the conversion." % pdb_in.name
+        )
         return pdb_in
     for resnum in pdb_in.residues:
         residue = pdb_in.residues[resnum]
-        if residue.name.upper(
-        ) == "HID":  # Valid only when the pdb input file is from AMBER.
+        if (
+            residue.name.upper() == "HID"
+        ):  # Valid only when the pdb input file is from AMBER.
             resname = "HIS"
             pdb_out.residues[resnum].name = resname
         else:
@@ -1091,20 +1206,27 @@ def pdb2pms(pdb_in, forcefield, conversion_file):
                 newName = conversion["backbone"][atomname]
             elif atomname in conversion[resname]:
                 newName = conversion[resname][atomname]
-            elif atomname[1:len(atomname)] + atomname[0] in conversion[
-                    resname]:
-                newName = conversion[resname][(
-                    atomname[1:len(atomname)] + atomname[0])]
-            elif atomname[-1] + atomname[0:(len(atomname) - 1)] in conversion[
-                    resname]:
-                newName = conversion[resname][(
-                    atomname[-1] + atomname[0:(len(atomname) - 1)])]
+            elif (
+                atomname[1 : len(atomname)] + atomname[0]
+                in conversion[resname]
+            ):
+                newName = conversion[resname][
+                    (atomname[1 : len(atomname)] + atomname[0])
+                ]
+            elif (
+                atomname[-1] + atomname[0 : (len(atomname) - 1)]
+                in conversion[resname]
+            ):
+                newName = conversion[resname][
+                    (atomname[-1] + atomname[0 : (len(atomname) - 1)])
+                ]
             else:
                 newName = atomname
                 logger.warning(
                     "Warning: atom %s in residue %s %i not found in %s. This "
                     "atom has not been converted. Check atom names are validb."
-                    % (atomname, resname, resnum, conversion_file))
+                    % (atomname, resname, resnum, conversion_file)
+                )
             pdb_out.residues[resnum].atoms[atomnum].name = newName
             pdb_out.residues[resnum].atoms[atomnum].resname = resname
     return pdb_out

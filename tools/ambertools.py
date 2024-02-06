@@ -18,7 +18,7 @@ import logging
 from protomslib import simulationobjects
 from protomslib.prepare import run_antechamber, run_parmchk
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def get_arg_parser():
@@ -28,17 +28,21 @@ def get_arg_parser():
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
         description="Program to run antechamber and parmchk"
-                    " for a series of PDB-files")
+        " for a series of PDB-files"
+    )
     parser.add_argument(
-        '-f', '--files', nargs="+", help="the name of the PDB-files")
+        "-f", "--files", nargs="+", help="the name of the PDB-files"
+    )
     parser.add_argument(
-        '-n', '--name', help="the name of the solute", default="UNK")
+        "-n", "--name", help="the name of the solute", default="UNK"
+    )
     parser.add_argument(
-        '-c',
-        '--charge',
+        "-c",
+        "--charge",
         nargs="+",
         type=float,
-        help="the net charge of each PDB-file")
+        help="the net charge of each PDB-file",
+    )
     return parser
 
 

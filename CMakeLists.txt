@@ -66,6 +66,9 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE}
 if("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "GNU")
     message("-- Using GNU compiler flags")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffixed-line-length-132 -ffixed-form -fimplicit-none")
+
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-argument-mismatch" CACHE TYPE STRING FORCE)
+
     if(COVERAGE)
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fprofile-arcs -ftest-coverage")
     endif()

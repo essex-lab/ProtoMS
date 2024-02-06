@@ -6,8 +6,6 @@ Tests for ProtoMS python module (protoms.py): Setup tests
 
 import os
 import unittest
-import nose
-import nose.tools as nt
 
 # ---------------------------------------------
 # PROTOMSHOME test
@@ -26,8 +24,10 @@ class TestSetUp(unittest.TestCase):
         print("Cleaning up PROTOMSHOME check test.")
 
     def test_protoms_path(self):
-        self.assertIsNotNone(os.getenv("PROTOMSHOME"), "PROTOMSHOME is not set.")
+        self.assertIsNotNone(
+            os.getenv("PROTOMSHOME"), "PROTOMSHOME is not set."
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -8,7 +8,7 @@ import sys
 from protomslib import free_energy as fe
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
-    matplotlib.use('Agg')
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
@@ -20,8 +20,10 @@ class TI_decomposed(fe.Estimator):
     decomposition of the total free energy is not well-defined however
     can be indicative of the dominant terms in a free energy change.
     """
-    def __init__(self, lambdas, results_name='results',
-                 subdir_glob='./', **kwargs):
+
+    def __init__(
+        self, lambdas, results_name="results", subdir_glob="./", **kwargs
+    ):
         """Parameters
         ---------
         lambdas: list of numbers
@@ -34,7 +36,8 @@ class TI_decomposed(fe.Estimator):
           Additional keyword arguments are ignored
         """
         self.estimators = defaultdict(
-            lambda: fe.TI(lambdas, results_name, subdir_glob))
+            lambda: fe.TI(lambdas, results_name, subdir_glob)
+        )
         self.lambdas = lambdas
         self.subdir_glob = subdir_glob
         self.results_name = results_name
@@ -49,27 +52,29 @@ class TI_decomposed(fe.Estimator):
             free energy simulation data for a particular lambda value
 
         """
-        dlam = series.lamf[0]-series.lamb[0]
-        min_len = 10E20
+        dlam = series.lamf[0] - series.lamb[0]
+        min_len = 10e20
         for name, term in six.iteritems(series.interaction_energies):
             for energy in term[:-1]:
-                dat = (energy.forw-energy.back) / dlam
+                dat = (energy.forw - energy.back) / dlam
                 min_len = len(dat) if len(dat) < min_len else min_len
                 self.estimators["%s_%s" % (name, energy.type)].data.append(dat)
 
         for name, term in six.iteritems(series.internal_energies):
             for energy in term[:-1]:
-                dat = (energy.forw-energy.back) / dlam
+                dat = (energy.forw - energy.back) / dlam
                 min_len = len(dat) if len(dat) < min_len else min_len
                 self.estimators["%s_%s" % (name, energy.type)].data.append(dat)
 
         return min_len
 
-    def calculate(self, subset=(0., 1., 1)):
+    def calculate(self, subset=(0.0, 1.0, 1)):
         """Calculate the free energy difference for each energy component and
         return a dictionary of PMF objects."""
-        return {term: self.estimators[term].calculate(subset)
-                for term in self.estimators}
+        return {
+            term: self.estimators[term].calculate(subset)
+            for term in self.estimators
+        }
 
     def __getitem__(self, val):
         """Return a new class instance with series[val] applied to each
@@ -82,8 +87,11 @@ class TI_decomposed(fe.Estimator):
 
     def __len__(self):
         """Return the number of data points contained in the data series."""
-        lengths = [dat.shape[-1] for term in self.estimators
-                   for dat in self.estimators[term].data]
+        lengths = [
+            dat.shape[-1]
+            for term in self.estimators
+            for dat in self.estimators[term].data
+        ]
         if len(lengths) == 0:
             return 0
         if len(set(lengths)) > 1:
@@ -97,7 +105,8 @@ class DecomposedCalculation(fe.FreeEnergyCalculation):
     energy. This decomposition is additive and, although not formally
     meaningful, can be helpful to identify the dominant driving forces
     or to debug problems in a free energy calculation."""
-    def __init__(self, root_paths, subdir=''):
+
+    def __init__(self, root_paths, subdir=""):
         """Parameters
         ----------
         root_paths: a list of lists of strings
@@ -114,11 +123,12 @@ class DecomposedCalculation(fe.FreeEnergyCalculation):
         fe.FreeEnergyCalculation.__init__(
             self,
             root_paths=root_paths,
-            temperature=0.,
+            temperature=0.0,
             subdir=subdir,
-            estimators={fe.TI, TI_decomposed})
+            estimators={fe.TI, TI_decomposed},
+        )
 
-    def calculate(self, subset=(0., 1., 1.)):
+    def calculate(self, subset=(0.0, 1.0, 1.0)):
         """For each estimator return the evaluated potential of mean force.
 
         Parameters
@@ -131,17 +141,21 @@ class DecomposedCalculation(fe.FreeEnergyCalculation):
         leg_result = fe.Result()
         for leg in self.estimators[fe.TI]:
             leg_result += fe.Result(
-                [rep.subset(*subset).calculate(self.temperature)
-                 for rep in leg])
+                [
+                    rep.subset(*subset).calculate(self.temperature)
+                    for rep in leg
+                ]
+            )
         results[fe.TI] = leg_result
 
         # dealing with the decomposed estimator is a little more difficult.
         # repeats for the same term need to be grouped together into a
         # single Results object
         # start by pulling out all the data
-        data = [[rep.subset(*subset).calculate(self.temperature)
-                 for rep in leg]
-                for leg in self.estimators[TI_decomposed]]
+        data = [
+            [rep.subset(*subset).calculate(self.temperature) for rep in leg]
+            for leg in self.estimators[TI_decomposed]
+        ]
 
         # now add into results in a compatible order and combine legs such that
         # results[TI_decomposed][term] = Results object
@@ -192,12 +206,12 @@ class DecomposedCalculation(fe.FreeEnergyCalculation):
 
         if args.dualtopology:
             _consolidate_terms(decomp)
-        self.figures['decomposed'] = plot_terms(decomp)
+        self.figures["decomposed"] = plot_terms(decomp)
 
         if args.pmf:
-            self.figures['decomposed_pmfs'] = plot_pmfs(decomp)
+            self.figures["decomposed_pmfs"] = plot_pmfs(decomp)
 
-        table = fe.Table('', fmts=["%s:", "%.3f"])
+        table = fe.Table("", fmts=["%s:", "%.3f"])
         table.add_row(["FDTI", results[fe.TI].dG])
         table.add_blank_row()
         for term in sorted(decomp):
@@ -205,7 +219,7 @@ class DecomposedCalculation(fe.FreeEnergyCalculation):
                 continue
             else:
                 table.add_row([term, decomp[term].dG])
-        table.add_row(['sum of terms', np.sum(list(decomp.values())).dG])
+        table.add_row(["sum of terms", np.sum(list(decomp.values())).dG])
         self.tables.append(table)
 
         return results
@@ -216,8 +230,8 @@ def _consolidate_terms(data):
     energy terms from the two transformed ligands."""
     # this is a little better than the previous iteration, copes with
     # gcsolutes at least, set operations are still not ideal though
-    components = {'protein1', 'solvent', 'GCS'}
-    for inter in ('COU', 'LJ'):
+    components = {"protein1", "solvent", "GCS"}
+    for inter in ("COU", "LJ"):
         for comp in components:
             interaction_terms = []
             for term in data:
@@ -225,15 +239,16 @@ def _consolidate_terms(data):
                     continue
 
                 # get the one or more parts of the energy term
-                parts = term.split('_')[0].split('-')
+                parts = term.split("_")[0].split("-")
                 # if it has two parts and exactly one is a non-solute
                 # component then we can consolidate
                 if len(parts) == 2 and len(set(parts) - components) == 1:
                     interaction_terms.append(term)
 
             if len(interaction_terms) > 1:
-                data['lig-%s_%s' % (comp, inter)] = np.sum(
-                    [data.pop(term) for term in interaction_terms])
+                data["lig-%s_%s" % (comp, inter)] = np.sum(
+                    [data.pop(term) for term in interaction_terms]
+                )
 
 
 def plot_terms(data):
@@ -252,16 +267,16 @@ def plot_terms(data):
     for term in sorted(data):
         dG = data[term].dG
         # only include terms with non-zero differences
-        if dG.value != 0.:
+        if dG.value != 0.0:
             ys.append(dG.value)
             errs.append(dG.error)
             labels.append(term)
 
     xs = np.arange(len(ys))
-    ax.bar(xs, ys, yerr=errs, ecolor='black')
+    ax.bar(xs, ys, yerr=errs, ecolor="black")
     ax.set_xticks(xs)
     ax.set_xticklabels(labels, rotation="vertical")
-    ax.set_ylabel('Free Energy (kcal/mol)')
+    ax.set_ylabel("Free Energy (kcal/mol)")
     return fig
 
 
@@ -276,11 +291,11 @@ def plot_pmfs(data):
     """
     fig, ax = plt.subplots()
     for term in data:
-        if data[term].dG.value != 0.:
+        if data[term].dG.value != 0.0:
             data[term].pmf.plot(ax, label=term)
-    ax.legend(loc='best')
-    ax.set_xlabel('Lambda Value')
-    ax.set_ylabel('Free Energy (kcal/mol)')
+    ax.legend(loc="best")
+    ax.set_xlabel("Lambda Value")
+    ax.set_ylabel("Free Energy (kcal/mol)")
     return fig
 
 
@@ -288,36 +303,56 @@ def get_arg_parser():
     """Returns the custom argument parser for this script"""
     parser = fe.FEArgumentParser(
         description="Calculate individual contributions of different terms "
-                    "to the total free energy difference. Although terms are "
-                    "guaranteed to be additive with TI, the decomposition "
-                    "is not strictly well defined. That said, it can be "
-                    "illustrative to consider the dominant contributions of "
-                    "a calculation.",
-        parents=[fe.get_alchemical_arg_parser()])
+        "to the total free energy difference. Although terms are "
+        "guaranteed to be additive with TI, the decomposition "
+        "is not strictly well defined. That said, it can be "
+        "illustrative to consider the dominant contributions of "
+        "a calculation.",
+        parents=[fe.get_alchemical_arg_parser()],
+    )
     parser.add_argument(
-        "-b", "--bound", nargs="+", action='append',
+        "-b",
+        "--bound",
+        nargs="+",
+        action="append",
         help="Output directory(s) of additional bound phase calculation(s). "
-             "Using this flag causes data loaded via -d to be considered as "
-             "solvent phase data. All data is then combined to provide a "
-             "decomposition of the binding free energy. Behaves identically "
-             "to -d in treatment of repeats and calculation legs.",
-        clashes=['gas'])
+        "Using this flag causes data loaded via -d to be considered as "
+        "solvent phase data. All data is then combined to provide a "
+        "decomposition of the binding free energy. Behaves identically "
+        "to -d in treatment of repeats and calculation legs.",
+        clashes=["gas"],
+    )
     parser.add_argument(
-        "-g", "--gas", nargs="+", action='append',
+        "-g",
+        "--gas",
+        nargs="+",
+        action="append",
         help="As -b except data loaded via this flag is treated as gas phase "
-             "data to provide to provide a decomposed solvation free energy.",
-        clashes=['bound'])
+        "data to provide to provide a decomposed solvation free energy.",
+        clashes=["bound"],
+    )
     parser.add_argument(
-        "--dualtopology", action='store_true', default=False,
+        "--dualtopology",
+        action="store_true",
+        default=False,
         help="Indicates provided data is from a dual topology calculation. "
-             "Attempts to consolidate terms, for clarity, from ligands that "
-             "can have opposite signs and large magnitudes. Please note that "
-             "standard errors calculated with this approach are no longer "
-             "rigorous and can be spuriously large.")
-    parser.add_argument("--pmf", action='store_true', default=False,
-                        help="Plot the Potential of Mean Force for all terms.")
-    parser.add_argument("--full", action='store_false', default=True,
-                        help="Prevents printing out of zero contribution energies.")
+        "Attempts to consolidate terms, for clarity, from ligands that "
+        "can have opposite signs and large magnitudes. Please note that "
+        "standard errors calculated with this approach are no longer "
+        "rigorous and can be spuriously large.",
+    )
+    parser.add_argument(
+        "--pmf",
+        action="store_true",
+        default=False,
+        help="Plot the Potential of Mean Force for all terms.",
+    )
+    parser.add_argument(
+        "--full",
+        action="store_false",
+        default=True,
+        help="Prevents printing out of zero contribution energies.",
+    )
     return parser
 
 

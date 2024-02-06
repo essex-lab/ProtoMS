@@ -1,9 +1,10 @@
 import logging
-import numpy as np
 import os
 import subprocess
 
-logger = logging.getLogger('protoms')
+import numpy as np
+
+logger = logging.getLogger("protoms")
 
 
 def _is_float(num):
@@ -93,8 +94,13 @@ def rotmat_x(alpha):
     numpy array
       the rotation matrix for the desired angle.
     """
-    return (np.mat([[1.0, 0.0, 0.0], [0.0, np.cos(alpha), -np.sin(alpha)],
-                    [0.0, np.sin(alpha), np.cos(alpha)]]))
+    return np.mat(
+        [
+            [1.0, 0.0, 0.0],
+            [0.0, np.cos(alpha), -np.sin(alpha)],
+            [0.0, np.sin(alpha), np.cos(alpha)],
+        ]
+    )
 
 
 def rotmat_y(beta):
@@ -111,8 +117,13 @@ def rotmat_y(beta):
     numpy array
       the rotation matrix for the desired angle.
     """
-    return (np.mat([[np.cos(beta), 0.0, np.sin(beta)], [0.0, 1.0, 0.0],
-                    [-np.sin(beta), 0.0, np.cos(beta)]]))
+    return np.mat(
+        [
+            [np.cos(beta), 0.0, np.sin(beta)],
+            [0.0, 1.0, 0.0],
+            [-np.sin(beta), 0.0, np.cos(beta)],
+        ]
+    )
 
 
 def rotmat_z(gamma):
@@ -129,8 +140,13 @@ def rotmat_z(gamma):
     numpy array
       the rotation matrix for the desired angle.
     """
-    return (np.mat([[np.cos(gamma), -np.sin(gamma), 0.0],
-                    [np.sin(gamma), np.cos(gamma), 0.0], [0.0, 0.0, 1.0]]))
+    return np.mat(
+        [
+            [np.cos(gamma), -np.sin(gamma), 0.0],
+            [np.sin(gamma), np.cos(gamma), 0.0],
+            [0.0, 0.0, 1.0],
+        ]
+    )
 
 
 def _cleanup(tarlist):
@@ -154,5 +170,6 @@ def _cleanup(tarlist):
     logger.info("Cleaning up and saving extra files to prep_files.tar")
     logger.debug("The files are: %s" % " ".join(tarlist2))
     subprocess.call(
-        "tar -cf prep_files.tar %s" % " ".join(tarlist2), shell=True)
+        "tar -cf prep_files.tar %s" % " ".join(tarlist2), shell=True
+    )
     subprocess.call("rm -f %s" % " ".join(tarlist2), shell=True)

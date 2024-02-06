@@ -6,25 +6,34 @@ import framework
 class RetiSnglSetupTest(framework.BaseTest):
     ref_dir = "tests/RETI_sngl/"
 
-    input_files = [
-        "ethane.pdb",
-        "methanol.pdb",
-        "single_cmap.dat"
-    ]
+    input_files = ["ethane.pdb", "methanol.pdb", "single_cmap.dat"]
 
     executable = "protoms.py"
 
     args = [
-        "-s", "singletopology",
-        "-l", "ethane.pdb", "methanol.pdb",
-        "--lambdas", "0.00", "0.33", "0.67", "1.00",
-        "--nequil", "0",
-        "--nprod", "10",
-        "--ranseed", "100000",
-        "--dumpfreq", "1",
+        "-s",
+        "singletopology",
+        "-l",
+        "ethane.pdb",
+        "methanol.pdb",
+        "--lambdas",
+        "0.00",
+        "0.33",
+        "0.67",
+        "1.00",
+        "--nequil",
+        "0",
+        "--nprod",
+        "10",
+        "--ranseed",
+        "100000",
+        "--dumpfreq",
+        "1",
         "--cleanup",
-        "--singlemap", "single_cmap.dat",
-        "--gaff", "gaff14"
+        "--singlemap",
+        "single_cmap.dat",
+        "--gaff",
+        "gaff14",
     ]
 
     output_files = [
@@ -37,7 +46,7 @@ class RetiSnglSetupTest(framework.BaseTest):
         "run_ele_free.cmd",
         "run_ele_gas.cmd",
         "run_vdw_free.cmd",
-        "run_vdw_gas.cmd"
+        "run_vdw_gas.cmd",
     ]
 
 
@@ -48,22 +57,20 @@ class RetiSnglSimulationFreeTest(framework.BaseTest):
         "run_comb_free.cmd",
         "ethane.pdb",
         "ethtmeo_comb.tem",
-        "ethane_box.pdb"
+        "ethane_box.pdb",
     ]
 
     mpi_processes = 4
 
     executable = "build/protoms3"
 
-    args = [
-        "run_comb_free.cmd"
-    ]
+    args = ["run_comb_free.cmd"]
 
     output_directories = [
         "out_comb_free/lam-0.000",
         "out_comb_free/lam-0.330",
         "out_comb_free/lam-0.670",
-        "out_comb_free/lam-1.000"
+        "out_comb_free/lam-1.000",
     ]
 
     output_files = [
@@ -74,32 +81,26 @@ class RetiSnglSimulationFreeTest(framework.BaseTest):
         "restart.prev",
         "results",
         "results_inst",
-        "warning"
+        "warning",
     ]
 
 
 class RetiSnglSimulationGasTest(framework.BaseTest):
     ref_dir = "tests/RETI_sngl/"
 
-    input_files = [
-        "run_comb_gas.cmd",
-        "ethane.pdb",
-        "ethtmeo_comb.tem"
-    ]
+    input_files = ["run_comb_gas.cmd", "ethane.pdb", "ethtmeo_comb.tem"]
 
     mpi_processes = 4
 
     executable = "build/protoms3"
 
-    args = [
-        "run_comb_gas.cmd"
-    ]
+    args = ["run_comb_gas.cmd"]
 
     output_directories = [
         "out_comb_gas/lam-0.000",
         "out_comb_gas/lam-0.330",
         "out_comb_gas/lam-0.670",
-        "out_comb_gas/lam-1.000"
+        "out_comb_gas/lam-1.000",
     ]
 
     output_files = [
@@ -110,9 +111,9 @@ class RetiSnglSimulationGasTest(framework.BaseTest):
         "restart.prev",
         "results",
         "results_inst",
-        "warning"
+        "warning",
     ]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

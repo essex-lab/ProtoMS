@@ -19,7 +19,7 @@ import numpy as np
 from protomslib import simulationobjects
 from protomslib.prepare import convertwater
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 # --------------------------------------------------
@@ -34,38 +34,41 @@ def get_arg_parser():
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
         description="Program to convert water molecules - with or without"
-                    " hydrogens - in a pdb file to simulation models, such"
-                    " as tip4p. Currently ignores original hydrogen positions."
+        " hydrogens - in a pdb file to simulation models, such"
+        " as tip4p. Currently ignores original hydrogen positions."
     )
     parser.add_argument(
-        '-p',
-        '--pdb',
-        help="the PDF-file containing the waters to be transformed")
+        "-p",
+        "--pdb",
+        help="the PDF-file containing the waters to be transformed",
+    )
     parser.add_argument(
-        '-o',
-        '--out',
-        help="the output PDB-file",
-        default="convertedwater.pdb")
+        "-o", "--out", help="the output PDB-file", default="convertedwater.pdb"
+    )
     parser.add_argument(
-        '-m', '--model', help="the water model,default=tip4p", default="tip4p")
+        "-m", "--model", help="the water model,default=tip4p", default="tip4p"
+    )
     parser.add_argument(
-        '-i',
-        '--ignoreh',
-        action='store_true',
+        "-i",
+        "--ignoreh",
+        action="store_true",
         help="whether to ignore hydrogens in input water. If no hydrogens"
-             " are present, waters are randomly orientated. default=No",
-        default=False)
+        " are present, waters are randomly orientated. default=No",
+        default=False,
+    )
     parser.add_argument(
-        '-n',
-        '--resname',
+        "-n",
+        "--resname",
         help="the residue name that will be applied to the water molecules. "
-             "When it is not specified, it is chosen based on the water model",
-        default=None)
+        "When it is not specified, it is chosen based on the water model",
+        default=None,
+    )
     parser.add_argument(
-        '--setupseed',
+        "--setupseed",
         help="optional random number seed for generation of water coordinates",
         default=None,
-        type=int)
+        type=int,
+    )
     return parser
 
 

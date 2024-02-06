@@ -32,11 +32,11 @@ from protomslib import simulationobjects
 
 
 if "DISPLAY" not in os.environ or os.environ["DISPLAY"] == "":
-    matplotlib.use('Agg')
+    matplotlib.use("Agg")
 import matplotlib.pylab as plt
 
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 EQUIL_LIMIT = 10
 
@@ -47,27 +47,27 @@ EQUIL_LIMIT = 10
 
 def find_equilibration(x, y, atleast=EQUIL_LIMIT, threshold=0.05, nperm=0):
     """
-  Find the equilibration time of a data series
+    Find the equilibration time of a data series
 
-  Parameters
-  ----------
-  x : Numpy array
-    the x data
-  y : Numpy array
-    the y data
-  atleast : int, optional
-    this is the smallest number of snapshots considered to be production
-  threshold : float, optional
-    the confidence level
-  nperm : int, optional
-    if greater than zero, a permutation test is peformed
-    with nperm synthetic permutations
+    Parameters
+    ----------
+    x : Numpy array
+      the x data
+    y : Numpy array
+      the y data
+    atleast : int, optional
+      this is the smallest number of snapshots considered to be production
+    threshold : float, optional
+      the confidence level
+    nperm : int, optional
+      if greater than zero, a permutation test is peformed
+      with nperm synthetic permutations
 
-  Returns
-  -------
-  int
-    the length of the equilibration period
-  """
+    Returns
+    -------
+    int
+      the length of the equilibration period
+    """
     x, y = np.array(x), np.array(y)
     for i in range(0, y.shape[0] - atleast):
         if nperm == 0:  # Performs an assymptotic test, fast
@@ -87,33 +87,33 @@ def find_equilibration(x, y, atleast=EQUIL_LIMIT, threshold=0.05, nperm=0):
 
 def stat_inefficiency(y):
     """
-  Calculates the statistical inefficiency, g.
+    Calculates the statistical inefficiency, g.
 
-  g = 1 + 2*tau, where tau is the autocorrelation time
+    g = 1 + 2*tau, where tau is the autocorrelation time
 
-  Parameters
-  ----------
-  y : Numpy array
-    the data
+    Parameters
+    ----------
+    y : Numpy array
+      the data
 
-  Returns
-  -------
-  float
-    g, the inefficiency
-    or None if variance is too small
-  float
-    neff, the number of samples 
-    or None if variance is too small
-  """
+    Returns
+    -------
+    float
+      g, the inefficiency
+      or None if variance is too small
+    float
+      neff, the number of samples
+      or None if variance is too small
+    """
     n = len(y)
     dy = y - y.mean()
     vary = (dy * dy).mean()
-    if vary < 0.1E-6:
+    if vary < 0.1e-6:
         return None, None
     tmax = int(np.round(n * 0.9))
     g = 1.0
     for t in range(1, tmax + 1):
-        c = np.sum(dy[0:n - t] * dy[t:n]) / (float(n - t) * vary)
+        c = np.sum(dy[0 : n - t] * dy[t:n]) / (float(n - t) * vary)
         if c < 0.0 and t > 10:
             break
         g = g + 2.0 * c * (1.0 - float(t) / float(n))
@@ -125,26 +125,26 @@ def stat_inefficiency(y):
 
 def maximize_samples(y, atleast=EQUIL_LIMIT):
     """
-  Find the minimum of the statistical inefficiency by varying
-  the equlibration period, i.e. maximizing the number of
-  uncorrelated samples
+    Find the minimum of the statistical inefficiency by varying
+    the equlibration period, i.e. maximizing the number of
+    uncorrelated samples
 
-  Parameters
-  ----------
-  y : Numpy array
-    the data
-  atleast : int, optional
-    this is the smallest number of snapshots considered to be production
+    Parameters
+    ----------
+    y : Numpy array
+      the data
+    atleast : int, optional
+      this is the smallest number of snapshots considered to be production
 
-  Returns
-  -------
-  int
-    the snapshot at which g is maximum
-  float
-    maximum of g
-  int
-    the number of uncorrelated samples
-  """
+    Returns
+    -------
+    int
+      the snapshot at which g is maximum
+    float
+      maximum of g
+    int
+      the number of uncorrelated samples
+    """
     n = y.shape[0]
     gt = np.zeros([n - atleast])
     neff = np.zeros([n - atleast])
@@ -161,45 +161,45 @@ def maximize_samples(y, atleast=EQUIL_LIMIT):
 
 def running(data):
     """
-  Returns a running average of the data
+    Returns a running average of the data
 
-  Value at position i of the returned data is the average of the
-   input data from point zero to point i
+    Value at position i of the returned data is the average of the
+     input data from point zero to point i
 
-  Parameters
-  ----------
-  data : NumpyArray
-    the input data, should be 1D
+    Parameters
+    ----------
+    data : NumpyArray
+      the input data, should be 1D
 
-  Returns
-  -------
-  NumpyArray
-    the averaged data
-  """
+    Returns
+    -------
+    NumpyArray
+      the averaged data
+    """
     running = np.zeros(data.shape)
     for i in range(data.shape[0]):
-        running[i] = data[:i + 1].mean()
+        running[i] = data[: i + 1].mean()
     return running
 
 
 def moving(data, window):
     """
-  Returns a moving/rolling average of the data
+    Returns a moving/rolling average of the data
 
-  Parameters
-  ----------
-  data : NumpyArray
-    the input data, should be 1D
-  window : int
-    the window size
+    Parameters
+    ----------
+    data : NumpyArray
+      the input data, should be 1D
+    window : int
+      the window size
 
-  Returns
-  -------
-  NumpyArray
-    the averaged data
-  """
+    Returns
+    -------
+    NumpyArray
+      the averaged data
+    """
     weights = np.repeat(1.0, window) / float(window)
-    return np.convolve(data, weights, 'valid')
+    return np.convolve(data, weights, "valid")
 
 
 ###################
@@ -209,22 +209,22 @@ def moving(data, window):
 
 def parse_series(series, results):
     """
-  Extract data series and label from a results file based on a label
+    Extract data series and label from a results file based on a label
 
-  Parameters
-  ----------
-  series : list of string
-    the series to extract
-  results : SnapshotResults object
-    all the results
+    Parameters
+    ----------
+    series : list of string
+      the series to extract
+    results : SnapshotResults object
+      all the results
 
-  Returns
-  -------
-  list of NumpyArrays
-    the data series
-  list of string
-    the labels for the series
-  """
+    Returns
+    -------
+    list of NumpyArrays
+      the data series
+    list of string
+      the labels for the series
+    """
 
     def parse_compound_series(series, results):
         """
@@ -256,8 +256,8 @@ def parse_series(series, results):
 
     def parse_energyresults(series, results):
         """
-    Parse a EnergyResults object
-    """
+        Parse a EnergyResults object
+        """
         if series[-1] == "b":
             eattr = "back"
             etype = series[:-1]
@@ -275,29 +275,32 @@ def parse_series(series, results):
 
     def parse_feenergy(series, results):
         """
-    Parse the feenergy attribute
-    """
-        if not hasattr(results, "feenergies"): return None
+        Parse the feenergy attribute
+        """
+        if not hasattr(results, "feenergies"):
+            return None
 
         cols = series.lower().strip().split("/")
         if len(cols) == 1:
             ys = [
-                results.feenergies[l]
-                for l in sorted(results.feenergies.keys())
+                results.feenergies[_key]
+                for _key in sorted(results.feenergies.keys())
             ]
             labels = [
-                "energy at %.3f [kcal/mol]" % l
-                for l in sorted(results.feenergies.keys())
+                "energy at %.3f [kcal/mol]" % _key
+                for _key in sorted(results.feenergies.keys())
             ]
             return ys, labels
         else:
             ys = [
-                results.feenergies[float(l)] for l in cols[1].split(",")
-                if float(l) in results.feenergies
+                results.feenergies[float(ll)]
+                for ll in cols[1].split(",")
+                if float(ll) in results.feenergies
             ]
             labels = [
-                "energy at %.3f [kcal/mol]" % float(l)
-                for l in cols[1].split(",") if float(l) in results.feenergies
+                "energy at %.3f [kcal/mol]" % float(ll)
+                for ll in cols[1].split(",")
+                if float(ll) in results.feenergies
             ]
             if len(ys) == 0:
                 return None
@@ -331,10 +334,10 @@ def parse_series(series, results):
         else:
             if hasattr(results, s):
                 if s in special_units:
-                    l = s + special_units[s]
+                    ll = s + special_units[s]
                 else:
-                    l = s + " [kcal/mol]"
-                resp = getattr(results, s), l
+                    ll = s + " [kcal/mol]"
+                resp = getattr(results, s), ll
         if resp is not None:
             y, label = resp
             if isinstance(y, list):
@@ -350,39 +353,39 @@ def parse_series(series, results):
 
 def parse_files(filenames, series, all_results, ys, labels, **kwargs):
     """
-  Parse multiple results file
+    Parse multiple results file
 
-  If a data serie in series can be calculated over multiple
-  input files, the data series is replaced by some calculation
-  over all input files
+    If a data serie in series can be calculated over multiple
+    input files, the data series is replaced by some calculation
+    over all input files
 
-  Parameters
-  ----------
-  filenames : list of strings
-    the files to parse
-  series : list of strings
-    the series selected
-  all_results : list of SnapshotResults
-    all the results loaded from all input files, needs to
-     be initialized before calling this routine
-  ys : list of NumpyArrays
-    all the series
-  labels : list of strings
-    labels for all the data series
-  **kwargs : dictionary
-    additional parameters, passed directly to the different parsers
+    Parameters
+    ----------
+    filenames : list of strings
+      the files to parse
+    series : list of strings
+      the series selected
+    all_results : list of SnapshotResults
+      all the results loaded from all input files, needs to
+       be initialized before calling this routine
+    ys : list of NumpyArrays
+      all the series
+    labels : list of strings
+      labels for all the data series
+    **kwargs : dictionary
+      additional parameters, passed directly to the different parsers
 
-  Returns
-  -------
-  bool
-    whether the series has been modified, i.e. if any parser was found
-  """
+    Returns
+    -------
+    bool
+      whether the series has been modified, i.e. if any parser was found
+    """
 
     def parse_multi_gradients(results, attr, **kwargs):
         """
-    Routine to return parse multiple gradients series,
-    and computing running average of dG using trapezium
-    """
+        Routine to return parse multiple gradients series,
+        and computing running average of dG using trapezium
+        """
         lam = [r.lam[0] for r in results]
         lam = np.array(lam)
 
@@ -401,13 +404,14 @@ def parse_files(filenames, series, all_results, ys, labels, **kwargs):
         for i in range(d, gradients.shape[1] - d):
             if domoving:
                 dg[i] = np.trapz(
-                    gradients[:, i - d:i + d + 1].mean(axis=1), lam)
+                    gradients[:, i - d : i + d + 1].mean(axis=1), lam
+                )
             else:
                 dg[i] = np.trapz(gradients[:, i:].mean(axis=1), lam)
 
         # Remove start and begininng of series
         if domoving:
-            dg = dg[d:dg.shape[0] - d]
+            dg = dg[d : dg.shape[0] - d]
 
         return dg, "dG [kcal/mol]"
 
@@ -452,38 +456,43 @@ def parse_files(filenames, series, all_results, ys, labels, **kwargs):
 
 def _label0(label):
     """
-  Removes the unit from a label
-  """
+    Removes the unit from a label
+    """
     if label.find("[") == -1:
         return label
 
-    l = "_".join(label.split()[:-1])
-    l = l.replace("/", "_")
-    return l
+    _label = "_".join(label.split()[:-1])
+    _label = _label.replace("/", "_")
+    return _label
 
 
 def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
     """
-  Plot a series
+    Plot a series
 
-  Parameters
-  ----------
-  ys : list of Numpy arrays
-    the data series
-  yprop : list of dictionary
-    statistical properties of the data
-  labels : list of strings
-    the labels for the data series
-  offset : int
-    the offset of x from 1
-  plotkind : string
-    the type of plot to create, can be either sep, sub,
-    single, single_first0 or single_last0
-  outprefix : string
-    the prefix of the created png-files
-  """
-    if plotkind not in ["sep", "sub", "single",
-                        "single_first0", "single_last0"]:
+    Parameters
+    ----------
+    ys : list of Numpy arrays
+      the data series
+    yprop : list of dictionary
+      statistical properties of the data
+    labels : list of strings
+      the labels for the data series
+    offset : int
+      the offset of x from 1
+    plotkind : string
+      the type of plot to create, can be either sep, sub,
+      single, single_first0 or single_last0
+    outprefix : string
+      the prefix of the created png-files
+    """
+    if plotkind not in [
+        "sep",
+        "sub",
+        "single",
+        "single_first0",
+        "single_last0",
+    ]:
         plotkind == "sep"
     if len(ys) == 1 or plotkind is None:
         plotkind = "single"  # For a single series, there is only one kind
@@ -521,9 +530,11 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
 
         ax.plot(x, y, label=label, color=simulationobjects.color(i))
         ax.plot(
-            [prop["equil"], prop["equil"]], [ymin, ymax],
-            '--',
-            color=simulationobjects.color(i))
+            [prop["equil"], prop["equil"]],
+            [ymin, ymax],
+            "--",
+            color=simulationobjects.color(i),
+        )
 
         if not plotkind.startswith("single"):
             ax.set_xlim([0, max(x)])
@@ -532,7 +543,8 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
             ax.set_ylabel(label)
         if plotkind == "sep":
             currfig.savefig(
-                outprefix + "_" + _label0(label) + ".png", format="png")
+                outprefix + "_" + _label0(label) + ".png", format="png"
+            )
 
     if plotkind.startswith("single"):
         ax.set_xlim([0, max(x)])
@@ -554,23 +566,23 @@ def plot_series(ys, yprop, labels, offset, plotkind, outprefix):
 
 def write_series(ys, yprop, labels, offset, filekind, outprefix):
     """
-  Write a series to disc
+    Write a series to disc
 
-  Parameters
-  ----------
-  ys : list of Numpy arrays
-    the data series
-  yprop : list of dictionary
-    statistical properties of the data
-  labels : list of strings
-    the labels for the data series
-  offset : int
-    the offset of x from 1
-  filekind : string
-    the type of file to write, can be either sep or single
-  outprefix : string
-    the prefix of the created files
-  """
+    Parameters
+    ----------
+    ys : list of Numpy arrays
+      the data series
+    yprop : list of dictionary
+      statistical properties of the data
+    labels : list of strings
+      the labels for the data series
+    offset : int
+      the offset of x from 1
+    filekind : string
+      the type of file to write, can be either sep or single
+    outprefix : string
+      the prefix of the created files
+    """
     if len(ys) == 1 or filekind is None:
         filekind = "sep"  # For a single series, there is only one kind
     if filekind not in ["sep", "single"]:
@@ -583,34 +595,46 @@ def write_series(ys, yprop, labels, offset, filekind, outprefix):
             with open(outprefix + "_" + _label0(label) + ".dat", "w") as f:
                 f.write("#Data for %s\n" % label)
                 f.write("#Equilibration time: %d\n" % prop["equil"])
-                f.write("#Production contain %d data (g=%.3f)\n" %
-                        (prop["neff"], prop["g"]))
-                f.write("#Number of samples are maximized at %d with g=%.3f"
-                        " and samples=%d\n" % (
-                            prop["t_opt"], prop["g_min"], prop["neff_max"]))
+                f.write(
+                    "#Production contain %d data (g=%.3f)\n"
+                    % (prop["neff"], prop["g"])
+                )
+                f.write(
+                    "#Number of samples are maximized at %d with g=%.3f"
+                    " and samples=%d\n"
+                    % (prop["t_opt"], prop["g_min"], prop["neff_max"])
+                )
                 for i, yi in enumerate(y):
                     f.write("%d %.5f\n" % (i + 1 + offset, yi))
     else:
         with open(outprefix + ".dat", "w") as f:
             f.write("#Data for %s\n" % "\t".join(labels))
             f.write(
-                "#Equilibration time: %s\n" % "\t".join("%d" % prop["equil"]
-                                                        for prop in yprop))
+                "#Equilibration time: %s\n"
+                % "\t".join("%d" % prop["equil"] for prop in yprop)
+            )
             f.write(
-                "#Independent samples: %s\n" % "\t".join("{}".format(prop["neff"]
-                                                         for prop in yprop)))
+                "#Independent samples: %s\n"
+                % "\t".join("{}".format(prop["neff"] for prop in yprop))
+            )
+            f.write("#Production period g: %s\n" % "\t".join("%d".format()))
             f.write(
-                "#Production period g: %s\n" % "\t".join("%d".format(prop["g"]
-                                                         for prop in yprop)))
-            f.write("#Snapshot when independent samples are optimized: %s\n" %
-                    "\t".join("%d" % prop["t_opt"] for prop in yprop))
-            f.write("#Minimum g: %s\n" % "\t".join("%d" % prop["g_min"]
-                                                   for prop in yprop))
-            f.write("#Maximum number of independent samples: %s\n" % "\t".join(
-                "%d" % prop["neff_max"] for prop in yprop))
+                "#Snapshot when independent samples are optimized: %s\n"
+                % "\t".join("%d" % prop["t_opt"] for prop in yprop)
+            )
+            f.write(
+                "#Minimum g: %s\n"
+                % "\t".join("%d" % prop["g_min"] for prop in yprop)
+            )
+            f.write(
+                "#Maximum number of independent samples: %s\n"
+                % "\t".join("%d" % prop["neff_max"] for prop in yprop)
+            )
             for i in range(ys[0].shape[0]):
-                f.write("%d %s\n" % (i + 1 + offset, "\t".join("%.5f" % y[i]
-                                                               for y in ys)))
+                f.write(
+                    "%d %s\n"
+                    % (i + 1 + offset, "\t".join("%.5f" % y[i] for y in ys))
+                )
 
 
 #################################
@@ -620,25 +644,32 @@ def write_series(ys, yprop, labels, offset, filekind, outprefix):
 
 def _select_series(results):
     """
-  Prompts the user for series to plot and write
+    Prompts the user for series to plot and write
 
-  Parameters
-  ----------
-  results : SnapshotResults object
-    all the results
+    Parameters
+    ----------
+    results : SnapshotResults object
+      all the results
 
-  Returns
-  -------
-  list of string
-    the selected series
-  """
+    Returns
+    -------
+    list of string
+      the selected series
+    """
     selection = []
 
     print("Select one or several of the following series:")
     print("----------------------------------------------")
     singles = []
-    for attr in ["backfe", "forwfe", "gradient", "agradient",
-                 "lambdareplica", "solventson", "globalreplica"]:
+    for attr in [
+        "backfe",
+        "forwfe",
+        "gradient",
+        "agradient",
+        "lambdareplica",
+        "solventson",
+        "globalreplica",
+    ]:
         if hasattr(results, attr):
             singles.append(attr)
     for attr in ["total", "capenergy", "extraenergy"]:
@@ -647,23 +678,45 @@ def _select_series(results):
     if len(singles) > 0:
         print("Single valued series: ")
         for i in range(0, len(singles), 5):
-            print("".join("%-15s" % s for s in singles[i:i + 5]))
+            print("".join("%-15s" % s for s in singles[i : i + 5]))
         print("(type e.g. total)")
     if hasattr(results, "internal_energies"):
         print("\nInternal energies:")
         for elabel in results.internal_energies:
-            print("%-10s : %s" % (elabel, ", ".join(
-                e.type.lower() for e in results.internal_energies[elabel])))
+            print(
+                "%-10s : %s"
+                % (
+                    elabel,
+                    ", ".join(
+                        e.type.lower()
+                        for e in results.internal_energies[elabel]
+                    ),
+                )
+            )
         print("(type e.g. intra/protein1/sum)")
     if hasattr(results, "interaction_energies"):
         print("\nInteraction energies:")
         for elabel in results.interaction_energies:
-            print("%-20s : %s" % (elabel, ", ".join(
-                e.type.lower() for e in results.interaction_energies[elabel])))
+            print(
+                "%-20s : %s"
+                % (
+                    elabel,
+                    ", ".join(
+                        e.type.lower()
+                        for e in results.interaction_energies[elabel]
+                    ),
+                )
+            )
         print("(type e.g. inter/solvent-solvent/sum)")
     if hasattr(results, "feenergies"):
-        print("\nEnergies at lambda-values: %s" % (", ".join(
-            "%.3f" % l for l in sorted(results.feenergies.keys()))))
+        print(
+            "\nEnergies at lambda-values: %s"
+            % (
+                ", ".join(
+                    "%.3f" % _key for _key in sorted(results.feenergies.keys())
+                )
+            )
+        )
         print("(type e.g. feenergy or feenergy/0.000,1.000)")
 
     print("\n> ", end="")
@@ -677,13 +730,13 @@ def _select_series(results):
 
 def _select_plot():
     """
-  Prompt the user to select a plot kind
+    Prompt the user to select a plot kind
 
-  Returns
-  -------
-  string
-    the plot/write kind
-  """
+    Returns
+    -------
+    string
+      the plot/write kind
+    """
     print("\nHow do you want to plot/write the multiple series?")
     print("1) Separate plots (default)")
     print("2) Sub-plots")
@@ -709,52 +762,61 @@ def get_arg_parser():
 
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Program to analyze and plot a time series")
+        description="Program to analyze and plot a time series"
+    )
     parser.add_argument(
-        '-f',
-        '--file',
+        "-f",
+        "--file",
         nargs="+",
         help="the name of the file to analyse. Default is results. ",
-        default=["results"])
+        default=["results"],
+    )
     parser.add_argument(
-        '-o',
-        '--out',
+        "-o",
+        "--out",
         help="the prefix of the output figure. Default is series. ",
-        default="series")
+        default="series",
+    )
     parser.add_argument(
-        '-s', '--series', nargs="+", help="the series to analyze")
+        "-s", "--series", nargs="+", help="the series to analyze"
+    )
     parser.add_argument(
-        '-p',
-        '--plot',
+        "-p",
+        "--plot",
         choices=["sep", "sub", "single", "single_first0", "single_last0"],
-        help="the type of plot to generate for several series")
+        help="the type of plot to generate for several series",
+    )
     parser.add_argument(
-        '--nperm',
+        "--nperm",
         type=int,
         help="if larger than zero, perform a permutation test to"
-             " determine equilibration, default=0",
-        default=0)
+        " determine equilibration, default=0",
+        default=0,
+    )
     parser.add_argument(
-        '--threshold',
+        "--threshold",
         type=float,
         help="the significant level of the equilibration test, default=0.05",
-        default=0.05)
+        default=0.05,
+    )
     parser.add_argument(
-        '--average',
-        action='store_true',
+        "--average",
+        action="store_true",
         help="turns on use of running averaging of series",
-        default=False)
+        default=False,
+    )
     parser.add_argument(
-        '--moving',
+        "--moving",
         type=int,
-        help="turns on use of moving averaging of series, default=None")
+        help="turns on use of moving averaging of series, default=None",
+    )
     return parser
 
 
 #
 # If this is run from the command-line
 #
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     args = get_arg_parser().parse_args()
 
@@ -775,7 +837,8 @@ if __name__ == '__main__':
         filename = args.file[0]
     results_file = simulationobjects.ResultsFile()
     results_file.read(filename=filename)
-    results = results_file.make_series(
+    results = (
+        results_file.make_series()
     )  # This puts all data into Numpy arrays
 
     # Select which series to plot
@@ -802,7 +865,8 @@ if __name__ == '__main__':
             all_results,
             ys,
             labels,
-            moving=args.moving)
+            moving=args.moving,
+        )
 
     # Calculates running/moving averages for series
     if not parsed_files and args.average:
@@ -814,40 +878,49 @@ if __name__ == '__main__':
 
     # Compute the equilibration time and other properties for
     # each series to plot
-    yprop = [{
-        "equil": 0,
-        "g": 0,
-        "neff": 0,
-        "t_opt": 0,
-        "neff_max": 0,
-        "g_min": 0
-    } for y in ys]
+    yprop = [
+        {"equil": 0, "g": 0, "neff": 0, "t_opt": 0, "neff_max": 0, "g_min": 0}
+        for y in ys
+    ]
     x = np.arange(1, ys[0].shape[0] + 1) + offset
     print()
     for i, (y, prop, label) in enumerate(zip(ys, yprop, labels)):
         if len(y) <= EQUIL_LIMIT:
-            print("%i snapshots or less found in %s, will not evaluate "
-                  "equilibration" % (EQUIL_LIMIT, _label0(label)))
+            print(
+                "%i snapshots or less found in %s, will not evaluate "
+                "equilibration" % (EQUIL_LIMIT, _label0(label))
+            )
             continue
-        prop["equil"] = find_equilibration(
-            y, x, nperm=args.nperm, threshold=args.threshold) + offset
+        prop["equil"] = (
+            find_equilibration(
+                y, x, nperm=args.nperm, threshold=args.threshold
+            )
+            + offset
+        )
         if prop["equil"] == EQUIL_LIMIT:
             print("No point of equilibration found for %s" % _label0(label))
             prop["equil"] = 0
             continue
 
-        print("Equilibration found at snapshot %d for %s, value=%.3f" %
-              (prop["equil"], _label0(label), ys[i][prop["equil"]]))
-        prop["g"], prop["neff"] = stat_inefficiency(y[prop["equil"]:])
+        print(
+            "Equilibration found at snapshot %d for %s, value=%.3f"
+            % (prop["equil"], _label0(label), ys[i][prop["equil"]])
+        )
+        prop["g"], prop["neff"] = stat_inefficiency(y[prop["equil"] :])
         if prop["g"] is not None:
-            print("\tThis production part is estimated to contain %d "
-                  "uncorrelated samples (g=%.3f)" % (prop["neff"], prop["g"]))
-            prop["t_opt"], prop["g_min"], prop["neff_max"] = \
-                maximize_samples(y)
+            print(
+                "\tThis production part is estimated to contain %d "
+                "uncorrelated samples (g=%.3f)" % (prop["neff"], prop["g"])
+            )
+            prop["t_opt"], prop["g_min"], prop["neff_max"] = maximize_samples(
+                y
+            )
             prop["t_opt"] = prop["t_opt"] + offset
-            print("\tThe number of samples is maximized at %d, g=%.3f and the "
-                  "number of uncorrelated samples is %d" % (
-                      prop["t_opt"], prop["g_min"], prop["neff_max"]))
+            print(
+                "\tThe number of samples is maximized at %d, g=%.3f and the "
+                "number of uncorrelated samples is %d"
+                % (prop["t_opt"], prop["g_min"], prop["neff_max"])
+            )
 
     # Select what kind of plot to make for multiple series
     if len(ys) > 1 and args.plot is None:

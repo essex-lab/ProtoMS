@@ -2,23 +2,27 @@ import itertools
 import logging
 import operator
 import os
-import six
+
 import numpy as np
+import six
+
 from .. import simulationobjects
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
-def scoop(protein,
-          ligand,
-          innercut=16,
-          outercut=20,
-          flexin='full',
-          flexout='sidechain',
-          terminal='neutralize',
-          excluded=[],
-          added=[],
-          scooplimit=10):
+def scoop(
+    protein,
+    ligand,
+    innercut=16,
+    outercut=20,
+    flexin="full",
+    flexout="sidechain",
+    terminal="neutralize",
+    excluded=[],
+    added=[],
+    scooplimit=10,
+):
     """
     Generates a scoop from protein structure
 
@@ -83,8 +87,8 @@ def scoop(protein,
         ligand.residues = {0: simulationobjects.Residue()}
         ligand.residues[0].addAtom(simulationobjects.Atom(coords=centerarray))
 
-    assert flexin in ['sidechain', 'flexible', 'rigid']
-    assert flexout in ['sidechain', 'flexible', 'rigid']
+    assert flexin in ["sidechain", "flexible", "rigid"]
+    assert flexout in ["sidechain", "flexible", "rigid"]
 
     if len(ligand.residues) > 1:
         print("More than one ligand in input. Scooping around everything...")
@@ -98,12 +102,15 @@ def scoop(protein,
     in_kill_list = [True] * len(pdb_out.residues)
     for res in pdb_out.residues:
         for atom in pdb_out.residues[res].atoms:
-            if (atom.name.startswith(('H', 'h', '1'))
-                    or atom.name in ('N', 'C', 'O')):
+            if atom.name.startswith(("H", "h", "1")) or atom.name in (
+                "N",
+                "C",
+                "O",
+            ):
                 continue
             for lig in six.itervalues(ligand.residues):
                 for lat in lig.atoms:
-                    if lat.name.startswith(('H', 'h')):
+                    if lat.name.startswith(("H", "h")):
                         continue
                     distance = np.linalg.norm(atom.coords - lat.coords)
                     if distance < outercut:
@@ -114,8 +121,11 @@ def scoop(protein,
     if sum(kill_list) < scooplimit:
         kill_list = [False] * len(pdb_out.residues)
     for res in pdb_out.residues:
-        if not kill_list[res - 1] and \
-           in_kill_list[res - 1] and res not in excluded:
+        if (
+            not kill_list[res - 1]
+            and in_kill_list[res - 1]
+            and res not in excluded
+        ):
             outer.append(res)
         if kill_list[res - 1] and res in added:
             outer.append(res)
@@ -146,7 +156,7 @@ def scoop(protein,
     rigid = []
     backBoneRigid = []
     for res in both:
-        if pdb_out.residues[res].name == 'CYX':
+        if pdb_out.residues[res].name == "CYX":
             rigid.append(res)
             if res != 0:
                 backBoneRigid.append(res - 1)
@@ -156,14 +166,14 @@ def scoop(protein,
     # Constrain outer residues only if the number of discarded
     # residues is less than scooplimit.
     if n_kill > scooplimit:
-        if flexout in ['rigid', 'sidechain']:
+        if flexout in ["rigid", "sidechain"]:
             backBoneRigid += [res for res in outer]
-        if flexout == 'rigid':
+        if flexout == "rigid":
             rigid += [res for res in outer]
-    # Same thing for inner residues
-        if flexin in ['rigid', 'sidechain']:
+        # Same thing for inner residues
+        if flexin in ["rigid", "sidechain"]:
             backBoneRigid += [res for res in inner]
-        if flexin == 'rigid':
+        if flexin == "rigid":
             rigid += [res for res in inner]
 
     outres = []
@@ -180,24 +190,26 @@ def scoop(protein,
 
     # Need to turn residue lists into nice string of residue ranges for
     # ProtoMS to interpret. Not crazy about this but works.
-    outBB = ''
+    outBB = ""
     for k, g in itertools.groupby(
-            enumerate(rigidBB), key=lambda x: x[0] - x[1]):
+        enumerate(rigidBB), key=lambda x: x[0] - x[1]
+    ):
         r = list(map(operator.itemgetter(1), g))
         if len(r) > 1:
-            outBB += '%d-%d, ' % (min(r), max(r))
+            outBB += "%d-%d, " % (min(r), max(r))
         else:
-            outBB += '%d, ' % r[0]
+            outBB += "%d, " % r[0]
     outBB = outBB[:-2]
 
-    outSC = ''
+    outSC = ""
     for k, g in itertools.groupby(
-            enumerate(rigidSC), key=lambda x: x[0] - x[1]):
+        enumerate(rigidSC), key=lambda x: x[0] - x[1]
+    ):
         r = list(map(operator.itemgetter(1), g))
         if len(r) > 1:
-            outSC += '%d-%d, ' % (min(r), max(r))
+            outSC += "%d-%d, " % (min(r), max(r))
         else:
-            outSC += '%d, ' % r[0]
+            outSC += "%d, " % r[0]
     outSC = outSC[:-2]
 
     # Purge residues outside the outer scoop from the protein pdb and save it
@@ -213,11 +225,12 @@ def scoop(protein,
         # print "Not scooping, lower than limit."
         logger.info(
             "Not scooping. Number of residues removed from the protein is"
-            " too small (%s less than %s)" % (n_kill, scooplimit))
+            " too small (%s less than %s)" % (n_kill, scooplimit)
+        )
 
     # Check of terminal residue
     headerscoop = False
-    if terminal != 'keep':
+    if terminal != "keep":
         nres = pdb_out.residues[sorted(pdb_out.residues.keys())[0]]
         cres = pdb_out.residues[sorted(pdb_out.residues.keys())[-1]]
 
@@ -236,7 +249,7 @@ def scoop(protein,
 
         # If both are charged and terminal is doublekeep,
         # we will not tell ProtoMS this is a scoop and keep them
-        if charged_nres and charged_cres and terminal == 'doublekeep':
+        if charged_nres and charged_cres and terminal == "doublekeep":
             headerscoop = False
         # Otherwise we will neutralize and tell ProtoMS this is a scoop
         else:
@@ -262,34 +275,40 @@ def scoop(protein,
         header += "REMARK Inner Region : %8.2f Angstrom radius\n" % innercut
         header += "REMARK Outer Region : %8.2f Angstrom radius\n" % outercut
         header += "REMARK Num Residues %d ( %d inner %d outer )\n" % (
-            len(inner) + len(outer), len(inner), len(outer))
+            len(inner) + len(outer),
+            len(inner),
+            len(outer),
+        )
         header += "REMARK %d residues have a fixed backbone\n" % (len(rigidBB))
         header += "REMARK %d residues are fixed\n" % (len(rigidSC))
         header += "REMARK flexibility of the inner part : %s\n" % flexin
         header += "REMARK flexibility of the outer part : %s\n" % flexout
         header += "REMARK ProtoMS keyword to use\n"
 
-
-# check that the outBB and outSC are short enough to be printed on one line
+    # check that the outBB and outSC are short enough to be printed on one line
     linelength = 270
     if len(outBB) <= linelength:
         if not len(rigidBB) == 0:
             header += "REMARK chunk fixbackbone 1 %s\n" % outBB
     else:
-        print("REMARK chunk fixbackbone line is too long for ProtoMS, "
-              "please split over two lines")
+        print(
+            "REMARK chunk fixbackbone line is too long for ProtoMS, "
+            "please split over two lines"
+        )
     if len(outSC) <= linelength:
         if not len(rigidSC) == 0:
             header += "REMARK chunk fixresidues 1 %s\n" % outSC
     else:
-        print("REMARK chunk fixresidues line is too long for ProtoMS, "
-              "please split over two lines")
+        print(
+            "REMARK chunk fixresidues line is too long for ProtoMS, "
+            "please split over two lines"
+        )
 
     if n_kill > scooplimit:
         header += "REMARK Xray Water within %8.2f Angstrom\n" % outercut
         header += "REMARK of the ligand\n"
         if headerscoop:
-            header += 'HEADER scoop\n'
+            header += "HEADER scoop\n"
 
     pdb_out.header = header
 

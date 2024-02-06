@@ -17,20 +17,23 @@ import logging
 from protomslib import simulationobjects
 from protomslib.prepare import make_dummy
 
-logger = logging.getLogger('protoms')
+logger = logging.getLogger("protoms")
 
 
 def get_arg_parser():
     import argparse
+
     # Setup a parser of the command-line arguments
     parser = argparse.ArgumentParser(
-        description="Program make a dummy corresponding to a molecule")
-    parser.add_argument('-f', '--file', help="the name of a PDB file")
+        description="Program make a dummy corresponding to a molecule"
+    )
+    parser.add_argument("-f", "--file", help="the name of a PDB file")
     parser.add_argument(
-        '-o',
-        '--out',
+        "-o",
+        "--out",
         help="the name of the dummy PDB file",
-        default="dummy.pdb")
+        default="dummy.pdb",
+    )
     return parser
 
 

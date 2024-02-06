@@ -5,11 +5,12 @@ class FEArgumentParser(argparse.ArgumentParser):
     """Thin wrapper around argparse.ArgumentParser designed to allow
     specification of individual arguments that cannot be used at the
     same time as one another."""
+
     def __init__(self, *args, **kwargs):
         # use a dict to store clashes for arguments
         self.clashes = {}
         # inherit any clashes belonging to parent argument parsers
-        for parent in kwargs.get('parents', {}):
+        for parent in kwargs.get("parents", {}):
             self.clashes.update(parent.clashes)
 
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
@@ -28,13 +29,13 @@ class FEArgumentParser(argparse.ArgumentParser):
         cannot be provided at the same time as this one."""
         # figure out what the argument will be called in the parser namespace
         try:
-            name = kwargs['dest']
+            name = kwargs["dest"]
         except KeyError:
-            name = args[-1].strip('-')
+            name = args[-1].strip("-")
 
         # store clashes if these are provided, otherwise empty list
         try:
-            self.clashes[name] = kwargs.pop('clashes')
+            self.clashes[name] = kwargs.pop("clashes")
         except KeyError:
             self.clashes[name] = []
 
@@ -52,5 +53,7 @@ class FEArgumentParser(argparse.ArgumentParser):
                 # if clashing argument has non-default value it WAS used
                 # so complain and quit
                 if getattr(parsed, clash) != self.get_default(clash):
-                    self.error('Cannot provide both --%s and --%s arguments' %
-                               (arg, clash))
+                    self.error(
+                        "Cannot provide both --%s and --%s arguments"
+                        % (arg, clash)
+                    )

@@ -10,23 +10,37 @@ class Jaws2SetupTest(framework.BaseTest):
         "fragment.pdb",
         "protein.pdb",
         "jaws2_waters.pdb",
-        "water.pdb"
+        "water.pdb",
     ]
 
     executable = "protoms.py"
 
     args = [
-        "-s", "jaws2",
-        "-l", "fragment.pdb",
-        "-p", "protein.pdb",
-        "--gcmcwater", "jaws2_waters.pdb",
-        "--jawsbias", "8", "10", "12", "14",
-        "--nequil", "0",
-        "--nprod", "100",
-        "--ranseed", "100000",
-        "--setupseed", "100000",
-        "--dumpfreq", "10",
-        "--gaff", "gaff14"
+        "-s",
+        "jaws2",
+        "-l",
+        "fragment.pdb",
+        "-p",
+        "protein.pdb",
+        "--gcmcwater",
+        "jaws2_waters.pdb",
+        "--jawsbias",
+        "8",
+        "10",
+        "12",
+        "14",
+        "--nequil",
+        "0",
+        "--nprod",
+        "100",
+        "--ranseed",
+        "100000",
+        "--setupseed",
+        "100000",
+        "--dumpfreq",
+        "10",
+        "--gaff",
+        "gaff14",
     ]
 
     output_files = [
@@ -44,7 +58,7 @@ class Jaws2SetupTest(framework.BaseTest):
         "jaws2_not3.pdb",
         "run_jaws2-w1_jaws.cmd",
         "run_jaws2-w2_jaws.cmd",
-        "run_jaws2-w3_jaws.cmd"
+        "run_jaws2-w3_jaws.cmd",
     ]
 
 
@@ -58,22 +72,20 @@ class Jaws2SimulationTest(framework.BaseTest):
         "water.pdb",
         "jaws2_not1.pdb",
         "fragment.tem",
-        "protein_scoop.pdb"
+        "protein_scoop.pdb",
     ]
 
     mpi_processes = 4
 
     executable = "build/protoms3"
 
-    args = [
-        "run_jaws2-w1_jaws.cmd"
-    ]
+    args = ["run_jaws2-w1_jaws.cmd"]
 
     output_directories = [
         "out_jaws2-w1/j_+8.000",
         "out_jaws2-w1/j_+10.000",
         "out_jaws2-w1/j_+12.000",
-        "out_jaws2-w1/j_+14.000"
+        "out_jaws2-w1/j_+14.000",
     ]
 
     output_files = [
@@ -83,9 +95,9 @@ class Jaws2SimulationTest(framework.BaseTest):
         "restart",
         "restart.prev",
         "results",
-        "warning"
+        "warning",
     ]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
