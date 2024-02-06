@@ -14,5 +14,6 @@ setup(
         "matplotlib>=3.4.2",
         "six>=1.16",
         "nose>=1.3.7",
+        "pymbar[jax]>=4.0.2"
     ]
 )
