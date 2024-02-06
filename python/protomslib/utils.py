@@ -1,7 +1,8 @@
 import logging
-import numpy as np
 import os
 import subprocess
+
+import numpy as np
 
 logger = logging.getLogger("protoms")
 

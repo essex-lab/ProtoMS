@@ -1,8 +1,10 @@
-import os
 import logging
-import numpy as np
+import os
 import random
 import subprocess
+
+import numpy as np
+
 from . import simulationobjects as sim
 from .templates import _auto_map, _make_dict
 

@@ -2,17 +2,20 @@
 free energy calculation framework."""
 
 from __future__ import print_function
+
+import os
+import pickle
+import warnings
 from copy import copy
 from glob import glob
 from operator import add
-import os
+
 import matplotlib
 import numpy as np
-import pickle
 import pymbar
-from scipy.integrate import trapz
 import six
-import warnings
+from scipy.integrate import trapz
+
 from .. import simulationobjects as sim
 from .free_energy_argument_parser import FEArgumentParser
 

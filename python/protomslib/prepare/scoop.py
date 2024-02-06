@@ -2,8 +2,10 @@ import itertools
 import logging
 import operator
 import os
-import six
+
 import numpy as np
+import six
+
 from .. import simulationobjects
 
 logger = logging.getLogger("protoms")

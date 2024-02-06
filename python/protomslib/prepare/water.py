@@ -1,8 +1,10 @@
 import copy
 import logging
-from scipy.optimize import minimize
-import six
+
 import numpy as np
+import six
+from scipy.optimize import minimize
+
 from .. import simulationobjects
 from ..utils import rotmat_x, rotmat_y, rotmat_z
 

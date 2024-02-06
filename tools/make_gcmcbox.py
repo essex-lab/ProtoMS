@@ -18,7 +18,7 @@ import logging
 import numpy as np
 
 from protomslib import simulationobjects
-from protomslib.gcmc import make_gcmcbox, print_bequil
+from protomslib.prepare.gcmc import make_gcmcbox, print_bequil
 
 logger = logging.getLogger("protoms")
 

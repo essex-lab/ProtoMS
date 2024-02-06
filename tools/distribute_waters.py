@@ -23,7 +23,7 @@ Can be executed from the command line as a stand-alone program
 import logging
 import numpy as np
 from protomslib import simulationobjects
-from protomslib.gcmc import distribute_particles
+from protomslib.prepare.gcmc import distribute_particles
 
 logger = logging.getLogger("protoms")
 

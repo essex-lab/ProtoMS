@@ -14,16 +14,17 @@
     4) Read, modify and write ProtoMS template files
 """
 from __future__ import print_function
-import sys
-import os
-import glob
-import logging
+
+import argparse
 import copy
 import gettext
-import argparse
-import six
+import glob
+import logging
+import os
+import sys
 
 import numpy as np
+import six
 
 boltz = 0.00198717076  # kcal.mol-1K-1
 

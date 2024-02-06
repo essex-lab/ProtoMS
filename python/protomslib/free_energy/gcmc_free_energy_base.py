@@ -1,10 +1,12 @@
 from __future__ import print_function
+
+import os
+
 import matplotlib
 import numpy as np
-import os
 import pymbar
-from scipy import optimize
-from scipy import integrate
+from scipy import integrate, optimize
+
 from . import free_energy_base as feb
 from .table import Table
 

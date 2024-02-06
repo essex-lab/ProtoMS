@@ -15,7 +15,7 @@ Can be executed from the command line as a stand-alone program
 import logging
 
 from protomslib import simulationobjects
-from protomslib.gcmc import clear_gcmcbox
+from protomslib.prepare.gcmc import clear_gcmcbox
 
 logger = logging.getLogger("protoms")
 

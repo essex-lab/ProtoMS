@@ -1,9 +1,12 @@
 from __future__ import print_function
+
 import logging
+
 import numpy as np
 import six
-from . import simulationobjects
-from .prepare.water import convertwater, rotatesolute
+
+from protomslib import simulationobjects
+from protomslib.prepare.water import convertwater, rotatesolute
 
 logger = logging.getLogger("protoms")
 

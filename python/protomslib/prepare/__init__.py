@@ -1,19 +1,25 @@
 import distutils.spawn
 import logging
-import numpy as np
 import os
-import six
 import subprocess
 import tempfile
+
+import numpy as np
+import six
+
 from .. import simulationobjects
-from ..gcmc import clear_gcmcbox, distribute_particles
-from ..gcmc import make_gcmcbox, print_bequil
 from ..solvate import solvate
-from ..templates import merge_templates, build_template
-from ..templates import make_single, summarize_single, write_map
+from ..templates import (
+    build_template,
+    make_single,
+    merge_templates,
+    summarize_single,
+    write_map,
+)
 from ..utils import _get_prefix, _locate_file
+from .gcmc import clear_gcmcbox, distribute_particles, make_gcmcbox, print_bequil
 from .scoop import scoop
-from .water import convertwater, split_waters, set_jaws2_box
+from .water import convertwater, set_jaws2_box, split_waters
 
 logger = logging.getLogger("protoms")
 

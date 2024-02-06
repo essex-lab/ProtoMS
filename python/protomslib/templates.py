@@ -1,9 +1,12 @@
-from __future__ import print_function, division
+from __future__ import division, print_function
+
 import copy
 import logging
 import os
+
 import numpy as np
 import six
+
 from . import simulationobjects as sim
 
 logger = logging.getLogger("protoms")
