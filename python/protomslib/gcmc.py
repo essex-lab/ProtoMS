@@ -150,6 +150,9 @@ def distribute_particles(
     elif isinstance(box, dict):
         orig = box["origin"]
         length = box["len"]
+    else:
+        # Ensure error raised for unknown type handling
+        raise TypeError(box)
 
     if isinstance(particles, str) and particles.isdigit():
         watnumb = int(particles)
