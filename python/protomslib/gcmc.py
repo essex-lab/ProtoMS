@@ -166,7 +166,7 @@ def distribute_particles(
                 resname=resname, positions=[oxpos]
             )
         particles = convertwater(
-            particles, watermodel, "y", watresname=resname
+            particles, watermodel, True, watresname=resname
         )
 
     else:
